@@ -31,7 +31,7 @@ const Welcome = ({navigation}) => {
 
                 <OButtonWide filled={true} text="Create Account" style={{marginBottom: 14}}
                              onPress={() => navigation.navigate(ROUTES.Onboarding.Email)}/>
-                <OButtonWide filled={false} text="Sign in" style={{marginBottom: 100}}/>
+                <OButtonWide filled={false} text="Sign in" style={{marginBottom: 90}}/>
 
                 <Text style={[styles.troubleSigningIn, styles.troubleSigningInFlexBox]}>
                     Trouble signing in?
@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
         color: Color.white,
         textAlign: "center",
         alignItems: "center",
-        position: "absolute",
     },
     troubleSigningIn: {
         fontSize: 16,
@@ -75,7 +74,7 @@ const styles = StyleSheet.create({
     },
     termsContainerOuter: {
         fontSize: FontSize.size_sm,
-        marginBottom: 280,
+        marginBottom: 25,
         lineHeight: 20,
         width: 341,
         height: 81,
@@ -85,18 +84,6 @@ const styles = StyleSheet.create({
             height: 4,
         },
         textShadowRadius: 4,
-    },
-    datingAppsAre: {
-        top: 411,
-        left: 29,
-        fontSize: 22,
-        width: 370,
-        height: 63,
-        letterSpacing: 0,
-        lineHeight: 52,
-        fontFamily: FontFamily.montserratLight,
-        fontWeight: "500",
-        position: "absolute",
     },
     noWifi1Icon: {
         left: 0,
@@ -116,13 +103,6 @@ const styles = StyleSheet.create({
         textAlign: "center",
         justifyContent: "center",
         alignItems: "center",
-    },
-    noWifi1Parent: {
-        top: 367,
-        left: 78,
-        width: 269,
-        height: 54,
-        position: "absolute",
     },
     welcome1: {
         shadowColor: "rgba(0, 0, 0, 0.25)",
