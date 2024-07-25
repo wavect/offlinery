@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Text, StyleSheet} from "react-native";
+import {Text, StyleSheet, View} from "react-native";
 import {Color, FontSize, FontFamily} from "../GlobalStyles";
 import {OShowcase} from "../components/OShowcase/OShowcase";
 import {OLinearBackground} from "../components/OLinearBackground/OLinearBackground";
@@ -10,28 +10,34 @@ import {ROUTES} from "./routes";
 const Welcome = ({navigation}) => {
     return (
         <OLinearBackground>
-            <OButtonWide filled={true} text="Create Account" onPress={() => navigation.navigate(ROUTES.Onboarding.Email)}/>
-            <OButtonWide filled={false} text="Sign in"/>
-            <Text style={[styles.troubleSigningIn, styles.troubleSigningInFlexBox]}>
-                Trouble signing in?
-            </Text>
-            <Text
-                style={[
-                    styles.termsContainerOuter,
-                    styles.troubleSigningInFlexBox,
-                ]}
-            >
-                <Text style={styles.termsContainer}>
-                    <Text style={styles.termsText}>
-                        {`By tapping “Create account” or “Sign in”, you agree to our `}
-                        <A href="https://wavect.io/imprint" style={styles.termsLink}>Terms</A>
-                        {`. See how we process your data in our `}
-                        <A href="https://wavect.io/imprint" style={styles.termsLink}>Privacy and Cookie Policy.</A>
+            <View style={styles.layoutContainer}>
+                <OShowcase subtitle="Stop Swiping. Meet IRL."/>
+
+                <Text
+                    style={[
+                        styles.termsContainerOuter,
+                        styles.troubleSigningInFlexBox,
+                    ]}
+                >
+                    <Text style={styles.termsContainer}>
+                        <Text style={styles.termsText}>
+                            {`By tapping “Create account” or “Sign in”, you agree to our `}
+                            <A href="https://wavect.io/imprint" style={styles.termsLink}>Terms</A>
+                            {`. See how we process your data in our `}
+                            <A href="https://wavect.io/imprint" style={styles.termsLink}>Privacy and Cookie Policy.</A>
+                        </Text>
                     </Text>
                 </Text>
-            </Text>
 
-            <OShowcase subtitle="Stop Swiping. Meet IRL."/>
+                <OButtonWide filled={true} text="Create Account" style={{marginBottom: 14}}
+                             onPress={() => navigation.navigate(ROUTES.Onboarding.Email)}/>
+                <OButtonWide filled={false} text="Sign in" style={{marginBottom: 100}}/>
+
+                <Text style={[styles.troubleSigningIn, styles.troubleSigningInFlexBox]}>
+                    Trouble signing in?
+                </Text>
+            </View>
+
         </OLinearBackground>
     );
 };
@@ -46,10 +52,9 @@ const styles = StyleSheet.create({
         position: "absolute",
     },
     troubleSigningIn: {
-        top: 852,
-        left: 99,
         fontSize: 16,
         lineHeight: 24,
+        marginBottom: 22,
         width: 230,
         height: 45,
         textDecorationLine: "underline",
@@ -69,9 +74,8 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     termsContainerOuter: {
-        top: 551,
-        left: 43,
         fontSize: FontSize.size_sm,
+        marginBottom: 280,
         lineHeight: 20,
         width: 341,
         height: 81,
@@ -135,6 +139,13 @@ const styles = StyleSheet.create({
         width: "100%",
         flex: 1,
     },
+    layoutContainer: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'flex-end',
+    },
 });
+
 
 export default Welcome;
