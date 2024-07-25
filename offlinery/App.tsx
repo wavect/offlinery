@@ -1,3 +1,5 @@
+import {ROUTES} from "./screens/routes";
+
 const Stack = createStackNavigator();
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
@@ -20,6 +22,7 @@ import {
   Montserrat_800ExtraBold,
   Montserrat_900Black,
 } from '@expo-google-fonts/montserrat';
+import Email from "./screens/onboarding/Email";
 
 export default function App() {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(false);
@@ -53,9 +56,14 @@ export default function App() {
                   screenOptions={{ headerShown: false }}
               >
                 <Stack.Screen
-                    name="Welcome"
+                    name={ROUTES.Welcome}
                     component={Welcome}
                     options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name={ROUTES.Onboarding.Email}
+                    component={Email}
+                    options={{ headerShown: true, headerShadowVisible: false, headerTitle: ""}}
                 />
               </Stack.Navigator>
           ) : (

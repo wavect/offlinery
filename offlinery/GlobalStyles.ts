@@ -6,12 +6,27 @@ export const FontFamily = {
 
 /* font sizes */
 export const FontSize = {
-    m3LabelLarge_size: 14,
+    size_sm: 14,
+    size_md: 16,
     size_xl: 20,
 };
 /* Colors */
 export const Color = {
-    m3White: "#fff",
+    white: "#fff",
+    gray: "#757575",
     stateLayersSurfaceDimOpacity08: "rgba(222, 216, 225, 0.08)",
     schemesPrimary: "#65558f",
 };
+
+export const Padding = {
+    p_5xl: 24,
+    p_3xs: 10,
+    p_base: 16,
+    p_xs: 12,
+}
+
+export const BorderRadius = {
+        br_81xl: 100,
+        br_5xs: 8,
+        br_9xs: 4,
+}

@@ -4,7 +4,7 @@ export default {
     offlineryFlexBox: {
         lineHeight: 52,
         display: "flex",
-        color: Color.m3White,
+        color: Color.white,
         textAlign: "center",
         justifyContent: "center",
         alignItems: "center",
@@ -48,6 +48,6 @@ export default {
         alignItems: "center",
         display: "flex",
         textAlign: "center",
-        color: Color.m3White,
+        color: Color.white,
     }
 }
