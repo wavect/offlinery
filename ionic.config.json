@@ -1,7 +1,0 @@
-{
-  "name": "fuck-dating-apps",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react-vite"
-}
