@@ -31,7 +31,7 @@ const getStyle = (disabled: boolean, el: "btn" | "lbl", filled: boolean, variant
             }
         } else {
             if (disabled) {
-                return oButtonWideStyles.buttonOutlinedDisabled
+                return [oButtonWideStyles.buttonOutlinedDisabled, oButtonWideStyles.buttonOutlined]
             } else if (variant === "dark") {
                 // btn, outlined, dark
                 return [oButtonWideStyles.buttonOutlinedDark, oButtonWideStyles.buttonOutlined]

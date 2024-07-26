@@ -5,6 +5,7 @@ import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {Subtitle, Title} from "../../GlobalStyles";
 import {ROUTES} from "../routes";
 import {EACTION_USER, useUserContext} from "../../context/UserContext";
+import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 
 const Email = ({navigation}) => {
     const { state, dispatch } = useUserContext()
@@ -18,38 +19,27 @@ const Email = ({navigation}) => {
 
     const isInvalidEmail = () => !state.email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.content}>
-                <Text style={Title}>What's your email?</Text>
-                <Text style={Subtitle}>
-                    Don't lose access to your account, verify your email.
-                </Text>
-
-                <View style={styles.inputField}>
-                    <TextInput
-                        style={styles.input}
-                        value={state.email}
-                        onChangeText={setEmail}
-                        placeholder="Enter email"
-                        placeholderTextColor="#999"
-                    />
-                </View>
-
-                <View style={styles.checkboxField}>
-                    <Checkbox value={state.wantsEmailUpdates} onValueChange={setCheckboxChecked} />
-                    <Text style={styles.checkboxLabel}>
-                        I want to receive news, updates and offers from Offlinery.
-                    </Text>
-                </View>
-            </View>
-
-            <View style={styles.buttonContainer}>
-                <OButtonWide text="Continue" filled={true} disabled={isInvalidEmail()} variant="dark"
-                             onPress={() => navigation.navigate(ROUTES.Onboarding.FirstName)}/>
-            </View>
+    return <OPageContainer title="What's your email?"
+                           bottomContainerChildren={ <OButtonWide text="Continue" filled={true} disabled={isInvalidEmail()} variant="dark"
+                                                                  onPress={() => navigation.navigate(ROUTES.Onboarding.FirstName)}/>}
+                           subtitle="Don't lose access to your account, verify your email.">
+        <View style={styles.inputField}>
+            <TextInput
+                style={styles.input}
+                value={state.email}
+                onChangeText={setEmail}
+                placeholder="Enter email"
+                placeholderTextColor="#999"
+            />
         </View>
-    );
+
+        <View style={styles.checkboxField}>
+            <Checkbox value={state.wantsEmailUpdates} onValueChange={setCheckboxChecked} />
+            <Text style={styles.checkboxLabel}>
+                I want to receive news, updates and offers from Offlinery.
+            </Text>
+        </View>
+    </OPageContainer>
 };
 
 const styles = StyleSheet.create({

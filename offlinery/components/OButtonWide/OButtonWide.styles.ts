@@ -7,6 +7,15 @@ const baseButtonStyle = {
     height: 65,
     borderRadius: 100,
     overflow: "hidden",
+    // Add shadow properties
+    shadowColor: "#000",
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5, // for Android
 };
 
 const baseLabelStyle = {

@@ -29,6 +29,8 @@ import BookSafetyCall from "./screens/onboarding/BookSafetyCall";
 import {UserProvider} from "./context/UserContext";
 import FirstName from "./screens/onboarding/FirstName";
 import Birthday from "./screens/onboarding/Birthday";
+import GenderChoice from "./screens/onboarding/GenderChoice";
+import GenderLookingFor from "./screens/onboarding/GenderLookingFor";
 
 const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: ""}
 
@@ -82,6 +84,16 @@ export default function App() {
                             <Stack.Screen
                                 name={ROUTES.Onboarding.BirthDay}
                                 component={Birthday}
+                                options={DEFAULT_SCREEN_PROPS}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.Onboarding.GenderChoice}
+                                component={GenderChoice}
+                                options={DEFAULT_SCREEN_PROPS}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.Onboarding.GenderLookingFor}
+                                component={GenderLookingFor}
                                 options={DEFAULT_SCREEN_PROPS}
                             />
                             <Stack.Screen
