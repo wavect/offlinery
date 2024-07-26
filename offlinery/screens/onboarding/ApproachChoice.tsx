@@ -1,15 +1,16 @@
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
-import { Subtitle, Title } from "../../GlobalStyles";
+import {Color, Subtitle, Title} from "../../GlobalStyles";
+import {ROUTES} from "../routes";
 
-const ApproachChoice = () => {
+const ApproachChoice = ({navigation}) => {
     return (
         <View style={styles.container}>
-            <Text style={[Title, styles.title]}>I want to</Text>
+            <Text style={Title}>I want to</Text>
             <View style={styles.content}>
                 <View style={styles.optionContainer}>
-                    <OButtonWide text="Approach" filled={true} variant="dark" />
+                    <OButtonWide text="Approach" filled={true} variant="dark" onPress={() => navigation.navigate(ROUTES.Onboarding.SafetyCheck)} />
                     <Text style={[Subtitle, styles.subtitle]}>
                         Approach people you are interested in. Meet them in-real-life where they are.
                     </Text>
@@ -23,7 +24,7 @@ const ApproachChoice = () => {
                 </View>
 
                 <View style={styles.optionContainer}>
-                    <OButtonWide text="Both" filled={false} variant="dark" />
+                    <OButtonWide text="Both" filled={false} variant="dark" onPress={() => navigation.navigate(ROUTES.Onboarding.SafetyCheck)} />
                     <Text style={[Subtitle, styles.subtitle]}>
                         Want to approach and be approached by people you like?
                     </Text>
@@ -39,12 +40,8 @@ const ApproachChoice = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Color.white,
         padding: 18,
-    },
-    title: {
-        marginBottom: 20,
-        paddingLeft: 10,
     },
     content: {
         flex: 1,
@@ -63,7 +60,7 @@ const styles = StyleSheet.create({
     },
     footnote: {
         textAlign: 'center',
-        color: '#A0A0A0', // Light gray color
+        color: Color.lightGray,
         fontSize: 14,
         marginTop: 20,
     },

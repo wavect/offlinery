@@ -24,6 +24,9 @@ import {
 } from '@expo-google-fonts/montserrat';
 import Email from "./screens/onboarding/Email";
 import ApproachChoice from "./screens/onboarding/ApproachChoice";
+import SafetyCheck from "./screens/onboarding/SafetyCheck";
+
+const DEFAULT_SCREEN_PROPS = { headerShown: true, headerShadowVisible: false, headerTitle: ""}
 
 export default function App() {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(false);
@@ -64,12 +67,17 @@ export default function App() {
                 <Stack.Screen
                     name={ROUTES.Onboarding.Email}
                     component={Email}
-                    options={{ headerShown: true, headerShadowVisible: false, headerTitle: ""}}
+                    options={DEFAULT_SCREEN_PROPS}
                 />
                 <Stack.Screen
                     name={ROUTES.Onboarding.ApproachChoice}
                     component={ApproachChoice}
-                    options={{ headerShown: true, headerShadowVisible: false, headerTitle: ""}}
+                    options={DEFAULT_SCREEN_PROPS}
+                />
+                <Stack.Screen
+                    name={ROUTES.Onboarding.SafetyCheck}
+                    component={SafetyCheck}
+                    options={DEFAULT_SCREEN_PROPS}
                 />
               </Stack.Navigator>
           ) : (

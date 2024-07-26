@@ -4,5 +4,6 @@ export const ROUTES = {
     Onboarding: {
         Email: 'Onboarding_Email',
         ApproachChoice: 'Onboarding_ApproachChoice',
+        SafetyCheck: 'Onboarding_SafetyCheck',
     },
 }
