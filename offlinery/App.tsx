@@ -27,6 +27,8 @@ import ApproachChoice from "./screens/onboarding/ApproachChoice";
 import SafetyCheck from "./screens/onboarding/SafetyCheck";
 import BookSafetyCall from "./screens/onboarding/BookSafetyCall";
 import {UserProvider} from "./context/UserContext";
+import FirstName from "./screens/onboarding/FirstName";
+import Birthday from "./screens/onboarding/Birthday";
 
 const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: ""}
 
@@ -70,6 +72,16 @@ export default function App() {
                             <Stack.Screen
                                 name={ROUTES.Onboarding.Email}
                                 component={Email}
+                                options={DEFAULT_SCREEN_PROPS}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.Onboarding.FirstName}
+                                component={FirstName}
+                                options={DEFAULT_SCREEN_PROPS}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.Onboarding.BirthDay}
+                                component={Birthday}
                                 options={DEFAULT_SCREEN_PROPS}
                             />
                             <Stack.Screen

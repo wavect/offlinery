@@ -32,7 +32,9 @@ const BookSafetyCall = ({navigation}) => {
                 }} utm={{
                     utmSource: 'MobileApp'
                 }} prefill={{
-                    email: state.email
+                    email: state.email,
+                    firstName: state.firstName,
+                    name: state.firstName
                 }} />
 
             </View>

@@ -1,52 +1,39 @@
 import * as React from "react";
+import {useState} from "react";
 import {StyleSheet, Text, TextInput, View} from "react-native";
 import Checkbox from 'expo-checkbox';
 import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {Subtitle, Title} from "../../GlobalStyles";
 import {ROUTES} from "../routes";
 import {EACTION_USER, useUserContext} from "../../context/UserContext";
+import RNDateTimePicker, {DateTimePickerEvent} from "@react-native-community/datetimepicker";
 
-const Email = ({navigation}) => {
+const Birthday = ({navigation}) => {
     const { state, dispatch } = useUserContext()
 
-    const setEmail = (email: string) => {
-        dispatch({ type: EACTION_USER.ADD_EMAIL, payload: email})
+    const setBirthDay = (event: DateTimePickerEvent, date?: Date) => {
+        dispatch({ type: EACTION_USER.ADD_BIRTHDAY, payload: date || new Date(0)})
     }
-    const setCheckboxChecked = (wantsEmailUpdates: boolean) => {
-        dispatch({ type: EACTION_USER.SET_EMAIL_UPDATES, payload: wantsEmailUpdates })
+    const isValidDate = () => {
+        return true // todo, maybe just length check to avoid issues !isNaN(Date.parse(state.birthDay))
     }
-
-    const isInvalidEmail = () => !state.email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
 
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                <Text style={Title}>What's your email?</Text>
+                <Text style={Title}>My birthday is</Text>
                 <Text style={Subtitle}>
-                    Don't lose access to your account, verify your email.
+                    Your age will be public.
                 </Text>
 
                 <View style={styles.inputField}>
-                    <TextInput
-                        style={styles.input}
-                        value={state.email}
-                        onChangeText={setEmail}
-                        placeholder="Enter email"
-                        placeholderTextColor="#999"
-                    />
-                </View>
-
-                <View style={styles.checkboxField}>
-                    <Checkbox value={state.wantsEmailUpdates} onValueChange={setCheckboxChecked} />
-                    <Text style={styles.checkboxLabel}>
-                        I want to receive news, updates and offers from Offlinery.
-                    </Text>
+                    <RNDateTimePicker display="default" mode="date" onChange={setBirthDay} value={state.birthDay} />
                 </View>
             </View>
 
             <View style={styles.buttonContainer}>
-                <OButtonWide text="Continue" filled={true} disabled={isInvalidEmail()} variant="dark"
-                             onPress={() => navigation.navigate(ROUTES.Onboarding.FirstName)}/>
+                <OButtonWide text="Continue" filled={true} disabled={isValidDate()} variant="dark"
+                    onPress={() => navigation.navigate(ROUTES.Onboarding.ApproachChoice)}/>
             </View>
         </View>
     );
@@ -86,4 +73,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Email;
+export default Birthday;
