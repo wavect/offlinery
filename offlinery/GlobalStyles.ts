@@ -13,7 +13,9 @@ export const FontSize = {
 /* Colors */
 export const Color = {
     white: "#fff",
+    primary: '#36797d',
     gray: "#757575",
+    lightGray: '#a9a9a9',
     stateLayersSurfaceDimOpacity08: "rgba(222, 216, 225, 0.08)",
     schemesPrimary: "#65558f",
 };

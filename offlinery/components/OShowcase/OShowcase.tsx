@@ -8,9 +8,6 @@ interface IOShowcaseProps {
 
 export const OShowcase = (props: IOShowcaseProps) => {
     return <>
-        <Text style={[oShowcaseStyles.subtitle, oShowcaseStyles.offlineryFlexBox]}>
-            {props.subtitle}
-        </Text>
         <View style={oShowcaseStyles.headlineContainer}>
             <Image
                 style={[oShowcaseStyles.icon, oShowcaseStyles.headlinePosition]}
@@ -21,5 +18,8 @@ export const OShowcase = (props: IOShowcaseProps) => {
                 offlinery
             </Text>
         </View>
+        <Text style={[oShowcaseStyles.subtitle, oShowcaseStyles.offlineryFlexBox]}>
+            {props.subtitle}
+        </Text>
     </>
 }

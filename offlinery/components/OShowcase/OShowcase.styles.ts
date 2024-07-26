@@ -1,6 +1,12 @@
-import {Color, FontFamily} from "../../GlobalStyles";
+import { Color, FontFamily } from "../../GlobalStyles";
 
 export default {
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '20px',
+    },
     offlineryFlexBox: {
         lineHeight: 52,
         display: "flex",
@@ -9,45 +15,35 @@ export default {
         justifyContent: "center",
         alignItems: "center",
     },
-    headlinePosition: {
-        top: 0,
-        position: "absolute",
+    headlineContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     icon: {
-        left: 0,
         width: 53,
         height: 44,
     },
-    subtitle: {
-        top: 411,
-        left: 18,
-        fontSize: 22,
-        lineHeight: 44,
-        fontWeight: "500",
-        fontFamily: FontFamily.montserratLight,
-        width: 390,
-        height: 61,
-        position: "absolute",
-    },
-    headlineContainer: {
-        top: 367,
-        left: 78,
-        width: 269,
-        height: 54,
-        position: "absolute",
-    },
     headlineText: {
-        left: 53,
         fontSize: 48,
         lineHeight: 52,
         fontWeight: "600",
         fontFamily: FontFamily.montserratRegular,
         width: 216,
-        height: 54,
+        display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        display: "flex",
         textAlign: "center",
         color: Color.white,
-    }
+    },
+    subtitle: {
+        fontSize: 22,
+        lineHeight: 44,
+        fontWeight: "500",
+        fontFamily: FontFamily.montserratLight,
+        width: 390,
+        textAlign: 'center',
+        marginBottom: 70,
+    },
 }

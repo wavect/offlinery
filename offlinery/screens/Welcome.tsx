@@ -30,8 +30,8 @@ const Welcome = ({navigation}) => {
                 </Text>
 
                 <OButtonWide filled={true} text="Create Account" style={{marginBottom: 14}}
-                             onPress={() => navigation.navigate(ROUTES.Onboarding.Email)}/>
-                <OButtonWide filled={false} text="Sign in" style={{marginBottom: 90}}/>
+                             onPress={() => navigation.navigate(ROUTES.Onboarding.Email)} variant="light"/>
+                <OButtonWide filled={false} text="Sign in" style={{marginBottom: 90}} variant="light"/>
 
                 <Text style={[styles.troubleSigningIn, styles.troubleSigningInFlexBox]}>
                     Trouble signing in?
