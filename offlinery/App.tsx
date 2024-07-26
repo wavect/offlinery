@@ -25,6 +25,7 @@ import {
 import Email from "./screens/onboarding/Email";
 import ApproachChoice from "./screens/onboarding/ApproachChoice";
 import SafetyCheck from "./screens/onboarding/SafetyCheck";
+import BookSafetyCall from "./screens/onboarding/BookSafetyCall";
 
 const DEFAULT_SCREEN_PROPS = { headerShown: true, headerShadowVisible: false, headerTitle: ""}
 
@@ -77,6 +78,11 @@ export default function App() {
                 <Stack.Screen
                     name={ROUTES.Onboarding.SafetyCheck}
                     component={SafetyCheck}
+                    options={DEFAULT_SCREEN_PROPS}
+                />
+                <Stack.Screen
+                    name={ROUTES.Onboarding.BookSafetyCall}
+                    component={BookSafetyCall}
                     options={DEFAULT_SCREEN_PROPS}
                 />
               </Stack.Navigator>

@@ -2,8 +2,9 @@ import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
 import { Subtitle, Title } from "../../GlobalStyles";
+import {ROUTES} from "../routes";
 
-const SafetyCheck = () => {
+const SafetyCheck = ({navigation}) => {
     return (
         <View style={styles.container}>
             <Text style={[Title, styles.title]}>Safety Check</Text>
@@ -11,7 +12,7 @@ const SafetyCheck = () => {
                 This will only work if everyone has a great experience and feels safe at all times.
             </Text>
             <View style={styles.content}>
-                <OButtonWide text="Book a 15 Minute call" filled={true} variant="dark"/>
+                <OButtonWide text="Book a 15 Minute call" filled={true} variant="dark" onPress={() => navigation.navigate(ROUTES.Onboarding.BookSafetyCall)}/>
                 <Text style={[Subtitle, styles.subtitle]}>
                     This will be a Video call. Making sure you have good intentions using this app.
                 </Text>
