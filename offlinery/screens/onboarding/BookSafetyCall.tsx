@@ -4,9 +4,11 @@ import { useState } from "react";
 import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
 import {Color, Subtitle, Title} from "../../GlobalStyles";
 import {InlineWidget, useCalendlyEventListener} from "react-calendly";
+import {useUserContext} from "../../context/UserContext";
 
 const BookSafetyCall = ({navigation}) => {
     const [hasBookedCall, setCallBooked] = useState(false)
+    const { state } = useUserContext();
 
     useCalendlyEventListener({
         onEventScheduled: (e) => setCallBooked(true),
@@ -29,6 +31,8 @@ const BookSafetyCall = ({navigation}) => {
                     primaryColor: Color.primary,
                 }} utm={{
                     utmSource: 'MobileApp'
+                }} prefill={{
+                    email: state.email
                 }} />
 
             </View>

@@ -1,16 +1,21 @@
 import * as React from "react";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import {useState} from "react";
+import {StyleSheet, Text, TextInput, View} from "react-native";
 import Checkbox from 'expo-checkbox';
-import { useState } from "react";
-import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
+import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {Subtitle, Title} from "../../GlobalStyles";
 import {ROUTES} from "../routes";
+import {EACTION_USER, useUserContext} from "../../context/UserContext";
 
 const Email = ({navigation}) => {
     const [isCheckboxChecked, setCheckboxChecked] = useState(false)
-    const [email, setEmail] = useState("")
+    const { state, dispatch } = useUserContext()
 
-    const isInvalidEmail = () => !email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+    const setEmail = (email: string) => {
+        dispatch({ type: EACTION_USER.ADD_EMAIL, payload: email})
+    }
+
+    const isInvalidEmail = () => !state.email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
 
     return (
         <View style={styles.container}>
@@ -23,7 +28,7 @@ const Email = ({navigation}) => {
                 <View style={styles.inputField}>
                     <TextInput
                         style={styles.input}
-                        value={email}
+                        value={state.email}
                         onChangeText={setEmail}
                         placeholder="Enter email"
                         placeholderTextColor="#999"
