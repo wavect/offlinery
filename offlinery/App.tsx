@@ -32,6 +32,8 @@ import Birthday from "./screens/onboarding/Birthday";
 import GenderChoice from "./screens/onboarding/GenderChoice";
 import GenderLookingFor from "./screens/onboarding/GenderLookingFor";
 import HouseRules from "./screens/HouseRules";
+import AddPhotos from "./screens/onboarding/AddPhotos";
+import {Color} from "./GlobalStyles";
 
 const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: ""}
 
@@ -69,13 +71,13 @@ export default function App() {
                         >
                             <Stack.Screen
                                 name={ROUTES.Welcome}
-                                component={HouseRules}
+                                component={Welcome}
                                 options={{headerShown: false}}
                             />
                             <Stack.Screen
                                 name={ROUTES.HouseRules}
                                 component={HouseRules}
-                                options={DEFAULT_SCREEN_PROPS}
+                                options={{...DEFAULT_SCREEN_PROPS, headerTransparent: true, headerTintColor: Color.white}}
                             />
                             <Stack.Screen
                                 name={ROUTES.Onboarding.Email}
@@ -115,6 +117,11 @@ export default function App() {
                             <Stack.Screen
                                 name={ROUTES.Onboarding.BookSafetyCall}
                                 component={BookSafetyCall}
+                                options={DEFAULT_SCREEN_PROPS}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.Onboarding.AddPhotos}
+                                component={AddPhotos}
                                 options={DEFAULT_SCREEN_PROPS}
                             />
                         </Stack.Navigator>

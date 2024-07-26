@@ -58,6 +58,14 @@ export default {
         borderColor: Color.white,
     },
     btnLabel: baseLabelStyle,
+    btnDisabledLabelDark: {
+        ...baseLabelStyle,
+        color: Color.brightGray,
+    },
+    btnDisabledLabelLight: {
+        ...baseLabelStyle,
+        color: Color.lightGray,
+    },
     btnFilledLabelDark: {
         ...baseLabelStyle,
         color: Color.white,

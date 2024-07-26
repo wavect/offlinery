@@ -4,6 +4,7 @@ import oButtonWideStyles from './OButtonWide.styles'
 import {GestureResponderEvent} from "react-native/Libraries/Types/CoreEventTypes";
 import {StyleProp} from "react-native/Libraries/StyleSheet/StyleSheet";
 import {ViewStyle} from "react-native/Libraries/StyleSheet/StyleSheetTypes";
+import {Color} from "../../GlobalStyles";
 
 type StyleVariant = "dark" | "light"
 
@@ -42,7 +43,9 @@ const getStyle = (disabled: boolean, el: "btn" | "lbl", filled: boolean, variant
         }
     } else {
         if (filled) {
-            if (variant === "dark") {
+            if (disabled) {
+                return oButtonWideStyles.btnDisabledLabelDark
+            } else if (variant === "dark") {
                 // lbl, filled, dark
                 return oButtonWideStyles.btnFilledLabelDark
             } else {
@@ -50,7 +53,9 @@ const getStyle = (disabled: boolean, el: "btn" | "lbl", filled: boolean, variant
                 return oButtonWideStyles.btnFilledLabelLight
             }
         } else {
-            if (variant === "dark") {
+            if (disabled) {
+                return oButtonWideStyles.btnDisabledLabelLight
+            } else if (variant === "dark") {
                 // lbl, outlined, dark
                 return oButtonWideStyles.btnOutlineLabelDark
             } else {

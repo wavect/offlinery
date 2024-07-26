@@ -11,7 +11,7 @@ const GenderLookingFor = ({navigation}) => {
 
     const setGender = (gender: Gender) => {
         dispatch({ type: EACTION_USER.ADD_GENDER_DESIRE, payload: gender})
-        navigation.navigate(ROUTES.Onboarding.ApproachChoice)
+        navigation.navigate(ROUTES.Onboarding.AddPhotos)
     }
 
     return <OPageContainer title="I look for">
