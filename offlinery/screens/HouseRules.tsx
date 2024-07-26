@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Text, StyleSheet, View, Image, ScrollView, ImageSourcePropType} from "react-native";
-import { Color, FontSize, FontFamily, Padding, BorderRadius } from "../GlobalStyles";
+import { Color, FontSize, FontFamily, BorderRadius } from "../GlobalStyles";
 import { OShowcase } from "../components/OShowcase/OShowcase";
 import { OLinearBackground } from "../components/OLinearBackground/OLinearBackground";
 import {OButtonWide} from "../components/OButtonWide/OButtonWide";
