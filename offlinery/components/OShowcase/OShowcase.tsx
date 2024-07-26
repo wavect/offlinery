@@ -10,11 +10,11 @@ export const OShowcase = (props: IOShowcaseProps) => {
     return <>
         <View style={oShowcaseStyles.headlineContainer}>
             <Image
-                style={[oShowcaseStyles.icon, oShowcaseStyles.headlinePosition]}
+                style={oShowcaseStyles.icon}
                 resizeMode="cover"
                 source={require("../../assets/img/no-wifi.svg")}
             />
-            <Text style={[oShowcaseStyles.headlineText, oShowcaseStyles.headlinePosition]}>
+            <Text style={oShowcaseStyles.headlineText}>
                 offlinery
             </Text>
         </View>

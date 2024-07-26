@@ -1,6 +1,7 @@
 
 export const ROUTES = {
     Welcome: 'Welcome',
+    HouseRules: 'HouseRules',
     Onboarding: {
         Email: 'Onboarding_Email',
         FirstName: 'Onboarding_Firstname',

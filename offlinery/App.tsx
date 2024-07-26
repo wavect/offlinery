@@ -31,6 +31,7 @@ import FirstName from "./screens/onboarding/FirstName";
 import Birthday from "./screens/onboarding/Birthday";
 import GenderChoice from "./screens/onboarding/GenderChoice";
 import GenderLookingFor from "./screens/onboarding/GenderLookingFor";
+import HouseRules from "./screens/HouseRules";
 
 const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: ""}
 
@@ -68,8 +69,13 @@ export default function App() {
                         >
                             <Stack.Screen
                                 name={ROUTES.Welcome}
-                                component={Welcome}
+                                component={HouseRules}
                                 options={{headerShown: false}}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.HouseRules}
+                                component={HouseRules}
+                                options={DEFAULT_SCREEN_PROPS}
                             />
                             <Stack.Screen
                                 name={ROUTES.Onboarding.Email}
