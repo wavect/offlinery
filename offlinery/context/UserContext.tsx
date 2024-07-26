@@ -28,7 +28,7 @@ const initialState: IUserData = {
     wantsEmailUpdates: false,
     email: "",
     firstName: "",
-    birthDay: new Date(0),
+    birthDay: new Date(),
 };
 
 const userReducer = (state: IUserData, action: IUserAction): IUserData => {

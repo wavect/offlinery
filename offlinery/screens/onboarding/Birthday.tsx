@@ -10,12 +10,11 @@ import RNDateTimePicker, {DateTimePickerEvent} from "@react-native-community/dat
 
 const Birthday = ({navigation}) => {
     const { state, dispatch } = useUserContext()
+    const [showDatePicker, setShowDatePicker] = useState(false)
 
-    const setBirthDay = (event: DateTimePickerEvent, date?: Date) => {
-        dispatch({ type: EACTION_USER.ADD_BIRTHDAY, payload: date || new Date(0)})
-    }
-    const isValidDate = () => {
-        return true // todo, maybe just length check to avoid issues !isNaN(Date.parse(state.birthDay))
+    const onDatePickerEvent = (event: DateTimePickerEvent, date?: Date) => {
+        setShowDatePicker(!showDatePicker)
+        dispatch({ type: EACTION_USER.ADD_BIRTHDAY, payload: date || new Date()})
     }
 
     return (
@@ -27,12 +26,22 @@ const Birthday = ({navigation}) => {
                 </Text>
 
                 <View style={styles.inputField}>
-                    <RNDateTimePicker display="default" mode="date" onChange={setBirthDay} value={state.birthDay} />
+                    <TextInput
+                        style={styles.input}
+                        value={state.birthDay.toLocaleDateString()}
+                        onPress={() => setShowDatePicker(true)}
+                        placeholder="01.01.2000"
+                        placeholderTextColor="#999"
+                    />
+                    {showDatePicker && <RNDateTimePicker display="inline" mode="date" onChange={onDatePickerEvent}
+                                      minimumDate={new Date(1900, 1, 1)}
+                                      maximumDate={new Date(2010,1,1)}
+                                      value={state.birthDay} />}
                 </View>
             </View>
 
             <View style={styles.buttonContainer}>
-                <OButtonWide text="Continue" filled={true} disabled={isValidDate()} variant="dark"
+                <OButtonWide text="Continue" filled={true} variant="dark"
                     onPress={() => navigation.navigate(ROUTES.Onboarding.ApproachChoice)}/>
             </View>
         </View>

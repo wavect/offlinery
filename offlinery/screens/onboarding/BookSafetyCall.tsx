@@ -14,9 +14,6 @@ const BookSafetyCall = ({navigation}) => {
         onEventScheduled: (e) => setCallBooked(true),
     });
 
-    /*prefill email + name, hide details etc
-    */
-
     return (
         <View style={styles.container}>
             <View style={styles.content}>
