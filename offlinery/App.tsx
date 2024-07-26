@@ -23,6 +23,7 @@ import {
   Montserrat_900Black,
 } from '@expo-google-fonts/montserrat';
 import Email from "./screens/onboarding/Email";
+import ApproachChoice from "./screens/onboarding/ApproachChoice";
 
 export default function App() {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(false);
@@ -63,6 +64,11 @@ export default function App() {
                 <Stack.Screen
                     name={ROUTES.Onboarding.Email}
                     component={Email}
+                    options={{ headerShown: true, headerShadowVisible: false, headerTitle: ""}}
+                />
+                <Stack.Screen
+                    name={ROUTES.Onboarding.ApproachChoice}
+                    component={ApproachChoice}
                     options={{ headerShown: true, headerShadowVisible: false, headerTitle: ""}}
                 />
               </Stack.Navigator>

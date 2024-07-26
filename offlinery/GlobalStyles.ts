@@ -20,6 +20,18 @@ export const Color = {
     schemesPrimary: "#65558f",
 };
 
+export const Title = {
+    fontSize: 40,
+        fontWeight: '600',
+        color: '#000',
+        marginBottom: 8,
+}
+export const Subtitle = {
+    fontSize: 16,
+        color: '#aaa',
+        marginBottom: 24,
+}
+
 export const Padding = {
     p_5xl: 24,
     p_3xs: 10,

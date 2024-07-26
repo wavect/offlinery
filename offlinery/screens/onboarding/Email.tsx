@@ -3,8 +3,10 @@ import { StyleSheet, Text, View, TextInput } from "react-native";
 import Checkbox from 'expo-checkbox';
 import { useState } from "react";
 import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
+import {Subtitle, Title} from "../../GlobalStyles";
+import {ROUTES} from "../routes";
 
-const Email = () => {
+const Email = ({navigation}) => {
     const [isCheckboxChecked, setCheckboxChecked] = useState(false)
     const [email, setEmail] = useState("")
 
@@ -13,8 +15,8 @@ const Email = () => {
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                <Text style={styles.title}>What's your email?</Text>
-                <Text style={styles.subtitle}>
+                <Text style={Title}>What's your email?</Text>
+                <Text style={Subtitle}>
                     Don't lose access to your account, verify your email.
                 </Text>
 
@@ -37,7 +39,8 @@ const Email = () => {
             </View>
 
             <View style={styles.buttonContainer}>
-                <OButtonWide text="Continue" filled={true} disabled={isInvalidEmail()} variant="dark"/>
+                <OButtonWide text="Continue" filled={true} disabled={isInvalidEmail()} variant="dark"
+                             onPress={() => navigation.navigate(ROUTES.Onboarding.ApproachChoice)}/>
             </View>
         </View>
     );
@@ -51,17 +54,6 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-    },
-    title: {
-        fontSize: 40,
-        fontWeight: '600',
-        color: '#000',
-        marginBottom: 8,
-    },
-    subtitle: {
-        fontSize: 16,
-        color: '#aaa',
-        marginBottom: 24,
     },
     inputField: {
         marginBottom: 24,
