@@ -6,6 +6,7 @@ import {ROUTES} from "../routes";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import {EACTION_USER, EApproachChoice, useUserContext} from "../../context/UserContext";
 
+
 const ApproachChoice = ({navigation}) => {
     const {dispatch} = useUserContext()
 

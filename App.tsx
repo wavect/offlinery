@@ -36,6 +36,7 @@ import AddPhotos from "./screens/onboarding/AddPhotos";
 import {Color} from "./GlobalStyles";
 import WaitingForVerification from "./screens/onboarding/WaitingForVerification";
 import HeatMap from "./screens/main/HeatMap";
+import ILiveHere from "./screens/onboarding/ILiveHere";
 
 const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: ""}
 const NO_HEADER = {headerShown: false}
@@ -74,7 +75,7 @@ export default function App() {
                         >
                             <Stack.Screen
                                 name={ROUTES.Welcome}
-                                component={WaitingForVerification}
+                                component={ILiveHere}
                                 options={NO_HEADER}
                             />
                             <Stack.Screen
@@ -125,6 +126,11 @@ export default function App() {
                             <Stack.Screen
                                 name={ROUTES.Onboarding.AddPhotos}
                                 component={AddPhotos}
+                                options={DEFAULT_SCREEN_PROPS}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.Onboarding.ILiveHere}
+                                component={ILiveHere}
                                 options={DEFAULT_SCREEN_PROPS}
                             />
                             <Stack.Screen

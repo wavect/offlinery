@@ -5,7 +5,7 @@ import styles from './OPageContainer.styles'
 
 interface IOPageContainerProps {
     title: string
-    subtitle?: string
+    subtitle?: string|React.ReactNode
     children: React.ReactNode
     bottomContainerChildren?: React.ReactNode
 }

@@ -1,5 +1,5 @@
 
-export const ROUTES = {
+export const ROUTES: any = {
     Welcome: 'Welcome',
     HouseRules: 'HouseRules',
     Main: {
@@ -16,5 +16,6 @@ export const ROUTES = {
         BookSafetyCall: 'Onboarding_BookSafetyCall',
         AddPhotos: 'Onboarding_AddPhotos',
         WaitingVerification: 'Onboarding_WaitingVerification',
+        ILiveHere: 'Onboarding_ILiveHere',
     },
 }
