@@ -14,7 +14,7 @@ export const ROUTES: any = {
         BookSafetyCall: 'Onboarding_BookSafetyCall',
         AddPhotos: 'Onboarding_AddPhotos',
         WaitingVerification: 'Onboarding_WaitingVerification',
-        ILiveHere: 'Onboarding_ILiveHere',
+        // user should just blacklist their home for now if they want to, ILiveHere: 'Onboarding_ILiveHere',
         DontApproachMeHere: 'Onboarding_DontApproachMeHere',
         ApproachMeBetween: 'Onboarding_ApproachMeBetween',
         BioLetThemKnow: 'Onboarding_BioLetThemKnow',

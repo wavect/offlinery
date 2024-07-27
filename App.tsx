@@ -35,8 +35,6 @@ import HouseRules from "./screens/HouseRules";
 import AddPhotos from "./screens/onboarding/AddPhotos";
 import {Color} from "./GlobalStyles";
 import WaitingForVerification from "./screens/onboarding/WaitingForVerification";
-import HeatMap from "./screens/main/HeatMap";
-import ILiveHere from "./screens/onboarding/ILiveHere";
 import DontApproachMeHere from "./screens/onboarding/DontApproachMeHere";
 import ApproachMeBetween from "./screens/onboarding/ApproachMeBetween";
 import BioLetThemKnow from "./screens/onboarding/BioLetThemKnow";
@@ -79,7 +77,7 @@ export default function App() {
                         >
                             <Stack.Screen
                                 name={ROUTES.Welcome}
-                                component={BioLetThemKnow}
+                                component={MainScreenTabs}
                                 options={NO_HEADER}
                             />
                             <Stack.Screen
@@ -132,11 +130,12 @@ export default function App() {
                                 component={AddPhotos}
                                 options={DEFAULT_SCREEN_PROPS}
                             />
+                            {/* user should just blacklist their home themselves for now (otherwise we need to do geofencing)
                             <Stack.Screen
                                 name={ROUTES.Onboarding.ILiveHere}
-                                component={ILiveHere}
+                                component={_ILiveHere}
                                 options={DEFAULT_SCREEN_PROPS}
-                            />
+                            />*/}
                             <Stack.Screen
                                 name={ROUTES.Onboarding.DontApproachMeHere}
                                 component={DontApproachMeHere}

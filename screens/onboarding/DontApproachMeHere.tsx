@@ -1,24 +1,62 @@
 import * as React from "react";
-import {StyleSheet, Text, View, Platform, Pressable} from "react-native";
-import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
+import {useEffect, useState} from "react";
+import {Platform, Pressable, StyleSheet, Text, View} from "react-native";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import MapView, {
-    LatLng,
-    MapPressEvent,
-    PROVIDER_DEFAULT,
-    PROVIDER_GOOGLE,
     Circle,
-    Marker
+    MapPressEvent,
+    Marker,
+    MarkerDragEvent,
+    PROVIDER_DEFAULT,
+    PROVIDER_GOOGLE
 } from "react-native-maps";
 import {BorderRadius, Color, Subtitle} from "../../GlobalStyles";
 import Slider from '@react-native-community/slider';
 import {EACTION_USER, MapRegion, useUserContext} from "../../context/UserContext";
 import {MaterialIcons} from "@expo/vector-icons";
-import {ROUTES} from "../routes";
+import * as Location from 'expo-location';
+import {LocationAccuracy} from 'expo-location';
 
 const DontApproachMeHere = ({navigation}) => {
     const {state, dispatch} = useUserContext()
     const [activeRegionIndex, setActiveRegionIndex] = React.useState<number | null>(null);
+    const [location, setLocation] = useState<Location.LocationObject|null>(null);
+    const mapRef = React.useRef(null);
+    const [mapRegion, setMapRegion] = useState({
+        latitude: 47.257832302,
+        longitude: 11.383665132,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+    });
+
+    // TODO: Also add home base here (or maybe just remove that screen altogether?)
+
+    // TODO: Request background permission when setting user live in separate component
+    // TODO: Maybe make map to a separate component
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                alert('Permission to access location was denied');
+                return;
+            }
+
+            const location = await Location.getCurrentPositionAsync({accuracy: LocationAccuracy.BestForNavigation});
+            setLocation(location);
+        })();
+    }, []);
+
+    useEffect(() => {
+        if (location) {
+            setMapRegion({
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            });
+        }
+    }, [location]);
+
 
     const setBlacklistedRegions = (blacklistedRegions: MapRegion[]) => {
         dispatch({type: EACTION_USER.SET_BLACKLISTED_REGIONS, payload: blacklistedRegions})
@@ -51,19 +89,21 @@ const DontApproachMeHere = ({navigation}) => {
         setActiveRegionIndex(null);
     };
 
+    const handleRegionDrag = (event: MarkerDragEvent, index: number) => {
+        state.blacklistedRegions[index].center = event.nativeEvent.coordinate
+        setBlacklistedRegions(state.blacklistedRegions)
+    }
+
     return (
-        <OPageContainer
-            title="Don't approach me here"
-            bottomContainerChildren={<OButtonWide text="Continue" filled={true}
-                                                  variant="dark" onPress={() => navigation.navigate(ROUTES.Onboarding.ApproachMeBetween)} />}
-            subtitle="What are spots you don't want to be approached at? Your Gym, workplace?"
-        >
+        <OPageContainer subtitle="Being near these hotspots increases your odds of meeting your soulmate.">
             <>
                 <MapView
+                    ref={mapRef}
                     style={styles.map}
+                    region={mapRegion}
                     initialRegion={{
-                        latitude: 47.257832302,
-                        longitude: 11.383665132,
+                        latitude: location?.coords?.latitude ?? 47.257832302,
+                        longitude: location?.coords?.longitude ?? 11.383665132,
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     }}
@@ -80,11 +120,22 @@ const DontApproachMeHere = ({navigation}) => {
                             />
                             <Marker
                                 coordinate={region.center}
+                                title="You're undercover"
+                                description="Nobody will see you here."
+                                draggable={true}
+                                onDrag={(ev) => handleRegionDrag(ev, index)}
                                 onPress={() => handleRegionPress(index)}
-                                opacity={0} // Make the marker invisible
+                                tracksViewChanges={false}
                             />
                         </React.Fragment>
                     ))}
+                    {location && <Marker
+                        title="My Location"
+                        description="You are here"
+                        pinColor="blue"
+                        coordinate={location.coords}
+                        tracksViewChanges={false}
+                    />}
 
                 </MapView>
                 {activeRegionIndex !== null && (
@@ -129,7 +180,7 @@ const styles = StyleSheet.create({
     },
     removeButtonContainer: {
         position: 'absolute',
-        top: 175,
+        top: 70,
         right: 10,
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
         borderRadius: 20,

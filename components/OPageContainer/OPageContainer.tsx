@@ -4,7 +4,7 @@ import * as React from "react";
 import styles from './OPageContainer.styles'
 
 interface IOPageContainerProps {
-    title: string
+    title?: string
     subtitle?: string|React.ReactNode
     children: React.ReactNode
     bottomContainerChildren?: React.ReactNode
@@ -13,7 +13,7 @@ interface IOPageContainerProps {
 export const OPageContainer = (props: IOPageContainerProps) => {
     return  <View style={styles.container}>
         <View style={styles.content}>
-            <Text style={Title}>{props.title}</Text>
+            {props.title && <Text style={Title}>{props.title}</Text>}
             {props.subtitle && <Text style={Subtitle}>
                 {props.subtitle}
             </Text>}

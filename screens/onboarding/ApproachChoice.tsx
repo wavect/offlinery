@@ -20,7 +20,7 @@ const ApproachChoice = ({navigation}) => {
                 break;
             case EApproachChoice.BE_APPROACHED:
                 dispatch({type: EACTION_USER.SET_VERIFICATION_STATUS, payload: EVerificationStatus.NOT_NEEDED})
-                // TODO: separate flow
+                navigation.navigate(ROUTES.Onboarding.DontApproachMeHere) // not doing IliveHere for now, to avoid geoFencing their address
                 break;
             case EApproachChoice.BOTH:
                 // TODO: Not yet supported, since both flows need to be completed

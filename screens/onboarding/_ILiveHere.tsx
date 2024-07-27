@@ -9,7 +9,7 @@ import MapView, {Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE} from "react-native-m
 import {BorderRadius} from "../../GlobalStyles";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
 
-const ILiveHere = ({navigation}) => {
+const _ILiveHere = ({navigation}) => {
     const {state, dispatch} = useUserContext()
 
     const setStreet = (street: string) => {
@@ -75,4 +75,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ILiveHere;
+export default _ILiveHere;
