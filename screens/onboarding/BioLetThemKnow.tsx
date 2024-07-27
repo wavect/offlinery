@@ -26,7 +26,7 @@ const BioLetThemKnow = ({ navigation }) => {
                     text="Done"
                     filled={true}
                     variant="dark"
-                    onPress={() => navigation.navigate(ROUTES.Main.HeatMap)}
+                    onPress={() => navigation.navigate(ROUTES.MainTabView)}
                 />
             }
         >

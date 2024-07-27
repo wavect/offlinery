@@ -1,11 +1,8 @@
-import ApproachMeBetween from "./onboarding/ApproachMeBetween";
-
 export const ROUTES: any = {
     Welcome: 'Welcome',
     HouseRules: 'HouseRules',
-    Main: {
-        HeatMap: 'Main_HeatMap',
-    },
+    /** @dev MainTabView then manages the tab routes */
+    MainTabView: 'Main_TabView',
     Onboarding: {
         Email: 'Onboarding_Email',
         FirstName: 'Onboarding_Firstname',

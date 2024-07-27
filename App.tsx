@@ -40,6 +40,7 @@ import ILiveHere from "./screens/onboarding/ILiveHere";
 import DontApproachMeHere from "./screens/onboarding/DontApproachMeHere";
 import ApproachMeBetween from "./screens/onboarding/ApproachMeBetween";
 import BioLetThemKnow from "./screens/onboarding/BioLetThemKnow";
+import {MainScreenTabs} from "./screens/main/MainScreenTabs";
 
 const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: ""}
 const NO_HEADER = {headerShown: false}
@@ -157,8 +158,8 @@ export default function App() {
                                 options={NO_HEADER}
                             />
                             <Stack.Screen
-                                name={ROUTES.Main.HeatMap}
-                                component={HeatMap}
+                                name={ROUTES.MainTabView}
+                                component={MainScreenTabs}
                                 options={NO_HEADER}
                             />
                         </Stack.Navigator>
