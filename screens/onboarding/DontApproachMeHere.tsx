@@ -14,6 +14,7 @@ import {BorderRadius, Color, Subtitle} from "../../GlobalStyles";
 import Slider from '@react-native-community/slider';
 import {EACTION_USER, MapRegion, useUserContext} from "../../context/UserContext";
 import {MaterialIcons} from "@expo/vector-icons";
+import {ROUTES} from "../routes";
 
 const DontApproachMeHere = ({navigation}) => {
     const {state, dispatch} = useUserContext()
@@ -53,7 +54,8 @@ const DontApproachMeHere = ({navigation}) => {
     return (
         <OPageContainer
             title="Don't approach me here"
-            bottomContainerChildren={<OButtonWide text="Continue" filled={true} variant="dark"/>}
+            bottomContainerChildren={<OButtonWide text="Continue" filled={true}
+                                                  variant="dark" onPress={() => navigation.navigate(ROUTES.Onboarding.ApproachMeBetween)} />}
             subtitle="What are spots you don't want to be approached at? Your Gym, workplace?"
         >
             <>

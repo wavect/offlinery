@@ -9,7 +9,7 @@ import {EACTION_USER, useUserContext} from "../../context/UserContext";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 
 const HeatMap = ({navigation}) => {
-  return <>Create tabs, etc.</>
+  return <Text>Create tabs, etc.</Text>
 };
 
 export default HeatMap;

@@ -1,3 +1,4 @@
+import ApproachMeBetween from "./onboarding/ApproachMeBetween";
 
 export const ROUTES: any = {
     Welcome: 'Welcome',
@@ -18,5 +19,6 @@ export const ROUTES: any = {
         WaitingVerification: 'Onboarding_WaitingVerification',
         ILiveHere: 'Onboarding_ILiveHere',
         DontApproachMeHere: 'Onboarding_DontApproachMeHere',
+        ApproachMeBetween: 'Onboarding_ApproachMeBetween',
     },
 }

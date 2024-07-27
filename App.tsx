@@ -38,6 +38,7 @@ import WaitingForVerification from "./screens/onboarding/WaitingForVerification"
 import HeatMap from "./screens/main/HeatMap";
 import ILiveHere from "./screens/onboarding/ILiveHere";
 import DontApproachMeHere from "./screens/onboarding/DontApproachMeHere";
+import ApproachMeBetween from "./screens/onboarding/ApproachMeBetween";
 
 const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: ""}
 const NO_HEADER = {headerShown: false}
@@ -76,7 +77,7 @@ export default function App() {
                         >
                             <Stack.Screen
                                 name={ROUTES.Welcome}
-                                component={DontApproachMeHere}
+                                component={ApproachMeBetween}
                                 options={NO_HEADER}
                             />
                             <Stack.Screen
@@ -137,6 +138,11 @@ export default function App() {
                             <Stack.Screen
                                 name={ROUTES.Onboarding.DontApproachMeHere}
                                 component={DontApproachMeHere}
+                                options={DEFAULT_SCREEN_PROPS}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.Onboarding.ApproachMeBetween}
+                                component={ApproachMeBetween}
                                 options={DEFAULT_SCREEN_PROPS}
                             />
                             <Stack.Screen

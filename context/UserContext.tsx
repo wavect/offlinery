@@ -2,7 +2,7 @@ import React, {createContext, Dispatch, useContext, useReducer} from 'react';
 import * as ImagePicker from "expo-image-picker";
 import {LatLng} from "react-native-maps";
 
-export type Gender = "woman"|"man"
+export type Gender = "woman" | "man"
 
 export interface IUserData {
     wantsEmailUpdates: boolean
@@ -11,7 +11,7 @@ export interface IUserData {
     birthDay: Date
     gender?: Gender
     genderDesire?: Gender
-    images:  {
+    images: {
         [key in ImageIdx]?: ImagePicker.ImagePickerAsset;
     }
     verificationStatus: EVerificationStatus
@@ -21,6 +21,8 @@ export interface IUserData {
     country: string
     /** @dev Regions the user that wants to be approached marked as blacklisted */
     blacklistedRegions: MapRegion[]
+    approachFromTime: Date
+    approachToTime: Date
 }
 
 export interface MapRegion {
@@ -28,7 +30,8 @@ export interface MapRegion {
     radius: number;
 }
 
-export type ImageIdx = "0"|"1"|"2"|"3"|"4"|"5"
+export type ImageIdx = "0" | "1" | "2" | "3" | "4" | "5"
+
 export interface IImageAction {
     imageIdx: ImageIdx
     image: ImagePicker.ImagePickerAsset
@@ -53,6 +56,8 @@ export enum EACTION_USER {
     SET_POSTAL_CODE = 'SET_POSTAL_CODE',
     SET_COUNTRY = 'SET_COUNTRY',
     SET_BLACKLISTED_REGIONS = 'SET_BLACKLISTED_REGIONS',
+    SET_APPROACH_FROM_TIME = 'SET_APPROACH_FROM_TIME',
+    SET_APPROACH_TO_TIME = 'SET_APPROACH_TO_TIME',
 }
 
 interface IUserContextType {
@@ -72,6 +77,11 @@ export enum EVerificationStatus {
     /** @dev Not needed if not approaching right now (e.g. women) */
     NOT_NEEDED = "not_needed",
 }
+
+export const DEFAULT_FROM_TIME = new Date()
+DEFAULT_FROM_TIME.setHours(9, 0, 0, 0)
+export const DEFAULT_TO_TIME = new Date()
+DEFAULT_TO_TIME.setHours(19, 0, 0, 0)
 
 const initialState: IUserData = {
     wantsEmailUpdates: false,
@@ -94,6 +104,8 @@ const initialState: IUserData = {
     postalCode: "",
     country: "",
     blacklistedRegions: [],
+    approachFromTime: DEFAULT_FROM_TIME,
+    approachToTime: DEFAULT_TO_TIME,
 };
 
 const userReducer = (state: IUserData, action: IUserAction): IUserData => {
@@ -164,6 +176,16 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
                 ...state,
                 blacklistedRegions: action.payload as MapRegion[],
             };
+        case EACTION_USER.SET_APPROACH_FROM_TIME:
+            return {
+                ...state,
+                approachFromTime: action.payload as Date,
+            };
+        case EACTION_USER.SET_APPROACH_TO_TIME:
+            return {
+                ...state,
+                approachToTime: action.payload as Date,
+            };
         default:
             return state;
     }
@@ -171,11 +193,11 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
 
 const UserContext = createContext<IUserContextType | undefined>(undefined);
 
-export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [state, dispatch] = useReducer(userReducer, initialState);
 
     return (
-        <UserContext.Provider value={{ state, dispatch }}>
+        <UserContext.Provider value={{state, dispatch}}>
             {children}
         </UserContext.Provider>
     );
