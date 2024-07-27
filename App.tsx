@@ -71,7 +71,7 @@ export default function App() {
                         >
                             <Stack.Screen
                                 name={ROUTES.Welcome}
-                                component={AddPhotos}
+                                component={Welcome}
                                 options={{headerShown: false}}
                             />
                             <Stack.Screen

@@ -3,19 +3,27 @@ import * as ImagePicker from "expo-image-picker";
 
 export type Gender = "woman"|"man"
 
-interface IUserData {
+export interface IUserData {
     wantsEmailUpdates: boolean
     email: string
     firstName: string
     birthDay: Date
     gender?: Gender
     genderDesire?: Gender
-    images: ImagePicker.ImagePickerAsset[]
+    images:  {
+        [key in ImageIdx]?: ImagePicker.ImagePickerAsset;
+    };
 }
 
-interface IUserAction {
+export type ImageIdx = "0"|"1"|"2"|"3"|"4"|"5"
+export interface IImageAction {
+    imageIdx: ImageIdx
+    image: ImagePicker.ImagePickerAsset
+}
+
+export interface IUserAction {
     type: EACTION_USER;
-    payload: string | Date | boolean | ImagePicker.ImagePickerAsset;
+    payload: string | Date | boolean | IImageAction;
 }
 
 export enum EACTION_USER {
@@ -25,8 +33,7 @@ export enum EACTION_USER {
     ADD_BIRTHDAY = 'ADD_BIRTHDAY',
     ADD_GENDER = 'ADD_GENDER',
     ADD_GENDER_DESIRE = 'ADD_GENDER_DESIRE',
-    ADD_IMAGE = 'ADD_IMAGE',
-    REMOVE_IMAGE = 'REMOVE_IMAGE',
+    SET_IMAGE = 'SET_IMAGE',
 }
 
 interface IUserContextType {
@@ -41,7 +48,14 @@ const initialState: IUserData = {
     birthDay: new Date(),
     gender: undefined,
     genderDesire: undefined,
-    images: [],
+    images: {
+        "0": undefined,
+        "1": undefined,
+        "2": undefined,
+        "3": undefined,
+        "4": undefined,
+        "5": undefined,
+    },
 };
 
 const userReducer = (state: IUserData, action: IUserAction): IUserData => {
@@ -76,15 +90,11 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
                 ...state,
                 genderDesire: action.payload as Gender,
             };
-        case EACTION_USER.ADD_IMAGE:
+        case EACTION_USER.SET_IMAGE:
+            const {imageIdx, image} = action.payload as IImageAction
             return {
                 ...state,
-                images: [...state.images, action.payload as ImagePicker.ImagePickerAsset],
-            };
-        case EACTION_USER.REMOVE_IMAGE:
-            return {
-                ...state,
-                images: [...state.images.filter(i => i.assetId !== (action.payload as ImagePicker.ImagePickerAsset).assetId)],
+                images: {...state.images, [imageIdx]: image},
             };
         default:
             return state;

@@ -21,10 +21,6 @@ export default {
         alignItems: 'center',
         justifyContent: 'center',
     },
-    icon: {
-        width: 53,
-        height: 44,
-    },
     headlineText: {
         fontSize: 48,
         lineHeight: 52,

@@ -18,7 +18,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -31,6 +34,12 @@
           "photosPermission": "The app accesses your photos to let others know about your appearance."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "82312fa2-5baf-4876-a294-ed9ff600a260"
+      }
+    },
+    "owner": "wavect"
   }
 }

@@ -5,11 +5,11 @@ import { OShowcase } from "../components/OShowcase/OShowcase";
 import { OLinearBackground } from "../components/OLinearBackground/OLinearBackground";
 import {OButtonWide} from "../components/OButtonWide/OButtonWide";
 import {useEffect, useState} from "react";
+import {MaterialIcons} from "@expo/vector-icons";
 
 const HouseRules = ({ route, navigation }) => {
     const [countdown, setCountdown] = useState(5);
     const [isBtnDisabled, setIsBtnDisabled] = useState(true);
-    const {nextPage} = route.params;
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -60,7 +60,7 @@ const HouseRules = ({ route, navigation }) => {
 
                 <View style={styles.buttonContainer}>
                     <OButtonWide text={buttonText} filled={true} variant="light"
-                                 disabled={isBtnDisabled} onPress={() => navigation.navigate(nextPage)}/>
+                                 disabled={isBtnDisabled} onPress={() => navigation.navigate(route.params.nextPage)}/>
 
                     <Text style={styles.violatingRules}>
                         Violating these rules blocks you from using this app for at least{" "}
@@ -79,11 +79,7 @@ interface IRuleItemProps {
 
 const RuleItem: React.FC<IRuleItemProps> = ({ title, description }) => (
     <View style={styles.ruleItem}>
-        <Image
-            style={styles.checkIcon}
-            resizeMode="cover"
-            source={require("../assets/img/check.svg") as ImageSourcePropType}
-        />
+        <MaterialIcons name="check" size={24} color={Color.white} style={styles.checkIcon}/>
         <View style={styles.ruleTextContainer}>
             <Text style={styles.ruleTitle}>{title}</Text>
             <Text style={styles.ruleDescription}>{description}</Text>
@@ -105,8 +101,6 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
     checkIcon: {
-        width: 31,
-        height: 31,
         marginRight: 13,
     },
     ruleTextContainer: {
