@@ -12,7 +12,8 @@ export interface IUserData {
     genderDesire?: Gender
     images:  {
         [key in ImageIdx]?: ImagePicker.ImagePickerAsset;
-    };
+    }
+    isVerified: EVerificationStatus
 }
 
 export type ImageIdx = "0"|"1"|"2"|"3"|"4"|"5"
@@ -28,17 +29,25 @@ export interface IUserAction {
 
 export enum EACTION_USER {
     SET_EMAIL_UPDATES = 'SET_EMAIL_UPDATES',
-    ADD_EMAIL = 'ADD_EMAIL',
-    ADD_FIRSTNAME = 'ADD_FIRSTNAME',
-    ADD_BIRTHDAY = 'ADD_BIRTHDAY',
-    ADD_GENDER = 'ADD_GENDER',
-    ADD_GENDER_DESIRE = 'ADD_GENDER_DESIRE',
+    SET_EMAIL = 'SET_EMAIL',
+    SET_FIRSTNAME = 'SET_FIRSTNAME',
+    SET_BIRTHDAY = 'SET_BIRTHDAY',
+    SET_GENDER = 'SET_GENDER',
+    SET_GENDER_DESIRE = 'SET_GENDER_DESIRE',
     SET_IMAGE = 'SET_IMAGE',
+    SET_VERIFICATION_STATUS = 'SET_VERIFICATION_STATUS',
 }
 
 interface IUserContextType {
     state: IUserData;
     dispatch: Dispatch<IUserAction>;
+}
+
+export enum EVerificationStatus {
+    VERIFIED = "verified",
+    PENDING = "pending",
+    /** @dev Not needed if not approaching right now (e.g. women) */
+    NOT_NEEDED = "not_needed",
 }
 
 const initialState: IUserData = {
@@ -56,6 +65,7 @@ const initialState: IUserData = {
         "4": undefined,
         "5": undefined,
     },
+    isVerified: EVerificationStatus,
 };
 
 const userReducer = (state: IUserData, action: IUserAction): IUserData => {
@@ -65,27 +75,27 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
                 ...state,
                 wantsEmailUpdates: action.payload as boolean,
             };
-        case EACTION_USER.ADD_EMAIL:
+        case EACTION_USER.SET_EMAIL:
             return {
                 ...state,
                 email: action.payload as string,
             };
-        case EACTION_USER.ADD_FIRSTNAME:
+        case EACTION_USER.SET_FIRSTNAME:
             return {
                 ...state,
                 firstName: action.payload as string,
             };
-        case EACTION_USER.ADD_BIRTHDAY:
+        case EACTION_USER.SET_BIRTHDAY:
             return {
                 ...state,
                 birthDay: action.payload as Date,
             };
-        case EACTION_USER.ADD_GENDER:
+        case EACTION_USER.SET_GENDER:
             return {
                 ...state,
                 gender: action.payload as Gender,
             };
-        case EACTION_USER.ADD_GENDER_DESIRE:
+        case EACTION_USER.SET_GENDER_DESIRE:
             return {
                 ...state,
                 genderDesire: action.payload as Gender,
@@ -95,6 +105,11 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             return {
                 ...state,
                 images: {...state.images, [imageIdx]: image},
+            };
+        case EACTION_USER.SET_VERIFICATION_STATUS:
+            return {
+                ...state,
+                isVerified: action.payload as EVerificationStatus,
             };
         default:
             return state;

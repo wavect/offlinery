@@ -10,7 +10,7 @@ const GenderChoice = ({navigation}) => {
     const { dispatch } = useUserContext();
 
     const setGender = (gender: Gender) => {
-        dispatch({ type: EACTION_USER.ADD_GENDER, payload: gender})
+        dispatch({ type: EACTION_USER.SET_GENDER, payload: gender})
         navigation.navigate(ROUTES.Onboarding.GenderLookingFor)
     }
 

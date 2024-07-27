@@ -15,7 +15,7 @@ const Birthday = ({navigation}) => {
 
     const onDatePickerEvent = (event: DateTimePickerEvent, date?: Date) => {
         setShowDatePicker(!showDatePicker)
-        dispatch({type: EACTION_USER.ADD_BIRTHDAY, payload: date || new Date()})
+        dispatch({type: EACTION_USER.SET_BIRTHDAY, payload: date || new Date()})
     }
 
     return <OPageContainer title="My birthday is" subtitle="Your age will be public"

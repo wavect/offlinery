@@ -1,77 +1,81 @@
-import {Pressable, Text, View} from "react-native";
-import * as React from "react";
-import oButtonWideStyles from './OButtonWide.styles'
-import {GestureResponderEvent} from "react-native/Libraries/Types/CoreEventTypes";
-import {StyleProp} from "react-native/Libraries/StyleSheet/StyleSheet";
-import {ViewStyle} from "react-native/Libraries/StyleSheet/StyleSheetTypes";
-import {Color} from "../../GlobalStyles";
+import React, { useEffect, useState } from "react";
+import { Pressable, Text, GestureResponderEvent, StyleProp, ViewStyle } from "react-native";
+import oButtonWideStyles from './OButtonWide.styles';
 
-type StyleVariant = "dark" | "light"
+type StyleVariant = "dark" | "light";
 
 interface IOButtonWideProps {
-    text: string
-    /** @dev Filled or outlined button? */
-    filled: boolean
-    variant: StyleVariant
-    onPress?: ((event: GestureResponderEvent) => void);
+    text: string;
+    filled: boolean;
+    variant: StyleVariant;
+    onPress?: (event: GestureResponderEvent) => void;
     style?: StyleProp<ViewStyle>;
-    disabled?: boolean
+    disabled?: boolean;
+    countdownEnableSeconds?: number;
 }
 
-const getStyle = (disabled: boolean, el: "btn" | "lbl", filled: boolean, variant: StyleVariant) => {
-    if (el === "btn") {
-        if (filled) {
-            if (disabled) {
-                return oButtonWideStyles.buttonFilledDisabled
-            } else if (variant === "dark") {
-                // btn, filled, dark
-                return oButtonWideStyles.buttonFilledDark
-            } else {
-                // btn, filled, light
-                return oButtonWideStyles.buttonFilledLight
-            }
-        } else {
-            if (disabled) {
-                return [oButtonWideStyles.buttonOutlinedDisabled, oButtonWideStyles.buttonOutlined]
-            } else if (variant === "dark") {
-                // btn, outlined, dark
-                return [oButtonWideStyles.buttonOutlinedDark, oButtonWideStyles.buttonOutlined]
-            } else {
-                // btn, outlined, light
-                return [oButtonWideStyles.buttonOutlinedLight, oButtonWideStyles.buttonOutlined]
-            }
-        }
+const getButtonStyle = (isDisabled: boolean, filled: boolean, variant: StyleVariant): StyleProp<ViewStyle> => {
+    if (filled) {
+        if (isDisabled) return oButtonWideStyles.buttonFilledDisabled;
+        return variant === "dark" ? oButtonWideStyles.buttonFilledDark : oButtonWideStyles.buttonFilledLight;
     } else {
-        if (filled) {
-            if (disabled) {
-                return oButtonWideStyles.btnDisabledLabelDark
-            } else if (variant === "dark") {
-                // lbl, filled, dark
-                return oButtonWideStyles.btnFilledLabelDark
-            } else {
-                // lbl, filled, light
-                return oButtonWideStyles.btnFilledLabelLight
-            }
-        } else {
-            if (disabled) {
-                return oButtonWideStyles.btnDisabledLabelLight
-            } else if (variant === "dark") {
-                // lbl, outlined, dark
-                return oButtonWideStyles.btnOutlineLabelDark
-            } else {
-                // lbl, outlined, light
-                return oButtonWideStyles.btnOutlineLabelLight
-            }
-        }
+        const baseStyle = [oButtonWideStyles.buttonOutlined];
+        if (isDisabled) return [...baseStyle, oButtonWideStyles.buttonOutlinedDisabled];
+        return [...baseStyle, variant === "dark" ? oButtonWideStyles.buttonOutlinedDark : oButtonWideStyles.buttonOutlinedLight];
     }
-}
+};
 
-export const OButtonWide = (props: IOButtonWideProps) => {
-    return <Pressable
-        onPress={props.onPress}
-        disabled={props.disabled}
-        style={[getStyle(props.disabled, "btn", props.filled, props.variant), oButtonWideStyles.button, props.style]}>
-        <Text
-            style={getStyle(props.disabled, "lbl", props.filled, props.variant)}>{props.text.toUpperCase()}</Text>
-    </Pressable>
-}
+const getLabelStyle = (isDisabled: boolean, filled: boolean, variant: StyleVariant) => {
+    if (isDisabled) {
+        return filled ? oButtonWideStyles.btnDisabledLabelDark : oButtonWideStyles.btnDisabledLabelLight;
+    }
+    if (filled) {
+        return variant === "dark" ? oButtonWideStyles.btnFilledLabelDark : oButtonWideStyles.btnFilledLabelLight;
+    }
+    return variant === "dark" ? oButtonWideStyles.btnOutlineLabelDark : oButtonWideStyles.btnOutlineLabelLight;
+};
+
+export const OButtonWide: React.FC<IOButtonWideProps> = ({
+                                                             text,
+                                                             filled,
+                                                             variant,
+                                                             onPress,
+                                                             style,
+                                                             disabled = false,
+                                                             countdownEnableSeconds = 0
+                                                         }) => {
+    const [countdown, setCountdown] = useState(countdownEnableSeconds);
+    const [isBtnCountdownActive, setIsBtnCountdownActive] = useState(countdownEnableSeconds > 0);
+
+    useEffect(() => {
+        if (countdown > 0) {
+            const timer = setInterval(() => {
+                setCountdown((prevCount) => {
+                    if (prevCount <= 1) {
+                        clearInterval(timer);
+                        setIsBtnCountdownActive(false);
+                        return 0;
+                    }
+                    return prevCount - 1;
+                });
+            }, 1000);
+
+            return () => clearInterval(timer);
+        }
+    }, [countdown]);
+
+    const buttonText = isBtnCountdownActive ? `${text} (${countdown})` : text;
+    const isDisabled = disabled || isBtnCountdownActive;
+
+    return (
+        <Pressable
+            onPress={onPress}
+            disabled={isDisabled}
+            style={[getButtonStyle(isDisabled, filled, variant), oButtonWideStyles.button, style]}
+        >
+            <Text style={getLabelStyle(isDisabled, filled, variant)}>
+                {buttonText.toUpperCase()}
+            </Text>
+        </Pressable>
+    );
+};

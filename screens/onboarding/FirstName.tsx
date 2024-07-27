@@ -12,7 +12,7 @@ const FirstName = ({navigation}) => {
     const { state, dispatch } = useUserContext()
 
     const setFirstName = (firstName: string) => {
-        dispatch({ type: EACTION_USER.ADD_FIRSTNAME, payload: firstName})
+        dispatch({ type: EACTION_USER.SET_FIRSTNAME, payload: firstName})
     }
     const isValidFirstName = () => {
         return state.firstName.length > 3

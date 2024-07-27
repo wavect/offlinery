@@ -10,7 +10,7 @@ const GenderLookingFor = ({navigation}) => {
     const { dispatch } = useUserContext();
 
     const setGender = (gender: Gender) => {
-        dispatch({ type: EACTION_USER.ADD_GENDER_DESIRE, payload: gender})
+        dispatch({ type: EACTION_USER.SET_GENDER_DESIRE, payload: gender})
         navigation.navigate(ROUTES.Onboarding.AddPhotos)
     }
 

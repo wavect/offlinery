@@ -8,34 +8,11 @@ import {useEffect, useState} from "react";
 import {MaterialIcons} from "@expo/vector-icons";
 
 const HouseRules = ({ route, navigation }) => {
-    const [countdown, setCountdown] = useState(5);
-    const [isBtnDisabled, setIsBtnDisabled] = useState(true);
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCountdown((prevCount) => {
-                if (prevCount <= 1) {
-                    clearInterval(timer);
-                    setIsBtnDisabled(false);
-                    return 0;
-                }
-                return prevCount - 1;
-            });
-        }, 1000);
-
-        return () => clearInterval(timer);
-    }, []);
-
-    const buttonText = isBtnDisabled
-        ? `I understand (${countdown})`
-        : "I understand";
 
     return (
         <OLinearBackground>
             <ScrollView contentContainerStyle={styles.container}>
                 <OShowcase subtitle="Stop Swiping. Meet IRL." />
-
-                <View style={styles.rulesContainer}>
                     <RuleItem
                         title="Be Respectful."
                         description="We've a 0 tolerance for disrespectful behavior."
@@ -56,11 +33,10 @@ const HouseRules = ({ route, navigation }) => {
                         title="Don't rush it."
                         description="Don't try to 'close'. Have a good time, the rest follows naturally."
                     />
-                </View>
 
                 <View style={styles.buttonContainer}>
-                    <OButtonWide text={buttonText} filled={true} variant="light"
-                                 disabled={isBtnDisabled} onPress={() => navigation.navigate(route.params.nextPage)}/>
+                    <OButtonWide text="I understand" filled={true} variant="light"
+                                 countdownEnableSeconds={5} onPress={() => navigation.navigate(route.params.nextPage)}/>
 
                     <Text style={styles.violatingRules}>
                         Violating these rules blocks you from using this app for at least{" "}
@@ -91,14 +67,11 @@ const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
         padding: 20,
-        marginTop: 50,
-    },
-    rulesContainer: {
-        marginTop: 20,
+        marginTop: 100,
     },
     ruleItem: {
         flexDirection: 'row',
-        marginBottom: 40,
+        marginBottom: 25,
     },
     checkIcon: {
         marginRight: 13,

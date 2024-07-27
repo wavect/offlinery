@@ -34,6 +34,7 @@ import GenderLookingFor from "./screens/onboarding/GenderLookingFor";
 import HouseRules from "./screens/HouseRules";
 import AddPhotos from "./screens/onboarding/AddPhotos";
 import {Color} from "./GlobalStyles";
+import WaitingForVerification from "./screens/onboarding/WaitingForVerification";
 
 const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: ""}
 

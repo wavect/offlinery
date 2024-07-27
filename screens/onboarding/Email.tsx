@@ -10,7 +10,7 @@ const Email = ({navigation}) => {
     const { state, dispatch } = useUserContext()
 
     const setEmail = (email: string) => {
-        dispatch({ type: EACTION_USER.ADD_EMAIL, payload: email})
+        dispatch({ type: EACTION_USER.SET_EMAIL, payload: email})
     }
     const setCheckboxChecked = (wantsEmailUpdates: boolean) => {
         dispatch({ type: EACTION_USER.SET_EMAIL_UPDATES, payload: wantsEmailUpdates })
