@@ -4,7 +4,7 @@ import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {Color, Subtitle} from "../../GlobalStyles";
 import {ROUTES} from "../routes";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
-import {EACTION_USER, EApproachChoice, useUserContext} from "../../context/UserContext";
+import {EACTION_USER, EApproachChoice, EVerificationStatus, useUserContext} from "../../context/UserContext";
 
 
 const ApproachChoice = ({navigation}) => {
@@ -16,9 +16,11 @@ const ApproachChoice = ({navigation}) => {
         switch (approachChoice) {
             case EApproachChoice.APPROACH: // fall through
             case EApproachChoice.BOTH:
+                dispatch({type: EACTION_USER.SET_VERIFICATION_STATUS, payload: EVerificationStatus.PENDING})
                 navigation.navigate(ROUTES.Onboarding.SafetyCheck)
                 break;
             case EApproachChoice.BE_APPROACHED:
+                dispatch({type: EACTION_USER.SET_VERIFICATION_STATUS, payload: EVerificationStatus.NOT_NEEDED})
                 // TODO: separate flow
                 break;
         }

@@ -21,7 +21,7 @@ export const OPageContainer = (props: IOPageContainerProps) => {
         </View>
 
         <KeyboardAvoidingView style={styles.buttonContainer} behavior={Platform.OS === "ios" ? "padding" : "height"}
-                              keyboardVerticalOffset={Platform.OS === "ios" ? 120 : 140}>
+                              keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 140}>
             {props.bottomContainerChildren}
         </KeyboardAvoidingView>
     </View>

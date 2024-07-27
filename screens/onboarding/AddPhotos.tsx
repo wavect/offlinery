@@ -12,23 +12,30 @@ interface IPhotoContainerProps {
     imageIdx: ImageIdx
     dispatch: React.Dispatch<IUserAction>
     state: IUserData,
+    mediaStatus: ImagePicker.MediaLibraryPermissionResponse|null,
+    requestMediaLibPermission: () => Promise<ImagePicker.MediaLibraryPermissionResponse>
 }
 const PhotoContainer = (props: IPhotoContainerProps) => {
-    const {dispatch, imageIdx, state} = props
+    const {dispatch, imageIdx, state, mediaStatus, requestMediaLibPermission} = props
 
     const openMediaLibrary = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            quality: 1,
-            allowsMultipleSelection: false,
-        });
+        let mediaAccessGranted = mediaStatus?.granted
+        if (!mediaAccessGranted) {
+            mediaAccessGranted = (await requestMediaLibPermission()).granted
+        }
+        if (mediaAccessGranted) {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                quality: 1,
+                allowsMultipleSelection: false,
+            });
 
-        if (!result.canceled) {
-            // remove, override, add image
-            dispatch({type: EACTION_USER.SET_IMAGE, payload: {imageIdx, image: result.assets[0]}})
-            //}
+            if (!result.canceled) {
+                // remove, override, add image
+                dispatch({type: EACTION_USER.SET_IMAGE, payload: {imageIdx, image: result.assets[0]}})
+            }
         } else {
-            alert('You did not select any image.');
+            alert('No access to media library.')
         }
     }
 
@@ -48,8 +55,7 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
 }
 
 const AddPhotos = ({navigation}) => {
-    //const [cameraStatus, requestCameraPermission] = ImagePicker.useCameraPermissions();
-    //const [mediaLibStatus, requestMediaLibPermission] = ImagePicker.useMediaLibraryPermissions();
+    const [mediaLibStatus, requestMediaLibPermission] = ImagePicker.useMediaLibraryPermissions();
     const {state, dispatch} = useUserContext();
     const hasAnyImage = Object.values(state.images).some(Boolean);
 
@@ -71,16 +77,16 @@ const AddPhotos = ({navigation}) => {
         >
             <View style={styles.container}>
                 <View style={styles.row}>
-                    <PhotoContainer imageIdx="0" dispatch={dispatch} state={state} />
-                    <PhotoContainer imageIdx="1" dispatch={dispatch} state={state}/>
+                    <PhotoContainer imageIdx="0" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus} requestMediaLibPermission={requestMediaLibPermission} />
+                    <PhotoContainer imageIdx="1" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus} requestMediaLibPermission={requestMediaLibPermission}/>
                 </View>
                 <View style={styles.row}>
-                    <PhotoContainer imageIdx="2" dispatch={dispatch} state={state}/>
-                    <PhotoContainer imageIdx="3" dispatch={dispatch} state={state}/>
+                    <PhotoContainer imageIdx="2" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus} requestMediaLibPermission={requestMediaLibPermission}/>
+                    <PhotoContainer imageIdx="3" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus} requestMediaLibPermission={requestMediaLibPermission}/>
                 </View>
                 <View style={styles.row}>
-                    <PhotoContainer imageIdx="4" dispatch={dispatch} state={state}/>
-                    <PhotoContainer imageIdx="5" dispatch={dispatch} state={state}/>
+                    <PhotoContainer imageIdx="4" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus} requestMediaLibPermission={requestMediaLibPermission}/>
+                    <PhotoContainer imageIdx="5" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus} requestMediaLibPermission={requestMediaLibPermission}/>
                 </View>
             </View>
         </OPageContainer>

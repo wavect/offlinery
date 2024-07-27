@@ -15,6 +15,9 @@ export interface IUserData {
     }
     verificationStatus: EVerificationStatus
     approachChoice: EApproachChoice
+    street: string
+    postalCode: string
+    country: string
 }
 
 export type ImageIdx = "0"|"1"|"2"|"3"|"4"|"5"
@@ -38,6 +41,9 @@ export enum EACTION_USER {
     SET_IMAGE = 'SET_IMAGE',
     SET_VERIFICATION_STATUS = 'SET_VERIFICATION_STATUS',
     SET_APPROACH_CHOICE = 'SET_APPROACH_CHOICE',
+    SET_STREET = 'SET_STREET',
+    SET_POSTAL_CODE = 'SET_POSTAL_CODE',
+    SET_COUNTRY = 'SET_COUNTRY',
 }
 
 interface IUserContextType {
@@ -75,6 +81,9 @@ const initialState: IUserData = {
     },
     verificationStatus: EVerificationStatus.NOT_NEEDED,
     approachChoice: EApproachChoice.BOTH,
+    street: "",
+    postalCode: "",
+    country: "",
 };
 
 const userReducer = (state: IUserData, action: IUserAction): IUserData => {
@@ -124,6 +133,21 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             return {
                 ...state,
                 approachChoice: action.payload as EApproachChoice,
+            };
+        case EACTION_USER.SET_STREET:
+            return {
+                ...state,
+                street: action.payload as string,
+            };
+        case EACTION_USER.SET_POSTAL_CODE:
+            return {
+                ...state,
+                postalCode: action.payload as string,
+            };
+        case EACTION_USER.SET_COUNTRY:
+            return {
+                ...state,
+                country: action.payload as string,
             };
         default:
             return state;

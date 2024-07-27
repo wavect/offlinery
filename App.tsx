@@ -75,7 +75,7 @@ export default function App() {
                         >
                             <Stack.Screen
                                 name={ROUTES.Welcome}
-                                component={ILiveHere}
+                                component={AddPhotos}
                                 options={NO_HEADER}
                             />
                             <Stack.Screen

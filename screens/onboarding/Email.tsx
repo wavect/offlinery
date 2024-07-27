@@ -5,35 +5,29 @@ import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {ROUTES} from "../routes";
 import {EACTION_USER, useUserContext} from "../../context/UserContext";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
+import {OTextInput} from "../../components/OTextInput/OTextInput";
 
 const Email = ({navigation}) => {
-    const { state, dispatch } = useUserContext()
+    const {state, dispatch} = useUserContext()
 
     const setEmail = (email: string) => {
-        dispatch({ type: EACTION_USER.SET_EMAIL, payload: email})
+        dispatch({type: EACTION_USER.SET_EMAIL, payload: email})
     }
     const setCheckboxChecked = (wantsEmailUpdates: boolean) => {
-        dispatch({ type: EACTION_USER.SET_EMAIL_UPDATES, payload: wantsEmailUpdates })
+        dispatch({type: EACTION_USER.SET_EMAIL_UPDATES, payload: wantsEmailUpdates})
     }
 
     const isInvalidEmail = () => !state.email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
 
     return <OPageContainer title="What's your email?"
-                           bottomContainerChildren={ <OButtonWide text="Continue" filled={true} disabled={isInvalidEmail()} variant="dark"
-                                                                  onPress={() => navigation.navigate(ROUTES.Onboarding.FirstName)}/>}
+                           bottomContainerChildren={<OButtonWide text="Continue" filled={true}
+                                                                 disabled={isInvalidEmail()} variant="dark"
+                                                                 onPress={() => navigation.navigate(ROUTES.Onboarding.FirstName)}/>}
                            subtitle="Don't lose access to your account, verify your email.">
-        <View style={styles.inputField}>
-            <TextInput
-                style={styles.input}
-                value={state.email}
-                onChangeText={setEmail}
-                placeholder="Enter email"
-                placeholderTextColor="#999"
-            />
-        </View>
+        <OTextInput value={state.email} setValue={setEmail} placeholder="Enter email" style={styles.inputField}/>
 
         <View style={styles.checkboxField}>
-            <Checkbox value={state.wantsEmailUpdates} onValueChange={setCheckboxChecked} />
+            <Checkbox value={state.wantsEmailUpdates} onValueChange={setCheckboxChecked}/>
             <Text style={styles.checkboxLabel}>
                 I want to receive news, updates and offers from Offlinery.
             </Text>
