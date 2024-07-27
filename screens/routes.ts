@@ -20,5 +20,6 @@ export const ROUTES: any = {
         ILiveHere: 'Onboarding_ILiveHere',
         DontApproachMeHere: 'Onboarding_DontApproachMeHere',
         ApproachMeBetween: 'Onboarding_ApproachMeBetween',
+        BioLetThemKnow: 'Onboarding_BioLetThemKnow',
     },
 }

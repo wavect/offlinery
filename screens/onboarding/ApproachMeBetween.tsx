@@ -25,7 +25,7 @@ const ApproachMeBetween = ({ navigation }) => {
                     text="Continue"
                     filled={true}
                     variant="dark"
-                    onPress={() => navigation.navigate(ROUTES.Main.HeatMap)}
+                    onPress={() => navigation.navigate(ROUTES.Onboarding.BioLetThemKnow)}
                 />
             }
         >

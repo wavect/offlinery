@@ -23,6 +23,7 @@ export interface IUserData {
     blacklistedRegions: MapRegion[]
     approachFromTime: Date
     approachToTime: Date
+    bio: string
 }
 
 export interface MapRegion {
@@ -58,6 +59,7 @@ export enum EACTION_USER {
     SET_BLACKLISTED_REGIONS = 'SET_BLACKLISTED_REGIONS',
     SET_APPROACH_FROM_TIME = 'SET_APPROACH_FROM_TIME',
     SET_APPROACH_TO_TIME = 'SET_APPROACH_TO_TIME',
+    SET_BIO = 'SET_BIO',
 }
 
 interface IUserContextType {
@@ -106,6 +108,7 @@ const initialState: IUserData = {
     blacklistedRegions: [],
     approachFromTime: DEFAULT_FROM_TIME,
     approachToTime: DEFAULT_TO_TIME,
+    bio: 'No pick-up lines please. Just be chill.',
 };
 
 const userReducer = (state: IUserData, action: IUserAction): IUserData => {
@@ -185,6 +188,11 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             return {
                 ...state,
                 approachToTime: action.payload as Date,
+            };
+        case EACTION_USER.SET_BIO:
+            return {
+                ...state,
+                bio: action.payload as string,
             };
         default:
             return state;
