@@ -35,8 +35,10 @@ import HouseRules from "./screens/HouseRules";
 import AddPhotos from "./screens/onboarding/AddPhotos";
 import {Color} from "./GlobalStyles";
 import WaitingForVerification from "./screens/onboarding/WaitingForVerification";
+import HeatMap from "./screens/main/HeatMap";
 
 const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: ""}
+const NO_HEADER = {headerShown: false}
 
 export default function App() {
     const [hideSplashScreen, setHideSplashScreen] = React.useState(false);
@@ -68,12 +70,12 @@ export default function App() {
                     <UserProvider>
                         <Stack.Navigator
                             initialRouteName="Welcome"
-                            screenOptions={{headerShown: false}}
+                            screenOptions={NO_HEADER}
                         >
                             <Stack.Screen
                                 name={ROUTES.Welcome}
-                                component={Welcome}
-                                options={{headerShown: false}}
+                                component={WaitingForVerification}
+                                options={NO_HEADER}
                             />
                             <Stack.Screen
                                 name={ROUTES.HouseRules}
@@ -124,6 +126,16 @@ export default function App() {
                                 name={ROUTES.Onboarding.AddPhotos}
                                 component={AddPhotos}
                                 options={DEFAULT_SCREEN_PROPS}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.Onboarding.WaitingVerification}
+                                component={WaitingForVerification}
+                                options={NO_HEADER}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.Main.HeatMap}
+                                component={HeatMap}
+                                options={NO_HEADER}
                             />
                         </Stack.Navigator>
                     </UserProvider>

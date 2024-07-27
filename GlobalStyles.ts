@@ -23,14 +23,14 @@ export const Color = {
 
 export const Title = {
     fontSize: 40,
-        fontWeight: '600',
-        color: '#000',
-        marginBottom: 8,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 8,
 }
 export const Subtitle = {
     fontSize: 16,
-        color: '#aaa',
-        marginBottom: 24,
+    color: '#aaa',
+    marginBottom: 24,
 }
 
 export const Padding = {
@@ -41,7 +41,7 @@ export const Padding = {
 }
 
 export const BorderRadius = {
-        br_81xl: 100,
-        br_5xs: 8,
-        br_9xs: 4,
+    br_81xl: 100,
+    br_5xs: 8,
+    br_9xs: 4,
 }

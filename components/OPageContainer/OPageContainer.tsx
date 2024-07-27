@@ -1,4 +1,4 @@
-import {Text, View} from "react-native";
+import {KeyboardAvoidingView, Platform, Text, View} from "react-native";
 import {Subtitle, Title} from "../../GlobalStyles";
 import * as React from "react";
 import styles from './OPageContainer.styles'
@@ -20,8 +20,9 @@ export const OPageContainer = (props: IOPageContainerProps) => {
             {props.children}
         </View>
 
-        <View style={styles.buttonContainer}>
+        <KeyboardAvoidingView style={styles.buttonContainer} behavior={Platform.OS === "ios" ? "padding" : "height"}
+                              keyboardVerticalOffset={Platform.OS === "ios" ? 120 : 140}>
             {props.bottomContainerChildren}
-        </View>
+        </KeyboardAvoidingView>
     </View>
 }

@@ -11,5 +11,6 @@ export default {
     buttonContainer: {
         alignItems: 'center',
         width: '100%',
+        marginTop: 'auto',
     },
 }

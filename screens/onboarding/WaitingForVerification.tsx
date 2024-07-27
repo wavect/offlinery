@@ -1,12 +1,12 @@
 import * as React from "react";
-import {Text, StyleSheet, View} from "react-native";
-import {Color, FontSize, FontFamily} from "../../GlobalStyles";
+import {StyleSheet, Text, View} from "react-native";
+import {Color, FontFamily, FontSize, Subtitle, SubtitleBright} from "../../GlobalStyles";
 import {OShowcase} from "../../components/OShowcase/OShowcase";
 import {OLinearBackground} from "../../components/OLinearBackground/OLinearBackground";
 import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
-import {A} from '@expo/html-elements';
 import {ROUTES} from "../routes";
-import {useUserContext} from "../../context/UserContext";
+import {EVerificationStatus, useUserContext} from "../../context/UserContext";
+import {A} from "@expo/html-elements";
 
 const WaitingForVerification = ({navigation}) => {
     const {state} = useUserContext()
@@ -15,14 +15,17 @@ const WaitingForVerification = ({navigation}) => {
             <View style={styles.layoutContainer}>
                 <OShowcase subtitle="Stop Swiping. Meet IRL."/>
 
-                <OButtonWide filled={true} text="Verification in progress.." style={{marginBottom: 14}} disabled={!state.isVerified}/>
-                    {/*onPress={() => navigation.navigate(ROUTES.Onboarding.Email)} variant="light"/>*/}
-                <OButtonWide filled={false} text="Book new call" style={{marginBottom: 90}} variant="light"
-                             onPress={() => navigation.navigate(ROUTES.Onboarding.BookSafetyCall)}/>
+                <OButtonWide filled={true} text="Verification in progress.." style={{marginBottom: 14}}
+                             disabled={state.verificationStatus !== EVerificationStatus.VERIFIED}
+                             onPress={() => navigation.navigate(ROUTES.Main.HeatMap)} variant="light"/>
 
-                <Text style={[styles.bottomText, styles.bottomTextContainer]}>
+                    <OButtonWide filled={false} text="Book new call" variant="light" style={{marginBottom: 15}}
+                                 onPress={() => navigation.navigate(ROUTES.Onboarding.BookSafetyCall)}/>
+                    <Text style={styles.subtitleBookCall}>Please do not make double bookings.</Text>
+
+                <A href="mailto:office@wavect.io" style={[styles.bottomText, styles.bottomTextContainer]}>
                     Something wrong?
-                </Text>
+                </A>
             </View>
 
         </OLinearBackground>
@@ -30,6 +33,11 @@ const WaitingForVerification = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+    subtitleBookCall: {
+        fontSize: FontSize.size_md,
+        color: Color.white,
+        marginBottom: 80,
+    },
     bottomTextContainer: {
         display: "flex",
         letterSpacing: 0,

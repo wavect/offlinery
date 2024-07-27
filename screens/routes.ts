@@ -2,6 +2,9 @@
 export const ROUTES = {
     Welcome: 'Welcome',
     HouseRules: 'HouseRules',
+    Main: {
+        HeatMap: 'Main_HeatMap',
+    },
     Onboarding: {
         Email: 'Onboarding_Email',
         FirstName: 'Onboarding_Firstname',
@@ -12,5 +15,6 @@ export const ROUTES = {
         SafetyCheck: 'Onboarding_SafetyCheck',
         BookSafetyCall: 'Onboarding_BookSafetyCall',
         AddPhotos: 'Onboarding_AddPhotos',
+        WaitingVerification: 'Onboarding_WaitingVerification',
     },
 }

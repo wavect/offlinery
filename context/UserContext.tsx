@@ -13,7 +13,8 @@ export interface IUserData {
     images:  {
         [key in ImageIdx]?: ImagePicker.ImagePickerAsset;
     }
-    isVerified: EVerificationStatus
+    verificationStatus: EVerificationStatus
+    approachChoice: EApproachChoice
 }
 
 export type ImageIdx = "0"|"1"|"2"|"3"|"4"|"5"
@@ -24,7 +25,7 @@ export interface IImageAction {
 
 export interface IUserAction {
     type: EACTION_USER;
-    payload: string | Date | boolean | IImageAction;
+    payload: string | Date | boolean | IImageAction | EApproachChoice | EVerificationStatus;
 }
 
 export enum EACTION_USER {
@@ -36,11 +37,18 @@ export enum EACTION_USER {
     SET_GENDER_DESIRE = 'SET_GENDER_DESIRE',
     SET_IMAGE = 'SET_IMAGE',
     SET_VERIFICATION_STATUS = 'SET_VERIFICATION_STATUS',
+    SET_APPROACH_CHOICE = 'SET_APPROACH_CHOICE',
 }
 
 interface IUserContextType {
     state: IUserData;
     dispatch: Dispatch<IUserAction>;
+}
+
+export enum EApproachChoice {
+    APPROACH = "approach",
+    BE_APPROACHED = "be_approached",
+    BOTH = "both"
 }
 
 export enum EVerificationStatus {
@@ -65,7 +73,8 @@ const initialState: IUserData = {
         "4": undefined,
         "5": undefined,
     },
-    isVerified: EVerificationStatus,
+    verificationStatus: EVerificationStatus.NOT_NEEDED,
+    approachChoice: EApproachChoice.BOTH,
 };
 
 const userReducer = (state: IUserData, action: IUserAction): IUserData => {
@@ -109,7 +118,12 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
         case EACTION_USER.SET_VERIFICATION_STATUS:
             return {
                 ...state,
-                isVerified: action.payload as EVerificationStatus,
+                verificationStatus: action.payload as EVerificationStatus,
+            };
+        case EACTION_USER.SET_APPROACH_CHOICE:
+            return {
+                ...state,
+                approachChoice: action.payload as EApproachChoice,
             };
         default:
             return state;

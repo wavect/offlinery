@@ -24,6 +24,7 @@ const Birthday = ({navigation}) => {
         <View style={styles.inputField}>
             <TextInput
                 style={styles.input}
+                showSoftInputOnFocus={false}
                 value={state.birthDay.toLocaleDateString()}
                 onPress={() => setShowDatePicker(true)}
                 placeholder="01.01.2000"

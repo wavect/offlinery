@@ -5,6 +5,7 @@ import {Color} from "../../GlobalStyles";
 import {useUserContext} from "../../context/UserContext";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import OCalendlyInline from "../../components/OCalendlyInline/OCalendlyInline";
+import {ROUTES} from "../routes";
 
 const BookSafetyCall = ({navigation}) => {
     // const [hasBookedCall, setCallBooked] = useState(false)
@@ -18,8 +19,8 @@ const BookSafetyCall = ({navigation}) => {
 
     return <OPageContainer title="Book Safety Call"
                            subtitle="We retain our right to reject applicants to ensure everyone feels safe and respected."
-                           bottomContainerChildren={<OButtonWide text="Next" filled={true} countdownEnableSeconds={10}
-                                                                 variant="dark"/>}>
+                           bottomContainerChildren={<OButtonWide text="Call booked?" filled={true} countdownEnableSeconds={10}
+                                                                 variant="dark" onPress={() => navigation.navigate(ROUTES.Onboarding.WaitingVerification)}/>}>
 
         <OCalendlyInline url="https://calendly.com/wavect/safety-call" pageSettings={{
             hideLandingPageDetails: true,
