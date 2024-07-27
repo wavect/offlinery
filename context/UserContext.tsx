@@ -1,5 +1,6 @@
 import React, {createContext, Dispatch, useContext, useReducer} from 'react';
 import * as ImagePicker from "expo-image-picker";
+import {LatLng} from "react-native-maps";
 
 export type Gender = "woman"|"man"
 
@@ -18,6 +19,13 @@ export interface IUserData {
     street: string
     postalCode: string
     country: string
+    /** @dev Regions the user that wants to be approached marked as blacklisted */
+    blacklistedRegions: MapRegion[]
+}
+
+export interface MapRegion {
+    center: LatLng;
+    radius: number;
 }
 
 export type ImageIdx = "0"|"1"|"2"|"3"|"4"|"5"
@@ -28,7 +36,7 @@ export interface IImageAction {
 
 export interface IUserAction {
     type: EACTION_USER;
-    payload: string | Date | boolean | IImageAction | EApproachChoice | EVerificationStatus;
+    payload: string | Date | boolean | IImageAction | EApproachChoice | EVerificationStatus | MapRegion[];
 }
 
 export enum EACTION_USER {
@@ -44,6 +52,7 @@ export enum EACTION_USER {
     SET_STREET = 'SET_STREET',
     SET_POSTAL_CODE = 'SET_POSTAL_CODE',
     SET_COUNTRY = 'SET_COUNTRY',
+    SET_BLACKLISTED_REGIONS = 'SET_BLACKLISTED_REGIONS',
 }
 
 interface IUserContextType {
@@ -84,6 +93,7 @@ const initialState: IUserData = {
     street: "",
     postalCode: "",
     country: "",
+    blacklistedRegions: [],
 };
 
 const userReducer = (state: IUserData, action: IUserAction): IUserData => {
@@ -148,6 +158,11 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             return {
                 ...state,
                 country: action.payload as string,
+            };
+        case EACTION_USER.SET_BLACKLISTED_REGIONS:
+            return {
+                ...state,
+                blacklistedRegions: action.payload as MapRegion[],
             };
         default:
             return state;

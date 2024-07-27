@@ -22,28 +22,27 @@ const ILiveHere = ({navigation}) => {
         dispatch({type: EACTION_USER.SET_COUNTRY, payload: country})
     }
 
-    const isInvalidLocation = () => {
-        return true; // TODO
+    const isMissingLocationInfo = () => {
+        return !state.country || !state.street || !state.postalCode
     }
 
     return <OPageContainer title="I live here"
                            bottomContainerChildren={<OButtonWide text="Continue" filled={true}
-                                                                 disabled={isInvalidLocation()} variant="dark"/>}
+                                                                 onPress={() => navigation.navigate(ROUTES.Onboarding.DontApproachMeHere)}
+                                                                 disabled={isMissingLocationInfo()} variant="dark"/>}
                            subtitle={<>
                                <Text>This is </Text>
                                <Text style={{fontWeight: "bold"}}>not</Text>
                                <Text> public. This is used to not inform others you are nearby when you are at
                                    home.</Text></>
                            }>
-
-
         <>
 
             <OTextInput value={state.street} setValue={setStreet} placeholder="Street" style={styles.inputField}/>
             <OTextInput value={state.postalCode} setValue={setPostalCode} placeholder="Postal code" style={styles.inputField}/>
             <OTextInput value={state.country} setValue={setCountry} placeholder="Country" style={styles.inputField}/>
 
-            {/* recently google maps not supported on ios anymore: https://github.com/react-native-maps/react-native-maps/issues/5049 at least partially */}
+            {/* recently google maps not supported on ios anymore: https://github.com/react-native-maps/react-native-maps/issues/5049 at least partially
             <MapView style={styles.map}
                      initialRegion={{
                          latitude: 47.257832302,
@@ -52,7 +51,7 @@ const ILiveHere = ({navigation}) => {
                          longitudeDelta: 0.0421,
                      }}
                      provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}>
-            </MapView>
+            </MapView>*/}
         </>
     </OPageContainer>
 };
@@ -72,27 +71,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     inputField: {
-        marginBottom: 10,
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 8,
-        padding: 12,
-        fontSize: 16,
-    },
-    checkboxField: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    checkboxLabel: {
-        flex: 1,
-        fontSize: 16,
-        color: '#000',
-        marginLeft: 10,
-    },
-    buttonContainer: {
-        alignItems: 'center',
+        marginBottom: 40,
     },
 });
 

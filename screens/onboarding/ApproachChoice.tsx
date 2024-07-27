@@ -15,7 +15,6 @@ const ApproachChoice = ({navigation}) => {
 
         switch (approachChoice) {
             case EApproachChoice.APPROACH: // fall through
-            case EApproachChoice.BOTH:
                 dispatch({type: EACTION_USER.SET_VERIFICATION_STATUS, payload: EVerificationStatus.PENDING})
                 navigation.navigate(ROUTES.Onboarding.SafetyCheck)
                 break;
@@ -23,6 +22,8 @@ const ApproachChoice = ({navigation}) => {
                 dispatch({type: EACTION_USER.SET_VERIFICATION_STATUS, payload: EVerificationStatus.NOT_NEEDED})
                 // TODO: separate flow
                 break;
+            case EApproachChoice.BOTH:
+                // TODO: Not yet supported, since both flows need to be completed
         }
     }
 
@@ -46,10 +47,10 @@ const ApproachChoice = ({navigation}) => {
         </View>
 
         <View style={styles.optionContainer}>
-            <OButtonWide text="Both" filled={false} variant="dark"
+            <OButtonWide text="Both" filled={false} variant="dark" disabled={true}
                          onPress={() => setApproachChoice(EApproachChoice.BOTH)}/>
             <Text style={[Subtitle, styles.subtitle]}>
-                Want to approach and be approached by people you like?
+                Want to approach and be approached by people you like? (not yet supported)
             </Text>
         </View>
     </OPageContainer>
