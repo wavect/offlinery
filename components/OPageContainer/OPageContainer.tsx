@@ -8,17 +8,19 @@ interface IOPageContainerProps {
     subtitle?: string|React.ReactNode
     children: React.ReactNode
     bottomContainerChildren?: React.ReactNode
+    doNotUseScrollView?: boolean
 }
 
 export const OPageContainer = (props: IOPageContainerProps) => {
+    const MainViewContainer = props.doNotUseScrollView ? View : ScrollView
     return  <View style={styles.container}>
-        <ScrollView style={styles.content}>
+        <MainViewContainer style={styles.content}>
             {props.title && <Text style={Title}>{props.title}</Text>}
             {props.subtitle && <Text style={Subtitle}>
                 {props.subtitle}
             </Text>}
             {props.children}
-        </ScrollView>
+        </MainViewContainer>
 
         <KeyboardAvoidingView style={styles.buttonContainer} behavior={Platform.OS === "ios" ? "padding" : "height"}
                               keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 140}>

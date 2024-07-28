@@ -29,6 +29,21 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
             }
             setIsEnabled(previousState => !previousState);
             dispatch({type: EACTION_USER.SET_DATE_MODE, payload: isEnabled ? EDateMode.LIVE : EDateMode.GHOST})
+
+            // Load location and inform user about state
+            if (isEnabled) {
+                let {status} = await Location.requestForegroundPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Permission to access location was denied');
+                    return;
+                }
+
+                const location = await Location.getCurrentPositionAsync({accuracy: LocationAccuracy.BestForNavigation});
+                dispatch({type: EACTION_USER.SET_CURRENT_LOCATION, payload: location})
+                alert(`You are live! ${getSuccessMessage()}`)
+            } else {
+                alert('Ghost mode. Nobody will see you! Press the toggle on the top to go live.')
+            }
         } catch (error) {
             console.error("Error requesting permissions:", error);
             alert('An error occurred while requesting permissions');
@@ -36,7 +51,7 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
     }
 
     const getSuccessMessage = () => {
-        switch(state.approachChoice) {
+        switch (state.approachChoice) {
             case EApproachChoice.BOTH: // fall through
             case EApproachChoice.APPROACH:
                 return 'You will receive notifications when someone interesting is nearby!'
@@ -47,27 +62,8 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
         }
     }
 
-    useEffect(() => {
-        if (isEnabled) {
-            (async () => {
-                let {status} = await Location.requestForegroundPermissionsAsync();
-                if (status !== 'granted') {
-                    alert('Permission to access location was denied');
-                    return;
-                }
-
-                const location = await Location.getCurrentPositionAsync({accuracy: LocationAccuracy.BestForNavigation});
-                dispatch({type: EACTION_USER.SET_CURRENT_LOCATION, payload: location})
-                alert(`You are live! ${getSuccessMessage()}`)
-            })();
-        } else {
-            alert('Ghost mode. Nobody will see you! Press the toggle on the top to go live.')
-        }
-    }, []);
-
-
     return (
-        <View style={[props.style, { alignItems: 'center' }]}>
+        <View style={[props.style, {alignItems: 'center'}]}>
             <Switch
                 trackColor={{false: Color.lightGray, true: Color.primary}}
                 thumbColor={isEnabled ? Color.white : Color.lightGray}
@@ -75,7 +71,7 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 onValueChange={toggleSwitch}
                 value={isEnabled}
             />
-            <Text style={{ marginTop: 5, fontSize: 12, color: Color.gray }}>
+            <Text style={{marginTop: 5, fontSize: 12, color: Color.gray}}>
                 {isEnabled ? 'Live' : 'Ghost Mode'}
             </Text>
         </View>
