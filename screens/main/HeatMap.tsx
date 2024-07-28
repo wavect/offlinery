@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {Platform, Pressable, StyleSheet, Text, View} from "react-native";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import MapView, {
-  Circle,
+  Circle, LongPressEvent,
   MapPressEvent,
   Marker,
   MarkerDragEvent,
@@ -64,7 +64,7 @@ const HeatMap = ({navigation}) => {
     dispatch({type: EACTION_USER.SET_BLACKLISTED_REGIONS, payload: blacklistedRegions})
   }
 
-  const handleMapLongPress = (event: MapPressEvent) => {
+  const handleMapLongPress = (event: LongPressEvent) => {
     const {coordinate} = event.nativeEvent;
     setBlacklistedRegions([...state.blacklistedRegions, {center: coordinate, radius: 100}]);
     setActiveRegionIndex(state.blacklistedRegions.length);
@@ -99,7 +99,6 @@ const HeatMap = ({navigation}) => {
   return (
       <OPageContainer subtitle="Being near these hotspots increases your odds of meeting your soulmate.">
         <>
-          <OGoLiveToggle />
           <MapView
               ref={mapRef}
               style={styles.map}
@@ -158,7 +157,7 @@ const HeatMap = ({navigation}) => {
           </View>
           {activeRegionIndex !== null && (
               <View style={styles.sliderContainer}>
-                <Text style={[Subtitle, styles.instructionText]}>Adjust Region Radius ({Math.round(state.blacklistedRegions[activeRegionIndex].radius)}m)</Text>
+                <Text style={[Subtitle, styles.instructionText, styles.bold]}>Adjust Region Radius ({Math.round(state.blacklistedRegions[activeRegionIndex].radius)}m)</Text>
                 <Slider
                     style={styles.slider}
                     minimumValue={100}
@@ -178,7 +177,7 @@ const HeatMap = ({navigation}) => {
 const styles = StyleSheet.create({
   map: {
     width: '100%',
-    height: '50%',
+    minHeight: 400,
     borderRadius: BorderRadius.br_5xs,
   },
   removeButtonContainer: {
@@ -192,15 +191,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   instructions: {
-    marginTop: 10,
-    padding: 10,
+    marginTop: 20,
+  },
+  bold: {
+    fontWeight: 'bold',
   },
   instructionText: {
     marginBottom: 5,
   },
   sliderContainer: {
-    marginTop: 5,
-    padding: 10,
+    marginTop: 20,
   },
   slider: {
     width: '100%',

@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {Platform, Pressable, StyleSheet, Text, View} from "react-native";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import MapView, {
-    Circle,
+    Circle, LongPressEvent,
     MapPressEvent,
     Marker,
     MarkerDragEvent,
@@ -23,14 +23,15 @@ const DontApproachMeHere = ({navigation}) => {
     const [location, setLocation] = useState<Location.LocationObject|null>(null);
     const mapRef = React.useRef(null);
     const [mapRegion, setMapRegion] = useState({
+        // Uni Ibk
         latitude: 47.257832302,
         longitude: 11.383665132,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
     });
 
-    // TODO: Also add home base here (or maybe just remove that screen altogether?)
-
+    // TODO: Add heatmap when google maps works on both ios and android, https://github.com/react-native-maps/react-native-maps/tree/master
+    // TODO: Provider Google should also work for IOS, but ONLY WITHOUT EXPO GO!
     // TODO: Request background permission when setting user live in separate component
     // TODO: Maybe make map to a separate component
     useEffect(() => {
@@ -62,7 +63,7 @@ const DontApproachMeHere = ({navigation}) => {
         dispatch({type: EACTION_USER.SET_BLACKLISTED_REGIONS, payload: blacklistedRegions})
     }
 
-    const handleMapLongPress = (event: MapPressEvent) => {
+    const handleMapLongPress = (event: LongPressEvent) => {
         const {coordinate} = event.nativeEvent;
         setBlacklistedRegions([...state.blacklistedRegions, {center: coordinate, radius: 100}]);
         setActiveRegionIndex(state.blacklistedRegions.length);
@@ -95,7 +96,7 @@ const DontApproachMeHere = ({navigation}) => {
     }
 
     return (
-        <OPageContainer subtitle="Being near these hotspots increases your odds of meeting your soulmate.">
+        <OPageContainer title="Don't approach me here" subtitle="What are spots you don't want to be approached at? Your gym, workplace?">
             <>
                 <MapView
                     ref={mapRef}
@@ -175,7 +176,7 @@ const DontApproachMeHere = ({navigation}) => {
 const styles = StyleSheet.create({
     map: {
         width: '100%',
-        height: '50%',
+        minHeight: 400,
         borderRadius: BorderRadius.br_5xs,
     },
     removeButtonContainer: {

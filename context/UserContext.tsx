@@ -1,6 +1,7 @@
 import React, {createContext, Dispatch, useContext, useReducer} from 'react';
 import * as ImagePicker from "expo-image-picker";
 import {LatLng} from "react-native-maps";
+import {LocationObject} from "expo-location";
 
 export type Gender = "woman" | "man"
 
@@ -24,6 +25,8 @@ export interface IUserData {
     approachFromTime: Date
     approachToTime: Date
     bio: string
+    currentLocation?: LocationObject,
+    dateMode: EDateMode,
 }
 
 export interface MapRegion {
@@ -40,7 +43,7 @@ export interface IImageAction {
 
 export interface IUserAction {
     type: EACTION_USER;
-    payload: string | Date | boolean | IImageAction | EApproachChoice | EVerificationStatus | MapRegion[];
+    payload: string | Date | boolean | IImageAction | EApproachChoice | EVerificationStatus | MapRegion[] | LocationObject | EDateMode;
 }
 
 export enum EACTION_USER {
@@ -60,11 +63,18 @@ export enum EACTION_USER {
     SET_APPROACH_FROM_TIME = 'SET_APPROACH_FROM_TIME',
     SET_APPROACH_TO_TIME = 'SET_APPROACH_TO_TIME',
     SET_BIO = 'SET_BIO',
+    SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION',
+    SET_DATE_MODE = 'SET_DATE_MODE',
 }
 
 interface IUserContextType {
     state: IUserData;
     dispatch: Dispatch<IUserAction>;
+}
+
+export enum EDateMode {
+    GHOST = "ghost",
+    LIVE = "live",
 }
 
 export enum EApproachChoice {
@@ -109,6 +119,8 @@ const initialState: IUserData = {
     approachFromTime: DEFAULT_FROM_TIME,
     approachToTime: DEFAULT_TO_TIME,
     bio: 'No pick-up lines please. Just be chill.',
+    currentLocation: undefined,
+    dateMode: EDateMode.GHOST,
 };
 
 const userReducer = (state: IUserData, action: IUserAction): IUserData => {
@@ -193,6 +205,16 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             return {
                 ...state,
                 bio: action.payload as string,
+            };
+        case EACTION_USER.SET_CURRENT_LOCATION:
+            return {
+                ...state,
+                currentLocation: action.payload as LocationObject,
+            };
+        case EACTION_USER.SET_DATE_MODE:
+            return {
+                ...state,
+                dateMode: action.payload as EDateMode,
             };
         default:
             return state;

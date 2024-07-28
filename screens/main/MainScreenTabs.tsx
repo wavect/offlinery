@@ -4,14 +4,18 @@ import HeatMap from "../../screens/main/HeatMap";
 import Encounters from "./Encounters";
 import Settings from "./Settings";
 import {MaterialIcons} from "@expo/vector-icons";
-import {Color} from "../../GlobalStyles";
+import {Color, Title} from "../../GlobalStyles";
+import {OGoLiveToggle} from "../../components/OGoLiveToggle/OGoLiveToggle";
+import {Text} from "react-native";
 
 const Tab = createBottomTabNavigator();
 
 export const MainScreenTabs = () => {
     return <Tab.Navigator
-        screenOptions={{tabBarActiveTintColor: Color.white, tabBarLabelStyle: {marginBottom: 5},
-            tabBarActiveBackgroundColor: Color.primary}}>
+        screenOptions={{ headerTitleStyle: Title,
+            headerStyle: { height: 110 }, headerTitleAlign: 'left',
+            tabBarActiveTintColor: Color.white, tabBarLabelStyle: {marginBottom: 5},
+            tabBarActiveBackgroundColor: Color.primary, headerShadowVisible: false, headerRight: () => <OGoLiveToggle style={{marginRight: 10}} />}}>
         <Tab.Screen name="Find People" component={HeatMap} options={{
             tabBarIcon: ({color, size}) => <MaterialIcons name="location-history" size={size} color={color}/>
         }}/>
