@@ -6,6 +6,7 @@ import {ROUTES} from "../routes";
 import {EACTION_USER, useUserContext} from "../../context/UserContext";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
+import {OCheckbox} from "../../components/OCheckbox/OCheckbox";
 
 const Email = ({navigation}) => {
     const {state, dispatch} = useUserContext()
@@ -26,12 +27,7 @@ const Email = ({navigation}) => {
                            subtitle="Don't lose access to your account, verify your email.">
         <OTextInput value={state.email} setValue={setEmail} placeholder="Enter email" style={styles.inputField}/>
 
-        <View style={styles.checkboxField}>
-            <Checkbox value={state.wantsEmailUpdates} onValueChange={setCheckboxChecked}/>
-            <Text style={styles.checkboxLabel}>
-                I want to receive news, updates and offers from Offlinery.
-            </Text>
-        </View>
+        <OCheckbox onValueChange={setCheckboxChecked} checkboxState={state.wantsEmailUpdates} label="I want to receive news, updates and offers from Offlinery."/>
     </OPageContainer>
 };
 
@@ -53,16 +49,6 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 12,
         fontSize: 16,
-    },
-    checkboxField: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    checkboxLabel: {
-        flex: 1,
-        fontSize: 16,
-        color: '#000',
-        marginLeft: 10,
     },
     buttonContainer: {
         alignItems: 'center',

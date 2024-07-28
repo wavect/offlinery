@@ -1,6 +1,5 @@
-import {LatLng} from "react-native-maps";
-
 export interface IPublicProfile {
+    encounterId: string
     firstName: string
     age: string
     mainImageURI: string

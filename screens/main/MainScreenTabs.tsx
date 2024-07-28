@@ -6,21 +6,59 @@ import Settings from "./Settings";
 import {MaterialIcons} from "@expo/vector-icons";
 import {Color, Title} from "../../GlobalStyles";
 import {OGoLiveToggle} from "../../components/OGoLiveToggle/OGoLiveToggle";
-import {Text} from "react-native";
+import {createStackNavigator} from "@react-navigation/stack";
+import {ROUTES} from "../routes";
+import ReportEncounter from "./ReportEncounter";
+import {useNavigationState} from "@react-navigation/native";
+import {EncountersProvider} from "../../context/EncountersContext";
 
 const Tab = createBottomTabNavigator();
+const EncounterStack = createStackNavigator();
+
+const NO_HEADER = {headerShown: false}
+const EncounterScreenStack = () => <EncountersProvider>
+    <EncounterStack.Navigator
+        initialRouteName={ROUTES.Main.Encounters}
+        screenOptions={NO_HEADER}
+    >
+        <EncounterStack.Screen
+            name={ROUTES.Main.Encounters}
+            component={Encounters}
+            options={NO_HEADER}
+        />
+        <EncounterStack.Screen
+            name={ROUTES.Main.ReportEncounter}
+            component={ReportEncounter}
+            options={{
+                headerShown: true,
+                headerShadowVisible: false,
+                headerTitle: "Report person",
+                headerBackTitleVisible: false,
+                headerTitleAlign: 'left'
+            }}
+        />
+    </EncounterStack.Navigator>
+</EncountersProvider>
 
 export const MainScreenTabs = () => {
     return <Tab.Navigator
-        screenOptions={{ headerTitleStyle: Title,
-            headerStyle: { height: 110 }, headerTitleAlign: 'left',
-            tabBarActiveTintColor: Color.white, tabBarLabelStyle: {marginBottom: 5},
-            tabBarActiveBackgroundColor: Color.primary, headerShadowVisible: false, headerRight: () => <OGoLiveToggle style={{marginRight: 10}} />}}>
+        screenOptions={() => (
+            {
+                headerTitleStyle: Title,
+                headerStyle: {height: 110},
+                headerTitleAlign: 'left',
+                tabBarActiveTintColor: Color.white,
+                tabBarLabelStyle: {marginBottom: 5},
+                tabBarActiveBackgroundColor: Color.primary,
+                headerShadowVisible: false,
+                headerRight: () => <OGoLiveToggle style={{marginRight: 10}}/>
+            })
+        }>
         <Tab.Screen name="Find People" component={HeatMap} options={{
             tabBarIcon: ({color, size}) => <MaterialIcons name="location-history" size={size} color={color}/>
         }}/>
         {/* TODO: We could add badges to encounters, https://reactnavigation.org/docs/tab-based-navigation */}
-        <Tab.Screen name="Encounters" component={Encounters} options={{
+        <Tab.Screen name="Encounters" component={EncounterScreenStack} options={{
             tabBarIcon: ({color, size}) => <MaterialIcons name="emoji-people" size={size} color={color}/>
         }}/>
         <Tab.Screen name="Settings" component={Settings} options={{

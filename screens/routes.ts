@@ -3,6 +3,10 @@ export const ROUTES: any = {
     HouseRules: 'HouseRules',
     /** @dev MainTabView then manages the tab routes */
     MainTabView: 'Main_TabView',
+    Main: {
+        Encounters: 'Main_Encounters',
+        ReportEncounter: 'Main_ReportEncounter',
+    },
     Onboarding: {
         Email: 'Onboarding_Email',
         FirstName: 'Onboarding_Firstname',

@@ -72,7 +72,7 @@ export default function App() {
                 {hideSplashScreen ? (
                     <UserProvider>
                         <Stack.Navigator
-                            initialRouteName="Welcome"
+                            initialRouteName={ROUTES.Welcome}
                             screenOptions={NO_HEADER}
                         >
                             <Stack.Screen

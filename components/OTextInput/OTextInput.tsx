@@ -6,16 +6,18 @@ interface IOTextInputProps {
     setValue: React.Dispatch<string>
     placeholder: string
     style?: StyleProp<ViewStyle>;
+    multiline?: boolean
 }
 
 export const OTextInput = (props: IOTextInputProps) => {
-    const {value, setValue, placeholder, style} = props;
+    const {value, setValue, placeholder, style, multiline} = props;
 
     return <TextInput
         style={[styles.input, style]}
         value={value}
         onChangeText={setValue}
         placeholder={placeholder}
+        multiline={multiline}
         placeholderTextColor="#999"
     />
 }

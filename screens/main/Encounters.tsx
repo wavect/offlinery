@@ -3,11 +3,12 @@ import {useState} from "react";
 import {Image, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
-import {EDateStatus, IPublicProfile} from "../../types/PublicProfile.types";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import OSingleEncounter from "../../components/OSingleEncounter/OSingleEncounter";
+import OProfilePreview from "../../components/OProfilePreview/OProfilePreview";
+import {useEncountersContext} from "../../context/EncountersContext";
 
-const Encounters = () => {
+const Encounters = ({navigation}) => {
+    const {state} = useEncountersContext()
     const today = new Date()
     const twoWeeksBefore = new Date();
     twoWeeksBefore.setDate(today.getDate() - 14);
@@ -30,48 +31,9 @@ const Encounters = () => {
         }
     };
 
-    // TODO: fetch from server
-    const encounters: IPublicProfile[] = [
-        {
-            firstName: 'Kevin',
-            age: '27',
-            rating: 4,
-            mainImageURI: 'https://wavect.io/img/team/kevin.webp',
-            personalRelationship: {
-                lastTimePassedBy: '4 days ago',
-                lastLocationPassedBy: 'Altstadt Innsbruck',
-                status: EDateStatus.NOT_MET,
-                reported: false,
-            }
-        },
-        {
-            firstName: 'Kev',
-            age: '28',
-            rating: 3.4,
-            mainImageURI: 'https://wavect.io/img/team/kevin.webp',
-            personalRelationship: {
-                lastTimePassedBy: '3 hours ago',
-                lastLocationPassedBy: 'Marien-Theresien-Straße 1',
-                status: EDateStatus.MET_NOT_INTERESTED,
-                reported: false,
-            }
-        },
-        {
-            firstName: 'Kev',
-            age: '28',
-            rating: 3.4,
-            mainImageURI: 'https://wavect.io/img/team/kevin.webp',
-            personalRelationship: {
-                lastTimePassedBy: '1 week ago',
-                lastLocationPassedBy: 'Cafe Katzung',
-                status: EDateStatus.MET_NOT_INTERESTED,
-                reported: true,
-            }
-        },
-    ];
-
     return (
-        <OPageContainer subtitle="People you might have met. Rate them, Report them or stay in touch." doNotUseScrollView={true}>
+        <OPageContainer subtitle="People you might have met. Rate them, Report them or stay in touch."
+                        doNotUseScrollView={true}>
             <View style={styles.container}>
                 <View style={styles.dateRangeContainer}>
                     <View style={styles.dateContainer}>
@@ -130,14 +92,17 @@ const Encounters = () => {
                     </View>
                 </View>
 
-                {encounters.length
+                {state.encounters.length
                     && <ScrollView style={styles.encountersList}>
-                    {encounters.map((encounter, idx) => <OSingleEncounter key={idx} publicProfile={encounter}/>)}
-                </ScrollView>
+                        {state.encounters.map((encounter, idx) => <OProfilePreview key={idx} publicProfile={encounter}
+                                                                             showActions={true}
+                                                                             navigation={navigation}/>)}
+                    </ScrollView>
+                // No encounters, just show small text in the middle of the screen
                     || <View style={styles.noEncountersContainer}>
-                    <Text style={styles.noEncountersTextLg}>Nobody was nearby..</Text>
+                        <Text style={styles.noEncountersTextLg}>Nobody was nearby..</Text>
                         <Text style={styles.noEncountersTextSm}>(hint: mingle with the crowd)</Text>
-                </View>}
+                    </View>}
 
 
             </View>
