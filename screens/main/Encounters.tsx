@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useState} from "react";
-import {Image, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
+import {Image, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import {EDateStatus, IPublicProfile} from "../../types/PublicProfile.types";
@@ -55,8 +55,24 @@ const Encounters = () => {
     const today = new Date()
     const twoWeeksBefore = new Date();
     twoWeeksBefore.setDate(today.getDate() - 14);
-    const [metStartDateFilter, onMetStartDateFilterChange] = useState<Date | undefined>(twoWeeksBefore)
-    const [metEndDateFilter, onMetEndDateFilterChange] = useState<Date | undefined>(today)
+    const [metStartDateFilter, setMetStartDateFilter] = useState<Date>(twoWeeksBefore)
+    const [metEndDateFilter, setMetEndDateFilter] = useState<Date>(today)
+    const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+    const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+
+    const onMetStartDateFilterChange = (event: any, selectedDate?: Date) => {
+        setShowStartDatePicker(Platform.OS === 'ios');
+        if (selectedDate) {
+            setMetStartDateFilter(selectedDate);
+        }
+    };
+
+    const onMetEndDateFilterChange = (event: any, selectedDate?: Date) => {
+        setShowEndDatePicker(Platform.OS === 'ios');
+        if (selectedDate) {
+            setMetEndDateFilter(selectedDate);
+        }
+    };
 
     // TODO: fetch from server
     const encounters: IPublicProfile[] = [
@@ -104,23 +120,55 @@ const Encounters = () => {
                 <View style={styles.dateRangeContainer}>
                     <View style={styles.dateContainer}>
                         <Text style={styles.dateLabel}>From</Text>
-                        <RNDateTimePicker
-                            display="default"
-                            mode="date"
-                            onChange={(_, val) => onMetStartDateFilterChange(val)}
-                            accessibilityLabel="We met from"
-                            value={metStartDateFilter || twoWeeksBefore}
-                        />
+                        {Platform.OS === 'ios' ? (
+                            <RNDateTimePicker
+                                display="default"
+                                mode="date"
+                                onChange={onMetStartDateFilterChange}
+                                accessibilityLabel="We met from"
+                                value={metStartDateFilter}
+                            />
+                        ) : (
+                            <>
+                                <TouchableOpacity onPress={() => setShowStartDatePicker(true)}>
+                                    <Text style={styles.dateButton}>{metStartDateFilter.toDateString()}</Text>
+                                </TouchableOpacity>
+                                {showStartDatePicker && (
+                                    <RNDateTimePicker
+                                        value={metStartDateFilter}
+                                        mode="date"
+                                        display="default"
+                                        onChange={onMetStartDateFilterChange}
+                                    />
+                                )}
+                            </>
+                        )}
                     </View>
                     <View style={styles.dateContainer}>
                         <Text style={styles.dateLabel}>To</Text>
-                        <RNDateTimePicker
-                            display="default"
-                            mode="date"
-                            onChange={(_, val) => onMetEndDateFilterChange(val)}
-                            accessibilityLabel="to this date"
-                            value={metEndDateFilter || today}
-                        />
+                        {Platform.OS === 'ios' ? (
+                            <RNDateTimePicker
+                                display="default"
+                                mode="date"
+                                onChange={onMetEndDateFilterChange}
+                                accessibilityLabel="to this date"
+                                value={metEndDateFilter}
+                            />
+                        ) : (
+                            <>
+                                <TouchableOpacity onPress={() => setShowEndDatePicker(true)}>
+                                    <Text style={styles.dateButton}>{metEndDateFilter.toDateString()}</Text>
+                                </TouchableOpacity>
+                                {showEndDatePicker && (
+                                    <RNDateTimePicker
+                                        value={metEndDateFilter}
+                                        mode="date"
+                                        display="default"
+                                        onChange={onMetEndDateFilterChange}
+                                    />
+                                )}
+                            </>
+                        )}
                     </View>
                 </View>
 
@@ -140,6 +188,16 @@ const Encounters = () => {
 };
 
 const styles = StyleSheet.create({
+    dateButton: {
+        fontSize: FontSize.size_md,
+        fontFamily: FontFamily.montserratRegular,
+        color: Color.black,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: Color.lightGray,
+        borderRadius: 5,
+    },
     noEncountersContainer: {
         flex: 1,
         justifyContent: 'center',
