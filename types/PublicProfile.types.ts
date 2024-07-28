@@ -1,3 +1,4 @@
+import {LatLng} from "react-native-maps";
 
 export interface IPublicProfile {
     firstName: string
@@ -15,6 +16,9 @@ export enum EDateStatus {
 
 export interface IProfileRelationship {
     status: EDateStatus
-    /** @dev Last time both have been nearby regardless whether they actually met */
-    lastTimePassedBy?: Date
+    /** @dev Last time both have been nearby regardless whether they actually met, might just be calculated by backend "4 days ago"|"2 hours ago" */
+    lastTimePassedBy: string
+    /** Before we go for LatLng here, we might just return a readable string from the backend */
+    lastLocationPassedBy: string
+    reported: boolean
 }

@@ -1,10 +1,9 @@
 import * as React from "react";
 import {useState} from "react";
-import {FlatList, Image, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
+import {Image, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import {EDateStatus, IPublicProfile} from "../../types/PublicProfile.types";
-import {MaterialIcons} from "@expo/vector-icons";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -14,7 +13,8 @@ interface ISingleEncounterProps {
 
 const SingleEncounter = (props: ISingleEncounterProps) => {
     const {publicProfile} = props;
-    const [dateStatus, setDateStatus] = useState<EDateStatus>(EDateStatus.NOT_MET)
+    const {personalRelationship} = publicProfile
+    const [dateStatus, setDateStatus] = useState<EDateStatus>(personalRelationship?.status || EDateStatus.NOT_MET)
     const [dateStates, setDateStates] = useState([
         {label: 'Not met', value: EDateStatus.NOT_MET},
         {label: 'Met, not interested', value: EDateStatus.MET_NOT_INTERESTED},
@@ -22,6 +22,7 @@ const SingleEncounter = (props: ISingleEncounterProps) => {
     ])
     const [isDateStatusDropwdownOpen, setDateStatusDropdownOpen] = useState(false)
 
+    // TODO: Zindex (ios), elevation (android) --> still not showing above other elements when selecting a datestate
     return <View style={styles.encounterContainer}>
         <Image
             style={styles.profileImage}
@@ -30,20 +31,22 @@ const SingleEncounter = (props: ISingleEncounterProps) => {
         />
         <View style={styles.encounterDetails}>
             <Text style={styles.nameAge}>{`${publicProfile.firstName}, ${publicProfile.age}`}</Text>
-            <Text style={styles.encounterInfo}>4 days ago near Altstadt</Text>
+            <Text style={styles.encounterInfo}>{`${personalRelationship?.lastTimePassedBy} near ${personalRelationship?.lastLocationPassedBy}`}</Text>
 
-            <DropDownPicker value={dateStatus} setValue={setDateStatus} items={dateStates} setItems={setDateStates}
+            <View style={styles.encounterDropwdownContainer}>
+            <DropDownPicker value={dateStatus} setValue={setDateStatus} items={dateStates} setItems={setDateStates} zIndex={3000}
+                            disabled={personalRelationship?.reported} dropDownContainerStyle={{ zIndex:3000,backgroundColor:'white',elevation:3000}}
+                            style={[styles.encounterDropdownPicker, personalRelationship?.reported ? styles.encounterDropdownPickerDisabled : null]} textStyle={{fontFamily: FontFamily.montserratRegular}}
                             open={isDateStatusDropwdownOpen} setOpen={setDateStatusDropdownOpen}/>
+            </View>
         </View>
         <View style={styles.rightColumn}>
-            <MaterialIcons
-                style={styles.ratingImage}
-                name="star-border"
-                size={32}
-            />
-            <Pressable style={styles.buttonDanger}>
-                <Text style={styles.buttonText}>Report</Text>
-            </Pressable>
+            <Text style={styles.trustScore} onPress={() => alert('The higher the more trustworthy the person is (5 = best).')}>Trust ({publicProfile.rating})</Text>
+            {dateStatus === EDateStatus.MET_NOT_INTERESTED && <Pressable style={personalRelationship?.reported ? styles.buttonDisabled : styles.buttonDanger} disabled={personalRelationship?.reported}>
+                <Text style={styles.buttonText}>
+                    {personalRelationship?.reported ? 'Reported..' : 'Report'}
+                </Text>
+            </Pressable>}
         </View>
     </View>
 }
@@ -63,8 +66,34 @@ const Encounters = () => {
             rating: 4,
             mainImageURI: 'https://wavect.io/img/team/kevin.webp',
             personalRelationship: {
-                lastTimePassedBy: new Date(2024, 7, 20, 13, 5, 1),
+                lastTimePassedBy: '4 days ago',
+                lastLocationPassedBy: 'Altstadt Innsbruck',
                 status: EDateStatus.NOT_MET,
+                reported: false,
+            }
+        },
+        {
+            firstName: 'Kev',
+            age: '28',
+            rating: 3.4,
+            mainImageURI: 'https://wavect.io/img/team/kevin.webp',
+            personalRelationship: {
+                lastTimePassedBy: '3 hours ago',
+                lastLocationPassedBy: 'Marien-Theresien-Straße 1',
+                status: EDateStatus.MET_NOT_INTERESTED,
+                reported: false,
+            }
+        },
+        {
+            firstName: 'Kev',
+            age: '28',
+            rating: 3.4,
+            mainImageURI: 'https://wavect.io/img/team/kevin.webp',
+            personalRelationship: {
+                lastTimePassedBy: '1 week ago',
+                lastLocationPassedBy: 'Cafe Katzung',
+                status: EDateStatus.MET_NOT_INTERESTED,
+                reported: true,
             }
         },
     ];
@@ -95,17 +124,51 @@ const Encounters = () => {
                     </View>
                 </View>
 
-                <ScrollView style={styles.encountersList}>
+                {encounters.length
+                    && <ScrollView style={styles.encountersList}>
                     {encounters.map((encounter, idx) => <SingleEncounter key={idx} publicProfile={encounter}/>)}
                 </ScrollView>
+                    || <View style={styles.noEncountersContainer}>
+                    <Text style={styles.noEncountersTextLg}>Nobody was nearby..</Text>
+                        <Text style={styles.noEncountersTextSm}>(hint: mingle with the crowd)</Text>
+                </View>}
+
+
             </View>
         </OPageContainer>
     );
 };
 
 const styles = StyleSheet.create({
+    noEncountersContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    noEncountersTextLg: {
+        fontFamily: FontFamily.montserratMedium,
+        fontSize: FontSize.size_md,
+        color: Color.gray,
+    },
+    noEncountersTextSm: {
+        fontFamily: FontFamily.montserratRegular,
+        fontSize: FontSize.size_sm,
+        color: Color.gray,
+    },
     container: {
         flex: 1,
+    },
+    encounterDropdownPicker: {
+        maxWidth: '95%',
+        height: 35,
+        maxHeight: 35,
+        minHeight: 35,
+    },
+    encounterDropwdownContainer: {
+      zIndex: 3000,
+    },
+    encounterDropdownPickerDisabled: {
+        backgroundColor: Color.brightGray,
     },
     dateRangeContainer: {
         flexDirection: 'row',
@@ -133,6 +196,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: Color.lightGray,
         paddingBottom: 10,
+        zIndex: 1,
     },
     profileImage: {
         width: 80,
@@ -142,6 +206,7 @@ const styles = StyleSheet.create({
     encounterDetails: {
         flex: 1,
         marginLeft: 15,
+        zIndex: 2,
     },
     nameAge: {
         fontSize: FontSize.size_xl,
@@ -152,38 +217,27 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.montserratRegular,
         marginBottom: 10,
     },
-    selectField: {
-        marginTop: 5,
-    },
-    select: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: Color.gray,
-        borderRadius: 8,
-        padding: 8,
-    },
-    value: {
-        flex: 1,
-        fontFamily: FontFamily.montserratLight,
-        fontSize: FontSize.size_md,
-    },
-    chevronDownIcon: {
-        marginLeft: 5,
-    },
     rightColumn: {
         justifyContent: 'space-between',
         alignItems: 'flex-end',
     },
-    ratingImage: {
-        marginBottom: 10,
+    trustScore: {
+        fontFamily: FontFamily.montserratSemiBold,
     },
     buttonDanger: {
         backgroundColor: Color.red,
         borderColor: '#c00f0c',
         borderWidth: 1,
         borderRadius: 8,
-        padding: 8,
+        padding: 7,
+    },
+    buttonDisabled: {
+        borderRadius: 8,
+        padding: 7,
+        backgroundColor: Color.lightGray,
+        borderColor: Color.gray,
+        color: Color.white,
+        borderWidth: 1,
     },
     buttonText: {
         color: Color.white,
