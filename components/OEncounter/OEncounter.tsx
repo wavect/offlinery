@@ -1,4 +1,4 @@
-import {EDateStatus, IPublicProfile} from "../../types/PublicProfile.types";
+import {EDateStatus, IEncounterProfile} from "../../types/PublicProfile.types";
 import * as React from "react";
 import {useState} from "react";
 import {Image, Pressable, StyleSheet, Text, View} from "react-native";
@@ -9,13 +9,13 @@ import {EACTION_ENCOUNTERS, useEncountersContext} from "../../context/Encounters
 
 
 interface ISingleEncounterProps {
-    publicProfile: IPublicProfile
+    publicProfile: IEncounterProfile
     showActions: boolean
     navigation: any
 }
 
-const OProfilePreview = (props: ISingleEncounterProps) => {
-    const {dispatch, state} = useEncountersContext()
+const OEncounter = (props: ISingleEncounterProps) => {
+    const {dispatch} = useEncountersContext()
     const {publicProfile, showActions, navigation} = props;
     const {personalRelationship} = publicProfile
     const [dateStates, setDateStates] = useState([
@@ -140,4 +140,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default OProfilePreview
+export default OEncounter

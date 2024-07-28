@@ -2,11 +2,19 @@ import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
 import { ROUTES } from "../routes";
-import { DEFAULT_FROM_TIME, DEFAULT_TO_TIME, EACTION_USER, useUserContext } from "../../context/UserContext";
+import {
+    DEFAULT_FROM_TIME,
+    DEFAULT_TO_TIME,
+    EACTION_USER,
+    getPublicProfile,
+    useUserContext
+} from "../../context/UserContext";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
 import {Subtitle} from "../../GlobalStyles";
+import OEncounter from "../../components/OEncounter/OEncounter";
+import OTeaserProfilePreview from "../../components/OTeaserProfilePreview/OTeaserProfilePreview";
 
 const MAX_LENGTH_BIO = 60
 const BioLetThemKnow = ({ navigation }) => {
@@ -40,6 +48,8 @@ const BioLetThemKnow = ({ navigation }) => {
                     <Text style={styles.characterCount}>{MAX_LENGTH_BIO - state.bio.length}</Text>
                 </View>
             </View>
+
+            <OTeaserProfilePreview prefixText='Find ' publicProfile={getPublicProfile(state)} showOpenProfileButton={false}/>
         </OPageContainer>
     );
 };

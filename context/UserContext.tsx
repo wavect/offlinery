@@ -2,6 +2,8 @@ import React, {createContext, Dispatch, useContext, useReducer} from 'react';
 import * as ImagePicker from "expo-image-picker";
 import {LatLng} from "react-native-maps";
 import {LocationObject} from "expo-location";
+import {IEncounterProfile, IPublicProfile} from "../types/PublicProfile.types";
+import {getAge} from "../utils/date.utils";
 
 export type Gender = "woman" | "man"
 
@@ -99,7 +101,7 @@ const initialState: IUserData = {
     wantsEmailUpdates: false,
     email: "",
     firstName: "",
-    birthDay: new Date(),
+    birthDay: new Date(2000, 1, 1),
     gender: undefined,
     genderDesire: undefined,
     images: {
@@ -122,6 +124,22 @@ const initialState: IUserData = {
     currentLocation: undefined,
     dateMode: EDateMode.GHOST,
 };
+
+export const getFirstImage = (state: IUserData): ImagePicker.ImagePickerAsset => {
+    for (const img of Object.values(state.images)) {
+        // return first image as people can upload image into any slot without filling out all of them as of now
+        if (img) return img;
+    }
+}
+
+export const getPublicProfile = (state: IUserData): IPublicProfile => {
+    return {
+        firstName: state.firstName,
+        bio: state.bio,
+        age: getAge(state.birthDay).toString(),
+        mainImageURI: getFirstImage(state)?.uri,
+    }
+}
 
 const userReducer = (state: IUserData, action: IUserAction): IUserData => {
     switch (action.type) {

@@ -77,7 +77,7 @@ export default function App() {
                         >
                             <Stack.Screen
                                 name={ROUTES.Welcome}
-                                component={MainScreenTabs}
+                                component={Welcome}
                                 options={NO_HEADER}
                             />
                             <Stack.Screen

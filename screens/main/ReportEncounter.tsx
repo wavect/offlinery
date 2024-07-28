@@ -2,7 +2,7 @@ import * as React from "react";
 import {Image, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
-import OProfilePreview from "../../components/OProfilePreview/OProfilePreview";
+import OEncounter from "../../components/OEncounter/OEncounter";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
 import DropDownPicker from "react-native-dropdown-picker";
 import {useState} from "react";
@@ -49,7 +49,7 @@ const ReportEncounter = ({route, navigation}) => {
     return (
         <OPageContainer
             subtitle="Please only report people that were disrespectful, didn’t accept a No or even did misbehave in a different way.">
-            <OProfilePreview publicProfile={personToReport} showActions={false} navigation={navigation}/>
+            <OEncounter publicProfile={personToReport} showActions={false} navigation={navigation}/>
 
             <Text style={styles.label}>Type of Incident</Text>
             <DropDownPicker value={incidentType} setValue={setIncidentType} items={incidents} setItems={setIncidents}

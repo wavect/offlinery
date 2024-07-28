@@ -1,9 +1,7 @@
 import * as React from "react";
 import {useState} from "react";
-import {StyleSheet, Text, TextInput, View} from "react-native";
-import Checkbox from 'expo-checkbox';
+import {StyleSheet, TextInput, View} from "react-native";
 import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
-import {Subtitle, Title} from "../../GlobalStyles";
 import {ROUTES} from "../routes";
 import {EACTION_USER, useUserContext} from "../../context/UserContext";
 import RNDateTimePicker, {DateTimePickerEvent} from "@react-native-community/datetimepicker";
@@ -15,7 +13,7 @@ const Birthday = ({navigation}) => {
 
     const onDatePickerEvent = (event: DateTimePickerEvent, date?: Date) => {
         setShowDatePicker(!showDatePicker)
-        dispatch({type: EACTION_USER.SET_BIRTHDAY, payload: date || new Date()})
+        dispatch({type: EACTION_USER.SET_BIRTHDAY, payload: date || new Date(2000, 1, 1)})
     }
 
     return <OPageContainer title="My birthday is" subtitle="Your age will be public"

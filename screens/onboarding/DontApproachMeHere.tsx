@@ -16,6 +16,8 @@ import {EACTION_USER, MapRegion, useUserContext} from "../../context/UserContext
 import {MaterialIcons} from "@expo/vector-icons";
 import * as Location from 'expo-location';
 import {LocationAccuracy} from 'expo-location';
+import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
+import {ROUTES} from "../routes";
 
 const DontApproachMeHere = ({navigation}) => {
     const {state, dispatch} = useUserContext()
@@ -96,7 +98,15 @@ const DontApproachMeHere = ({navigation}) => {
     }
 
     return (
-        <OPageContainer title="Don't approach me here" subtitle="What are spots you don't want to be approached at? Your gym, workplace?">
+        <OPageContainer title="Don't approach me here" subtitle="What are spots you don't want to be approached at? Your gym, workplace?"
+                        bottomContainerChildren={
+                            <OButtonWide
+                                text="Continue"
+                                filled={true}
+                                variant="dark"
+                                onPress={() => navigation.navigate(ROUTES.Onboarding.ApproachMeBetween)}
+                            />
+                        }>
             <>
                 <MapView
                     ref={mapRef}
@@ -181,7 +191,7 @@ const styles = StyleSheet.create({
     },
     removeButtonContainer: {
         position: 'absolute',
-        top: 70,
+        top: 175,
         right: 10,
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
         borderRadius: 20,
@@ -190,15 +200,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     instructions: {
-        marginTop: 10,
-        padding: 10,
+        marginTop: 12,
     },
     instructionText: {
         marginBottom: 5,
     },
     sliderContainer: {
-        marginTop: 5,
-        padding: 10,
+        marginTop: 12,
     },
     slider: {
         width: '100%',

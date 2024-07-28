@@ -1,8 +1,8 @@
 import React, {createContext, Dispatch, useContext, useReducer} from 'react';
-import {EDateStatus, IPublicProfile} from "../types/PublicProfile.types";
+import {EDateStatus, IEncounterProfile} from "../types/PublicProfile.types";
 
 export interface IEncounters {
-    encounters: IPublicProfile[]
+    encounters: IEncounterProfile[]
 }
 
 export enum EACTION_ENCOUNTERS {
@@ -23,7 +23,7 @@ interface IRelationshipUpdatePayload {
 
 export interface IEncountersAction {
     type: EACTION_ENCOUNTERS;
-    payload: IPublicProfile[] | IRelationshipUpdatePayload;
+    payload: IEncounterProfile[] | IRelationshipUpdatePayload;
 }
 
 const initialState: IEncounters = {
@@ -75,7 +75,7 @@ const userReducer = (state: IEncounters, action: IEncountersAction): IEncounters
         case EACTION_ENCOUNTERS.SET_ENCOUNTERS:
             return {
                 ...state,
-                encounters: action.payload as IPublicProfile[],
+                encounters: action.payload as IEncounterProfile[],
             };
         case EACTION_ENCOUNTERS.SET_REPORTED:
             const reportedUpdate = action.payload as IRelationshipUpdatePayload

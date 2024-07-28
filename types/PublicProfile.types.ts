@@ -1,10 +1,17 @@
-export interface IPublicProfile {
+export interface IEncounterProfile {
     encounterId: string
     firstName: string
     age: string
     mainImageURI: string
     rating?: number
     personalRelationship?: IProfileRelationship
+}
+
+export interface IPublicProfile {
+    firstName: string
+    age: string
+    bio: string
+    mainImageURI: string
 }
 
 export enum EDateStatus {

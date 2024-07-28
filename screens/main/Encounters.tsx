@@ -4,7 +4,7 @@ import {Image, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpaci
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import OProfilePreview from "../../components/OProfilePreview/OProfilePreview";
+import OEncounter from "../../components/OEncounter/OEncounter";
 import {useEncountersContext} from "../../context/EncountersContext";
 
 const Encounters = ({navigation}) => {
@@ -94,9 +94,9 @@ const Encounters = ({navigation}) => {
 
                 {state.encounters.length
                     && <ScrollView style={styles.encountersList}>
-                        {state.encounters.map((encounter, idx) => <OProfilePreview key={idx} publicProfile={encounter}
-                                                                             showActions={true}
-                                                                             navigation={navigation}/>)}
+                        {state.encounters.map((encounter, idx) => <OEncounter key={idx} publicProfile={encounter}
+                                                                              showActions={true}
+                                                                              navigation={navigation}/>)}
                     </ScrollView>
                 // No encounters, just show small text in the middle of the screen
                     || <View style={styles.noEncountersContainer}>
