@@ -2,7 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import * as React from "react";
 import HeatMap from "../../screens/main/HeatMap";
 import Encounters from "./Encounters";
-import Settings from "./Settings";
+import ProfileSettings from "./ProfileSettings";
 import {MaterialIcons} from "@expo/vector-icons";
 import {Color, Title} from "../../GlobalStyles";
 import {OGoLiveToggle} from "../../components/OGoLiveToggle/OGoLiveToggle";
@@ -44,6 +44,7 @@ export const MainScreenTabs = () => {
     return <Tab.Navigator
         screenOptions={() => (
             {
+                headerTitle: '',
                 headerTitleStyle: Title,
                 headerStyle: {height: 110},
                 headerTitleAlign: 'left',
@@ -54,14 +55,20 @@ export const MainScreenTabs = () => {
                 headerRight: () => <OGoLiveToggle style={{marginRight: 10}}/>
             })
         }>
-        <Tab.Screen name="Find People" component={HeatMap} options={{
+        <Tab.Screen name={ROUTES.Main.FindPeople} component={HeatMap} options={{
+            tabBarLabel: 'Find people',
+            headerTitle: 'Find people',
             tabBarIcon: ({color, size}) => <MaterialIcons name="location-history" size={size} color={color}/>
         }}/>
         {/* TODO: We could add badges to encounters, https://reactnavigation.org/docs/tab-based-navigation */}
-        <Tab.Screen name="Encounters" component={EncounterScreenStack} options={{
+        <Tab.Screen name={ROUTES.Main.Encounters} component={EncounterScreenStack} options={{
+            tabBarLabel: 'Encounters',
+            headerTitle: 'Encounters',
             tabBarIcon: ({color, size}) => <MaterialIcons name="emoji-people" size={size} color={color}/>
         }}/>
-        <Tab.Screen name="Settings" component={Settings} options={{
+        <Tab.Screen name={ROUTES.Main.ProfileSettings} component={ProfileSettings} options={{
+            tabBarLabel: 'Settings',
+            headerTitle: 'Settings',
             tabBarIcon: ({color, size}) => <MaterialIcons name="settings" size={size} color={color}/>
         }}/>
     </Tab.Navigator>

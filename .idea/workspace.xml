@@ -5,19 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f94f1752-c4a8-44f2-835b-2c8f15cc2880" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/components/OTeaserProfilePreview/OTeaserProfilePreview.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/date.utils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/OProfilePreview/OProfilePreview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/OEncounter/OEncounter.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/context/EncountersContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/context/EncountersContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/context/UserContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/context/UserContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/main/Encounters.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/main/Encounters.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/main/ReportEncounter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/main/ReportEncounter.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/onboarding/BioLetThemKnow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/onboarding/BioLetThemKnow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/onboarding/Birthday.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/onboarding/Birthday.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/onboarding/DontApproachMeHere.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/onboarding/DontApproachMeHere.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/PublicProfile.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/PublicProfile.types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/HouseRules.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/HouseRules.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/main/MainScreenTabs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/main/MainScreenTabs.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/main/Settings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/main/ProfileSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/onboarding/AddPhotos.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/onboarding/AddPhotos.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/onboarding/FirstName.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/onboarding/FirstName.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/screens/routes.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +47,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/kevin/Desktop/GitRepositories/FuckDatingApps/fuck-dating-apps/components",
+    "last_opened_file_path": "C:/Users/kevin/Desktop/GitRepositories/FuckDatingApps/fuck-dating-apps/screens/main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -64,9 +59,9 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\screens\main" />
       <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\components" />
       <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\context" />
-      <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\screens\main" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -87,7 +82,7 @@
       <updated>1722108599746</updated>
       <workItem from="1722108601360" duration="16000" />
       <workItem from="1722149419882" duration="11288000" />
-      <workItem from="1722185545519" duration="14286000" />
+      <workItem from="1722185545519" duration="18352000" />
     </task>
     <servers />
   </component>

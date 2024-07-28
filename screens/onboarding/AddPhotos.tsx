@@ -3,18 +3,19 @@ import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {ROUTES} from "../routes";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import * as ImagePicker from 'expo-image-picker';
-import {View, Image, StyleSheet, Pressable} from "react-native";
+import {View, Image, StyleSheet, Pressable, GestureResponderEvent} from "react-native";
 import {BorderRadius, Color} from "../../GlobalStyles";
 import {EACTION_USER, ImageIdx, IUserAction, IUserData, useUserContext} from "../../context/UserContext";
-import { MaterialIcons } from '@expo/vector-icons';
+import {MaterialIcons} from '@expo/vector-icons';
 
 interface IPhotoContainerProps {
     imageIdx: ImageIdx
     dispatch: React.Dispatch<IUserAction>
     state: IUserData,
-    mediaStatus: ImagePicker.MediaLibraryPermissionResponse|null,
+    mediaStatus: ImagePicker.MediaLibraryPermissionResponse | null,
     requestMediaLibPermission: () => Promise<ImagePicker.MediaLibraryPermissionResponse>
 }
+
 const PhotoContainer = (props: IPhotoContainerProps) => {
     const {dispatch, imageIdx, state, mediaStatus, requestMediaLibPermission} = props
 
@@ -45,7 +46,7 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
             {currImg ? (
                 <Image
                     style={styles.previewImage}
-                    source={{ uri: currImg.uri }}
+                    source={{uri: currImg.uri}}
                 />
             ) : (
                 <MaterialIcons name="add-circle-outline" size={30} color={Color.primary}/>
@@ -54,7 +55,7 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
     )
 }
 
-const AddPhotos = ({navigation}) => {
+const AddPhotos = ({route, navigation}) => {
     const [mediaLibStatus, requestMediaLibPermission] = ImagePicker.useMediaLibraryPermissions();
     const {state, dispatch} = useUserContext();
     const hasAnyImage = Object.values(state.images).some(Boolean);
@@ -64,29 +65,35 @@ const AddPhotos = ({navigation}) => {
             title="Add photos"
             bottomContainerChildren={
                 <OButtonWide
-                    text="Continue"
+                    text={route.params?.overrideSaveBtnLbl || 'Continue'}
                     filled={true}
                     variant="dark"
                     disabled={!hasAnyImage}
-                    onPress={() => navigation.navigate(ROUTES.HouseRules, {
+                    onPress={route.params?.overrideOnBtnPress || (() => navigation.navigate(ROUTES.HouseRules, {
                         nextPage: ROUTES.Onboarding.ApproachChoice
-                    })}
+                    }))}
                 />
             }
             subtitle="Click to upload images."
         >
             <View style={styles.container}>
                 <View style={styles.row}>
-                    <PhotoContainer imageIdx="0" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus} requestMediaLibPermission={requestMediaLibPermission} />
-                    <PhotoContainer imageIdx="1" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus} requestMediaLibPermission={requestMediaLibPermission}/>
+                    <PhotoContainer imageIdx="0" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus}
+                                    requestMediaLibPermission={requestMediaLibPermission}/>
+                    <PhotoContainer imageIdx="1" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus}
+                                    requestMediaLibPermission={requestMediaLibPermission}/>
                 </View>
                 <View style={styles.row}>
-                    <PhotoContainer imageIdx="2" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus} requestMediaLibPermission={requestMediaLibPermission}/>
-                    <PhotoContainer imageIdx="3" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus} requestMediaLibPermission={requestMediaLibPermission}/>
+                    <PhotoContainer imageIdx="2" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus}
+                                    requestMediaLibPermission={requestMediaLibPermission}/>
+                    <PhotoContainer imageIdx="3" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus}
+                                    requestMediaLibPermission={requestMediaLibPermission}/>
                 </View>
                 <View style={styles.row}>
-                    <PhotoContainer imageIdx="4" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus} requestMediaLibPermission={requestMediaLibPermission}/>
-                    <PhotoContainer imageIdx="5" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus} requestMediaLibPermission={requestMediaLibPermission}/>
+                    <PhotoContainer imageIdx="4" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus}
+                                    requestMediaLibPermission={requestMediaLibPermission}/>
+                    <PhotoContainer imageIdx="5" dispatch={dispatch} state={state} mediaStatus={mediaLibStatus}
+                                    requestMediaLibPermission={requestMediaLibPermission}/>
                 </View>
             </View>
         </OPageContainer>

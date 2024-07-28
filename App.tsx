@@ -39,8 +39,9 @@ import DontApproachMeHere from "./screens/onboarding/DontApproachMeHere";
 import ApproachMeBetween from "./screens/onboarding/ApproachMeBetween";
 import BioLetThemKnow from "./screens/onboarding/BioLetThemKnow";
 import {MainScreenTabs} from "./screens/main/MainScreenTabs";
+import ProfileSettings from "./screens/main/ProfileSettings";
 
-const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: ""}
+const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: "", headerBackTitle: 'Back'}
 const NO_HEADER = {headerShown: false}
 
 export default function App() {
@@ -77,7 +78,7 @@ export default function App() {
                         >
                             <Stack.Screen
                                 name={ROUTES.Welcome}
-                                component={Welcome}
+                                component={ProfileSettings}
                                 options={NO_HEADER}
                             />
                             <Stack.Screen
