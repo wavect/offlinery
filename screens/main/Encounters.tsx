@@ -124,6 +124,7 @@ const Encounters = () => {
                             <RNDateTimePicker
                                 display="default"
                                 mode="date"
+                                style={styles.iosDatePicker}
                                 onChange={onMetStartDateFilterChange}
                                 accessibilityLabel="We met from"
                                 value={metStartDateFilter}
@@ -131,7 +132,7 @@ const Encounters = () => {
                         ) : (
                             <>
                                 <TouchableOpacity onPress={() => setShowStartDatePicker(true)}>
-                                    <Text style={styles.dateButton}>{metStartDateFilter.toDateString()}</Text>
+                                    <Text style={styles.androidDateButton}>{metStartDateFilter.toDateString()}</Text>
                                 </TouchableOpacity>
                                 {showStartDatePicker && (
                                     <RNDateTimePicker
@@ -150,6 +151,7 @@ const Encounters = () => {
                             <RNDateTimePicker
                                 display="default"
                                 mode="date"
+                                style={styles.iosDatePicker}
                                 onChange={onMetEndDateFilterChange}
                                 accessibilityLabel="to this date"
                                 value={metEndDateFilter}
@@ -157,7 +159,7 @@ const Encounters = () => {
                         ) : (
                             <>
                                 <TouchableOpacity onPress={() => setShowEndDatePicker(true)}>
-                                    <Text style={styles.dateButton}>{metEndDateFilter.toDateString()}</Text>
+                                    <Text style={styles.androidDateButton}>{metEndDateFilter.toDateString()}</Text>
                                 </TouchableOpacity>
                                 {showEndDatePicker && (
                                     <RNDateTimePicker
@@ -188,7 +190,8 @@ const Encounters = () => {
 };
 
 const styles = StyleSheet.create({
-    dateButton: {
+    iosDatePicker: {marginLeft: -10},
+    androidDateButton: {
         fontSize: FontSize.size_md,
         fontFamily: FontFamily.montserratRegular,
         color: Color.black,
