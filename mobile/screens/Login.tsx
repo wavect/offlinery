@@ -42,7 +42,8 @@ const Login = ({navigation}) => {
 
                 <KeyboardAvoidingView style={styles.keyBoardAvoidingViewContainer}
                                       behavior={Platform.OS === "ios" ? "padding" : "height"}
-                                      keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 140}>
+                                      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 140}>
+
                     <OShowcase subtitle="Stop Swiping. Meet IRL."/>
 
                     <OTextInputWide value={email} setValue={setEmail} placeholder="Your email" topLabel="Email"

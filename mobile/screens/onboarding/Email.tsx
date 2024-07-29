@@ -23,7 +23,7 @@ const Email = ({navigation}) => {
     return <OPageContainer title="What's your email?"
                            bottomContainerChildren={<OButtonWide text="Continue" filled={true}
                                                                  disabled={isInvalidEmail()} variant="dark"
-                                                                 onPress={() => navigation.navigate(ROUTES.Onboarding.FirstName)}/>}
+                                                                 onPress={() => navigation.navigate(ROUTES.Onboarding.Password)}/>}
                            subtitle="Don't lose access to your account, verify your email.">
         <OTextInput value={state.email} setValue={setEmail} placeholder="Enter email" style={styles.inputField}/>
 

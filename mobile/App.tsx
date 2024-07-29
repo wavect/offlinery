@@ -41,6 +41,7 @@ import BioLetThemKnow from "./screens/onboarding/BioLetThemKnow";
 import {MainScreenTabs} from "./screens/main/MainScreenTabs";
 import ProfileSettings from "./screens/main/ProfileSettings";
 import Login from "./screens/Login";
+import Password from "./screens/onboarding/Password";
 
 const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: "", headerBackTitle: 'Back'}
 const DEFAULT_LIGHT_SCREEN_PROPS = {...DEFAULT_SCREEN_PROPS, headerTransparent: true, headerTintColor: Color.white}
@@ -96,6 +97,11 @@ export default function App() {
                             <Stack.Screen
                                 name={ROUTES.Onboarding.Email}
                                 component={Email}
+                                options={DEFAULT_SCREEN_PROPS}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.Onboarding.Password}
+                                component={Password}
                                 options={DEFAULT_SCREEN_PROPS}
                             />
                             <Stack.Screen
