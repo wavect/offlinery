@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
-import {INestApplication} from "@nestjs/common";
+import {INestApplication, VersioningType} from "@nestjs/common";
 import * as path from 'path'
 import { writeFileSync } from 'fs';
 
@@ -15,6 +15,11 @@ async function bootstrap() {
     }
   });
   setupSwagger(app)
+
+  // @dev https://docs.nestjs.com/techniques/versioning
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
 
   await app.listen(3000);
 }

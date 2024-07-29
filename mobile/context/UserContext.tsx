@@ -20,9 +20,9 @@ export interface IUserData {
     }
     verificationStatus: EVerificationStatus
     approachChoice: EApproachChoice
-    street: string
+    /*street: string
     postalCode: string
-    country: string
+    country: string*/
     /** @dev Regions the user that wants to be approached marked as blacklisted */
     blacklistedRegions: MapRegion[]
     approachFromTime: Date
@@ -60,9 +60,9 @@ export enum EACTION_USER {
     SET_IMAGE = 'SET_IMAGE',
     SET_VERIFICATION_STATUS = 'SET_VERIFICATION_STATUS',
     SET_APPROACH_CHOICE = 'SET_APPROACH_CHOICE',
-    SET_STREET = 'SET_STREET',
+    /*SET_STREET = 'SET_STREET',
     SET_POSTAL_CODE = 'SET_POSTAL_CODE',
-    SET_COUNTRY = 'SET_COUNTRY',
+    SET_COUNTRY = 'SET_COUNTRY',*/
     SET_BLACKLISTED_REGIONS = 'SET_BLACKLISTED_REGIONS',
     SET_APPROACH_FROM_TIME = 'SET_APPROACH_FROM_TIME',
     SET_APPROACH_TO_TIME = 'SET_APPROACH_TO_TIME',
@@ -117,9 +117,9 @@ const initialState: IUserData = {
     },
     verificationStatus: EVerificationStatus.NOT_NEEDED,
     approachChoice: EApproachChoice.BOTH,
-    street: "",
+    /*street: "",
     postalCode: "",
-    country: "",
+    country: "",*/
     blacklistedRegions: [],
     approachFromTime: DEFAULT_FROM_TIME,
     approachToTime: DEFAULT_TO_TIME,
@@ -198,7 +198,7 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
                 ...state,
                 approachChoice: action.payload as EApproachChoice,
             };
-        case EACTION_USER.SET_STREET:
+       /* case EACTION_USER.SET_STREET:
             return {
                 ...state,
                 street: action.payload as string,
@@ -212,7 +212,7 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             return {
                 ...state,
                 country: action.payload as string,
-            };
+            };*/
         case EACTION_USER.SET_BLACKLISTED_REGIONS:
             return {
                 ...state,

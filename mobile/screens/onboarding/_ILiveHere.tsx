@@ -9,6 +9,8 @@ import MapView, {Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE} from "react-native-m
 import {BorderRadius} from "../../GlobalStyles";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
 
+const _ILiveHere = () => null
+/*
 const _ILiveHere = ({navigation}) => {
     const {state, dispatch} = useUserContext()
 
@@ -51,7 +53,7 @@ const _ILiveHere = ({navigation}) => {
                          longitudeDelta: 0.0421,
                      }}
                      provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}>
-            </MapView>*/}
+            </MapView>*}
         </>
     </OPageContainer>
 };
@@ -73,6 +75,6 @@ const styles = StyleSheet.create({
     inputField: {
         marginBottom: 40,
     },
-});
+});*/
 
 export default _ILiveHere;
