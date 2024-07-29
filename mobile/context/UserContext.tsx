@@ -8,6 +8,7 @@ import {getAge} from "../utils/date.utils";
 export type Gender = "woman" | "man"
 
 export interface IUserData {
+    isAuthenticated: boolean
     wantsEmailUpdates: boolean
     email: string
     firstName: string
@@ -49,6 +50,7 @@ export interface IUserAction {
 }
 
 export enum EACTION_USER {
+    SET_AUTHENTICATED = 'SET_AUTHENTICATED',
     SET_EMAIL_UPDATES = 'SET_EMAIL_UPDATES',
     SET_EMAIL = 'SET_EMAIL',
     SET_FIRSTNAME = 'SET_FIRSTNAME',
@@ -98,6 +100,7 @@ export const DEFAULT_TO_TIME = new Date()
 DEFAULT_TO_TIME.setHours(19, 0, 0, 0)
 
 const initialState: IUserData = {
+    isAuthenticated: false,
     wantsEmailUpdates: false,
     email: "",
     firstName: "",
@@ -125,11 +128,12 @@ const initialState: IUserData = {
     dateMode: EDateMode.GHOST,
 };
 
-export const getFirstImage = (state: IUserData): ImagePicker.ImagePickerAsset => {
+export const getFirstImage = (state: IUserData): ImagePicker.ImagePickerAsset|undefined => {
     for (const img of Object.values(state.images)) {
         // return first image as people can upload image into any slot without filling out all of them as of now
         if (img) return img;
     }
+    return;
 }
 
 export const getPublicProfile = (state: IUserData): IPublicProfile => {
@@ -137,12 +141,17 @@ export const getPublicProfile = (state: IUserData): IPublicProfile => {
         firstName: state.firstName,
         bio: state.bio,
         age: getAge(state.birthDay).toString(),
-        mainImageURI: getFirstImage(state)?.uri,
+        mainImageURI: getFirstImage(state)?.uri ?? '',
     }
 }
 
 const userReducer = (state: IUserData, action: IUserAction): IUserData => {
     switch (action.type) {
+        case EACTION_USER.SET_AUTHENTICATED:
+            return {
+                ...state,
+                isAuthenticated: action.payload as boolean,
+            };
         case EACTION_USER.SET_EMAIL_UPDATES:
             return {
                 ...state,

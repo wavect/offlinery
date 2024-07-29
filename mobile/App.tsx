@@ -40,8 +40,10 @@ import ApproachMeBetween from "./screens/onboarding/ApproachMeBetween";
 import BioLetThemKnow from "./screens/onboarding/BioLetThemKnow";
 import {MainScreenTabs} from "./screens/main/MainScreenTabs";
 import ProfileSettings from "./screens/main/ProfileSettings";
+import Login from "./screens/Login";
 
 const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: "", headerBackTitle: 'Back'}
+const DEFAULT_LIGHT_SCREEN_PROPS = {...DEFAULT_SCREEN_PROPS, headerTransparent: true, headerTintColor: Color.white}
 const NO_HEADER = {headerShown: false}
 
 export default function App() {
@@ -78,13 +80,18 @@ export default function App() {
                         >
                             <Stack.Screen
                                 name={ROUTES.Welcome}
-                                component={ProfileSettings}
+                                component={Welcome}
                                 options={NO_HEADER}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.Login}
+                                component={Login}
+                                options={DEFAULT_LIGHT_SCREEN_PROPS}
                             />
                             <Stack.Screen
                                 name={ROUTES.HouseRules}
                                 component={HouseRules}
-                                options={{...DEFAULT_SCREEN_PROPS, headerTransparent: true, headerTintColor: Color.white}}
+                                options={DEFAULT_LIGHT_SCREEN_PROPS}
                             />
                             <Stack.Screen
                                 name={ROUTES.Onboarding.Email}

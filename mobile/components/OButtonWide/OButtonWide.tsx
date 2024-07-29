@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Pressable, Text, GestureResponderEvent, StyleProp, ViewStyle } from "react-native";
+import React, {useEffect, useState} from "react";
+import {Pressable, Text, GestureResponderEvent, StyleProp, ViewStyle, ActivityIndicator} from "react-native";
 import oButtonWideStyles from './OButtonWide.styles';
+import {Color} from "../../GlobalStyles";
 
 type StyleVariant = "dark" | "light";
 
@@ -12,6 +13,9 @@ interface IOButtonWideProps {
     style?: StyleProp<ViewStyle>;
     disabled?: boolean;
     countdownEnableSeconds?: number;
+    isLoading?: boolean;
+    /** @dev Override button text in loading state */
+    loadingBtnText?: string
 }
 
 const getButtonStyle = (isDisabled: boolean, filled: boolean, variant: StyleVariant): StyleProp<ViewStyle> => {
@@ -36,6 +40,8 @@ const getLabelStyle = (isDisabled: boolean, filled: boolean, variant: StyleVaria
 };
 
 export const OButtonWide: React.FC<IOButtonWideProps> = ({
+                                                             loadingBtnText,
+                                                             isLoading,
                                                              text,
                                                              filled,
                                                              variant,
@@ -74,7 +80,10 @@ export const OButtonWide: React.FC<IOButtonWideProps> = ({
             style={[getButtonStyle(isDisabled, filled, variant), oButtonWideStyles.button, style]}
         >
             <Text style={getLabelStyle(isDisabled, filled, variant)}>
-                {buttonText.toUpperCase()}
+                {isLoading ? <>
+                    <ActivityIndicator size="small" style={{marginRight: 6}}/>
+                    {(loadingBtnText || buttonText).toUpperCase()}
+                </> : buttonText.toUpperCase()}
             </Text>
         </Pressable>
     );

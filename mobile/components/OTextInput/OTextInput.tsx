@@ -23,9 +23,6 @@ export const OTextInput = (props: IOTextInputProps) => {
 }
 
 const styles = StyleSheet.create({
-    inputField: {
-        marginBottom: 24,
-    },
     input: {
         borderWidth: 1,
         borderColor: '#ccc',
