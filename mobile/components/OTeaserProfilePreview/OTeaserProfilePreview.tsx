@@ -30,7 +30,7 @@ const OTeaserProfilePreview = (props: IOTeaserProfileProps) => {
                 <Pressable style={styles.button}>
                     {/* TODO: onPress={() => navigation.navigate(ROUTES.Main.ReportEncounter, {personToReport: publicProfile})}>*/}
                     <Text style={styles.buttonText}>
-                        {`${publicProfile.firstName}'s Profile`}
+                       View Profile
                     </Text>
                 </Pressable>
         </View>}

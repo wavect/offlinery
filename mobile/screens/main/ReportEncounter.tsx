@@ -49,7 +49,7 @@ const ReportEncounter = ({route, navigation}) => {
     return (
         <OPageContainer
             subtitle="Please only report people that were disrespectful, didn’t accept a No or even did misbehave in a different way.">
-            <OEncounter publicProfile={personToReport} showActions={false} navigation={navigation}/>
+            <OEncounter encounterProfile={personToReport} showActions={false} navigation={navigation}/>
 
             <Text style={styles.label}>Type of Incident</Text>
             <DropDownPicker value={incidentType} setValue={setIncidentType} items={incidents} setItems={setIncidents}

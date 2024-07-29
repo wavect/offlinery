@@ -11,6 +11,7 @@ import {ROUTES} from "../routes";
 import ReportEncounter from "./ReportEncounter";
 import {useNavigationState} from "@react-navigation/native";
 import {EncountersProvider} from "../../context/EncountersContext";
+import NavigateToApproach from "./NavigateToApproach";
 
 const Tab = createBottomTabNavigator();
 const EncounterStack = createStackNavigator();
@@ -33,6 +34,17 @@ const EncounterScreenStack = () => <EncountersProvider>
                 headerShown: true,
                 headerShadowVisible: false,
                 headerTitle: "Report person",
+                headerBackTitleVisible: false,
+                headerTitleAlign: 'left'
+            }}
+        />
+        <EncounterStack.Screen
+            name={ROUTES.Main.NavigateToApproach}
+            component={NavigateToApproach}
+            options={{
+                headerShown: true,
+                headerShadowVisible: false,
+                headerTitle: "Meet in IRL",
                 headerBackTitleVisible: false,
                 headerTitleAlign: 'left'
             }}

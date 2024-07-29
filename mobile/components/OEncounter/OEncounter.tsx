@@ -9,15 +9,15 @@ import {EACTION_ENCOUNTERS, useEncountersContext} from "../../context/Encounters
 
 
 interface ISingleEncounterProps {
-    publicProfile: IEncounterProfile
+    encounterProfile: IEncounterProfile
     showActions: boolean
     navigation: any
 }
 
 const OEncounter = (props: ISingleEncounterProps) => {
     const {dispatch} = useEncountersContext()
-    const {publicProfile, showActions, navigation} = props;
-    const {personalRelationship} = publicProfile
+    const {encounterProfile, showActions, navigation} = props;
+    const {personalRelationship} = encounterProfile
     const [dateStates, setDateStates] = useState([
         {label: 'Not met', value: EDateStatus.NOT_MET},
         {label: 'Met, not interested', value: EDateStatus.MET_NOT_INTERESTED},
@@ -28,22 +28,21 @@ const OEncounter = (props: ISingleEncounterProps) => {
     const setDateStatus = (dateStatus: EDateStatus) => {
         dispatch({
             type: EACTION_ENCOUNTERS.SET_DATE_STATUS,
-            payload: {encounterId: publicProfile.encounterId, value: dateStatus},
+            payload: {encounterId: encounterProfile.encounterId, value: dateStatus},
         })
     };
-    const dateStatus = publicProfile.personalRelationship?.status
+    const dateStatus = encounterProfile.personalRelationship?.status
 
 // TODO: Zindex (ios), elevation (android) --> still not showing above other elements when selecting a datestate
     return <View style={styles.encounterContainer}>
         <Image
             style={styles.profileImage}
             contentFit="cover"
-            source={{uri: publicProfile.mainImageURI}}
+            source={{uri: encounterProfile.mainImageURI}}
         />
         <View style={styles.encounterDetails}>
-            <Text style={styles.nameAge}>{`${publicProfile.firstName}, ${publicProfile.age}`}</Text>
-            <Text
-                style={styles.encounterInfo}>{`${personalRelationship?.lastTimePassedBy} near ${personalRelationship?.lastLocationPassedBy}`}</Text>
+            <Text style={styles.nameAge}>{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>
+            <Text style={styles.encounterInfo}>{`${personalRelationship?.lastTimePassedBy} near ${personalRelationship?.lastLocationPassedBy}`}</Text>
 
             {showActions && <View style={styles.encounterDropwdownContainer}>
                 <DropDownPicker value={dateStatus} setValue={d => setDateStatus(d())} items={dateStates} setItems={setDateStates}
@@ -58,13 +57,21 @@ const OEncounter = (props: ISingleEncounterProps) => {
         {showActions && <View style={styles.rightColumn}>
             <Text style={styles.trustScore}
                   onPress={() => alert('The higher the more trustworthy the person is (5 = best).')}>Trust
-                ({publicProfile.rating})</Text>
+                ({encounterProfile.rating})</Text>
             {dateStatus === EDateStatus.MET_NOT_INTERESTED &&
                 <Pressable style={personalRelationship?.reported ? styles.buttonDisabled : styles.buttonDanger}
                            disabled={personalRelationship?.reported}
-                           onPress={() => navigation.navigate(ROUTES.Main.ReportEncounter, {personToReport: publicProfile})}>
+                           onPress={() => navigation.navigate(ROUTES.Main.ReportEncounter, {personToReport: encounterProfile})}>
                     <Text style={styles.buttonText}>
                         {personalRelationship?.reported ? 'Reported..' : 'Report'}
+                    </Text>
+                </Pressable>}
+
+            {dateStatus !== EDateStatus.MET_NOT_INTERESTED && personalRelationship?.isNearbyRightNow &&
+                <Pressable style={styles.buttonBlack}
+                           onPress={() => navigation.navigate(ROUTES.Main.NavigateToApproach, {navigateToPerson: encounterProfile})}>
+                    <Text style={styles.buttonText}>
+                        Navigate
                     </Text>
                 </Pressable>}
         </View>}
@@ -105,6 +112,13 @@ const styles = StyleSheet.create({
     },
     trustScore: {
         fontFamily: FontFamily.montserratSemiBold,
+    },
+    buttonBlack: {
+        backgroundColor: Color.black,
+        borderColor: Color.gray,
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 7,
     },
     buttonDanger: {
         backgroundColor: Color.red,

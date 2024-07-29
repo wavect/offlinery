@@ -9,6 +9,7 @@ export const ROUTES: any = {
         ReportEncounter: 'Main_ReportEncounter',
         FindPeople: 'Main_FindPeople',
         ProfileSettings: 'Main_ProfileSettings',
+        NavigateToApproach: 'Main_NavigateToApproach',
     },
     Onboarding: {
         Email: 'Onboarding_Email',

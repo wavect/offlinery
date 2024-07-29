@@ -2,6 +2,7 @@ export interface IEncounterProfile {
     encounterId: string
     firstName: string
     age: string
+    bio: string
     mainImageURI: string
     rating?: number
     personalRelationship?: IProfileRelationship
@@ -21,6 +22,7 @@ export enum EDateStatus {
 }
 
 export interface IProfileRelationship {
+    isNearbyRightNow: boolean
     status: EDateStatus
     /** @dev Last time both have been nearby regardless whether they actually met, might just be calculated by backend "4 days ago"|"2 hours ago" */
     lastTimePassedBy: string

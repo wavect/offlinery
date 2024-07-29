@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useState} from "react";
-import {Image, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
@@ -94,7 +94,7 @@ const Encounters = ({navigation}) => {
 
                 {state.encounters.length
                     && <ScrollView style={styles.encountersList}>
-                        {state.encounters.map((encounter, idx) => <OEncounter key={idx} publicProfile={encounter}
+                        {state.encounters.map((encounter, idx) => <OEncounter key={idx} encounterProfile={encounter}
                                                                               showActions={true}
                                                                               navigation={navigation}/>)}
                     </ScrollView>

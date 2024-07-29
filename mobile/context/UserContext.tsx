@@ -136,7 +136,7 @@ export const getFirstImage = (state: IUserData): ImagePicker.ImagePickerAsset|un
     return;
 }
 
-export const getPublicProfile = (state: IUserData): IPublicProfile => {
+export const getPublicProfileFromUserData = (state: IUserData): IPublicProfile => {
     return {
         firstName: state.firstName,
         bio: state.bio,

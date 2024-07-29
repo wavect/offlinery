@@ -6,7 +6,7 @@ import {
     DEFAULT_FROM_TIME,
     DEFAULT_TO_TIME,
     EACTION_USER,
-    getPublicProfile,
+    getPublicProfileFromUserData,
     useUserContext
 } from "../../context/UserContext";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
@@ -49,7 +49,7 @@ const BioLetThemKnow = ({ navigation }) => {
                 </View>
             </View>
 
-            <OTeaserProfilePreview prefixText='Find ' publicProfile={getPublicProfile(state)} showOpenProfileButton={false}/>
+            <OTeaserProfilePreview prefixText='Find ' publicProfile={getPublicProfileFromUserData(state)} showOpenProfileButton={false}/>
         </OPageContainer>
     );
 };
