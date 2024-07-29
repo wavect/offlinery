@@ -1,45 +1,62 @@
 import {IPublicProfile} from "../../types/PublicProfile.types";
 import * as React from "react";
-import {Image, Pressable, StyleSheet, Text, View} from "react-native";
+import {Image, Pressable, StyleProp, StyleSheet, Text, View, ViewStyle} from "react-native";
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
+import {GestureResponderEvent} from "react-native/Libraries/Types/CoreEventTypes";
 
 
 interface IOTeaserProfileProps {
     prefixText?: string
     publicProfile: IPublicProfile
     showOpenProfileButton: boolean
+    secondButton?: {
+        onPress: (event: GestureResponderEvent) => void
+        text: string
+        style?: StyleProp<ViewStyle>
+    }
 }
 
 /** @dev This component looks a bit differently to the OEncounter component and does not require the EncountersContext */
 const OTeaserProfilePreview = (props: IOTeaserProfileProps) => {
-    const {publicProfile, showOpenProfileButton, prefixText} = props;
+    const {secondButton, publicProfile, showOpenProfileButton, prefixText} = props;
 
-    return <View style={styles.profileContainer}>
-        <Image
-            style={styles.profileImage}
-            contentFit="cover"
-            source={{uri: publicProfile.mainImageURI}}
-        />
-        <View style={styles.profileDetails}>
-            <Text style={styles.nameAge}>{`${prefixText ?? ''}${publicProfile.firstName}, ${publicProfile.age}`}</Text>
-            <Text
-                style={styles.encounterInfo}>{publicProfile.bio}</Text>
+    return <View style={styles.outerContainer}>
+        <View style={styles.profileContainer}>
+            <Image
+                style={styles.profileImage}
+                contentFit="cover"
+                source={{uri: publicProfile.mainImageURI}}
+            />
+            <View style={styles.profileDetails}>
+                <Text
+                    style={styles.nameAge}>{`${prefixText ?? ''}${publicProfile.firstName}, ${publicProfile.age}`}</Text>
+                <Text
+                    style={styles.encounterInfo}>{publicProfile.bio}</Text>
 
+                {showOpenProfileButton && <View style={styles.buttonContainer}>
+                    <Pressable style={styles.button}>
+                        {/* TODO: onPress={() => navigation.navigate(ROUTES.Main.ReportEncounter, {personToReport: publicProfile})}>*/}
+                        <Text style={styles.buttonText}>
+                            Profile
+                        </Text>
+                    </Pressable>
+                    {secondButton && <Pressable style={[styles.button, secondButton.style]}
+                                                onPress={secondButton.onPress}>
+                        <Text style={styles.buttonText}>
+                            {secondButton.text}
+                        </Text>
+                    </Pressable>}
+                </View>}
+            </View>
         </View>
-        {showOpenProfileButton && <View style={styles.rightColumn}>
-                <Pressable style={styles.button}>
-                    {/* TODO: onPress={() => navigation.navigate(ROUTES.Main.ReportEncounter, {personToReport: publicProfile})}>*/}
-                    <Text style={styles.buttonText}>
-                       View Profile
-                    </Text>
-                </Pressable>
-        </View>}
     </View>
 }
 
 const styles = StyleSheet.create({
     profileContainer: {
         flexDirection: 'row',
+    },
+    outerContainer: {
         marginBottom: 20,
         borderBottomWidth: 1,
         borderBottomColor: Color.lightGray,
@@ -63,13 +80,15 @@ const styles = StyleSheet.create({
     },
     encounterInfo: {
         fontFamily: FontFamily.montserratRegular,
-        marginBottom: 10,
+        marginBottom: 5,
     },
-    rightColumn: {
-        justifyContent: 'space-between',
-        alignItems: 'flex-end',
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        marginTop: 5,
     },
     button: {
+        marginRight: 10,
         backgroundColor: Color.black,
         borderColor: Color.gray,
         color: Color.white,

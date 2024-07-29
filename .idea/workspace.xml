@@ -5,18 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a144658d-77eb-49a4-ac48-90e721fa13e0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/mobile/screens/main/NavigateToApproach.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mobile/utils/map.utils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/components/OEncounter/OEncounter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/components/OEncounter/OEncounter.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mobile/components/OTeaserProfilePreview/OTeaserProfilePreview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/components/OTeaserProfilePreview/OTeaserProfilePreview.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/context/EncountersContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/context/EncountersContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/context/UserContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/context/UserContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/main/Encounters.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/main/Encounters.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/main/MainScreenTabs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/main/MainScreenTabs.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/main/ReportEncounter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/main/ReportEncounter.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/onboarding/BioLetThemKnow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/onboarding/BioLetThemKnow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/types/PublicProfile.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/types/PublicProfile.types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/screens/main/NavigateToApproach.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/main/NavigateToApproach.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +19,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -82,7 +75,7 @@
       <option name="presentableId" value="Default" />
       <updated>1722247410309</updated>
       <workItem from="1722247411450" duration="8061000" />
-      <workItem from="1722258541413" duration="2081000" />
+      <workItem from="1722258541413" duration="7559000" />
     </task>
     <servers />
   </component>
