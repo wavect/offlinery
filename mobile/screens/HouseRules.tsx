@@ -36,7 +36,7 @@ const HouseRules = ({ route, navigation }) => {
 
                 <View style={styles.buttonContainer}>
                     <OButtonWide text="I understand" filled={true} variant="light"
-                                 countdownEnableSeconds={forceWaitSeconds} onPress={() => navigation.navigate(route.params.nextPage)}/>
+                                 countdownEnableSeconds={forceWaitSeconds} onPress={() => navigation.navigate(route.params.nextPage, route.params.propsForNextScreen)}/>
 
                     <Text style={styles.violatingRules}>
                         Violating these rules blocks you from using this app for at least{" "}

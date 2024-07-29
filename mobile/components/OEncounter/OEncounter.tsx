@@ -69,7 +69,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
 
             {dateStatus !== EDateStatus.MET_NOT_INTERESTED && personalRelationship?.isNearbyRightNow &&
                 <Pressable style={styles.buttonBlack}
-                           onPress={() => navigation.navigate(ROUTES.Main.NavigateToApproach, {navigateToPerson: encounterProfile})}>
+                           onPress={() => navigation.navigate(ROUTES.HouseRules, {nextPage: ROUTES.Main.NavigateToApproach, propsForNextScreen: {navigateToPerson: encounterProfile}})}>
                     <Text style={styles.buttonText}>
                         Navigate
                     </Text>
