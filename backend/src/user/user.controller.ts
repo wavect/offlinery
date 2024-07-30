@@ -6,16 +6,17 @@ import {
     Body,
     ParseFilePipe,
     MaxFileSizeValidator,
-    FileTypeValidator,
+    FileTypeValidator, Put, Param,
 } from '@nestjs/common';
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { ApiConsumes, ApiBody, ApiTags, ApiOperation } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { CreateUserDto } from '../DTOs/create-user.dto';
+import { CreateUserDTO } from '../DTOs/create-user.dto';
 import { BlacklistedRegion } from '../blacklisted-region/blacklisted-region.entity';
 import {UserService} from "./user.service";
+import {UpdateUserDTO} from "../DTOs/update-user.dto";
 
 @ApiTags('User')
 @Controller({
@@ -47,7 +48,7 @@ export class UserController {
     })
     @ApiOperation({ summary: 'Create a new user with images' })
     async createUser(
-        @Body() createUserDto: CreateUserDto,
+        @Body() createUserDto: CreateUserDTO,
         @UploadedFiles(
             new ParseFilePipe({
                 validators: [
@@ -58,5 +59,40 @@ export class UserController {
         ) images: Express.Multer.File[]
     ) {
         return this.userService.createUser(createUserDto, images)
+    }
+
+    @Put(':id')
+    @UseInterceptors(FilesInterceptor('images', 6))
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                user: { type: 'object' },
+                images: {
+                    type: 'array',
+                    items: {
+                        type: 'string',
+                        format: 'binary',
+                    },
+                },
+            },
+        },
+    })
+    @ApiOperation({ summary: 'Update an existing user' })
+    async updateUser(
+        @Param('id') id: number,
+        @Body() updateUserDto: UpdateUserDTO,
+        @UploadedFiles(
+            new ParseFilePipe({
+                validators: [
+                    new MaxFileSizeValidator({ maxSize: 100 * 1024 * 1024, message: 'Max file size of 100 MB exceeded' }),
+                    new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/ }),
+                ],
+                fileIsRequired: false,
+            })
+        ) images?: Express.Multer.File[]
+    ) {
+        return this.userService.updateUser(id, updateUserDto, images);
     }
 }
