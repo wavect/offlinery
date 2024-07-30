@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a144658d-77eb-49a4-ac48-90e721fa13e0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/fuck-dating-apps.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/fuck-dating-apps.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/context/UserContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/context/UserContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/onboarding/_ILiveHere.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/onboarding/_ILiveHere.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +38,7 @@
     "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/kevin/Desktop/GitRepositories/FuckDatingApps/fuck-dating-apps/backend/src/blacklisted-region",
     "node.js.detected.package.eslint": "true",
@@ -49,6 +47,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "prettier.import.notification.dismissed": "true",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "ts.external.directory.path": "C:\\Users\\kevin\\Desktop\\GitRepositories\\FuckDatingApps\\fuck-dating-apps\\backend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
@@ -89,7 +88,9 @@
       <workItem from="1722258541413" duration="10557000" />
       <workItem from="1722275799453" duration="173000" />
       <workItem from="1722275981646" duration="1064000" />
-      <workItem from="1722278880637" duration="4283000" />
+      <workItem from="1722278880637" duration="4310000" />
+      <workItem from="1722327087084" duration="132000" />
+      <workItem from="1722327231980" duration="667000" />
     </task>
     <servers />
   </component>

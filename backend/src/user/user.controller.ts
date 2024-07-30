@@ -15,6 +15,7 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from '../DTOs/create-user.dto';
 import { BlacklistedRegion } from '../blacklisted-region/blacklisted-region.entity';
+import {UserService} from "./user.service";
 
 @ApiTags('User')
 @Controller({
@@ -23,10 +24,7 @@ import { BlacklistedRegion } from '../blacklisted-region/blacklisted-region.enti
 })
 export class UserController {
     constructor(
-        @InjectRepository(User)
-        private userRepository: Repository<User>,
-        @InjectRepository(BlacklistedRegion)
-        private blacklistedRegionRepository: Repository<BlacklistedRegion>
+        private readonly userService: UserService,
     ) {}
 
     @Post('create')
@@ -59,28 +57,6 @@ export class UserController {
             })
         ) images: Express.Multer.File[]
     ) {
-        const user = new User();
-        Object.assign(user, createUserDto);
-
-        // Save images
-        user.images = images.map(image => ({
-            filename: image.filename,
-            mimetype: image.mimetype,
-            path: image.path
-        }));
-
-        // Save blacklisted regions
-        if (createUserDto.blacklistedRegions) {
-            user.blacklistedRegions = await Promise.all(
-                createUserDto.blacklistedRegions.map(async region => {
-                    const blacklistedRegion = new BlacklistedRegion();
-                    blacklistedRegion.center = region.center;
-                    blacklistedRegion.radius = region.radius;
-                    return await this.blacklistedRegionRepository.save(blacklistedRegion);
-                })
-            );
-        }
-
-        return await this.userRepository.save(user);
+        return this.userService.createUser(createUserDto, images)
     }
 }

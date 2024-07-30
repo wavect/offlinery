@@ -28,7 +28,7 @@ import {BlacklistedRegionModule} from "./blacklisted-region/blacklisted-region.m
         CacheModule.register(),
         UserModule, BlacklistedRegionModule,
     ],
-    controllers: [AppController, UserController, BlacklistedRegionController],
+    controllers: [AppController],
     providers: [
         AppService,
         {
