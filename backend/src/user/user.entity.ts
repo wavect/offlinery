@@ -1,9 +1,31 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { EApproachChoice, EDateMode, EVerificationStatus, EGender } from "../types/user.types";
 import { BlacklistedRegion } from '../blacklisted-region/blacklisted-region.entity';
+import {UserPublicDTO} from "../DTOs/user-public.dto";
 
 @Entity()
 export class User {
+
+    /** @dev Important to not return any sensitive data */
+    public convertToPublicDTO(): UserPublicDTO {
+        return {
+            id: this.id,
+            isActive: this.isActive,
+            firstName: this.firstName,
+            wantsEmailUpdates: this.wantsEmailUpdates,
+            birthDay: this.birthDay,
+            gender: this.gender,
+            genderDesire: this.genderDesire,
+            images: this.images.map(img => ({ filename: img.filename, mimetype: img.mimetype })),
+            verificationStatus: this.verificationStatus,
+            approachChoice: this.approachChoice,
+            approachFromTime: this.approachFromTime,
+            approachToTime: this.approachToTime,
+            bio: this.bio,
+            dateMode: this.dateMode
+        };
+    }
+
     @PrimaryGeneratedColumn()
     id: number;
 

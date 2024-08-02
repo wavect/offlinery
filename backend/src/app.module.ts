@@ -11,6 +11,7 @@ import {APP_INTERCEPTOR} from "@nestjs/core";
 import {BlacklistedRegion} from "./blacklisted-region/blacklisted-region.entity";
 import {BlacklistedRegionController} from "./blacklisted-region/blacklisted-region.controller";
 import {BlacklistedRegionModule} from "./blacklisted-region/blacklisted-region.module";
+import {ThrottlerModule} from "@nestjs/throttler";
 
 @Module({
     imports: [
@@ -26,6 +27,11 @@ import {BlacklistedRegionModule} from "./blacklisted-region/blacklisted-region.m
         }),
         // @dev https://docs.nestjs.com/techniques/caching
         CacheModule.register(),
+        // @dev https://docs.nestjs.com/security/rate-limiting
+        ThrottlerModule.forRoot([{
+            ttl: 60000,
+            limit: 10,
+        }]),
         UserModule, BlacklistedRegionModule,
     ],
     controllers: [AppController],

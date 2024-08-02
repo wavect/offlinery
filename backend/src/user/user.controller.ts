@@ -6,10 +6,10 @@ import {
     Body,
     ParseFilePipe,
     MaxFileSizeValidator,
-    FileTypeValidator, Put, Param,
+    FileTypeValidator, Put, Param, NotFoundException, Get,
 } from '@nestjs/common';
 import { FilesInterceptor } from "@nestjs/platform-express";
-import { ApiConsumes, ApiBody, ApiTags, ApiOperation } from '@nestjs/swagger';
+import {ApiConsumes, ApiBody, ApiTags, ApiOperation, ApiResponse, ApiParam} from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -17,6 +17,7 @@ import { CreateUserDTO } from '../DTOs/create-user.dto';
 import { BlacklistedRegion } from '../blacklisted-region/blacklisted-region.entity';
 import {UserService} from "./user.service";
 import {UpdateUserDTO} from "../DTOs/update-user.dto";
+import {UserPublicDTO} from "../DTOs/user-public.dto";
 
 @ApiTags('User')
 @Controller({
@@ -57,8 +58,8 @@ export class UserController {
                 ],
             })
         ) images: Express.Multer.File[]
-    ) {
-        return this.userService.createUser(createUserDto, images)
+    ): Promise<UserPublicDTO> {
+        return (await this.userService.createUser(createUserDto, images)).convertToPublicDTO()
     }
 
     @Put(':id')
@@ -92,7 +93,20 @@ export class UserController {
                 fileIsRequired: false,
             })
         ) images?: Express.Multer.File[]
-    ) {
-        return this.userService.updateUser(id, updateUserDto, images);
+    ): Promise<UserPublicDTO> {
+        return (await this.userService.updateUser(id, updateUserDto, images)).convertToPublicDTO();
+    }
+
+    @Get(':id')
+    @ApiOperation({ summary: 'Get a user by ID' })
+    @ApiParam({ name: 'id', type: 'number', description: 'User ID' })
+    @ApiResponse({ status: 200, description: 'The user has been successfully retrieved.', type: User })
+    @ApiResponse({ status: 404, description: 'User not found.' })
+    async getUser(@Param('id') id: number): Promise<UserPublicDTO> {
+        const user = await this.userService.getUserById(id);
+        if (!user) {
+            throw new NotFoundException(`User with ID ${id} not found`);
+        }
+        return user.convertToPublicDTO();
     }
 }
