@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a144658d-77eb-49a4-ac48-90e721fa13e0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/mobile/screens/main/ReportEncounter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/main/ReportEncounter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/components/OEncounter/OEncounter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/components/OEncounter/OEncounter.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +100,8 @@
       <workItem from="1722708654994" duration="5000" />
       <workItem from="1722850480742" duration="18604000" />
       <workItem from="1722881319684" duration="3792000" />
-      <workItem from="1722885332870" duration="2393000" />
+      <workItem from="1722885332870" duration="3091000" />
+      <workItem from="1722888589950" duration="45000" />
     </task>
     <servers />
   </component>
