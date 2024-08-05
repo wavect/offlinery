@@ -3,6 +3,7 @@ import * as React from "react";
 import {Image, Pressable, StyleProp, StyleSheet, Text, View, ViewStyle} from "react-native";
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
 import {GestureResponderEvent} from "react-native/Libraries/Types/CoreEventTypes";
+import {ROUTES} from "../../screens/routes";
 
 
 interface IOTeaserProfileProps {
@@ -13,19 +14,20 @@ interface IOTeaserProfileProps {
         onPress: (event: GestureResponderEvent) => void
         text: string
         style?: StyleProp<ViewStyle>
-    }
+    },
+    navigation?: any,
 }
 
 /** @dev This component looks a bit differently to the OEncounter component and does not require the EncountersContext */
 const OTeaserProfilePreview = (props: IOTeaserProfileProps) => {
-    const {secondButton, publicProfile, showOpenProfileButton, prefixText} = props;
+    const {navigation, secondButton, publicProfile, showOpenProfileButton, prefixText} = props;
 
     return <View style={styles.outerContainer}>
         <View style={styles.profileContainer}>
             <Image
                 style={styles.profileImage}
                 contentFit="cover"
-                source={{uri: publicProfile.mainImageURI}}
+                source={{uri: publicProfile.imageURIs[0]}}
             />
             <View style={styles.profileDetails}>
                 <Text
@@ -34,8 +36,8 @@ const OTeaserProfilePreview = (props: IOTeaserProfileProps) => {
                     style={styles.encounterInfo}>{publicProfile.bio}</Text>
 
                 {showOpenProfileButton && <View style={styles.buttonContainer}>
-                    <Pressable style={styles.button}>
-                        {/* TODO: onPress={() => navigation.navigate(ROUTES.Main.ReportEncounter, {personToReport: publicProfile})}>*/}
+                    <Pressable style={styles.button}
+                        onPress={() => navigation.navigate(ROUTES.Main.ProfileView, {user: publicProfile})}>
                         <Text style={styles.buttonText}>
                             Profile
                         </Text>

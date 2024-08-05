@@ -60,7 +60,8 @@ const BioLetThemKnow = ({ navigation }) => {
                 </View>
             </View>
 
-            <OTeaserProfilePreview prefixText='Find ' publicProfile={getPublicProfileFromUserData(state)} showOpenProfileButton={false}/>
+            <OTeaserProfilePreview prefixText='Find ' navigation={navigation}
+                                   publicProfile={getPublicProfileFromUserData(state)} showOpenProfileButton={false}/>
         </OPageContainer>
     );
 };

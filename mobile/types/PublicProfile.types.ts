@@ -3,7 +3,7 @@ export interface IEncounterProfile {
     firstName: string
     age: string
     bio: string
-    mainImageURI: string
+    imageURIs: string[]
     rating?: number
     personalRelationship?: IProfileRelationship
 }
@@ -12,7 +12,7 @@ export interface IPublicProfile {
     firstName: string
     age: string
     bio: string
-    mainImageURI: string
+    imageURIs: string[]
 }
 
 export enum EDateStatus {

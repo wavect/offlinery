@@ -44,6 +44,7 @@ import Login from "./screens/Login";
 import Password from "./screens/onboarding/Password";
 import {useCallback, useEffect} from "react";
 import {View} from "react-native";
+import ProfileView from "./screens/main/ProfileView";
 
 const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: "", headerBackTitle: 'Back'}
 const DEFAULT_LIGHT_SCREEN_PROPS = {...DEFAULT_SCREEN_PROPS, headerTransparent: true, headerTintColor: Color.white}
@@ -90,7 +91,7 @@ export default function App() {
                     >
                         <Stack.Screen
                             name={ROUTES.Welcome}
-                            component={BookSafetyCall}
+                            component={Welcome}
                             options={NO_HEADER}
                         />
                         <Stack.Screen

@@ -17,6 +17,7 @@ import {useEffect, useRef, useState} from "react";
 import {useUserContext} from "../../context/UserContext";
 import {Subscription} from "expo-notifications";
 import {Platform} from "react-native";
+import ProfileView from "./ProfileView";
 
 const Tab = createBottomTabNavigator();
 const EncounterStack = createStackNavigator();
@@ -50,6 +51,17 @@ const EncounterScreenStack = () => <EncountersProvider>
                 headerShown: true,
                 headerShadowVisible: false,
                 headerTitle: "Meet in IRL",
+                headerBackTitleVisible: false,
+                headerTitleAlign: 'left'
+            }}
+        />
+        <EncounterStack.Screen
+            name={ROUTES.Main.ProfileView}
+            component={ProfileView}
+            options={{
+                headerShown: true,
+                headerShadowVisible: false,
+                headerTitle: "Profile view",
                 headerBackTitleVisible: false,
                 headerTitleAlign: 'left'
             }}

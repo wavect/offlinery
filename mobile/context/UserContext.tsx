@@ -135,12 +135,13 @@ const initialState: IUserData = {
     dateMode: EDateMode.GHOST,
 };
 
-export const getFirstImage = (state: IUserData): ImagePicker.ImagePickerAsset|undefined => {
+export const getSavedImageURIs = (state: IUserData): string[] => {
+    const imgs: string[] = []
     for (const img of Object.values(state.images)) {
         // return first image as people can upload image into any slot without filling out all of them as of now
-        if (img) return img;
+        if (img) imgs.push(img.uri);
     }
-    return;
+    return imgs;
 }
 
 export const getPublicProfileFromUserData = (state: IUserData): IPublicProfile => {
@@ -148,7 +149,7 @@ export const getPublicProfileFromUserData = (state: IUserData): IPublicProfile =
         firstName: state.firstName,
         bio: state.bio,
         age: getAge(state.birthDay).toString(),
-        mainImageURI: getFirstImage(state)?.uri ?? '',
+        imageURIs: getSavedImageURIs(state),
     }
 }
 

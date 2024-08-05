@@ -38,7 +38,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
         <Image
             style={styles.profileImage}
             contentFit="cover"
-            source={{uri: encounterProfile.mainImageURI}}
+            source={{uri: encounterProfile.imageURIs[0]}}
         />
         <View style={styles.encounterDetails}>
             <Text style={styles.nameAge}>{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>

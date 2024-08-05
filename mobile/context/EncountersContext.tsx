@@ -1,7 +1,5 @@
 import React, {createContext, Dispatch, useContext, useReducer} from 'react';
 import {EDateStatus, IEncounterProfile, IPublicProfile} from "../types/PublicProfile.types";
-import {getAge} from "../utils/date.utils";
-import {getFirstImage, IUserData} from "./UserContext";
 
 export interface IEncounters {
     encounters: IEncounterProfile[]
@@ -37,7 +35,8 @@ const initialState: IEncounters = {
         age: '27',
         rating: 4,
         bio: 'Love going to the gym.',
-        mainImageURI: 'https://wavect.io/img/team/kevin.webp',
+        imageURIs: ['https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        'https://images.pexels.com/photos/103123/pexels-photo-103123.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 'https://images.pexels.com/photos/1121796/pexels-photo-1121796.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'],
         personalRelationship: {
             isNearbyRightNow: true,
             lastTimePassedBy: '4 days ago',
@@ -52,7 +51,7 @@ const initialState: IEncounters = {
             age: '28',
             rating: 3.4,
             bio: 'Investing in crypto',
-            mainImageURI: 'https://wavect.io/img/team/kevin.webp',
+            imageURIs: ['https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'],
             personalRelationship: {
                 isNearbyRightNow: false,
                 lastTimePassedBy: '3 hours ago',
@@ -67,7 +66,8 @@ const initialState: IEncounters = {
             age: '28',
             rating: 3.4,
             bio: 'Serial Entrepreneur. Need to know more?',
-            mainImageURI: 'https://wavect.io/img/team/kevin.webp',
+            imageURIs: ['https://images.pexels.com/photos/670720/pexels-photo-670720.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+                'https://images.pexels.com/photos/874158/pexels-photo-874158.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 'https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'],
             personalRelationship: {
                 isNearbyRightNow: false,
                 lastTimePassedBy: '1 week ago',
@@ -84,7 +84,7 @@ export const getPublicProfileFromEncounter = (state: IEncounterProfile): IPublic
         firstName: state.firstName,
         bio: state.bio,
         age: state.age,
-        mainImageURI: state.mainImageURI,
+        imageURIs: state.imageURIs,
     }
 }
 

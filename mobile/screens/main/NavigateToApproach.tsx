@@ -77,7 +77,7 @@ const NavigateToApproach = ({route, navigation}) => {
 
     return (
         <OPageContainer>
-            <OTeaserProfilePreview prefixText='Find '
+            <OTeaserProfilePreview prefixText='Find ' navigation={navigation}
                                    publicProfile={getPublicProfileFromEncounter(navigateToPerson)}
                                    showOpenProfileButton={true} secondButton={{
                 onPress: openMapsApp, text: `Navigate to ${navigateToPerson.firstName}`,

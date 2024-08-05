@@ -10,6 +10,7 @@ export const ROUTES: any = {
         FindPeople: 'Main_FindPeople',
         ProfileSettings: 'Main_ProfileSettings',
         NavigateToApproach: 'Main_NavigateToApproach',
+        ProfileView: 'Main_ProfileView',
     },
     Onboarding: {
         Email: 'Onboarding_Email',
