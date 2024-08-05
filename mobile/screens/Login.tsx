@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Text, StyleSheet, View, Platform, KeyboardAvoidingView} from "react-native";
-import {Color, FontSize, FontFamily} from "../GlobalStyles";
+import {Color, FontFamily} from "../GlobalStyles";
 import {OShowcase} from "../components/OShowcase/OShowcase";
 import {OLinearBackground} from "../components/OLinearBackground/OLinearBackground";
 import {OButtonWide} from "../components/OButtonWide/OButtonWide";

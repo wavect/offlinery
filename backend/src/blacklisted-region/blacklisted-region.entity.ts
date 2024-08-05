@@ -6,10 +6,13 @@ export class BlacklistedRegion {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column('json')
-    center: { latitude: number; longitude: number };
+    @Column('float')
+    latitude: number;
 
-    @Column()
+    @Column('float')
+    longitude: number;
+
+    @Column('float')
     radius: number;
 
     @ManyToOne(() => User, user => user.blacklistedRegions)

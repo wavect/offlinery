@@ -11,10 +11,12 @@ import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
 import {Subtitle} from "../../GlobalStyles";
 import OTeaserProfilePreview from "../../components/OTeaserProfilePreview/OTeaserProfilePreview";
+import {useState} from "react";
 
 const MAX_LENGTH_BIO = 60
 const BioLetThemKnow = ({ navigation }) => {
     const { state, dispatch } = useUserContext();
+    const [isLoading, setLoading] = useState(false)
 
     const setBio = (bio: string) => {
         if (bio.length > MAX_LENGTH_BIO) return;
@@ -22,9 +24,14 @@ const BioLetThemKnow = ({ navigation }) => {
     }
 
     const startUserRegistration = async () => {
+        setLoading(true)
         const onSuccess = () => navigation.navigate(ROUTES.MainTabView)
         const onFailure = (err: any) => console.error(err) // TODO
-        await registerUser(state, dispatch, onSuccess, onFailure)
+        try {
+            await registerUser(state, dispatch, onSuccess, onFailure)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -34,6 +41,8 @@ const BioLetThemKnow = ({ navigation }) => {
             bottomContainerChildren={
                 <OButtonWide
                     text="Done"
+                    isLoading={isLoading}
+                    loadingBtnText='Registering..'
                     filled={true}
                     variant="dark"
                     onPress={startUserRegistration}

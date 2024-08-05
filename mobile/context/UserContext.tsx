@@ -327,7 +327,7 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
         // Navigate to the next screen or update the UI as needed
         onSuccess()
     } catch (error: any) {
-        console.error("Error creating user:", error);
+        console.error("Error creating user:", error, JSON.stringify(error));
         onError(error)
         // Handle the error (e.g., show an error message to the user)
     }

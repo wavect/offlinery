@@ -10,11 +10,8 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from "@nestjs/platform-express";
 import {ApiConsumes, ApiBody, ApiTags, ApiOperation, ApiResponse, ApiParam} from '@nestjs/swagger';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDTO } from '../DTOs/create-user.dto';
-import { BlacklistedRegion } from '../blacklisted-region/blacklisted-region.entity';
 import {UserService} from "./user.service";
 import {UpdateUserDTO} from "../DTOs/update-user.dto";
 import {UserPublicDTO} from "../DTOs/user-public.dto";

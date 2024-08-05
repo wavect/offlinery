@@ -2,15 +2,20 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class BlacklistedRegionDTO {
     @ApiProperty({
-        type: 'object',
-        properties: {
-            latitude: { type: 'number' },
-            longitude: { type: 'number' }
-        },
-        required: ['latitude', 'longitude'] as any,
-        example: { latitude: 40.7128, longitude: -74.0060 }
+        type: 'number',
+        description: 'Latitude of the center of the blacklisted region',
+        required: true,
+        example: 40.7128,
     })
-    center: { latitude: number; longitude: number };
+    latitude: number;
+
+    @ApiProperty({
+        type: 'number',
+        description: 'Longitude of the center of the blacklisted region',
+        required: true,
+        example: -74.0060
+    })
+    longitude: number;
 
     @ApiProperty({
         type: 'number',

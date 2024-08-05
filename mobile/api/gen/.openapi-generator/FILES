@@ -8,7 +8,6 @@ src/apis/UserApi.ts
 src/apis/index.ts
 src/index.ts
 src/models/BlacklistedRegion.ts
-src/models/BlacklistedRegionCenter.ts
 src/models/StorePushTokenDto.ts
 src/models/User.ts
 src/models/UserPublicDTO.ts

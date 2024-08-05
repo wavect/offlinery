@@ -13,12 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { BlacklistedRegionCenter } from './BlacklistedRegionCenter';
-import {
-    BlacklistedRegionCenterFromJSON,
-    BlacklistedRegionCenterFromJSONTyped,
-    BlacklistedRegionCenterToJSON,
-} from './BlacklistedRegionCenter';
 import type { User } from './User';
 import {
     UserFromJSON,
@@ -40,10 +34,16 @@ export interface BlacklistedRegion {
     id: number;
     /**
      * 
-     * @type {BlacklistedRegionCenter}
+     * @type {number}
      * @memberof BlacklistedRegion
      */
-    center: BlacklistedRegionCenter;
+    latitude: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof BlacklistedRegion
+     */
+    longitude: number;
     /**
      * 
      * @type {number}
@@ -63,7 +63,8 @@ export interface BlacklistedRegion {
  */
 export function instanceOfBlacklistedRegion(value: object): value is BlacklistedRegion {
     if (!('id' in value) || value['id'] === undefined) return false;
-    if (!('center' in value) || value['center'] === undefined) return false;
+    if (!('latitude' in value) || value['latitude'] === undefined) return false;
+    if (!('longitude' in value) || value['longitude'] === undefined) return false;
     if (!('radius' in value) || value['radius'] === undefined) return false;
     if (!('user' in value) || value['user'] === undefined) return false;
     return true;
@@ -80,7 +81,8 @@ export function BlacklistedRegionFromJSONTyped(json: any, ignoreDiscriminator: b
     return {
         
         'id': json['id'],
-        'center': BlacklistedRegionCenterFromJSON(json['center']),
+        'latitude': json['latitude'],
+        'longitude': json['longitude'],
         'radius': json['radius'],
         'user': UserFromJSON(json['user']),
     };
@@ -93,7 +95,8 @@ export function BlacklistedRegionToJSON(value?: BlacklistedRegion | null): any {
     return {
         
         'id': value['id'],
-        'center': BlacklistedRegionCenterToJSON(value['center']),
+        'latitude': value['latitude'],
+        'longitude': value['longitude'],
         'radius': value['radius'],
         'user': UserToJSON(value['user']),
     };
