@@ -2,7 +2,7 @@ import * as React from "react";
 import {useState} from "react";
 import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {Color} from "../../GlobalStyles";
-import {registerUser, useUserContext} from "../../context/UserContext";
+import {EACTION_USER, registerUser, useUserContext} from "../../context/UserContext";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import OCalendlyInline from "../../components/OCalendlyInline/OCalendlyInline";
 import {ROUTES} from "../routes";
@@ -26,6 +26,8 @@ const BookSafetyCall = ({navigation}) => {
             await registerUser(state, dispatch, onSuccess, onFailure)
         } finally {
             setLoading(false)
+            /** @dev Delete clear password once logged in */
+            dispatch({type: EACTION_USER.SET_CLEAR_PASSWORD, payload: ""})
         }
     }
 

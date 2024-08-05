@@ -31,6 +31,8 @@ const BioLetThemKnow = ({ navigation }) => {
             await registerUser(state, dispatch, onSuccess, onFailure)
         } finally {
             setLoading(false)
+            /** @dev Delete clear password once logged in */
+            dispatch({type: EACTION_USER.SET_CLEAR_PASSWORD, payload: ""})
         }
     }
 

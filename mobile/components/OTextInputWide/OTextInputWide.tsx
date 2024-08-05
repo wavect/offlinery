@@ -5,7 +5,7 @@ import {MaterialIcons} from "@expo/vector-icons";
 
 interface IOTextInputWideProps {
     value: string;
-    setValue: React.Dispatch<React.SetStateAction<string>>;
+    setValue: React.Dispatch<string>;
     placeholder: string;
     style?: StyleProp<ViewStyle>;
     multiline?: boolean;

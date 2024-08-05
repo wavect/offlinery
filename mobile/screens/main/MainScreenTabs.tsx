@@ -18,6 +18,7 @@ import {useUserContext} from "../../context/UserContext";
 import {Subscription} from "expo-notifications";
 import {Platform} from "react-native";
 import ProfileView from "./ProfileView";
+import {useNavigationState} from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 const EncounterStack = createStackNavigator();
@@ -125,7 +126,7 @@ export const MainScreenTabs = () => {
                 tabBarLabelStyle: {marginBottom: 5},
                 tabBarActiveBackgroundColor: Color.primary,
                 headerShadowVisible: false,
-                headerRight: () => <OGoLiveToggle style={{marginRight: 10}}/>
+                headerRight: () => <OGoLiveToggle style={{marginRight: 10}}/>,
             })
         }>
         <Tab.Screen name={ROUTES.Main.FindPeople} component={HeatMap} options={{
