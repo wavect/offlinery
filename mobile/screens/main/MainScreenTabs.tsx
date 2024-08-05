@@ -9,7 +9,6 @@ import {OGoLiveToggle} from "../../components/OGoLiveToggle/OGoLiveToggle";
 import {createStackNavigator} from "@react-navigation/stack";
 import {ROUTES} from "../routes";
 import ReportEncounter from "./ReportEncounter";
-import {useNavigationState} from "@react-navigation/native";
 import {EncountersProvider} from "../../context/EncountersContext";
 import NavigateToApproach from "./NavigateToApproach";
 

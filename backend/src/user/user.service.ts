@@ -105,4 +105,14 @@ export class UserService {
 
         return user;
     }
+
+    async updatePushToken(userId: number, pushToken: string): Promise<User> {
+        const user = await this.userRepository.findOneBy({ id: userId });
+        if (!user) {
+            throw new NotFoundException(`User with ID ${userId} not found`);
+        }
+
+        user.pushToken = pushToken;
+        return await this.userRepository.save(user);
+    }
 }

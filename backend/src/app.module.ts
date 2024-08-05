@@ -12,6 +12,7 @@ import {BlacklistedRegion} from "./blacklisted-region/blacklisted-region.entity"
 import {BlacklistedRegionController} from "./blacklisted-region/blacklisted-region.controller";
 import {BlacklistedRegionModule} from "./blacklisted-region/blacklisted-region.module";
 import {ThrottlerModule} from "@nestjs/throttler";
+import {NotificationModule} from "./transient-services/notification/notification.module";
 
 @Module({
     imports: [
@@ -32,7 +33,7 @@ import {ThrottlerModule} from "@nestjs/throttler";
             ttl: 60000,
             limit: 10,
         }]),
-        UserModule, BlacklistedRegionModule,
+        UserModule, BlacklistedRegionModule, NotificationModule,
     ],
     controllers: [AppController],
     providers: [

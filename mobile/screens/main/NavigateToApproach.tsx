@@ -9,7 +9,7 @@ import MapView, {
     PROVIDER_GOOGLE, Region
 } from "react-native-maps";
 import {BorderRadius, Color, FontFamily, FontSize} from "../../GlobalStyles";
-import {getPublicProfileFromUserData, useUserContext} from "../../context/UserContext";
+import {useUserContext} from "../../context/UserContext";
 import * as Location from 'expo-location';
 import {LocationAccuracy} from 'expo-location';
 import OTeaserProfilePreview from "../../components/OTeaserProfilePreview/OTeaserProfilePreview";

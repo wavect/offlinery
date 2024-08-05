@@ -79,4 +79,7 @@ export class User {
 
     @Column()
     dateMode: EDateMode;
+
+    @Column({ nullable: true })
+    pushToken: string;
 }
