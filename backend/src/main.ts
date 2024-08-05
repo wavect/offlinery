@@ -28,7 +28,7 @@ async function bootstrap() {
   await app.listen(3000);
 }
 
-const BE_ENDPOINT = 'http://localhost:3000' // TODO: Adapt / dev env
+const BE_ENDPOINT = 'https://offlinery.onrender.com' // 'http://localhost:3000' // TODO: Adapt / dev env
 
 const setupSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()
