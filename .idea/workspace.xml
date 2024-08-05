@@ -6,11 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="a144658d-77eb-49a4-ac48-90e721fa13e0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/components/OEncounter/OEncounter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/components/OEncounter/OEncounter.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/main/Encounters.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/main/Encounters.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/components/OCalendlyInline/OCalendlyInline.styles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/components/OCalendlyInline/OCalendlyInline.styles.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/components/OCalendlyInline/OCalendlyInline.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/components/OCalendlyInline/OCalendlyInline.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +99,7 @@
       <workItem from="1722344504553" duration="14000" />
       <workItem from="1722632069260" duration="2239000" />
       <workItem from="1722708654994" duration="5000" />
-      <workItem from="1722850480742" duration="11227000" />
+      <workItem from="1722850480742" duration="11615000" />
     </task>
     <servers />
   </component>

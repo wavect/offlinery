@@ -10,6 +10,7 @@ import {
 import CalendlyLoadingSpinner from "./OCalendlyLoadingSpinner";
 import styles from './OCalendlyInline.styles'
 import { WebView } from 'react-native-webview';
+import {Text} from "react-native";
 
 export interface Props {
     url: string;

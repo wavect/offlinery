@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     webView: {
         width: '100%',
         height: '100%',
+        minHeight: 600,
     },
     calendlyInlineWidgetAll: {
         fontSize: 16,
