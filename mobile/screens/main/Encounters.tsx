@@ -98,7 +98,7 @@ const Encounters = ({navigation}) => {
                                                                               showActions={true}
                                                                               navigation={navigation}/>)}
                     </ScrollView>
-                // No encounters, just show small text in the middle of the screen
+                    // No encounters, just show small text in the middle of the screen
                     || <View style={styles.noEncountersContainer}>
                         <Text style={styles.noEncountersTextLg}>Nobody was nearby..</Text>
                         <Text style={styles.noEncountersTextSm}>(hint: mingle with the crowd)</Text>

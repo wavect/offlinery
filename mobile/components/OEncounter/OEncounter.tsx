@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
         borderBottomColor: Color.lightGray,
         paddingBottom: 10,
         zIndex: 1,
+        elevation: 1,
     },
     profileImage: {
         width: 80,
