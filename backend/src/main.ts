@@ -35,7 +35,7 @@ const setupSwagger = (app: INestApplication) => {
       .setTitle('Offlinery')
       .setDescription('API of Offlinery')
       .setVersion('1.0')
-      .addServer(BE_ENDPOINT) // will also be used in Frontend when generated
+      .addServer(`${BE_ENDPOINT}/v1`) // will also be used in Frontend when generated
       .addTag('app')
       .build();
   const document = SwaggerModule.createDocument(app, config, {deepScanRoutes: true});

@@ -13,7 +13,7 @@
  */
 
 
-export const BASE_PATH = "https://offlinery.onrender.com".replace(/\/+$/, "");
+export const BASE_PATH = "https://offlinery.onrender.com/v1".replace(/\/+$/, "");
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path

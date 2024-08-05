@@ -46,7 +46,7 @@ export class UserController {
     })
     @ApiOperation({ summary: 'Create a new user with images' })
     async createUser(
-        @Body() createUserDto: CreateUserDTO,
+        @Body('user') createUserDto: CreateUserDTO,
         @UploadedFiles(
             new ParseFilePipe({
                 validators: [
@@ -80,12 +80,12 @@ export class UserController {
     @ApiOperation({ summary: 'Update an existing user' })
     async updateUser(
         @Param('id') id: number,
-        @Body() updateUserDto: UpdateUserDTO,
+        @Body('user') updateUserDto: UpdateUserDTO,
         @UploadedFiles(
             new ParseFilePipe({
                 validators: [
-                    new MaxFileSizeValidator({ maxSize: 100 * 1024 * 1024, message: 'Max file size of 100 MB exceeded' }),
-                    new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/ }),
+                  /* TODO  new MaxFileSizeValidator({ maxSize: 100 * 1024 * 1024, message: 'Max file size of 100 MB exceeded' }),
+                    new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/ }),*/
                 ],
                 fileIsRequired: false,
             })
