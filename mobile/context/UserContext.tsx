@@ -16,6 +16,7 @@ export interface IUserData {
     wantsEmailUpdates: boolean
     email: string
     firstName: string
+    clearPassword: string
     birthDay: Date
     gender?: Gender
     genderDesire?: Gender
@@ -60,6 +61,7 @@ export enum EACTION_USER {
     SET_EMAIL_UPDATES = 'SET_EMAIL_UPDATES',
     SET_EMAIL = 'SET_EMAIL',
     SET_FIRSTNAME = 'SET_FIRSTNAME',
+    SET_CLEAR_PASSWORD = 'SET_CLEAR_PASSWORD',
     SET_BIRTHDAY = 'SET_BIRTHDAY',
     SET_GENDER = 'SET_GENDER',
     SET_GENDER_DESIRE = 'SET_GENDER_DESIRE',
@@ -111,6 +113,7 @@ const initialState: IUserData = {
     wantsEmailUpdates: false,
     email: "",
     firstName: "",
+    clearPassword: "",
     birthDay: new Date(2000, 1, 1),
     gender: undefined,
     genderDesire: undefined,
@@ -179,6 +182,11 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             return {
                 ...state,
                 firstName: action.payload as string,
+            };
+        case EACTION_USER.SET_CLEAR_PASSWORD:
+            return {
+                ...state,
+                clearPassword: action.payload as string,
             };
         case EACTION_USER.SET_BIRTHDAY:
             return {

@@ -1,32 +1,28 @@
 import * as React from "react";
 import {StyleSheet, Text, TextInput, View} from "react-native";
-import Checkbox from 'expo-checkbox';
 import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {ROUTES} from "../routes";
-import {EACTION_USER, useUserContext} from "../../context/UserContext";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
-import {OCheckbox} from "../../components/OCheckbox/OCheckbox";
 import {useState} from "react";
-import {Color, FontFamily, FontSize} from "../../GlobalStyles";
+import {EACTION_USER, useUserContext} from "../../context/UserContext";
 
-const Password = ({navigation}) => {
-
-    // NOTE: Do not store password in global store, hash & salt on backend and verify on backend
-    const [password, setPassword] = useState("")
+const Password = ({route, navigation}) => {
+    const {state, dispatch} = useUserContext()
+    const [oldClearPassword, setOldClearPassword] = useState("")
     const [passwordConfirmation, setPasswordConfirmation] = useState("")
     const [passwordError, setPasswordError] = useState("")
     const [passwordErrorConfirmation, setPasswordErrorConfirmation] = useState("")
 
     const isStrongPassword = () => {
-        return password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,40}$/);
+        return state.clearPassword.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,40}$/);
     }
     const doPasswordsMatch = () => {
-        return password === passwordConfirmation
+        return state.clearPassword === passwordConfirmation
     }
 
     const setValidatePassword = (pwd: string) => {
-        setPassword(pwd)
+        dispatch({type: EACTION_USER.SET_CLEAR_PASSWORD, payload: pwd})
 
         if (isStrongPassword()) {
             setPasswordError('')
@@ -47,15 +43,30 @@ const Password = ({navigation}) => {
     const isValidPassword = () => {
         return isStrongPassword() && doPasswordsMatch()
     }
+    const isChangePassword = !!route?.params?.isChangePassword
 
-    return <OPageContainer title="Set password"
-                           bottomContainerChildren={<OButtonWide text="Continue" filled={true}
+    const onSave = () => {
+        if (isChangePassword) {
+            // TODO: Update User request to backend
+            navigation.navigate(route.params.nextPage)
+        } else {
+            // Save later with the rest of the data
+            navigation.navigate(ROUTES.Onboarding.FirstName)
+        }
+    }
+
+    return <OPageContainer title={`${isChangePassword ? 'Change' : 'Set'} password`}
+                           bottomContainerChildren={<OButtonWide text={isChangePassword ? 'Save' : 'Continue'} filled={true}
                                                                  disabled={!isValidPassword()} variant="dark"
-                                                                 onPress={() => navigation.navigate(ROUTES.Onboarding.FirstName)}/>}
+                                                                 onPress={onSave}/>}
                            subtitle="Set a strong password.">
-        <OTextInput value={password} setValue={setValidatePassword} placeholder="Enter password" style={styles.inputField}
+        {isChangePassword && <OTextInput value={oldClearPassword} setValue={setOldClearPassword} placeholder="Enter old password" style={styles.inputField}
+                    secureTextEntry={true}
+                    topLabel="Current password"/>}
+
+        <OTextInput value={state.clearPassword} setValue={setValidatePassword} placeholder="Enter password" style={styles.inputField}
                     isBottomLabelError={!!passwordError} secureTextEntry={true} bottomLabel={passwordError}
-                    topLabel="Strong password"/>
+                    topLabel={`${isChangePassword ? 'New' : 'Strong'} password`}/>
 
         <OTextInput value={passwordConfirmation} setValue={setValidatePasswordConfirmation} placeholder="Repeat password"
                     topLabel="Repeat password" isBottomLabelError={!!passwordErrorConfirmation} secureTextEntry={true}

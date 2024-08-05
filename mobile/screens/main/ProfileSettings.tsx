@@ -46,14 +46,15 @@ const ProfileSettings = ({navigation}) => {
         {label: 'Man', value: 'man'},
     ];
 
-    const SettingsButton = ({onPress, icon, text}) => (
-        <TouchableOpacity style={styles.settingsButton} onPress={onPress}>
+    const SettingsButton = (props: { onPress, icon, text: string, style?: any }) => {
+        const {onPress, icon, text} = props
+        return <TouchableOpacity style={[styles.settingsButton, props.style]} onPress={onPress}>
             <View style={styles.settingsButtonContent}>
                 <MaterialIcons name={icon} size={30} color="#000"/>
                 <Text style={styles.settingsButtonText}>{text}</Text>
             </View>
         </TouchableOpacity>
-    );
+    };
 
     return (
         <OPageContainer subtitle='Change your preferences or update your profile.'
@@ -159,7 +160,14 @@ const ProfileSettings = ({navigation}) => {
                     <SettingsButton
                         onPress={() => navigation.navigate(ROUTES.MainTabView, {screen: ROUTES.Main.FindPeople})}
                         icon="location-off" text="Update Safe Zones"/>
-                    <SettingsButton onPress={() => navigation.navigate(ROUTES.HouseRules, {
+                    <SettingsButton onPress={() => navigation.navigate(ROUTES.Onboarding.Password, {
+                        nextPage: ROUTES.MainTabView,
+                        isChangePassword: true,
+                    })} icon="lock" text="Change Password"/>
+
+                </View>
+                <View style={styles.settingsButtonsContainer}>
+                    <SettingsButton style={{width: '100%', height: 75}} onPress={() => navigation.navigate(ROUTES.HouseRules, {
                         forceWaitSeconds: 0,
                         nextPage: ROUTES.MainTabView
                     })} icon="rule" text="House Rules"/>
