@@ -9,8 +9,13 @@ import {OGoLiveToggle} from "../../components/OGoLiveToggle/OGoLiveToggle";
 import {createStackNavigator} from "@react-navigation/stack";
 import {ROUTES} from "../routes";
 import ReportEncounter from "./ReportEncounter";
+import * as Notifications from 'expo-notifications';
 import {EncountersProvider} from "../../context/EncountersContext";
 import NavigateToApproach from "./NavigateToApproach";
+import {registerForPushNotificationsAsync} from "../../services/notification.service";
+import {useEffect, useRef, useState} from "react";
+import {useUserContext} from "../../context/UserContext";
+import {Subscription} from "expo-notifications";
 
 const Tab = createBottomTabNavigator();
 const EncounterStack = createStackNavigator();
@@ -52,6 +57,46 @@ const EncounterScreenStack = () => <EncountersProvider>
 </EncountersProvider>
 
 export const MainScreenTabs = () => {
+    const {state, dispatch} = useUserContext()
+    const [notification, setNotification] = useState<Notifications.Notification|false>(false);
+    const notificationListener = useRef<Subscription>();
+    const responseListener = useRef<Subscription>();
+
+    useEffect(() => {
+        if (!state.id) {
+            console.error('No user ID assigned! Cannot listen to notifications')
+        } else {
+            registerForPushNotificationsAsync(state.id).then(token => {
+                if (!token) {
+                    console.error('Could not fetch notification token.')
+                    return;
+                }
+            });
+
+            notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+                setNotification(notification);
+                console.log("Received new notification: ", notification)
+                // TODO handle
+            });
+
+            responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+                console.log("Notification response", response);
+                // TODO handle
+                // Handle notification response (e.g., navigate to a specific screen)
+            });
+
+            return () => {
+                if (notificationListener.current) {
+                    Notifications.removeNotificationSubscription(notificationListener.current);
+                }
+                if (responseListener.current) {
+                    Notifications.removeNotificationSubscription(responseListener.current);
+                }
+            };
+        }
+    }, [state.id]);
+
+
     return <Tab.Navigator
         screenOptions={() => (
             {

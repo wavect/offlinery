@@ -49,7 +49,7 @@ export class DefaultApi extends runtime.BaseAPI implements DefaultApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/`,
+            path: `/main`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,

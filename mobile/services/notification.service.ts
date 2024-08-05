@@ -1,8 +1,9 @@
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
-import {useEffect} from "react";
+import {PushNotificationsApi, StorePushTokenDto} from "../api/gen/src";
 
-export const registerForPushNotificationsAsync = async () => {
+const notificationsApi = new PushNotificationsApi()
+export const registerForPushNotificationsAsync = async (userId: number) => {
     const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
     let finalStatus = existingStatus;
 
@@ -16,17 +17,6 @@ export const registerForPushNotificationsAsync = async () => {
         return;
     }
 
-    const token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
-
-    // Send this token to your backend
-    await sendTokenToBackend(token);
-
-    return token;
-}
-
-/** @dev Uses useEffect() so only call from component */
-export const handleIncomingNotifications = async () => {
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
             shouldShowAlert: true,
@@ -35,13 +25,22 @@ export const handleIncomingNotifications = async () => {
         }),
     });
 
-// In your App.js or a relevant component
-    useEffect(() => {
-        const subscription = Notifications.addNotificationReceivedListener(notification => {
-            console.log(notification);
-            // TODO: Handle the notification
-        });
+    const token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log("Notification token", token);
 
-        return () => subscription.remove();
-    }, []);
+    // Send this token to your backend
+    const storePushTokenDto: StorePushTokenDto = {
+        userId: userId,
+        pushToken: token
+    };
+
+    try {
+        await notificationsApi.pushNotificationControllerStorePushToken({ storePushTokenDto });
+        console.log('Push token successfully sent to backend');
+    } catch (error) {
+        // TODO
+        console.error('Failed to send push token to backend:', error);
+    }
+
+    return token;
 }

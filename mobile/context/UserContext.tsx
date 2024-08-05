@@ -8,6 +8,8 @@ import {getAge} from "../utils/date.utils";
 export type Gender = "woman" | "man"
 
 export interface IUserData {
+    /** @dev Backend assigned ID for registered users */
+    id?: number
     isAuthenticated: boolean
     wantsEmailUpdates: boolean
     email: string
@@ -46,10 +48,11 @@ export interface IImageAction {
 
 export interface IUserAction {
     type: EACTION_USER;
-    payload: string | Date | boolean | IImageAction | EApproachChoice | EVerificationStatus | MapRegion[] | LocationObject | EDateMode;
+    payload: string | Date | boolean | IImageAction | EApproachChoice | EVerificationStatus | MapRegion[] | LocationObject | EDateMode | number;
 }
 
 export enum EACTION_USER {
+    SET_ID = 'SET_ID',
     SET_AUTHENTICATED = 'SET_AUTHENTICATED',
     SET_EMAIL_UPDATES = 'SET_EMAIL_UPDATES',
     SET_EMAIL = 'SET_EMAIL',
@@ -100,6 +103,7 @@ export const DEFAULT_TO_TIME = new Date()
 DEFAULT_TO_TIME.setHours(19, 0, 0, 0)
 
 const initialState: IUserData = {
+    id: undefined,
     isAuthenticated: false,
     wantsEmailUpdates: false,
     email: "",
@@ -147,6 +151,11 @@ export const getPublicProfileFromUserData = (state: IUserData): IPublicProfile =
 
 const userReducer = (state: IUserData, action: IUserAction): IUserData => {
     switch (action.type) {
+        case EACTION_USER.SET_ID:
+            return {
+                ...state,
+                id: action.payload as number,
+            };
         case EACTION_USER.SET_AUTHENTICATED:
             return {
                 ...state,
