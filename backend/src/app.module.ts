@@ -20,6 +20,7 @@ import {UserReport} from "./user-report/user-report.entity";
     imports: [
         ConfigModule.forRoot(),
         TypeOrmModule.forRoot({
+            synchronize: true, // TODO: Remove in prod
             type: 'postgres',
             host: process.env.DB_HOST ?? 'localhost',
             port: parseInt(process.env.DB_PORT ?? '5432'),

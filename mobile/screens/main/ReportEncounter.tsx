@@ -56,7 +56,7 @@ const ReportEncounter = ({route, navigation}) => {
     }
 
     /** @dev Form properly filled out? */
-        // TODO: Add minimum length
+        // TODO: Add minimum length (show on UI as on password view)
     const isValidReport = incidentDescription?.length && incidentType
 
     return (
