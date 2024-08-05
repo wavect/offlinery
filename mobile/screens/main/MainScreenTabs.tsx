@@ -16,6 +16,7 @@ import {registerForPushNotificationsAsync} from "../../services/notification.ser
 import {useEffect, useRef, useState} from "react";
 import {useUserContext} from "../../context/UserContext";
 import {Subscription} from "expo-notifications";
+import {Platform} from "react-native";
 
 const Tab = createBottomTabNavigator();
 const EncounterStack = createStackNavigator();
@@ -58,12 +59,14 @@ const EncounterScreenStack = () => <EncountersProvider>
 
 export const MainScreenTabs = () => {
     const {state, dispatch} = useUserContext()
-    const [notification, setNotification] = useState<Notifications.Notification|false>(false);
+    const [unreadNotifications, setUnreadNotifications] = useState<Notifications.Notification[]>([]);
+    const [channels, setChannels] = useState<Notifications.NotificationChannel[]>([]);
     const notificationListener = useRef<Subscription>();
     const responseListener = useRef<Subscription>();
 
     useEffect(() => {
-        if (!state.id) {
+        // 0 might be a valid ID too
+        if (!state.id && state.id !== 0) {
             console.error('No user ID assigned! Cannot listen to notifications')
         } else {
             registerForPushNotificationsAsync(state.id).then(token => {
@@ -71,10 +74,14 @@ export const MainScreenTabs = () => {
                     console.error('Could not fetch notification token.')
                     return;
                 }
-            });
+            }).catch(console.error);
+
+            if (Platform.OS === 'android') {
+                Notifications.getNotificationChannelsAsync().then(value => setChannels(value ?? []));
+            }
 
             notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-                setNotification(notification);
+                setUnreadNotifications([...unreadNotifications, notification]);
                 console.log("Received new notification: ", notification)
                 // TODO handle
             });
@@ -86,12 +93,10 @@ export const MainScreenTabs = () => {
             });
 
             return () => {
-                if (notificationListener.current) {
-                    Notifications.removeNotificationSubscription(notificationListener.current);
-                }
-                if (responseListener.current) {
-                    Notifications.removeNotificationSubscription(responseListener.current);
-                }
+                notificationListener.current &&
+                Notifications.removeNotificationSubscription(notificationListener.current);
+                responseListener.current &&
+                Notifications.removeNotificationSubscription(responseListener.current);
             };
         }
     }, [state.id]);
@@ -116,10 +121,10 @@ export const MainScreenTabs = () => {
             headerTitle: 'Find people',
             tabBarIcon: ({color, size}) => <MaterialIcons name="location-history" size={size} color={color}/>
         }}/>
-        {/* TODO: We could add badges to encounters, https://reactnavigation.org/docs/tab-based-navigation */}
         <Tab.Screen name={ROUTES.Main.Encounters} component={EncounterScreenStack} options={{
             tabBarLabel: 'Encounters',
             headerTitle: 'Encounters',
+            tabBarBadge: unreadNotifications.length === 0 ? undefined : unreadNotifications.length,
             tabBarIcon: ({color, size}) => <MaterialIcons name="emoji-people" size={size} color={color}/>
         }}/>
         <Tab.Screen name={ROUTES.Main.ProfileSettings} component={ProfileSettings} options={{
