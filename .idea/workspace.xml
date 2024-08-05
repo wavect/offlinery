@@ -6,20 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a144658d-77eb-49a4-ac48-90e721fa13e0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/.openapi-generator/FILES" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/.openapi-generator/FILES" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/apis/DefaultApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/apis/DefaultApi.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/apis/PushNotificationsApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/apis/PushNotificationsApi.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/apis/UserApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/apis/UserApi.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/apis/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/apis/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/BlacklistedRegion.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/BlacklistedRegion.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/StorePushTokenDto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/StorePushTokenDto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/User.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/UserPublicDTO.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/UserPublicDTO.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/UserPublicDTOImagesInner.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/UserPublicDTOImagesInner.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/runtime.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/runtime.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/components/OButtonWide/OButtonWide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/components/OButtonWide/OButtonWide.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mobile/screens/main/ReportEncounter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/main/ReportEncounter.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -114,7 +101,7 @@
       <workItem from="1722708654994" duration="5000" />
       <workItem from="1722850480742" duration="18604000" />
       <workItem from="1722881319684" duration="3792000" />
-      <workItem from="1722885332870" duration="1253000" />
+      <workItem from="1722885332870" duration="1871000" />
     </task>
     <servers />
   </component>

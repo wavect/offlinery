@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Pressable, Text, GestureResponderEvent, StyleProp, ViewStyle, ActivityIndicator} from "react-native";
 import oButtonWideStyles from './OButtonWide.styles';
-import {Color} from "../../GlobalStyles";
 
 type StyleVariant = "dark" | "light";
 

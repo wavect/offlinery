@@ -1,12 +1,14 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserReportService } from './user-report.service';
 import { CreateUserReportDto } from '../DTOs/create-user-report.dto';
 import { UserReport } from './user-report.entity';
 
 @ApiTags('user-reports')
-@Controller('user-reports')
-@ApiBearerAuth()
+@Controller({
+    path: 'user-reports',
+    version: '1',
+})
 export class UserReportController {
     constructor(private readonly userReportService: UserReportService) {}
 

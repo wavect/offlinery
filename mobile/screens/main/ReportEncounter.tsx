@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Pressable, StyleSheet, Text} from "react-native";
+import {ActivityIndicator, Pressable, StyleSheet, Text} from "react-native";
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import OEncounter from "../../components/OEncounter/OEncounter";
@@ -10,12 +10,13 @@ import {OCheckbox} from "../../components/OCheckbox/OCheckbox";
 import {EACTION_ENCOUNTERS, useEncountersContext} from "../../context/EncountersContext";
 import {CreateUserReportDto, CreateUserReportDtoIncidentTypeEnum, UserReportsApi} from "../../api/gen/src";
 import {useUserContext} from "../../context/UserContext";
+import {isLoading} from "expo-font";
 
 const reportApi = new UserReportsApi()
 const ReportEncounter = ({route, navigation}) => {
     const {state} = useUserContext()
     const {dispatch} = useEncountersContext()
-    const [loading, setLoading] = useState(false)
+    const [isLoading, setLoading] = useState(false)
     const {personToReport} = route.params;
     const [incidentDescription, setIncidentDescription] = useState<string>()
     const [keepMeInTheLoop, setKeepMeInTheLoop] = useState<boolean>(false)
@@ -26,7 +27,6 @@ const ReportEncounter = ({route, navigation}) => {
         {label: 'Violent behavior', value: CreateUserReportDtoIncidentTypeEnum.ViolentBehavior},
         {label: 'Other', value: CreateUserReportDtoIncidentTypeEnum.Other},
     ])
-    const [isIncidentDropdownOpen, setIncidentDropdownOpen] = useState(false)
     const [isButtonPressed, setIsButtonPressed] = useState(false)
 
     const submitReport = async () => {
@@ -48,7 +48,7 @@ const ReportEncounter = ({route, navigation}) => {
             })
             navigation.goBack()
         } catch(err) {
-            console.error(err)
+            console.error(err, JSON.stringify(err))
             // TODO
         } finally {
             setLoading(false)
@@ -100,6 +100,7 @@ const ReportEncounter = ({route, navigation}) => {
                        onPressOut={() => setIsButtonPressed(false)}
                        onPress={submitReport}>
                 <Text style={styles.buttonText}>
+                    {isLoading && <ActivityIndicator size="small" style={{marginRight: 6}}/>}
                     Report now
                 </Text>
             </Pressable>
@@ -147,6 +148,8 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 10,
         borderWidth: 1,
+        justifyContent: "center",
+        alignItems: "center",
     },
     buttonDanger: {
         backgroundColor: Color.red,
