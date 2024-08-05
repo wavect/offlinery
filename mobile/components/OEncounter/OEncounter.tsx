@@ -2,11 +2,10 @@ import {EDateStatus, IEncounterProfile} from "../../types/PublicProfile.types";
 import * as React from "react";
 import {useState} from "react";
 import {Image, Pressable, StyleSheet, Text, View} from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
+import {Dropdown} from "react-native-element-dropdown";
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
 import {ROUTES} from "../../screens/routes";
 import {EACTION_ENCOUNTERS, useEncountersContext} from "../../context/EncountersContext";
-
 
 interface ISingleEncounterProps {
     encounterProfile: IEncounterProfile
@@ -18,64 +17,75 @@ const OEncounter = (props: ISingleEncounterProps) => {
     const {dispatch} = useEncountersContext()
     const {encounterProfile, showActions, navigation} = props;
     const {personalRelationship} = encounterProfile
-    const [dateStates, setDateStates] = useState([
+    const [dateStates] = useState([
         {label: 'Not met', value: EDateStatus.NOT_MET},
         {label: 'Met, not interested', value: EDateStatus.MET_NOT_INTERESTED},
         {label: 'Met, interested', value: EDateStatus.MET_INTERESTED},
     ])
-    const [isDateStatusDropdownOpen, setDateStatusDropdownOpen] = useState(false)
 
-    const setDateStatus = (dateStatus: EDateStatus) => {
+    const setDateStatus = (item: { label: string, value: EDateStatus }) => {
         dispatch({
             type: EACTION_ENCOUNTERS.SET_DATE_STATUS,
-            payload: {encounterId: encounterProfile.encounterId, value: dateStatus},
+            payload: {encounterId: encounterProfile.encounterId, value: item.value},
         })
     };
     const dateStatus = encounterProfile.personalRelationship?.status
 
-// TODO: Zindex (ios), elevation (android) --> still not showing above other elements when selecting a datestate
-    return <View style={styles.encounterContainer}>
-        <Image
-            style={styles.profileImage}
-            contentFit="cover"
-            source={{uri: encounterProfile.imageURIs[0]}}
-        />
-        <View style={styles.encounterDetails}>
-            <Text style={styles.nameAge}>{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>
-            <Text style={styles.encounterInfo}>{`${personalRelationship?.lastTimePassedBy} near ${personalRelationship?.lastLocationPassedBy}`}</Text>
+    return (
+        <View style={styles.encounterContainer}>
+            <Image
+                style={styles.profileImage}
+                contentFit="cover"
+                source={{uri: encounterProfile.imageURIs[0]}}
+            />
+            <View style={styles.encounterDetails}>
+                <Text style={styles.nameAge}>{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>
+                <Text style={styles.encounterInfo}>{`${personalRelationship?.lastTimePassedBy} near ${personalRelationship?.lastLocationPassedBy}`}</Text>
 
-            {showActions && <View style={styles.encounterDropwdownContainer}>
-                <DropDownPicker value={dateStatus} setValue={d => setDateStatus(d())} items={dateStates} setItems={setDateStates}
-                                zIndex={3000}
-                                disabled={personalRelationship?.reported}
-                                dropDownContainerStyle={{zIndex: 3000, backgroundColor: 'white', elevation: 3000}}
-                                style={[styles.encounterDropdownPicker, personalRelationship?.reported ? styles.encounterDropdownPickerDisabled : null]}
-                                textStyle={{fontFamily: FontFamily.montserratRegular}}
-                                open={isDateStatusDropdownOpen} setOpen={setDateStatusDropdownOpen}/>
+                {showActions && (
+                    <View style={styles.encounterDropdownContainer}>
+                        <Dropdown
+                            data={dateStates}
+                            labelField="label"
+                            valueField="value"
+                            value={dateStatus}
+                            onChange={setDateStatus}
+                            disable={personalRelationship?.reported}
+                            containerStyle={styles.dropdownContainerStyle}
+                            style={[
+                                styles.encounterDropdownPicker,
+                                personalRelationship?.reported ? styles.encounterDropdownPickerDisabled : null
+                            ]}
+                            placeholderStyle={styles.dropdownPlaceholderStyle}
+                            selectedTextStyle={styles.dropdownSelectedTextStyle}
+                            itemTextStyle={styles.dropdownItemTextStyle}
+                        />
+                    </View>
+                )}
+            </View>
+            {showActions && <View style={styles.rightColumn}>
+                <Text style={styles.trustScore}
+                      onPress={() => alert('The higher the more trustworthy the person is (5 = best).')}>Trust
+                    ({encounterProfile.rating})</Text>
+                {dateStatus === EDateStatus.MET_NOT_INTERESTED &&
+                    <Pressable style={personalRelationship?.reported ? styles.buttonDisabled : styles.buttonDanger}
+                               disabled={personalRelationship?.reported}
+                               onPress={() => navigation.navigate(ROUTES.Main.ReportEncounter, {personToReport: encounterProfile})}>
+                        <Text style={styles.buttonText}>
+                            {personalRelationship?.reported ? 'Reported..' : 'Report'}
+                        </Text>
+                    </Pressable>}
+
+                {dateStatus !== EDateStatus.MET_NOT_INTERESTED && personalRelationship?.isNearbyRightNow &&
+                    <Pressable style={styles.buttonBlack}
+                               onPress={() => navigation.navigate(ROUTES.HouseRules, {nextPage: ROUTES.Main.NavigateToApproach, propsForNextScreen: {navigateToPerson: encounterProfile}})}>
+                        <Text style={styles.buttonText}>
+                            Navigate
+                        </Text>
+                    </Pressable>}
             </View>}
         </View>
-        {showActions && <View style={styles.rightColumn}>
-            <Text style={styles.trustScore}
-                  onPress={() => alert('The higher the more trustworthy the person is (5 = best).')}>Trust
-                ({encounterProfile.rating})</Text>
-            {dateStatus === EDateStatus.MET_NOT_INTERESTED &&
-                <Pressable style={personalRelationship?.reported ? styles.buttonDisabled : styles.buttonDanger}
-                           disabled={personalRelationship?.reported}
-                           onPress={() => navigation.navigate(ROUTES.Main.ReportEncounter, {personToReport: encounterProfile})}>
-                    <Text style={styles.buttonText}>
-                        {personalRelationship?.reported ? 'Reported..' : 'Report'}
-                    </Text>
-                </Pressable>}
-
-            {dateStatus !== EDateStatus.MET_NOT_INTERESTED && personalRelationship?.isNearbyRightNow &&
-                <Pressable style={styles.buttonBlack}
-                           onPress={() => navigation.navigate(ROUTES.HouseRules, {nextPage: ROUTES.Main.NavigateToApproach, propsForNextScreen: {navigateToPerson: encounterProfile}})}>
-                    <Text style={styles.buttonText}>
-                        Navigate
-                    </Text>
-                </Pressable>}
-        </View>}
-    </View>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -120,6 +130,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         padding: 7,
+        marginLeft: 5,
     },
     buttonDanger: {
         backgroundColor: Color.red,
@@ -127,6 +138,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         padding: 7,
+        marginLeft: 5,
     },
     buttonDisabled: {
         borderRadius: 8,
@@ -135,23 +147,44 @@ const styles = StyleSheet.create({
         borderColor: Color.gray,
         color: Color.white,
         borderWidth: 1,
+        marginLeft: 5,
     },
     buttonText: {
         color: Color.white,
         fontFamily: FontFamily.montserratLight,
         fontSize: FontSize.size_md,
     },
-    encounterDropdownPicker: {
-        maxWidth: '95%',
-        height: 35,
-        maxHeight: 35,
-        minHeight: 35,
-    },
     encounterDropwdownContainer: {
         zIndex: 3000,
     },
+    encounterDropdownContainer: {
+        marginTop: 5,
+    },
+    dropdownContainerStyle: {
+        backgroundColor: 'white',
+        borderRadius: 8,
+    },
+    encounterDropdownPicker: {
+        height: 35,
+        borderColor: Color.lightGray,
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingHorizontal: 8,
+    },
     encounterDropdownPickerDisabled: {
         backgroundColor: Color.brightGray,
+    },
+    dropdownPlaceholderStyle: {
+        fontSize: FontSize.size_sm,
+        fontFamily: FontFamily.montserratRegular,
+    },
+    dropdownSelectedTextStyle: {
+        fontSize: FontSize.size_sm,
+        fontFamily: FontFamily.montserratRegular,
+    },
+    dropdownItemTextStyle: {
+        fontSize: FontSize.size_sm,
+        fontFamily: FontFamily.montserratRegular,
     },
 });
 

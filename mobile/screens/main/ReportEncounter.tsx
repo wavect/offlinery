@@ -1,14 +1,12 @@
 import * as React from "react";
-import {Image, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Pressable, StyleSheet, Text} from "react-native";
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import OEncounter from "../../components/OEncounter/OEncounter";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
-import DropDownPicker from "react-native-dropdown-picker";
+import {Dropdown} from "react-native-element-dropdown";
 import {useState} from "react";
-import {EDateStatus} from "../../types/PublicProfile.types";
 import {OCheckbox} from "../../components/OCheckbox/OCheckbox";
-import {ROUTES} from "../routes";
 import {EACTION_ENCOUNTERS, useEncountersContext} from "../../context/EncountersContext";
 
 enum EIncidentType {
@@ -52,15 +50,27 @@ const ReportEncounter = ({route, navigation}) => {
             <OEncounter encounterProfile={personToReport} showActions={false} navigation={navigation}/>
 
             <Text style={styles.label}>Type of Incident</Text>
-            <DropDownPicker value={incidentType} setValue={setIncidentType} items={incidents} setItems={setIncidents}
-                            zIndex={3000}
-                            dropDownContainerStyle={{zIndex: 3000, backgroundColor: 'white', elevation: 3000}}
-                            style={[styles.encounterDropdownPicker]}
-                            textStyle={{fontFamily: FontFamily.montserratRegular}}
-                            open={isIncidentDropdownOpen} setOpen={setIncidentDropdownOpen}/>
+            <Dropdown
+                style={styles.dropdown}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                data={incidents}
+                search
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder="Select incident type"
+                searchPlaceholder="Search..."
+                value={incidentType}
+                onChange={item => {
+                    setIncidentType(item.value);
+                }}
+            />
 
             <Text style={styles.label}>What happened?</Text>
-            <OTextInput value={incidentDescription} setValue={setIncidentDescription}
+            <OTextInput value={incidentDescription ?? ''} setValue={setIncidentDescription}
                         placeholder='Describe the incident / misbehavior' multiline={true}/>
 
             <OCheckbox checkboxState={keepMeInTheLoop} onValueChange={setKeepMeInTheLoop}
@@ -83,9 +93,34 @@ const ReportEncounter = ({route, navigation}) => {
 };
 
 const styles = StyleSheet.create({
+    dropdown: {
+        height: 50,
+        borderColor: 'gray',
+        borderWidth: 0.5,
+        borderRadius: 8,
+        paddingHorizontal: 8,
+        marginBottom: 16,
+    },
+    placeholderStyle: {
+        fontSize: 16,
+        fontFamily: FontFamily.montserratRegular,
+    },
+    selectedTextStyle: {
+        fontSize: 16,
+        fontFamily: FontFamily.montserratRegular,
+    },
+    inputSearchStyle: {
+        height: 40,
+        fontSize: 16,
+        fontFamily: FontFamily.montserratRegular,
+    },
+    iconStyle: {
+        width: 20,
+        height: 20,
+    },
     label: {
         fontFamily: FontFamily.montserratMedium,
-        fontSize: FontSize.medium,
+        fontSize: FontSize.size_md,
         marginTop: 24,
         marginBottom: 8,
     },

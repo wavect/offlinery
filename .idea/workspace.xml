@@ -5,21 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a144658d-77eb-49a4-ac48-90e721fa13e0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/mobile/screens/main/ProfileView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/App.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mobile/components/OEncounter/OEncounter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/components/OEncounter/OEncounter.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/components/OTeaserProfilePreview/OTeaserProfilePreview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/components/OTeaserProfilePreview/OTeaserProfilePreview.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/context/EncountersContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/context/EncountersContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/context/UserContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/context/UserContext.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mobile/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mobile/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mobile/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/main/MainScreenTabs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/main/MainScreenTabs.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/main/NavigateToApproach.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/main/NavigateToApproach.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/onboarding/BioLetThemKnow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/onboarding/BioLetThemKnow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/types/PublicProfile.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/types/PublicProfile.types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/screens/main/ProfileSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/main/ProfileSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/screens/main/ReportEncounter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/main/ReportEncounter.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +103,7 @@
       <workItem from="1722344504553" duration="14000" />
       <workItem from="1722632069260" duration="2239000" />
       <workItem from="1722708654994" duration="5000" />
-      <workItem from="1722850480742" duration="16196000" />
+      <workItem from="1722850480742" duration="18581000" />
     </task>
     <servers />
   </component>

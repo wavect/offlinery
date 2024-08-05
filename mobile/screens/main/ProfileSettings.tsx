@@ -2,7 +2,7 @@ import * as React from "react";
 import {useState} from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import DropDownPicker from 'react-native-dropdown-picker';
+import {Dropdown} from "react-native-element-dropdown";
 import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
 import {FontFamily, FontSize, Subtitle, Title} from "../../GlobalStyles";
@@ -29,15 +29,12 @@ const ProfileSettings = ({navigation}) => {
     const setBirthday = (birthday?: Date) => {
         dispatch({type: EACTION_USER.SET_BIRTHDAY, payload: birthday || state.birthDay})
     }
-    const setGender = (gender: Gender) => {
-        dispatch({type: EACTION_USER.SET_GENDER, payload: gender})
+    const setGender = (item: { label: string, value: Gender }) => {
+        dispatch({type: EACTION_USER.SET_GENDER, payload: item.value})
     }
-    const setGenderDesire = (genderDesire: Gender) => {
-        dispatch({type: EACTION_USER.SET_GENDER_DESIRE, payload: genderDesire})
+    const setGenderDesire = (item: { label: string, value: Gender }) => {
+        dispatch({type: EACTION_USER.SET_GENDER_DESIRE, payload: item.value})
     }
-
-    const [genderOpen, setGenderOpen] = useState(false);
-    const [genderLookingForOpen, setGenderLookingForOpen] = useState(false);
 
     const handleSave = () => {
         // TODO: Save to backend.
@@ -103,9 +100,9 @@ const ProfileSettings = ({navigation}) => {
                     <Text style={styles.label}>Bio</Text>
                     <OTextInput
                         value={state.bio}
-                        onChangeText={setBio}
-                        multiline
-                        numberOfLines={4}
+                        setValue={setBio}
+                        placeholder='Please just be kind.'
+                        multiline={true}
                         style={styles.input}
                     />
                 </View>
@@ -122,25 +119,33 @@ const ProfileSettings = ({navigation}) => {
 
                 <View style={styles.dropdownContainer}>
                     <Text style={styles.label}>Gender</Text>
-                    <DropDownPicker
-                        open={genderOpen}
+                    <Dropdown
+                        data={genderItems}
+                        labelField="label"
+                        valueField="value"
                         value={state.gender}
-                        items={genderItems}
-                        setOpen={setGenderOpen}
-                        setValue={(g) => setGender(g())}
+                        onChange={setGender}
                         style={styles.dropdown}
+                        containerStyle={styles.dropdownContainerStyle}
+                        placeholderStyle={styles.dropdownPlaceholderStyle}
+                        selectedTextStyle={styles.dropdownSelectedTextStyle}
+                        itemTextStyle={styles.dropdownItemTextStyle}
                     />
                 </View>
 
                 <View style={styles.dropdownContainer}>
                     <Text style={styles.label}>Looking for</Text>
-                    <DropDownPicker
-                        open={genderLookingForOpen}
+                    <Dropdown
+                        data={genderItems}
+                        labelField="label"
+                        valueField="value"
                         value={state.genderDesire}
-                        items={genderItems}
-                        setOpen={setGenderLookingForOpen}
-                        setValue={(g) => setGenderDesire(g())}
+                        onChange={setGenderDesire}
                         style={styles.dropdown}
+                        containerStyle={styles.dropdownContainerStyle}
+                        placeholderStyle={styles.dropdownPlaceholderStyle}
+                        selectedTextStyle={styles.dropdownSelectedTextStyle}
+                        itemTextStyle={styles.dropdownItemTextStyle}
                     />
                 </View>
 
@@ -165,6 +170,33 @@ const ProfileSettings = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+    // ... (keep existing styles)
+
+    dropdownContainer: {
+        marginBottom: 16,
+        zIndex: 1000,
+    },
+    dropdown: {
+        marginTop: 8,
+        height: 50,
+        borderColor: 'gray',
+        borderWidth: 0.5,
+        borderRadius: 8,
+        paddingHorizontal: 8,
+    },
+    dropdownContainerStyle: {
+        borderRadius: 8,
+    },
+    dropdownPlaceholderStyle: {
+        fontSize: 16,
+        color: 'gray',
+    },
+    dropdownSelectedTextStyle: {
+        fontSize: 16,
+    },
+    dropdownItemTextStyle: {
+        fontSize: 16,
+    },
     container: {
         flex: 1,
         padding: 16,
@@ -196,13 +228,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-    },
-    dropdownContainer: {
-        marginBottom: 16,
-        zIndex: 1000,
-    },
-    dropdown: {
-        marginTop: 8,
     },
     settingsButtonsContainer: {
         flexDirection: 'row',
