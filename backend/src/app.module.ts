@@ -13,6 +13,8 @@ import {BlacklistedRegionController} from "./blacklisted-region/blacklisted-regi
 import {BlacklistedRegionModule} from "./blacklisted-region/blacklisted-region.module";
 import {ThrottlerModule} from "@nestjs/throttler";
 import {NotificationModule} from "./transient-services/notification/notification.module";
+import {UserReportModule} from "./user-report/user-report.module";
+import {UserReport} from "./user-report/user-report.entity";
 
 @Module({
     imports: [
@@ -24,7 +26,7 @@ import {NotificationModule} from "./transient-services/notification/notification
             username: process.env.DB_USER ?? 'root',
             password: process.env.DB_PASSWORD ?? 'root',
             database: process.env.DB_DATABASE ?? 'test',
-            entities: [User, BlacklistedRegion],
+            entities: [User, BlacklistedRegion, UserReport],
         }),
         // @dev https://docs.nestjs.com/techniques/caching
         CacheModule.register(),
@@ -33,7 +35,7 @@ import {NotificationModule} from "./transient-services/notification/notification
             ttl: 60000,
             limit: 10,
         }]),
-        UserModule, BlacklistedRegionModule, NotificationModule,
+        UserModule, BlacklistedRegionModule, NotificationModule, UserReportModule,
     ],
     controllers: [AppController],
     providers: [

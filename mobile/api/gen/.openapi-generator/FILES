@@ -5,13 +5,16 @@ package.json
 src/apis/DefaultApi.ts
 src/apis/PushNotificationsApi.ts
 src/apis/UserApi.ts
+src/apis/UserReportsApi.ts
 src/apis/index.ts
 src/index.ts
 src/models/BlacklistedRegion.ts
+src/models/CreateUserReportDto.ts
 src/models/StorePushTokenDto.ts
 src/models/User.ts
 src/models/UserPublicDTO.ts
 src/models/UserPublicDTOImagesInner.ts
+src/models/UserReport.ts
 src/models/index.ts
 src/runtime.ts
 tsconfig.esm.json

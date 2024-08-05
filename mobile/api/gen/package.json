@@ -1,6 +1,6 @@
 {
   "name": "@offlinery/api",
-  "version": "1.0",
+  "version": "1",
   "description": "OpenAPI client for @offlinery/api",
   "author": "OpenAPI-Generator",
   "repository": {

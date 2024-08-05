@@ -8,36 +8,51 @@ import {Dropdown} from "react-native-element-dropdown";
 import {useState} from "react";
 import {OCheckbox} from "../../components/OCheckbox/OCheckbox";
 import {EACTION_ENCOUNTERS, useEncountersContext} from "../../context/EncountersContext";
+import {CreateUserReportDto, CreateUserReportDtoIncidentTypeEnum, UserReportsApi} from "../../api/gen/src";
+import {useUserContext} from "../../context/UserContext";
 
-enum EIncidentType {
-    Disrespectful = 'Disrespectful',
-    SexualHarassment = 'Sexual harassment',
-    Violent = 'Violent behavior',
-    Other = 'Other',
-}
-
+const reportApi = new UserReportsApi()
 const ReportEncounter = ({route, navigation}) => {
+    const {state} = useUserContext()
     const {dispatch} = useEncountersContext()
+    const [loading, setLoading] = useState(false)
     const {personToReport} = route.params;
     const [incidentDescription, setIncidentDescription] = useState<string>()
     const [keepMeInTheLoop, setKeepMeInTheLoop] = useState<boolean>(false)
-    const [incidentType, setIncidentType] = useState<EIncidentType | null>(null)
+    const [incidentType, setIncidentType] = useState<CreateUserReportDtoIncidentTypeEnum | null>(null)
     const [incidents, setIncidents] = useState([
-        {label: 'Disrespectful', value: EIncidentType.Disrespectful},
-        {label: 'Sexual harassment', value: EIncidentType.SexualHarassment},
-        {label: 'Violent behavior', value: EIncidentType.Violent},
-        {label: 'Other', value: EIncidentType.Other},
+        {label: 'Disrespectful', value: CreateUserReportDtoIncidentTypeEnum.Disrespectful},
+        {label: 'Sexual harassment', value: CreateUserReportDtoIncidentTypeEnum.SexualHarassment},
+        {label: 'Violent behavior', value: CreateUserReportDtoIncidentTypeEnum.ViolentBehavior},
+        {label: 'Other', value: CreateUserReportDtoIncidentTypeEnum.Other},
     ])
     const [isIncidentDropdownOpen, setIncidentDropdownOpen] = useState(false)
     const [isButtonPressed, setIsButtonPressed] = useState(false)
 
-    const submitReport = () => {
-        // TODO: Add backend call here
-        dispatch({
-            type: EACTION_ENCOUNTERS.SET_REPORTED,
-            payload: {encounterId: personToReport.encounterId, value: true},
-        })
-        navigation.goBack()
+    const submitReport = async () => {
+        try {
+            setLoading(true)
+            const createUserReportDto: CreateUserReportDto = {
+                incidentDescription: incidentDescription!,
+                keepReporterInTheLoop: keepMeInTheLoop,
+                incidentType: incidentType!,
+                reportedUserId: personToReport.id, // Assuming personToReport has an id field
+                reportingUserId: state.id!, // You need to provide the current user's ID here
+            };
+
+            await reportApi.userReportControllerCreate({ createUserReportDto });
+
+            dispatch({
+                type: EACTION_ENCOUNTERS.SET_REPORTED,
+                payload: {encounterId: personToReport.encounterId, value: true},
+            })
+            navigation.goBack()
+        } catch(err) {
+            console.error(err)
+            // TODO
+        } finally {
+            setLoading(false)
+        }
     }
 
     /** @dev Form properly filled out? */

@@ -22,13 +22,15 @@ export enum EVerificationStatus {
     NOT_NEEDED = "not_needed",
 }
 
-export interface MapRegion {
-    center: LatLng;
-    radius: number;
-}
-
 // TODO: Maybe to own entity?
 interface LatLng {
     latitude: number;
     longitude: number;
+}
+
+export enum EIncidentType {
+    Disrespectful = 'Disrespectful',
+    SexualHarassment = 'Sexual harassment',
+    Violent = 'Violent behavior',
+    Other = 'Other',
 }

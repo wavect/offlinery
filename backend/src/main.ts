@@ -28,14 +28,15 @@ async function bootstrap() {
   await app.listen(3000);
 }
 
+const VERSION = '1'
 const BE_ENDPOINT = 'https://offlinery.onrender.com' // 'http://localhost:3000' // TODO: Adapt / dev env
 
 const setupSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()
       .setTitle('Offlinery')
       .setDescription('API of Offlinery')
-      .setVersion('1.0')
-      .addServer(`${BE_ENDPOINT}/v1`) // will also be used in Frontend when generated
+      .setVersion(VERSION)
+      .addServer(`${BE_ENDPOINT}/v${VERSION}`) // will also be used in Frontend when generated
       .addTag('app')
       .build();
   const document = SwaggerModule.createDocument(app, config, {deepScanRoutes: true});
