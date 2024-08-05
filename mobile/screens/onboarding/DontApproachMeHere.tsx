@@ -4,7 +4,6 @@ import {Platform, Pressable, StyleSheet, Text, View} from "react-native";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import MapView, {
     Circle, LongPressEvent,
-    MapPressEvent,
     Marker,
     MarkerDragEvent,
     PROVIDER_DEFAULT,
@@ -67,7 +66,8 @@ const DontApproachMeHere = ({navigation}) => {
 
     const handleMapLongPress = (event: LongPressEvent) => {
         const {coordinate} = event.nativeEvent;
-        setBlacklistedRegions([...state.blacklistedRegions, {center: coordinate, radius: 100}]);
+        const {latitude, longitude} = coordinate
+        setBlacklistedRegions([...state.blacklistedRegions, {latitude, longitude, radius: 100}]);
         setActiveRegionIndex(state.blacklistedRegions.length);
     };
 
@@ -93,7 +93,9 @@ const DontApproachMeHere = ({navigation}) => {
     };
 
     const handleRegionDrag = (event: MarkerDragEvent, index: number) => {
-        state.blacklistedRegions[index].center = event.nativeEvent.coordinate
+        const {latitude, longitude} = event.nativeEvent.coordinate
+        state.blacklistedRegions[index].latitude = latitude
+        state.blacklistedRegions[index].longitude = longitude
         setBlacklistedRegions(state.blacklistedRegions)
     }
 
@@ -124,13 +126,13 @@ const DontApproachMeHere = ({navigation}) => {
                     {state.blacklistedRegions.map((region, index) => (
                         <React.Fragment key={`region-${index}`}>
                             <Circle
-                                center={region.center}
+                                center={region}
                                 radius={region.radius}
                                 fillColor={index === activeRegionIndex ? "rgba(255, 0, 0, 0.4)" : "rgba(255, 0, 0, 0.2)"}
                                 strokeColor={index === activeRegionIndex ? "rgba(255, 0, 0, 0.8)" : "rgba(255, 0, 0, 0.5)"}
                             />
                             <Marker
-                                coordinate={region.center}
+                                coordinate={region}
                                 title="You're undercover"
                                 description="Nobody will see you here."
                                 draggable={true}

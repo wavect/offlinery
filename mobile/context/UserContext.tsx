@@ -37,7 +37,8 @@ export interface IUserData {
 }
 
 export interface MapRegion {
-    center: LatLng;
+    longitude: number;
+    latitude: number;
     radius: number;
 }
 
