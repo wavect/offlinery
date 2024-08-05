@@ -4,6 +4,8 @@ import {LatLng} from "react-native-maps";
 import {LocationObject} from "expo-location";
 import {IEncounterProfile, IPublicProfile} from "../types/PublicProfile.types";
 import {getAge} from "../utils/date.utils";
+import {UserApi, UserControllerCreateUserRequest} from "../api/gen/src";
+import {ROUTES} from "../screens/routes";
 
 export type Gender = "woman" | "man"
 
@@ -275,4 +277,58 @@ export const useUserContext = (): IUserContextType => {
         throw new Error('useUserContext must be used within a UserProvider');
     }
     return context;
+};
+
+export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IUserAction>, onSuccess: () => void, onError: (err: any) => void) => {
+    const api = new UserApi();
+
+    // Prepare the user data
+    const userData = {
+        firstName: state.firstName,
+        email: state.email,
+        wantsEmailUpdates: state.wantsEmailUpdates,
+        birthDay: state.birthDay.toISOString(),
+        gender: state.gender,
+        genderDesire: state.genderDesire,
+        verificationStatus: state.verificationStatus,
+        approachChoice: state.approachChoice,
+        blacklistedRegions: state.blacklistedRegions,
+        approachFromTime: state.approachFromTime.toISOString(),
+        approachToTime: state.approachToTime.toISOString(),
+        bio: state.bio,
+        dateMode: state.dateMode,
+    };
+
+    // Prepare the images
+    const images: Blob[] = [];
+    for (const key in state.images) {
+        const image: ImagePicker.ImagePickerAsset|undefined = state.images[key as ImageIdx];
+        if (image) {
+            const response = await fetch(image.uri);
+            const blob = await response.blob();
+            images.push(blob);
+        }
+    }
+
+    const requestParameters: UserControllerCreateUserRequest = {
+        user: userData,
+        images: images,
+    };
+
+    try {
+        const user = await api.userControllerCreateUser(requestParameters);
+        console.log("User created successfully:", user);
+
+        // Update the user state with the returned ID
+        if (user.id) {
+            dispatch({ type: EACTION_USER.SET_ID, payload: user.id });
+        }
+
+        // Navigate to the next screen or update the UI as needed
+        onSuccess()
+    } catch (error: any) {
+        console.error("Error creating user:", error);
+        onError(error)
+        // Handle the error (e.g., show an error message to the user)
+    }
 };
