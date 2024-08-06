@@ -13,13 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { Time } from './Time';
-import {
-    TimeFromJSON,
-    TimeFromJSONTyped,
-    TimeToJSON,
-} from './Time';
-
 /**
  * 
  * @export
@@ -69,7 +62,7 @@ export interface UserPublicDTO {
      */
     genderDesire: UserPublicDTOGenderDesireEnum;
     /**
-     * An array of image files
+     * An array of image uris
      * @type {Array<string>}
      * @memberof UserPublicDTO
      */
@@ -88,16 +81,16 @@ export interface UserPublicDTO {
     approachChoice: UserPublicDTOApproachChoiceEnum;
     /**
      * The time from which the user can be approached
-     * @type {Time}
+     * @type {string}
      * @memberof UserPublicDTO
      */
-    approachFromTime: Time;
+    approachFromTime: string;
     /**
      * The time until which the user can be approached
-     * @type {Date}
+     * @type {string}
      * @memberof UserPublicDTO
      */
-    approachToTime: Date;
+    approachToTime: string;
     /**
      * The user's bio
      * @type {string}
@@ -202,8 +195,8 @@ export function UserPublicDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
         'imageURIs': json['imageURIs'],
         'verificationStatus': json['verificationStatus'],
         'approachChoice': json['approachChoice'],
-        'approachFromTime': TimeFromJSON(json['approachFromTime']),
-        'approachToTime': (new Date(json['approachToTime'])),
+        'approachFromTime': json['approachFromTime'],
+        'approachToTime': json['approachToTime'],
         'bio': json['bio'],
         'dateMode': json['dateMode'],
     };
@@ -225,8 +218,8 @@ export function UserPublicDTOToJSON(value?: UserPublicDTO | null): any {
         'imageURIs': value['imageURIs'],
         'verificationStatus': value['verificationStatus'],
         'approachChoice': value['approachChoice'],
-        'approachFromTime': TimeToJSON(value['approachFromTime']),
-        'approachToTime': ((value['approachToTime']).toISOString()),
+        'approachFromTime': value['approachFromTime'],
+        'approachToTime': value['approachToTime'],
         'bio': value['bio'],
         'dateMode': value['dateMode'],
     };
