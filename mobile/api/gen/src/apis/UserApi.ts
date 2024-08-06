@@ -33,7 +33,7 @@ import {
 
 export interface UserControllerCreateUserRequest {
     user: CreateUserDTO;
-    images: Array<Blob>;
+    images: Array<any>;
 }
 
 export interface UserControllerGetUserRequest {
@@ -42,8 +42,8 @@ export interface UserControllerGetUserRequest {
 
 export interface UserControllerUpdateUserRequest {
     id: number;
-    user: UpdateUserDTO;
-    images: Array<Blob>;
+    user?: UpdateUserDTO;
+    images?: Array<any>;
 }
 
 /**
@@ -57,7 +57,7 @@ export interface UserApiInterface {
      * 
      * @summary Create a new user with images
      * @param {CreateUserDTO} user 
-     * @param {Array<Blob>} images 
+     * @param {Array<any>} images An array of image files
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApiInterface
@@ -88,8 +88,8 @@ export interface UserApiInterface {
      * 
      * @summary Update an existing user
      * @param {number} id 
-     * @param {UpdateUserDTO} user 
-     * @param {Array<Blob>} images 
+     * @param {UpdateUserDTO} [user] 
+     * @param {Array<any>} [images] An array of image files
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApiInterface
@@ -138,8 +138,6 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
 
         let formParams: { append(param: string, value: any): any };
         let useForm = false;
-        // use FormData to transmit files using content-type "multipart/form-data"
-        useForm = canConsumeForm;
         if (useForm) {
             formParams = new FormData();
         } else {
@@ -219,20 +217,6 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
             );
         }
 
-        if (requestParameters['user'] == null) {
-            throw new runtime.RequiredError(
-                'user',
-                'Required parameter "user" was null or undefined when calling userControllerUpdateUser().'
-            );
-        }
-
-        if (requestParameters['images'] == null) {
-            throw new runtime.RequiredError(
-                'images',
-                'Required parameter "images" was null or undefined when calling userControllerUpdateUser().'
-            );
-        }
-
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -245,8 +229,6 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
 
         let formParams: { append(param: string, value: any): any };
         let useForm = false;
-        // use FormData to transmit files using content-type "multipart/form-data"
-        useForm = canConsumeForm;
         if (useForm) {
             formParams = new FormData();
         } else {

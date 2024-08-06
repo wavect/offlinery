@@ -2,9 +2,18 @@ import {ApiProperty} from '@nestjs/swagger';
 import {UpdateUserDTO} from "./update-user.dto";
 
 export class UpdateUserRequestDTO {
-    @ApiProperty({ type: UpdateUserDTO })
+    @ApiProperty({ type: UpdateUserDTO, required: false })
     user: UpdateUserDTO;
 
-    @ApiProperty({ type: 'array', items: { type: 'string', format: 'binary' } })
+    @ApiProperty({
+        type: 'array',
+        items: {
+            type: 'file',
+            format: 'binary'
+        },
+        description: 'An array of image files',
+        maxItems: 6,
+        required: false,
+    })
     images: Express.Multer.File[];
 }
