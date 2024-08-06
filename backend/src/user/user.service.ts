@@ -18,7 +18,6 @@ export class UserService {
 
     async createUser(createUserDto: CreateUserDTO, images: Express.Multer.File[]): Promise<User> {
         const user = new User();
-        Object.assign(user, createUserDto);
 
         // @dev https://docs.nestjs.com/security/encryption-and-hashing
         user.passwordSalt = await bcrypt.genSalt();
@@ -39,6 +38,8 @@ export class UserService {
                 })
             );
         }
+
+        Object.assign(user, createUserDto);
 
         return await this.userRepository.save(user);
     }

@@ -44,6 +44,7 @@ export class UserController {
             })
         ) images: Express.Multer.File[]
     ): Promise<UserPublicDTO> {
+        console.warn('RECEIVED REQUEST: ', createUserDto, images)
         return (await this.userService.createUser(createUserDto, images)).convertToPublicDTO()
     }
 

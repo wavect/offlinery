@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty } from 'class-validator';
 
-export class StorePushTokenDto {
+export class StorePushTokenDTO {
     @ApiProperty({
         description: 'The unique identifier of the user',
         example: 'user123'
