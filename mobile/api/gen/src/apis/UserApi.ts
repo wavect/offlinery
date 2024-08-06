@@ -41,7 +41,7 @@ export interface UserControllerGetUserRequest {
 }
 
 export interface UserControllerUpdateUserRequest {
-    id: number;
+    id: string;
     user?: UpdateUserDTO;
     images?: Array<any>;
 }
@@ -87,7 +87,7 @@ export interface UserApiInterface {
     /**
      * 
      * @summary Update an existing user
-     * @param {number} id 
+     * @param {string} id 
      * @param {UpdateUserDTO} [user] 
      * @param {Array<any>} [images] An array of image files
      * @param {*} [options] Override http request option.

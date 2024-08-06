@@ -8,7 +8,7 @@ export class StorePushTokenDTO {
     })
     @IsString()
     @IsNotEmpty()
-    userId: number;
+    userId: string;
 
     @ApiProperty({
         description: 'The Expo push token for the user\'s device',

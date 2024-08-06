@@ -92,7 +92,7 @@ describe('UserController', () => {
             const expectedResult = new User();
             Object.assign(expectedResult, createUserDto);
             expectedResult.id = 1;
-            expectedResult.images = mockImages;
+            expectedResult.imageURIs = mockImages;
             expectedResult.isActive = true;
             expectedResult.convertToPublicDTO = jest.fn().mockReturnValue({
                 id: 1,
@@ -131,7 +131,7 @@ describe('UserController', () => {
             const expectedResult = new User();
             Object.assign(expectedResult, updateUserDto);
             expectedResult.id = 1;
-            expectedResult.images = mockImages;
+            expectedResult.imageURIs = mockImages;
             expectedResult.convertToPublicDTO = jest.fn().mockReturnValue({
                 id: 1,
                 firstName: 'John Updated',

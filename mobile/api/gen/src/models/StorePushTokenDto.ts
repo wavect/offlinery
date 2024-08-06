@@ -16,37 +16,37 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface StorePushTokenDto
+ * @interface StorePushTokenDTO
  */
-export interface StorePushTokenDto {
+export interface StorePushTokenDTO {
     /**
      * The unique identifier of the user
-     * @type {number}
-     * @memberof StorePushTokenDto
+     * @type {string}
+     * @memberof StorePushTokenDTO
      */
-    userId: number;
+    userId: string;
     /**
      * The Expo push token for the user's device
      * @type {string}
-     * @memberof StorePushTokenDto
+     * @memberof StorePushTokenDTO
      */
     pushToken: string;
 }
 
 /**
- * Check if a given object implements the StorePushTokenDto interface.
+ * Check if a given object implements the StorePushTokenDTO interface.
  */
-export function instanceOfStorePushTokenDto(value: object): value is StorePushTokenDto {
+export function instanceOfStorePushTokenDTO(value: object): value is StorePushTokenDTO {
     if (!('userId' in value) || value['userId'] === undefined) return false;
     if (!('pushToken' in value) || value['pushToken'] === undefined) return false;
     return true;
 }
 
-export function StorePushTokenDtoFromJSON(json: any): StorePushTokenDto {
-    return StorePushTokenDtoFromJSONTyped(json, false);
+export function StorePushTokenDTOFromJSON(json: any): StorePushTokenDTO {
+    return StorePushTokenDTOFromJSONTyped(json, false);
 }
 
-export function StorePushTokenDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): StorePushTokenDto {
+export function StorePushTokenDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): StorePushTokenDTO {
     if (json == null) {
         return json;
     }
@@ -57,7 +57,7 @@ export function StorePushTokenDtoFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function StorePushTokenDtoToJSON(value?: StorePushTokenDto | null): any {
+export function StorePushTokenDTOToJSON(value?: StorePushTokenDTO | null): any {
     if (value == null) {
         return value;
     }
