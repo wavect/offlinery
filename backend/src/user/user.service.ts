@@ -21,7 +21,7 @@ export class UserService {
         Object.assign(user, createUserDto);
 
         // @dev https://docs.nestjs.com/security/encryption-and-hashing
-        console.warn("PWD: ", createUserDto?.clearPassword)
+        console.warn("PWD: ", createUserDto?.clearPassword, createUserDto, user)
         user.passwordSalt = await bcrypt.genSalt();
         console.warn("SALT: ", user.passwordSalt)
         user.passwordHash = await bcrypt.hash(createUserDto.clearPassword, user.passwordSalt);
