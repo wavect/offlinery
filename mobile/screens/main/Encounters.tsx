@@ -6,6 +6,7 @@ import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import OEncounter from "../../components/OEncounter/OEncounter";
 import {useEncountersContext} from "../../context/EncountersContext";
+import {i18n, TR} from "../../localization/translate.service";
 
 const Encounters = ({navigation}) => {
     const {state} = useEncountersContext()
@@ -32,7 +33,7 @@ const Encounters = ({navigation}) => {
     };
 
     return (
-        <OPageContainer subtitle="People you might have met. Rate them, Report them or stay in touch."
+        <OPageContainer subtitle={i18n.t(TR.peopleYouMightHaveMet)}
                         doNotUseScrollView={true}>
             <View style={styles.container}>
                 <View style={styles.dateRangeContainer}>
@@ -44,7 +45,7 @@ const Encounters = ({navigation}) => {
                                 mode="date"
                                 style={styles.iosDatePicker}
                                 onChange={onMetStartDateFilterChange}
-                                accessibilityLabel="We met from"
+                                accessibilityLabel={i18n.t(TR.weMetFrom)}
                                 value={metStartDateFilter}
                             />
                         ) : (
@@ -71,7 +72,7 @@ const Encounters = ({navigation}) => {
                                 mode="date"
                                 style={styles.iosDatePicker}
                                 onChange={onMetEndDateFilterChange}
-                                accessibilityLabel="to this date"
+                                accessibilityLabel={i18n.t(TR.toThisDate)}
                                 value={metEndDateFilter}
                             />
                         ) : (

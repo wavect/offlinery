@@ -11,6 +11,7 @@ import {EACTION_ENCOUNTERS, useEncountersContext} from "../../context/Encounters
 import {CreateUserReportDto, CreateUserReportDtoIncidentTypeEnum, UserReportsApi} from "../../api/gen/src";
 import {useUserContext} from "../../context/UserContext";
 import {isLoading} from "expo-font";
+import {i18n, TR} from "../../localization/translate.service";
 
 const reportApi = new UserReportsApi()
 const ReportEncounter = ({route, navigation}) => {
@@ -22,10 +23,10 @@ const ReportEncounter = ({route, navigation}) => {
     const [keepMeInTheLoop, setKeepMeInTheLoop] = useState<boolean>(false)
     const [incidentType, setIncidentType] = useState<CreateUserReportDtoIncidentTypeEnum | null>(null)
     const [incidents, setIncidents] = useState([
-        {label: 'Disrespectful', value: CreateUserReportDtoIncidentTypeEnum.Disrespectful},
-        {label: 'Sexual harassment', value: CreateUserReportDtoIncidentTypeEnum.SexualHarassment},
-        {label: 'Violent behavior', value: CreateUserReportDtoIncidentTypeEnum.ViolentBehavior},
-        {label: 'Other', value: CreateUserReportDtoIncidentTypeEnum.Other},
+        {label: i18n.t(TR.reportIncident.disrespectful), value: CreateUserReportDtoIncidentTypeEnum.Disrespectful},
+        {label: i18n.t(TR.reportIncident.sexualHarassment), value: CreateUserReportDtoIncidentTypeEnum.SexualHarassment},
+        {label: i18n.t(TR.reportIncident.violentBehavior), value: CreateUserReportDtoIncidentTypeEnum.ViolentBehavior},
+        {label: i18n.t(TR.reportIncident.other), value: CreateUserReportDtoIncidentTypeEnum.Other},
     ])
     const [isButtonPressed, setIsButtonPressed] = useState(false)
 
@@ -61,10 +62,10 @@ const ReportEncounter = ({route, navigation}) => {
 
     return (
         <OPageContainer
-            subtitle="Please only report people that were disrespectful, didn’t accept a No or even did misbehave in a different way.">
+            subtitle={i18n.t(TR.onlyReportThatWasDisrespectful)}>
             <OEncounter encounterProfile={personToReport} showActions={false} navigation={navigation}/>
 
-            <Text style={styles.label}>Type of Incident</Text>
+            <Text style={styles.label}>{i18n.t(TR.typeOfIncident)}</Text>
             <Dropdown
                 style={styles.dropdown}
                 placeholderStyle={styles.placeholderStyle}
@@ -76,8 +77,8 @@ const ReportEncounter = ({route, navigation}) => {
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
-                placeholder="Select incident type"
-                searchPlaceholder="Search..."
+                placeholder={i18n.t(TR.selectIncidentType)}
+                searchPlaceholder={i18n.t(TR.search)}
                 value={incidentType}
                 onChange={item => {
                     setIncidentType(item.value);
@@ -86,10 +87,10 @@ const ReportEncounter = ({route, navigation}) => {
 
             <Text style={styles.label}>What happened?</Text>
             <OTextInput value={incidentDescription ?? ''} setValue={setIncidentDescription}
-                        placeholder='Describe the incident / misbehavior' multiline={true}/>
+                        placeholder={i18n.t(TR.describeIncident)} multiline={true}/>
 
             <OCheckbox checkboxState={keepMeInTheLoop} onValueChange={setKeepMeInTheLoop}
-                       label='Please keep me in the loop via email.' style={{marginTop: 20}}/>
+                       label={i18n.t(TR.keepMeInTheLoopEmail)} style={{marginTop: 20}}/>
 
             <Pressable style={[
                 styles.buttonBase,
@@ -101,7 +102,7 @@ const ReportEncounter = ({route, navigation}) => {
                        onPress={submitReport}>
                 <Text style={styles.buttonText}>
                     {isLoading && <ActivityIndicator size="small" style={{marginRight: 6}}/>}
-                    Report now
+                    {i18n.t(TR.reportNow)}
                 </Text>
             </Pressable>
         </OPageContainer>

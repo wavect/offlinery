@@ -15,6 +15,7 @@ import {EACTION_USER, MapRegion, useUserContext} from "../../context/UserContext
 import {MaterialIcons} from "@expo/vector-icons";
 import * as Location from 'expo-location';
 import {LocationAccuracy} from 'expo-location';
+import {i18n, TR} from "../../localization/translate.service";
 
 const HeatMap = ({navigation}) => {
   const {state, dispatch} = useUserContext()
@@ -98,7 +99,7 @@ const HeatMap = ({navigation}) => {
   }
 
   return (
-      <OPageContainer subtitle="Being near these hotspots increases your odds of meeting your soulmate.">
+      <OPageContainer subtitle={i18n.t(TR.beNearTheseHotspotsToMeet)}>
         <>
           <MapView
               ref={mapRef}
@@ -123,8 +124,8 @@ const HeatMap = ({navigation}) => {
                   />
                   <Marker
                       coordinate={region}
-                      title="You're undercover"
-                      description="Nobody will see you here."
+                      title={i18n.t(TR.youAreUndercover)}
+                      description={i18n.t(TR.nobodyWillSeeYou)}
                       draggable={true}
                       onDrag={(ev) => handleRegionDrag(ev, index)}
                       onPress={() => handleRegionPress(index)}
@@ -133,8 +134,8 @@ const HeatMap = ({navigation}) => {
                 </React.Fragment>
             ))}
             {location && <Marker
-                title="My Location"
-                description="You are here"
+                title={i18n.t(TR.myLocation)}
+                description={i18n.t(TR.youAreHere)}
                 pinColor="blue"
                 coordinate={location.coords}
                 tracksViewChanges={false}
@@ -153,12 +154,12 @@ const HeatMap = ({navigation}) => {
           )}
           <View style={styles.instructions}>
             <Text style={[Subtitle, styles.instructionText]}>
-              Long press on the map to add a circular region. Tap a region to select it and adjust its radius.
+              {i18n.t(TR.longPressMapSafeZoneInstruction)}
             </Text>
           </View>
           {activeRegionIndex !== null && (
               <View style={styles.sliderContainer}>
-                <Text style={[Subtitle, styles.instructionText, styles.bold]}>Adjust Region Radius ({Math.round(state.blacklistedRegions[activeRegionIndex].radius)}m)</Text>
+                <Text style={[Subtitle, styles.instructionText, styles.bold]}>{i18n.t(TR.adjustRegionRadius)}&nsbp;({Math.round(state.blacklistedRegions[activeRegionIndex].radius)}m)</Text>
                 <Slider
                     style={styles.slider}
                     minimumValue={100}
