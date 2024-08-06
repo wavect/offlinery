@@ -10,6 +10,7 @@ import {EACTION_USER, useUserContext} from "../context/UserContext";
 import {sleep} from "../utils/misc.utils";
 import {OTermsDisclaimer} from "../components/OTermsDisclaimer/OTermsDisclaimer";
 import {OTextInputWide} from "../components/OTextInputWide/OTextInputWide";
+import {i18n, TR} from "../localization/translate.service";
 
 const Login = ({navigation}) => {
 
@@ -52,30 +53,30 @@ const Login = ({navigation}) => {
             >
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.content}>
-                        <OShowcase subtitle="Stop Swiping. Meet IRL."/>
+                        <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)}/>
 
                         <OTextInputWide
                             value={state.email}
                             setValue={setEmail}
-                            placeholder="Your email"
-                            topLabel="Email"
+                            placeholder={i18n.t(TR.yourEmail)}
+                            topLabel={i18n.t(TR.email)}
                             style={styles.textInputContainer}
                         />
                         <OTextInputWide
                             value={state.clearPassword}
                             setValue={setClearPassword}
-                            placeholder="Your password"
+                            placeholder={i18n.t(TR.yourPassword)}
                             secureTextEntry={true}
-                            topLabel="Password"
+                            topLabel={i18n.t(TR.password)}
                             style={styles.textInputContainer}
                         />
 
                         <OButtonWide
                             filled={true}
-                            text="Sign in"
+                            text={i18n.t(TR.signIn)}
                             style={styles.loginButton}
                             isLoading={isLoading}
-                            loadingBtnText='Signing in..'
+                            loadingBtnText={i18n.t(TR.signingIn)}
                             disabled={!hasFilledOutLoginForm()}
                             onPress={login}
                             variant="light"
@@ -84,7 +85,7 @@ const Login = ({navigation}) => {
                         <OTermsDisclaimer style={styles.termsDisclaimer}/>
 
                         <Text style={styles.troubleSigningIn}>
-                            Trouble signing in?
+                            {i18n.t(TR.troubleSignIn)}
                         </Text>
                     </View>
                 </ScrollView>

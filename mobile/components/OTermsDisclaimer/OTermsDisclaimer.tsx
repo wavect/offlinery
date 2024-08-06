@@ -2,6 +2,7 @@ import {StyleProp, StyleSheet, Text, ViewStyle} from "react-native";
 import {A} from "@expo/html-elements";
 import * as React from "react";
 import {FontFamily, FontSize} from "../../GlobalStyles";
+import {i18n, TR} from "../../localization/translate.service";
 
 interface IOTermsDisclaimerProps {
     style?: StyleProp<ViewStyle>,
@@ -16,10 +17,10 @@ export const OTermsDisclaimer = (props: IOTermsDisclaimerProps) => {
     >
         <Text style={styles.termsContainer}>
             <Text style={styles.termsText}>
-                {`By tapping “Create account” or “Sign in”, you agree to our `}
-                <A href="https://wavect.io/imprint" style={styles.termsLink}>Terms</A>
-                {`. See how we process your data in our `}
-                <A href="https://wavect.io/imprint" style={styles.termsLink}>Privacy and Cookie Policy.</A>
+                {i18n.t(TR.termsDisclaimer.p1)}
+                <A href="https://wavect.io/imprint" style={styles.termsLink}>{i18n.t(TR.termsDisclaimer.terms)}</A>
+                {i18n.t(TR.termsDisclaimer.p2)}
+                <A href="https://wavect.io/imprint" style={styles.termsLink}>{i18n.t(TR.termsDisclaimer.privacyCookie)}</A>
             </Text>
         </Text>
     </Text>

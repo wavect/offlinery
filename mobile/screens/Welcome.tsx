@@ -11,6 +11,7 @@ import {useCallback, useEffect, useState} from "react";
 import {useFocusEffect} from "@react-navigation/native";
 import {sleep} from "../utils/misc.utils";
 import {OTermsDisclaimer} from "../components/OTermsDisclaimer/OTermsDisclaimer";
+import {i18n, TR} from "../localization/translate.service";
 
 const Welcome = ({navigation}) => {
     const {state, dispatch} = useUserContext()
@@ -52,20 +53,20 @@ const Welcome = ({navigation}) => {
     const AuthScreen = () => <>
         <OTermsDisclaimer style={styles.troubleSigningInFlexBox} />
 
-        <OButtonWide filled={true} text="Create Account" style={{marginBottom: 14}}
+        <OButtonWide filled={true} text={i18n.t(TR.createAccount)} style={{marginBottom: 14}}
                      onPress={() => navigation.navigate(ROUTES.Onboarding.Email)} variant="light"/>
-        <OButtonWide filled={false} text="Sign in" style={{marginBottom: 90}} variant="light"
+        <OButtonWide filled={false} text={i18n.t(TR.signIn)} style={{marginBottom: 90}} variant="light"
                      onPress={() => navigation.navigate(ROUTES.Login)}/>
 
         <Text style={[styles.troubleSigningIn, styles.troubleSigningInFlexBox]}>
-            Trouble signing in?
+            {i18n.t(TR.troubleSignIn)}
         </Text>
     </>
 
     const LoadingScreen = () => {
         return <>
             <ActivityIndicator size="large" color={Color.white}/>
-            <Text style={styles.loadingText}>Getting ready to amaze you..</Text>
+            <Text style={styles.loadingText}>{i18n.t(TR.gettingReadyToAmazeYou)}</Text>
         </>
     }
 
@@ -73,7 +74,7 @@ const Welcome = ({navigation}) => {
     return (
         <OLinearBackground>
             <View style={[styles.layoutContainer, isLoading ? {justifyContent: 'center'} : null]}>
-                <OShowcase subtitle="Stop Swiping. Meet IRL."/>
+                <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)}/>
 
                 {isLoading && <LoadingScreen/>}
                 {!isLoading && !state.isAuthenticated && <AuthScreen/>}
