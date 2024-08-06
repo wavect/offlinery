@@ -10,11 +10,15 @@ import {EACTION_USER, EApproachChoice, Gender, useUserContext} from "../../conte
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import {MaterialIcons} from "@expo/vector-icons";
 import {i18n, TR} from "../../localization/translate.service";
+import {UserApi, UserControllerUpdateUserRequest} from "../../api/gen/src";
+import {useState} from "react";
 
+const userApi = new UserApi()
 const ProfileSettings = ({navigation}) => {
     const {state, dispatch} = useUserContext();
+    const [isLoading, setLoading] = useState(false)
 
-    const setFirstName = (firstName: string) => {
+    const setFirstName = async (firstName: string) => {
         dispatch({type: EACTION_USER.SET_FIRSTNAME, payload: firstName})
     }
     const setApproachFromTime = (fromTime?: Date) => {
@@ -36,9 +40,30 @@ const ProfileSettings = ({navigation}) => {
         dispatch({type: EACTION_USER.SET_GENDER_DESIRE, payload: item.value})
     }
 
-    const handleSave = () => {
-        // TODO: Save to backend.
-        navigation.navigate(ROUTES.MainTabView, {screen: ROUTES.Main.FindPeople})
+    const handleSave = async () => {
+        try {
+            setLoading(true)
+            const request: UserControllerUpdateUserRequest = {
+                id: state.id!,
+                user: {
+                    firstName: state.firstName,
+                    approachFromTime: state.approachFromTime,
+                    approachToTime: state.approachToTime,
+                    bio: state.bio,
+                    birthDay: state.birthDay,
+                    gender: state.gender,
+                    genderDesire: state.genderDesire,
+                }
+            };
+            await userApi.userControllerUpdateUser(request);
+
+            navigation.navigate(ROUTES.MainTabView, {screen: ROUTES.Main.FindPeople});
+        } catch (error) {
+            console.error("Error updating user profile:", error);
+            // Handle error (e.g., show error message to user)
+        } finally {
+            setLoading(false)
+        }
     };
 
     const genderItems: { label: string, value: Gender }[] = [
@@ -59,6 +84,7 @@ const ProfileSettings = ({navigation}) => {
     return (
         <OPageContainer subtitle={i18n.t(TR.changePreferencesDescr)}
                         bottomContainerChildren={<OButtonWide text={i18n.t(TR.save)} filled={true} variant="dark"
+                                                              isLoading={isLoading} loadingBtnText={i18n.t(TR.saving)}
                                                               onPress={handleSave}/>}>
             <View style={styles.container}>
                 <View style={styles.inputContainer}>

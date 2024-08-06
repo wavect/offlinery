@@ -162,4 +162,5 @@ export const en = {
     youAreLiveBeApproachedDescr: 'People you may find interesting will receive notifications when you are nearby!',
     live: 'Live',
     ghostMode: 'Ghost Mode',
+    saving: 'Saving..',
 }

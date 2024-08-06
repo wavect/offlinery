@@ -24,6 +24,7 @@ import {
     UserPublicDTOFromJSON,
     UserPublicDTOToJSON,
 } from '../models/index';
+import {objectToJSON} from "../../../tmp.utils";
 
 export interface UserControllerCreateUserRequest {
     user?: object;
