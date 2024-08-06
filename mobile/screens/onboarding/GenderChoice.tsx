@@ -5,6 +5,7 @@ import {Color, Subtitle, Title} from "../../GlobalStyles";
 import {ROUTES} from "../routes";
 import {EACTION_USER, Gender, useUserContext} from "../../context/UserContext";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
+import {i18n, TR} from "../../localization/translate.service";
 
 const GenderChoice = ({navigation}) => {
     const { dispatch } = useUserContext();
@@ -14,19 +15,19 @@ const GenderChoice = ({navigation}) => {
         navigation.navigate(ROUTES.Onboarding.GenderLookingFor)
     }
 
-    return <OPageContainer title="I am a">
+    return <OPageContainer title={i18n.t(TR.iAmA)}>
         <View style={styles.optionContainer}>
-            <OButtonWide text="Woman" filled={false} variant="dark" onPress={() => setGender("woman")} />
+            <OButtonWide text={i18n.t(TR.woman)} filled={false} variant="dark" onPress={() => setGender("woman")} />
         </View>
 
         <View style={styles.optionContainer}>
-            <OButtonWide text="Man" filled={false} variant="dark" onPress={() => setGender("man")} />
+            <OButtonWide text={i18n.t(TR.man)} filled={false} variant="dark" onPress={() => setGender("man")} />
         </View>
 
         <View style={styles.optionContainer}>
-            <OButtonWide text="More" filled={false} variant="dark" disabled={true} />
+            <OButtonWide text={i18n.t(TR.more)} filled={false} variant="dark" disabled={true} />
             <Text style={[Subtitle, styles.subtitle]}>
-                We will be adding this option as soon as possible. You will have the option later on to change this to something you truly identify with.
+                {i18n.t(TR.genderMoreComingSoon)}
             </Text>
         </View>
     </OPageContainer>

@@ -6,6 +6,7 @@ import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
 import {useState} from "react";
 import {EACTION_USER, useUserContext} from "../../context/UserContext";
+import {i18n, TR} from "../../localization/translate.service";
 
 const Password = ({route, navigation}) => {
     const {state, dispatch} = useUserContext()
@@ -27,7 +28,7 @@ const Password = ({route, navigation}) => {
         if (isStrongPassword()) {
             setPasswordError('')
         } else {
-            setPasswordError('Password must contain at least 1 number, 1 big and small letter and have between 6-40 characters.')
+            setPasswordError(i18n.t(TR.pwdErrSecurityGuideline))
         }
     }
     const setValidatePasswordConfirmation = (pwd: string) => {
@@ -36,7 +37,7 @@ const Password = ({route, navigation}) => {
         if (doPasswordsMatch()) {
             setPasswordErrorConfirmation('')
         } else {
-            setPasswordErrorConfirmation('Passwords do not match.')
+            setPasswordErrorConfirmation(i18n.t(TR.pwdErrNotMatching))
         }
     }
 
@@ -55,21 +56,21 @@ const Password = ({route, navigation}) => {
         }
     }
 
-    return <OPageContainer title={`${isChangePassword ? 'Change' : 'Set'} password`}
-                           bottomContainerChildren={<OButtonWide text={isChangePassword ? 'Save' : 'Continue'} filled={true}
+    return <OPageContainer title={i18n.t(isChangePassword ? TR.changePassword : TR.setPassword)}
+                           bottomContainerChildren={<OButtonWide text={isChangePassword ? i18n.t(TR.save) : i18n.t(TR.continue)} filled={true}
                                                                  disabled={!isValidPassword()} variant="dark"
                                                                  onPress={onSave}/>}
-                           subtitle="Set a strong password.">
-        {isChangePassword && <OTextInput value={oldClearPassword} setValue={setOldClearPassword} placeholder="Enter old password" style={styles.inputField}
+                           subtitle={i18n.t(TR.setStrongPassword)}>
+        {isChangePassword && <OTextInput value={oldClearPassword} setValue={setOldClearPassword} placeholder={i18n.t(TR.enterOldPassword)} style={styles.inputField}
                     secureTextEntry={true}
-                    topLabel="Current password"/>}
+                    topLabel={i18n.t(TR.currentPassword)}/>}
 
-        <OTextInput value={state.clearPassword} setValue={setValidatePassword} placeholder="Enter password" style={styles.inputField}
+        <OTextInput value={state.clearPassword} setValue={setValidatePassword} placeholder={i18n.t(TR.enterPassword)} style={styles.inputField}
                     isBottomLabelError={!!passwordError} secureTextEntry={true} bottomLabel={passwordError}
-                    topLabel={`${isChangePassword ? 'New' : 'Strong'} password`}/>
+                    topLabel={i18n.t(isChangePassword ? TR.newPassword : TR.strongPassword)}/>
 
-        <OTextInput value={passwordConfirmation} setValue={setValidatePasswordConfirmation} placeholder="Repeat password"
-                    topLabel="Repeat password" isBottomLabelError={!!passwordErrorConfirmation} secureTextEntry={true}
+        <OTextInput value={passwordConfirmation} setValue={setValidatePasswordConfirmation} placeholder={i18n.t(TR.repeatPassword)}
+                    topLabel={i18n.t(TR.repeatPassword)} isBottomLabelError={!!passwordErrorConfirmation} secureTextEntry={true}
                     bottomLabel={passwordErrorConfirmation}
                     style={styles.inputField}/>
     </OPageContainer>

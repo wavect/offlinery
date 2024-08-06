@@ -7,6 +7,7 @@ import {View, Image, StyleSheet, Pressable, GestureResponderEvent} from "react-n
 import {BorderRadius, Color} from "../../GlobalStyles";
 import {EACTION_USER, ImageIdx, IUserAction, IUserData, useUserContext} from "../../context/UserContext";
 import {MaterialIcons} from '@expo/vector-icons';
+import {i18n, TR} from "../../localization/translate.service";
 
 interface IPhotoContainerProps {
     imageIdx: ImageIdx
@@ -36,7 +37,7 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
                 dispatch({type: EACTION_USER.SET_IMAGE, payload: {imageIdx, image: result.assets[0]}})
             }
         } else {
-            alert('No access to media library.')
+            alert(i18n.t(TR.noAccessToMediaLib))
         }
     }
 
@@ -62,10 +63,10 @@ const AddPhotos = ({route, navigation}) => {
 
     return (
         <OPageContainer
-            title="Add photos"
+            title={i18n.t(TR.addPhotos)}
             bottomContainerChildren={
                 <OButtonWide
-                    text={route.params?.overrideSaveBtnLbl || 'Continue'}
+                    text={route.params?.overrideSaveBtnLbl || i18n.t(TR.continue)}
                     filled={true}
                     variant="dark"
                     disabled={!hasAnyImage}
@@ -74,7 +75,7 @@ const AddPhotos = ({route, navigation}) => {
                     }))}
                 />
             }
-            subtitle="Click to upload images."
+            subtitle={i18n.t(TR.clickToUploadImages)}
         >
             <View style={styles.container}>
                 <View style={styles.row}>

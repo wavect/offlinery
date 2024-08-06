@@ -6,6 +6,7 @@ import {EACTION_USER, registerUser, useUserContext} from "../../context/UserCont
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import OCalendlyInline from "../../components/OCalendlyInline/OCalendlyInline";
 import {ROUTES} from "../routes";
+import {i18n, TR} from "../../localization/translate.service";
 
 const BookSafetyCall = ({navigation}) => {
     // const [hasBookedCall, setCallBooked] = useState(false)
@@ -31,11 +32,11 @@ const BookSafetyCall = ({navigation}) => {
         }
     }
 
-    return <OPageContainer title="Book Safety Call"
-                           subtitle="We retain our right to reject applicants to ensure everyone feels safe and respected."
+    return <OPageContainer title={i18n.t(TR.bookSafetyCall)}
+                           subtitle={i18n.t(TR.retainRightToRejectApplicants)}
                            bottomContainerChildren={
-        <OButtonWide text="Call booked?" filled={true} countdownEnableSeconds={10}
-                     isLoading={isLoading} loadingBtnText='Registering..'
+        <OButtonWide text={i18n.t(TR.callBookedQuestion)} filled={true} countdownEnableSeconds={10}
+                     isLoading={isLoading} loadingBtnText={i18n.t(TR.registering)}
                                                                  variant="dark" onPress={startUserRegistration}/>}>
 
         <OCalendlyInline url="https://calendly.com/wavect/safety-call" pageSettings={{

@@ -5,6 +5,7 @@ import { OShowcase } from "../components/OShowcase/OShowcase";
 import { OLinearBackground } from "../components/OLinearBackground/OLinearBackground";
 import {OButtonWide} from "../components/OButtonWide/OButtonWide";
 import {MaterialIcons} from "@expo/vector-icons";
+import {i18n, TR} from "../localization/translate.service";
 
 const HouseRules = ({ route, navigation }) => {
     const forceWaitSeconds = route.params?.forceWaitSeconds ?? 5;
@@ -12,35 +13,37 @@ const HouseRules = ({ route, navigation }) => {
     return (
         <OLinearBackground>
             <ScrollView contentContainerStyle={styles.container}>
-                <OShowcase subtitle="Stop Swiping. Meet IRL." />
+                <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)} />
                     <RuleItem
-                        title="Be Respectful."
-                        description="We've a 0 tolerance for disrespectful behavior."
+                        title={i18n.t(TR.houseRules.titleRespectful)}
+                        description={i18n.t(TR.houseRules.descrRespectful)}
                     />
                     <RuleItem
-                        title="Accept a No."
-                        description="Don't be pushy. If there is no vibe, accept it."
+                        title={i18n.t(TR.houseRules.titleAcceptNo)}
+                        description={i18n.t(TR.houseRules.descrAcceptNo)}
                     />
                     <RuleItem
-                        title="Be authentic."
-                        description="Be yourself. Trust us, it works."
+                        title={i18n.t(TR.houseRules.titleAuthentic)}
+                        description={i18n.t(TR.houseRules.descrAuthentic)}
                     />
                     <RuleItem
-                        title="Don't wait. Don't make it weird."
-                        description="Approach immediately. Don't observe and watch. Just be casual and polite."
+                        title={i18n.t(TR.houseRules.titleWaitWeird)}
+                        description={i18n.t(TR.houseRules.descrWaitWeird)}
                     />
                     <RuleItem
-                        title="Don't rush it."
-                        description="Don't try to 'close'. Have a good time, the rest follows naturally."
+                        title={i18n.t(TR.houseRules.titleDontRush)}
+                        description={i18n.t(TR.houseRules.descrDontRush)}
                     />
 
                 <View style={styles.buttonContainer}>
-                    <OButtonWide text="I understand" filled={true} variant="light"
+                    <OButtonWide text={i18n.t(TR.iUnderstand)} filled={true} variant="light"
                                  countdownEnableSeconds={forceWaitSeconds} onPress={() => navigation.navigate(route.params.nextPage, route.params.propsForNextScreen)}/>
 
                     <Text style={styles.violatingRules}>
-                        Violating these rules blocks you from using this app for at least{" "}
-                        <Text style={styles.boldText}>12 months</Text>. We have no mercy.
+                        {i18n.t(TR.violatingRules.p1)}
+                        <Text style={styles.boldText}>
+                            {i18n.t(TR.violatingRules.duration)}
+                        </Text>{i18n.t(TR.violatingRules.p2)}
                     </Text>
                 </View>
             </ScrollView>

@@ -6,6 +6,7 @@ import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
 import { useSharedValue } from 'react-native-reanimated';
 import { Color } from "../../GlobalStyles";
 import {RouteProp} from "@react-navigation/native";
+import {i18n, TR} from "../../localization/translate.service";
 
 interface IProfileViewProps {
     route?: RouteProp<{ params: { user: IPublicProfile, bottomContainerChildren?: React.ReactNode } }, 'params'>
@@ -31,7 +32,7 @@ const ProfileView = ({route}: IProfileViewProps) => {
         </TouchableOpacity>
     );
     const user: IPublicProfile|undefined = route?.params?.user;
-    if (!user) return <Text>Error: No user provided</Text>
+    if (!user) return <Text>{i18n.t(TR.errNoUserProvided)}</Text>
     const bottomContainerChildren: React.ReactNode = route?.params?.bottomContainerChildren
 
     return (

@@ -10,7 +10,7 @@ import {
 import CalendlyLoadingSpinner from "./OCalendlyLoadingSpinner";
 import styles from './OCalendlyInline.styles'
 import { WebView } from 'react-native-webview';
-import {Text} from "react-native";
+import {i18n, TR} from "../../localization/translate.service";
 
 export interface Props {
     url: string;
@@ -55,7 +55,7 @@ class InlineWidget extends React.Component<Props, { isLoading: boolean }> {
                 <WebView
                     style={styles.webView}
                     originWhitelist={['*']}
-                    title={this.props.iframeTitle || "Calendly Scheduling Page"}
+                    title={this.props.iframeTitle || i18n.t(TR.calendlySchedulingPageDefault)}
                     onLoadEnd={this.onLoadEnd}
                     source={{ uri: src }}
                 />

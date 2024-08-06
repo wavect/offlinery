@@ -1,9 +1,8 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {Button, Linking, Platform, Pressable, StyleSheet, Text, View} from "react-native";
+import {Linking, Platform, StyleSheet, Text, View} from "react-native";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import MapView, {
-    Callout,
     Marker, Polyline,
     PROVIDER_DEFAULT,
     PROVIDER_GOOGLE, Region
@@ -16,6 +15,7 @@ import OTeaserProfilePreview from "../../components/OTeaserProfilePreview/OTease
 import {IEncounterProfile} from "../../types/PublicProfile.types";
 import {getPublicProfileFromEncounter} from "../../context/EncountersContext";
 import {calculateDistance, getRegionForCoordinates} from "../../utils/map.utils";
+import {i18n, TR} from "../../localization/translate.service";
 
 const NavigateToApproach = ({route, navigation}) => {
     const {state, dispatch} = useUserContext()
@@ -35,7 +35,7 @@ const NavigateToApproach = ({route, navigation}) => {
         (async () => {
             let {status} = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
-                alert('Permission to access location was denied');
+                alert(i18n.t(TR.permissionToLocationDenied));
                 return;
             }
 
@@ -66,7 +66,7 @@ const NavigateToApproach = ({route, navigation}) => {
     const openMapsApp = () => {
         const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
         const latLng = `${destination.latitude},${destination.longitude}`;
-        const label = 'Destination';
+        const label = i18n.t(TR.destination);
         const url = Platform.select({
             ios: `${scheme}${label}@${latLng}`,
             android: `${scheme}${latLng}(${label})`
@@ -77,10 +77,10 @@ const NavigateToApproach = ({route, navigation}) => {
 
     return (
         <OPageContainer>
-            <OTeaserProfilePreview prefixText='Find ' navigation={navigation}
+            <OTeaserProfilePreview prefixText={i18n.t(TR.findWithSpace)} navigation={navigation}
                                    publicProfile={getPublicProfileFromEncounter(navigateToPerson)}
                                    showOpenProfileButton={true} secondButton={{
-                onPress: openMapsApp, text: `Navigate to ${navigateToPerson.firstName}`,
+                onPress: openMapsApp, text: `${i18n.t(TR.navigateTo)} ${navigateToPerson.firstName}`,
                 style: styles.navigateBtn,
             }}/>
             <MapView
@@ -96,7 +96,7 @@ const NavigateToApproach = ({route, navigation}) => {
                 provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
             >
                 {location && (
-                    <Marker coordinate={location.coords} title="Your Location" pinColor={Color.black}/>
+                    <Marker coordinate={location.coords} title={i18n.t(TR.yourLocation)} pinColor={Color.black}/>
                 )}
                 <Marker coordinate={destination} title={navigateToPerson.firstName} />
                 {location && (
@@ -118,7 +118,7 @@ const NavigateToApproach = ({route, navigation}) => {
                         >
                             <View style={styles.distanceMarker}>
                                 <Text style={styles.distanceText}>
-                                    {distance ? `${distance.toFixed(2)} km` : 'Calculating...'}
+                                    {distance ? `${distance.toFixed(2)} km` : i18n.t(TR.calculating)}
                                 </Text>
                             </View>
                         </Marker>

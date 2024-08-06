@@ -12,6 +12,7 @@ import {OTextInput} from "../../components/OTextInput/OTextInput";
 import {Subtitle} from "../../GlobalStyles";
 import OTeaserProfilePreview from "../../components/OTeaserProfilePreview/OTeaserProfilePreview";
 import {useState} from "react";
+import {i18n, TR} from "../../localization/translate.service";
 
 const MAX_LENGTH_BIO = 60
 const BioLetThemKnow = ({ navigation }) => {
@@ -38,13 +39,13 @@ const BioLetThemKnow = ({ navigation }) => {
 
     return (
         <OPageContainer
-            title="Let them know"
-            subtitle="The message is shown to the person approaching you before."
+            title={i18n.t(TR.letThemKnow)}
+            subtitle={i18n.t(TR.messageShownToPersonApproaching)}
             bottomContainerChildren={
                 <OButtonWide
-                    text="Done"
+                    text={i18n.t(TR.done)}
                     isLoading={isLoading}
-                    loadingBtnText='Registering..'
+                    loadingBtnText={i18n.t(TR.registering)}
                     filled={true}
                     variant="dark"
                     onPress={startUserRegistration}
@@ -55,14 +56,14 @@ const BioLetThemKnow = ({ navigation }) => {
                 <OTextInput
                     value={state.bio}
                     setValue={setBio}
-                    placeholder="No pick-up lines please. Just be chill."
+                    placeholder={i18n.t(TR.noPickUpLinesBeChill)}
                 />
                 <View style={styles.characterCountContainer}>
                     <Text style={styles.characterCount}>{MAX_LENGTH_BIO - state.bio.length}</Text>
                 </View>
             </View>
 
-            <OTeaserProfilePreview prefixText='Find ' navigation={navigation}
+            <OTeaserProfilePreview prefixText={i18n.t(TR.findWithSpace)} navigation={navigation}
                                    publicProfile={getPublicProfileFromUserData(state)} showOpenProfileButton={false}/>
         </OPageContainer>
     );

@@ -4,22 +4,22 @@ import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {Subtitle, Title} from "../../GlobalStyles";
 import {ROUTES} from "../routes";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
+import {i18n, TR} from "../../localization/translate.service";
 
 const SafetyCheck = ({navigation}) => {
 
-    return <OPageContainer title="Safety Check"
-                           subtitle="This will only work if everyone has a great experience and feels safe at all times.">
+    return <OPageContainer title={i18n.t(TR.safetyCheck)}
+                           subtitle={i18n.t(TR.safetyCheckDescr)}>
         <View style={styles.centerContainer}>
-        <OButtonWide text="Book a 15 Minute call" filled={true} variant="dark"
+        <OButtonWide text={i18n.t(TR.book15MinCall)} filled={true} variant="dark"
                      onPress={() => navigation.navigate(ROUTES.Onboarding.BookSafetyCall)}/>
         <Text style={[Subtitle, styles.subtitle]}>
-            This will be a Video call. Making sure you have good intentions using this app.
+            {i18n.t(TR.book15MinCallDescr)}
         </Text>
 
-        <OButtonWide text="I Prefer to KYC" filled={true} variant="dark" disabled={true} style={{marginTop: 30}}/>
+        <OButtonWide text={i18n.t(TR.iPreferKYC)} filled={true} variant="dark" disabled={true} style={{marginTop: 30}}/>
         <Text style={[Subtitle, styles.subtitle]}>
-            Alternatively, you can do a regulated 3rd party KYC. You'll be charged the provider's fee since we incur
-            real costs (coming soon).
+            {i18n.t(TR.iPreferKYCDescr)}
         </Text>
         </View>
     </OPageContainer>

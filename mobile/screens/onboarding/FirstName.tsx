@@ -4,6 +4,7 @@ import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {ROUTES} from "../routes";
 import {EACTION_USER, useUserContext} from "../../context/UserContext";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
+import {i18n, TR} from "../../localization/translate.service";
 
 const FirstName = ({navigation}) => {
     const { state, dispatch } = useUserContext()
@@ -15,16 +16,16 @@ const FirstName = ({navigation}) => {
         return state.firstName.length > 3
     }
 
-    return <OPageContainer title="My first name is" bottomContainerChildren={
-            <OButtonWide text="Continue" filled={true} disabled={!isValidFirstName()} variant="dark"
+    return <OPageContainer title={i18n.t(TR.myFirstNameIs)} bottomContainerChildren={
+            <OButtonWide text={i18n.t(TR.continue)} filled={true} disabled={!isValidFirstName()} variant="dark"
                          onPress={() => navigation.navigate(ROUTES.Onboarding.BirthDay)}/>
-        } subtitle="This is how you will appear in Offlinery. You won't be able to change this.">
+        } subtitle={i18n.t(TR.myFirstNameDescr)}>
             <View style={styles.inputField}>
                 <TextInput
                     style={styles.input}
                     value={state.firstName}
                     onChangeText={setFirstName}
-                    placeholder="Enter first name"
+                    placeholder={i18n.t(TR.enterFirstName)}
                     placeholderTextColor="#999"
                 />
             </View>

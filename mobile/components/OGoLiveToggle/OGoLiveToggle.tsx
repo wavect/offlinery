@@ -4,6 +4,7 @@ import {Color} from "../../GlobalStyles";
 import * as Location from "expo-location";
 import {LocationAccuracy} from "expo-location";
 import {EACTION_USER, EApproachChoice, EDateMode, useUserContext} from "../../context/UserContext";
+import {i18n, TR} from "../../localization/translate.service";
 
 interface IOGoLiveToggleProps {
     style?: StyleProp<ViewStyle>;
@@ -15,16 +16,14 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
     const toggleSwitch = async () => {
         try {
             const {status: fStatus} = await Location.requestForegroundPermissionsAsync();
-            console.log("status...", fStatus)
             if (fStatus !== 'granted') {
-                alert('Permission to access location was denied');
+                alert(i18n.t(TR.permissionToLocationDenied));
                 return;
             }
             const {status: bStatus} = await Location.requestBackgroundPermissionsAsync();
-            console.log("status2", bStatus)
 
             if (bStatus !== 'granted') {
-                alert('Permission to access location in background was denied');
+                alert(i18n.t(TR.permissionToBackgroundLocationDenied));
                 return;
             }
             setIsEnabled(previousState => !previousState);
@@ -32,21 +31,15 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
 
             // Load location and inform user about state
             if (isEnabled) {
-                let {status} = await Location.requestForegroundPermissionsAsync();
-                if (status !== 'granted') {
-                    alert('Permission to access location was denied');
-                    return;
-                }
-
                 const location = await Location.getCurrentPositionAsync({accuracy: LocationAccuracy.BestForNavigation});
                 dispatch({type: EACTION_USER.SET_CURRENT_LOCATION, payload: location})
-                alert(`You are live! ${getSuccessMessage()}`)
+                alert(`${i18n.t(TR.youAreLive)} ${getSuccessMessage()}`)
             } else {
-                alert('Ghost mode. Nobody will see you! Press the toggle on the top to go live.')
+                alert(i18n.t(TR.ghostModeDescr))
             }
         } catch (error) {
             console.error("Error requesting permissions:", error);
-            alert('An error occurred while requesting permissions');
+            alert(i18n.t(TR.errRequestingPermissions));
         }
     }
 
@@ -54,10 +47,10 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
         switch (state.approachChoice) {
             case EApproachChoice.BOTH: // fall through
             case EApproachChoice.APPROACH:
-                return 'You will receive notifications when someone interesting is nearby!'
+                return i18n.t(TR.youAreLiveApproachDescr)
                 break;
             case EApproachChoice.BE_APPROACHED:
-                return 'People you may find interesting will receive notifications when you are nearby!'
+                return i18n.t(TR.youAreLiveBeApproachedDescr)
                 break;
         }
     }
@@ -72,7 +65,7 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 value={isEnabled}
             />
             <Text style={{marginTop: 5, fontSize: 12, color: Color.gray}}>
-                {isEnabled ? 'Live' : 'Ghost Mode'}
+                {isEnabled ? i18n.t(TR.live) : i18n.t(TR.ghostMode)}
             </Text>
         </View>
     );

@@ -1,15 +1,15 @@
 import * as React from "react";
-import {useState} from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from "react-native-element-dropdown";
 import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
-import {FontFamily, FontSize, Subtitle, Title} from "../../GlobalStyles";
+import {FontFamily, FontSize} from "../../GlobalStyles";
 import {ROUTES} from "../routes";
-import {EACTION_USER, EDateMode, Gender, useUserContext} from "../../context/UserContext";
+import {EACTION_USER, EApproachChoice, Gender, useUserContext} from "../../context/UserContext";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import {MaterialIcons} from "@expo/vector-icons";
+import {i18n, TR} from "../../localization/translate.service";
 
 const ProfileSettings = ({navigation}) => {
     const {state, dispatch} = useUserContext();
@@ -42,8 +42,8 @@ const ProfileSettings = ({navigation}) => {
     };
 
     const genderItems: { label: string, value: Gender }[] = [
-        {label: 'Woman', value: 'woman'},
-        {label: 'Man', value: 'man'},
+        {label: i18n.t(TR.woman), value: 'woman'},
+        {label: i18n.t(TR.man), value: 'man'},
     ];
 
     const SettingsButton = (props: { onPress, icon, text: string, style?: any }) => {
@@ -57,8 +57,8 @@ const ProfileSettings = ({navigation}) => {
     };
 
     return (
-        <OPageContainer subtitle='Change your preferences or update your profile.'
-                        bottomContainerChildren={<OButtonWide text="Save" filled={true} variant="dark"
+        <OPageContainer subtitle={i18n.t(TR.changePreferencesDescr)}
+                        bottomContainerChildren={<OButtonWide text={i18n.t(TR.save)} filled={true} variant="dark"
                                                               onPress={handleSave}/>}>
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
@@ -66,50 +66,51 @@ const ProfileSettings = ({navigation}) => {
                     <OTextInput
                         value={state.firstName}
                         setValue={setFirstName}
-                        placeholder='Your first name'
+                        placeholder={i18n.t(TR.enterFirstName)}
                         style={styles.input}
                     />
                 </View>
 
-                <View style={styles.timePickerContainer}>
-                    <Text style={[styles.label, {marginBottom: 8}]}>Approach Time</Text>
-                    <View style={styles.timePickerRow}>
-                        <View style={styles.timePicker}>
-                            <Text>From:</Text>
-                            <DateTimePicker
-                                value={state.approachFromTime}
-                                mode="time"
-                                is24Hour={true}
-                                display="default"
-                                onChange={(event, selectedTime) => setApproachFromTime(selectedTime)}
-                            />
+                {state.approachChoice !== EApproachChoice.APPROACH
+                    && <View style={styles.timePickerContainer}>
+                        <Text style={[styles.label, {marginBottom: 8}]}>{i18n.t(TR.approachMeBetween)}</Text>
+                        <View style={styles.timePickerRow}>
+                            <View style={styles.timePicker}>
+                                <Text>{i18n.t(TR.from)}</Text>
+                                <DateTimePicker
+                                    value={state.approachFromTime}
+                                    mode="time"
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={(event, selectedTime) => setApproachFromTime(selectedTime)}
+                                />
+                            </View>
+                            <View style={styles.timePicker}>
+                                <Text>{i18n.t(TR.until)}</Text>
+                                <DateTimePicker
+                                    value={state.approachToTime}
+                                    mode="time"
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={(event, selectedTime) => setApproachToTime(selectedTime)}
+                                />
+                            </View>
                         </View>
-                        <View style={styles.timePicker}>
-                            <Text>To:</Text>
-                            <DateTimePicker
-                                value={state.approachToTime}
-                                mode="time"
-                                is24Hour={true}
-                                display="default"
-                                onChange={(event, selectedTime) => setApproachToTime(selectedTime)}
-                            />
-                        </View>
-                    </View>
-                </View>
+                    </View>}
 
                 <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Bio</Text>
+                    <Text style={styles.label}>{i18n.t(TR.bio)}</Text>
                     <OTextInput
                         value={state.bio}
                         setValue={setBio}
-                        placeholder='Please just be kind.'
+                        placeholder={i18n.t(TR.noPickUpLinesBeChill)}
                         multiline={true}
                         style={styles.input}
                     />
                 </View>
 
                 <View style={styles.datePickerContainer}>
-                    <Text style={styles.label}>Birthday</Text>
+                    <Text style={styles.label}>{i18n.t(TR.myBirthDayIs)}</Text>
                     <DateTimePicker
                         value={state.birthDay}
                         mode="date"
@@ -119,7 +120,7 @@ const ProfileSettings = ({navigation}) => {
                 </View>
 
                 <View style={styles.dropdownContainer}>
-                    <Text style={styles.label}>Gender</Text>
+                    <Text style={styles.label}>{i18n.t(TR.iAmA)}</Text>
                     <Dropdown
                         data={genderItems}
                         labelField="label"
@@ -135,7 +136,7 @@ const ProfileSettings = ({navigation}) => {
                 </View>
 
                 <View style={styles.dropdownContainer}>
-                    <Text style={styles.label}>Looking for</Text>
+                    <Text style={styles.label}>{i18n.t(TR.iLookFor)}</Text>
                     <Dropdown
                         data={genderItems}
                         labelField="label"
@@ -154,23 +155,24 @@ const ProfileSettings = ({navigation}) => {
                     <SettingsButton
                         onPress={() => navigation.navigate(ROUTES.Onboarding.AddPhotos, {
                             overrideOnBtnPress: () => navigation.navigate(ROUTES.MainTabView, {screen: ROUTES.Main.ProfileSettings}),
-                            overrideSaveBtnLbl: 'Save'
+                            overrideSaveBtnLbl: i18n.t(TR.save)
                         })}
-                        icon="image" text="Update Images"/>
+                        icon="image" text={i18n.t(TR.updateImages)}/>
                     <SettingsButton
                         onPress={() => navigation.navigate(ROUTES.MainTabView, {screen: ROUTES.Main.FindPeople})}
-                        icon="location-off" text="Update Safe Zones"/>
+                        icon="location-off" text={i18n.t(TR.updateSafeZones)}/>
                     <SettingsButton onPress={() => navigation.navigate(ROUTES.Onboarding.Password, {
                         nextPage: ROUTES.MainTabView,
                         isChangePassword: true,
-                    })} icon="lock" text="Change Password"/>
+                    })} icon="lock" text={i18n.t(TR.changePassword)}/>
 
                 </View>
                 <View style={styles.settingsButtonsContainer}>
-                    <SettingsButton style={{width: '100%', height: 75}} onPress={() => navigation.navigate(ROUTES.HouseRules, {
-                        forceWaitSeconds: 0,
-                        nextPage: ROUTES.MainTabView
-                    })} icon="rule" text="House Rules"/>
+                    <SettingsButton style={{width: '100%', height: 75}}
+                                    onPress={() => navigation.navigate(ROUTES.HouseRules, {
+                                        forceWaitSeconds: 0,
+                                        nextPage: ROUTES.MainTabView
+                                    })} icon="rule" text={i18n.t(TR.houseRules.mainTitle)}/>
                 </View>
             </View>
         </OPageContainer>

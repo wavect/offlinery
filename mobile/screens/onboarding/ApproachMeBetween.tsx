@@ -5,6 +5,7 @@ import { ROUTES } from "../routes";
 import { DEFAULT_FROM_TIME, DEFAULT_TO_TIME, EACTION_USER, useUserContext } from "../../context/UserContext";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
+import {i18n, TR} from "../../localization/translate.service";
 
 const ApproachMeBetween = ({ navigation }) => {
     const { state, dispatch } = useUserContext();
@@ -18,11 +19,11 @@ const ApproachMeBetween = ({ navigation }) => {
 
     return (
         <OPageContainer
-            title="Approach me between"
-            subtitle="What are times you feel comfortable being approached at? Default is during the day."
+            title={i18n.t(TR.approachMeBetween)}
+            subtitle={i18n.t(TR.approachMeBetweenDescr)}
             bottomContainerChildren={
                 <OButtonWide
-                    text="Continue"
+                    text={i18n.t(TR.continue)}
                     filled={true}
                     variant="dark"
                     onPress={() => navigation.navigate(ROUTES.Onboarding.BioLetThemKnow)}
@@ -30,24 +31,28 @@ const ApproachMeBetween = ({ navigation }) => {
             }
         >
             <View style={styles.timePickerContainer}>
-                <Text style={styles.timePickerLabel}>From</Text>
+                <Text style={styles.timePickerLabel}>
+                    {i18n.t(TR.from)}
+                </Text>
                 <RNDateTimePicker
                     display="default"
                     mode="time"
                     onChange={onFromTimeChange}
-                    accessibilityLabel="Approach me starting from"
+                    accessibilityLabel={i18n.t(TR.fromDescr)}
                     value={state.approachFromTime}
                     style={styles.timePicker}
                 />
             </View>
 
             <View style={styles.timePickerContainer}>
-                <Text style={styles.timePickerLabel}>Until</Text>
+                <Text style={styles.timePickerLabel}>
+                    {i18n.t(TR.until)}
+                </Text>
                 <RNDateTimePicker
                     display="default"
                     mode="time"
                     onChange={onToTimeChange}
-                    accessibilityLabel="Approach me until"
+                    accessibilityLabel={i18n.t(TR.untilDescr)}
                     value={state.approachToTime}
                     style={styles.timePicker}
                 />

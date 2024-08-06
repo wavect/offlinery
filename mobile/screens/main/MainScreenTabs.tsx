@@ -18,7 +18,7 @@ import {useUserContext} from "../../context/UserContext";
 import {Subscription} from "expo-notifications";
 import {Platform} from "react-native";
 import ProfileView from "./ProfileView";
-import {useNavigationState} from "@react-navigation/native";
+import {i18n, TR} from "../../localization/translate.service";
 
 const Tab = createBottomTabNavigator();
 const EncounterStack = createStackNavigator();
@@ -40,7 +40,7 @@ const EncounterScreenStack = () => <EncountersProvider>
             options={{
                 headerShown: true,
                 headerShadowVisible: false,
-                headerTitle: "Report person",
+                headerTitle: i18n.t(TR.reportPerson),
                 headerBackTitleVisible: false,
                 headerTitleAlign: 'left'
             }}
@@ -51,7 +51,7 @@ const EncounterScreenStack = () => <EncountersProvider>
             options={{
                 headerShown: true,
                 headerShadowVisible: false,
-                headerTitle: "Meet in IRL",
+                headerTitle: i18n.t(TR.meetIRL),
                 headerBackTitleVisible: false,
                 headerTitleAlign: 'left'
             }}
@@ -62,7 +62,7 @@ const EncounterScreenStack = () => <EncountersProvider>
             options={{
                 headerShown: true,
                 headerShadowVisible: false,
-                headerTitle: "Profile view",
+                headerTitle: i18n.t(TR.profileView),
                 headerBackTitleVisible: false,
                 headerTitleAlign: 'left'
             }}
@@ -80,11 +80,11 @@ export const MainScreenTabs = () => {
     useEffect(() => {
         // 0 might be a valid ID too
         if (!state.id && state.id !== 0) {
-            console.error('No user ID assigned! Cannot listen to notifications')
+            console.error(i18n.t(TR.noUserIdAssignedCannotListenToNotifications))
         } else {
             registerForPushNotificationsAsync(state.id).then(token => {
                 if (!token) {
-                    console.error('Could not fetch notification token.')
+                    console.error(i18n.t(TR.couldNotFetchNotificationToken))
                     return;
                 }
             }).catch(console.error);
@@ -130,19 +130,19 @@ export const MainScreenTabs = () => {
             })
         }>
         <Tab.Screen name={ROUTES.Main.FindPeople} component={HeatMap} options={{
-            tabBarLabel: 'Find people',
-            headerTitle: 'Find people',
+            tabBarLabel: i18n.t(TR.findPeople),
+            headerTitle: i18n.t(TR.findPeople),
             tabBarIcon: ({color, size}) => <MaterialIcons name="location-history" size={size} color={color}/>
         }}/>
         <Tab.Screen name={ROUTES.Main.Encounters} component={EncounterScreenStack} options={{
-            tabBarLabel: 'Encounters',
-            headerTitle: 'Encounters',
+            tabBarLabel: i18n.t(TR.encounters),
+            headerTitle: i18n.t(TR.encounters),
             tabBarBadge: unreadNotifications.length === 0 ? undefined : unreadNotifications.length,
             tabBarIcon: ({color, size}) => <MaterialIcons name="emoji-people" size={size} color={color}/>
         }}/>
         <Tab.Screen name={ROUTES.Main.ProfileSettings} component={ProfileSettings} options={{
-            tabBarLabel: 'Settings',
-            headerTitle: 'Settings',
+            tabBarLabel: i18n.t(TR.settings),
+            headerTitle: i18n.t(TR.settings),
             tabBarIcon: ({color, size}) => <MaterialIcons name="settings" size={size} color={color}/>
         }}/>
     </Tab.Navigator>

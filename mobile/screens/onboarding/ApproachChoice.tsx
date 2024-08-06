@@ -5,6 +5,7 @@ import {Color, Subtitle} from "../../GlobalStyles";
 import {ROUTES} from "../routes";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import {EACTION_USER, EApproachChoice, EVerificationStatus, useUserContext} from "../../context/UserContext";
+import {i18n, TR} from "../../localization/translate.service";
 
 
 const ApproachChoice = ({navigation}) => {
@@ -27,30 +28,30 @@ const ApproachChoice = ({navigation}) => {
         }
     }
 
-    return <OPageContainer title="I want to" bottomContainerChildren={<Text style={styles.footnote}>
+    return <OPageContainer title={i18n.t(TR.iWantTo)} bottomContainerChildren={<Text style={styles.footnote}>
         No worries, you can change this at any time.
     </Text>}>
 
         <View style={styles.optionContainer}>
-            <OButtonWide text="Approach" filled={true} variant="dark"
+            <OButtonWide text={i18n.t(TR.approach)} filled={true} variant="dark"
                          onPress={() => setApproachChoice(EApproachChoice.APPROACH)}/>
             <Text style={[Subtitle, styles.subtitle]}>
-                Approach people you are interested in. Meet them in-real-life where they are.
+                {i18n.t(TR.approachDescr)}
             </Text>
         </View>
 
         <View style={styles.optionContainer}>
-            <OButtonWide text="Be approached" filled={true} variant="dark" onPress={() => setApproachChoice(EApproachChoice.BE_APPROACHED)}/>
+            <OButtonWide text={i18n.t(TR.beApproached)} filled={true} variant="dark" onPress={() => setApproachChoice(EApproachChoice.BE_APPROACHED)}/>
             <Text style={[Subtitle, styles.subtitle]}>
-                Be approached by people you are interested in. Safely and Respectfully.
+                {i18n.t(TR.beApproachedDescr)}
             </Text>
         </View>
 
         <View style={styles.optionContainer}>
-            <OButtonWide text="Both" filled={false} variant="dark" disabled={true}
+            <OButtonWide text={i18n.t(TR.both)} filled={false} variant="dark" disabled={true}
                          onPress={() => setApproachChoice(EApproachChoice.BOTH)}/>
             <Text style={[Subtitle, styles.subtitle]}>
-                Want to approach and be approached by people you like? (not yet supported)
+                {i18n.t(TR.bothDescr)}
             </Text>
         </View>
     </OPageContainer>

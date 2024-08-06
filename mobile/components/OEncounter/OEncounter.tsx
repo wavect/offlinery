@@ -6,6 +6,7 @@ import {Dropdown} from "react-native-element-dropdown";
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
 import {ROUTES} from "../../screens/routes";
 import {EACTION_ENCOUNTERS, useEncountersContext} from "../../context/EncountersContext";
+import {i18n, TR} from "../../localization/translate.service";
 
 interface ISingleEncounterProps {
     encounterProfile: IEncounterProfile
@@ -18,9 +19,9 @@ const OEncounter = (props: ISingleEncounterProps) => {
     const {encounterProfile, showActions, navigation} = props;
     const {personalRelationship} = encounterProfile
     const [dateStates] = useState([
-        {label: 'Not met', value: EDateStatus.NOT_MET},
-        {label: 'Met, not interested', value: EDateStatus.MET_NOT_INTERESTED},
-        {label: 'Met, interested', value: EDateStatus.MET_INTERESTED},
+        {label: i18n.t(TR.encounterInterest.notMet), value: EDateStatus.NOT_MET},
+        {label: i18n.t(TR.encounterInterest.metNotInterested), value: EDateStatus.MET_NOT_INTERESTED},
+        {label: i18n.t(TR.encounterInterest.metInterested), value: EDateStatus.MET_INTERESTED},
     ])
 
     const setDateStatus = (item: { label: string, value: EDateStatus }) => {
@@ -40,7 +41,8 @@ const OEncounter = (props: ISingleEncounterProps) => {
             />
             <View style={styles.encounterDetails}>
                 <Text style={styles.nameAge}>{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>
-                <Text style={styles.encounterInfo}>{`${personalRelationship?.lastTimePassedBy} near ${personalRelationship?.lastLocationPassedBy}`}</Text>
+                <Text
+                    style={styles.encounterInfo}>{`${personalRelationship?.lastTimePassedBy} near ${personalRelationship?.lastLocationPassedBy}`}</Text>
 
                 {showActions && (
                     <View style={styles.encounterDropdownContainer}>
@@ -65,22 +67,25 @@ const OEncounter = (props: ISingleEncounterProps) => {
             </View>
             {showActions && <View style={styles.rightColumn}>
                 <Text style={styles.trustScore}
-                      onPress={() => alert('The higher the more trustworthy the person is (5 = best).')}>Trust
+                      onPress={() => alert(i18n.t(TR.ratingDescr))}>{i18n.t(TR.trust)}
                     ({encounterProfile.rating})</Text>
                 {dateStatus === EDateStatus.MET_NOT_INTERESTED &&
                     <Pressable style={personalRelationship?.reported ? styles.buttonDisabled : styles.buttonDanger}
                                disabled={personalRelationship?.reported}
                                onPress={() => navigation.navigate(ROUTES.Main.ReportEncounter, {personToReport: encounterProfile})}>
                         <Text style={styles.buttonText}>
-                            {personalRelationship?.reported ? 'Reported..' : 'Report'}
+                            {personalRelationship?.reported ? i18n.t(TR.reported) : i18n.t(TR.report)}
                         </Text>
                     </Pressable>}
 
                 {dateStatus === EDateStatus.NOT_MET && personalRelationship?.isNearbyRightNow &&
                     <Pressable style={styles.buttonBlack}
-                               onPress={() => navigation.navigate(ROUTES.HouseRules, {nextPage: ROUTES.Main.NavigateToApproach, propsForNextScreen: {navigateToPerson: encounterProfile}})}>
+                               onPress={() => navigation.navigate(ROUTES.HouseRules, {
+                                   nextPage: ROUTES.Main.NavigateToApproach,
+                                   propsForNextScreen: {navigateToPerson: encounterProfile}
+                               })}>
                         <Text style={styles.buttonText}>
-                            Navigate
+                            {i18n.t(TR.navigate)}
                         </Text>
                     </Pressable>}
             </View>}
