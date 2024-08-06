@@ -15,10 +15,16 @@
 
 import * as runtime from '../runtime';
 import type {
+  CreateUserDTO,
+  UpdateUserDTO,
   User,
   UserPublicDTO,
 } from '../models/index';
 import {
+    CreateUserDTOFromJSON,
+    CreateUserDTOToJSON,
+    UpdateUserDTOFromJSON,
+    UpdateUserDTOToJSON,
     UserFromJSON,
     UserToJSON,
     UserPublicDTOFromJSON,
@@ -26,8 +32,8 @@ import {
 } from '../models/index';
 
 export interface UserControllerCreateUserRequest {
-    user?: object;
-    images?: Array<Blob>;
+    user: CreateUserDTO;
+    images: Array<Blob>;
 }
 
 export interface UserControllerGetUserRequest {
@@ -36,8 +42,8 @@ export interface UserControllerGetUserRequest {
 
 export interface UserControllerUpdateUserRequest {
     id: number;
-    user?: object;
-    images?: Array<Blob>;
+    user: UpdateUserDTO;
+    images: Array<Blob>;
 }
 
 /**
@@ -50,8 +56,8 @@ export interface UserApiInterface {
     /**
      * 
      * @summary Create a new user with images
-     * @param {object} [user] 
-     * @param {Array<Blob>} [images] 
+     * @param {CreateUserDTO} user 
+     * @param {Array<Blob>} images 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApiInterface
@@ -82,8 +88,8 @@ export interface UserApiInterface {
      * 
      * @summary Update an existing user
      * @param {number} id 
-     * @param {object} [user] 
-     * @param {Array<Blob>} [images] 
+     * @param {UpdateUserDTO} user 
+     * @param {Array<Blob>} images 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApiInterface
@@ -106,6 +112,20 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
      * Create a new user with images
      */
     async userControllerCreateUserRaw(requestParameters: UserControllerCreateUserRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserPublicDTO>> {
+        if (requestParameters['user'] == null) {
+            throw new runtime.RequiredError(
+                'user',
+                'Required parameter "user" was null or undefined when calling userControllerCreateUser().'
+            );
+        }
+
+        if (requestParameters['images'] == null) {
+            throw new runtime.RequiredError(
+                'images',
+                'Required parameter "images" was null or undefined when calling userControllerCreateUser().'
+            );
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -127,7 +147,7 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         }
 
         if (requestParameters['user'] != null) {
-            formParams.append('user', new Blob([JSON.stringify(objectToJSON(requestParameters['user']))], { type: "application/json", }));
+            formParams.append('user', new Blob([JSON.stringify(CreateUserDTOToJSON(requestParameters['user']))], { type: "application/json", }));
                     }
 
         if (requestParameters['images'] != null) {
@@ -150,7 +170,7 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
     /**
      * Create a new user with images
      */
-    async userControllerCreateUser(requestParameters: UserControllerCreateUserRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserPublicDTO> {
+    async userControllerCreateUser(requestParameters: UserControllerCreateUserRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserPublicDTO> {
         const response = await this.userControllerCreateUserRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -199,6 +219,20 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
             );
         }
 
+        if (requestParameters['user'] == null) {
+            throw new runtime.RequiredError(
+                'user',
+                'Required parameter "user" was null or undefined when calling userControllerUpdateUser().'
+            );
+        }
+
+        if (requestParameters['images'] == null) {
+            throw new runtime.RequiredError(
+                'images',
+                'Required parameter "images" was null or undefined when calling userControllerUpdateUser().'
+            );
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -220,7 +254,7 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         }
 
         if (requestParameters['user'] != null) {
-            formParams.append('user', new Blob([JSON.stringify(objectToJSON(requestParameters['user']))], { type: "application/json", }));
+            formParams.append('user', new Blob([JSON.stringify(UpdateUserDTOToJSON(requestParameters['user']))], { type: "application/json", }));
                     }
 
         if (requestParameters['images'] != null) {

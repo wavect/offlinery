@@ -15,6 +15,8 @@ import { CreateUserDTO } from '../DTOs/create-user.dto';
 import {UserService} from "./user.service";
 import {UpdateUserDTO} from "../DTOs/update-user.dto";
 import {UserPublicDTO} from "../DTOs/user-public.dto";
+import {CreateUserRequestDTO} from "../DTOs/create-user-request.dto";
+import {UpdateUserRequestDTO} from "../DTOs/update-user-request.dto";
 
 @ApiTags('User')
 @Controller({
@@ -29,21 +31,7 @@ export class UserController {
     @Post('create')
     @UseInterceptors(FilesInterceptor('images', 6))
     @ApiConsumes('multipart/form-data')
-    @ApiBody({
-        schema: {
-            type: 'object',
-            properties: {
-                user: { type: 'object' },
-                images: {
-                    type: 'array',
-                    items: {
-                        type: 'string',
-                        format: 'binary',
-                    },
-                },
-            },
-        },
-    })
+    @ApiBody({ type: CreateUserRequestDTO })
     @ApiOperation({ summary: 'Create a new user with images' })
     async createUser(
         @Body('user') createUserDto: CreateUserDTO,
@@ -62,21 +50,7 @@ export class UserController {
     @Put(':id')
     @UseInterceptors(FilesInterceptor('images', 6))
     @ApiConsumes('multipart/form-data')
-    @ApiBody({
-        schema: {
-            type: 'object',
-            properties: {
-                user: { type: 'object' },
-                images: {
-                    type: 'array',
-                    items: {
-                        type: 'string',
-                        format: 'binary',
-                    },
-                },
-            },
-        },
-    })
+    @ApiBody({ type: UpdateUserRequestDTO })
     @ApiOperation({ summary: 'Update an existing user' })
     async updateUser(
         @Param('id') id: number,

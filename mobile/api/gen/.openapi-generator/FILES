@@ -9,8 +9,11 @@ src/apis/UserReportsApi.ts
 src/apis/index.ts
 src/index.ts
 src/models/BlacklistedRegion.ts
+src/models/BlacklistedRegionDTO.ts
+src/models/CreateUserDTO.ts
 src/models/CreateUserReportDto.ts
 src/models/StorePushTokenDto.ts
+src/models/UpdateUserDTO.ts
 src/models/User.ts
 src/models/UserPublicDTO.ts
 src/models/UserPublicDTOImagesInner.ts
