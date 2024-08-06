@@ -3,7 +3,7 @@ import { EApproachChoice, EDateMode, EVerificationStatus, EGender } from "../typ
 
 export class UserPublicDTO {
     @ApiProperty({ description: 'The unique identifier of the user' })
-    id: number;
+    id: string;
 
     @ApiProperty({ description: 'Indicates if the user account is active' })
     isActive: boolean;
@@ -26,13 +26,12 @@ export class UserPublicDTO {
     @ApiProperty({
         type: 'array',
         items: {
-            type: 'file',
-            format: 'binary'
+            type: 'string',
         },
         description: 'An array of image files',
         maxItems: 6
     })
-    images: Express.Multer.File[];
+    imageURIs: string[];
 
     @ApiProperty({ enum: EVerificationStatus, description: 'The verification status of the user' })
     verificationStatus: EVerificationStatus;

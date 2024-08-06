@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany, PrimaryColumn} from 'typeorm';
 import { EApproachChoice, EDateMode, EVerificationStatus, EGender } from "../types/user.types";
 import { BlacklistedRegion } from '../blacklisted-region/blacklisted-region.entity';
 import {UserPublicDTO} from "../DTOs/user-public.dto";
@@ -17,7 +17,7 @@ export class User {
             birthDay: this.birthDay,
             gender: this.gender,
             genderDesire: this.genderDesire,
-            images: this.images,
+            imageURIs: this.imageURIs,
             verificationStatus: this.verificationStatus,
             approachChoice: this.approachChoice,
             approachFromTime: this.approachFromTime,
@@ -27,8 +27,8 @@ export class User {
         };
     }
 
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn("uuid")
+    id: string;
 
     @Column({ default: true })
     isActive: boolean;
@@ -58,8 +58,8 @@ export class User {
     @Column()
     genderDesire: EGender;
 
-    @Column('json')
-    images: Express.Multer.File[];
+    @Column("text", {array: true, nullable: true})
+    imageURIs: string[];
 
     @Column()
     verificationStatus: EVerificationStatus;

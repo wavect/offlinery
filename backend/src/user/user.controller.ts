@@ -45,7 +45,6 @@ export class UserController {
             })
         ) images: Express.Multer.File[]
     ): Promise<UserPublicDTO> {
-        console.warn('RECEIVED REQUEST: ', createUserDto, images)
         return (await this.userService.createUser(createUserDto, images)).convertToPublicDTO()
     }
 
@@ -55,8 +54,8 @@ export class UserController {
     @ApiBody({ type: UpdateUserRequestDTO })
     @ApiOperation({ summary: 'Update an existing user' })
     async updateUser(
-        @Param('id') id: number,
-        @Body('user') updateUserDto: UpdateUserDTO,
+        @Param('id') id: string,
+        @Body('user', new ParseJsonPipe()) updateUserDto: UpdateUserDTO,
         @UploadedFiles(
             new ParseFilePipe({
                 validators: [
@@ -75,7 +74,7 @@ export class UserController {
     @ApiParam({ name: 'id', type: 'number', description: 'User ID' })
     @ApiResponse({ status: 200, description: 'The user has been successfully retrieved.', type: User })
     @ApiResponse({ status: 404, description: 'User not found.' })
-    async getUser(@Param('id') id: number): Promise<UserPublicDTO> {
+    async getUser(@Param('id') id: string): Promise<UserPublicDTO> {
         const user = await this.userService.getUserById(id);
         if (!user) {
             throw new NotFoundException(`User with ID ${id} not found`);

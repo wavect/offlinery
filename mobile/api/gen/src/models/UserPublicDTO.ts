@@ -28,10 +28,10 @@ import {
 export interface UserPublicDTO {
     /**
      * The unique identifier of the user
-     * @type {number}
+     * @type {string}
      * @memberof UserPublicDTO
      */
-    id: number;
+    id: string;
     /**
      * Indicates if the user account is active
      * @type {boolean}
@@ -70,10 +70,10 @@ export interface UserPublicDTO {
     genderDesire: UserPublicDTOGenderDesireEnum;
     /**
      * An array of image files
-     * @type {Array<any>}
+     * @type {Array<string>}
      * @memberof UserPublicDTO
      */
-    images: Array<any>;
+    imageURIs: Array<string>;
     /**
      * The verification status of the user
      * @type {string}
@@ -172,7 +172,7 @@ export function instanceOfUserPublicDTO(value: object): value is UserPublicDTO {
     if (!('birthDay' in value) || value['birthDay'] === undefined) return false;
     if (!('gender' in value) || value['gender'] === undefined) return false;
     if (!('genderDesire' in value) || value['genderDesire'] === undefined) return false;
-    if (!('images' in value) || value['images'] === undefined) return false;
+    if (!('imageURIs' in value) || value['imageURIs'] === undefined) return false;
     if (!('verificationStatus' in value) || value['verificationStatus'] === undefined) return false;
     if (!('approachChoice' in value) || value['approachChoice'] === undefined) return false;
     if (!('approachFromTime' in value) || value['approachFromTime'] === undefined) return false;
@@ -199,7 +199,7 @@ export function UserPublicDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
         'birthDay': json['birthDay'],
         'gender': json['gender'],
         'genderDesire': json['genderDesire'],
-        'images': json['images'],
+        'imageURIs': json['imageURIs'],
         'verificationStatus': json['verificationStatus'],
         'approachChoice': json['approachChoice'],
         'approachFromTime': TimeFromJSON(json['approachFromTime']),
@@ -222,7 +222,7 @@ export function UserPublicDTOToJSON(value?: UserPublicDTO | null): any {
         'birthDay': value['birthDay'],
         'gender': value['gender'],
         'genderDesire': value['genderDesire'],
-        'images': value['images'],
+        'imageURIs': value['imageURIs'],
         'verificationStatus': value['verificationStatus'],
         'approachChoice': value['approachChoice'],
         'approachFromTime': TimeToJSON(value['approachFromTime']),

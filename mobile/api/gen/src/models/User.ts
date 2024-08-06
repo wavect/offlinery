@@ -34,10 +34,10 @@ import {
 export interface User {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof User
      */
-    id: number;
+    id: string;
     /**
      * 
      * @type {boolean}
@@ -94,10 +94,10 @@ export interface User {
     genderDesire: UserGenderDesireEnum;
     /**
      * 
-     * @type {Array<object>}
+     * @type {Array<string>}
      * @memberof User
      */
-    images: Array<object>;
+    imageURIs: Array<string>;
     /**
      * 
      * @type {string}
@@ -223,7 +223,7 @@ export function instanceOfUser(value: object): value is User {
     if (!('birthDay' in value) || value['birthDay'] === undefined) return false;
     if (!('gender' in value) || value['gender'] === undefined) return false;
     if (!('genderDesire' in value) || value['genderDesire'] === undefined) return false;
-    if (!('images' in value) || value['images'] === undefined) return false;
+    if (!('imageURIs' in value) || value['imageURIs'] === undefined) return false;
     if (!('verificationStatus' in value) || value['verificationStatus'] === undefined) return false;
     if (!('approachChoice' in value) || value['approachChoice'] === undefined) return false;
     if (!('blacklistedRegions' in value) || value['blacklistedRegions'] === undefined) return false;
@@ -257,7 +257,7 @@ export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User
         'birthDay': json['birthDay'],
         'gender': json['gender'],
         'genderDesire': json['genderDesire'],
-        'images': json['images'],
+        'imageURIs': json['imageURIs'],
         'verificationStatus': json['verificationStatus'],
         'approachChoice': json['approachChoice'],
         'blacklistedRegions': ((json['blacklistedRegions'] as Array<any>).map(BlacklistedRegionFromJSON)),
@@ -287,7 +287,7 @@ export function UserToJSON(value?: User | null): any {
         'birthDay': value['birthDay'],
         'gender': value['gender'],
         'genderDesire': value['genderDesire'],
-        'images': value['images'],
+        'imageURIs': value['imageURIs'],
         'verificationStatus': value['verificationStatus'],
         'approachChoice': value['approachChoice'],
         'blacklistedRegions': ((value['blacklistedRegions'] as Array<any>).map(BlacklistedRegionToJSON)),

@@ -6,6 +6,9 @@ import { BlacklistedRegion } from '../blacklisted-region/blacklisted-region.enti
 import {CreateUserDTO} from "../DTOs/create-user.dto";
 import {UpdateUserDTO} from "../DTOs/update-user.dto";
 import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
+import * as path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -16,19 +19,32 @@ export class UserService {
         private blacklistedRegionRepository: Repository<BlacklistedRegion>
     ) {}
 
+    private async saveFiles(files: Express.Multer.File[]): Promise<string[]> {
+        const uploadDir = 'uploads/img';
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+
+        const savedFilePaths = await Promise.all(files.map(async (file) => {
+            const uniqueFilename = `${uuidv4()}${path.extname(file.originalname)}`;
+            const filePath = path.join(uploadDir, uniqueFilename);
+            await fs.promises.writeFile(filePath, file.buffer);
+            return filePath;
+        }));
+
+        return savedFilePaths;
+    }
+
     async createUser(createUserDto: CreateUserDTO, images: Express.Multer.File[]): Promise<User> {
         const user = new User();
         Object.assign(user, createUserDto);
 
         // @dev https://docs.nestjs.com/security/encryption-and-hashing
-        console.warn("PWD: ", createUserDto?.clearPassword, createUserDto, user)
         user.passwordSalt = await bcrypt.genSalt();
-        console.warn("SALT: ", user.passwordSalt)
         user.passwordHash = await bcrypt.hash(createUserDto.clearPassword, user.passwordSalt);
-        console.warn("USER: ", user)
 
         // Save images
-        user.images = images
+        user.imageURIs = await this.saveFiles(images)
 
         // Save blacklisted regions
         if (createUserDto.blacklistedRegions) {
@@ -45,7 +61,7 @@ export class UserService {
         return await this.userRepository.save(user);
     }
 
-    async updateUser(id: number, updateUserDto: UpdateUserDTO, images?: Express.Multer.File[]): Promise<User> {
+    async updateUser(id: string, updateUserDto: UpdateUserDTO, images?: Express.Multer.File[]): Promise<User> {
         const user = await this.userRepository.findOneBy({ id });
         if (!user) {
             throw new Error('User not found');
@@ -56,7 +72,7 @@ export class UserService {
 
         // Update images if provided
         if (images && images.length > 0) {
-            user.images = images;
+            user.imageURIs = await this.saveFiles(images)
         }
 
         // Update blacklisted regions if provided
@@ -89,7 +105,7 @@ export class UserService {
         await this.userRepository.delete(id);
     }
 
-    async getUserById(id: number): Promise<User> {
+    async getUserById(id: string): Promise<User> {
         const user = await this.userRepository.findOne({
             where: { id },
             relations: ['blacklistedRegions'] // Include related entities if needed
@@ -102,7 +118,7 @@ export class UserService {
         return user;
     }
 
-    async updatePushToken(userId: number, pushToken: string): Promise<User> {
+    async updatePushToken(userId: string, pushToken: string): Promise<User> {
         const user = await this.userRepository.findOneBy({ id: userId });
         if (!user) {
             throw new NotFoundException(`User with ID ${userId} not found`);

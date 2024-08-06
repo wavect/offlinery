@@ -15,15 +15,15 @@
 
 import * as runtime from '../runtime';
 import type {
-  StorePushTokenDto,
+  StorePushTokenDTO,
 } from '../models/index';
 import {
-    StorePushTokenDtoFromJSON,
-    StorePushTokenDtoToJSON,
+    StorePushTokenDTOFromJSON,
+    StorePushTokenDTOToJSON,
 } from '../models/index';
 
 export interface PushNotificationControllerStorePushTokenRequest {
-    storePushTokenDto: StorePushTokenDto;
+    storePushTokenDTO: StorePushTokenDTO;
 }
 
 /**
@@ -36,7 +36,7 @@ export interface PushNotificationsApiInterface {
     /**
      * 
      * @summary Store user\'s push token
-     * @param {StorePushTokenDto} storePushTokenDto 
+     * @param {StorePushTokenDTO} storePushTokenDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PushNotificationsApiInterface
@@ -59,10 +59,10 @@ export class PushNotificationsApi extends runtime.BaseAPI implements PushNotific
      * Store user\'s push token
      */
     async pushNotificationControllerStorePushTokenRaw(requestParameters: PushNotificationControllerStorePushTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['storePushTokenDto'] == null) {
+        if (requestParameters['storePushTokenDTO'] == null) {
             throw new runtime.RequiredError(
-                'storePushTokenDto',
-                'Required parameter "storePushTokenDto" was null or undefined when calling pushNotificationControllerStorePushToken().'
+                'storePushTokenDTO',
+                'Required parameter "storePushTokenDTO" was null or undefined when calling pushNotificationControllerStorePushToken().'
             );
         }
 
@@ -77,7 +77,7 @@ export class PushNotificationsApi extends runtime.BaseAPI implements PushNotific
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: StorePushTokenDtoToJSON(requestParameters['storePushTokenDto']),
+            body: StorePushTokenDTOToJSON(requestParameters['storePushTokenDTO']),
         }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
