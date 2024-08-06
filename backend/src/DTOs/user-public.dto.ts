@@ -28,7 +28,7 @@ export class UserPublicDTO {
         items: {
             type: 'string',
         },
-        description: 'An array of image files',
+        description: 'An array of image uris',
         maxItems: 6
     })
     imageURIs: string[];
@@ -39,10 +39,10 @@ export class UserPublicDTO {
     @ApiProperty({ enum: EApproachChoice, description: 'The approach choice of the user' })
     approachChoice: EApproachChoice;
 
-    @ApiProperty({ type: 'time', description: 'The time from which the user can be approached' })
+    @ApiProperty({ type: 'string', format: 'time', description: 'The time from which the user can be approached' })
     approachFromTime: Date;
 
-    @ApiProperty({ description: 'The time until which the user can be approached' })
+    @ApiProperty({ type: 'string', format: 'time', description: 'The time until which the user can be approached' })
     approachToTime: Date;
 
     @ApiProperty({ description: 'The user\'s bio' })
