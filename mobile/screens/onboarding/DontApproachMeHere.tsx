@@ -17,6 +17,7 @@ import * as Location from 'expo-location';
 import {LocationAccuracy} from 'expo-location';
 import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {ROUTES} from "../routes";
+import {i18n, TR} from "../../localization/translate.service";
 
 const DontApproachMeHere = ({navigation}) => {
     const {state, dispatch} = useUserContext()
@@ -39,7 +40,7 @@ const DontApproachMeHere = ({navigation}) => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
-                alert('Permission to access location was denied');
+                alert(i18n.t(TR.permissionToLocationDenied));
                 return;
             }
 
@@ -100,10 +101,10 @@ const DontApproachMeHere = ({navigation}) => {
     }
 
     return (
-        <OPageContainer title="Don't approach me here" subtitle="What are spots you don't want to be approached at? Your gym, workplace?"
+        <OPageContainer title={i18n.t(TR.dontApproachHere)} subtitle={i18n.t(TR.whatAreSpotsToNotApproachYou)}
                         bottomContainerChildren={
                             <OButtonWide
-                                text="Continue"
+                                text={i18n.t(TR.continue)}
                                 filled={true}
                                 variant="dark"
                                 onPress={() => navigation.navigate(ROUTES.Onboarding.ApproachMeBetween)}
@@ -133,8 +134,8 @@ const DontApproachMeHere = ({navigation}) => {
                             />
                             <Marker
                                 coordinate={region}
-                                title="You're undercover"
-                                description="Nobody will see you here."
+                                title={i18n.t(TR.youAreUndercover)}
+                                description={i18n.t(TR.nobodyWillSeeYou)}
                                 draggable={true}
                                 onDrag={(ev) => handleRegionDrag(ev, index)}
                                 onPress={() => handleRegionPress(index)}
@@ -143,8 +144,8 @@ const DontApproachMeHere = ({navigation}) => {
                         </React.Fragment>
                     ))}
                     {location && <Marker
-                        title="My Location"
-                        description="You are here"
+                        title={i18n.t(TR.myLocation)}
+                        description={i18n.t(TR.youAreHere)}
                         pinColor="blue"
                         coordinate={location.coords}
                         tracksViewChanges={false}
@@ -163,12 +164,12 @@ const DontApproachMeHere = ({navigation}) => {
                 )}
                 <View style={styles.instructions}>
                     <Text style={[Subtitle, styles.instructionText]}>
-                        Long press on the map to add a circular region. Tap a region to select it and adjust its radius.
+                        {i18n.t(TR.longPressMapSafeZoneInstruction)}
                     </Text>
                 </View>
                 {activeRegionIndex !== null && (
                     <View style={styles.sliderContainer}>
-                        <Text style={[Subtitle, styles.instructionText]}>Adjust Region Radius ({Math.round(state.blacklistedRegions[activeRegionIndex].radius)}m)</Text>
+                        <Text style={[Subtitle, styles.instructionText]}>{i18n.t(TR.adjustRegionRadius)}&nbsp;({Math.round(state.blacklistedRegions[activeRegionIndex].radius)}m)</Text>
                         <Slider
                             style={styles.slider}
                             minimumValue={100}

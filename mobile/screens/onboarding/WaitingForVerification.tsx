@@ -7,24 +7,25 @@ import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {ROUTES} from "../routes";
 import {EVerificationStatus, useUserContext} from "../../context/UserContext";
 import {A} from "@expo/html-elements";
+import {i18n, TR} from "../../localization/translate.service";
 
 const WaitingForVerification = ({navigation}) => {
     const {state} = useUserContext()
     return (
         <OLinearBackground>
             <View style={styles.layoutContainer}>
-                <OShowcase subtitle="Stop Swiping. Meet IRL."/>
+                <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)}/>
 
-                <OButtonWide filled={true} text="Verification in progress.." style={{marginBottom: 14}}
+                <OButtonWide filled={true} text={i18n.t(TR.verificationInProgress)} style={{marginBottom: 14}}
                              disabled={state.verificationStatus !== EVerificationStatus.VERIFIED}
                              onPress={() => navigation.navigate(ROUTES.Main.HeatMap)} variant="light"/>
 
-                    <OButtonWide filled={false} text="Book new call" variant="light" style={{marginBottom: 15}}
+                    <OButtonWide filled={false} text={i18n.t(TR.bookNewCall)} variant="light" style={{marginBottom: 15}}
                                  onPress={() => navigation.navigate(ROUTES.Onboarding.BookSafetyCall)}/>
-                    <Text style={styles.subtitleBookCall}>Please do not make double bookings.</Text>
+                    <Text style={styles.subtitleBookCall}>{i18n.t(TR.pleaseDoNotMakeDoubleBookings)}</Text>
 
                 <A href="mailto:office@wavect.io" style={[styles.bottomText, styles.bottomTextContainer]}>
-                    Something wrong?
+                    {i18n.t(TR.somethingWrongQ)}
                 </A>
             </View>
 

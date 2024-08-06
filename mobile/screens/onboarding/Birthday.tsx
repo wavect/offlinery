@@ -6,6 +6,7 @@ import {ROUTES} from "../routes";
 import {EACTION_USER, useUserContext} from "../../context/UserContext";
 import RNDateTimePicker, {DateTimePickerEvent} from "@react-native-community/datetimepicker";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
+import {i18n, TR} from "../../localization/translate.service";
 
 const Birthday = ({navigation}) => {
     const {state, dispatch} = useUserContext()
@@ -16,8 +17,8 @@ const Birthday = ({navigation}) => {
         dispatch({type: EACTION_USER.SET_BIRTHDAY, payload: date || new Date(2000, 1, 1)})
     }
 
-    return <OPageContainer title="My birthday is" subtitle="Your age will be public"
-                           bottomContainerChildren={<OButtonWide text="Continue" filled={true} variant="dark"
+    return <OPageContainer title={i18n.t(TR.myBirthDayIs)} subtitle={i18n.t(TR.yourAgeWillBePublic)}
+                           bottomContainerChildren={<OButtonWide text={i18n.t(TR.continue)} filled={true} variant="dark"
                                                                  onPress={() => navigation.navigate(ROUTES.Onboarding.GenderChoice)}/>}>
         <View style={styles.inputField}>
             <TextInput
