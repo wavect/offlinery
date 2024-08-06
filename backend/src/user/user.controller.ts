@@ -17,6 +17,7 @@ import {UpdateUserDTO} from "../DTOs/update-user.dto";
 import {UserPublicDTO} from "../DTOs/user-public.dto";
 import {CreateUserRequestDTO} from "../DTOs/create-user-request.dto";
 import {UpdateUserRequestDTO} from "../DTOs/update-user-request.dto";
+import {ParseJsonPipe} from "../pipes/ParseJson.pipe";
 
 @ApiTags('User')
 @Controller({
@@ -34,7 +35,7 @@ export class UserController {
     @ApiBody({ type: CreateUserRequestDTO })
     @ApiOperation({ summary: 'Create a new user with images' })
     async createUser(
-        @Body('user') createUserDto: CreateUserDTO,
+        @Body('user', new ParseJsonPipe()) createUserDto: CreateUserDTO,
         @UploadedFiles(
             new ParseFilePipe({
                 validators: [
