@@ -4,7 +4,7 @@ import {LatLng} from "react-native-maps";
 import {LocationObject} from "expo-location";
 import {IEncounterProfile, IPublicProfile} from "../types/PublicProfile.types";
 import {getAge} from "../utils/date.utils";
-import {UserApi, UserControllerCreateUserRequest} from "../api/gen/src";
+import {CreateUserDTO, UserApi, UserControllerCreateUserRequest} from "../api/gen/src";
 import {ROUTES} from "../screens/routes";
 
 export type Gender = "woman" | "man"
@@ -219,21 +219,21 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
                 ...state,
                 approachChoice: action.payload as EApproachChoice,
             };
-       /* case EACTION_USER.SET_STREET:
-            return {
-                ...state,
-                street: action.payload as string,
-            };
-        case EACTION_USER.SET_POSTAL_CODE:
-            return {
-                ...state,
-                postalCode: action.payload as string,
-            };
-        case EACTION_USER.SET_COUNTRY:
-            return {
-                ...state,
-                country: action.payload as string,
-            };*/
+        /* case EACTION_USER.SET_STREET:
+             return {
+                 ...state,
+                 street: action.payload as string,
+             };
+         case EACTION_USER.SET_POSTAL_CODE:
+             return {
+                 ...state,
+                 postalCode: action.payload as string,
+             };
+         case EACTION_USER.SET_COUNTRY:
+             return {
+                 ...state,
+                 country: action.payload as string,
+             };*/
         case EACTION_USER.SET_BLACKLISTED_REGIONS:
             return {
                 ...state,
@@ -293,13 +293,14 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
     const api = new UserApi();
 
     // Prepare the user data
-    const userData = {
+    const userData: CreateUserDTO = {
         firstName: state.firstName,
+        clearPassword: state.clearPassword,
         email: state.email,
         wantsEmailUpdates: state.wantsEmailUpdates,
-        birthDay: state.birthDay.toISOString(),
-        gender: state.gender,
-        genderDesire: state.genderDesire,
+        birthDay: state.birthDay,
+        gender: state.gender!,
+        genderDesire: state.genderDesire!,
         verificationStatus: state.verificationStatus,
         approachChoice: state.approachChoice,
         blacklistedRegions: state.blacklistedRegions,
@@ -309,20 +310,9 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
         dateMode: state.dateMode,
     };
 
-    // Prepare the images
-    const images: Blob[] = [];
-    for (const key in state.images) {
-        const image: ImagePicker.ImagePickerAsset|undefined = state.images[key as ImageIdx];
-        if (image) {
-            const response = await fetch(image.uri);
-            const blob = await response.blob();
-            images.push(blob);
-        }
-    }
-
     const requestParameters: UserControllerCreateUserRequest = {
         user: userData,
-        images: images,
+        images: await getBlobsOfUserImages(state),
     };
 
     try {
@@ -331,7 +321,7 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
 
         // Update the user state with the returned ID
         if (user.id) {
-            dispatch({ type: EACTION_USER.SET_ID, payload: user.id });
+            dispatch({type: EACTION_USER.SET_ID, payload: user.id});
         }
 
         // Navigate to the next screen or update the UI as needed
@@ -342,3 +332,11 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
         // Handle the error (e.g., show an error message to the user)
     }
 };
+
+
+export const getBlobsOfUserImages = async (state: IUserData): Promise<Blob[]> => {
+    return await Promise.all(Object.values(state.images).map(async i => {
+        if (!i) return new Blob()
+        return (await fetch(i.uri)).blob()
+    }))
+}

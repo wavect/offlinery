@@ -6,7 +6,7 @@ import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
 import {FontFamily, FontSize} from "../../GlobalStyles";
 import {ROUTES} from "../routes";
-import {EACTION_USER, EApproachChoice, Gender, useUserContext} from "../../context/UserContext";
+import {EACTION_USER, EApproachChoice, Gender, getBlobsOfUserImages, useUserContext} from "../../context/UserContext";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import {MaterialIcons} from "@expo/vector-icons";
 import {i18n, TR} from "../../localization/translate.service";
@@ -47,13 +47,14 @@ const ProfileSettings = ({navigation}) => {
                 id: state.id!,
                 user: {
                     firstName: state.firstName,
-                    approachFromTime: state.approachFromTime,
-                    approachToTime: state.approachToTime,
+                    approachFromTime: state.approachFromTime.toTimeString(),
+                    approachToTime: state.approachToTime.toTimeString(),
                     bio: state.bio,
                     birthDay: state.birthDay,
                     gender: state.gender,
                     genderDesire: state.genderDesire,
-                }
+                },
+                images: await getBlobsOfUserImages(state),
             };
             await userApi.userControllerUpdateUser(request);
 
