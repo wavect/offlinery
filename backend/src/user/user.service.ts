@@ -24,7 +24,6 @@ export class UserService {
         user.passwordHash = await bcrypt.hash(createUserDto.clearPassword, user.passwordSalt);
 
         // Save images
-        Object.assign(user, createUserDto);
         user.images = images
 
         // Save blacklisted regions
@@ -39,6 +38,8 @@ export class UserService {
                 })
             );
         }
+
+        Object.assign(user, createUserDto);
 
         return await this.userRepository.save(user);
     }
