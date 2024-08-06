@@ -5,8 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a144658d-77eb-49a4-ac48-90e721fa13e0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/mobile/assets/adaptive-icon.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mobile/assets/favicon.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mobile/assets/icon.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mobile/assets/splash.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/components/OEncounter/OEncounter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/components/OEncounter/OEncounter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/assets/adaptive-icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/assets/adaptive-icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/assets/favicon.png" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/assets/favicon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/assets/icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/assets/icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/assets/splash.png" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/assets/splash.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,33 +46,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/kevin/Desktop/GitRepositories/FuckDatingApps/fuck-dating-apps/mobile/screens/main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;prettier.import.notification.dismissed&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\kevin\\Desktop\\GitRepositories\\FuckDatingApps\\fuck-dating-apps\\backend\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "wsdt/localization",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/kevin/Desktop/GitRepositories/FuckDatingApps/fuck-dating-apps/mobile/assets",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettier.import.notification.dismissed": "true",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "C:\\Users\\kevin\\Desktop\\GitRepositories\\FuckDatingApps\\fuck-dating-apps\\backend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\mobile\assets" />
       <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\mobile\screens\main" />
       <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\backend\src\user" />
       <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\backend\src\blacklisted-region" />
       <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\backend" />
-      <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\mobile\screens\onboarding" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\backend\src\transient-services\notification" />
@@ -101,7 +111,9 @@
       <workItem from="1722850480742" duration="18604000" />
       <workItem from="1722881319684" duration="3792000" />
       <workItem from="1722885332870" duration="3091000" />
-      <workItem from="1722888589950" duration="45000" />
+      <workItem from="1722888589950" duration="71000" />
+      <workItem from="1722936542060" duration="4000" />
+      <workItem from="1722949319336" duration="678000" />
     </task>
     <servers />
   </component>
