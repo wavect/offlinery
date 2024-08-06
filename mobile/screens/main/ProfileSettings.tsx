@@ -18,6 +18,11 @@ const ProfileSettings = ({navigation}) => {
     const {state, dispatch} = useUserContext();
     const [isLoading, setLoading] = useState(false)
 
+    if (!state.id) {
+        // TODO REMOVE
+        dispatch({type: EACTION_USER.SET_ID, payload: 1})
+    }
+
     const setFirstName = async (firstName: string) => {
         dispatch({type: EACTION_USER.SET_FIRSTNAME, payload: firstName})
     }

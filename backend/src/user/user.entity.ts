@@ -17,7 +17,7 @@ export class User {
             birthDay: this.birthDay,
             gender: this.gender,
             genderDesire: this.genderDesire,
-            images: this.images.map(img => ({ filename: img.filename, mimetype: img.mimetype })),
+            images: this.images,
             verificationStatus: this.verificationStatus,
             approachChoice: this.approachChoice,
             approachFromTime: this.approachFromTime,
@@ -48,8 +48,9 @@ export class User {
     @Column()
     passwordSalt: string;
 
-    @Column()
-    birthDay: Date;
+    // Date only
+    @Column({ type: 'date'})
+    birthDay: string;
 
     @Column()
     gender: EGender;
@@ -58,7 +59,7 @@ export class User {
     genderDesire: EGender;
 
     @Column('json')
-    images: { filename: string; mimetype: string; path: string }[];
+    images: Express.Multer.File[];
 
     @Column()
     verificationStatus: EVerificationStatus;
@@ -69,10 +70,12 @@ export class User {
     @OneToMany(() => BlacklistedRegion, blacklistedRegion => blacklistedRegion.user)
     blacklistedRegions: BlacklistedRegion[];
 
-    @Column()
+    // timestamptz (PostgreSQL datetime with timezone)
+    @Column({ type: 'timestamptz' })
     approachFromTime: Date;
 
-    @Column()
+    // timestamptz (PostgreSQL datetime with timezone)
+    @Column({ type: 'timestamptz' })
     approachToTime: Date;
 
     @Column()

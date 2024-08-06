@@ -76,7 +76,7 @@ export const en = {
     whatIsYourEmail: 'What\'s your email?',
     whatIsYourEmailDescr: 'Don\'t lose access to your account, verify your email.',
     wantToReceiveNews: 'I want to receive news, updates and offers from Offlinery.',
-    myFirstNameIs: 'my first name is',
+    myFirstNameIs: 'My first name is',
     myFirstNameDescr: 'This is how you will appear in Offlinery.',
     enterFirstName: 'Enter first name',
     woman: 'Woman',

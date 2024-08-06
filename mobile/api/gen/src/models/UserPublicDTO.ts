@@ -13,12 +13,12 @@
  */
 
 import { mapValues } from '../runtime';
-import type { UserPublicDTOImagesInner } from './UserPublicDTOImagesInner';
+import type { Time } from './Time';
 import {
-    UserPublicDTOImagesInnerFromJSON,
-    UserPublicDTOImagesInnerFromJSONTyped,
-    UserPublicDTOImagesInnerToJSON,
-} from './UserPublicDTOImagesInner';
+    TimeFromJSON,
+    TimeFromJSONTyped,
+    TimeToJSON,
+} from './Time';
 
 /**
  * 
@@ -52,10 +52,10 @@ export interface UserPublicDTO {
     wantsEmailUpdates: boolean;
     /**
      * The birth date of the user
-     * @type {Date}
+     * @type {string}
      * @memberof UserPublicDTO
      */
-    birthDay: Date;
+    birthDay: string;
     /**
      * The gender of the user
      * @type {string}
@@ -69,11 +69,11 @@ export interface UserPublicDTO {
      */
     genderDesire: UserPublicDTOGenderDesireEnum;
     /**
-     * Array of user images (excluding sensitive path information)
-     * @type {Array<UserPublicDTOImagesInner>}
+     * An array of image files
+     * @type {Array<any>}
      * @memberof UserPublicDTO
      */
-    images: Array<UserPublicDTOImagesInner>;
+    images: Array<any>;
     /**
      * The verification status of the user
      * @type {string}
@@ -88,10 +88,10 @@ export interface UserPublicDTO {
     approachChoice: UserPublicDTOApproachChoiceEnum;
     /**
      * The time from which the user can be approached
-     * @type {Date}
+     * @type {Time}
      * @memberof UserPublicDTO
      */
-    approachFromTime: Date;
+    approachFromTime: Time;
     /**
      * The time until which the user can be approached
      * @type {Date}
@@ -196,13 +196,13 @@ export function UserPublicDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
         'isActive': json['isActive'],
         'firstName': json['firstName'],
         'wantsEmailUpdates': json['wantsEmailUpdates'],
-        'birthDay': (new Date(json['birthDay'])),
+        'birthDay': json['birthDay'],
         'gender': json['gender'],
         'genderDesire': json['genderDesire'],
-        'images': ((json['images'] as Array<any>).map(UserPublicDTOImagesInnerFromJSON)),
+        'images': json['images'],
         'verificationStatus': json['verificationStatus'],
         'approachChoice': json['approachChoice'],
-        'approachFromTime': (new Date(json['approachFromTime'])),
+        'approachFromTime': TimeFromJSON(json['approachFromTime']),
         'approachToTime': (new Date(json['approachToTime'])),
         'bio': json['bio'],
         'dateMode': json['dateMode'],
@@ -219,13 +219,13 @@ export function UserPublicDTOToJSON(value?: UserPublicDTO | null): any {
         'isActive': value['isActive'],
         'firstName': value['firstName'],
         'wantsEmailUpdates': value['wantsEmailUpdates'],
-        'birthDay': ((value['birthDay']).toISOString()),
+        'birthDay': value['birthDay'],
         'gender': value['gender'],
         'genderDesire': value['genderDesire'],
-        'images': ((value['images'] as Array<any>).map(UserPublicDTOImagesInnerToJSON)),
+        'images': value['images'],
         'verificationStatus': value['verificationStatus'],
         'approachChoice': value['approachChoice'],
-        'approachFromTime': ((value['approachFromTime']).toISOString()),
+        'approachFromTime': TimeToJSON(value['approachFromTime']),
         'approachToTime': ((value['approachToTime']).toISOString()),
         'bio': value['bio'],
         'dateMode': value['dateMode'],

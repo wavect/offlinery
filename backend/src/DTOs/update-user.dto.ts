@@ -12,8 +12,8 @@ export class UpdateUserDTO {
     @ApiProperty({type: 'boolean', required: false})
     wantsEmailUpdates?: boolean;
 
-    @ApiProperty({type: 'string', format: 'date', required: false})
-    birthDay?: Date;
+    @ApiProperty({type: 'date', required: false})
+    birthDay?: string;
 
     @ApiProperty({enum: EGender, required: false})
     gender?: EGender;

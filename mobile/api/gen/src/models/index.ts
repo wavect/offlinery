@@ -8,5 +8,4 @@ export * from './StorePushTokenDto';
 export * from './UpdateUserDTO';
 export * from './User';
 export * from './UserPublicDTO';
-export * from './UserPublicDTOImagesInner';
 export * from './UserReport';

@@ -25,11 +25,7 @@ export class UserService {
         user.passwordHash = await bcrypt.hash(createUserDto.clearPassword, user.passwordSalt);
 
         // Save images
-        user.images = images.map(image => ({
-            filename: image.filename,
-            mimetype: image.mimetype,
-            path: image.path
-        }));
+        user.images = images
 
         // Save blacklisted regions
         if (createUserDto.blacklistedRegions) {
@@ -58,11 +54,7 @@ export class UserService {
 
         // Update images if provided
         if (images && images.length > 0) {
-            user.images = images.map(image => ({
-                filename: image.filename,
-                mimetype: image.mimetype,
-                path: image.path
-            }));
+            user.images = images;
         }
 
         // Update blacklisted regions if provided

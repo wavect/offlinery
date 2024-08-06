@@ -16,7 +16,6 @@ src/models/StorePushTokenDto.ts
 src/models/UpdateUserDTO.ts
 src/models/User.ts
 src/models/UserPublicDTO.ts
-src/models/UserPublicDTOImagesInner.ts
 src/models/UserReport.ts
 src/models/index.ts
 src/runtime.ts

@@ -15,7 +15,7 @@ export class UserPublicDTO {
     wantsEmailUpdates: boolean;
 
     @ApiProperty({ description: 'The birth date of the user' })
-    birthDay: Date;
+    birthDay: string; // date only
 
     @ApiProperty({ enum: EGender, description: 'The gender of the user' })
     gender: EGender;
@@ -26,15 +26,13 @@ export class UserPublicDTO {
     @ApiProperty({
         type: 'array',
         items: {
-            type: 'object',
-            properties: {
-                filename: { type: 'string' },
-                mimetype: { type: 'string' }
-            }
+            type: 'file',
+            format: 'binary'
         },
-        description: 'Array of user images (excluding sensitive path information)'
+        description: 'An array of image files',
+        maxItems: 6
     })
-    images: { filename: string; mimetype: string }[];
+    images: Express.Multer.File[];
 
     @ApiProperty({ enum: EVerificationStatus, description: 'The verification status of the user' })
     verificationStatus: EVerificationStatus;
@@ -42,7 +40,7 @@ export class UserPublicDTO {
     @ApiProperty({ enum: EApproachChoice, description: 'The approach choice of the user' })
     approachChoice: EApproachChoice;
 
-    @ApiProperty({ description: 'The time from which the user can be approached' })
+    @ApiProperty({ type: 'time', description: 'The time from which the user can be approached' })
     approachFromTime: Date;
 
     @ApiProperty({ description: 'The time until which the user can be approached' })

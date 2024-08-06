@@ -76,10 +76,10 @@ export interface User {
     passwordSalt: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof User
      */
-    birthDay: Date;
+    birthDay: string;
     /**
      * 
      * @type {string}
@@ -94,10 +94,10 @@ export interface User {
     genderDesire: UserGenderDesireEnum;
     /**
      * 
-     * @type {Array<string>}
+     * @type {Array<object>}
      * @memberof User
      */
-    images: Array<string>;
+    images: Array<object>;
     /**
      * 
      * @type {string}
@@ -254,7 +254,7 @@ export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User
         'email': json['email'],
         'passwordHash': json['passwordHash'],
         'passwordSalt': json['passwordSalt'],
-        'birthDay': (new Date(json['birthDay'])),
+        'birthDay': json['birthDay'],
         'gender': json['gender'],
         'genderDesire': json['genderDesire'],
         'images': json['images'],
@@ -284,7 +284,7 @@ export function UserToJSON(value?: User | null): any {
         'email': value['email'],
         'passwordHash': value['passwordHash'],
         'passwordSalt': value['passwordSalt'],
-        'birthDay': ((value['birthDay']).toISOString()),
+        'birthDay': value['birthDay'],
         'gender': value['gender'],
         'genderDesire': value['genderDesire'],
         'images': value['images'],
