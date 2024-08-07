@@ -15,6 +15,7 @@ import {ThrottlerModule} from "@nestjs/throttler";
 import {NotificationModule} from "./transient-services/notification/notification.module";
 import {UserReportModule} from "./user-report/user-report.module";
 import {UserReport} from "./user-report/user-report.entity";
+import {MulterModule} from "@nestjs/platform-express";
 
 @Module({
     imports: [
@@ -31,6 +32,10 @@ import {UserReport} from "./user-report/user-report.entity";
         }),
         // @dev https://docs.nestjs.com/techniques/caching
         CacheModule.register(),
+        /* right now directly saved in UserService
+        MulterModule.register({
+           dest: './uploads'
+        }),*/
         // @dev https://docs.nestjs.com/security/rate-limiting
         ThrottlerModule.forRoot([{
             ttl: 60000,

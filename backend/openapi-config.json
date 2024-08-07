@@ -1,0 +1,15 @@
+{
+  "npmName": "@offlinery/api",
+  "supportsES6": true,
+  "withInterfaces": true,
+  "typescriptThreePlus": true,
+  "useSingleRequestParameter": true,
+  "useObjectParameters": true,
+  "removeEnumValuePrefix": false,
+  "enumPropertyNaming": "original",
+  "withSeparateModelsAndApi": true,
+  "formDataWithoutBlob": true,
+  "additionalProperties": {
+    "formDataWithoutBlob": true
+  }
+}

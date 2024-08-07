@@ -18,7 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "openapi:generate": "npx @openapitools/openapi-generator-cli generate -i ./swagger.json -g typescript-fetch -o ../mobile/api/gen/ --additional-properties=supportsES6=true,useSingleRequestParameter=true,npmName=@offlinery/api,withInterfaces=true,typescriptThreePlus=true"
+    "openapi:generate": "npx @openapitools/openapi-generator-cli generate -i ./swagger.json -g typescript-fetch -o ../mobile/api/gen/ -c openapi-config.json"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^2.2.2",
@@ -31,6 +31,7 @@
     "@nestjs/typeorm": "^10.0.2",
     "bcrypt": "^5.1.1",
     "cache-manager": "^5.7.4",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "expo-server-sdk": "^3.10.0",
     "helmet": "^7.1.0",

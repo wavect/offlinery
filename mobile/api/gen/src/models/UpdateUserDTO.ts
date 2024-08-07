@@ -117,8 +117,8 @@ export interface UpdateUserDTO {
  * @export
  */
 export const UpdateUserDTOGenderEnum = {
-    Woman: 'woman',
-    Man: 'man'
+    woman: 'woman',
+    man: 'man'
 } as const;
 export type UpdateUserDTOGenderEnum = typeof UpdateUserDTOGenderEnum[keyof typeof UpdateUserDTOGenderEnum];
 
@@ -126,8 +126,8 @@ export type UpdateUserDTOGenderEnum = typeof UpdateUserDTOGenderEnum[keyof typeo
  * @export
  */
 export const UpdateUserDTOGenderDesireEnum = {
-    Woman: 'woman',
-    Man: 'man'
+    woman: 'woman',
+    man: 'man'
 } as const;
 export type UpdateUserDTOGenderDesireEnum = typeof UpdateUserDTOGenderDesireEnum[keyof typeof UpdateUserDTOGenderDesireEnum];
 
@@ -135,9 +135,9 @@ export type UpdateUserDTOGenderDesireEnum = typeof UpdateUserDTOGenderDesireEnum
  * @export
  */
 export const UpdateUserDTOVerificationStatusEnum = {
-    Verified: 'verified',
-    Pending: 'pending',
-    NotNeeded: 'not_needed'
+    verified: 'verified',
+    pending: 'pending',
+    not_needed: 'not_needed'
 } as const;
 export type UpdateUserDTOVerificationStatusEnum = typeof UpdateUserDTOVerificationStatusEnum[keyof typeof UpdateUserDTOVerificationStatusEnum];
 
@@ -145,9 +145,9 @@ export type UpdateUserDTOVerificationStatusEnum = typeof UpdateUserDTOVerificati
  * @export
  */
 export const UpdateUserDTOApproachChoiceEnum = {
-    Approach: 'approach',
-    BeApproached: 'be_approached',
-    Both: 'both'
+    approach: 'approach',
+    be_approached: 'be_approached',
+    both: 'both'
 } as const;
 export type UpdateUserDTOApproachChoiceEnum = typeof UpdateUserDTOApproachChoiceEnum[keyof typeof UpdateUserDTOApproachChoiceEnum];
 
@@ -155,8 +155,8 @@ export type UpdateUserDTOApproachChoiceEnum = typeof UpdateUserDTOApproachChoice
  * @export
  */
 export const UpdateUserDTODateModeEnum = {
-    Ghost: 'ghost',
-    Live: 'live'
+    ghost: 'ghost',
+    live: 'live'
 } as const;
 export type UpdateUserDTODateModeEnum = typeof UpdateUserDTODateModeEnum[keyof typeof UpdateUserDTODateModeEnum];
 

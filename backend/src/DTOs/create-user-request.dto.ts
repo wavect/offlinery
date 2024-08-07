@@ -2,7 +2,7 @@ import {ApiProperty} from '@nestjs/swagger';
 import {CreateUserDTO} from "./create-user.dto";
 
 export class CreateUserRequestDTO {
-    @ApiProperty({ type: CreateUserDTO })
+    @ApiProperty({ type: CreateUserDTO, format: 'json', })
     user: CreateUserDTO;
 
     @ApiProperty({

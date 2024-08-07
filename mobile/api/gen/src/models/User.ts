@@ -165,8 +165,8 @@ export interface User {
  * @export
  */
 export const UserGenderEnum = {
-    Woman: 'woman',
-    Man: 'man'
+    woman: 'woman',
+    man: 'man'
 } as const;
 export type UserGenderEnum = typeof UserGenderEnum[keyof typeof UserGenderEnum];
 
@@ -174,8 +174,8 @@ export type UserGenderEnum = typeof UserGenderEnum[keyof typeof UserGenderEnum];
  * @export
  */
 export const UserGenderDesireEnum = {
-    Woman: 'woman',
-    Man: 'man'
+    woman: 'woman',
+    man: 'man'
 } as const;
 export type UserGenderDesireEnum = typeof UserGenderDesireEnum[keyof typeof UserGenderDesireEnum];
 
@@ -183,9 +183,9 @@ export type UserGenderDesireEnum = typeof UserGenderDesireEnum[keyof typeof User
  * @export
  */
 export const UserVerificationStatusEnum = {
-    Verified: 'verified',
-    Pending: 'pending',
-    NotNeeded: 'not_needed'
+    verified: 'verified',
+    pending: 'pending',
+    not_needed: 'not_needed'
 } as const;
 export type UserVerificationStatusEnum = typeof UserVerificationStatusEnum[keyof typeof UserVerificationStatusEnum];
 
@@ -193,9 +193,9 @@ export type UserVerificationStatusEnum = typeof UserVerificationStatusEnum[keyof
  * @export
  */
 export const UserApproachChoiceEnum = {
-    Approach: 'approach',
-    BeApproached: 'be_approached',
-    Both: 'both'
+    approach: 'approach',
+    be_approached: 'be_approached',
+    both: 'both'
 } as const;
 export type UserApproachChoiceEnum = typeof UserApproachChoiceEnum[keyof typeof UserApproachChoiceEnum];
 
@@ -203,8 +203,8 @@ export type UserApproachChoiceEnum = typeof UserApproachChoiceEnum[keyof typeof 
  * @export
  */
 export const UserDateModeEnum = {
-    Ghost: 'ghost',
-    Live: 'live'
+    ghost: 'ghost',
+    live: 'live'
 } as const;
 export type UserDateModeEnum = typeof UserDateModeEnum[keyof typeof UserDateModeEnum];
 

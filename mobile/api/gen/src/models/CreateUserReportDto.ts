@@ -39,16 +39,16 @@ export interface CreateUserReportDto {
     incidentType: CreateUserReportDtoIncidentTypeEnum;
     /**
      * The ID of the user being reported
-     * @type {number}
+     * @type {string}
      * @memberof CreateUserReportDto
      */
-    reportedUserId: number;
+    reportedUserId: string;
     /**
      * The ID of the user making the report
-     * @type {number}
+     * @type {string}
      * @memberof CreateUserReportDto
      */
-    reportingUserId: number;
+    reportingUserId: string;
 }
 
 
@@ -57,8 +57,8 @@ export interface CreateUserReportDto {
  */
 export const CreateUserReportDtoIncidentTypeEnum = {
     Disrespectful: 'Disrespectful',
-    SexualHarassment: 'Sexual harassment',
-    ViolentBehavior: 'Violent behavior',
+    Sexual_harassment: 'Sexual harassment',
+    Violent_behavior: 'Violent behavior',
     Other: 'Other'
 } as const;
 export type CreateUserReportDtoIncidentTypeEnum = typeof CreateUserReportDtoIncidentTypeEnum[keyof typeof CreateUserReportDtoIncidentTypeEnum];
