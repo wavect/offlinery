@@ -88,16 +88,16 @@ export interface CreateUserDTO {
     blacklistedRegions: Array<BlacklistedRegionDTO>;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof CreateUserDTO
      */
-    approachFromTime: string;
+    approachFromTime: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof CreateUserDTO
      */
-    approachToTime: string;
+    approachToTime: Date;
     /**
      * 
      * @type {string}
@@ -196,14 +196,14 @@ export function CreateUserDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
         'email': json['email'],
         'clearPassword': json['clearPassword'],
         'wantsEmailUpdates': json['wantsEmailUpdates'],
-        'birthDay': json['birthDay'],
+        'birthDay': (new Date(json['birthDay'])),
         'gender': json['gender'],
         'genderDesire': json['genderDesire'],
         'verificationStatus': json['verificationStatus'],
         'approachChoice': json['approachChoice'],
         'blacklistedRegions': ((json['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOFromJSON)),
-        'approachFromTime': json['approachFromTime'],
-        'approachToTime': json['approachToTime'],
+        'approachFromTime': (new Date(json['approachFromTime'])),
+        'approachToTime': (new Date(json['approachToTime'])),
         'bio': json['bio'],
         'dateMode': json['dateMode'],
     };
@@ -219,14 +219,14 @@ export function CreateUserDTOToJSON(value?: CreateUserDTO | null): any {
         'email': value['email'],
         'clearPassword': value['clearPassword'],
         'wantsEmailUpdates': value['wantsEmailUpdates'],
-        'birthDay': value['birthDay'],
+        'birthDay': ((value['birthDay']).toISOString().substring(0,10)),
         'gender': value['gender'],
         'genderDesire': value['genderDesire'],
         'verificationStatus': value['verificationStatus'],
         'approachChoice': value['approachChoice'],
         'blacklistedRegions': ((value['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOToJSON)),
-        'approachFromTime': value['approachFromTime'],
-        'approachToTime': value['approachToTime'],
+        'approachFromTime': ((value['approachFromTime']).toISOString()),
+        'approachToTime': ((value['approachToTime']).toISOString()),
         'bio': value['bio'],
         'dateMode': value['dateMode'],
     };

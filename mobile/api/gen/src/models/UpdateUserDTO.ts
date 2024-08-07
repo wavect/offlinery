@@ -82,16 +82,16 @@ export interface UpdateUserDTO {
     blacklistedRegions?: Array<BlacklistedRegionDTO>;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof UpdateUserDTO
      */
-    approachFromTime?: string;
+    approachFromTime?: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof UpdateUserDTO
      */
-    approachToTime?: string;
+    approachToTime?: Date;
     /**
      * 
      * @type {string}
@@ -187,8 +187,8 @@ export function UpdateUserDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
         'verificationStatus': json['verificationStatus'] == null ? undefined : json['verificationStatus'],
         'approachChoice': json['approachChoice'] == null ? undefined : json['approachChoice'],
         'blacklistedRegions': json['blacklistedRegions'] == null ? undefined : ((json['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOFromJSON)),
-        'approachFromTime': json['approachFromTime'] == null ? undefined : json['approachFromTime'],
-        'approachToTime': json['approachToTime'] == null ? undefined : json['approachToTime'],
+        'approachFromTime': json['approachFromTime'] == null ? undefined : (new Date(json['approachFromTime'])),
+        'approachToTime': json['approachToTime'] == null ? undefined : (new Date(json['approachToTime'])),
         'bio': json['bio'] == null ? undefined : json['bio'],
         'dateMode': json['dateMode'] == null ? undefined : json['dateMode'],
         'clearPassword': json['clearPassword'] == null ? undefined : json['clearPassword'],
@@ -210,8 +210,8 @@ export function UpdateUserDTOToJSON(value?: UpdateUserDTO | null): any {
         'verificationStatus': value['verificationStatus'],
         'approachChoice': value['approachChoice'],
         'blacklistedRegions': value['blacklistedRegions'] == null ? undefined : ((value['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOToJSON)),
-        'approachFromTime': value['approachFromTime'],
-        'approachToTime': value['approachToTime'],
+        'approachFromTime': value['approachFromTime'] == null ? undefined : ((value['approachFromTime']).toISOString()),
+        'approachToTime': value['approachToTime'] == null ? undefined : ((value['approachToTime']).toISOString()),
         'bio': value['bio'],
         'dateMode': value['dateMode'],
         'clearPassword': value['clearPassword'],

@@ -76,10 +76,10 @@ export interface User {
     passwordSalt: string;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof User
      */
-    birthDay: string;
+    birthDay: Date;
     /**
      * 
      * @type {string}
@@ -254,7 +254,7 @@ export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User
         'email': json['email'],
         'passwordHash': json['passwordHash'],
         'passwordSalt': json['passwordSalt'],
-        'birthDay': json['birthDay'],
+        'birthDay': (new Date(json['birthDay'])),
         'gender': json['gender'],
         'genderDesire': json['genderDesire'],
         'imageURIs': json['imageURIs'],
@@ -284,7 +284,7 @@ export function UserToJSON(value?: User | null): any {
         'email': value['email'],
         'passwordHash': value['passwordHash'],
         'passwordSalt': value['passwordSalt'],
-        'birthDay': value['birthDay'],
+        'birthDay': ((value['birthDay']).toISOString()),
         'gender': value['gender'],
         'genderDesire': value['genderDesire'],
         'imageURIs': value['imageURIs'],

@@ -16,8 +16,8 @@ export class CreateUserDTO {
     wantsEmailUpdates: boolean;
 
     // only Date, no time
-    @ApiProperty({type: 'date' })
-    birthDay: string;
+    @ApiProperty({type: 'string', format: 'date' })
+    birthDay: Date;
 
     @ApiProperty({enum: EGender})
     gender: EGender;
@@ -45,10 +45,10 @@ export class CreateUserDTO {
     })
     blacklistedRegions: BlacklistedRegionDTO[];
 
-    @ApiProperty({type: 'string', format: 'time'})
+    @ApiProperty({type: 'string', format: 'date-time'})
     approachFromTime: Date;
 
-    @ApiProperty({type: 'string', format: 'time'})
+    @ApiProperty({type: 'string', format: 'date-time'})
     approachToTime: Date;
 
     @ApiProperty({type: 'string'})

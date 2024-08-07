@@ -45,10 +45,10 @@ export interface UserPublicDTO {
     wantsEmailUpdates: boolean;
     /**
      * The birth date of the user
-     * @type {string}
+     * @type {Date}
      * @memberof UserPublicDTO
      */
-    birthDay: string;
+    birthDay: Date;
     /**
      * The gender of the user
      * @type {string}
@@ -189,7 +189,7 @@ export function UserPublicDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
         'isActive': json['isActive'],
         'firstName': json['firstName'],
         'wantsEmailUpdates': json['wantsEmailUpdates'],
-        'birthDay': json['birthDay'],
+        'birthDay': (new Date(json['birthDay'])),
         'gender': json['gender'],
         'genderDesire': json['genderDesire'],
         'imageURIs': json['imageURIs'],
@@ -212,7 +212,7 @@ export function UserPublicDTOToJSON(value?: UserPublicDTO | null): any {
         'isActive': value['isActive'],
         'firstName': value['firstName'],
         'wantsEmailUpdates': value['wantsEmailUpdates'],
-        'birthDay': value['birthDay'],
+        'birthDay': ((value['birthDay']).toISOString().substring(0,10)),
         'gender': value['gender'],
         'genderDesire': value['genderDesire'],
         'imageURIs': value['imageURIs'],

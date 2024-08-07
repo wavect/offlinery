@@ -14,8 +14,8 @@ export class UserPublicDTO {
     @ApiProperty({ description: 'Indicates if the user wants to receive email updates' })
     wantsEmailUpdates: boolean;
 
-    @ApiProperty({ description: 'The birth date of the user' })
-    birthDay: string; // date only
+    @ApiProperty({ type: 'string', format: 'date', description: 'The birth date of the user' })
+    birthDay: Date;
 
     @ApiProperty({ enum: EGender, description: 'The gender of the user' })
     gender: EGender;
