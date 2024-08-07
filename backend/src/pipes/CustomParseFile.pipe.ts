@@ -8,6 +8,8 @@ export class CustomParseFilePipe extends ParseFilePipe {
         } catch (error) {
             if (error instanceof BadRequestException) {
                 const originalMessage = error.message;
+                console.warn("FILE PIPE: ", originalMessage, value)
+
                 if (originalMessage.includes('Max file size')) {
                     throw new BadRequestException({
                         statusCode: HttpStatus.PAYLOAD_TOO_LARGE,
