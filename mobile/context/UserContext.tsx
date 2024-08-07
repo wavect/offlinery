@@ -292,6 +292,8 @@ export const useUserContext = (): IUserContextType => {
 export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IUserAction>, onSuccess: () => void, onError: (err: any) => void) => {
     const api = new UserApi();
 
+    console.warn("USER REGISTER: ", state)
+
     // Prepare the user data
     const userData: CreateUserDTO = {
         firstName: state.firstName,
@@ -304,11 +306,12 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
         verificationStatus: state.verificationStatus,
         approachChoice: state.approachChoice,
         blacklistedRegions: state.blacklistedRegions,
-        approachFromTime: state.approachFromTime.toISOString(),
-        approachToTime: state.approachToTime.toISOString(),
+        approachFromTime: state.approachFromTime,
+        approachToTime: state.approachToTime,
         bio: state.bio,
         dateMode: state.dateMode,
     };
+    console.warn("USER DATA: ", userData)
 
     const requestParameters: UserControllerCreateUserRequest = {
         user: userData,

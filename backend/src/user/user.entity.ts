@@ -48,9 +48,8 @@ export class User {
     @Column()
     passwordSalt: string;
 
-    // Date only
     @Column({ type: 'date'})
-    birthDay: string;
+    birthDay: Date;
 
     @Column()
     gender: EGender;
