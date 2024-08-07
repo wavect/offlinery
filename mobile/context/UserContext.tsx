@@ -318,6 +318,8 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
         images: await getBlobsOfUserImages(state),
     };
 
+    console.warn("BLOBS: ", requestParameters.images)
+
     try {
         const user = await api.userControllerCreateUser(requestParameters);
         console.log("User created successfully:", user);

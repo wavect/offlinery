@@ -8,12 +8,12 @@ export class UpdateUserRequestDTO {
     @ApiProperty({
         type: 'array',
         items: {
-            type: 'file',
+            type: 'string',
             format: 'binary'
         },
         description: 'An array of image files',
         maxItems: 6,
         required: false,
     })
-    images: Express.Multer.File[];
+    images: Blob[];
 }
