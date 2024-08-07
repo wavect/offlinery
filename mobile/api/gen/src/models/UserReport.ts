@@ -76,8 +76,8 @@ export interface UserReport {
  */
 export const UserReportIncidentTypeEnum = {
     Disrespectful: 'Disrespectful',
-    SexualHarassment: 'Sexual harassment',
-    ViolentBehavior: 'Violent behavior',
+    Sexual_harassment: 'Sexual harassment',
+    Violent_behavior: 'Violent behavior',
     Other: 'Other'
 } as const;
 export type UserReportIncidentTypeEnum = typeof UserReportIncidentTypeEnum[keyof typeof UserReportIncidentTypeEnum];

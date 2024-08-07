@@ -6,7 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="a144658d-77eb-49a4-ac48-90e721fa13e0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/onboarding/BioLetThemKnow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/onboarding/BioLetThemKnow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/apis/UserApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/apis/UserApi.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/CreateUserDTO.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/CreateUserDTO.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/CreateUserReportDto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/CreateUserReportDto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/UpdateUserDTO.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/UpdateUserDTO.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/User.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/UserPublicDTO.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/UserPublicDTO.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/UserReport.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/UserReport.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +113,9 @@
       <workItem from="1722959555757" duration="2156000" />
       <workItem from="1722961853495" duration="622000" />
       <workItem from="1722975302280" duration="5684000" />
-      <workItem from="1723015701685" duration="2397000" />
+      <workItem from="1723015701685" duration="5188000" />
+      <workItem from="1723053449075" duration="5000" />
+      <workItem from="1723056426223" duration="1524000" />
     </task>
     <servers />
   </component>

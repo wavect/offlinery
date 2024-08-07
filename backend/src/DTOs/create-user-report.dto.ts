@@ -27,15 +27,13 @@ export class CreateUserReportDto {
 
     @ApiProperty({
         description: 'The ID of the user being reported',
-        example: 1,
     })
-    @IsNumber()
-    reportedUserId: number;
+    @IsString()
+    reportedUserId: string;
 
     @ApiProperty({
         description: 'The ID of the user making the report',
-        example: 2,
     })
-    @IsNumber()
-    reportingUserId: number;
+    @IsString()
+    reportingUserId: string;
 }

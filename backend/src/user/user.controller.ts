@@ -23,6 +23,7 @@ import {UserPublicDTO} from "../DTOs/user-public.dto";
 import {CreateUserRequestDTO} from "../DTOs/create-user-request.dto";
 import {UpdateUserRequestDTO} from "../DTOs/update-user-request.dto";
 import {ParseJsonPipe} from "../pipes/ParseJson.pipe";
+import {CustomParseFilePipe} from "../pipes/CustomParseFile.pipe";
 
 @ApiTags('User')
 @Controller({
@@ -37,12 +38,12 @@ export class UserController {
     @Post('create')
     @UseInterceptors(FilesInterceptor('images', 6))
     @ApiConsumes('multipart/form-data')
-    @ApiBody({ type: CreateUserRequestDTO })
+    @ApiBody({ type: CreateUserRequestDTO, description: 'User data and images' })
     @ApiOperation({ summary: 'Create a new user with images' })
     async createUser(
-        @Body('user', new ParseJsonPipe()) createUserDto: CreateUserDTO,
+        @Body('user', new ParseJsonPipe(CreateUserDTO)) createUserDto: CreateUserDTO,
         @UploadedFiles(
-            new ParseFilePipe({
+            new CustomParseFilePipe({
                 validators: [
                     new MaxFileSizeValidator({ maxSize: 100 * 1024 * 1024, message: 'Max file size of 100 MB exceeded' }),
                     new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/ }),
@@ -57,13 +58,13 @@ export class UserController {
     @Put(':id')
     @UseInterceptors(FilesInterceptor('images', 6))
     @ApiConsumes('multipart/form-data')
-    @ApiBody({ type: UpdateUserRequestDTO })
+    @ApiBody({ type: UpdateUserRequestDTO, description: 'User data and images' })
     @ApiOperation({ summary: 'Update an existing user' })
     async updateUser(
         @Param('id') id: string,
-        @Body('user', new ParseJsonPipe()) updateUserDto: UpdateUserDTO,
+        @Body('user', new ParseJsonPipe(UpdateUserDTO)) updateUserDto: UpdateUserDTO,
         @UploadedFiles(
-            new ParseFilePipe({
+            new CustomParseFilePipe({
                 validators: [
                     new MaxFileSizeValidator({ maxSize: 100 * 1024 * 1024, message: 'Max file size of 100 MB exceeded' }),
                     new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/ }),

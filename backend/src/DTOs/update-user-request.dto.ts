@@ -2,7 +2,7 @@ import {ApiProperty} from '@nestjs/swagger';
 import {UpdateUserDTO} from "./update-user.dto";
 
 export class UpdateUserRequestDTO {
-    @ApiProperty({ type: UpdateUserDTO, required: false })
+    @ApiProperty({ type: UpdateUserDTO, format: 'json', required: false })
     user: UpdateUserDTO;
 
     @ApiProperty({
