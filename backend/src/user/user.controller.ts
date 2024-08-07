@@ -48,7 +48,6 @@ export class UserController {
                     new MaxFileSizeValidator({ maxSize: 100 * 1024 * 1024, message: 'Max file size of 100 MB exceeded' }),
                     new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/ }),
                 ],
-                errorHttpStatusCode: HttpStatus.UNSUPPORTED_MEDIA_TYPE,
             })
         ) images: Express.Multer.File[]
     ): Promise<UserPublicDTO> {
@@ -70,7 +69,6 @@ export class UserController {
                     new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/ }),
                 ],
                 fileIsRequired: false,
-                errorHttpStatusCode: HttpStatus.UNSUPPORTED_MEDIA_TYPE,
             })
         ) images?: Express.Multer.File[]
     ): Promise<UserPublicDTO> {
