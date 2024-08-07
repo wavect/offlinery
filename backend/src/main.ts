@@ -5,7 +5,6 @@ import {INestApplication, VersioningType} from "@nestjs/common";
 import * as path from 'path'
 import { writeFileSync } from 'fs';
 import helmet from "helmet";
-import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -25,10 +24,6 @@ async function bootstrap() {
 
   // security base line
   app.use(helmet());
-
-  // file uploads
-  app.use(express.json({ limit: '50mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
   await app.listen(3000);
 }

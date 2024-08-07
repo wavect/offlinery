@@ -340,8 +340,9 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
 
 
 export const getBlobsOfUserImages = async (state: IUserData): Promise<Blob[]> => {
-    return await Promise.all(Object.values(state.images).map(async i => {
-        if (!i) return new Blob()
-        return (await fetch(i.uri)).blob()
-    }))
+    const blobPromises = Object.values(state.images)
+        .filter(i => i && i.uri) // Filter out null, undefined, or empty URIs
+        .map(async i => (await fetch(i.uri)).blob());
+
+    return Promise.all(blobPromises);
 }

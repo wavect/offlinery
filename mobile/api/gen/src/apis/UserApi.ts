@@ -150,8 +150,10 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
             formParams.append('user', new Blob([JSON.stringify(CreateUserDTOToJSON(requestParameters['user']))], { type: "application/json", }));
                     }
 
+        console.warn("IMAGE::::", requestParameters['images'])
         if (requestParameters['images'] != null) {
             requestParameters['images'].forEach((element) => {
+                console.warn("APPEND::", element)
                 formParams.append('images', element as any);
             })
         }
