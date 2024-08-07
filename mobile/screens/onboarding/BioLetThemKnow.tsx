@@ -1,13 +1,13 @@
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
-import { ROUTES } from "../routes";
+import {StyleSheet, Text, View} from "react-native";
+import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
+import {ROUTES} from "../routes";
 import {
     EACTION_USER,
     getPublicProfileFromUserData, ImageIdx, registerUser,
     useUserContext
 } from "../../context/UserContext";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
+import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
 import {Subtitle} from "../../GlobalStyles";
 import OTeaserProfilePreview from "../../components/OTeaserProfilePreview/OTeaserProfilePreview";
@@ -15,13 +15,13 @@ import {useState} from "react";
 import {i18n, TR} from "../../localization/translate.service";
 
 const MAX_LENGTH_BIO = 60
-const BioLetThemKnow = ({ navigation }) => {
-    const { state, dispatch } = useUserContext();
+const BioLetThemKnow = ({navigation}) => {
+    const {state, dispatch} = useUserContext();
     const [isLoading, setLoading] = useState(false)
 
     const setBio = (bio: string) => {
         if (bio.length > MAX_LENGTH_BIO) return;
-        dispatch({ type: EACTION_USER.SET_BIO, payload: bio})
+        dispatch({type: EACTION_USER.SET_BIO, payload: bio})
     }
 
     const startUserRegistration = async () => {
@@ -56,6 +56,7 @@ const BioLetThemKnow = ({ navigation }) => {
                 <OTextInput
                     value={state.bio}
                     setValue={setBio}
+                    style={styles.input}
                     placeholder={i18n.t(TR.noPickUpLinesBeChill)}
                 />
                 <View style={styles.characterCountContainer}>
@@ -80,6 +81,9 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         marginBottom: 16,
+    },
+    input: {
+        width: '100%',
     },
     characterCountContainer: {
         flexDirection: 'row',
