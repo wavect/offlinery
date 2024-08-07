@@ -140,6 +140,7 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         let useForm = false;
         // use FormData to transmit files using content-type "multipart/form-data"
         useForm = canConsumeForm;
+        console.warn("USEFORM: ", useForm)
         if (useForm) {
             formParams = new FormData();
         } else {

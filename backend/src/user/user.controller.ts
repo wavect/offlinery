@@ -1,17 +1,22 @@
 import {
-    Controller,
-    Post,
-    UseInterceptors,
-    UploadedFiles,
     Body,
-    ParseFilePipe,
+    Controller,
+    FileTypeValidator,
+    Get,
+    HttpStatus,
     MaxFileSizeValidator,
-    FileTypeValidator, Put, Param, NotFoundException, Get,
+    NotFoundException,
+    Param,
+    ParseFilePipe,
+    Post,
+    Put,
+    UploadedFiles,
+    UseInterceptors,
 } from '@nestjs/common';
-import { FilesInterceptor } from "@nestjs/platform-express";
-import {ApiConsumes, ApiBody, ApiTags, ApiOperation, ApiResponse, ApiParam} from '@nestjs/swagger';
-import { User } from './user.entity';
-import { CreateUserDTO } from '../DTOs/create-user.dto';
+import {FilesInterceptor} from "@nestjs/platform-express";
+import {ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {User} from './user.entity';
+import {CreateUserDTO} from '../DTOs/create-user.dto';
 import {UserService} from "./user.service";
 import {UpdateUserDTO} from "../DTOs/update-user.dto";
 import {UserPublicDTO} from "../DTOs/user-public.dto";
@@ -42,6 +47,7 @@ export class UserController {
                     new MaxFileSizeValidator({ maxSize: 100 * 1024 * 1024, message: 'Max file size of 100 MB exceeded' }),
                     new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/ }),
                 ],
+                errorHttpStatusCode: HttpStatus.UNSUPPORTED_MEDIA_TYPE,
             })
         ) images: Express.Multer.File[]
     ): Promise<UserPublicDTO> {
@@ -63,6 +69,7 @@ export class UserController {
                     new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/ }),
                 ],
                 fileIsRequired: false,
+                errorHttpStatusCode: HttpStatus.UNSUPPORTED_MEDIA_TYPE,
             })
         ) images?: Express.Multer.File[]
     ): Promise<UserPublicDTO> {
