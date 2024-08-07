@@ -8,11 +8,11 @@ export class CreateUserRequestDTO {
     @ApiProperty({
         type: 'array',
         items: {
-            type: 'file',
+            type: 'string',
             format: 'binary'
         },
         description: 'An array of image files',
         maxItems: 6 // Assuming a maximum of 6 images as per your controller
     })
-    images: Express.Multer.File[];
+    images: Blob[];
 }

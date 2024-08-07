@@ -33,7 +33,7 @@ import {
 
 export interface UserControllerCreateUserRequest {
     user: CreateUserDTO;
-    images: Array<any>;
+    images: Array<Blob>;
 }
 
 export interface UserControllerGetUserRequest {
@@ -43,7 +43,7 @@ export interface UserControllerGetUserRequest {
 export interface UserControllerUpdateUserRequest {
     id: string;
     user?: UpdateUserDTO;
-    images?: Array<any>;
+    images?: Array<Blob>;
 }
 
 /**
@@ -57,7 +57,7 @@ export interface UserApiInterface {
      * 
      * @summary Create a new user with images
      * @param {CreateUserDTO} user 
-     * @param {Array<any>} images An array of image files
+     * @param {Array<Blob>} images An array of image files
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApiInterface
@@ -89,7 +89,7 @@ export interface UserApiInterface {
      * @summary Update an existing user
      * @param {string} id 
      * @param {UpdateUserDTO} [user] 
-     * @param {Array<any>} [images] An array of image files
+     * @param {Array<Blob>} [images] An array of image files
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApiInterface
@@ -138,6 +138,8 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
 
         let formParams: { append(param: string, value: any): any };
         let useForm = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        useForm = canConsumeForm;
         if (useForm) {
             formParams = new FormData();
         } else {
@@ -229,6 +231,8 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
 
         let formParams: { append(param: string, value: any): any };
         let useForm = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        useForm = canConsumeForm;
         if (useForm) {
             formParams = new FormData();
         } else {
