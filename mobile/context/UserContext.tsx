@@ -6,6 +6,7 @@ import {IEncounterProfile, IPublicProfile} from "../types/PublicProfile.types";
 import {getAge} from "../utils/date.utils";
 import {CreateUserDTO, UserApi, UserControllerCreateUserRequest} from "../api/gen/src";
 import {ROUTES} from "../screens/routes";
+import {ImagePickerAsset} from "expo-image-picker";
 
 export type Gender = "woman" | "man"
 
@@ -292,8 +293,6 @@ export const useUserContext = (): IUserContextType => {
 export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IUserAction>, onSuccess: () => void, onError: (err: any) => void) => {
     const api = new UserApi();
 
-    console.warn("USER REGISTER: ", state)
-
     // Prepare the user data
     const userData: CreateUserDTO = {
         firstName: state.firstName,
@@ -311,11 +310,10 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
         bio: state.bio,
         dateMode: state.dateMode,
     };
-    console.warn("USER DATA: ", userData)
 
     const requestParameters: UserControllerCreateUserRequest = {
         user: userData,
-        images: await getBlobsOfUserImages(state),
+        images: getUserImages(state),
     };
 
     console.warn("BLOBS: ", requestParameters.images)
@@ -339,10 +337,23 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
 };
 
 
-export const getBlobsOfUserImages = async (state: IUserData): Promise<Blob[]> => {
+export const getBlobsOfUserImages = async (state: IUserData): Promise<FormData[]> => {
     const blobPromises = Object.values(state.images)
         .filter(i => i && i.uri) // Filter out null, undefined, or empty URIs
-        .map(async i => (await fetch(i.uri)).blob());
+        .map(async i => {
+            console.warn("pre", i)
+            console.warn("kk", (await fetch(i.uri)))
+            console.warn("kkll", await (await fetch(i.uri)).formData())
+            const r =  await (await fetch(i.uri)).formData()
+            console.warn("FRMMM", r)
+
+            return r;
+        });
 
     return Promise.all(blobPromises);
+}
+
+export const getUserImages = (state: IUserData): ImagePickerAsset[] => {
+    return Object.values(state.images)
+        .filter(i => i && i.uri) // Filter out null, undefined, or empty URIs
 }

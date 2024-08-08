@@ -42,6 +42,7 @@ export class CreateUserDTO {
                 radius: 1000
             }
         ],
+        required: false // optional, since approachers don't have this to fill out on registration
     })
     blacklistedRegions: BlacklistedRegionDTO[];
 

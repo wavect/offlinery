@@ -60,7 +60,8 @@ describe('UserController', () => {
                 approachChoice: EApproachChoice.BOTH,
                 blacklistedRegions: [
                     {
-                        center: {latitude: 40.7128, longitude: -74.0060},
+                        latitude: 40.7128,
+                        longitude: -74.0060,
                         radius: 1000
                     }
                 ],
@@ -91,8 +92,8 @@ describe('UserController', () => {
 
             const expectedResult = new User();
             Object.assign(expectedResult, createUserDto);
-            expectedResult.id = 1;
-            expectedResult.imageURIs = mockImages;
+            expectedResult.id = "1";
+            expectedResult.imageURIs = mockImages.map(i => i.path);
             expectedResult.isActive = true;
             expectedResult.convertToPublicDTO = jest.fn().mockReturnValue({
                 id: 1,
@@ -130,8 +131,8 @@ describe('UserController', () => {
 
             const expectedResult = new User();
             Object.assign(expectedResult, updateUserDto);
-            expectedResult.id = 1;
-            expectedResult.imageURIs = mockImages;
+            expectedResult.id = "1";
+            expectedResult.imageURIs = mockImages.map(i => i.path);
             expectedResult.convertToPublicDTO = jest.fn().mockReturnValue({
                 id: 1,
                 firstName: 'John Updated',
@@ -141,7 +142,7 @@ describe('UserController', () => {
 
             (userService.updateUser as jest.Mock).mockResolvedValue(expectedResult);
 
-            const result = await userController.updateUser(1, updateUserDto, mockImages);
+            const result = await userController.updateUser("1", updateUserDto, mockImages);
 
             expect(userService.updateUser).toHaveBeenCalledWith(1, updateUserDto, mockImages);
             expect(result).toEqual(expectedResult.convertToPublicDTO());
@@ -150,7 +151,7 @@ describe('UserController', () => {
 
     describe('getUser', () => {
         it('should get a user by ID', async () => {
-            const userId = 1;
+            const userId = "1";
             const expectedUser = new User();
             expectedUser.id = userId;
             expectedUser.firstName = 'John';
@@ -171,7 +172,7 @@ describe('UserController', () => {
         });
 
         it('should throw NotFoundException when user is not found', async () => {
-            const userId = 999;
+            const userId = "999";
 
             (userService.getUserById as jest.Mock).mockResolvedValue(null);
 

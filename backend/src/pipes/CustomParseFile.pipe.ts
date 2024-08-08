@@ -3,6 +3,7 @@ import { ParseFilePipe, FileValidator, HttpStatus, BadRequestException } from '@
 /** @dev The sole purpose of this custom file pipe that extends the default one is to provide more precise error messages depending on which file validator failed. */
 export class CustomParseFilePipe extends ParseFilePipe {
     async transform(value: any) {
+        console.warn("Customfilepipe, ", value)
         try {
             return await super.transform(value);
         } catch (error) {

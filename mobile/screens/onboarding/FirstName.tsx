@@ -13,7 +13,7 @@ const FirstName = ({navigation}) => {
         dispatch({ type: EACTION_USER.SET_FIRSTNAME, payload: firstName})
     }
     const isValidFirstName = () => {
-        return state.firstName.length > 3
+        return state.firstName.length > 2
     }
 
     return <OPageContainer title={i18n.t(TR.myFirstNameIs)} bottomContainerChildren={

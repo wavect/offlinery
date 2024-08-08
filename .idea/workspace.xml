@@ -8,6 +8,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/apis/UserApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/apis/UserApi.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mobile/context/UserContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/context/UserContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/screens/onboarding/FirstName.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/onboarding/FirstName.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/screens/onboarding/Password.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/onboarding/Password.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +47,7 @@
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/kevin/Desktop/GitRepositories/FuckDatingApps/fuck-dating-apps/backend/test-scripts",
+    "last_opened_file_path": "C:/Users/kevin/Desktop/GitRepositories/FuckDatingApps/fuck-dating-apps/backend/test/client_tests",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -59,11 +61,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\backend\test\client_tests" />
       <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\backend\test-scripts" />
       <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\mobile\localization" />
       <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\mobile\assets" />
       <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\mobile\screens\main" />
-      <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\backend\src\user" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\backend\src\transient-services\notification" />
@@ -111,6 +113,7 @@
       <workItem from="1723015701685" duration="5188000" />
       <workItem from="1723053449075" duration="5000" />
       <workItem from="1723056426223" duration="2158000" />
+      <workItem from="1723106041331" duration="4490000" />
     </task>
     <servers />
   </component>

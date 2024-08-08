@@ -18,8 +18,8 @@ const Password = ({route, navigation}) => {
     const isStrongPassword = () => {
         return state.clearPassword.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,40}$/);
     }
-    const doPasswordsMatch = () => {
-        return state.clearPassword === passwordConfirmation
+    const doPasswordsMatch = (pwd: string) => {
+        return state.clearPassword === pwd
     }
 
     const setValidatePassword = (pwd: string) => {
@@ -34,7 +34,7 @@ const Password = ({route, navigation}) => {
     const setValidatePasswordConfirmation = (pwd: string) => {
         setPasswordConfirmation(pwd)
 
-        if (doPasswordsMatch()) {
+        if (doPasswordsMatch(pwd)) {
             setPasswordErrorConfirmation('')
         } else {
             setPasswordErrorConfirmation(i18n.t(TR.pwdErrNotMatching))
@@ -42,7 +42,7 @@ const Password = ({route, navigation}) => {
     }
 
     const isValidPassword = () => {
-        return isStrongPassword() && doPasswordsMatch()
+        return isStrongPassword() && doPasswordsMatch(passwordConfirmation)
     }
     const isChangePassword = !!route?.params?.isChangePassword
 
