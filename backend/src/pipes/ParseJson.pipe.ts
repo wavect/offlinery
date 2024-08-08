@@ -8,6 +8,7 @@ export class ParseJsonPipe<T extends object> implements PipeTransform<any, Promi
     constructor(private readonly classType: ClassConstructor<T>) {}
 
     async transform(value: any, metadata: ArgumentMetadata): Promise<T> {
+        console.warn("user obj, ", value)
         if (typeof value === 'string') {
             try {
                 const parsedValue = JSON.parse(value);

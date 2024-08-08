@@ -14,5 +14,5 @@ export class CreateUserRequestDTO {
         description: 'An array of image files',
         maxItems: 6 // Assuming a maximum of 6 images as per your controller
     })
-    images: Blob[];
+    images: File[];
 }

@@ -313,7 +313,7 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
 
     const requestParameters: UserControllerCreateUserRequest = {
         user: userData,
-        images: getUserImages(state),
+        images: await getUserImagesAsFiles(state),
     };
 
     console.warn("BLOBS: ", requestParameters.images)
@@ -337,20 +337,24 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
 };
 
 
-export const getBlobsOfUserImages = async (state: IUserData): Promise<FormData[]> => {
+export const getUserImagesAsFiles = async (state: IUserData): Promise<File[]> => {
     const blobPromises = Object.values(state.images)
         .filter(i => i && i.uri) // Filter out null, undefined, or empty URIs
         .map(async i => {
-            console.warn("pre", i)
-            console.warn("kk", (await fetch(i.uri)))
-            console.warn("kkll", await (await fetch(i.uri)).formData())
-            const r =  await (await fetch(i.uri)).formData()
-            console.warn("FRMMM", r)
-
-            return r;
+            const blob = await (await fetch(i.uri)).blob()
+            return blobToFile(blob, i.fileName ?? 'unnamed_file')
         });
-
     return Promise.all(blobPromises);
+}
+
+const blobToFile = (theBlob: Blob, fileName:string): File => {
+    const b: any = theBlob;
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    b.lastModifiedDate = new Date();
+    b.name = fileName;
+
+    //Cast to a File() type
+    return theBlob as File;
 }
 
 export const getUserImages = (state: IUserData): ImagePickerAsset[] => {

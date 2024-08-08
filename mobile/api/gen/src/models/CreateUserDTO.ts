@@ -85,7 +85,7 @@ export interface CreateUserDTO {
      * @type {Array<BlacklistedRegionDTO>}
      * @memberof CreateUserDTO
      */
-    blacklistedRegions: Array<BlacklistedRegionDTO>;
+    blacklistedRegions?: Array<BlacklistedRegionDTO>;
     /**
      * 
      * @type {Date}
@@ -174,7 +174,6 @@ export function instanceOfCreateUserDTO(value: object): value is CreateUserDTO {
     if (!('genderDesire' in value) || value['genderDesire'] === undefined) return false;
     if (!('verificationStatus' in value) || value['verificationStatus'] === undefined) return false;
     if (!('approachChoice' in value) || value['approachChoice'] === undefined) return false;
-    if (!('blacklistedRegions' in value) || value['blacklistedRegions'] === undefined) return false;
     if (!('approachFromTime' in value) || value['approachFromTime'] === undefined) return false;
     if (!('approachToTime' in value) || value['approachToTime'] === undefined) return false;
     if (!('bio' in value) || value['bio'] === undefined) return false;
@@ -201,7 +200,7 @@ export function CreateUserDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
         'genderDesire': json['genderDesire'],
         'verificationStatus': json['verificationStatus'],
         'approachChoice': json['approachChoice'],
-        'blacklistedRegions': ((json['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOFromJSON)),
+        'blacklistedRegions': json['blacklistedRegions'] == null ? undefined : ((json['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOFromJSON)),
         'approachFromTime': (new Date(json['approachFromTime'])),
         'approachToTime': (new Date(json['approachToTime'])),
         'bio': json['bio'],
@@ -224,7 +223,7 @@ export function CreateUserDTOToJSON(value?: CreateUserDTO | null): any {
         'genderDesire': value['genderDesire'],
         'verificationStatus': value['verificationStatus'],
         'approachChoice': value['approachChoice'],
-        'blacklistedRegions': ((value['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOToJSON)),
+        'blacklistedRegions': value['blacklistedRegions'] == null ? undefined : ((value['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOToJSON)),
         'approachFromTime': ((value['approachFromTime']).toISOString()),
         'approachToTime': ((value['approachToTime']).toISOString()),
         'bio': value['bio'],

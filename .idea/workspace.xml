@@ -6,10 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="a144658d-77eb-49a4-ac48-90e721fa13e0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/apis/PushNotificationsApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/apis/PushNotificationsApi.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/apis/UserApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/apis/UserApi.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/BlacklistedRegionDTO.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/BlacklistedRegionDTO.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/CreateUserDTO.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/CreateUserDTO.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/CreateUserReportDto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/CreateUserReportDto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/StorePushTokenDTO.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/StorePushTokenDTO.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/UpdateUserDTO.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/UpdateUserDTO.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/User.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/UserPublicDTO.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/UserPublicDTO.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/UserReport.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/UserReport.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mobile/context/UserContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/context/UserContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/onboarding/FirstName.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/onboarding/FirstName.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mobile/screens/onboarding/Password.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/onboarding/Password.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/screens/main/ProfileSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/main/ProfileSettings.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +122,7 @@
       <workItem from="1723015701685" duration="5188000" />
       <workItem from="1723053449075" duration="5000" />
       <workItem from="1723056426223" duration="2158000" />
-      <workItem from="1723106041331" duration="4490000" />
+      <workItem from="1723106041331" duration="6363000" />
     </task>
     <servers />
   </component>

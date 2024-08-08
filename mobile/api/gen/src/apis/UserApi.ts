@@ -30,11 +30,10 @@ import {
     UserPublicDTOFromJSON,
     UserPublicDTOToJSON,
 } from '../models/index';
-import {ImagePickerAsset} from "expo-image-picker";
 
 export interface UserControllerCreateUserRequest {
     user: CreateUserDTO;
-    images: Array<ImagePickerAsset>;
+    images: Array<Blob>;
 }
 
 export interface UserControllerGetUserRequest {
@@ -44,7 +43,7 @@ export interface UserControllerGetUserRequest {
 export interface UserControllerUpdateUserRequest {
     id: string;
     user?: UpdateUserDTO;
-    images?: Array<ImagePickerAsset>;
+    images?: Array<Blob>;
 }
 
 /**
@@ -151,13 +150,11 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
             formParams.append('user', new Blob([JSON.stringify(CreateUserDTOToJSON(requestParameters['user']))], { type: "application/json", }));
                     }
 
-        console.warn("IMA::", requestParameters['images'])
         if (requestParameters['images'] != null) {
             requestParameters['images'].forEach((element) => {
-                formParams.append('images', {uri: element.uri, type: element.mimeType, name: element.fileName});
+                formParams.append('images', element as any);
             })
         }
-        console.warn("immmmm", formParams)
 
         const response = await this.request({
             path: `/user/create`,
@@ -166,8 +163,6 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
             query: queryParameters,
             body: formParams,
         }, initOverrides);
-
-        console.warn("RESP:", response)
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UserPublicDTOFromJSON(jsonValue));
     }
