@@ -15,5 +15,5 @@ export class UpdateUserRequestDTO {
         maxItems: 6,
         required: false,
     })
-    images: File[];
+    images: Blob[];
 }

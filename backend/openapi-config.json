@@ -6,10 +6,5 @@
   "useSingleRequestParameter": true,
   "useObjectParameters": true,
   "removeEnumValuePrefix": false,
-  "enumPropertyNaming": "original",
-  "withSeparateModelsAndApi": true,
-  "formDataWithoutBlob": true,
-  "additionalProperties": {
-    "formDataWithoutBlob": true
-  }
+  "enumPropertyNaming": "original"
 }

@@ -1,11 +1,9 @@
 import React, {createContext, Dispatch, useContext, useReducer} from 'react';
 import * as ImagePicker from "expo-image-picker";
-import {LatLng} from "react-native-maps";
 import {LocationObject} from "expo-location";
-import {IEncounterProfile, IPublicProfile} from "../types/PublicProfile.types";
+import {IPublicProfile} from "../types/PublicProfile.types";
 import {getAge} from "../utils/date.utils";
 import {CreateUserDTO, UserApi, UserControllerCreateUserRequest} from "../api/gen/src";
-import {ROUTES} from "../screens/routes";
 import {ImagePickerAsset} from "expo-image-picker";
 
 export type Gender = "woman" | "man"
@@ -337,13 +335,10 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
 };
 
 
-export const getUserImagesAsFiles = async (state: IUserData): Promise<File[]> => {
+export const getUserImagesAsFiles = async (state: IUserData): Promise<Blob[]> => {
     const blobPromises = Object.values(state.images)
         .filter(i => i && i.uri) // Filter out null, undefined, or empty URIs
-        .map(async i => {
-            const blob = await (await fetch(i.uri)).blob()
-            return blobToFile(blob, i.fileName ?? 'unnamed_file')
-        });
+        .map(async i => await (await fetch(i.uri)).blob());
     return Promise.all(blobPromises);
 }
 
