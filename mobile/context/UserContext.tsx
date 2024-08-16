@@ -311,7 +311,7 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
 
     const requestParameters: UserControllerCreateUserRequest = {
         user: userData,
-        images: await getUserImagesAsFiles(state),
+        images: state.images as any //await getUserImagesAsFiles(state),
     };
 
     console.warn("BLOBS: ", requestParameters.images)

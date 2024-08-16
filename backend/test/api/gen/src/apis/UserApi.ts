@@ -147,15 +147,21 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         }
 
         if (requestParameters['user'] != null) {
-            formParams.append('user', new Blob([JSON.stringify(CreateUserDTOToJSON(requestParameters['user']))], { type: "application/json", }));
+            formParams.append('user', [JSON.stringify(CreateUserDTOToJSON(requestParameters['user']))]);
                     }
 
-        if (requestParameters['images'] != null) {
-            requestParameters['images'].forEach((element) => {
-                formParams.append('images', element as any);
-            })
-        }
+       const files = requestParameters['images'];
+       const filteredFiles = Object.keys(files)
+        .filter((key) => files[key] !== undefined)
+        .map((key) => files[key]);
 
+        for (const file of filteredFiles) {
+            formParams.append('images', {
+            uri: file.uri,
+            name: file.fileName,
+            type: file.mimeType,
+            });
+        }
         const response = await this.request({
             path: `/user/create`,
             method: 'POST',
@@ -240,15 +246,21 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         }
 
         if (requestParameters['user'] != null) {
-            formParams.append('user', new Blob([JSON.stringify(UpdateUserDTOToJSON(requestParameters['user']))], { type: "application/json", }));
+            formParams.append('user', [JSON.stringify(UpdateUserDTOToJSON(requestParameters['user']))]);
                     }
 
-        if (requestParameters['images'] != null) {
-            requestParameters['images'].forEach((element) => {
-                formParams.append('images', element as any);
-            })
-        }
+       const files = requestParameters['images'];
+       const filteredFiles = Object.keys(files)
+        .filter((key) => files[key] !== undefined)
+        .map((key) => files[key]);
 
+        for (const file of filteredFiles) {
+            formParams.append('images', {
+            uri: file.uri,
+            name: file.fileName,
+            type: file.mimeType,
+            });
+        }
         const response = await this.request({
             path: `/user/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PUT',
