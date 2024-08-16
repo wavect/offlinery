@@ -311,10 +311,8 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
 
     const requestParameters: UserControllerCreateUserRequest = {
         user: userData,
-        images: state.images as any //await getUserImagesAsFiles(state),
+        images: getUserImages(state)
     };
-
-    console.warn("BLOBS: ", requestParameters.images)
 
     try {
         const user = await api.userControllerCreateUser(requestParameters);
@@ -334,23 +332,6 @@ export const registerUser = async (state: IUserData, dispatch: React.Dispatch<IU
     }
 };
 
-
-export const getUserImagesAsFiles = async (state: IUserData): Promise<Blob[]> => {
-    const blobPromises = Object.values(state.images)
-        .filter(i => i && i.uri) // Filter out null, undefined, or empty URIs
-        .map(async i => await (await fetch(i.uri)).blob());
-    return Promise.all(blobPromises);
-}
-
-const blobToFile = (theBlob: Blob, fileName:string): File => {
-    const b: any = theBlob;
-    //A Blob() is almost a File() - it's just missing the two properties below which we will add
-    b.lastModifiedDate = new Date();
-    b.name = fileName;
-
-    //Cast to a File() type
-    return theBlob as File;
-}
 
 export const getUserImages = (state: IUserData): ImagePickerAsset[] => {
     return Object.values(state.images)

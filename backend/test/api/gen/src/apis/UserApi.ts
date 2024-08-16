@@ -33,7 +33,7 @@ import {
 
 export interface UserControllerCreateUserRequest {
     user: CreateUserDTO;
-    images: Array<Blob>;
+    images: {uri: string, fileName?: string | null, type?: string}[];
 }
 
 export interface UserControllerGetUserRequest {
@@ -43,7 +43,7 @@ export interface UserControllerGetUserRequest {
 export interface UserControllerUpdateUserRequest {
     id: string;
     user?: UpdateUserDTO;
-    images?: Array<Blob>;
+    images?: {uri: string, fileName?: string | null, type?: string}[];
 }
 
 /**

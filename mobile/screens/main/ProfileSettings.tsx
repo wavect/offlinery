@@ -6,7 +6,7 @@ import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
 import {OTextInput} from "../../components/OTextInput/OTextInput";
 import {FontFamily, FontSize} from "../../GlobalStyles";
 import {ROUTES} from "../routes";
-import {EACTION_USER, EApproachChoice, Gender, getUserImagesAsFiles, useUserContext} from "../../context/UserContext";
+import {EACTION_USER, EApproachChoice, Gender, getUserImages, useUserContext} from "../../context/UserContext";
 import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import {MaterialIcons} from "@expo/vector-icons";
 import {i18n, TR} from "../../localization/translate.service";
@@ -59,7 +59,7 @@ const ProfileSettings = ({navigation}) => {
                     gender: state.gender,
                     genderDesire: state.genderDesire,
                 },
-                images: await getUserImagesAsFiles(state),
+                images: getUserImages(state)
             };
             await userApi.userControllerUpdateUser(request);
 
