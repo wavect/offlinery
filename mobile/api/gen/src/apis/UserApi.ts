@@ -31,9 +31,13 @@ import {
     UserPublicDTOToJSON,
 } from '../models/index';
 
+// We import this type even if it's unused to avoid additional
+// template rendering logic. If the drawbacks of this approach
+// are larger than the benefits, we can try another approach.
+import { ImagePickerAsset } from "expo-image-picker";
 export interface UserControllerCreateUserRequest {
     user: CreateUserDTO;
-    images: {uri: string, fileName?: string | null, type?: string}[];
+    images: ImagePickerAsset[];
 }
 
 export interface UserControllerGetUserRequest {
@@ -43,7 +47,7 @@ export interface UserControllerGetUserRequest {
 export interface UserControllerUpdateUserRequest {
     id: string;
     user?: UpdateUserDTO;
-    images?: {uri: string, fileName?: string | null, type?: string}[];
+    images?: ImagePickerAsset[];
 }
 
 /**

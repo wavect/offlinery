@@ -25,6 +25,10 @@ import {
     UserReportToJSON,
 } from '../models/index';
 
+// We import this type even if it's unused to avoid additional
+// template rendering logic. If the drawbacks of this approach
+// are larger than the benefits, we can try another approach.
+import { ImagePickerAsset } from "expo-image-picker";
 export interface UserReportControllerCreateRequest {
     createUserReportDto: CreateUserReportDto;
 }

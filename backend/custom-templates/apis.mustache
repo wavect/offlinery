@@ -19,13 +19,17 @@ import {
 {{/withoutRuntimeChecks}}
 {{/imports.0}}
 
+// We import this type even if it's unused to avoid additional
+// template rendering logic. If the drawbacks of this approach
+// are larger than the benefits, we can try another approach.
+import { ImagePickerAsset } from "expo-image-picker";
 {{#operations}}
 {{#operation}}
 {{#allParams.0}}
 export interface {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request {
 {{#allParams}}
 {{#isFile}}
-    {{paramName}}{{^required}}?{{/required}}: {uri: string, fileName?: string | null, type?: string}{{#isArray}}[]{{/isArray}};
+    {{paramName}}{{^required}}?{{/required}}: ImagePickerAsset{{#isArray}}[]{{/isArray}};
 {{/isFile}}
 {{^isFile}}
     {{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{#hasReadOnly}}Omit<{{{dataType}}}, {{#readOnlyVars}}'{{baseName}}'{{^-last}}|{{/-last}}{{/readOnlyVars}}>{{/hasReadOnly}}{{^hasReadOnly}}{{{dataType}}}{{/hasReadOnly}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}};
