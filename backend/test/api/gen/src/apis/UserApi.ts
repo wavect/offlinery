@@ -31,9 +31,13 @@ import {
     UserPublicDTOToJSON,
 } from '../models/index';
 
+// We import this type even if it's unused to avoid additional
+// template rendering logic. If the drawbacks of this approach
+// are larger than the benefits, we can try another approach.
+import { ImagePickerAsset } from "expo-image-picker";
 export interface UserControllerCreateUserRequest {
     user: CreateUserDTO;
-    images: Array<Blob>;
+    images: ImagePickerAsset[];
 }
 
 export interface UserControllerGetUserRequest {
@@ -43,7 +47,7 @@ export interface UserControllerGetUserRequest {
 export interface UserControllerUpdateUserRequest {
     id: string;
     user?: UpdateUserDTO;
-    images?: Array<Blob>;
+    images?: ImagePickerAsset[];
 }
 
 /**
@@ -147,15 +151,21 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         }
 
         if (requestParameters['user'] != null) {
-            formParams.append('user', new Blob([JSON.stringify(CreateUserDTOToJSON(requestParameters['user']))], { type: "application/json", }));
+            formParams.append('user', [JSON.stringify(CreateUserDTOToJSON(requestParameters['user']))]);
                     }
 
-        if (requestParameters['images'] != null) {
-            requestParameters['images'].forEach((element) => {
-                formParams.append('images', element as any);
-            })
-        }
+       const files = requestParameters['images'];
+       const filteredFiles = Object.keys(files)
+        .filter((key) => files[key] !== undefined)
+        .map((key) => files[key]);
 
+        for (const file of filteredFiles) {
+            formParams.append('images', {
+            uri: file.uri,
+            name: file.fileName,
+            type: file.mimeType,
+            });
+        }
         const response = await this.request({
             path: `/user/create`,
             method: 'POST',
@@ -240,15 +250,21 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         }
 
         if (requestParameters['user'] != null) {
-            formParams.append('user', new Blob([JSON.stringify(UpdateUserDTOToJSON(requestParameters['user']))], { type: "application/json", }));
+            formParams.append('user', [JSON.stringify(UpdateUserDTOToJSON(requestParameters['user']))]);
                     }
 
-        if (requestParameters['images'] != null) {
-            requestParameters['images'].forEach((element) => {
-                formParams.append('images', element as any);
-            })
-        }
+       const files = requestParameters['images'];
+       const filteredFiles = Object.keys(files)
+        .filter((key) => files[key] !== undefined)
+        .map((key) => files[key]);
 
+        for (const file of filteredFiles) {
+            formParams.append('images', {
+            uri: file.uri,
+            name: file.fileName,
+            type: file.mimeType,
+            });
+        }
         const response = await this.request({
             path: `/user/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PUT',
