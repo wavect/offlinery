@@ -6,6 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="a144658d-77eb-49a4-ac48-90e721fa13e0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/.openapi-generator/FILES" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/.openapi-generator/FILES" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/apis/DefaultApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/apis/DefaultApi.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/apis/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/apis/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/SignInDTO.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/SignInDTO.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/SignInResponseDTO.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/SignInResponseDTO.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/UserPublicDTO.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/UserPublicDTO.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/api/gen/src/models/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/api/gen/src/models/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/context/UserContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/context/UserContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/localization/en.ts" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/localization/en.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/screens/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/screens/Welcome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/Welcome.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/screens/onboarding/AddPhotos.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/screens/onboarding/AddPhotos.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,26 +47,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "wsdt/auth",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/kevin/Desktop/GitRepositories/FuckDatingApps/fuck-dating-apps/backend/src/DTOs",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "prettier.import.notification.dismissed": "true",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "C:\\Users\\kevin\\Desktop\\GitRepositories\\FuckDatingApps\\fuck-dating-apps\\backend\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;wsdt/auth&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/kevin/Desktop/GitRepositories/FuckDatingApps/fuck-dating-apps/backend/src/DTOs&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;prettier.import.notification.dismissed&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\kevin\\Desktop\\GitRepositories\\FuckDatingApps\\fuck-dating-apps\\backend\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\kevin\Desktop\GitRepositories\FuckDatingApps\fuck-dating-apps\backend\src\DTOs" />

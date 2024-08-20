@@ -9,5 +9,6 @@ export * from './SignInResponseDTO';
 export * from './StorePushTokenDTO';
 export * from './UpdateUserDTO';
 export * from './User';
+export * from './UserPrivateDTO';
 export * from './UserPublicDTO';
 export * from './UserReport';

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EApproachChoice, EDateMode, EVerificationStatus, EGender } from "../types/user.types";
 
+// TODO: The public DTO might need to be further trimmed for GDPR
 export class UserPublicDTO {
     @ApiProperty({ description: 'The unique identifier of the user' })
     id: string;
@@ -10,9 +11,6 @@ export class UserPublicDTO {
 
     @ApiProperty({ description: 'The first name of the user' })
     firstName: string;
-
-    @ApiProperty({ description: 'Indicates if the user wants to receive email updates' })
-    wantsEmailUpdates: boolean;
 
     @ApiProperty({ type: 'string', format: 'date', description: 'The birth date of the user' })
     birthDay: Date;

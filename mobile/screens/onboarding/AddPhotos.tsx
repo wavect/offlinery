@@ -41,7 +41,7 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
         }
     }
 
-    const currImg = state.images[imageIdx]
+    const currImg = state.imageURIs[imageIdx]
     return (
         <Pressable style={styles.photoContainer} onPress={openMediaLibrary}>
             {currImg ? (
@@ -59,7 +59,7 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
 const AddPhotos = ({route, navigation}) => {
     const [mediaLibStatus, requestMediaLibPermission] = ImagePicker.useMediaLibraryPermissions();
     const {state, dispatch} = useUserContext();
-    const hasAnyImage = Object.values(state.images).some(Boolean);
+    const hasAnyImage = Object.values(state.imageURIs).some(Boolean);
 
     return (
         <OPageContainer

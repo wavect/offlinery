@@ -2,6 +2,7 @@
 export const en = {
     createAccount: 'Create Account',
     signIn: 'Sign in',
+    invalidCredentials: 'Email or password invalid.',
     signingIn: 'Signing in..',
     troubleSignIn: 'Trouble signing in?',
     gettingReadyToAmazeYou: 'Getting ready to amaze you..',

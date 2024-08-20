@@ -4,12 +4,10 @@ import {Color, FontSize, FontFamily} from "../GlobalStyles";
 import {OShowcase} from "../components/OShowcase/OShowcase";
 import {OLinearBackground} from "../components/OLinearBackground/OLinearBackground";
 import {OButtonWide} from "../components/OButtonWide/OButtonWide";
-import {A} from '@expo/html-elements';
 import {ROUTES} from "./routes";
-import {useUserContext} from "../context/UserContext";
+import {isAuthenticated, useUserContext} from "../context/UserContext";
 import {useCallback, useEffect, useState} from "react";
 import {useFocusEffect} from "@react-navigation/native";
-import {sleep} from "../utils/misc.utils";
 import {OTermsDisclaimer} from "../components/OTermsDisclaimer/OTermsDisclaimer";
 import {i18n, TR} from "../localization/translate.service";
 
@@ -23,8 +21,7 @@ const Welcome = ({navigation}) => {
         // For now, we'll use the state.isAuthenticated
         // TODO local cache? api call etc
 
-        await sleep(2000) // TODO REMOVE
-        return state.isAuthenticated;
+        return isAuthenticated(state);
     };
 
     useFocusEffect(
@@ -77,7 +74,7 @@ const Welcome = ({navigation}) => {
                 <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)}/>
 
                 {isLoading && <LoadingScreen/>}
-                {!isLoading && !state.isAuthenticated && <AuthScreen/>}
+                {!isLoading && !isAuthenticated(state) && <AuthScreen/>}
             </View>
 
         </OLinearBackground>

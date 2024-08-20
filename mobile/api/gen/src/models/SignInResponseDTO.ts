@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { UserPrivateDTO } from './UserPrivateDTO';
+import {
+    UserPrivateDTOFromJSON,
+    UserPrivateDTOFromJSONTyped,
+    UserPrivateDTOToJSON,
+} from './UserPrivateDTO';
+
 /**
  * 
  * @export
@@ -25,6 +32,12 @@ export interface SignInResponseDTO {
      * @memberof SignInResponseDTO
      */
     accessToken: string;
+    /**
+     * 
+     * @type {UserPrivateDTO}
+     * @memberof SignInResponseDTO
+     */
+    user: UserPrivateDTO;
 }
 
 /**
@@ -32,6 +45,7 @@ export interface SignInResponseDTO {
  */
 export function instanceOfSignInResponseDTO(value: object): value is SignInResponseDTO {
     if (!('accessToken' in value) || value['accessToken'] === undefined) return false;
+    if (!('user' in value) || value['user'] === undefined) return false;
     return true;
 }
 
@@ -46,6 +60,7 @@ export function SignInResponseDTOFromJSONTyped(json: any, ignoreDiscriminator: b
     return {
         
         'accessToken': json['access_token'],
+        'user': UserPrivateDTOFromJSON(json['user']),
     };
 }
 
@@ -56,6 +71,7 @@ export function SignInResponseDTOToJSON(value?: SignInResponseDTO | null): any {
     return {
         
         'access_token': value['accessToken'],
+        'user': UserPrivateDTOToJSON(value['user']),
     };
 }
 
