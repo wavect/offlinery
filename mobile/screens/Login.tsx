@@ -46,6 +46,7 @@ const Login = ({navigation}) => {
                 navigation.navigate(ROUTES.MainTabView)
             }
         } catch (err) {
+            console.error(err)
             setErrorMessage(i18n.t(TR.invalidCredentials));
         } finally {
             // always stop loading
@@ -153,11 +154,11 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     errorMessage: {
-        color: Color.red,
+        color: Color.redLight,
         fontSize: 16,
-        fontFamily: FontFamily.montserratLight,
+        fontFamily: FontFamily.montserratSemiBold,
         textAlign: "center",
-        marginTop: 10,
+        marginBottom: 10,
     },
 });
 
