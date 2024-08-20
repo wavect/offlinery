@@ -1,14 +1,16 @@
-import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
+import {PipeTransform, Injectable, ArgumentMetadata, BadRequestException, Logger} from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { ClassConstructor } from 'class-transformer/types/interfaces';
 
 @Injectable()
 export class ParseJsonPipe<T extends object> implements PipeTransform<any, Promise<T>> {
+    private readonly logger = new Logger(ParseJsonPipe.name);
+
     constructor(private readonly classType: ClassConstructor<T>) {}
 
     async transform(value: any, metadata: ArgumentMetadata): Promise<T> {
-        console.warn("user obj, ", value)
+        this.logger.debug("user obj, ", value)
         if (typeof value === 'string') {
             try {
                 const parsedValue = JSON.parse(value);
@@ -22,7 +24,7 @@ export class ParseJsonPipe<T extends object> implements PipeTransform<any, Promi
                 const parsedValue = JSON.parse(text);
                 return this.validateAndTransform(parsedValue);
             } catch (error) {
-                console.error('ParseJsonBlob error', error);
+                this.logger.error('ParseJsonBlob error', error);
                 throw new BadRequestException('Invalid JSON format or validation failed');
             }
         } else if (typeof value === 'object' && value !== null) {

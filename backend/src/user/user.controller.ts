@@ -3,7 +3,7 @@ import {
     Controller,
     FileTypeValidator,
     Get,
-    HttpStatus,
+    HttpStatus, Logger,
     MaxFileSizeValidator,
     NotFoundException,
     Param,
@@ -32,6 +32,8 @@ import {Public} from "../auth/auth.guard";
     path: 'user',
 })
 export class UserController {
+    private readonly logger = new Logger(UserController.name);
+
     constructor(
         private readonly userService: UserService,
     ) {}
@@ -53,7 +55,7 @@ export class UserController {
             })
         ) images: Express.Multer.File[]
     ): Promise<UserPublicDTO> {
-        console.warn("RECEIVED REQ: ", createUserDto, images)
+        this.logger.debug("Trying to create user: ", createUserDto, images)
         return (await this.userService.createUser(createUserDto, images)).convertToPublicDTO()
     }
 

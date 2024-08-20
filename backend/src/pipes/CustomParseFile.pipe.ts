@@ -1,15 +1,17 @@
-import { ParseFilePipe, FileValidator, HttpStatus, BadRequestException } from '@nestjs/common';
+import {ParseFilePipe, FileValidator, HttpStatus, BadRequestException, Logger} from '@nestjs/common';
 
 /** @dev The sole purpose of this custom file pipe that extends the default one is to provide more precise error messages depending on which file validator failed. */
 export class CustomParseFilePipe extends ParseFilePipe {
+    private readonly logger = new Logger(CustomParseFilePipe.name);
+
     async transform(value: any) {
-        console.warn("Customfilepipe, ", value)
+        this.logger.debug("Customfilepipe, ", value)
         try {
             return await super.transform(value);
         } catch (error) {
             if (error instanceof BadRequestException) {
                 const originalMessage = error.message;
-                console.warn("FILE PIPE: ", originalMessage, value)
+                this.logger.debug("FILE PIPE: ", originalMessage, value)
 
                 if (originalMessage.includes('Max file size')) {
                     throw new BadRequestException({
