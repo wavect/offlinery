@@ -39,7 +39,7 @@ export class User {
     @Column({ default: false })
     wantsEmailUpdates: boolean;
 
-    @Column()
+    @Column({ unique: true })
     email: string;
 
     @Column()

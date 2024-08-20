@@ -24,6 +24,7 @@ import {CreateUserRequestDTO} from "../DTOs/create-user-request.dto";
 import {UpdateUserRequestDTO} from "../DTOs/update-user-request.dto";
 import {ParseJsonPipe} from "../pipes/ParseJson.pipe";
 import {CustomParseFilePipe} from "../pipes/CustomParseFile.pipe";
+import {Public} from "../auth/auth.guard";
 
 @ApiTags('User')
 @Controller({
@@ -35,6 +36,7 @@ export class UserController {
         private readonly userService: UserService,
     ) {}
 
+    @Public()
     @Post('create')
     @UseInterceptors(FilesInterceptor('images', 6))
     @ApiConsumes('multipart/form-data')
@@ -82,7 +84,7 @@ export class UserController {
     @ApiResponse({ status: 200, description: 'The user has been successfully retrieved.', type: User })
     @ApiResponse({ status: 404, description: 'User not found.' })
     async getUser(@Param('id') id: string): Promise<UserPublicDTO> {
-        const user = await this.userService.getUserById(id);
+        const user = await this.userService.findUserById(id);
         if (!user) {
             throw new NotFoundException(`User with ID ${id} not found`);
         }

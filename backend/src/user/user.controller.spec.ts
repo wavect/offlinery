@@ -163,21 +163,21 @@ describe('UserController', () => {
                 // ... other public fields
             });
 
-            (userService.getUserById as jest.Mock).mockResolvedValue(expectedUser);
+            (userService.findUserById as jest.Mock).mockResolvedValue(expectedUser);
 
             const result = await userController.getUser(userId);
 
-            expect(userService.getUserById).toHaveBeenCalledWith(userId);
+            expect(userService.findUserById).toHaveBeenCalledWith(userId);
             expect(result).toEqual(expectedUser.convertToPublicDTO());
         });
 
         it('should throw NotFoundException when user is not found', async () => {
             const userId = "999";
 
-            (userService.getUserById as jest.Mock).mockResolvedValue(null);
+            (userService.findUserById as jest.Mock).mockResolvedValue(null);
 
             await expect(userController.getUser(userId)).rejects.toThrow(NotFoundException);
-            expect(userService.getUserById).toHaveBeenCalledWith(userId);
+            expect(userService.findUserById).toHaveBeenCalledWith(userId);
         });
     });
 });

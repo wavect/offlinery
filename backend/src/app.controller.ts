@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import {Controller, Get, UseInterceptors} from '@nestjs/common';
 import { AppService } from './app.service';
+import { Public } from './auth/auth.guard';
 
 @Controller({
   version: '1',
@@ -8,8 +9,10 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  /** @dev Helper route to determine when the backend got started. Can be helpful to determine if an update has been shipped. */
+  @Public()
+  @Get('uptime')
+  getUptime(): string {
+    return this.appService.getUptime();
   }
 }

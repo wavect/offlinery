@@ -14,11 +14,25 @@
 
 
 import * as runtime from '../runtime';
+import type {
+  SignInDTO,
+  SignInResponseDTO,
+} from '../models/index';
+import {
+    SignInDTOFromJSON,
+    SignInDTOToJSON,
+    SignInResponseDTOFromJSON,
+    SignInResponseDTOToJSON,
+} from '../models/index';
 
 // We import this type even if it's unused to avoid additional
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
 import { ImagePickerAsset } from "expo-image-picker";
+export interface AuthControllerSignInRequest {
+    signInDTO: SignInDTO;
+}
+
 /**
  * DefaultApi - interface
  * 
@@ -32,11 +46,24 @@ export interface DefaultApiInterface {
      * @throws {RequiredError}
      * @memberof DefaultApiInterface
      */
-    appControllerGetHelloRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>>;
+    appControllerGetUptimeRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>>;
 
     /**
      */
-    appControllerGetHello(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string>;
+    appControllerGetUptime(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string>;
+
+    /**
+     * 
+     * @param {SignInDTO} signInDTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApiInterface
+     */
+    authControllerSignInRaw(requestParameters: AuthControllerSignInRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignInResponseDTO>>;
+
+    /**
+     */
+    authControllerSignIn(requestParameters: AuthControllerSignInRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignInResponseDTO>;
 
 }
 
@@ -47,13 +74,13 @@ export class DefaultApi extends runtime.BaseAPI implements DefaultApiInterface {
 
     /**
      */
-    async appControllerGetHelloRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
+    async appControllerGetUptimeRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/main`,
+            path: `/main/uptime`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -68,8 +95,42 @@ export class DefaultApi extends runtime.BaseAPI implements DefaultApiInterface {
 
     /**
      */
-    async appControllerGetHello(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
-        const response = await this.appControllerGetHelloRaw(initOverrides);
+    async appControllerGetUptime(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
+        const response = await this.appControllerGetUptimeRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async authControllerSignInRaw(requestParameters: AuthControllerSignInRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignInResponseDTO>> {
+        if (requestParameters['signInDTO'] == null) {
+            throw new runtime.RequiredError(
+                'signInDTO',
+                'Required parameter "signInDTO" was null or undefined when calling authControllerSignIn().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/auth/login`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: SignInDTOToJSON(requestParameters['signInDTO']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SignInResponseDTOFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async authControllerSignIn(requestParameters: AuthControllerSignInRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignInResponseDTO> {
+        const response = await this.authControllerSignInRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
