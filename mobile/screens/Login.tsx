@@ -7,25 +7,47 @@ import {OLinearBackground} from "../components/OLinearBackground/OLinearBackgrou
 import {OButtonWide} from "../components/OButtonWide/OButtonWide";
 import {ROUTES} from "./routes";
 import {EACTION_USER, useUserContext} from "../context/UserContext";
-import {sleep} from "../utils/misc.utils";
 import {OTermsDisclaimer} from "../components/OTermsDisclaimer/OTermsDisclaimer";
 import {OTextInputWide} from "../components/OTextInputWide/OTextInputWide";
 import {i18n, TR} from "../localization/translate.service";
+import {AuthApi, AuthControllerSignInRequest, SignInDTO} from "../api/gen/src";
 
+const authApi = new AuthApi()
 const Login = ({navigation}) => {
 
     const {state, dispatch} = useUserContext()
     const [isLoading, setLoading] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("");
 
-    // TODO: Dispatch isAuthenticated + fill userData when logged in
     const login = async () => {
         setLoading(true)
+        setErrorMessage(""); // Reset the error message
 
+        const signInDTO: AuthControllerSignInRequest = {
+            signInDTO: {
+                email: state.email,
+                clearPassword: state.clearPassword,
+            }
+        }
         try {
-            await sleep(2000)
-            // TODO: on success
-            navigation.navigate(ROUTES.MainTabView)
+            const signInRes = await authApi.authControllerSignIn(signInDTO)
+            if (signInRes.accessToken) {
+                // everything seems to be valid
+                const user = signInRes.user;
+                // also fill userData when logged in
+                dispatch({
+                    type: EACTION_USER.UPDATE_MULTIPLE,
+                    payload: {
+                        jwtAccessToken: signInRes.accessToken,
+                        ...user as any,
+                        // TODO: Not working yet, ..user is too different! e.g. images
+                    },
+                });
+                navigation.navigate(ROUTES.MainTabView)
+            }
         } catch (err) {
+            console.error(err)
+            setErrorMessage(i18n.t(TR.invalidCredentials));
         } finally {
             // always stop loading
             setLoading(false)
@@ -81,6 +103,9 @@ const Login = ({navigation}) => {
                             onPress={login}
                             variant="light"
                         />
+                        {errorMessage ? (
+                            <Text style={styles.errorMessage}>{errorMessage}</Text>
+                        ) : null}
 
                         <OTermsDisclaimer style={styles.termsDisclaimer}/>
 
@@ -127,6 +152,13 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         color: Color.white,
         textAlign: "center",
+    },
+    errorMessage: {
+        color: Color.redLight,
+        fontSize: 16,
+        fontFamily: FontFamily.montserratSemiBold,
+        textAlign: "center",
+        marginBottom: 10,
     },
 });
 

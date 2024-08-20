@@ -18,13 +18,14 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "openapi:generate": "npx @openapitools/openapi-generator-cli generate -i ./swagger.json -g typescript-fetch -o ../mobile/api/gen/ -c openapi-config.json -t ./custom-templates && npx @openapitools/openapi-generator-cli generate -i ./swagger.json -g typescript-fetch -o ./test/api/gen/ -c openapi-config.json -t ./custom-templates"
+    "openapi:generate": "npx @openapitools/openapi-generator-cli generate -i ./swagger.json -g typescript-fetch -o ../mobile/api/gen/ -c openapi-config.json -t ./custom-templates"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^2.2.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/jwt": "^10.2.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/throttler": "^6.0.0",

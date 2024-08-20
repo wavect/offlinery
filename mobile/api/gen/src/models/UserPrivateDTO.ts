@@ -13,155 +13,173 @@
  */
 
 import { mapValues } from '../runtime';
+import type { BlacklistedRegionDTO } from './BlacklistedRegionDTO';
+import {
+    BlacklistedRegionDTOFromJSON,
+    BlacklistedRegionDTOFromJSONTyped,
+    BlacklistedRegionDTOToJSON,
+} from './BlacklistedRegionDTO';
+
 /**
  * 
  * @export
- * @interface UserPublicDTO
+ * @interface UserPrivateDTO
  */
-export interface UserPublicDTO {
+export interface UserPrivateDTO {
     /**
      * The unique identifier of the user
      * @type {string}
-     * @memberof UserPublicDTO
+     * @memberof UserPrivateDTO
      */
     id: string;
     /**
      * Indicates if the user account is active
      * @type {boolean}
-     * @memberof UserPublicDTO
+     * @memberof UserPrivateDTO
      */
     isActive: boolean;
     /**
      * The first name of the user
      * @type {string}
-     * @memberof UserPublicDTO
+     * @memberof UserPrivateDTO
      */
     firstName: string;
     /**
-     * Indicates if the user wants to receive email updates
-     * @type {boolean}
-     * @memberof UserPublicDTO
-     */
-    wantsEmailUpdates: boolean;
-    /**
      * The birth date of the user
      * @type {Date}
-     * @memberof UserPublicDTO
+     * @memberof UserPrivateDTO
      */
     birthDay: Date;
     /**
      * The gender of the user
      * @type {string}
-     * @memberof UserPublicDTO
+     * @memberof UserPrivateDTO
      */
-    gender: UserPublicDTOGenderEnum;
+    gender: UserPrivateDTOGenderEnum;
     /**
      * The gender the user is interested in
      * @type {string}
-     * @memberof UserPublicDTO
+     * @memberof UserPrivateDTO
      */
-    genderDesire: UserPublicDTOGenderDesireEnum;
+    genderDesire: UserPrivateDTOGenderDesireEnum;
     /**
      * An array of image uris
      * @type {Array<string>}
-     * @memberof UserPublicDTO
+     * @memberof UserPrivateDTO
      */
     imageURIs: Array<string>;
     /**
      * The verification status of the user
      * @type {string}
-     * @memberof UserPublicDTO
+     * @memberof UserPrivateDTO
      */
-    verificationStatus: UserPublicDTOVerificationStatusEnum;
+    verificationStatus: UserPrivateDTOVerificationStatusEnum;
     /**
      * The approach choice of the user
      * @type {string}
-     * @memberof UserPublicDTO
+     * @memberof UserPrivateDTO
      */
-    approachChoice: UserPublicDTOApproachChoiceEnum;
+    approachChoice: UserPrivateDTOApproachChoiceEnum;
     /**
      * The time from which the user can be approached
      * @type {string}
-     * @memberof UserPublicDTO
+     * @memberof UserPrivateDTO
      */
     approachFromTime: string;
     /**
      * The time until which the user can be approached
      * @type {string}
-     * @memberof UserPublicDTO
+     * @memberof UserPrivateDTO
      */
     approachToTime: string;
     /**
      * The user's bio
      * @type {string}
-     * @memberof UserPublicDTO
+     * @memberof UserPrivateDTO
      */
     bio: string;
     /**
      * The date mode of the user
      * @type {string}
-     * @memberof UserPublicDTO
+     * @memberof UserPrivateDTO
      */
-    dateMode: UserPublicDTODateModeEnum;
+    dateMode: UserPrivateDTODateModeEnum;
+    /**
+     * The unique email of the user
+     * @type {string}
+     * @memberof UserPrivateDTO
+     */
+    email: string;
+    /**
+     * Indicates if the user wants to receive email updates
+     * @type {boolean}
+     * @memberof UserPrivateDTO
+     */
+    wantsEmailUpdates: boolean;
+    /**
+     * Locations to not be approached at
+     * @type {Array<BlacklistedRegionDTO>}
+     * @memberof UserPrivateDTO
+     */
+    blacklistedRegions: Array<BlacklistedRegionDTO>;
 }
 
 
 /**
  * @export
  */
-export const UserPublicDTOGenderEnum = {
+export const UserPrivateDTOGenderEnum = {
     woman: 'woman',
     man: 'man'
 } as const;
-export type UserPublicDTOGenderEnum = typeof UserPublicDTOGenderEnum[keyof typeof UserPublicDTOGenderEnum];
+export type UserPrivateDTOGenderEnum = typeof UserPrivateDTOGenderEnum[keyof typeof UserPrivateDTOGenderEnum];
 
 /**
  * @export
  */
-export const UserPublicDTOGenderDesireEnum = {
+export const UserPrivateDTOGenderDesireEnum = {
     woman: 'woman',
     man: 'man'
 } as const;
-export type UserPublicDTOGenderDesireEnum = typeof UserPublicDTOGenderDesireEnum[keyof typeof UserPublicDTOGenderDesireEnum];
+export type UserPrivateDTOGenderDesireEnum = typeof UserPrivateDTOGenderDesireEnum[keyof typeof UserPrivateDTOGenderDesireEnum];
 
 /**
  * @export
  */
-export const UserPublicDTOVerificationStatusEnum = {
+export const UserPrivateDTOVerificationStatusEnum = {
     verified: 'verified',
     pending: 'pending',
     not_needed: 'not_needed'
 } as const;
-export type UserPublicDTOVerificationStatusEnum = typeof UserPublicDTOVerificationStatusEnum[keyof typeof UserPublicDTOVerificationStatusEnum];
+export type UserPrivateDTOVerificationStatusEnum = typeof UserPrivateDTOVerificationStatusEnum[keyof typeof UserPrivateDTOVerificationStatusEnum];
 
 /**
  * @export
  */
-export const UserPublicDTOApproachChoiceEnum = {
+export const UserPrivateDTOApproachChoiceEnum = {
     approach: 'approach',
     be_approached: 'be_approached',
     both: 'both'
 } as const;
-export type UserPublicDTOApproachChoiceEnum = typeof UserPublicDTOApproachChoiceEnum[keyof typeof UserPublicDTOApproachChoiceEnum];
+export type UserPrivateDTOApproachChoiceEnum = typeof UserPrivateDTOApproachChoiceEnum[keyof typeof UserPrivateDTOApproachChoiceEnum];
 
 /**
  * @export
  */
-export const UserPublicDTODateModeEnum = {
+export const UserPrivateDTODateModeEnum = {
     ghost: 'ghost',
     live: 'live'
 } as const;
-export type UserPublicDTODateModeEnum = typeof UserPublicDTODateModeEnum[keyof typeof UserPublicDTODateModeEnum];
+export type UserPrivateDTODateModeEnum = typeof UserPrivateDTODateModeEnum[keyof typeof UserPrivateDTODateModeEnum];
 
 
 /**
- * Check if a given object implements the UserPublicDTO interface.
+ * Check if a given object implements the UserPrivateDTO interface.
  */
-export function instanceOfUserPublicDTO(value: object): value is UserPublicDTO {
+export function instanceOfUserPrivateDTO(value: object): value is UserPrivateDTO {
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('isActive' in value) || value['isActive'] === undefined) return false;
     if (!('firstName' in value) || value['firstName'] === undefined) return false;
-    if (!('wantsEmailUpdates' in value) || value['wantsEmailUpdates'] === undefined) return false;
     if (!('birthDay' in value) || value['birthDay'] === undefined) return false;
     if (!('gender' in value) || value['gender'] === undefined) return false;
     if (!('genderDesire' in value) || value['genderDesire'] === undefined) return false;
@@ -172,14 +190,17 @@ export function instanceOfUserPublicDTO(value: object): value is UserPublicDTO {
     if (!('approachToTime' in value) || value['approachToTime'] === undefined) return false;
     if (!('bio' in value) || value['bio'] === undefined) return false;
     if (!('dateMode' in value) || value['dateMode'] === undefined) return false;
+    if (!('email' in value) || value['email'] === undefined) return false;
+    if (!('wantsEmailUpdates' in value) || value['wantsEmailUpdates'] === undefined) return false;
+    if (!('blacklistedRegions' in value) || value['blacklistedRegions'] === undefined) return false;
     return true;
 }
 
-export function UserPublicDTOFromJSON(json: any): UserPublicDTO {
-    return UserPublicDTOFromJSONTyped(json, false);
+export function UserPrivateDTOFromJSON(json: any): UserPrivateDTO {
+    return UserPrivateDTOFromJSONTyped(json, false);
 }
 
-export function UserPublicDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserPublicDTO {
+export function UserPrivateDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserPrivateDTO {
     if (json == null) {
         return json;
     }
@@ -188,7 +209,6 @@ export function UserPublicDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
         'id': json['id'],
         'isActive': json['isActive'],
         'firstName': json['firstName'],
-        'wantsEmailUpdates': json['wantsEmailUpdates'],
         'birthDay': (new Date(json['birthDay'])),
         'gender': json['gender'],
         'genderDesire': json['genderDesire'],
@@ -199,10 +219,13 @@ export function UserPublicDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
         'approachToTime': json['approachToTime'],
         'bio': json['bio'],
         'dateMode': json['dateMode'],
+        'email': json['email'],
+        'wantsEmailUpdates': json['wantsEmailUpdates'],
+        'blacklistedRegions': ((json['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOFromJSON)),
     };
 }
 
-export function UserPublicDTOToJSON(value?: UserPublicDTO | null): any {
+export function UserPrivateDTOToJSON(value?: UserPrivateDTO | null): any {
     if (value == null) {
         return value;
     }
@@ -211,7 +234,6 @@ export function UserPublicDTOToJSON(value?: UserPublicDTO | null): any {
         'id': value['id'],
         'isActive': value['isActive'],
         'firstName': value['firstName'],
-        'wantsEmailUpdates': value['wantsEmailUpdates'],
         'birthDay': ((value['birthDay']).toISOString().substring(0,10)),
         'gender': value['gender'],
         'genderDesire': value['genderDesire'],
@@ -222,6 +244,9 @@ export function UserPublicDTOToJSON(value?: UserPublicDTO | null): any {
         'approachToTime': value['approachToTime'],
         'bio': value['bio'],
         'dateMode': value['dateMode'],
+        'email': value['email'],
+        'wantsEmailUpdates': value['wantsEmailUpdates'],
+        'blacklistedRegions': ((value['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOToJSON)),
     };
 }
 

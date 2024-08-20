@@ -32,11 +32,11 @@ export interface DefaultApiInterface {
      * @throws {RequiredError}
      * @memberof DefaultApiInterface
      */
-    appControllerGetHelloRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>>;
+    appControllerGetUptimeRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>>;
 
     /**
      */
-    appControllerGetHello(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string>;
+    appControllerGetUptime(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string>;
 
 }
 
@@ -47,13 +47,13 @@ export class DefaultApi extends runtime.BaseAPI implements DefaultApiInterface {
 
     /**
      */
-    async appControllerGetHelloRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
+    async appControllerGetUptimeRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/main`,
+            path: `/main/uptime`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -68,8 +68,8 @@ export class DefaultApi extends runtime.BaseAPI implements DefaultApiInterface {
 
     /**
      */
-    async appControllerGetHello(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
-        const response = await this.appControllerGetHelloRaw(initOverrides);
+    async appControllerGetUptime(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
+        const response = await this.appControllerGetUptimeRaw(initOverrides);
         return await response.value();
     }
 

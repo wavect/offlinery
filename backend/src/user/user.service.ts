@@ -105,7 +105,7 @@ export class UserService {
         await this.userRepository.delete(id);
     }
 
-    async getUserById(id: string): Promise<User> {
+    async findUserById(id: string): Promise<User> {
         const user = await this.userRepository.findOne({
             where: { id },
             relations: ['blacklistedRegions'] // Include related entities if needed
@@ -113,6 +113,19 @@ export class UserService {
 
         if (!user) {
             throw new NotFoundException(`User with ID ${id} not found`);
+        }
+
+        return user;
+    }
+
+    async findUserByEmail(email: string): Promise<User> {
+        const user = await this.userRepository.findOne({
+            where: { email },
+            relations: ['blacklistedRegions'] // Include related entities if needed
+        });
+
+        if (!user) {
+            throw new NotFoundException(`User with email ${email} not found`);
         }
 
         return user;

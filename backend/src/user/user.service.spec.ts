@@ -172,7 +172,7 @@ describe('UserService', () => {
 
             (userRepository.findOne as jest.Mock).mockResolvedValue(mockUser);
 
-            const result = await userService.getUserById(userId);
+            const result = await userService.findUserById(userId);
 
             expect(result).toEqual(mockUser);
             expect(userRepository.findOne).toHaveBeenCalledWith({
@@ -186,7 +186,7 @@ describe('UserService', () => {
 
             (userRepository.findOne as jest.Mock).mockResolvedValue(null);
 
-            await expect(userService.getUserById(userId)).rejects.toThrow(NotFoundException);
+            await expect(userService.findUserById(userId)).rejects.toThrow(NotFoundException);
         });
     });
 });

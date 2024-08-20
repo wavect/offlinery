@@ -3,6 +3,7 @@ import { EApproachChoice, EDateMode, EVerificationStatus, EGender } from "../typ
 import { BlacklistedRegion } from '../blacklisted-region/blacklisted-region.entity';
 import {UserPublicDTO} from "../DTOs/user-public.dto";
 import {UserReport} from "../user-report/user-report.entity";
+import {UserPrivateDTO} from "../DTOs/user-private.dto";
 
 @Entity()
 export class User {
@@ -13,7 +14,6 @@ export class User {
             id: this.id,
             isActive: this.isActive,
             firstName: this.firstName,
-            wantsEmailUpdates: this.wantsEmailUpdates,
             birthDay: this.birthDay,
             gender: this.gender,
             genderDesire: this.genderDesire,
@@ -23,8 +23,19 @@ export class User {
             approachFromTime: this.approachFromTime,
             approachToTime: this.approachToTime,
             bio: this.bio,
-            dateMode: this.dateMode
+            dateMode: this.dateMode,
+
         };
+    }
+
+    /** @dev Meant to be only viewable by user itself. */
+    public convertToPrivateDTO(): UserPrivateDTO {
+        return {
+            ...this.convertToPublicDTO(),
+            wantsEmailUpdates: this.wantsEmailUpdates,
+            blacklistedRegions: this.blacklistedRegions,
+            email: this.email,
+        }
     }
 
     @PrimaryGeneratedColumn("uuid")
@@ -39,7 +50,7 @@ export class User {
     @Column({ default: false })
     wantsEmailUpdates: boolean;
 
-    @Column()
+    @Column({ unique: true })
     email: string;
 
     @Column()

@@ -38,12 +38,6 @@ export interface UserPublicDTO {
      */
     firstName: string;
     /**
-     * Indicates if the user wants to receive email updates
-     * @type {boolean}
-     * @memberof UserPublicDTO
-     */
-    wantsEmailUpdates: boolean;
-    /**
      * The birth date of the user
      * @type {Date}
      * @memberof UserPublicDTO
@@ -161,7 +155,6 @@ export function instanceOfUserPublicDTO(value: object): value is UserPublicDTO {
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('isActive' in value) || value['isActive'] === undefined) return false;
     if (!('firstName' in value) || value['firstName'] === undefined) return false;
-    if (!('wantsEmailUpdates' in value) || value['wantsEmailUpdates'] === undefined) return false;
     if (!('birthDay' in value) || value['birthDay'] === undefined) return false;
     if (!('gender' in value) || value['gender'] === undefined) return false;
     if (!('genderDesire' in value) || value['genderDesire'] === undefined) return false;
@@ -188,7 +181,6 @@ export function UserPublicDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
         'id': json['id'],
         'isActive': json['isActive'],
         'firstName': json['firstName'],
-        'wantsEmailUpdates': json['wantsEmailUpdates'],
         'birthDay': (new Date(json['birthDay'])),
         'gender': json['gender'],
         'genderDesire': json['genderDesire'],
@@ -211,7 +203,6 @@ export function UserPublicDTOToJSON(value?: UserPublicDTO | null): any {
         'id': value['id'],
         'isActive': value['isActive'],
         'firstName': value['firstName'],
-        'wantsEmailUpdates': value['wantsEmailUpdates'],
         'birthDay': ((value['birthDay']).toISOString().substring(0,10)),
         'gender': value['gender'],
         'genderDesire': value['genderDesire'],

@@ -3,19 +3,19 @@ import {AppController} from './app.controller';
 import {AppService} from './app.service';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {User} from "./user/user.entity";
-import {UserController} from './user/user.controller';
 import {UserModule} from "./user/user.module";
 import {ConfigModule} from "@nestjs/config";
 import {CacheInterceptor, CacheModule} from "@nestjs/cache-manager";
-import {APP_INTERCEPTOR} from "@nestjs/core";
+import {APP_GUARD, APP_INTERCEPTOR} from "@nestjs/core";
 import {BlacklistedRegion} from "./blacklisted-region/blacklisted-region.entity";
-import {BlacklistedRegionController} from "./blacklisted-region/blacklisted-region.controller";
 import {BlacklistedRegionModule} from "./blacklisted-region/blacklisted-region.module";
 import {ThrottlerModule} from "@nestjs/throttler";
 import {NotificationModule} from "./transient-services/notification/notification.module";
 import {UserReportModule} from "./user-report/user-report.module";
 import {UserReport} from "./user-report/user-report.entity";
-import {MulterModule} from "@nestjs/platform-express";
+import {TYPED_ENV} from "./utils/env.utils";
+import {AuthGuard} from "./auth/auth.guard";
+import {AuthModule} from "./auth/auth.module";
 
 @Module({
     imports: [
@@ -23,15 +23,17 @@ import {MulterModule} from "@nestjs/platform-express";
         TypeOrmModule.forRoot({
             synchronize: true, // TODO: Remove in prod
             type: 'postgres',
-            host: process.env.DB_HOST ?? 'localhost',
-            port: parseInt(process.env.DB_PORT ?? '5432'),
-            username: process.env.DB_USER ?? 'root',
-            password: process.env.DB_PASSWORD ?? 'root',
-            database: process.env.DB_DATABASE ?? 'test',
+            host: TYPED_ENV.DB_HOST,
+            port: parseInt(TYPED_ENV.DB_PORT),
+            username: TYPED_ENV.DB_USER,
+            password: TYPED_ENV.DB_PASSWORD,
+            database: TYPED_ENV.DB_DATABASE,
             entities: [User, BlacklistedRegion, UserReport],
         }),
         // @dev https://docs.nestjs.com/techniques/caching
-        CacheModule.register(),
+        CacheModule.register({
+            isGlobal: true,
+        }),
         /* right now directly saved in UserService
         MulterModule.register({
            dest: './uploads'
@@ -41,7 +43,7 @@ import {MulterModule} from "@nestjs/platform-express";
             ttl: 60000,
             limit: 10,
         }]),
-        UserModule, BlacklistedRegionModule, NotificationModule, UserReportModule,
+        UserModule, BlacklistedRegionModule, NotificationModule, UserReportModule, AuthModule,
     ],
     controllers: [AppController],
     providers: [
@@ -49,6 +51,11 @@ import {MulterModule} from "@nestjs/platform-express";
         {
             provide: APP_INTERCEPTOR,
             useClass: CacheInterceptor,
+        },
+        {
+            // @dev By default all routes should be private, except the ones we declare as public (security)
+            provide: APP_GUARD,
+            useClass: AuthGuard,
         },
     ],
 })
