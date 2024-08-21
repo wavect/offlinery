@@ -5,6 +5,7 @@ import {INestApplication, VersioningType} from "@nestjs/common";
 import * as path from 'path'
 import { writeFileSync } from 'fs';
 import helmet from "helmet";
+import {NotificationNavigateUserDTO} from "./DTOs/notification-navigate-user.dto";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -39,7 +40,7 @@ const setupSwagger = (app: INestApplication) => {
       .addServer(`${BE_ENDPOINT}/v${VERSION}`) // will also be used in Frontend when generated
       .addTag('app')
       .build();
-  const document = SwaggerModule.createDocument(app, config, {deepScanRoutes: true});
+  const document = SwaggerModule.createDocument(app, config, {deepScanRoutes: true, extraModels: [NotificationNavigateUserDTO]});
 
   const outputPath = path.resolve(process.cwd(), 'swagger.json');
   writeFileSync(outputPath, JSON.stringify(document), { encoding: 'utf8' });

@@ -39,12 +39,9 @@ import DontApproachMeHere from "./screens/onboarding/DontApproachMeHere";
 import ApproachMeBetween from "./screens/onboarding/ApproachMeBetween";
 import BioLetThemKnow from "./screens/onboarding/BioLetThemKnow";
 import {MainScreenTabs} from "./screens/main/MainScreenTabs";
-import ProfileSettings from "./screens/main/ProfileSettings";
 import Login from "./screens/Login";
 import Password from "./screens/onboarding/Password";
 import {useCallback, useEffect} from "react";
-import {View} from "react-native";
-import ProfileView from "./screens/main/ProfileView";
 
 const DEFAULT_SCREEN_PROPS = {headerShown: true, headerShadowVisible: false, headerTitle: "", headerBackTitle: 'Back'}
 const DEFAULT_LIGHT_SCREEN_PROPS = {...DEFAULT_SCREEN_PROPS, headerTransparent: true, headerTintColor: Color.white}

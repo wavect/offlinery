@@ -19,6 +19,7 @@ import {Subscription} from "expo-notifications";
 import {Platform} from "react-native";
 import ProfileView from "./ProfileView";
 import {i18n, TR} from "../../localization/translate.service";
+import {NotificationNavigateUserDTO} from "../../api/gen/src";
 
 const Tab = createBottomTabNavigator();
 const EncounterStack = createStackNavigator();
@@ -70,7 +71,7 @@ const EncounterScreenStack = () => <EncountersProvider>
     </EncounterStack.Navigator>
 </EncountersProvider>
 
-export const MainScreenTabs = () => {
+export const MainScreenTabs = ({navigation}) => {
     const {state, dispatch} = useUserContext()
     const [unreadNotifications, setUnreadNotifications] = useState<Notifications.Notification[]>([]);
     const [channels, setChannels] = useState<Notifications.NotificationChannel[]>([]);
@@ -79,7 +80,7 @@ export const MainScreenTabs = () => {
 
     useEffect(() => {
         // 0 might be a valid ID too
-        if (!state.id && state.id !== 0) {
+        if (!state.id) {
             console.error(i18n.t(TR.noUserIdAssignedCannotListenToNotifications))
         } else {
             registerForPushNotificationsAsync(state.id).then(token => {
@@ -96,12 +97,15 @@ export const MainScreenTabs = () => {
             notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
                 setUnreadNotifications([...unreadNotifications, notification]);
                 console.log("Received new notification: ", notification)
-                // TODO handle
             });
 
             responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
                 console.log("Notification response", response);
-                // TODO handle
+                // TODO: At some point we might want to send other notifications too? then we need to be more flexible on the typing and checking it
+                const notificationData: NotificationNavigateUserDTO = response.notification.request.content.data as NotificationNavigateUserDTO;
+                // Navigate to the specified screen, passing the user object as a prop
+                navigation.navigate(notificationData.screen, { navigateToPerson: notificationData.navigateToPerson });
+
                 // Handle notification response (e.g., navigate to a specific screen)
             });
 

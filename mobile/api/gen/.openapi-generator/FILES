@@ -13,6 +13,7 @@ src/models/BlacklistedRegion.ts
 src/models/BlacklistedRegionDTO.ts
 src/models/CreateUserDTO.ts
 src/models/CreateUserReportDto.ts
+src/models/NotificationNavigateUserDTO.ts
 src/models/SignInDTO.ts
 src/models/SignInResponseDTO.ts
 src/models/StorePushTokenDTO.ts

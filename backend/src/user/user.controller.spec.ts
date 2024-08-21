@@ -96,7 +96,7 @@ describe('UserController', () => {
             expectedResult.imageURIs = mockImages.map(i => i.path);
             expectedResult.isActive = true;
             expectedResult.convertToPublicDTO = jest.fn().mockReturnValue({
-                id: 1,
+                id: "1",
                 firstName: 'John',
                 email: 'john@example.com',
                 // ... other public fields

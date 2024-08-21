@@ -1,5 +1,6 @@
 import {Injectable, Logger} from '@nestjs/common';
-import {Expo, ExpoPushMessage, ExpoPushTicket} from 'expo-server-sdk';
+import {Expo, ExpoPushMessage, ExpoPushTicket, ExpoPushToken} from 'expo-server-sdk';
+import {OfflineryNotification} from "./notification-message.type";
 
 @Injectable()
 export class NotificationService {
@@ -10,18 +11,13 @@ export class NotificationService {
         this.expo = new Expo();
     }
 
-    async sendPushNotification(pushToken: string, message: string, data?: object) {
+    /** @dev The ExpoPushToken remains the same for the user infinitely, except they reinstall the app, etc. */
+    async sendPushNotification(pushToken: ExpoPushToken, messages: OfflineryNotification[]) {
+        // TODO: ensure messages and pushToken are the same, maybe have some wrapper functions or whatever, or load directly from userEntity, etc.
         if (!Expo.isExpoPushToken(pushToken)) {
             this.logger.error(`Push token ${pushToken} is not a valid Expo push token`);
-            return;
+            return [];
         }
-
-        const messages: ExpoPushMessage[] = [{
-            to: pushToken,
-            sound: 'default',
-            body: message,
-            data: data,
-        }];
 
         const tickets: ExpoPushTicket[] = [];
         try {
