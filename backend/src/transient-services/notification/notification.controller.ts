@@ -5,7 +5,7 @@ import { UserService } from '../../user/user.service'; // Assume this service ex
 
 @ApiTags('Push Notifications')
 @Controller('api')
-export class PushNotificationController {
+export class NotificationController {
     constructor(private readonly userService: UserService) {}
 
     @Post('push-token')

@@ -1,11 +1,11 @@
 import * as Notifications from 'expo-notifications';
-import {PushNotificationsApi, StorePushTokenDto} from "../api/gen/src";
+import {PushNotificationsApi, StorePushTokenDTO} from "../api/gen/src";
 import {Platform} from "react-native";
 import {Color} from "../GlobalStyles";
 import Constants from 'expo-constants';
 
 const notificationsApi = new PushNotificationsApi()
-export const registerForPushNotificationsAsync = async (userId: number) => {
+export const registerForPushNotificationsAsync = async (userId: string) => {
 
     if (Platform.OS === 'android') {
         await Notifications.setNotificationChannelAsync('default', {
@@ -60,13 +60,13 @@ export const registerForPushNotificationsAsync = async (userId: number) => {
     }
 
     // Send this token to your backend
-    const storePushTokenDto: StorePushTokenDto = {
+    const storePushTokenDTO: StorePushTokenDTO = {
         userId: userId,
         pushToken: token
     };
 
     try {
-        await notificationsApi.pushNotificationControllerStorePushToken({ storePushTokenDto });
+        await notificationsApi.pushNotificationControllerStorePushToken({ storePushTokenDTO });
         console.log('Push token successfully sent to backend');
     } catch (err) {
         // TODO
