@@ -62,7 +62,7 @@ describe('UserService', () => {
                 approachChoice: EApproachChoice.APPROACH,
                 blacklistedRegions: [
                     {
-                        center: {latitude: 40.7128, longitude: -74.0060},
+                        latitude: 40.7128, longitude: -74.0060,
                         radius: 1000
                     }
                 ],
@@ -82,7 +82,7 @@ describe('UserService', () => {
 
             const mockUser = new User();
             Object.assign(mockUser, createUserDto);
-            mockUser.id = 1;
+            mockUser.id = "1";
 
             (bcrypt.genSalt as jest.Mock).mockResolvedValue('salt');
             (bcrypt.hash as jest.Mock).mockResolvedValue('hashedPassword');
@@ -99,7 +99,7 @@ describe('UserService', () => {
 
     describe('updateUser', () => {
         it('should update an existing user', async () => {
-            const userId = 1;
+            const userId = "1";
             const updateUserDto: UpdateUserDTO = {
                 firstName: 'John Updated',
                 bio: 'Updated bio',
@@ -132,7 +132,7 @@ describe('UserService', () => {
         });
 
         it('should throw an error if user is not found', async () => {
-            const userId = 999;
+            const userId = "999";
             const updateUserDto: UpdateUserDTO = { firstName: 'John Updated' };
 
             (userRepository.findOneBy as jest.Mock).mockResolvedValue(null);
@@ -166,7 +166,7 @@ describe('UserService', () => {
 
     describe('getUserById', () => {
         it('should return a user if found', async () => {
-            const userId = 1;
+            const userId = "1";
             const mockUser = new User();
             mockUser.id = userId;
 
@@ -182,7 +182,7 @@ describe('UserService', () => {
         });
 
         it('should throw NotFoundException if user is not found', async () => {
-            const userId = 999;
+            const userId = "999";
 
             (userRepository.findOne as jest.Mock).mockResolvedValue(null);
 

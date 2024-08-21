@@ -15,8 +15,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getUptime()).toBe('Hello World!');
+    it('should return "Application started"', () => {
+      expect(appController.getUptime()?.substring(0, "Application started".length)).toBe('Application started');
     });
   });
 });

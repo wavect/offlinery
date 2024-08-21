@@ -15,7 +15,7 @@ export type Gender = "woman" | "man";
 
 export interface IUserData {
     /** @dev Backend assigned ID for registered users */
-    id?: number;
+    id?: string;
     wantsEmailUpdates: boolean;
     email: string;
     firstName: string;
@@ -186,7 +186,7 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
         case EACTION_USER.SET_ID:
             return {
                 ...state,
-                id: action.payload as number,
+                id: action.payload as string,
             };
         case EACTION_USER.SET_JWT_ACCESS_TOKEN:
             return {

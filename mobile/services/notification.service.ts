@@ -1,8 +1,9 @@
 import * as Notifications from 'expo-notifications';
-import {PushNotificationsApi, StorePushTokenDTO} from "../api/gen/src";
+import {NotificationNavigateUserDTO, PushNotificationsApi, StorePushTokenDTO} from "../api/gen/src";
 import {Platform} from "react-native";
 import {Color} from "../GlobalStyles";
 import Constants from 'expo-constants';
+import {useNavigation} from "@react-navigation/native";
 
 const notificationsApi = new PushNotificationsApi()
 export const registerForPushNotificationsAsync = async (userId: string) => {
@@ -64,9 +65,10 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
         userId: userId,
         pushToken: token
     };
+    console.log("Pushing token: ", token)
 
     try {
-        await notificationsApi.pushNotificationControllerStorePushToken({ storePushTokenDTO });
+        await notificationsApi.notificationControllerStorePushToken({ storePushTokenDTO });
         console.log('Push token successfully sent to backend');
     } catch (err) {
         // TODO
@@ -75,3 +77,4 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
 
     return token;
 }
+

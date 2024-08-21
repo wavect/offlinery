@@ -26,7 +26,7 @@ import {
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
 import { ImagePickerAsset } from "expo-image-picker";
-export interface PushNotificationControllerStorePushTokenRequest {
+export interface NotificationControllerStorePushTokenRequest {
     storePushTokenDTO: StorePushTokenDTO;
 }
 
@@ -45,12 +45,12 @@ export interface PushNotificationsApiInterface {
      * @throws {RequiredError}
      * @memberof PushNotificationsApiInterface
      */
-    pushNotificationControllerStorePushTokenRaw(requestParameters: PushNotificationControllerStorePushTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>>;
+    notificationControllerStorePushTokenRaw(requestParameters: NotificationControllerStorePushTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>>;
 
     /**
      * Store user\'s push token
      */
-    pushNotificationControllerStorePushToken(requestParameters: PushNotificationControllerStorePushTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void>;
+    notificationControllerStorePushToken(requestParameters: NotificationControllerStorePushTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void>;
 
 }
 
@@ -62,11 +62,11 @@ export class PushNotificationsApi extends runtime.BaseAPI implements PushNotific
     /**
      * Store user\'s push token
      */
-    async pushNotificationControllerStorePushTokenRaw(requestParameters: PushNotificationControllerStorePushTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async notificationControllerStorePushTokenRaw(requestParameters: NotificationControllerStorePushTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['storePushTokenDTO'] == null) {
             throw new runtime.RequiredError(
                 'storePushTokenDTO',
-                'Required parameter "storePushTokenDTO" was null or undefined when calling pushNotificationControllerStorePushToken().'
+                'Required parameter "storePushTokenDTO" was null or undefined when calling notificationControllerStorePushToken().'
             );
         }
 
@@ -90,8 +90,8 @@ export class PushNotificationsApi extends runtime.BaseAPI implements PushNotific
     /**
      * Store user\'s push token
      */
-    async pushNotificationControllerStorePushToken(requestParameters: PushNotificationControllerStorePushTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.pushNotificationControllerStorePushTokenRaw(requestParameters, initOverrides);
+    async notificationControllerStorePushToken(requestParameters: NotificationControllerStorePushTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.notificationControllerStorePushTokenRaw(requestParameters, initOverrides);
     }
 
 }
