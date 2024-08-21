@@ -5,13 +5,12 @@ export class CustomParseFilePipe extends ParseFilePipe {
     private readonly logger = new Logger(CustomParseFilePipe.name);
 
     async transform(value: any) {
-        this.logger.debug("Customfilepipe, ", value)
+        this.logger.debug('Received file in CustomParseFilePipe')
         try {
             return await super.transform(value);
         } catch (error) {
             if (error instanceof BadRequestException) {
                 const originalMessage = error.message;
-                this.logger.debug("FILE PIPE: ", originalMessage, value)
 
                 if (originalMessage.includes('Max file size')) {
                     throw new BadRequestException({

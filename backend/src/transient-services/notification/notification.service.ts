@@ -1,5 +1,5 @@
 import {Injectable, Logger} from '@nestjs/common';
-import {Expo, ExpoPushMessage} from 'expo-server-sdk';
+import {Expo, ExpoPushMessage, ExpoPushTicket} from 'expo-server-sdk';
 
 @Injectable()
 export class NotificationService {
@@ -23,9 +23,9 @@ export class NotificationService {
             data: data,
         }];
 
+        const tickets: ExpoPushTicket[] = [];
         try {
             const chunks = this.expo.chunkPushNotifications(messages);
-            const tickets = [];
             for (let chunk of chunks) {
                 try {
                     let ticketChunk = await this.expo.sendPushNotificationsAsync(chunk);
@@ -34,9 +34,9 @@ export class NotificationService {
                     this.logger.error(error);
                 }
             }
-            return tickets;
         } catch (error) {
             this.logger.error(error);
         }
+        return tickets;
     }
 }

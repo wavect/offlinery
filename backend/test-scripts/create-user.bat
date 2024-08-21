@@ -1,3 +1,6 @@
 curl -X POST http://localhost:3000/v1/user/create -H "Content-Type: multipart/form-data" -F user="{\"firstName\":\"John\",\"email\":\"john@example.com\",\"clearPassword\":\"securePassword123\",\"wantsEmailUpdates\":true,\"birthDay\":\"1990-01-01\",\"gender\":\"man\",\"genderDesire\":\"woman\",\"verificationStatus\":\"pending\",\"approachChoice\":\"both\",\"blacklistedRegions\":[{\"latitude\":40.7128,\"longitude\":-74.0060,\"radius\":1000}],\"approachFromTime\":\"1970-01-01T09:00:00Z\",\"approachToTime\":\"1970-01-01T17:00:00Z\",\"bio\":\"Hello, I'm John!\",\"dateMode\":\"live\"}" -F images=@./image1.jpg -F images=@./image2.jpg
 
+# curl -X POST https://offlinery.onrender.com/v1/user/create -H "Content-Type: multipart/form-data" -F user="{\"firstName\":\"John\",\"email\":\"john@example.com\",\"clearPassword\":\"securePassword123\",\"wantsEmailUpdates\":true,\"birthDay\":\"1990-01-01\",\"gender\":\"man\",\"genderDesire\":\"woman\",\"verificationStatus\":\"pending\",\"approachChoice\":\"both\",\"blacklistedRegions\":[{\"latitude\":40.7128,\"longitude\":-74.0060,\"radius\":1000}],\"approachFromTime\":\"1970-01-01T09:00:00Z\",\"approachToTime\":\"1970-01-01T17:00:00Z\",\"bio\":\"Hello, I'm John!\",\"dateMode\":\"live\"}" -F images=@./image1.jpg -F images=@./image2.jpg
+
+
 pause
