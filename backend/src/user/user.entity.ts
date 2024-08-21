@@ -1,12 +1,14 @@
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany, PrimaryColumn} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany, PrimaryColumn, JoinTable, ManyToMany} from 'typeorm';
 import { EApproachChoice, EDateMode, EVerificationStatus, EGender } from "../types/user.types";
 import { BlacklistedRegion } from '../blacklisted-region/blacklisted-region.entity';
 import {UserPublicDTO} from "../DTOs/user-public.dto";
 import {UserReport} from "../user-report/user-report.entity";
 import {UserPrivateDTO} from "../DTOs/user-private.dto";
+import {IEntityToDTOInterface} from "../interfaces/IEntityToDTO.interface";
+import {Encounter} from "../encounter/encounter.entity";
 
 @Entity()
-export class User {
+export class User implements IEntityToDTOInterface<UserPublicDTO> {
 
     /** @dev Important to not return any sensitive data */
     public convertToPublicDTO(): UserPublicDTO {
@@ -24,7 +26,7 @@ export class User {
             approachToTime: this.approachToTime,
             bio: this.bio,
             dateMode: this.dateMode,
-
+            trustScore: this.trustScore,
         };
     }
 
@@ -102,4 +104,11 @@ export class User {
 
     @OneToMany(() => UserReport, report => report.reportingUser)
     issuedReports: UserReport[];
+
+    @OneToMany(() => Encounter, (encounter) => encounter.userNearby)
+    encounters: Encounter[];
+
+    @Column({ nullable: true })
+    trustScore?: number;
+
 }

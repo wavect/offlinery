@@ -48,4 +48,7 @@ export class UserPublicDTO {
 
     @ApiProperty({ enum: EDateMode, description: 'The date mode of the user' })
     dateMode: EDateMode;
+
+    @ApiProperty({ description: 'The user\'s trust score' })
+    trustScore?: number;
 }

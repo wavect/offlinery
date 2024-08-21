@@ -34,3 +34,9 @@ export enum EIncidentType {
     Violent = 'Violent behavior',
     Other = 'Other',
 }
+
+export enum EEncounterStatus {
+    NOT_MET ="not_met",
+    MET_NOT_INTERESTED = "met_not_interested",
+    MET_INTERESTED = "met_interested",
+}
