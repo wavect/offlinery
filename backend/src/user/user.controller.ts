@@ -55,7 +55,6 @@ export class UserController {
             })
         ) images: Express.Multer.File[]
     ): Promise<UserPublicDTO> {
-        this.logger.debug("Trying to create user: ", createUserDto, images)
         return (await this.userService.createUser(createUserDto, images)).convertToPublicDTO()
     }
 
