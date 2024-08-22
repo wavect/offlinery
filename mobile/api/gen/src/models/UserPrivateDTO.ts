@@ -105,6 +105,12 @@ export interface UserPrivateDTO {
      */
     dateMode: UserPrivateDTODateModeEnum;
     /**
+     * The user's trust score
+     * @type {number}
+     * @memberof UserPrivateDTO
+     */
+    trustScore?: number;
+    /**
      * The unique email of the user
      * @type {string}
      * @memberof UserPrivateDTO
@@ -219,6 +225,7 @@ export function UserPrivateDTOFromJSONTyped(json: any, ignoreDiscriminator: bool
         'approachToTime': json['approachToTime'],
         'bio': json['bio'],
         'dateMode': json['dateMode'],
+        'trustScore': json['trustScore'] == null ? undefined : json['trustScore'],
         'email': json['email'],
         'wantsEmailUpdates': json['wantsEmailUpdates'],
         'blacklistedRegions': ((json['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOFromJSON)),
@@ -244,6 +251,7 @@ export function UserPrivateDTOToJSON(value?: UserPrivateDTO | null): any {
         'approachToTime': value['approachToTime'],
         'bio': value['bio'],
         'dateMode': value['dateMode'],
+        'trustScore': value['trustScore'],
         'email': value['email'],
         'wantsEmailUpdates': value['wantsEmailUpdates'],
         'blacklistedRegions': ((value['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOToJSON)),

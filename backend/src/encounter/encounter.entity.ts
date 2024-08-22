@@ -3,9 +3,23 @@ import {
     EEncounterStatus
 } from "../types/user.types";
 import {User} from "../user/user.entity";
+import {IEntityToDTOInterface} from "../interfaces/IEntityToDTO.interface";
+import {EncounterPublicDTO} from "../DTOs/encounter-public.dto";
+import {UserReport} from "../user-report/user-report.entity";
 
 @Entity()
-export class Encounter {
+export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
+
+    public convertToPublicDTO(): EncounterPublicDTO {
+        return {
+            id: this.id,
+            status: this.status,
+            lastDateTimePassedBy: this.lastDateTimePassedBy,
+            lastLocationPassedBy: undefined, // TODO, derive a rough human readable string (translation??) that can be shown locally
+            reported: this.userReports?.length > 0, // TODO: Here we might want to make this boolean specific to the user querying? Otherwise technically only one user can report.
+            users: this.users.map(u => u.convertToPublicDTO())
+        }
+    }
 
     @PrimaryGeneratedColumn("uuid")
     id: string;
@@ -22,9 +36,6 @@ export class Encounter {
     @Column()
     lastLatitudePassedBy: string
 
-    @Column({default: false})
-    reported: boolean
-
     /** @dev Users that have met, typically 2.
      *
      * Can be queried this way:
@@ -38,4 +49,8 @@ export class Encounter {
      */
     @ManyToMany(() => User, user => user.encounters)
     users: User[]; // NOTE: Make sure the combination of users is UNIQUE (can't be enforced on DB level)
+
+    /** @dev Both users could theoretically report each other */
+    @OneToMany(() => UserReport, report => report.reportedEncounter)
+    userReports: UserReport[]
 }

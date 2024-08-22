@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm';
 import { User } from '../user/user.entity';
 import {EIncidentType} from "../types/user.types";
+import {Encounter} from "../encounter/encounter.entity";
 
 @Entity()
 export class UserReport {
@@ -27,4 +28,7 @@ export class UserReport {
 
     @ManyToOne(() => User, user => user.issuedReports)
     reportingUser: User;
+
+    @ManyToOne(() => Encounter, encounter => encounter.userReports)
+    reportedEncounter: Encounter;
 }

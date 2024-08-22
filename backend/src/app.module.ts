@@ -17,7 +17,6 @@ import {TYPED_ENV} from "./utils/env.utils";
 import {AuthGuard} from "./auth/auth.guard";
 import {AuthModule} from "./auth/auth.module";
 import {Encounter} from "./encounter/encounter.entity";
-import { EncounterService } from './encounter/encounter.service';
 import { EncounterModule } from './encounter/encounter.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -67,7 +66,6 @@ import { join } from 'path';
             provide: APP_GUARD,
             useClass: AuthGuard,
         },
-        EncounterService,
     ],
 })
 export class AppModule {
