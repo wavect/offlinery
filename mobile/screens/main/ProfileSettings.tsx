@@ -61,7 +61,8 @@ const ProfileSettings = ({navigation}) => {
                 },
                 images: getUserImagesForUpload(state)
             };
-            await userApi.userControllerUpdateUser(request);
+
+            await userApi.userControllerUpdateUser(request, {headers: {"Authorization": `Bearer ${state.jwtAccessToken}`}});
 
             navigation.navigate(ROUTES.MainTabView, {screen: ROUTES.Main.FindPeople});
         } catch (error) {

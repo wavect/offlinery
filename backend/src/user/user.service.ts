@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -17,7 +17,6 @@ export class UserService {
     private userRepository: Repository<User>,
     @InjectRepository(BlacklistedRegion)
     private blacklistedRegionRepository: Repository<BlacklistedRegion>,
-    private readonly logger = new Logger(UserService.name);
   ) {}
 
   private async saveFiles(
@@ -31,13 +30,18 @@ export class UserService {
     const savedFilePaths = await Promise.all(
       files.map(async (file) => {
         const index = Number(file.originalname);
-        if (!index) {
+
+        if (isNaN(index)) {
+            console.log(`"${index}"`)
             throw new Error(`Could not parse image index to number. Tried to parse following value: ${file.originalname}`)
         }
-        const uniqueFilename = `${uuidv4()}${path.extname(file.originalname)}`;
+
+        // mimeType examples: "image/jpeg", "image/png".
+        // Since we only allow image files, we can assume mimeType always follows this scheme.
+        const uniqueFilename = `${uuidv4()}${path.extname(file.originalname)}.${file.mimetype.split("/")[1]}`;
         const filePath = path.join(uploadDir, uniqueFilename);
         await fs.promises.writeFile(filePath, file.buffer);
-        return { index, filePath };
+        return { index, filePath: uniqueFilename };
       }),
     );
 

@@ -49,7 +49,7 @@ import { join } from 'path';
         }]),
         ServeStaticModule.forRoot({
             // serve images
-            rootPath: join(__dirname, '..', 'uploads'),
+            rootPath: join(__dirname, '..', 'uploads/img'),
             serveRoot: '/img',
         }),
         UserModule, BlacklistedRegionModule, NotificationModule, UserReportModule, AuthModule, EncounterModule,
