@@ -1,4 +1,4 @@
-import {EDateStatus, IEncounterProfile} from "../../types/PublicProfile.types";
+import {IEncounterProfile} from "../../types/PublicProfile.types";
 import * as React from "react";
 import {useState} from "react";
 import {Image, Pressable, StyleSheet, Text, View} from "react-native";
@@ -7,6 +7,7 @@ import {Color, FontFamily, FontSize} from "../../GlobalStyles";
 import {ROUTES} from "../../screens/routes";
 import {EACTION_ENCOUNTERS, useEncountersContext} from "../../context/EncountersContext";
 import {i18n, TR} from "../../localization/translate.service";
+import {EncounterStatusEnum} from "../../api/gen/src";
 
 interface ISingleEncounterProps {
     encounterProfile: IEncounterProfile
@@ -19,12 +20,12 @@ const OEncounter = (props: ISingleEncounterProps) => {
     const {encounterProfile, showActions, navigation} = props;
     const {personalRelationship} = encounterProfile
     const [dateStates] = useState([
-        {label: i18n.t(TR.encounterInterest.notMet), value: EDateStatus.NOT_MET},
-        {label: i18n.t(TR.encounterInterest.metNotInterested), value: EDateStatus.MET_NOT_INTERESTED},
-        {label: i18n.t(TR.encounterInterest.metInterested), value: EDateStatus.MET_INTERESTED},
+        {label: i18n.t(TR.encounterInterest.notMet), value: EncounterStatusEnum.not_met},
+        {label: i18n.t(TR.encounterInterest.metNotInterested), value: EncounterStatusEnum.met_not_interested},
+        {label: i18n.t(TR.encounterInterest.metInterested), value: EncounterStatusEnum.met_interested},
     ])
 
-    const setDateStatus = (item: { label: string, value: EDateStatus }) => {
+    const setDateStatus = (item: { label: string, value: EncounterStatusEnum }) => {
         dispatch({
             type: EACTION_ENCOUNTERS.SET_DATE_STATUS,
             payload: {encounterId: encounterProfile.encounterId, value: item.value},
@@ -69,7 +70,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                 <Text style={styles.trustScore}
                       onPress={() => alert(i18n.t(TR.ratingDescr))}>{i18n.t(TR.trust)}
                     ({encounterProfile.rating})</Text>
-                {dateStatus === EDateStatus.MET_NOT_INTERESTED &&
+                {dateStatus === EncounterStatusEnum.met_not_interested &&
                     <Pressable style={personalRelationship?.reported ? styles.buttonDisabled : styles.buttonDanger}
                                disabled={personalRelationship?.reported}
                                onPress={() => navigation.navigate(ROUTES.Main.ReportEncounter, {personToReport: encounterProfile})}>
@@ -78,7 +79,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                         </Text>
                     </Pressable>}
 
-                {dateStatus === EDateStatus.NOT_MET && personalRelationship?.isNearbyRightNow &&
+                {dateStatus === EncounterStatusEnum.not_met && personalRelationship?.isNearbyRightNow &&
                     <Pressable style={styles.buttonBlack}
                                onPress={() => navigation.navigate(ROUTES.HouseRules, {
                                    nextPage: ROUTES.Main.NavigateToApproach,

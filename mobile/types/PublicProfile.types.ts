@@ -1,3 +1,5 @@
+import {EncounterStatusEnum} from "../api/gen/src";
+
 export interface IEncounterProfile {
     encounterId: string
     firstName: string
@@ -15,15 +17,9 @@ export interface IPublicProfile {
     imageURIs: string[]
 }
 
-export enum EDateStatus {
-    NOT_MET ="not_met",
-    MET_NOT_INTERESTED = "met_not_interested",
-    MET_INTERESTED = "met_interested",
-}
-
 export interface IProfileRelationship {
     isNearbyRightNow: boolean
-    status: EDateStatus
+    status: EncounterStatusEnum
     /** @dev Last time both have been nearby regardless whether they actually met, might just be calculated by backend "4 days ago"|"2 hours ago" */
     lastTimePassedBy: string
     /** Before we go for LatLng here, we might just return a readable string from the backend */

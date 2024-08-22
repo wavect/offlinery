@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {EApproachChoice, EDateMode, EVerificationStatus, EGender, EEncounterStatus} from "../types/user.types";
+import {EEncounterStatus} from "../types/user.types";
 import {UserPublicDTO} from "./user-public.dto";
 
 export class EncounterPublicDTO {
