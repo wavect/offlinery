@@ -13,63 +13,77 @@ import * as Notifications from 'expo-notifications';
 import {EncountersProvider} from "../../context/EncountersContext";
 import NavigateToApproach from "./NavigateToApproach";
 import {registerForPushNotificationsAsync} from "../../services/notification.service";
-import {useEffect, useRef, useState} from "react";
+import {memo, useEffect, useRef, useState} from "react";
 import {useUserContext} from "../../context/UserContext";
 import {Subscription} from "expo-notifications";
 import {Platform} from "react-native";
 import ProfileView from "./ProfileView";
 import {i18n, TR} from "../../localization/translate.service";
 import {NotificationNavigateUserDTO} from "../../api/gen/src";
+import {IEncounterProfile} from "../../types/PublicProfile.types";
+import {getAge} from "../../utils/date.utils";
 
 const Tab = createBottomTabNavigator();
 const EncounterStack = createStackNavigator();
 
+interface IEncounterStackProps {
+    route?: {
+        params?: {
+            initialRouteName?: string
+        }
+    }
+}
+
 const NO_HEADER = {headerShown: false}
-const EncounterScreenStack = () => <EncountersProvider>
-    <EncounterStack.Navigator
-        initialRouteName={ROUTES.Main.Encounters}
-        screenOptions={NO_HEADER}
-    >
-        <EncounterStack.Screen
-            name={ROUTES.Main.Encounters}
-            component={Encounters}
-            options={NO_HEADER}
-        />
-        <EncounterStack.Screen
-            name={ROUTES.Main.ReportEncounter}
-            component={ReportEncounter}
-            options={{
-                headerShown: true,
-                headerShadowVisible: false,
-                headerTitle: i18n.t(TR.reportPerson),
-                headerBackTitleVisible: false,
-                headerTitleAlign: 'left'
-            }}
-        />
-        <EncounterStack.Screen
-            name={ROUTES.Main.NavigateToApproach}
-            component={NavigateToApproach}
-            options={{
-                headerShown: true,
-                headerShadowVisible: false,
-                headerTitle: i18n.t(TR.meetIRL),
-                headerBackTitleVisible: false,
-                headerTitleAlign: 'left'
-            }}
-        />
-        <EncounterStack.Screen
-            name={ROUTES.Main.ProfileView}
-            component={ProfileView}
-            options={{
-                headerShown: true,
-                headerShadowVisible: false,
-                headerTitle: i18n.t(TR.profileView),
-                headerBackTitleVisible: false,
-                headerTitleAlign: 'left'
-            }}
-        />
-    </EncounterStack.Navigator>
-</EncountersProvider>
+const EncounterScreenStack = memo(({route}: IEncounterStackProps) => {
+    const initialRouteName = route?.params?.initialRouteName ?? ROUTES.Main.Encounters;
+        return <EncountersProvider>
+            <EncounterStack.Navigator
+                initialRouteName={initialRouteName}
+                screenOptions={NO_HEADER}
+            >
+                <EncounterStack.Screen
+                    name={ROUTES.Main.Encounters}
+                    component={Encounters}
+                    options={NO_HEADER}
+                />
+                <EncounterStack.Screen
+                    name={ROUTES.Main.ReportEncounter}
+                    component={ReportEncounter}
+                    options={{
+                        headerShown: true,
+                        headerShadowVisible: false,
+                        headerTitle: i18n.t(TR.reportPerson),
+                        headerBackTitleVisible: false,
+                        headerTitleAlign: 'left'
+                    }}
+                />
+                <EncounterStack.Screen
+                    name={ROUTES.Main.NavigateToApproach}
+                    component={NavigateToApproach}
+                    options={{
+                        headerShown: true,
+                        headerShadowVisible: false,
+                        headerTitle: i18n.t(TR.meetIRL),
+                        headerBackTitleVisible: false,
+                        headerTitleAlign: 'left'
+                    }}
+                />
+                <EncounterStack.Screen
+                    name={ROUTES.Main.ProfileView}
+                    component={ProfileView}
+                    options={{
+                        headerShown: true,
+                        headerShadowVisible: false,
+                        headerTitle: i18n.t(TR.profileView),
+                        headerBackTitleVisible: false,
+                        headerTitleAlign: 'left'
+                    }}
+                />
+            </EncounterStack.Navigator>
+        </EncountersProvider>
+    }
+)
 
 export const MainScreenTabs = ({navigation}) => {
     const {state, dispatch} = useUserContext()
@@ -103,10 +117,17 @@ export const MainScreenTabs = ({navigation}) => {
                 console.log("Notification response", response);
                 // TODO: At some point we might want to send other notifications too? then we need to be more flexible on the typing and checking it
                 const notificationData: NotificationNavigateUserDTO = response.notification.request.content.data as NotificationNavigateUserDTO;
-                // Navigate to the specified screen, passing the user object as a prop
-                navigation.navigate(notificationData.screen, { navigateToPerson: notificationData.navigateToPerson });
 
-                // Handle notification response (e.g., navigate to a specific screen)
+                // TODO: Move As many types as possible into backend for generation (e.g. PublicUser, Encounter, ..)
+                const encounterProfile: IEncounterProfile = {
+                    firstName: notificationData.navigateToPerson.firstName,
+                    bio: notificationData.navigateToPerson.bio,
+                    imageURIs: notificationData.navigateToPerson.imageURIs,
+                    encounterId: notificationData.navigateToPerson.id, // TODO: Is a different ID most likely (relationship ID)
+                    age: getAge(notificationData.navigateToPerson.birthDay).toString(), // TODO: calc on backend and only return age
+                }; // TODO: FIX union types on backend to be consistent/clean
+                // Navigate to the specified screen, passing the user object as a prop
+                navigation.navigate(ROUTES.Main.Encounters, { screen: notificationData.screen, params: { navigateToPerson: encounterProfile } });
             });
 
             return () => {
