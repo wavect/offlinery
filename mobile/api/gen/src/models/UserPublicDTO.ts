@@ -26,35 +26,17 @@ export interface UserPublicDTO {
      */
     id: string;
     /**
-     * Indicates if the user account is active
-     * @type {boolean}
-     * @memberof UserPublicDTO
-     */
-    isActive: boolean;
-    /**
      * The first name of the user
      * @type {string}
      * @memberof UserPublicDTO
      */
     firstName: string;
     /**
-     * The birth date of the user
-     * @type {Date}
+     * Age of user
+     * @type {number}
      * @memberof UserPublicDTO
      */
-    birthDay: Date;
-    /**
-     * The gender of the user
-     * @type {string}
-     * @memberof UserPublicDTO
-     */
-    gender: UserPublicDTOGenderEnum;
-    /**
-     * The gender the user is interested in
-     * @type {string}
-     * @memberof UserPublicDTO
-     */
-    genderDesire: UserPublicDTOGenderDesireEnum;
+    age: number;
     /**
      * An array of image uris
      * @type {Array<string>}
@@ -62,41 +44,11 @@ export interface UserPublicDTO {
      */
     imageURIs: Array<string>;
     /**
-     * The verification status of the user
-     * @type {string}
-     * @memberof UserPublicDTO
-     */
-    verificationStatus: UserPublicDTOVerificationStatusEnum;
-    /**
-     * The approach choice of the user
-     * @type {string}
-     * @memberof UserPublicDTO
-     */
-    approachChoice: UserPublicDTOApproachChoiceEnum;
-    /**
-     * The time from which the user can be approached
-     * @type {string}
-     * @memberof UserPublicDTO
-     */
-    approachFromTime: string;
-    /**
-     * The time until which the user can be approached
-     * @type {string}
-     * @memberof UserPublicDTO
-     */
-    approachToTime: string;
-    /**
      * The user's bio
      * @type {string}
      * @memberof UserPublicDTO
      */
     bio: string;
-    /**
-     * The date mode of the user
-     * @type {string}
-     * @memberof UserPublicDTO
-     */
-    dateMode: UserPublicDTODateModeEnum;
     /**
      * The user's trust score
      * @type {number}
@@ -105,72 +57,15 @@ export interface UserPublicDTO {
     trustScore?: number;
 }
 
-
-/**
- * @export
- */
-export const UserPublicDTOGenderEnum = {
-    woman: 'woman',
-    man: 'man'
-} as const;
-export type UserPublicDTOGenderEnum = typeof UserPublicDTOGenderEnum[keyof typeof UserPublicDTOGenderEnum];
-
-/**
- * @export
- */
-export const UserPublicDTOGenderDesireEnum = {
-    woman: 'woman',
-    man: 'man'
-} as const;
-export type UserPublicDTOGenderDesireEnum = typeof UserPublicDTOGenderDesireEnum[keyof typeof UserPublicDTOGenderDesireEnum];
-
-/**
- * @export
- */
-export const UserPublicDTOVerificationStatusEnum = {
-    verified: 'verified',
-    pending: 'pending',
-    not_needed: 'not_needed'
-} as const;
-export type UserPublicDTOVerificationStatusEnum = typeof UserPublicDTOVerificationStatusEnum[keyof typeof UserPublicDTOVerificationStatusEnum];
-
-/**
- * @export
- */
-export const UserPublicDTOApproachChoiceEnum = {
-    approach: 'approach',
-    be_approached: 'be_approached',
-    both: 'both'
-} as const;
-export type UserPublicDTOApproachChoiceEnum = typeof UserPublicDTOApproachChoiceEnum[keyof typeof UserPublicDTOApproachChoiceEnum];
-
-/**
- * @export
- */
-export const UserPublicDTODateModeEnum = {
-    ghost: 'ghost',
-    live: 'live'
-} as const;
-export type UserPublicDTODateModeEnum = typeof UserPublicDTODateModeEnum[keyof typeof UserPublicDTODateModeEnum];
-
-
 /**
  * Check if a given object implements the UserPublicDTO interface.
  */
 export function instanceOfUserPublicDTO(value: object): value is UserPublicDTO {
     if (!('id' in value) || value['id'] === undefined) return false;
-    if (!('isActive' in value) || value['isActive'] === undefined) return false;
     if (!('firstName' in value) || value['firstName'] === undefined) return false;
-    if (!('birthDay' in value) || value['birthDay'] === undefined) return false;
-    if (!('gender' in value) || value['gender'] === undefined) return false;
-    if (!('genderDesire' in value) || value['genderDesire'] === undefined) return false;
+    if (!('age' in value) || value['age'] === undefined) return false;
     if (!('imageURIs' in value) || value['imageURIs'] === undefined) return false;
-    if (!('verificationStatus' in value) || value['verificationStatus'] === undefined) return false;
-    if (!('approachChoice' in value) || value['approachChoice'] === undefined) return false;
-    if (!('approachFromTime' in value) || value['approachFromTime'] === undefined) return false;
-    if (!('approachToTime' in value) || value['approachToTime'] === undefined) return false;
     if (!('bio' in value) || value['bio'] === undefined) return false;
-    if (!('dateMode' in value) || value['dateMode'] === undefined) return false;
     return true;
 }
 
@@ -185,18 +80,10 @@ export function UserPublicDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
     return {
         
         'id': json['id'],
-        'isActive': json['isActive'],
         'firstName': json['firstName'],
-        'birthDay': (new Date(json['birthDay'])),
-        'gender': json['gender'],
-        'genderDesire': json['genderDesire'],
+        'age': json['age'],
         'imageURIs': json['imageURIs'],
-        'verificationStatus': json['verificationStatus'],
-        'approachChoice': json['approachChoice'],
-        'approachFromTime': json['approachFromTime'],
-        'approachToTime': json['approachToTime'],
         'bio': json['bio'],
-        'dateMode': json['dateMode'],
         'trustScore': json['trustScore'] == null ? undefined : json['trustScore'],
     };
 }
@@ -208,18 +95,10 @@ export function UserPublicDTOToJSON(value?: UserPublicDTO | null): any {
     return {
         
         'id': value['id'],
-        'isActive': value['isActive'],
         'firstName': value['firstName'],
-        'birthDay': ((value['birthDay']).toISOString().substring(0,10)),
-        'gender': value['gender'],
-        'genderDesire': value['genderDesire'],
+        'age': value['age'],
         'imageURIs': value['imageURIs'],
-        'verificationStatus': value['verificationStatus'],
-        'approachChoice': value['approachChoice'],
-        'approachFromTime': value['approachFromTime'],
-        'approachToTime': value['approachToTime'],
         'bio': value['bio'],
-        'dateMode': value['dateMode'],
         'trustScore': value['trustScore'],
     };
 }

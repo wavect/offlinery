@@ -19,7 +19,7 @@ const mockUser: UserPublicDTO = {
   id: '123456789',
   isActive: true,
   firstName: 'John',
-  birthDay: new Date('1990-01-01'),
+  age: new Date('1990-01-01'),
   gender: EGender.MAN,
   genderDesire: EGender.WOMAN,
   imageURIs: ['image1.jpg', 'image2.jpg', 'image3.jpg'],

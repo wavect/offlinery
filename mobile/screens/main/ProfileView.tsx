@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Image, StyleSheet, View, Dimensions, TouchableOpacity, Modal, Text, FlatList } from "react-native";
 import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import { IPublicProfile } from "../../types/PublicProfile.types";
+import { UserPublicDTO } from "../../types/PublicProfile.types";
 import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
 import { useSharedValue } from 'react-native-reanimated';
 import { Color } from "../../GlobalStyles";
@@ -9,7 +9,7 @@ import {RouteProp} from "@react-navigation/native";
 import {i18n, TR} from "../../localization/translate.service";
 
 interface IProfileViewProps {
-    route?: RouteProp<{ params: { user: IPublicProfile, bottomContainerChildren?: React.ReactNode } }, 'params'>
+    route?: RouteProp<{ params: { user: UserPublicDTO, bottomContainerChildren?: React.ReactNode } }, 'params'>
 }
 
 const ProfileView = ({route}: IProfileViewProps) => {
@@ -31,7 +31,7 @@ const ProfileView = ({route}: IProfileViewProps) => {
             <Image source={{ uri: item }} style={styles.previewImage} />
         </TouchableOpacity>
     );
-    const user: IPublicProfile|undefined = route?.params?.user;
+    const user: UserPublicDTO|undefined = route?.params?.user;
     if (!user) return <Text>{i18n.t(TR.errNoUserProvided)}</Text>
     const bottomContainerChildren: React.ReactNode = route?.params?.bottomContainerChildren
 

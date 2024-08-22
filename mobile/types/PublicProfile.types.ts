@@ -10,13 +10,6 @@ export interface IEncounterProfile {
     personalRelationship?: IProfileRelationship
 }
 
-export interface IPublicProfile {
-    firstName: string
-    age: string
-    bio: string
-    imageURIs: string[]
-}
-
 export interface IProfileRelationship {
     isNearbyRightNow: boolean
     status: EncounterStatusEnum

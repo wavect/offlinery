@@ -1,7 +1,7 @@
 import React, {createContext, Dispatch, useContext, useReducer} from "react";
 import * as ImagePicker from "expo-image-picker";
 import {LocationObject} from "expo-location";
-import {IPublicProfile} from "../types/PublicProfile.types";
+import {UserPublicDTO} from "../types/PublicProfile.types";
 import {getAge} from "../utils/date.utils";
 import {
     CreateUserDTO,
@@ -170,7 +170,7 @@ export const getSavedImageURIs = (state: IUserData): string[] => {
 
 export const getPublicProfileFromUserData = (
     state: IUserData
-): IPublicProfile => {
+): UserPublicDTO => {
     return {
         firstName: state.firstName,
         bio: state.bio,

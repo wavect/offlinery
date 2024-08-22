@@ -1,6 +1,6 @@
 import React, {createContext, Dispatch, useContext, useReducer} from 'react';
-import {IEncounterProfile, IPublicProfile} from "../types/PublicProfile.types";
-import {EncounterStatusEnum} from "../api/gen/src";
+import {IEncounterProfile} from "../types/PublicProfile.types";
+import {EncounterStatusEnum, UserPublicDTO} from "../api/gen/src";
 
 export interface IEncounters {
     encounters: IEncounterProfile[]
@@ -80,7 +80,7 @@ const initialState: IEncounters = {
     ],
 };
 
-export const getPublicProfileFromEncounter = (state: IEncounterProfile): IPublicProfile => {
+export const getPublicProfileFromEncounter = (state: IEncounterProfile): UserPublicDTO => {
     return {
         firstName: state.firstName,
         bio: state.bio,
