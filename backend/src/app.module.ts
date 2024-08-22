@@ -16,6 +16,10 @@ import {UserReport} from "./user-report/user-report.entity";
 import {TYPED_ENV} from "./utils/env.utils";
 import {AuthGuard} from "./auth/auth.guard";
 import {AuthModule} from "./auth/auth.module";
+import {Encounter} from "./encounter/encounter.entity";
+import { EncounterModule } from './encounter/encounter.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
     imports: [
@@ -28,7 +32,7 @@ import {AuthModule} from "./auth/auth.module";
             username: TYPED_ENV.DB_USER,
             password: TYPED_ENV.DB_PASSWORD,
             database: TYPED_ENV.DB_DATABASE,
-            entities: [User, BlacklistedRegion, UserReport],
+            entities: [User, BlacklistedRegion, UserReport, Encounter],
         }),
         // @dev https://docs.nestjs.com/techniques/caching
         CacheModule.register({
@@ -43,7 +47,12 @@ import {AuthModule} from "./auth/auth.module";
             ttl: 60000,
             limit: 10,
         }]),
-        UserModule, BlacklistedRegionModule, NotificationModule, UserReportModule, AuthModule,
+        ServeStaticModule.forRoot({
+            // serve images
+            rootPath: join(__dirname, '..', 'uploads'),
+            serveRoot: '/img',
+        }),
+        UserModule, BlacklistedRegionModule, NotificationModule, UserReportModule, AuthModule, EncounterModule,
     ],
     controllers: [AppController],
     providers: [

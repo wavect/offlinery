@@ -97,6 +97,12 @@ export interface UserPublicDTO {
      * @memberof UserPublicDTO
      */
     dateMode: UserPublicDTODateModeEnum;
+    /**
+     * The user's trust score
+     * @type {number}
+     * @memberof UserPublicDTO
+     */
+    trustScore?: number;
 }
 
 
@@ -191,6 +197,7 @@ export function UserPublicDTOFromJSONTyped(json: any, ignoreDiscriminator: boole
         'approachToTime': json['approachToTime'],
         'bio': json['bio'],
         'dateMode': json['dateMode'],
+        'trustScore': json['trustScore'] == null ? undefined : json['trustScore'],
     };
 }
 
@@ -213,6 +220,7 @@ export function UserPublicDTOToJSON(value?: UserPublicDTO | null): any {
         'approachToTime': value['approachToTime'],
         'bio': value['bio'],
         'dateMode': value['dateMode'],
+        'trustScore': value['trustScore'],
     };
 }
 

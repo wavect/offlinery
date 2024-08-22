@@ -25,6 +25,12 @@ import {
     BlacklistedRegionFromJSONTyped,
     BlacklistedRegionToJSON,
 } from './BlacklistedRegion';
+import type { Encounter } from './Encounter';
+import {
+    EncounterFromJSON,
+    EncounterFromJSONTyped,
+    EncounterToJSON,
+} from './Encounter';
 
 /**
  * 
@@ -158,6 +164,18 @@ export interface User {
      * @memberof User
      */
     issuedReports: Array<UserReport>;
+    /**
+     * 
+     * @type {Array<Encounter>}
+     * @memberof User
+     */
+    encounters: Array<Encounter>;
+    /**
+     * 
+     * @type {number}
+     * @memberof User
+     */
+    trustScore?: number;
 }
 
 
@@ -234,6 +252,7 @@ export function instanceOfUser(value: object): value is User {
     if (!('pushToken' in value) || value['pushToken'] === undefined) return false;
     if (!('receivedReports' in value) || value['receivedReports'] === undefined) return false;
     if (!('issuedReports' in value) || value['issuedReports'] === undefined) return false;
+    if (!('encounters' in value) || value['encounters'] === undefined) return false;
     return true;
 }
 
@@ -268,6 +287,8 @@ export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User
         'pushToken': json['pushToken'],
         'receivedReports': ((json['receivedReports'] as Array<any>).map(UserReportFromJSON)),
         'issuedReports': ((json['issuedReports'] as Array<any>).map(UserReportFromJSON)),
+        'encounters': ((json['encounters'] as Array<any>).map(EncounterFromJSON)),
+        'trustScore': json['trustScore'] == null ? undefined : json['trustScore'],
     };
 }
 
@@ -298,6 +319,8 @@ export function UserToJSON(value?: User | null): any {
         'pushToken': value['pushToken'],
         'receivedReports': ((value['receivedReports'] as Array<any>).map(UserReportToJSON)),
         'issuedReports': ((value['issuedReports'] as Array<any>).map(UserReportToJSON)),
+        'encounters': ((value['encounters'] as Array<any>).map(EncounterToJSON)),
+        'trustScore': value['trustScore'],
     };
 }
 

@@ -4,6 +4,7 @@ README.md
 package.json
 src/apis/AuthApi.ts
 src/apis/DefaultApi.ts
+src/apis/EncounterApi.ts
 src/apis/PushNotificationsApi.ts
 src/apis/UserApi.ts
 src/apis/UserReportsApi.ts
@@ -13,6 +14,7 @@ src/models/BlacklistedRegion.ts
 src/models/BlacklistedRegionDTO.ts
 src/models/CreateUserDTO.ts
 src/models/CreateUserReportDto.ts
+src/models/Encounter.ts
 src/models/NotificationNavigateUserDTO.ts
 src/models/SignInDTO.ts
 src/models/SignInResponseDTO.ts

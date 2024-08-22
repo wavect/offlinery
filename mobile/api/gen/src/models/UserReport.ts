@@ -19,6 +19,12 @@ import {
     UserFromJSONTyped,
     UserToJSON,
 } from './User';
+import type { Encounter } from './Encounter';
+import {
+    EncounterFromJSON,
+    EncounterFromJSONTyped,
+    EncounterToJSON,
+} from './Encounter';
 
 /**
  * 
@@ -68,6 +74,12 @@ export interface UserReport {
      * @memberof UserReport
      */
     reportingUser: User;
+    /**
+     * 
+     * @type {Encounter}
+     * @memberof UserReport
+     */
+    reportedEncounter: Encounter;
 }
 
 
@@ -94,6 +106,7 @@ export function instanceOfUserReport(value: object): value is UserReport {
     if (!('reportedOn' in value) || value['reportedOn'] === undefined) return false;
     if (!('reportedUser' in value) || value['reportedUser'] === undefined) return false;
     if (!('reportingUser' in value) || value['reportingUser'] === undefined) return false;
+    if (!('reportedEncounter' in value) || value['reportedEncounter'] === undefined) return false;
     return true;
 }
 
@@ -114,6 +127,7 @@ export function UserReportFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'reportedOn': (new Date(json['reportedOn'])),
         'reportedUser': UserFromJSON(json['reportedUser']),
         'reportingUser': UserFromJSON(json['reportingUser']),
+        'reportedEncounter': EncounterFromJSON(json['reportedEncounter']),
     };
 }
 
@@ -130,6 +144,7 @@ export function UserReportToJSON(value?: UserReport | null): any {
         'reportedOn': ((value['reportedOn']).toISOString()),
         'reportedUser': UserToJSON(value['reportedUser']),
         'reportingUser': UserToJSON(value['reportingUser']),
+        'reportedEncounter': EncounterToJSON(value['reportedEncounter']),
     };
 }
 
