@@ -19,6 +19,8 @@ import {AuthModule} from "./auth/auth.module";
 import {Encounter} from "./encounter/encounter.entity";
 import { EncounterService } from './encounter/encounter.service';
 import { EncounterModule } from './encounter/encounter.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
     imports: [
@@ -46,6 +48,11 @@ import { EncounterModule } from './encounter/encounter.module';
             ttl: 60000,
             limit: 10,
         }]),
+        ServeStaticModule.forRoot({
+            // serve images
+            rootPath: join(__dirname, '..', 'uploads'),
+            serveRoot: '/img',
+        }),
         UserModule, BlacklistedRegionModule, NotificationModule, UserReportModule, AuthModule, EncounterModule,
     ],
     controllers: [AppController],

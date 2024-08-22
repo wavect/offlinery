@@ -40,7 +40,7 @@
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "wsdt/encounter",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/kevin/Desktop/GitRepositories/FuckDatingApps/fuck-dating-apps/backend/src/DTOs",
@@ -119,6 +119,7 @@
       <workItem from="1724160113614" duration="7000" />
       <workItem from="1724171864972" duration="9000" />
       <workItem from="1724176725328" duration="2271000" />
+      <workItem from="1724311177041" duration="1110000" />
     </task>
     <servers />
   </component>

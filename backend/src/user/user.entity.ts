@@ -105,7 +105,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
     @OneToMany(() => UserReport, report => report.reportingUser)
     issuedReports: UserReport[];
 
-    @OneToMany(() => Encounter, (encounter) => encounter.userNearby)
+    @OneToMany(() => Encounter, (encounter) => encounter.users)
     encounters: Encounter[];
 
     @Column({ nullable: true })
