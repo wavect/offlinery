@@ -12,15 +12,29 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - '${DB_PORT:-5432}:5432'
     networks:
       - app_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_DATABASE}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_DATABASE}']
       interval: 10s
       timeout: 5s
       retries: 5
-
+  db_ui:
+    container_name: db-ui
+    image: dpage/pgadmin4
+    restart: on-failure
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${DB_UI_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${DB_UI_PASSWORD}
+      PGADMIN_LISTEN_PORT: ${DB_UI_PORT}
+      
+    ports:
+      - ${DB_UI_PORT}:${DB_UI_PORT}
+    networks:
+      - app_network
+    depends_on:
+      - postgres
 # TODO: Later on, for MVP use in-memory store for cheaper hosting
 #  redis:
 #    image: redis:6.2-alpine
