@@ -32,13 +32,14 @@ export class UserService {
         const index = Number(file.originalname);
 
         if (isNaN(index)) {
-            console.log(`"${index}"`)
-            throw new Error(`Could not parse image index to number. Tried to parse following value: ${file.originalname}`)
+          throw new Error(
+            `Could not parse image index to number. Tried to parse following value: ${file.originalname}`,
+          );
         }
 
         // mimeType examples: "image/jpeg", "image/png".
         // Since we only allow image files, we can assume mimeType always follows this scheme.
-        const uniqueFilename = `${uuidv4()}${path.extname(file.originalname)}.${file.mimetype.split("/")[1]}`;
+        const uniqueFilename = `${uuidv4()}${path.extname(file.originalname)}.${file.mimetype.split('/')[1]}`;
         const filePath = path.join(uploadDir, uniqueFilename);
         await fs.promises.writeFile(filePath, file.buffer);
         return { index, filePath: uniqueFilename };
@@ -63,9 +64,9 @@ export class UserService {
     );
 
     // Save images
-    user.imageURIs = (
-        await this.saveFiles(images)
-    ).map((image) => image.filePath);
+    user.imageURIs = (await this.saveFiles(images)).map(
+      (image) => image.filePath,
+    );
 
     // Save blacklisted regions
     if (createUserDto.blacklistedRegions) {
@@ -97,11 +98,10 @@ export class UserService {
 
     // Update images if provided
     if (images && images.length > 0) {
-      const newImages  = await this.saveFiles(images);
+      const newImages = await this.saveFiles(images);
       for (let index = 0; index < newImages.length; index++) {
         const image = newImages[index];
         user.imageURIs[image.index] = image.filePath;
-        
       }
     }
 
@@ -109,7 +109,12 @@ export class UserService {
     if (updateUserDto.blacklistedRegions) {
       // Remove old blacklisted regions
       if (user.blacklistedRegions) {
-        await this.blacklistedRegionRepository.remove(user.blacklistedRegions);
+        console.log('blacklisted: ', user.blacklistedRegions);
+        const blacklistedRegions =
+          await this.blacklistedRegionRepository.findBy(
+            user.blacklistedRegions.map((region) => ({ id: region.id })),
+          );
+        await this.blacklistedRegionRepository.remove(blacklistedRegions);
       }
 
       // Add new blacklisted regions

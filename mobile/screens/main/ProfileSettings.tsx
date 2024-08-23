@@ -58,6 +58,7 @@ const ProfileSettings = ({navigation}) => {
                     birthDay: state.birthDay,
                     gender: state.gender,
                     genderDesire: state.genderDesire,
+                    blacklistedRegions: state.blacklistedRegions
                 },
                 images: getUserImagesForUpload(state)
             };

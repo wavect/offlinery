@@ -50,6 +50,7 @@ export interface MapRegion {
     longitude: number;
     latitude: number;
     radius: number;
+    uiRadius?: number;
 }
 
 export type ImageIdx = "0" | "1" | "2" | "3" | "4" | "5";

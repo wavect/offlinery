@@ -1,26 +1,36 @@
 import * as React from "react";
-import {useEffect, useState} from "react";
-import {Platform, Pressable, StyleSheet, Text, View} from "react-native";
-import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
+import { useEffect, useState } from "react";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
 import MapView, {
-  Circle, LongPressEvent,
+  Circle,
+  LongPressEvent,
   Marker,
   MarkerDragEvent,
   PROVIDER_DEFAULT,
-  PROVIDER_GOOGLE
+  PROVIDER_GOOGLE,
 } from "react-native-maps";
-import {BorderRadius, Color, Subtitle} from "../../GlobalStyles";
-import Slider from '@react-native-community/slider';
-import {EACTION_USER, MapRegion, useUserContext} from "../../context/UserContext";
-import {MaterialIcons} from "@expo/vector-icons";
-import * as Location from 'expo-location';
-import {LocationAccuracy} from 'expo-location';
-import {i18n, TR} from "../../localization/translate.service";
+import { BorderRadius, Color, Subtitle } from "../../GlobalStyles";
+import Slider from "@react-native-community/slider";
+import {
+  EACTION_USER,
+  MapRegion,
+  useUserContext,
+} from "../../context/UserContext";
+import { MaterialIcons } from "@expo/vector-icons";
+import * as Location from "expo-location";
+import { LocationAccuracy } from "expo-location";
+import { i18n, TR } from "../../localization/translate.service";
+import { UserApi } from "../../api/gen/src";
 
-const HeatMap = ({navigation}) => {
-  const {state, dispatch} = useUserContext()
-  const [activeRegionIndex, setActiveRegionIndex] = React.useState<number | null>(null);
-  const [location, setLocation] = useState<Location.LocationObject|null>(null);
+const HeatMap = ({ navigation }) => {
+  const { state, dispatch } = useUserContext();
+  const [activeRegionIndex, setActiveRegionIndex] = React.useState<
+    number | null
+  >(null);
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null
+  );
   const mapRef = React.useRef(null);
   const [mapRegion, setMapRegion] = useState({
     // Uni Ibk
@@ -37,12 +47,14 @@ const HeatMap = ({navigation}) => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Permission to access location was denied');
+      if (status !== "granted") {
+        alert("Permission to access location was denied");
         return;
       }
 
-      const location = await Location.getCurrentPositionAsync({accuracy: LocationAccuracy.BestForNavigation});
+      const location = await Location.getCurrentPositionAsync({
+        accuracy: LocationAccuracy.BestForNavigation,
+      });
       setLocation(location);
     })();
   }, []);
@@ -58,15 +70,54 @@ const HeatMap = ({navigation}) => {
     }
   }, [location]);
 
+  useEffect(() => {
+    async function updateBlacklistedRegion(regions: MapRegion[]) {
+      try {
+        const userApi = new UserApi();
+        await userApi.userControllerUpdateUser(
+          {
+            id: state.id!,
+            user: {
+              blacklistedRegions: regions,
+            },
+          },
+          {
+            headers: { Authorization: `Bearer ${state.jwtAccessToken}` },
+          }
+        );
+      } catch (error) {
+        console.error("Error updating blacklisted regions:", error);
+      }
+    }
+    const timer = setTimeout(() => {
+      const newRegions = [...state.blacklistedRegions];
+      if (activeRegionIndex !== null) {
+        const currRegion = newRegions[activeRegionIndex];
+        newRegions[activeRegionIndex] = {
+          ...currRegion,
+          radius: currRegion.uiRadius ?? currRegion.radius,
+        };
+      }
+      setBlacklistedRegions(newRegions);
+      updateBlacklistedRegion(newRegions);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [state.blacklistedRegions[activeRegionIndex!]?.uiRadius]);
 
   const setBlacklistedRegions = (blacklistedRegions: MapRegion[]) => {
-    dispatch({type: EACTION_USER.SET_BLACKLISTED_REGIONS, payload: blacklistedRegions})
-  }
+    dispatch({
+      type: EACTION_USER.SET_BLACKLISTED_REGIONS,
+      payload: blacklistedRegions,
+    });
+  };
 
   const handleMapLongPress = (event: LongPressEvent) => {
-    const {coordinate} = event.nativeEvent;
-    const {latitude, longitude} = coordinate;
-    setBlacklistedRegions([...state.blacklistedRegions, {latitude, longitude, radius: 100}]);
+    const { coordinate } = event.nativeEvent;
+    const { latitude, longitude } = coordinate;
+    setBlacklistedRegions([
+      ...state.blacklistedRegions,
+      { latitude, longitude, radius: 100, uiRadius: 100 },
+    ]);
     setActiveRegionIndex(state.blacklistedRegions.length);
   };
 
@@ -79,7 +130,7 @@ const HeatMap = ({navigation}) => {
       const newRegions = [...state.blacklistedRegions];
       newRegions[activeRegionIndex] = {
         ...newRegions[activeRegionIndex],
-        radius: value
+        uiRadius: value,
       };
       setBlacklistedRegions(newRegions);
     }
@@ -92,111 +143,129 @@ const HeatMap = ({navigation}) => {
   };
 
   const handleRegionDrag = (event: MarkerDragEvent, index: number) => {
-    const {latitude, longitude} = event.nativeEvent.coordinate
-    state.blacklistedRegions[index].latitude = latitude
-    state.blacklistedRegions[index].longitude = longitude
-    setBlacklistedRegions(state.blacklistedRegions)
-  }
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    state.blacklistedRegions[index].latitude = latitude;
+    state.blacklistedRegions[index].longitude = longitude;
+    setBlacklistedRegions(state.blacklistedRegions);
+  };
 
   return (
-      <OPageContainer subtitle={i18n.t(TR.beNearTheseHotspotsToMeet)}>
-        <>
-          <MapView
-              ref={mapRef}
-              style={styles.map}
-              region={mapRegion}
-              initialRegion={{
-                latitude: location?.coords?.latitude ?? 47.257832302,
-                longitude: location?.coords?.longitude ?? 11.383665132,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-              onLongPress={handleMapLongPress}
-              provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
-          >
-            {state.blacklistedRegions.map((region, index) => (
-                <React.Fragment key={`region-${index}`}>
-                  <Circle
-                      center={region}
-                      radius={region.radius}
-                      fillColor={index === activeRegionIndex ? "rgba(255, 0, 0, 0.4)" : "rgba(255, 0, 0, 0.2)"}
-                      strokeColor={index === activeRegionIndex ? "rgba(255, 0, 0, 0.8)" : "rgba(255, 0, 0, 0.5)"}
-                  />
-                  <Marker
-                      coordinate={region}
-                      title={i18n.t(TR.youAreUndercover)}
-                      description={i18n.t(TR.nobodyWillSeeYou)}
-                      draggable={true}
-                      onDrag={(ev) => handleRegionDrag(ev, index)}
-                      onPress={() => handleRegionPress(index)}
-                      tracksViewChanges={false}
-                  />
-                </React.Fragment>
-            ))}
-            {location && <Marker
-                title={i18n.t(TR.myLocation)}
-                description={i18n.t(TR.youAreHere)}
-                pinColor="blue"
-                coordinate={location.coords}
+    <OPageContainer subtitle={i18n.t(TR.beNearTheseHotspotsToMeet)}>
+      <>
+        <MapView
+          ref={mapRef}
+          style={styles.map}
+          region={mapRegion}
+          initialRegion={{
+            latitude: location?.coords?.latitude ?? 47.257832302,
+            longitude: location?.coords?.longitude ?? 11.383665132,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+          onLongPress={handleMapLongPress}
+          provider={
+            Platform.OS === "android" ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
+          }
+        >
+          {state.blacklistedRegions.map((region, index) => (
+            <React.Fragment key={`region-${index}`}>
+              <Circle
+                center={region}
+                radius={region.uiRadius ?? region.radius}
+                fillColor={
+                  index === activeRegionIndex
+                    ? "rgba(255, 0, 0, 0.4)"
+                    : "rgba(255, 0, 0, 0.2)"
+                }
+                strokeColor={
+                  index === activeRegionIndex
+                    ? "rgba(255, 0, 0, 0.8)"
+                    : "rgba(255, 0, 0, 0.5)"
+                }
+              />
+              <Marker
+                coordinate={region}
+                title={i18n.t(TR.youAreUndercover)}
+                description={i18n.t(TR.nobodyWillSeeYou)}
+                draggable={true}
+                onDrag={(ev) => handleRegionDrag(ev, index)}
+                onPress={() => handleRegionPress(index)}
                 tracksViewChanges={false}
-            />}
-
-          </MapView>
-          {activeRegionIndex !== null && (
-              <Pressable style={styles.removeButtonContainer}
-                         onPress={() => handleRemoveRegion(activeRegionIndex)}>
-                <MaterialIcons
-                    name="delete-outline"
-                    size={40}
-                    color="red"
-                />
-              </Pressable>
+              />
+            </React.Fragment>
+          ))}
+          {location && (
+            <Marker
+              title={i18n.t(TR.myLocation)}
+              description={i18n.t(TR.youAreHere)}
+              pinColor="blue"
+              coordinate={location.coords}
+              tracksViewChanges={false}
+            />
           )}
-          <View style={styles.instructions}>
-            <Text style={[Subtitle, styles.instructionText]}>
-              {i18n.t(TR.longPressMapSafeZoneInstruction)}
+        </MapView>
+        {activeRegionIndex !== null && (
+          <Pressable
+            style={styles.removeButtonContainer}
+            onPress={() => handleRemoveRegion(activeRegionIndex)}
+          >
+            <MaterialIcons name="delete-outline" size={40} color="red" />
+          </Pressable>
+        )}
+        <View style={styles.instructions}>
+          <Text style={[Subtitle, styles.instructionText]}>
+            {i18n.t(TR.longPressMapSafeZoneInstruction)}
+          </Text>
+        </View>
+        {activeRegionIndex !== null && (
+          <View style={styles.sliderContainer}>
+            <Text style={[Subtitle, styles.instructionText, styles.bold]}>
+              {i18n.t(TR.adjustRegionRadius)} (
+              {Math.round(
+                state.blacklistedRegions[activeRegionIndex].uiRadius ??
+                  state.blacklistedRegions[activeRegionIndex].radius
+              )}
+              m)
             </Text>
+            <Slider
+              style={styles.slider}
+              minimumValue={100}
+              maximumValue={1000}
+              step={10}
+              value={
+                state.blacklistedRegions[activeRegionIndex].uiRadius ??
+                state.blacklistedRegions[activeRegionIndex].radius
+              }
+              onValueChange={handleRadiusChange}
+            />
           </View>
-          {activeRegionIndex !== null && (
-              <View style={styles.sliderContainer}>
-                <Text style={[Subtitle, styles.instructionText, styles.bold]}>{i18n.t(TR.adjustRegionRadius)}&nsbp;({Math.round(state.blacklistedRegions[activeRegionIndex].radius)}m)</Text>
-                <Slider
-                    style={styles.slider}
-                    minimumValue={100}
-                    maximumValue={1000}
-                    step={10}
-                    value={state.blacklistedRegions[activeRegionIndex].radius}
-                    onValueChange={handleRadiusChange}
-                />
-              </View>
-          )}
-        </>
-      </OPageContainer>
+        )}
+      </>
+    </OPageContainer>
   );
 };
 
-
 const styles = StyleSheet.create({
   map: {
-    width: '100%',
+    width: "100%",
     minHeight: 400,
     borderRadius: BorderRadius.br_5xs,
   },
   removeButtonContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 70,
     right: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
     borderRadius: 20,
     padding: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   instructions: {
     marginTop: 20,
   },
   bold: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   instructionText: {
     marginBottom: 5,
@@ -205,11 +274,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   slider: {
-    width: '100%',
+    width: "100%",
   },
   sliderValue: {
     color: Color.white,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 
