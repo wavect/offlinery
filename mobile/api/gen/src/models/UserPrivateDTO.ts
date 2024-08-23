@@ -33,35 +33,17 @@ export interface UserPrivateDTO {
      */
     id: string;
     /**
-     * Indicates if the user account is active
-     * @type {boolean}
-     * @memberof UserPrivateDTO
-     */
-    isActive: boolean;
-    /**
      * The first name of the user
      * @type {string}
      * @memberof UserPrivateDTO
      */
     firstName: string;
     /**
-     * The birth date of the user
-     * @type {Date}
+     * Age of user
+     * @type {number}
      * @memberof UserPrivateDTO
      */
-    birthDay: Date;
-    /**
-     * The gender of the user
-     * @type {string}
-     * @memberof UserPrivateDTO
-     */
-    gender: UserPrivateDTOGenderEnum;
-    /**
-     * The gender the user is interested in
-     * @type {string}
-     * @memberof UserPrivateDTO
-     */
-    genderDesire: UserPrivateDTOGenderDesireEnum;
+    age: number;
     /**
      * An array of image uris
      * @type {Array<string>}
@@ -69,47 +51,23 @@ export interface UserPrivateDTO {
      */
     imageURIs: Array<string>;
     /**
-     * The verification status of the user
-     * @type {string}
-     * @memberof UserPrivateDTO
-     */
-    verificationStatus: UserPrivateDTOVerificationStatusEnum;
-    /**
-     * The approach choice of the user
-     * @type {string}
-     * @memberof UserPrivateDTO
-     */
-    approachChoice: UserPrivateDTOApproachChoiceEnum;
-    /**
-     * The time from which the user can be approached
-     * @type {string}
-     * @memberof UserPrivateDTO
-     */
-    approachFromTime: string;
-    /**
-     * The time until which the user can be approached
-     * @type {string}
-     * @memberof UserPrivateDTO
-     */
-    approachToTime: string;
-    /**
      * The user's bio
      * @type {string}
      * @memberof UserPrivateDTO
      */
     bio: string;
     /**
-     * The date mode of the user
-     * @type {string}
-     * @memberof UserPrivateDTO
-     */
-    dateMode: UserPrivateDTODateModeEnum;
-    /**
      * The user's trust score
      * @type {number}
      * @memberof UserPrivateDTO
      */
     trustScore?: number;
+    /**
+     * Indicates if the user account is active
+     * @type {boolean}
+     * @memberof UserPrivateDTO
+     */
+    isActive: boolean;
     /**
      * The unique email of the user
      * @type {string}
@@ -128,26 +86,65 @@ export interface UserPrivateDTO {
      * @memberof UserPrivateDTO
      */
     blacklistedRegions: Array<BlacklistedRegionDTO>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof UserPrivateDTO
+     */
+    birthDay: Date;
+    /**
+     * The time from which the user can be approached
+     * @type {string}
+     * @memberof UserPrivateDTO
+     */
+    approachFromTime: string;
+    /**
+     * The time until which the user can be approached
+     * @type {string}
+     * @memberof UserPrivateDTO
+     */
+    approachToTime: string;
+    /**
+     * The date mode of the user
+     * @type {string}
+     * @memberof UserPrivateDTO
+     */
+    dateMode: UserPrivateDTODateModeEnum;
+    /**
+     * The verification status of the user
+     * @type {string}
+     * @memberof UserPrivateDTO
+     */
+    verificationStatus: UserPrivateDTOVerificationStatusEnum;
+    /**
+     * The approach choice of the user
+     * @type {string}
+     * @memberof UserPrivateDTO
+     */
+    approachChoice: UserPrivateDTOApproachChoiceEnum;
+    /**
+     * The gender of the user
+     * @type {string}
+     * @memberof UserPrivateDTO
+     */
+    gender: UserPrivateDTOGenderEnum;
+    /**
+     * The gender the user is interested in
+     * @type {string}
+     * @memberof UserPrivateDTO
+     */
+    genderDesire: UserPrivateDTOGenderDesireEnum;
 }
 
 
 /**
  * @export
  */
-export const UserPrivateDTOGenderEnum = {
-    woman: 'woman',
-    man: 'man'
+export const UserPrivateDTODateModeEnum = {
+    ghost: 'ghost',
+    live: 'live'
 } as const;
-export type UserPrivateDTOGenderEnum = typeof UserPrivateDTOGenderEnum[keyof typeof UserPrivateDTOGenderEnum];
-
-/**
- * @export
- */
-export const UserPrivateDTOGenderDesireEnum = {
-    woman: 'woman',
-    man: 'man'
-} as const;
-export type UserPrivateDTOGenderDesireEnum = typeof UserPrivateDTOGenderDesireEnum[keyof typeof UserPrivateDTOGenderDesireEnum];
+export type UserPrivateDTODateModeEnum = typeof UserPrivateDTODateModeEnum[keyof typeof UserPrivateDTODateModeEnum];
 
 /**
  * @export
@@ -172,11 +169,20 @@ export type UserPrivateDTOApproachChoiceEnum = typeof UserPrivateDTOApproachChoi
 /**
  * @export
  */
-export const UserPrivateDTODateModeEnum = {
-    ghost: 'ghost',
-    live: 'live'
+export const UserPrivateDTOGenderEnum = {
+    woman: 'woman',
+    man: 'man'
 } as const;
-export type UserPrivateDTODateModeEnum = typeof UserPrivateDTODateModeEnum[keyof typeof UserPrivateDTODateModeEnum];
+export type UserPrivateDTOGenderEnum = typeof UserPrivateDTOGenderEnum[keyof typeof UserPrivateDTOGenderEnum];
+
+/**
+ * @export
+ */
+export const UserPrivateDTOGenderDesireEnum = {
+    woman: 'woman',
+    man: 'man'
+} as const;
+export type UserPrivateDTOGenderDesireEnum = typeof UserPrivateDTOGenderDesireEnum[keyof typeof UserPrivateDTOGenderDesireEnum];
 
 
 /**
@@ -184,21 +190,22 @@ export type UserPrivateDTODateModeEnum = typeof UserPrivateDTODateModeEnum[keyof
  */
 export function instanceOfUserPrivateDTO(value: object): value is UserPrivateDTO {
     if (!('id' in value) || value['id'] === undefined) return false;
-    if (!('isActive' in value) || value['isActive'] === undefined) return false;
     if (!('firstName' in value) || value['firstName'] === undefined) return false;
-    if (!('birthDay' in value) || value['birthDay'] === undefined) return false;
-    if (!('gender' in value) || value['gender'] === undefined) return false;
-    if (!('genderDesire' in value) || value['genderDesire'] === undefined) return false;
+    if (!('age' in value) || value['age'] === undefined) return false;
     if (!('imageURIs' in value) || value['imageURIs'] === undefined) return false;
-    if (!('verificationStatus' in value) || value['verificationStatus'] === undefined) return false;
-    if (!('approachChoice' in value) || value['approachChoice'] === undefined) return false;
-    if (!('approachFromTime' in value) || value['approachFromTime'] === undefined) return false;
-    if (!('approachToTime' in value) || value['approachToTime'] === undefined) return false;
     if (!('bio' in value) || value['bio'] === undefined) return false;
-    if (!('dateMode' in value) || value['dateMode'] === undefined) return false;
+    if (!('isActive' in value) || value['isActive'] === undefined) return false;
     if (!('email' in value) || value['email'] === undefined) return false;
     if (!('wantsEmailUpdates' in value) || value['wantsEmailUpdates'] === undefined) return false;
     if (!('blacklistedRegions' in value) || value['blacklistedRegions'] === undefined) return false;
+    if (!('birthDay' in value) || value['birthDay'] === undefined) return false;
+    if (!('approachFromTime' in value) || value['approachFromTime'] === undefined) return false;
+    if (!('approachToTime' in value) || value['approachToTime'] === undefined) return false;
+    if (!('dateMode' in value) || value['dateMode'] === undefined) return false;
+    if (!('verificationStatus' in value) || value['verificationStatus'] === undefined) return false;
+    if (!('approachChoice' in value) || value['approachChoice'] === undefined) return false;
+    if (!('gender' in value) || value['gender'] === undefined) return false;
+    if (!('genderDesire' in value) || value['genderDesire'] === undefined) return false;
     return true;
 }
 
@@ -213,22 +220,23 @@ export function UserPrivateDTOFromJSONTyped(json: any, ignoreDiscriminator: bool
     return {
         
         'id': json['id'],
-        'isActive': json['isActive'],
         'firstName': json['firstName'],
-        'birthDay': (new Date(json['birthDay'])),
-        'gender': json['gender'],
-        'genderDesire': json['genderDesire'],
+        'age': json['age'],
         'imageURIs': json['imageURIs'],
-        'verificationStatus': json['verificationStatus'],
-        'approachChoice': json['approachChoice'],
-        'approachFromTime': json['approachFromTime'],
-        'approachToTime': json['approachToTime'],
         'bio': json['bio'],
-        'dateMode': json['dateMode'],
         'trustScore': json['trustScore'] == null ? undefined : json['trustScore'],
+        'isActive': json['isActive'],
         'email': json['email'],
         'wantsEmailUpdates': json['wantsEmailUpdates'],
         'blacklistedRegions': ((json['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOFromJSON)),
+        'birthDay': (new Date(json['birthDay'])),
+        'approachFromTime': json['approachFromTime'],
+        'approachToTime': json['approachToTime'],
+        'dateMode': json['dateMode'],
+        'verificationStatus': json['verificationStatus'],
+        'approachChoice': json['approachChoice'],
+        'gender': json['gender'],
+        'genderDesire': json['genderDesire'],
     };
 }
 
@@ -239,22 +247,23 @@ export function UserPrivateDTOToJSON(value?: UserPrivateDTO | null): any {
     return {
         
         'id': value['id'],
-        'isActive': value['isActive'],
         'firstName': value['firstName'],
-        'birthDay': ((value['birthDay']).toISOString().substring(0,10)),
-        'gender': value['gender'],
-        'genderDesire': value['genderDesire'],
+        'age': value['age'],
         'imageURIs': value['imageURIs'],
-        'verificationStatus': value['verificationStatus'],
-        'approachChoice': value['approachChoice'],
-        'approachFromTime': value['approachFromTime'],
-        'approachToTime': value['approachToTime'],
         'bio': value['bio'],
-        'dateMode': value['dateMode'],
         'trustScore': value['trustScore'],
+        'isActive': value['isActive'],
         'email': value['email'],
         'wantsEmailUpdates': value['wantsEmailUpdates'],
         'blacklistedRegions': ((value['blacklistedRegions'] as Array<any>).map(BlacklistedRegionDTOToJSON)),
+        'birthDay': ((value['birthDay']).toISOString().substring(0,10)),
+        'approachFromTime': value['approachFromTime'],
+        'approachToTime': value['approachToTime'],
+        'dateMode': value['dateMode'],
+        'verificationStatus': value['verificationStatus'],
+        'approachChoice': value['approachChoice'],
+        'gender': value['gender'],
+        'genderDesire': value['genderDesire'],
     };
 }
 

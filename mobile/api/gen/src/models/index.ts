@@ -5,6 +5,7 @@ export * from './BlacklistedRegionDTO';
 export * from './CreateUserDTO';
 export * from './CreateUserReportDto';
 export * from './Encounter';
+export * from './EncounterPublicDTO';
 export * from './NotificationNavigateUserDTO';
 export * from './SignInDTO';
 export * from './SignInResponseDTO';

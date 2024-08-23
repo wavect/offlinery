@@ -1,4 +1,4 @@
-import {IPublicProfile} from "../../types/PublicProfile.types";
+import {UserPublicDTO} from "../../types/PublicProfile.types";
 import * as React from "react";
 import {Image, Pressable, StyleProp, StyleSheet, Text, View, ViewStyle} from "react-native";
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
@@ -8,7 +8,7 @@ import {ROUTES} from "../../screens/routes";
 
 interface IOTeaserProfileProps {
     prefixText?: string
-    publicProfile: IPublicProfile
+    publicProfile: UserPublicDTO
     showOpenProfileButton: boolean
     secondButton?: {
         onPress: (event: GestureResponderEvent) => void

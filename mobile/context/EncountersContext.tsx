@@ -1,5 +1,6 @@
 import React, {createContext, Dispatch, useContext, useReducer} from 'react';
-import {EDateStatus, IEncounterProfile, IPublicProfile} from "../types/PublicProfile.types";
+import {EncounterStatusEnum, UserPublicDTO} from "../api/gen/src";
+import {IEncounterProfile} from "../types/PublicProfile.types";
 
 export interface IEncounters {
     encounters: IEncounterProfile[]
@@ -19,7 +20,7 @@ interface IEncountersContextType {
 
 interface IRelationshipUpdatePayload {
     encounterId: string
-    value: boolean | EDateStatus
+    value: boolean | EncounterStatusEnum
 }
 
 export interface IEncountersAction {
@@ -41,7 +42,7 @@ const initialState: IEncounters = {
             isNearbyRightNow: true,
             lastTimePassedBy: '4 days ago',
             lastLocationPassedBy: 'Altstadt Innsbruck',
-            status: EDateStatus.NOT_MET,
+            status: EncounterStatusEnum.not_met,
             reported: false,
         }
     },
@@ -56,7 +57,7 @@ const initialState: IEncounters = {
                 isNearbyRightNow: false,
                 lastTimePassedBy: '3 hours ago',
                 lastLocationPassedBy: 'Marien-Theresien-Straße 1',
-                status: EDateStatus.MET_NOT_INTERESTED,
+                status: EncounterStatusEnum.met_not_interested,
                 reported: true,
             }
         },
@@ -72,14 +73,14 @@ const initialState: IEncounters = {
                 isNearbyRightNow: false,
                 lastTimePassedBy: '1 week ago',
                 lastLocationPassedBy: 'Cafe Katzung',
-                status: EDateStatus.MET_NOT_INTERESTED,
+                status: EncounterStatusEnum.met_not_interested,
                 reported: false,
             }
         },
     ],
 };
 
-export const getPublicProfileFromEncounter = (state: IEncounterProfile): IPublicProfile => {
+export const getPublicProfileFromEncounter = (state: IEncounterProfile): UserPublicDTO => {
     return {
         firstName: state.firstName,
         bio: state.bio,
@@ -122,7 +123,7 @@ const userReducer = (state: IEncounters, action: IEncountersAction): IEncounters
                             ...encounter,
                             personalRelationship: {
                                 ...encounter.personalRelationship,
-                                status: dateStatusUpdate.value as EDateStatus,
+                                status: dateStatusUpdate.value as EncounterStatusEnum,
                             }
                         }
                         : encounter

@@ -15,6 +15,7 @@ src/models/BlacklistedRegionDTO.ts
 src/models/CreateUserDTO.ts
 src/models/CreateUserReportDto.ts
 src/models/Encounter.ts
+src/models/EncounterPublicDTO.ts
 src/models/NotificationNavigateUserDTO.ts
 src/models/SignInDTO.ts
 src/models/SignInResponseDTO.ts
