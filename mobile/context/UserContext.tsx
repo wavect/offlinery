@@ -49,7 +49,22 @@ export const isAuthenticated = (state: IUserData) => {
 export interface MapRegion {
     longitude: number;
     latitude: number;
+    /**
+     * The radius after the debounce.
+     * 
+     * @remarks
+     * Other than the `uiRadius`, this gets updated
+     * after a certain debounce timer, so we do not
+     * call the backend on every `UI`-update.
+     */
     radius: number;
+    /**
+     * The radius displayed in the UI.
+     * 
+     * @remarks
+     * This is the radius displayed on the UI.
+     * It gets updates as the user adjusts the radius.
+     */
     uiRadius?: number;
 }
 
