@@ -20,6 +20,8 @@ import {Encounter} from "./encounter/encounter.entity";
 import { EncounterModule } from './encounter/encounter.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { RegistrationModule } from './registration/registration.module';
+import { PendingUser } from './registration/pending-user/pending-user.entity';
 
 @Module({
     imports: [
@@ -32,7 +34,7 @@ import { join } from 'path';
             username: TYPED_ENV.DB_USER,
             password: TYPED_ENV.DB_PASSWORD,
             database: TYPED_ENV.DB_DATABASE,
-            entities: [User, BlacklistedRegion, UserReport, Encounter],
+            entities: [User, BlacklistedRegion, UserReport, Encounter, PendingUser],
         }),
         // @dev https://docs.nestjs.com/techniques/caching
         CacheModule.register({
@@ -52,7 +54,7 @@ import { join } from 'path';
             rootPath: join(__dirname, '..', 'uploads/img'),
             serveRoot: '/img',
         }),
-        UserModule, BlacklistedRegionModule, NotificationModule, UserReportModule, AuthModule, EncounterModule,
+        UserModule, BlacklistedRegionModule, NotificationModule, UserReportModule, AuthModule, EncounterModule, RegistrationModule,
     ],
     controllers: [AppController],
     providers: [
