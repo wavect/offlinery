@@ -9,6 +9,9 @@ interface IEnv {
     DB_HOST: string
     DB_PORT: string
     JWT_SECRET: string
+    EMAIL_HOST: string;
+    EMAIL_USERNAME: string;
+    EMAIL_PASSWORD: string;
 }
 
 /** @dev Mandatory environment variables must be defined. */

@@ -5,6 +5,7 @@ import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
 import { PendingUser } from './pending-user/pending-user.entity';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class RegistrationService {
@@ -14,13 +15,12 @@ export class RegistrationService {
   constructor(
     @InjectRepository(PendingUser)
     private pendingUserRepo: Repository<PendingUser>,
-    @InjectRepository(User)
-    private userRepo: Repository<User>,
+    private readonly mailService: MailerService,
   ) {}
 
   public async registerPendingUser(email: string): Promise<string> {
     try {
-      const existingUser = await this.userRepo.findOneBy({ email });
+      const existingUser = await this.pendingUserRepo.findOneBy({ email });
       if (existingUser) {
         throw new Error('Email already exists.');
       }
@@ -36,13 +36,12 @@ export class RegistrationService {
         verificationNumber = verificationNumber.concat(randomNumber);
       }
 
-      console.log('email verification number: ', verificationNumber);
-
       pendingUser.verificationCode = verificationNumber;
-      console.log("saving user:", pendingUser)
       await this.pendingUserRepo.save(pendingUser);
 
-      return verificationNumber;
+      await this.sendMail(pendingUser.email, verificationNumber);
+
+      return pendingUser.email;
     } catch (error) {
       console.error(error);
       throw error;
@@ -58,10 +57,24 @@ export class RegistrationService {
 
       user.verificationStatus = EVerificationStatus.VERIFIED;
       await this.pendingUserRepo.save(user);
-      console.log("email verified: ", user.email)
     } catch (error) {
       console.error(error);
       throw error;
+    }
+  }
+
+  private async sendMail(to: string, verificationCode: string) {
+    try {
+      const text = `Thank you for registering! Here is your verification code: ${verificationCode}.`;
+
+      await this.mailService.sendMail({
+        from: 'Offlinery <offlinery@noreply.com>',
+        to,
+        subject: 'Offlinery Verification Code',
+        text,
+      });
+    } catch (error) {
+      console.error(error);
     }
   }
 }
