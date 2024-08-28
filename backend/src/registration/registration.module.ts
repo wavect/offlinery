@@ -6,9 +6,11 @@ import { PendingUserService } from './pending-user/pending-user.service';
 import { PendingUser } from './pending-user/pending-user.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { TYPED_ENV } from 'src/utils/env.utils';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forFeature([PendingUser]),
     MailerModule.forRoot({
       transport: {
