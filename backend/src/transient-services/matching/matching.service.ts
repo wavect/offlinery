@@ -19,6 +19,7 @@ export class MatchingService {
         }
 
         // TODO: This algorithm should be improved over time (e.g. age, etc. based on user settings, attractivity etc.)
+        // TODO: Also filter out users that have tracking DISABLED (Ghost mode)
         const nearbyUsers = await this.userRepository
             .createQueryBuilder('user')
             .where('user.id != :userId', {userId: user.id})
