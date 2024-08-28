@@ -2,13 +2,13 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:16
+    image: postgis/postgis # postgres with PostGis (coordinates, etc. enabled)
     container_name: postgres
     restart: always
     environment:
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE:-offlinery}
+      POSTGRES_USER: ${DB_USER:-offlinery}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-offlinery}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -25,12 +25,12 @@ services:
     image: dpage/pgadmin4
     restart: on-failure
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${DB_UI_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${DB_UI_PASSWORD}
-      PGADMIN_LISTEN_PORT: ${DB_UI_PORT}
+      PGADMIN_DEFAULT_EMAIL: ${DB_UI_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${DB_UI_PASSWORD:-123}
+      PGADMIN_LISTEN_PORT: ${DB_UI_PORT:-8091}
       
     ports:
-      - ${DB_UI_PORT}:${DB_UI_PORT}
+      - ${DB_UI_PORT:-8091}:${DB_UI_PORT:-8091}
     networks:
       - app_network
     depends_on:

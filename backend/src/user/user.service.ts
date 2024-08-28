@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {forwardRef, Inject, Injectable, NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -10,7 +10,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { PendingUser } from 'src/registration/pending-user/pending-user.entity';
-import { EVerificationStatus } from 'src/types/user.types';
+import {EVerificationStatus} from 'src/types/user.types';
+import {LocationUpdateDTO} from "../DTOs/location-update.dto";
+import {MatchingService} from "../transient-services/matching/matching.service";
 
 @Injectable()
 export class UserService {
@@ -21,6 +23,8 @@ export class UserService {
     private blacklistedRegionRepository: Repository<BlacklistedRegion>,
     @InjectRepository(PendingUser)
     private pendingUserRepo: Repository<PendingUser>,
+    @Inject(forwardRef(() => MatchingService))
+    private matchingService: MatchingService
   ) {}
 
   private async saveFiles(
@@ -184,5 +188,20 @@ export class UserService {
 
     user.pushToken = pushToken;
     return await this.userRepository.save(user);
+  }
+
+  async updateLocation(userId: string, { latitude, longitude }: LocationUpdateDTO): Promise<User> {
+    const user = await this.userRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    user.location = { type: 'Point', coordinates: [longitude, latitude] };
+    const updatedUser = await this.userRepository.save(user);
+
+    // Check for matches and send notifications
+    await this.matchingService.checkAndNotifyMatches(user);
+
+    return updatedUser;
   }
 }

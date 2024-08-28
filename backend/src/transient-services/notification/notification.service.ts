@@ -1,14 +1,22 @@
-import {Injectable, Logger} from '@nestjs/common';
-import {Expo, ExpoPushMessage, ExpoPushTicket, ExpoPushToken} from 'expo-server-sdk';
+import {forwardRef, Inject, Injectable, Logger} from '@nestjs/common';
+import {Expo, ExpoPushTicket, ExpoPushToken} from 'expo-server-sdk';
 import {OfflineryNotification} from "./notification-message.type";
+import {UserService} from "../../user/user.service";
+import {StorePushTokenDTO} from "../../DTOs/store-push-token.dto";
 
 @Injectable()
 export class NotificationService {
     private readonly logger = new Logger(NotificationService.name);
     private expo: Expo;
 
-    constructor() {
-        this.expo = new Expo();
+    constructor(
+        @Inject(forwardRef(() => UserService))
+        private readonly userService: UserService) {
+    this.expo = new Expo();
+    }
+
+    async storePushToken(storePushTokenDTO: StorePushTokenDTO) {
+        return await this.userService.updatePushToken(storePushTokenDTO.userId, storePushTokenDTO.pushToken);
     }
 
     /** @dev The ExpoPushToken remains the same for the user infinitely, except they reinstall the app, etc. */

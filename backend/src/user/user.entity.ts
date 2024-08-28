@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany, PrimaryColumn, JoinTable, ManyToMany} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany, Index} from 'typeorm';
 import {EApproachChoice, EDateMode, EVerificationStatus, EGender} from "../types/user.types";
 import {BlacklistedRegion} from '../blacklisted-region/blacklisted-region.entity';
 import {UserPublicDTO} from "../DTOs/user-public.dto";
@@ -7,6 +7,7 @@ import {UserPrivateDTO} from "../DTOs/user-private.dto";
 import {IEntityToDTOInterface} from "../interfaces/IEntityToDTO.interface";
 import {Encounter} from "../encounter/encounter.entity";
 import {getAge} from "../utils/date.utils";
+import { Point } from 'geojson';
 
 @Entity()
 export class User implements IEntityToDTOInterface<UserPublicDTO> {
@@ -112,5 +113,14 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
 
     @Column({nullable: true})
     trustScore?: number;
+
+    @Index({ spatial: true })
+    @Column({
+        type: 'geography',
+        spatialFeatureType: 'Point',
+        srid: 4326,
+        nullable: true
+    })
+    location: Point;
 
 }
