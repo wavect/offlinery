@@ -97,6 +97,7 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
+  // TODO: Only to be updated by that specific user!
   async updateUser(
     id: string,
     updateUserDto: UpdateUserDTO,
@@ -180,6 +181,7 @@ export class UserService {
     return user;
   }
 
+  // TODO: Only to be updated by that specific user!
   async updatePushToken(userId: string, pushToken: string): Promise<User> {
     const user = await this.userRepository.findOneBy({ id: userId });
     if (!user) {
@@ -190,6 +192,7 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
+  // TODO: Only to be updated by that specific user!
   async updateLocation(userId: string, { latitude, longitude }: LocationUpdateDTO): Promise<User> {
     const user = await this.userRepository.findOneBy({ id: userId });
     if (!user) {
