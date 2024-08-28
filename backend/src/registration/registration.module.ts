@@ -8,6 +8,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { TYPED_ENV } from 'src/utils/env.utils';
 import { ConfigModule } from '@nestjs/config';
 import { User } from 'src/user/user.entity';
+import { join } from 'path';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
@@ -20,6 +22,13 @@ import { User } from 'src/user/user.entity';
           user: TYPED_ENV.EMAIL_USERNAME,
           pass: TYPED_ENV.EMAIL_PASSWORD,
         },
+      },
+      defaults: {
+        from: '"No Reply" <noreply@offlinery.com>',
+      },
+      template: {
+        dir: join(__dirname, 'templates'),
+        adapter: new HandlebarsAdapter(),
       },
     }),
   ],

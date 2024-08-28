@@ -91,10 +91,13 @@ export class RegistrationService {
       const text = `Thank you for registering! Here is your verification code: ${verificationCode}.`;
 
       await this.mailService.sendMail({
-        from: 'Offlinery <offlinery@noreply.com>',
         to,
-        subject: 'Offlinery Verification Code',
-        text,
+        subject: 'Welcome to Offlinery! Confirm your Email',
+        template: '../../mail/templates/email-verification.hbs',
+        context: {
+          name: to,
+          verificationCode,
+        },
       });
     } catch (error) {
       console.error(error);

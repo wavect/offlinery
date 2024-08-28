@@ -53,6 +53,9 @@ dependencies:
   expo-server-sdk:
     specifier: ^3.10.0
     version: 3.10.0
+  handlebars:
+    specifier: ^4.7.8
+    version: 4.7.8
   helmet:
     specifier: ^7.1.0
     version: 7.1.0
@@ -4002,7 +4005,6 @@ packages:
     optionalDependencies:
       uglify-js: 3.19.2
     dev: false
-    optional: true
 
   /has-flag@3.0.0:
     resolution: {integrity: sha512-sKJf1+ceQBr4SMkvQnBDNDtf4TXpVhVGateu0t918bl30FnbE2m4vNLX+VWe/dpjlb+HugGYzW7uQXH98HPEYw==}
@@ -8069,7 +8071,6 @@ packages:
     resolution: {integrity: sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==}
     requiresBuild: true
     dev: false
-    optional: true
 
   /wrap-ansi@6.2.0:
     resolution: {integrity: sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==}
