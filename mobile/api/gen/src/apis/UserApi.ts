@@ -155,17 +155,19 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
                     }
 
        const files = requestParameters['images'];
-       const filteredFiles = Object.keys(files)
-        .filter((key) => files[key] !== undefined)
-        .map((key) => files[key]);
+       if (files) {
+        const filteredFiles = Object.keys(files)
+            .filter((key) => files[key] !== undefined)
+            .map((key) => files[key]);
 
-        for (const file of filteredFiles) {
-            formParams.append('images', {
-            uri: file.uri,
-            name: file.fileName,
-            type: file.mimeType,
-            });
-        }
+            for (const file of filteredFiles) {
+                formParams.append('images', {
+                uri: file.uri,
+                name: file.fileName,
+                type: file.mimeType,
+                });
+            }
+       }
         const response = await this.request({
             path: `/user/create`,
             method: 'POST',
@@ -254,17 +256,19 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
                     }
 
        const files = requestParameters['images'];
-       const filteredFiles = Object.keys(files)
-        .filter((key) => files[key] !== undefined)
-        .map((key) => files[key]);
+       if (files) {
+        const filteredFiles = Object.keys(files)
+            .filter((key) => files[key] !== undefined)
+            .map((key) => files[key]);
 
-        for (const file of filteredFiles) {
-            formParams.append('images', {
-            uri: file.uri,
-            name: file.fileName,
-            type: file.mimeType,
-            });
-        }
+            for (const file of filteredFiles) {
+                formParams.append('images', {
+                uri: file.uri,
+                name: file.fileName,
+                type: file.mimeType,
+                });
+            }
+       }
         const response = await this.request({
             path: `/user/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PUT',

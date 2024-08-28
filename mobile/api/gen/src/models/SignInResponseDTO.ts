@@ -59,7 +59,7 @@ export function SignInResponseDTOFromJSONTyped(json: any, ignoreDiscriminator: b
     }
     return {
         
-        'accessToken': json['access_token'],
+        'accessToken': json['accessToken'],
         'user': UserPrivateDTOFromJSON(json['user']),
     };
 }
@@ -70,7 +70,7 @@ export function SignInResponseDTOToJSON(value?: SignInResponseDTO | null): any {
     }
     return {
         
-        'access_token': value['accessToken'],
+        'accessToken': value['accessToken'],
         'user': UserPrivateDTOToJSON(value['user']),
     };
 }

@@ -41,10 +41,10 @@ export class UpdateUserDTO {
     })
     blacklistedRegions?: BlacklistedRegionDTO[];
 
-    @ApiProperty({type: 'string', format: 'date-time', required: false})
+    @ApiProperty({type: 'string', format: 'time', required: false})
     approachFromTime?: Date;
 
-    @ApiProperty({type: 'string', format: 'date-time', required: false})
+    @ApiProperty({type: 'string', format: 'time', required: false})
     approachToTime?: Date;
 
     @ApiProperty({type: 'string', required: false})

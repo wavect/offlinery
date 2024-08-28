@@ -30,7 +30,10 @@ async function bootstrap() {
 }
 
 const VERSION = '1'
-const BE_ENDPOINT = 'https://offlinery.onrender.com' // 'http://localhost:3000' // TODO: Adapt / dev env
+const BE_ENDPOINT = process.env.NODE_ENV === 'development' 
+  ? `http://localhost:${process.env.BE_PORT}` 
+  : 'https://offlinery.onrender.com';
+
 
 const setupSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()

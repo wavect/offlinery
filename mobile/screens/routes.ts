@@ -14,6 +14,7 @@ export const ROUTES: any = {
     },
     Onboarding: {
         Email: 'Onboarding_Email',
+        VerifyEmail: 'Onboarding_VerifyEmail',
         Password: 'Onboarding_Password',
         FirstName: 'Onboarding_Firstname',
         BirthDay: 'Onboarding_Birthday',

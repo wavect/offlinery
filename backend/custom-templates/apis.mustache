@@ -248,17 +248,19 @@ export class {{classname}} extends runtime.BaseAPI {
         {{#formParams}}
        {{#isFile}}
        const files = requestParameters['{{paramName}}'];
-       const filteredFiles = Object.keys(files)
-        .filter((key) => files[key] !== undefined)
-        .map((key) => files[key]);
+       if (files) {
+        const filteredFiles = Object.keys(files)
+            .filter((key) => files[key] !== undefined)
+            .map((key) => files[key]);
 
-        for (const file of filteredFiles) {
-            formParams.append('{{baseName}}', {
-            uri: file.uri,
-            name: file.fileName,
-            type: file.mimeType,
-            });
-        }
+            for (const file of filteredFiles) {
+                formParams.append('{{baseName}}', {
+                uri: file.uri,
+                name: file.fileName,
+                type: file.mimeType,
+                });
+            }
+       }
     {{/isFile}}
         {{^isArray}}
         if (requestParameters['{{paramName}}'] != null) {

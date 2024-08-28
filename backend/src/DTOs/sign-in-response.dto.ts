@@ -3,7 +3,7 @@ import {UserPrivateDTO} from "./user-private.dto";
 
 export class SignInResponseDTO {
     @ApiProperty({type: 'string'})
-    access_token: string;
+    accessToken: string;
 
     @ApiProperty({ type: UserPrivateDTO })
     user: UserPrivateDTO;

@@ -52,16 +52,18 @@ const ProfileSettings = ({navigation}) => {
                 id: state.id!,
                 user: {
                     firstName: state.firstName,
-                    approachFromTime: state.approachFromTime.toTimeString(),
-                    approachToTime: state.approachToTime.toTimeString(),
+                    approachFromTime: state.approachFromTime,
+                    approachToTime: state.approachToTime,
                     bio: state.bio,
                     birthDay: state.birthDay,
                     gender: state.gender,
                     genderDesire: state.genderDesire,
+                    blacklistedRegions: state.blacklistedRegions
                 },
                 images: getUserImagesForUpload(state)
             };
-            await userApi.userControllerUpdateUser(request);
+
+            await userApi.userControllerUpdateUser(request, {headers: {"Authorization": `Bearer ${state.jwtAccessToken}`}});
 
             navigation.navigate(ROUTES.MainTabView, {screen: ROUTES.Main.FindPeople});
         } catch (error) {
@@ -110,7 +112,7 @@ const ProfileSettings = ({navigation}) => {
                             <View style={styles.timePicker}>
                                 <Text>{i18n.t(TR.from)}</Text>
                                 <DateTimePicker
-                                    value={state.approachFromTime}
+                                    value={new Date(state.approachFromTime)}
                                     mode="time"
                                     is24Hour={true}
                                     display="default"
@@ -120,7 +122,7 @@ const ProfileSettings = ({navigation}) => {
                             <View style={styles.timePicker}>
                                 <Text>{i18n.t(TR.until)}</Text>
                                 <DateTimePicker
-                                    value={state.approachToTime}
+                                    value={new Date(state.approachToTime)}
                                     mode="time"
                                     is24Hour={true}
                                     display="default"

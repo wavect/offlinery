@@ -11,10 +11,11 @@ import {
     Post,
     Put,
     UploadedFiles,
+    UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
 import {FilesInterceptor} from "@nestjs/platform-express";
-import {ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiSecurity, ApiTags} from '@nestjs/swagger';
 import {User} from './user.entity';
 import {CreateUserDTO} from '../DTOs/create-user.dto';
 import {UserService} from "./user.service";
@@ -24,7 +25,7 @@ import {CreateUserRequestDTO} from "../DTOs/create-user-request.dto";
 import {UpdateUserRequestDTO} from "../DTOs/update-user-request.dto";
 import {ParseJsonPipe} from "../pipes/ParseJson.pipe";
 import {CustomParseFilePipe} from "../pipes/CustomParseFile.pipe";
-import {Public} from "../auth/auth.guard";
+import {AuthGuard, Public} from "../auth/auth.guard";
 
 @ApiTags('User')
 @Controller({
