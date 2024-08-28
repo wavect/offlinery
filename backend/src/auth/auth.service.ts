@@ -1,8 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserService } from '../user/user.service';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { SignInResponseDTO } from '../DTOs/sign-in-response.dto';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
+import { SignInResponseDTO } from "../DTOs/sign-in-response.dto";
+import { UserService } from "../user/user.service";
 
 @Injectable()
 export class AuthService {
@@ -31,7 +31,7 @@ export class AuthService {
     }
 
     const payload = { sub: user.id, email: user.email };
-    console.log("user: ", user.convertToPrivateDTO())
+    console.log("user: ", user.convertToPrivateDTO());
     return {
       accessToken: await this.jwtService.signAsync(payload),
       user: user.convertToPrivateDTO(),

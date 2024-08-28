@@ -1,4 +1,3 @@
-
 export interface IEntityToDTOInterface<T> {
-    convertToPublicDTO(): T
+  convertToPublicDTO(): T;
 }

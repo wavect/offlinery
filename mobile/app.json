@@ -17,9 +17,7 @@
         "googleMapsApiKey": "AIzaSyCvQCDDpKQW-DlxC44t8edMgC52HvTl4LM"
       },
       "infoPlist": {
-        "UIBackgroundModes": [
-          "location"
-        ],
+        "UIBackgroundModes": ["location"],
         "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open to show you interesting people nearby.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location even when closed to send you notifications when interesting people are nearby.",
         "NSLocationAlwaysUsageDescription": "This app requires access to your location to inform you when interesting people are nearby."

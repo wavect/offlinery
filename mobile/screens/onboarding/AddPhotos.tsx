@@ -62,12 +62,13 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
   const uri = state.imageURIs[imageIdx]?.uri;
   // If uri is set here, we can access the image on the local device.
   // Otherwise we need to access the image via our backend.
-  const currImg = uri  ??  `${BASE_PATH.replace("/v1", "")}/img/${state.imageURIs[imageIdx]}`;
+  const currImg =
+    uri ?? `${BASE_PATH.replace("/v1", "")}/img/${state.imageURIs[imageIdx]}`;
 
   return (
     <Pressable style={styles.photoContainer} onPress={openMediaLibrary}>
       {currImg ? (
-        <Image style={styles.previewImage} source={{ uri: currImg}} />
+        <Image style={styles.previewImage} source={{ uri: currImg }} />
       ) : (
         <MaterialIcons
           name="add-circle-outline"
@@ -84,7 +85,7 @@ const AddPhotos = ({ route, navigation }) => {
     ImagePicker.useMediaLibraryPermissions();
   const { state, dispatch } = useUserContext();
   const hasAnyImage = Object.values(state.imageURIs).some(Boolean);
-  
+
   return (
     <OPageContainer
       title={i18n.t(TR.addPhotos)}

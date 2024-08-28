@@ -1,16 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from './user.entity';
-import { BlacklistedRegion } from '../blacklisted-region/blacklisted-region.entity';
-import { CreateUserDTO } from '../DTOs/create-user.dto';
-import { UpdateUserDTO } from '../DTOs/update-user.dto';
-import * as bcrypt from 'bcrypt';
-import * as fs from 'fs';
-import * as path from 'path';
-import { v4 as uuidv4 } from 'uuid';
-import { PendingUser } from 'src/registration/pending-user/pending-user.entity';
-import { EVerificationStatus } from 'src/types/user.types';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import * as bcrypt from "bcrypt";
+import * as fs from "fs";
+import * as path from "path";
+import { PendingUser } from "src/registration/pending-user/pending-user.entity";
+import { EVerificationStatus } from "src/types/user.types";
+import { Repository } from "typeorm";
+import { v4 as uuidv4 } from "uuid";
+import { BlacklistedRegion } from "../blacklisted-region/blacklisted-region.entity";
+import { CreateUserDTO } from "../DTOs/create-user.dto";
+import { UpdateUserDTO } from "../DTOs/update-user.dto";
+import { User } from "./user.entity";
 
 @Injectable()
 export class UserService {
@@ -26,7 +26,7 @@ export class UserService {
   private async saveFiles(
     files: Express.Multer.File[],
   ): Promise<{ index: number; filePath: string }[]> {
-    const uploadDir = 'uploads/img';
+    const uploadDir = "uploads/img";
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -43,7 +43,7 @@ export class UserService {
 
         // mimeType examples: "image/jpeg", "image/png".
         // Since we only allow image files, we can assume mimeType always follows this scheme.
-        const uniqueFilename = `${uuidv4()}${path.extname(file.originalname)}.${file.mimetype.split('/')[1]}`;
+        const uniqueFilename = `${uuidv4()}${path.extname(file.originalname)}.${file.mimetype.split("/")[1]}`;
         const filePath = path.join(uploadDir, uniqueFilename);
         await fs.promises.writeFile(filePath, file.buffer);
         return { index, filePath: uniqueFilename };
@@ -100,7 +100,7 @@ export class UserService {
   ): Promise<User> {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     // Update user properties
@@ -119,7 +119,7 @@ export class UserService {
     if (updateUserDto.blacklistedRegions) {
       // Remove old blacklisted regions
       if (user.blacklistedRegions) {
-        console.log('blacklisted: ', user.blacklistedRegions);
+        console.log("blacklisted: ", user.blacklistedRegions);
         const blacklistedRegions =
           await this.blacklistedRegionRepository.findBy(
             user.blacklistedRegions.map((region) => ({ id: region.id })),
@@ -153,7 +153,7 @@ export class UserService {
   async findUserById(id: string): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['blacklistedRegions'], // Include related entities if needed
+      relations: ["blacklistedRegions"], // Include related entities if needed
     });
 
     if (!user) {
@@ -166,7 +166,7 @@ export class UserService {
   async findUserByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { email },
-      relations: ['blacklistedRegions'], // Include related entities if needed
+      relations: ["blacklistedRegions"], // Include related entities if needed
     });
 
     if (!user) {

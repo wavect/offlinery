@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import {AuthController} from "./auth.controller";
+import { Test, TestingModule } from "@nestjs/testing";
+import { AuthController } from "./auth.controller";
+import { AuthService } from "./auth.service";
 
-describe('AuthService', () => {
+describe("AuthService", () => {
   let service: AuthService;
 
   beforeEach(async () => {
@@ -14,7 +14,7 @@ describe('AuthService', () => {
     service = module.get<AuthService>(AuthService);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
   });
 });

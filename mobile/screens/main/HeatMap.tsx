@@ -29,7 +29,7 @@ const HeatMap = ({ navigation }) => {
     number | null
   >(null);
   const [location, setLocation] = useState<Location.LocationObject | null>(
-    null
+    null,
   );
   const mapRef = React.useRef(null);
   const [mapRegion, setMapRegion] = useState({
@@ -83,7 +83,7 @@ const HeatMap = ({ navigation }) => {
           },
           {
             headers: { Authorization: `Bearer ${state.jwtAccessToken}` },
-          }
+          },
         );
       } catch (error) {
         console.error("Error updating blacklisted regions:", error);
@@ -223,7 +223,7 @@ const HeatMap = ({ navigation }) => {
               {i18n.t(TR.adjustRegionRadius)} (
               {Math.round(
                 state.blacklistedRegions[activeRegionIndex].uiRadius ??
-                  state.blacklistedRegions[activeRegionIndex].radius
+                  state.blacklistedRegions[activeRegionIndex].radius,
               )}
               m)
             </Text>
