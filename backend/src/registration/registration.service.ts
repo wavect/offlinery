@@ -15,17 +15,21 @@ export class RegistrationService {
   constructor(
     @InjectRepository(PendingUser)
     private pendingUserRepo: Repository<PendingUser>,
+    @InjectRepository(User)
+    private userRepo: Repository<User>,
     private readonly mailService: MailerService,
   ) {}
 
   public async registerPendingUser(email: string): Promise<string> {
     try {
-      const existingUser = await this.pendingUserRepo.findOneBy({
+      const existingPendingUser = await this.pendingUserRepo.findOneBy({
         email,
         verificationStatus:
           EVerificationStatus.VERIFIED || EVerificationStatus.NOT_NEEDED,
       });
-      if (existingUser) {
+      const existingVerifiedUser = await this.userRepo.findOneBy({ email });
+
+      if (existingPendingUser || existingVerifiedUser) {
         throw new Error('Email already exists.');
       }
 

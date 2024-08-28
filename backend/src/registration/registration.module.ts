@@ -7,11 +7,12 @@ import { PendingUser } from './pending-user/pending-user.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { TYPED_ENV } from 'src/utils/env.utils';
 import { ConfigModule } from '@nestjs/config';
+import { User } from 'src/user/user.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([PendingUser]),
+    TypeOrmModule.forFeature([PendingUser, User]),
     MailerModule.forRoot({
       transport: {
         host: TYPED_ENV.EMAIL_HOST,
