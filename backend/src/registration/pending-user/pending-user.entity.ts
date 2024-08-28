@@ -1,4 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
 import { EVerificationStatus } from '../../types/user.types';
 import { IEntityToDTOInterface } from 'src/interfaces/IEntityToDTO.interface';
 import { PendingUserPublicDTO } from 'src/DTOs/pending-user.dto';
@@ -31,4 +36,7 @@ export class PendingUser
 
   @Column()
   verificationCode: string;
+
+  @Column({ type: 'timestamptz' })
+  verificationCodeIssuedAt: Date;
 }

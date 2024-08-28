@@ -9,6 +9,8 @@ import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class RegistrationService {
+  readonly VERIFICATION_CODE_EXPIRATION_IN_MIN = 15;
+
   constructor(
     @InjectRepository(PendingUser)
     private pendingUserRepo: Repository<PendingUser>,
@@ -38,6 +40,8 @@ export class RegistrationService {
         pendingUser.verificationStatus = EVerificationStatus.PENDING;
       }
 
+      pendingUser.verificationCodeIssuedAt = new Date();
+
       let verificationNumber: string = '';
       for (let index = 0; index <= 5; index++) {
         const randomNumber = Math.floor(Math.random() * (9 - 0) + 0).toString();
@@ -63,6 +67,16 @@ export class RegistrationService {
         email: email,
         verificationCode: code,
       });
+
+      const currentTime = new Date().getTime();
+      const issuedTime = user.verificationCodeIssuedAt.getTime();
+
+      const expirationTimeInMs =
+        this.VERIFICATION_CODE_EXPIRATION_IN_MIN * 60 * 1000;
+
+      if (currentTime - issuedTime > expirationTimeInMs) {
+        throw new Error('Verification code has expired.');
+      }
 
       user.verificationStatus = EVerificationStatus.VERIFIED;
       await this.pendingUserRepo.save(user);
