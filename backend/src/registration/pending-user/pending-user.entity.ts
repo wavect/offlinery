@@ -1,13 +1,13 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { EVerificationStatus } from '../../types/user.types';
 import { IEntityToDTOInterface } from 'src/interfaces/IEntityToDTO.interface';
-import { PendingUserPublicDto } from 'src/DTOs/pending-user.dto';
+import { PendingUserPublicDTO } from 'src/DTOs/pending-user.dto';
 
 @Entity()
 export class PendingUser
-  implements IEntityToDTOInterface<PendingUserPublicDto>
+  implements IEntityToDTOInterface<PendingUserPublicDTO>
 {
-  convertToPublicDTO(): PendingUserPublicDto {
+  convertToPublicDTO(): PendingUserPublicDTO {
     return {
       id: this.id,
       email: this.email,
