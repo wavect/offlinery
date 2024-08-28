@@ -1,4 +1,4 @@
-import {StyleProp, StyleSheet, Text, TextInput, ViewStyle, View, TouchableOpacity} from "react-native";
+import {StyleProp, StyleSheet, Text, TextInput, ViewStyle, View, TouchableOpacity, KeyboardTypeOptions} from "react-native";
 import * as React from "react";
 import {Color, FontFamily, FontSize} from "../../GlobalStyles";
 import {useState} from "react";
@@ -14,6 +14,8 @@ interface IOTextInputProps {
     topLabel?: string;
     bottomLabel?: string;
     isBottomLabelError?: boolean
+    keyboardType?: KeyboardTypeOptions
+    maxLength?: number
 }
 
 export const OTextInput = (props: IOTextInputProps) => {
@@ -26,7 +28,9 @@ export const OTextInput = (props: IOTextInputProps) => {
         setValue,
         placeholder,
         style,
-        multiline
+        multiline,
+        keyboardType,
+        maxLength
     } = props;
     const [isSecureTextVisible, setIsSecureTextVisible] = useState(!secureTextEntry);
 
@@ -45,6 +49,8 @@ export const OTextInput = (props: IOTextInputProps) => {
                 secureTextEntry={secureTextEntry && !isSecureTextVisible}
                 multiline={multiline}
                 placeholderTextColor="#999"
+                keyboardType={keyboardType}
+                maxLength={maxLength}
             />
             {secureTextEntry && (
                 <TouchableOpacity onPress={toggleSecureEntry} style={styles.eyeIcon}>
