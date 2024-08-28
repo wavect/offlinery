@@ -9,6 +9,8 @@ import * as bcrypt from 'bcrypt';
 import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { PendingUser } from 'src/registration/pending-user/pending-user.entity';
+import { EVerificationStatus } from 'src/types/user.types';
 
 @Injectable()
 export class UserService {
@@ -17,6 +19,8 @@ export class UserService {
     private userRepository: Repository<User>,
     @InjectRepository(BlacklistedRegion)
     private blacklistedRegionRepository: Repository<BlacklistedRegion>,
+    @InjectRepository(PendingUser)
+    private pendingUserRepo: Repository<PendingUser>,
   ) {}
 
   private async saveFiles(
@@ -55,6 +59,12 @@ export class UserService {
   ): Promise<User> {
     const user = new User();
     Object.assign(user, createUserDto);
+
+    // Double check if user's email actually is verified.
+    await this.pendingUserRepo.findOneByOrFail({
+      email: user.email,
+      verificationStatus: EVerificationStatus.VERIFIED,
+    });
 
     // @dev https://docs.nestjs.com/security/encryption-and-hashing
     user.passwordSalt = await bcrypt.genSalt();
