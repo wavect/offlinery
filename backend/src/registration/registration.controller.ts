@@ -31,8 +31,11 @@ export class RegistrationController {
   })
   async registerUserForEmailVerification(
     @Body() emailDto: RegistrationForVerificationDto,
-  ): Promise<string> {
-    return await this.registrationService.registerPendingUser(emailDto.email);
+  ): Promise<RegistrationForVerificationDto> {
+    const email = await this.registrationService.registerPendingUser(
+      emailDto.email,
+    );
+    return { email };
   }
 
   @Put('verify-email')

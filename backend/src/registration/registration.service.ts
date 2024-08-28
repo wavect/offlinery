@@ -20,14 +20,22 @@ export class RegistrationService {
 
   public async registerPendingUser(email: string): Promise<string> {
     try {
-      const existingUser = await this.pendingUserRepo.findOneBy({ email });
+      const existingUser = await this.pendingUserRepo.findOneBy({
+        email,
+        verificationStatus:
+          EVerificationStatus.VERIFIED || EVerificationStatus.NOT_NEEDED,
+      });
       if (existingUser) {
         throw new Error('Email already exists.');
       }
 
-      const pendingUser = new PendingUser();
-      pendingUser.email = email;
-      pendingUser.verificationStatus = EVerificationStatus.PENDING;
+      let pendingUser = await this.pendingUserRepo.findOneBy({ email });
+
+      if (!pendingUser) {
+        pendingUser = new PendingUser();
+        pendingUser.email = email;
+        pendingUser.verificationStatus = EVerificationStatus.PENDING;
+      }
 
       let verificationNumber: string = '';
       for (let index = 0; index <= 5; index++) {
