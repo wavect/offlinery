@@ -35,8 +35,7 @@ const Email = ({ navigation }) => {
 
       // Backend sent us an error
       if (!result.email) {
-        console.error("Error registering email");
-        return;
+        throw new Error("Error registering email")
       }
 
       navigation.navigate(ROUTES.Onboarding.VerifyEmail);
