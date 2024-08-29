@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserReportService } from './user-report.service';
-import { CreateUserReportDto } from '../DTOs/create-user-report.dto';
+import { CreateUserReportDTO } from '../DTOs/create-user-report.dto';
 import { UserReport } from './user-report.entity';
 
 @ApiTags('user-reports')
@@ -15,7 +15,7 @@ export class UserReportController {
     @Post()
     @ApiOperation({ summary: 'Create a new user report' })
     @ApiResponse({ status: 201, description: 'The report has been successfully created.', type: UserReport })
-    async create(@Body() createUserReportDto: CreateUserReportDto): Promise<UserReport> {
+    async create(@Body() createUserReportDto: CreateUserReportDTO): Promise<UserReport> {
         return this.userReportService.create(createUserReportDto);
     }
 

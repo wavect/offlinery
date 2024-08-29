@@ -26,7 +26,9 @@ import {MatchingModule} from "./transient-services/matching/matching.module";
 
 @Module({
     imports: [
-        ConfigModule.forRoot(),
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
         TypeOrmModule.forRoot({
             synchronize: true, // TODO: Remove in prod
             type: 'postgres',
