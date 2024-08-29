@@ -87,8 +87,7 @@ export class UserService {
       user.blacklistedRegions = await Promise.all(
         createUserDto.blacklistedRegions.map(async (region) => {
           const blacklistedRegion = new BlacklistedRegion();
-          blacklistedRegion.latitude = region.latitude;
-          blacklistedRegion.longitude = region.longitude;
+          blacklistedRegion.location = region.location;
           blacklistedRegion.radius = region.radius;
           return await this.blacklistedRegionRepository.save(blacklistedRegion);
         }),
@@ -136,8 +135,7 @@ export class UserService {
       user.blacklistedRegions = await Promise.all(
         updateUserDto.blacklistedRegions.map(async (region) => {
           const blacklistedRegion = new BlacklistedRegion();
-          blacklistedRegion.latitude = region.latitude;
-          blacklistedRegion.longitude = region.longitude;
+          blacklistedRegion.location = region.location;
           blacklistedRegion.radius = region.radius;
           return await this.blacklistedRegionRepository.save(blacklistedRegion);
         }),

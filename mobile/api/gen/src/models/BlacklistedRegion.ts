@@ -34,16 +34,10 @@ export interface BlacklistedRegion {
     id: number;
     /**
      * 
-     * @type {number}
+     * @type {object}
      * @memberof BlacklistedRegion
      */
-    latitude: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof BlacklistedRegion
-     */
-    longitude: number;
+    location: object;
     /**
      * 
      * @type {number}
@@ -63,8 +57,7 @@ export interface BlacklistedRegion {
  */
 export function instanceOfBlacklistedRegion(value: object): value is BlacklistedRegion {
     if (!('id' in value) || value['id'] === undefined) return false;
-    if (!('latitude' in value) || value['latitude'] === undefined) return false;
-    if (!('longitude' in value) || value['longitude'] === undefined) return false;
+    if (!('location' in value) || value['location'] === undefined) return false;
     if (!('radius' in value) || value['radius'] === undefined) return false;
     if (!('user' in value) || value['user'] === undefined) return false;
     return true;
@@ -81,8 +74,7 @@ export function BlacklistedRegionFromJSONTyped(json: any, ignoreDiscriminator: b
     return {
         
         'id': json['id'],
-        'latitude': json['latitude'],
-        'longitude': json['longitude'],
+        'location': json['location'],
         'radius': json['radius'],
         'user': UserFromJSON(json['user']),
     };
@@ -95,8 +87,7 @@ export function BlacklistedRegionToJSON(value?: BlacklistedRegion | null): any {
     return {
         
         'id': value['id'],
-        'latitude': value['latitude'],
-        'longitude': value['longitude'],
+        'location': value['location'],
         'radius': value['radius'],
         'user': UserToJSON(value['user']),
     };

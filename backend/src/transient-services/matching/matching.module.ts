@@ -5,10 +5,11 @@ import { MatchingService } from './matching.service';
 import { MatchingController } from './matching.controller';
 import { UserModule } from '../../user/user.module';
 import { NotificationModule } from '../notification/notification.module';
+import {BlacklistedRegion} from "../../blacklisted-region/blacklisted-region.entity";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([User]),
+        TypeOrmModule.forFeature([User, BlacklistedRegion]),
         forwardRef(() => UserModule),
         forwardRef(() => NotificationModule),
     ],

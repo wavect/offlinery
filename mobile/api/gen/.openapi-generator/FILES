@@ -15,7 +15,7 @@ src/index.ts
 src/models/BlacklistedRegion.ts
 src/models/BlacklistedRegionDTO.ts
 src/models/CreateUserDTO.ts
-src/models/CreateUserReportDto.ts
+src/models/CreateUserReportDTO.ts
 src/models/Encounter.ts
 src/models/EncounterPublicDTO.ts
 src/models/LocationUpdateDTO.ts

@@ -15,12 +15,12 @@
 
 import * as runtime from '../runtime';
 import type {
-  CreateUserReportDto,
+  CreateUserReportDTO,
   UserReport,
 } from '../models/index';
 import {
-    CreateUserReportDtoFromJSON,
-    CreateUserReportDtoToJSON,
+    CreateUserReportDTOFromJSON,
+    CreateUserReportDTOToJSON,
     UserReportFromJSON,
     UserReportToJSON,
 } from '../models/index';
@@ -30,7 +30,7 @@ import {
 // are larger than the benefits, we can try another approach.
 import { ImagePickerAsset } from "expo-image-picker";
 export interface UserReportControllerCreateRequest {
-    createUserReportDto: CreateUserReportDto;
+    createUserReportDTO: CreateUserReportDTO;
 }
 
 export interface UserReportControllerFindOneRequest {
@@ -47,7 +47,7 @@ export interface UserReportsApiInterface {
     /**
      * 
      * @summary Create a new user report
-     * @param {CreateUserReportDto} createUserReportDto 
+     * @param {CreateUserReportDTO} createUserReportDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserReportsApiInterface
@@ -99,10 +99,10 @@ export class UserReportsApi extends runtime.BaseAPI implements UserReportsApiInt
      * Create a new user report
      */
     async userReportControllerCreateRaw(requestParameters: UserReportControllerCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserReport>> {
-        if (requestParameters['createUserReportDto'] == null) {
+        if (requestParameters['createUserReportDTO'] == null) {
             throw new runtime.RequiredError(
-                'createUserReportDto',
-                'Required parameter "createUserReportDto" was null or undefined when calling userReportControllerCreate().'
+                'createUserReportDTO',
+                'Required parameter "createUserReportDTO" was null or undefined when calling userReportControllerCreate().'
             );
         }
 
@@ -117,7 +117,7 @@ export class UserReportsApi extends runtime.BaseAPI implements UserReportsApiInt
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: CreateUserReportDtoToJSON(requestParameters['createUserReportDto']),
+            body: CreateUserReportDTOToJSON(requestParameters['createUserReportDTO']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UserReportFromJSON(jsonValue));

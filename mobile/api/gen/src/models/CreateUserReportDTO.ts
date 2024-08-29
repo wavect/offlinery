@@ -16,37 +16,37 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface CreateUserReportDto
+ * @interface CreateUserReportDTO
  */
-export interface CreateUserReportDto {
+export interface CreateUserReportDTO {
     /**
      * The description of the incident
      * @type {string}
-     * @memberof CreateUserReportDto
+     * @memberof CreateUserReportDTO
      */
     incidentDescription: string;
     /**
      * Whether to keep the reporter updated on the report status
      * @type {boolean}
-     * @memberof CreateUserReportDto
+     * @memberof CreateUserReportDTO
      */
     keepReporterInTheLoop: boolean;
     /**
      * The type of incident
      * @type {string}
-     * @memberof CreateUserReportDto
+     * @memberof CreateUserReportDTO
      */
-    incidentType: CreateUserReportDtoIncidentTypeEnum;
+    incidentType: CreateUserReportDTOIncidentTypeEnum;
     /**
      * The ID of the user being reported
      * @type {string}
-     * @memberof CreateUserReportDto
+     * @memberof CreateUserReportDTO
      */
     reportedUserId: string;
     /**
      * The ID of the user making the report
      * @type {string}
-     * @memberof CreateUserReportDto
+     * @memberof CreateUserReportDTO
      */
     reportingUserId: string;
 }
@@ -55,19 +55,19 @@ export interface CreateUserReportDto {
 /**
  * @export
  */
-export const CreateUserReportDtoIncidentTypeEnum = {
+export const CreateUserReportDTOIncidentTypeEnum = {
     Disrespectful: 'Disrespectful',
     Sexual_harassment: 'Sexual harassment',
     Violent_behavior: 'Violent behavior',
     Other: 'Other'
 } as const;
-export type CreateUserReportDtoIncidentTypeEnum = typeof CreateUserReportDtoIncidentTypeEnum[keyof typeof CreateUserReportDtoIncidentTypeEnum];
+export type CreateUserReportDTOIncidentTypeEnum = typeof CreateUserReportDTOIncidentTypeEnum[keyof typeof CreateUserReportDTOIncidentTypeEnum];
 
 
 /**
- * Check if a given object implements the CreateUserReportDto interface.
+ * Check if a given object implements the CreateUserReportDTO interface.
  */
-export function instanceOfCreateUserReportDto(value: object): value is CreateUserReportDto {
+export function instanceOfCreateUserReportDTO(value: object): value is CreateUserReportDTO {
     if (!('incidentDescription' in value) || value['incidentDescription'] === undefined) return false;
     if (!('keepReporterInTheLoop' in value) || value['keepReporterInTheLoop'] === undefined) return false;
     if (!('incidentType' in value) || value['incidentType'] === undefined) return false;
@@ -76,11 +76,11 @@ export function instanceOfCreateUserReportDto(value: object): value is CreateUse
     return true;
 }
 
-export function CreateUserReportDtoFromJSON(json: any): CreateUserReportDto {
-    return CreateUserReportDtoFromJSONTyped(json, false);
+export function CreateUserReportDTOFromJSON(json: any): CreateUserReportDTO {
+    return CreateUserReportDTOFromJSONTyped(json, false);
 }
 
-export function CreateUserReportDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): CreateUserReportDto {
+export function CreateUserReportDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): CreateUserReportDTO {
     if (json == null) {
         return json;
     }
@@ -94,7 +94,7 @@ export function CreateUserReportDtoFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function CreateUserReportDtoToJSON(value?: CreateUserReportDto | null): any {
+export function CreateUserReportDTOToJSON(value?: CreateUserReportDTO | null): any {
     if (value == null) {
         return value;
     }

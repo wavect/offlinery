@@ -20,17 +20,11 @@ import { mapValues } from '../runtime';
  */
 export interface BlacklistedRegionDTO {
     /**
-     * Latitude of the center of the blacklisted region
-     * @type {number}
+     * GeoJSON Point representing the location of the blacklisted region
+     * @type {object}
      * @memberof BlacklistedRegionDTO
      */
-    latitude: number;
-    /**
-     * Longitude of the center of the blacklisted region
-     * @type {number}
-     * @memberof BlacklistedRegionDTO
-     */
-    longitude: number;
+    location: object;
     /**
      * Radius of the blacklisted region in meters
      * @type {number}
@@ -43,8 +37,7 @@ export interface BlacklistedRegionDTO {
  * Check if a given object implements the BlacklistedRegionDTO interface.
  */
 export function instanceOfBlacklistedRegionDTO(value: object): value is BlacklistedRegionDTO {
-    if (!('latitude' in value) || value['latitude'] === undefined) return false;
-    if (!('longitude' in value) || value['longitude'] === undefined) return false;
+    if (!('location' in value) || value['location'] === undefined) return false;
     if (!('radius' in value) || value['radius'] === undefined) return false;
     return true;
 }
@@ -59,8 +52,7 @@ export function BlacklistedRegionDTOFromJSONTyped(json: any, ignoreDiscriminator
     }
     return {
         
-        'latitude': json['latitude'],
-        'longitude': json['longitude'],
+        'location': json['location'],
         'radius': json['radius'],
     };
 }
@@ -71,8 +63,7 @@ export function BlacklistedRegionDTOToJSON(value?: BlacklistedRegionDTO | null):
     }
     return {
         
-        'latitude': value['latitude'],
-        'longitude': value['longitude'],
+        'location': value['location'],
         'radius': value['radius'],
     };
 }
