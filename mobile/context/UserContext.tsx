@@ -1,12 +1,11 @@
 import React, {createContext, Dispatch, useContext, useReducer} from "react";
 import * as ImagePicker from "expo-image-picker";
 import {LocationObject} from "expo-location";
-import {UserPublicDTO} from "../types/PublicProfile.types";
 import {getAge} from "../utils/date.utils";
 import {
     CreateUserDTO,
     UserApi,
-    UserControllerCreateUserRequest,
+    UserControllerCreateUserRequest, UserPublicDTO,
 } from "../api/gen/src";
 import {ImagePickerAsset} from "expo-image-picker";
 import {Platform} from "react-native";
@@ -188,9 +187,10 @@ export const getPublicProfileFromUserData = (
     state: IUserData
 ): UserPublicDTO => {
     return {
+        id: state.id!,
         firstName: state.firstName,
         bio: state.bio,
-        age: getAge(state.birthDay).toString(),
+        age: getAge(state.birthDay),
         imageURIs: getSavedImageURIs(state),
     };
 };

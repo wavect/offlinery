@@ -176,6 +176,12 @@ export interface User {
      * @memberof User
      */
     trustScore?: number;
+    /**
+     * 
+     * @type {object}
+     * @memberof User
+     */
+    location: object;
 }
 
 
@@ -253,6 +259,7 @@ export function instanceOfUser(value: object): value is User {
     if (!('receivedReports' in value) || value['receivedReports'] === undefined) return false;
     if (!('issuedReports' in value) || value['issuedReports'] === undefined) return false;
     if (!('encounters' in value) || value['encounters'] === undefined) return false;
+    if (!('location' in value) || value['location'] === undefined) return false;
     return true;
 }
 
@@ -289,6 +296,7 @@ export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User
         'issuedReports': ((json['issuedReports'] as Array<any>).map(UserReportFromJSON)),
         'encounters': ((json['encounters'] as Array<any>).map(EncounterFromJSON)),
         'trustScore': json['trustScore'] == null ? undefined : json['trustScore'],
+        'location': json['location'],
     };
 }
 
@@ -321,6 +329,7 @@ export function UserToJSON(value?: User | null): any {
         'issuedReports': ((value['issuedReports'] as Array<any>).map(UserReportToJSON)),
         'encounters': ((value['encounters'] as Array<any>).map(EncounterToJSON)),
         'trustScore': value['trustScore'],
+        'location': value['location'],
     };
 }
 

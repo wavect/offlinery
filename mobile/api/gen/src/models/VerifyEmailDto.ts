@@ -16,37 +16,37 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface VerifyEmailDto
+ * @interface VerifyEmailDTO
  */
-export interface VerifyEmailDto {
+export interface VerifyEmailDTO {
     /**
      * 
      * @type {string}
-     * @memberof VerifyEmailDto
+     * @memberof VerifyEmailDTO
      */
     email: string;
     /**
      * 
      * @type {string}
-     * @memberof VerifyEmailDto
+     * @memberof VerifyEmailDTO
      */
     verificationCode: string;
 }
 
 /**
- * Check if a given object implements the VerifyEmailDto interface.
+ * Check if a given object implements the VerifyEmailDTO interface.
  */
-export function instanceOfVerifyEmailDto(value: object): value is VerifyEmailDto {
+export function instanceOfVerifyEmailDTO(value: object): value is VerifyEmailDTO {
     if (!('email' in value) || value['email'] === undefined) return false;
     if (!('verificationCode' in value) || value['verificationCode'] === undefined) return false;
     return true;
 }
 
-export function VerifyEmailDtoFromJSON(json: any): VerifyEmailDto {
-    return VerifyEmailDtoFromJSONTyped(json, false);
+export function VerifyEmailDTOFromJSON(json: any): VerifyEmailDTO {
+    return VerifyEmailDTOFromJSONTyped(json, false);
 }
 
-export function VerifyEmailDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): VerifyEmailDto {
+export function VerifyEmailDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): VerifyEmailDTO {
     if (json == null) {
         return json;
     }
@@ -57,7 +57,7 @@ export function VerifyEmailDtoFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function VerifyEmailDtoToJSON(value?: VerifyEmailDto | null): any {
+export function VerifyEmailDTOToJSON(value?: VerifyEmailDTO | null): any {
     if (value == null) {
         return value;
     }

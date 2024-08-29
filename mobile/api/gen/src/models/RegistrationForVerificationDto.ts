@@ -16,30 +16,30 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface RegistrationForVerificationDto
+ * @interface RegistrationForVerificationDTO
  */
-export interface RegistrationForVerificationDto {
+export interface RegistrationForVerificationDTO {
     /**
      * 
      * @type {string}
-     * @memberof RegistrationForVerificationDto
+     * @memberof RegistrationForVerificationDTO
      */
     email: string;
 }
 
 /**
- * Check if a given object implements the RegistrationForVerificationDto interface.
+ * Check if a given object implements the RegistrationForVerificationDTO interface.
  */
-export function instanceOfRegistrationForVerificationDto(value: object): value is RegistrationForVerificationDto {
+export function instanceOfRegistrationForVerificationDTO(value: object): value is RegistrationForVerificationDTO {
     if (!('email' in value) || value['email'] === undefined) return false;
     return true;
 }
 
-export function RegistrationForVerificationDtoFromJSON(json: any): RegistrationForVerificationDto {
-    return RegistrationForVerificationDtoFromJSONTyped(json, false);
+export function RegistrationForVerificationDTOFromJSON(json: any): RegistrationForVerificationDTO {
+    return RegistrationForVerificationDTOFromJSONTyped(json, false);
 }
 
-export function RegistrationForVerificationDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): RegistrationForVerificationDto {
+export function RegistrationForVerificationDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): RegistrationForVerificationDTO {
     if (json == null) {
         return json;
     }
@@ -49,7 +49,7 @@ export function RegistrationForVerificationDtoFromJSONTyped(json: any, ignoreDis
     };
 }
 
-export function RegistrationForVerificationDtoToJSON(value?: RegistrationForVerificationDto | null): any {
+export function RegistrationForVerificationDTOToJSON(value?: RegistrationForVerificationDTO | null): any {
     if (value == null) {
         return value;
     }

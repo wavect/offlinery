@@ -16,6 +16,7 @@
 import * as runtime from '../runtime';
 import type {
   CreateUserDTO,
+  LocationUpdateDTO,
   UpdateUserDTO,
   User,
   UserPublicDTO,
@@ -23,6 +24,8 @@ import type {
 import {
     CreateUserDTOFromJSON,
     CreateUserDTOToJSON,
+    LocationUpdateDTOFromJSON,
+    LocationUpdateDTOToJSON,
     UpdateUserDTOFromJSON,
     UpdateUserDTOToJSON,
     UserFromJSON,
@@ -42,6 +45,11 @@ export interface UserControllerCreateUserRequest {
 
 export interface UserControllerGetUserRequest {
     id: number;
+}
+
+export interface UserControllerUpdateLocationRequest {
+    id: string;
+    locationUpdateDTO: LocationUpdateDTO;
 }
 
 export interface UserControllerUpdateUserRequest {
@@ -87,6 +95,22 @@ export interface UserApiInterface {
      * Get a user by ID
      */
     userControllerGetUser(requestParameters: UserControllerGetUserRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User>;
+
+    /**
+     * 
+     * @summary Update user location
+     * @param {string} id User ID
+     * @param {LocationUpdateDTO} locationUpdateDTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApiInterface
+     */
+    userControllerUpdateLocationRaw(requestParameters: UserControllerUpdateLocationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserPublicDTO>>;
+
+    /**
+     * Update user location
+     */
+    userControllerUpdateLocation(requestParameters: UserControllerUpdateLocationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserPublicDTO>;
 
     /**
      * 
@@ -217,6 +241,49 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
      */
     async userControllerGetUser(requestParameters: UserControllerGetUserRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User> {
         const response = await this.userControllerGetUserRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Update user location
+     */
+    async userControllerUpdateLocationRaw(requestParameters: UserControllerUpdateLocationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserPublicDTO>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling userControllerUpdateLocation().'
+            );
+        }
+
+        if (requestParameters['locationUpdateDTO'] == null) {
+            throw new runtime.RequiredError(
+                'locationUpdateDTO',
+                'Required parameter "locationUpdateDTO" was null or undefined when calling userControllerUpdateLocation().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/user/{id}/location`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: LocationUpdateDTOToJSON(requestParameters['locationUpdateDTO']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserPublicDTOFromJSON(jsonValue));
+    }
+
+    /**
+     * Update user location
+     */
+    async userControllerUpdateLocation(requestParameters: UserControllerUpdateLocationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserPublicDTO> {
+        const response = await this.userControllerUpdateLocationRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

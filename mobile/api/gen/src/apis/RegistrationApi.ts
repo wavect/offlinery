@@ -15,14 +15,14 @@
 
 import * as runtime from '../runtime';
 import type {
-  RegistrationForVerificationDto,
-  VerifyEmailDto,
+  RegistrationForVerificationDTO,
+  VerifyEmailDTO,
 } from '../models/index';
 import {
-    RegistrationForVerificationDtoFromJSON,
-    RegistrationForVerificationDtoToJSON,
-    VerifyEmailDtoFromJSON,
-    VerifyEmailDtoToJSON,
+    RegistrationForVerificationDTOFromJSON,
+    RegistrationForVerificationDTOToJSON,
+    VerifyEmailDTOFromJSON,
+    VerifyEmailDTOToJSON,
 } from '../models/index';
 
 // We import this type even if it's unused to avoid additional
@@ -30,11 +30,11 @@ import {
 // are larger than the benefits, we can try another approach.
 import { ImagePickerAsset } from "expo-image-picker";
 export interface RegistrationControllerRegisterUserForEmailVerificationRequest {
-    registrationForVerificationDto: RegistrationForVerificationDto;
+    registrationForVerificationDTO: RegistrationForVerificationDTO;
 }
 
 export interface RegistrationControllerVerifyEmailRequest {
-    verifyEmailDto: VerifyEmailDto;
+    verifyEmailDTO: VerifyEmailDTO;
 }
 
 /**
@@ -47,22 +47,22 @@ export interface RegistrationApiInterface {
     /**
      * 
      * @summary Creates a user with only an email to verify.
-     * @param {RegistrationForVerificationDto} registrationForVerificationDto User email.
+     * @param {RegistrationForVerificationDTO} registrationForVerificationDTO User email.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RegistrationApiInterface
      */
-    registrationControllerRegisterUserForEmailVerificationRaw(requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RegistrationForVerificationDto>>;
+    registrationControllerRegisterUserForEmailVerificationRaw(requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RegistrationForVerificationDTO>>;
 
     /**
      * Creates a user with only an email to verify.
      */
-    registrationControllerRegisterUserForEmailVerification(requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RegistrationForVerificationDto>;
+    registrationControllerRegisterUserForEmailVerification(requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RegistrationForVerificationDTO>;
 
     /**
      * 
      * @summary Verify email with verification code.
-     * @param {VerifyEmailDto} verifyEmailDto User email and verification code.
+     * @param {VerifyEmailDTO} verifyEmailDTO User email and verification code.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RegistrationApiInterface
@@ -84,11 +84,11 @@ export class RegistrationApi extends runtime.BaseAPI implements RegistrationApiI
     /**
      * Creates a user with only an email to verify.
      */
-    async registrationControllerRegisterUserForEmailVerificationRaw(requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RegistrationForVerificationDto>> {
-        if (requestParameters['registrationForVerificationDto'] == null) {
+    async registrationControllerRegisterUserForEmailVerificationRaw(requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RegistrationForVerificationDTO>> {
+        if (requestParameters['registrationForVerificationDTO'] == null) {
             throw new runtime.RequiredError(
-                'registrationForVerificationDto',
-                'Required parameter "registrationForVerificationDto" was null or undefined when calling registrationControllerRegisterUserForEmailVerification().'
+                'registrationForVerificationDTO',
+                'Required parameter "registrationForVerificationDTO" was null or undefined when calling registrationControllerRegisterUserForEmailVerification().'
             );
         }
 
@@ -103,16 +103,16 @@ export class RegistrationApi extends runtime.BaseAPI implements RegistrationApiI
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: RegistrationForVerificationDtoToJSON(requestParameters['registrationForVerificationDto']),
+            body: RegistrationForVerificationDTOToJSON(requestParameters['registrationForVerificationDTO']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => RegistrationForVerificationDtoFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => RegistrationForVerificationDTOFromJSON(jsonValue));
     }
 
     /**
      * Creates a user with only an email to verify.
      */
-    async registrationControllerRegisterUserForEmailVerification(requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RegistrationForVerificationDto> {
+    async registrationControllerRegisterUserForEmailVerification(requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RegistrationForVerificationDTO> {
         const response = await this.registrationControllerRegisterUserForEmailVerificationRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -121,10 +121,10 @@ export class RegistrationApi extends runtime.BaseAPI implements RegistrationApiI
      * Verify email with verification code.
      */
     async registrationControllerVerifyEmailRaw(requestParameters: RegistrationControllerVerifyEmailRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['verifyEmailDto'] == null) {
+        if (requestParameters['verifyEmailDTO'] == null) {
             throw new runtime.RequiredError(
-                'verifyEmailDto',
-                'Required parameter "verifyEmailDto" was null or undefined when calling registrationControllerVerifyEmail().'
+                'verifyEmailDTO',
+                'Required parameter "verifyEmailDTO" was null or undefined when calling registrationControllerVerifyEmail().'
             );
         }
 
@@ -139,7 +139,7 @@ export class RegistrationApi extends runtime.BaseAPI implements RegistrationApiI
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: VerifyEmailDtoToJSON(requestParameters['verifyEmailDto']),
+            body: VerifyEmailDTOToJSON(requestParameters['verifyEmailDTO']),
         }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
