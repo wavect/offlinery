@@ -1,12 +1,7 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-} from 'typeorm';
-import { EVerificationStatus } from '../../types/user.types';
-import { IEntityToDTOInterface } from 'src/interfaces/IEntityToDTO.interface';
-import { PendingUserPublicDTO } from 'src/DTOs/pending-user.dto';
+import { PendingUserPublicDTO } from "src/DTOs/pending-user.dto";
+import { IEntityToDTOInterface } from "src/interfaces/IEntityToDTO.interface";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { EVerificationStatus } from "../../types/user.types";
 
 @Entity()
 export class PendingUser
@@ -19,7 +14,7 @@ export class PendingUser
       verificationStatus: this.verificationStatus,
     };
   }
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()
@@ -37,6 +32,6 @@ export class PendingUser
   @Column()
   verificationCode: string;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: "timestamptz" })
   verificationCodeIssuedAt: Date;
 }

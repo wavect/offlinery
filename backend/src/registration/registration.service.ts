@@ -1,11 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { EVerificationStatus } from 'src/types/user.types';
-import { User } from 'src/user/user.entity';
-import { Repository } from 'typeorm';
-import * as crypto from 'crypto';
-import { PendingUser } from './pending-user/pending-user.entity';
-import { MailerService } from '@nestjs-modules/mailer';
+import { MailerService } from "@nestjs-modules/mailer";
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { EVerificationStatus } from "src/types/user.types";
+import { User } from "src/user/user.entity";
+import { Repository } from "typeorm";
+import { PendingUser } from "./pending-user/pending-user.entity";
 
 @Injectable()
 export class RegistrationService {
@@ -29,7 +28,7 @@ export class RegistrationService {
       const existingVerifiedUser = await this.userRepo.findOneBy({ email });
 
       if (existingPendingUser || existingVerifiedUser) {
-        throw new Error('Email already exists.');
+        throw new Error("Email already exists.");
       }
 
       let pendingUser = await this.pendingUserRepo.findOneBy({ email });
@@ -42,7 +41,7 @@ export class RegistrationService {
 
       pendingUser.verificationCodeIssuedAt = new Date();
 
-      let verificationNumber: string = '';
+      let verificationNumber: string = "";
       for (let index = 0; index <= 5; index++) {
         const randomNumber = Math.floor(Math.random() * (9 - 0) + 0).toString();
 
@@ -75,7 +74,7 @@ export class RegistrationService {
         this.VERIFICATION_CODE_EXPIRATION_IN_MIN * 60 * 1000;
 
       if (currentTime - issuedTime > expirationTimeInMs) {
-        throw new Error('Verification code has expired.');
+        throw new Error("Verification code has expired.");
       }
 
       user.verificationStatus = EVerificationStatus.VERIFIED;
@@ -88,12 +87,10 @@ export class RegistrationService {
 
   private async sendMail(to: string, verificationCode: string) {
     try {
-      const text = `Thank you for registering! Here is your verification code: ${verificationCode}.`;
-
       await this.mailService.sendMail({
         to,
-        subject: 'Welcome to Offlinery! Confirm your Email',
-        template: '../../mail/templates/email-verification.hbs',
+        subject: "Welcome to Offlinery! Confirm your Email",
+        template: "../../mail/templates/email-verification.hbs",
         context: {
           name: to,
           verificationCode,

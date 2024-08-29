@@ -35,11 +35,13 @@ const Email = ({ navigation }) => {
 
       // Backend sent us an error
       if (!result.email) {
-        throw new Error("Error registering email")
+        throw new Error("Error registering email");
       }
 
       navigation.navigate(ROUTES.Onboarding.VerifyEmail);
-    } catch (error) {console.error(error)}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

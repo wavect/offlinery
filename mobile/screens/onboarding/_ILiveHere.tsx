@@ -1,15 +1,19 @@
 import * as React from "react";
-import {Platform, StyleSheet, Text, TextInput, View} from "react-native";
-import Checkbox from 'expo-checkbox';
-import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
-import {ROUTES} from "../routes";
-import {EACTION_USER, useUserContext} from "../../context/UserContext";
-import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
-import MapView, {Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE} from "react-native-maps";
-import {BorderRadius} from "../../GlobalStyles";
-import {OTextInput} from "../../components/OTextInput/OTextInput";
+import { Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import Checkbox from "expo-checkbox";
+import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
+import { ROUTES } from "../routes";
+import { EACTION_USER, useUserContext } from "../../context/UserContext";
+import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
+import MapView, {
+  Marker,
+  PROVIDER_DEFAULT,
+  PROVIDER_GOOGLE,
+} from "react-native-maps";
+import { BorderRadius } from "../../GlobalStyles";
+import { OTextInput } from "../../components/OTextInput/OTextInput";
 
-const _ILiveHere = () => null
+const _ILiveHere = () => null;
 /*
 const _ILiveHere = ({navigation}) => {
     const {state, dispatch} = useUserContext()

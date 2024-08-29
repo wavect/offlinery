@@ -1,38 +1,39 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {User} from "../user/user.entity";
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
-import {Encounter} from "./encounter.entity";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Encounter } from "./encounter.entity";
 
 @Injectable()
 export class EncounterService {
+  constructor(
+    @InjectRepository(Encounter)
+    private encounterRepository: Repository<Encounter>,
+  ) {}
 
-    constructor(
-        @InjectRepository(Encounter)
-        private encounterRepository: Repository<Encounter>) {}
+  async findEncounterById(id: string): Promise<Encounter> {
+    const encounter = await this.encounterRepository.findOne({
+      where: { id },
+      relations: ["users"], // Include related entities if needed
+    });
 
-    async findEncounterById(id: string): Promise<Encounter> {
-        const encounter = await this.encounterRepository.findOne({
-            where: { id },
-            relations: ['users'] // Include related entities if needed
-        });
-
-        if (!encounter) {
-            throw new NotFoundException(`Encounter with ID ${id} not found`);
-        }
-
-        return encounter;
+    if (!encounter) {
+      throw new NotFoundException(`Encounter with ID ${id} not found`);
     }
 
-    async findEncountersByUser(userId: string): Promise<Encounter[]> {
-        const encounters = await this.encounterRepository.find({
-            where: { id: userId },
-        });
+    return encounter;
+  }
 
-        if (!encounters) {
-            throw new NotFoundException(`Encounters from user with ID ${userId} not found`);
-        }
+  async findEncountersByUser(userId: string): Promise<Encounter[]> {
+    const encounters = await this.encounterRepository.find({
+      where: { id: userId },
+    });
 
-        return encounters;
+    if (!encounters) {
+      throw new NotFoundException(
+        `Encounters from user with ID ${userId} not found`,
+      );
     }
+
+    return encounters;
+  }
 }
