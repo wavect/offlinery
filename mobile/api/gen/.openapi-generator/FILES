@@ -1,6 +1,5 @@
 .gitignore
 .npmignore
-.openapi-generator-ignore
 README.md
 package.json
 src/apis/AuthApi.ts
@@ -14,6 +13,7 @@ src/apis/index.ts
 src/index.ts
 src/models/BlacklistedRegion.ts
 src/models/BlacklistedRegionDTO.ts
+src/models/BlacklistedRegionDTOLocation.ts
 src/models/CreateUserDTO.ts
 src/models/CreateUserReportDTO.ts
 src/models/Encounter.ts
