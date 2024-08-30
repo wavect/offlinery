@@ -67,9 +67,6 @@ describe("UserService", () => {
 
         service = module.get<UserService>(UserService);
         userRepository = module.get<Repository<User>>(getRepositoryToken(User));
-        blacklistedRegionRepository = module.get<Repository<BlacklistedRegion>>(
-            getRepositoryToken(BlacklistedRegion),
-        );
         pendingUserRepository = module.get<Repository<PendingUser>>(
             getRepositoryToken(PendingUser),
         );
