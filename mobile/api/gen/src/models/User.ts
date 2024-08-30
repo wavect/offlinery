@@ -166,6 +166,12 @@ export interface User {
      * @memberof User
      */
     trustScore?: number;
+    /**
+     *
+     * @type {object}
+     * @memberof User
+     */
+    location: object;
 }
 
 /**
@@ -273,6 +279,7 @@ export function instanceOfUser(value: object): value is User {
         return false;
     if (!("encounters" in value) || value["encounters"] === undefined)
         return false;
+    if (!("location" in value) || value["location"] === undefined) return false;
     return true;
 }
 
@@ -317,6 +324,7 @@ export function UserFromJSONTyped(
         ),
         encounters: (json["encounters"] as Array<any>).map(EncounterFromJSON),
         trustScore: json["trustScore"] == null ? undefined : json["trustScore"],
+        location: json["location"],
     };
 }
 
@@ -354,5 +362,6 @@ export function UserToJSON(value?: User | null): any {
         ),
         encounters: (value["encounters"] as Array<any>).map(EncounterToJSON),
         trustScore: value["trustScore"],
+        location: value["location"],
     };
 }

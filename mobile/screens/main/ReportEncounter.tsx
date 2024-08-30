@@ -4,13 +4,12 @@ import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 import {
-    CreateUserReportDto,
-    CreateUserReportDtoIncidentTypeEnum,
+    CreateUserReportDTO,
+    CreateUserReportDTOIncidentTypeEnum,
     UserReportsApi,
 } from "../../api/gen/src";
 import { OCheckbox } from "../../components/OCheckbox/OCheckbox";
 import OEncounter from "../../components/OEncounter/OEncounter";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
 import { OTextInput } from "../../components/OTextInput/OTextInput";
 import {
     EACTION_ENCOUNTERS,
@@ -28,23 +27,23 @@ const ReportEncounter = ({ route, navigation }) => {
     const [incidentDescription, setIncidentDescription] = useState<string>();
     const [keepMeInTheLoop, setKeepMeInTheLoop] = useState<boolean>(false);
     const [incidentType, setIncidentType] =
-        useState<CreateUserReportDtoIncidentTypeEnum | null>(null);
+        useState<CreateUserReportDTOIncidentTypeEnum | null>(null);
     const [incidents, setIncidents] = useState([
         {
             label: i18n.t(TR.reportIncident.disrespectful),
-            value: CreateUserReportDtoIncidentTypeEnum.Disrespectful,
+            value: CreateUserReportDTOIncidentTypeEnum.Disrespectful,
         },
         {
             label: i18n.t(TR.reportIncident.sexualHarassment),
-            value: CreateUserReportDtoIncidentTypeEnum.SexualHarassment,
+            value: CreateUserReportDTOIncidentTypeEnum.Sexual_harassment,
         },
         {
             label: i18n.t(TR.reportIncident.violentBehavior),
-            value: CreateUserReportDtoIncidentTypeEnum.ViolentBehavior,
+            value: CreateUserReportDTOIncidentTypeEnum.Violent_behavior,
         },
         {
             label: i18n.t(TR.reportIncident.other),
-            value: CreateUserReportDtoIncidentTypeEnum.Other,
+            value: CreateUserReportDTOIncidentTypeEnum.Other,
         },
     ]);
     const [isButtonPressed, setIsButtonPressed] = useState(false);
@@ -52,7 +51,7 @@ const ReportEncounter = ({ route, navigation }) => {
     const submitReport = async () => {
         try {
             setLoading(true);
-            const createUserReportDto: CreateUserReportDto = {
+            const createUserReportDTO: CreateUserReportDTO = {
                 incidentDescription: incidentDescription!,
                 keepReporterInTheLoop: keepMeInTheLoop,
                 incidentType: incidentType!,
@@ -60,7 +59,7 @@ const ReportEncounter = ({ route, navigation }) => {
                 reportingUserId: state.id!, // You need to provide the current user's ID here
             };
 
-            await reportApi.userReportControllerCreate({ createUserReportDto });
+            await reportApi.userReportControllerCreate({ createUserReportDTO });
 
             dispatch({
                 type: EACTION_ENCOUNTERS.SET_REPORTED,

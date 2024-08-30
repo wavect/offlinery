@@ -13,6 +13,7 @@ import {
     EApproachChoice,
     Gender,
     getUserImagesForUpload,
+    mapRegionToBlacklistedRegionDTO,
     useUserContext,
 } from "../../context/UserContext";
 import { FontFamily, FontSize } from "../../GlobalStyles";
@@ -69,7 +70,9 @@ const ProfileSettings = ({ navigation }) => {
                     birthDay: state.birthDay,
                     gender: state.gender,
                     genderDesire: state.genderDesire,
-                    blacklistedRegions: state.blacklistedRegions,
+                    blacklistedRegions: state.blacklistedRegions.map((r) =>
+                        mapRegionToBlacklistedRegionDTO(r),
+                    ),
                 },
                 images: getUserImagesForUpload(state),
             };

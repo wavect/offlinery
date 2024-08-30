@@ -12,15 +12,15 @@
  * Do not edit the class manually.
  */
 
-import type { CreateUserReportDto, UserReport } from "../models/index";
-import { CreateUserReportDtoToJSON, UserReportFromJSON } from "../models/index";
+import type { CreateUserReportDTO, UserReport } from "../models/index";
+import { CreateUserReportDTOToJSON, UserReportFromJSON } from "../models/index";
 import * as runtime from "../runtime";
 
 // We import this type even if it's unused to avoid additional
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
 export interface UserReportControllerCreateRequest {
-    createUserReportDto: CreateUserReportDto;
+    createUserReportDTO: CreateUserReportDTO;
 }
 
 export interface UserReportControllerFindOneRequest {
@@ -37,7 +37,7 @@ export interface UserReportsApiInterface {
     /**
      *
      * @summary Create a new user report
-     * @param {CreateUserReportDto} createUserReportDto
+     * @param {CreateUserReportDTO} createUserReportDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserReportsApiInterface
@@ -109,10 +109,10 @@ export class UserReportsApi
         requestParameters: UserReportControllerCreateRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<UserReport>> {
-        if (requestParameters["createUserReportDto"] == null) {
+        if (requestParameters["createUserReportDTO"] == null) {
             throw new runtime.RequiredError(
-                "createUserReportDto",
-                'Required parameter "createUserReportDto" was null or undefined when calling userReportControllerCreate().',
+                "createUserReportDTO",
+                'Required parameter "createUserReportDTO" was null or undefined when calling userReportControllerCreate().',
             );
         }
 
@@ -128,8 +128,8 @@ export class UserReportsApi
                 method: "POST",
                 headers: headerParameters,
                 query: queryParameters,
-                body: CreateUserReportDtoToJSON(
-                    requestParameters["createUserReportDto"],
+                body: CreateUserReportDTOToJSON(
+                    requestParameters["createUserReportDTO"],
                 ),
             },
             initOverrides,

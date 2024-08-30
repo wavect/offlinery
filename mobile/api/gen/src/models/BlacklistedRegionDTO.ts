@@ -12,6 +12,12 @@
  * Do not edit the class manually.
  */
 
+import type { BlacklistedRegionDTOLocation } from "./BlacklistedRegionDTOLocation";
+import {
+    BlacklistedRegionDTOLocationFromJSON,
+    BlacklistedRegionDTOLocationToJSON,
+} from "./BlacklistedRegionDTOLocation";
+
 /**
  *
  * @export
@@ -19,17 +25,11 @@
  */
 export interface BlacklistedRegionDTO {
     /**
-     * Latitude of the center of the blacklisted region
-     * @type {number}
+     *
+     * @type {BlacklistedRegionDTOLocation}
      * @memberof BlacklistedRegionDTO
      */
-    latitude: number;
-    /**
-     * Longitude of the center of the blacklisted region
-     * @type {number}
-     * @memberof BlacklistedRegionDTO
-     */
-    longitude: number;
+    location: BlacklistedRegionDTOLocation;
     /**
      * Radius of the blacklisted region in meters
      * @type {number}
@@ -44,9 +44,7 @@ export interface BlacklistedRegionDTO {
 export function instanceOfBlacklistedRegionDTO(
     value: object,
 ): value is BlacklistedRegionDTO {
-    if (!("latitude" in value) || value["latitude"] === undefined) return false;
-    if (!("longitude" in value) || value["longitude"] === undefined)
-        return false;
+    if (!("location" in value) || value["location"] === undefined) return false;
     if (!("radius" in value) || value["radius"] === undefined) return false;
     return true;
 }
@@ -63,8 +61,7 @@ export function BlacklistedRegionDTOFromJSONTyped(
         return json;
     }
     return {
-        latitude: json["latitude"],
-        longitude: json["longitude"],
+        location: BlacklistedRegionDTOLocationFromJSON(json["location"]),
         radius: json["radius"],
     };
 }
@@ -76,8 +73,7 @@ export function BlacklistedRegionDTOToJSON(
         return value;
     }
     return {
-        latitude: value["latitude"],
-        longitude: value["longitude"],
+        location: BlacklistedRegionDTOLocationToJSON(value["location"]),
         radius: value["radius"],
     };
 }

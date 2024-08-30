@@ -2,10 +2,12 @@
 /* eslint-disable */
 export * from "./BlacklistedRegion";
 export * from "./BlacklistedRegionDTO";
+export * from "./BlacklistedRegionDTOLocation";
 export * from "./CreateUserDTO";
-export * from "./CreateUserReportDto";
+export * from "./CreateUserReportDTO";
 export * from "./Encounter";
 export * from "./EncounterPublicDTO";
+export * from "./LocationUpdateDTO";
 export * from "./NotificationNavigateUserDTO";
 export * from "./RegistrationForVerificationDTO";
 export * from "./SignInDTO";

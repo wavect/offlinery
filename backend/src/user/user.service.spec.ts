@@ -69,8 +69,10 @@ describe("UserService", () => {
                 approachChoice: EApproachChoice.APPROACH,
                 blacklistedRegions: [
                     {
-                        latitude: 40.7128,
-                        longitude: -74.006,
+                        location: {
+                            type: "Point",
+                            coordinates: [40.7128, -74.006],
+                        },
                         radius: 1000,
                     },
                 ],

@@ -1,4 +1,11 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Point } from "geojson";
+import {
+    Column,
+    Entity,
+    Index,
+    OneToMany,
+    PrimaryGeneratedColumn,
+} from "typeorm";
 import { BlacklistedRegion } from "../blacklisted-region/blacklisted-region.entity";
 import { UserPrivateDTO } from "../DTOs/user-private.dto";
 import { UserPublicDTO } from "../DTOs/user-public.dto";
@@ -119,4 +126,13 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
 
     @Column({ nullable: true })
     trustScore?: number;
+
+    @Index({ spatial: true })
+    @Column({
+        type: "geography",
+        spatialFeatureType: "Point",
+        srid: 4326,
+        nullable: true,
+    })
+    location: Point;
 }

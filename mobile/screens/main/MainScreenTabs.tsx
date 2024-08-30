@@ -1,90 +1,61 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
+import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
 import { Subscription } from "expo-notifications";
+import * as TaskManager from "expo-task-manager";
 import * as React from "react";
-import { memo, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
 import { Color, Title } from "../../GlobalStyles";
-import { NotificationNavigateUserDTO } from "../../api/gen/src";
+import {
+    LocationUpdateDTO,
+    NotificationNavigateUserDTO,
+    UserApi,
+} from "../../api/gen/src";
 import { OGoLiveToggle } from "../../components/OGoLiveToggle/OGoLiveToggle";
-import { EncountersProvider } from "../../context/EncountersContext";
-import { useUserContext } from "../../context/UserContext";
+import { EDateMode, useUserContext } from "../../context/UserContext";
 import { i18n, TR } from "../../localization/translate.service";
 import HeatMap from "../../screens/main/HeatMap";
 import { registerForPushNotificationsAsync } from "../../services/notification.service";
 import { IEncounterProfile } from "../../types/PublicProfile.types";
-import { getAge } from "../../utils/date.utils";
 import { ROUTES } from "../routes";
-import Encounters from "./Encounters";
-import NavigateToApproach from "./NavigateToApproach";
+import { EncounterScreenStack } from "./EncounterStackNavigator";
 import ProfileSettings from "./ProfileSettings";
-import ProfileView from "./ProfileView";
-import ReportEncounter from "./ReportEncounter";
 
 const Tab = createBottomTabNavigator();
-const EncounterStack = createStackNavigator();
 
-interface IEncounterStackProps {
-    route?: {
-        params?: {
-            initialRouteName?: string;
-        };
-    };
-}
+const LOCATION_TASK_NAME = "background-location-task";
 
-const NO_HEADER = { headerShown: false };
-const EncounterScreenStack = memo(({ route }: IEncounterStackProps) => {
-    const initialRouteName =
-        route?.params?.initialRouteName ?? ROUTES.Main.Encounters;
-    return (
-        <EncountersProvider>
-            <EncounterStack.Navigator
-                initialRouteName={initialRouteName}
-                screenOptions={NO_HEADER}
-            >
-                <EncounterStack.Screen
-                    name={ROUTES.Main.Encounters}
-                    component={Encounters}
-                    options={NO_HEADER}
-                />
-                <EncounterStack.Screen
-                    name={ROUTES.Main.ReportEncounter}
-                    component={ReportEncounter}
-                    options={{
-                        headerShown: true,
-                        headerShadowVisible: false,
-                        headerTitle: i18n.t(TR.reportPerson),
-                        headerBackTitleVisible: false,
-                        headerTitleAlign: "left",
-                    }}
-                />
-                <EncounterStack.Screen
-                    name={ROUTES.Main.NavigateToApproach}
-                    component={NavigateToApproach}
-                    options={{
-                        headerShown: true,
-                        headerShadowVisible: false,
-                        headerTitle: i18n.t(TR.meetIRL),
-                        headerBackTitleVisible: false,
-                        headerTitleAlign: "left",
-                    }}
-                />
-                <EncounterStack.Screen
-                    name={ROUTES.Main.ProfileView}
-                    component={ProfileView}
-                    options={{
-                        headerShown: true,
-                        headerShadowVisible: false,
-                        headerTitle: i18n.t(TR.profileView),
-                        headerBackTitleVisible: false,
-                        headerTitleAlign: "left",
-                    }}
-                />
-            </EncounterStack.Navigator>
-        </EncountersProvider>
-    );
+// Define the background task for location tracking
+TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
+    if (error) {
+        console.error(error);
+        return;
+    }
+    if (data) {
+        const locations = (data as any).locations as Location.LocationObject[];
+        const { state } = useUserContext();
+        const userApi = new UserApi();
+
+        if (locations && locations.length > 0 && state.id) {
+            const location = locations[locations.length - 1];
+            const locationUpdateDTO: LocationUpdateDTO = {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+            };
+
+            try {
+                await userApi.userControllerUpdateLocation({
+                    id: state.id,
+                    locationUpdateDTO: locationUpdateDTO,
+                });
+                console.log("Location updated successfully");
+            } catch (error) {
+                console.error("Error updating location:", error);
+            }
+        }
+    }
 });
 
 export const MainScreenTabs = ({ navigation }) => {
@@ -153,9 +124,7 @@ export const MainScreenTabs = ({ navigation }) => {
                             imageURIs:
                                 notificationData.navigateToPerson.imageURIs,
                             encounterId: notificationData.navigateToPerson.id, // TODO: Is a different ID most likely (relationship ID)
-                            age: getAge(
-                                notificationData.navigateToPerson.birthDay,
-                            ).toString(), // TODO: calc on backend and only return age
+                            age: notificationData.navigateToPerson.age.toString(),
                         }; // TODO: FIX union types on backend to be consistent/clean
                         // Navigate to the specified screen, passing the user object as a prop
                         navigation.navigate(ROUTES.Main.Encounters, {
@@ -177,6 +146,43 @@ export const MainScreenTabs = ({ navigation }) => {
             };
         }
     }, [state.id]);
+
+    const [locationStarted, setLocationStarted] = useState(false);
+    useEffect(() => {
+        (async () => {
+            if (state.dateMode === EDateMode.LIVE) {
+                const { status } =
+                    await Location.requestBackgroundPermissionsAsync();
+                if (status === "granted") {
+                    // TODO: Only do this if Ghost mode disabled! also set to backend that no matches to be done!
+                    await Location.startLocationUpdatesAsync(
+                        LOCATION_TASK_NAME,
+                        {
+                            accuracy: Location.Accuracy.BestForNavigation,
+                            timeInterval: 5000,
+                            distanceInterval: 10,
+                            foregroundService: {
+                                notificationTitle: "Background location use",
+                                notificationBody:
+                                    "Tracking your location in the background.",
+                            },
+                        },
+                    );
+                    setLocationStarted(true);
+                }
+            } else {
+                console.log(
+                    "Not running location service due to user settings (ghost mode).",
+                );
+            }
+        })();
+
+        return () => {
+            if (locationStarted) {
+                Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+            }
+        };
+    }, [state.dateMode]);
 
     return (
         <Tab.Navigator

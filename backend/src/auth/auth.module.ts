@@ -10,7 +10,9 @@ import { AuthService } from "./auth.service";
     controllers: [AuthController],
     providers: [AuthService],
     imports: [
-        ConfigModule.forRoot(),
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
         UserModule,
         JwtModule.register({
             global: true,

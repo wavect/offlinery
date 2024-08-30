@@ -13,10 +13,12 @@ src/apis/index.ts
 src/index.ts
 src/models/BlacklistedRegion.ts
 src/models/BlacklistedRegionDTO.ts
+src/models/BlacklistedRegionDTOLocation.ts
 src/models/CreateUserDTO.ts
-src/models/CreateUserReportDto.ts
+src/models/CreateUserReportDTO.ts
 src/models/Encounter.ts
 src/models/EncounterPublicDTO.ts
+src/models/LocationUpdateDTO.ts
 src/models/NotificationNavigateUserDTO.ts
 src/models/RegistrationForVerificationDTO.ts
 src/models/SignInDTO.ts

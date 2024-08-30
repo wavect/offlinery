@@ -24,6 +24,7 @@ import {
 import { Public } from "../auth/auth.guard";
 import { CreateUserRequestDTO } from "../DTOs/create-user-request.dto";
 import { CreateUserDTO } from "../DTOs/create-user.dto";
+import { LocationUpdateDTO } from "../DTOs/location-update.dto";
 import { UpdateUserRequestDTO } from "../DTOs/update-user-request.dto";
 import { UpdateUserDTO } from "../DTOs/update-user.dto";
 import { UserPublicDTO } from "../DTOs/user-public.dto";
@@ -118,5 +119,26 @@ export class UserController {
             throw new NotFoundException(`User with ID ${id} not found`);
         }
         return user.convertToPublicDTO();
+    }
+
+    @Put(":id/location")
+    @ApiOperation({ summary: "Update user location" })
+    @ApiParam({ name: "id", type: "string", description: "User ID" })
+    @ApiBody({ type: LocationUpdateDTO })
+    @ApiResponse({
+        status: 200,
+        description: "The user location has been successfully updated.",
+        type: UserPublicDTO,
+    })
+    @ApiResponse({ status: 404, description: "User not found." })
+    async updateLocation(
+        @Param("id") id: string,
+        @Body() locationUpdateDTO: LocationUpdateDTO,
+    ): Promise<UserPublicDTO> {
+        const updatedUser = await this.userService.updateLocation(
+            id,
+            locationUpdateDTO,
+        );
+        return updatedUser.convertToPublicDTO();
     }
 }

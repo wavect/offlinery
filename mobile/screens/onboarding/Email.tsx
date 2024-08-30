@@ -31,7 +31,7 @@ const Email = ({ navigation }) => {
             const result =
                 await regApi.registrationControllerRegisterUserForEmailVerification(
                     {
-                        registrationForVerificationDto: { email: state.email },
+                        registrationForVerificationDTO: { email: state.email },
                     },
                 );
 

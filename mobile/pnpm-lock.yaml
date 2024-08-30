@@ -62,6 +62,9 @@ dependencies:
   expo-status-bar:
     specifier: ~1.12.1
     version: 1.12.1
+  expo-task-manager:
+    specifier: ~11.8.2
+    version: 11.8.2(expo@51.0.26)
   i18n-js:
     specifier: ^4.4.3
     version: 4.4.3
@@ -4406,6 +4409,15 @@ packages:
     resolution: {integrity: sha512-/t3xdbS8KB0prj5KG5w7z+wZPFlPtkgs95BsmrP/E7Q0xHXTcDcQ6Cu2FkFuRM+PKTb17cJDnLkawyS5vDLxMA==}
     dev: false
 
+  /expo-task-manager@11.8.2(expo@51.0.26):
+    resolution: {integrity: sha512-Uhy3ol5gYeZOyeRFddYjLI1B2DGRH1gjp/YC8Hpn5p5MVENviySoKNF+wd98rRvOAokzrzElyDBHSTfX+C3tpg==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 51.0.26(@babel/core@7.25.2)(@babel/preset-env@7.25.3)
+      unimodules-app-loader: 4.6.0
+    dev: false
+
   /expo@51.0.26(@babel/core@7.25.2)(@babel/preset-env@7.25.3):
     resolution: {integrity: sha512-7ThQa6CVbiVtk4GNw0E9CewSzXYOeHkcRTCGorBZVcjAu6SuxbdWEtl0RI01/VpRKV+6I+yy/BmGnCl7lFRILg==}
     hasBin: true
@@ -7975,6 +7987,10 @@ packages:
   /unicode-property-aliases-ecmascript@2.1.0:
     resolution: {integrity: sha512-6t3foTQI9qne+OZoVQB/8x8rk2k1eVy1gRXhV3oFQ5T6R1dqQ1xtin3XqSlx3+ATBkliTaR/hHyJBm+LVPNM8w==}
     engines: {node: '>=4'}
+    dev: false
+
+  /unimodules-app-loader@4.6.0:
+    resolution: {integrity: sha512-FRNIlx7sLBDVPG117JnEBhnzZkTIgZTEwYW2rzrY9HdvLBTpRN+k0dxY50U/CAhFHW3zMD0OP5JAlnSQRhx5HA==}
     dev: false
 
   /unique-filename@3.0.0:

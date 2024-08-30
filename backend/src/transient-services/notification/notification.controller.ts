@@ -7,12 +7,12 @@ import {
 } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { StorePushTokenDTO } from "../../DTOs/store-push-token.dto";
-import { UserService } from "../../user/user.service"; // Assume this service exists to handle user-related operations
+import { NotificationService } from "./notification.service"; // Assume this service exists to handle user-related operations
 
 @ApiTags("Push Notifications")
 @Controller("api")
 export class NotificationController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private notificationService: NotificationService) {}
 
     @Post("push-token")
     @ApiOperation({ summary: "Store user's push token" })
@@ -25,10 +25,7 @@ export class NotificationController {
     @ApiResponse({ status: 500, description: "Internal server error." })
     async storePushToken(@Body() storePushTokenDto: StorePushTokenDTO) {
         try {
-            await this.userService.updatePushToken(
-                storePushTokenDto.userId,
-                storePushTokenDto.pushToken,
-            );
+            await this.notificationService.storePushToken(storePushTokenDto);
             return {
                 statusCode: HttpStatus.CREATED,
                 message: "Push token stored successfully",

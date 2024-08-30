@@ -1,21 +1,27 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Point } from "typeorm";
 
 export class BlacklistedRegionDTO {
     @ApiProperty({
-        type: "number",
-        description: "Latitude of the center of the blacklisted region",
+        type: "object",
+        properties: {
+            type: { type: "string", enum: ["Point"] },
+            coordinates: {
+                type: "array",
+                items: { type: "number" },
+                minItems: 2,
+                maxItems: 2,
+            },
+        },
+        description:
+            "GeoJSON Point representing the location of the blacklisted region (0:lon, 1:lat)",
         required: true,
-        example: 40.7128,
+        example: {
+            type: "Point",
+            coordinates: [-74.006, 40.7128],
+        },
     })
-    latitude: number;
-
-    @ApiProperty({
-        type: "number",
-        description: "Longitude of the center of the blacklisted region",
-        required: true,
-        example: -74.006,
-    })
-    longitude: number;
+    location: Point;
 
     @ApiProperty({
         type: "number",

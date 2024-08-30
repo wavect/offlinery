@@ -4,11 +4,13 @@ import { LocationObject } from "expo-location";
 import React, { createContext, Dispatch, useContext, useReducer } from "react";
 import { Platform } from "react-native";
 import {
+    BlacklistedRegionDTO,
+    BlacklistedRegionDTOLocationTypeEnum,
     CreateUserDTO,
     UserApi,
     UserControllerCreateUserRequest,
+    UserPublicDTO,
 } from "../api/gen/src";
-import { UserPublicDTO } from "../types/PublicProfile.types";
 import { getAge } from "../utils/date.utils";
 
 export type Gender = "woman" | "man";
@@ -67,6 +69,20 @@ export interface MapRegion {
      */
     uiRadius?: number;
 }
+export const mapRegionToBlacklistedRegionDTO = (
+    region: MapRegion,
+): BlacklistedRegionDTO => {
+    return {
+        radius: region.radius,
+        location: {
+            type: BlacklistedRegionDTOLocationTypeEnum.Point,
+            coordinates: [
+                region.longitude, // idx 0
+                region.latitude, // idx 1
+            ],
+        },
+    };
+};
 
 export type ImageIdx = "0" | "1" | "2" | "3" | "4" | "5";
 
@@ -188,9 +204,10 @@ export const getPublicProfileFromUserData = (
     state: IUserData,
 ): UserPublicDTO => {
     return {
+        id: state.id!,
         firstName: state.firstName,
         bio: state.bio,
-        age: getAge(state.birthDay).toString(),
+        age: getAge(state.birthDay),
         imageURIs: getSavedImageURIs(state),
     };
 };
@@ -351,7 +368,9 @@ export const registerUser = async (
         genderDesire: state.genderDesire!,
         verificationStatus: state.verificationStatus,
         approachChoice: state.approachChoice,
-        blacklistedRegions: state.blacklistedRegions,
+        blacklistedRegions: state.blacklistedRegions.map((r) =>
+            mapRegionToBlacklistedRegionDTO(r),
+        ),
         approachFromTime: state.approachFromTime,
         approachToTime: state.approachToTime,
         bio: state.bio,

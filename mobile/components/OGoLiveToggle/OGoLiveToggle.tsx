@@ -2,6 +2,7 @@ import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import { useState } from "react";
 import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
+import { UpdateUserDTO, UserApi } from "../../api/gen/src";
 import {
     EACTION_USER,
     EApproachChoice,
@@ -33,10 +34,25 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 alert(i18n.t(TR.permissionToBackgroundLocationDenied));
                 return;
             }
+
+            const newDateMode: EDateMode = isEnabled
+                ? EDateMode.LIVE
+                : EDateMode.GHOST;
+            const userApi = new UserApi();
+            const updateUserDTO: UpdateUserDTO = {
+                dateMode: newDateMode,
+            };
+
+            await userApi.userControllerUpdateUser({
+                id: state.id!,
+                user: updateUserDTO,
+            });
+            console.log("Date mode updated successfully on the backend");
+
             setIsEnabled((previousState) => !previousState);
             dispatch({
                 type: EACTION_USER.SET_DATE_MODE,
-                payload: isEnabled ? EDateMode.LIVE : EDateMode.GHOST,
+                payload: newDateMode,
             });
 
             // Load location and inform user about state
@@ -53,7 +69,10 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 alert(i18n.t(TR.ghostModeDescr));
             }
         } catch (error) {
-            console.error("Error requesting permissions:", error);
+            console.error(
+                "Error requesting permissions or saving to backend:",
+                error,
+            );
             alert(i18n.t(TR.errRequestingPermissions));
         }
     };

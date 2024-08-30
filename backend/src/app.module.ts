@@ -16,6 +16,7 @@ import { Encounter } from "./encounter/encounter.entity";
 import { EncounterModule } from "./encounter/encounter.module";
 import { PendingUser } from "./registration/pending-user/pending-user.entity";
 import { RegistrationModule } from "./registration/registration.module";
+import { MatchingModule } from "./transient-services/matching/matching.module";
 import { NotificationModule } from "./transient-services/notification/notification.module";
 import { UserReport } from "./user-report/user-report.entity";
 import { UserReportModule } from "./user-report/user-report.module";
@@ -25,7 +26,9 @@ import { TYPED_ENV } from "./utils/env.utils";
 
 @Module({
     imports: [
-        ConfigModule.forRoot(),
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
         TypeOrmModule.forRoot({
             synchronize: true, // TODO: Remove in prod
             type: "postgres",
@@ -47,9 +50,9 @@ import { TYPED_ENV } from "./utils/env.utils";
             isGlobal: true,
         }),
         /* right now directly saved in UserService
-        MulterModule.register({
-           dest: './uploads'
-        }),*/
+            MulterModule.register({
+               dest: './uploads'
+            }),*/
         // @dev https://docs.nestjs.com/security/rate-limiting
         ThrottlerModule.forRoot([
             {
@@ -63,8 +66,9 @@ import { TYPED_ENV } from "./utils/env.utils";
             serveRoot: "/img",
         }),
         UserModule,
-        BlacklistedRegionModule,
+        MatchingModule,
         NotificationModule,
+        BlacklistedRegionModule,
         UserReportModule,
         AuthModule,
         EncounterModule,

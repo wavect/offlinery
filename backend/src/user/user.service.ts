@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+    forwardRef,
+    Inject,
+    Injectable,
+    NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import * as fs from "fs";
@@ -9,7 +14,9 @@ import { Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 import { BlacklistedRegion } from "../blacklisted-region/blacklisted-region.entity";
 import { CreateUserDTO } from "../DTOs/create-user.dto";
+import { LocationUpdateDTO } from "../DTOs/location-update.dto";
 import { UpdateUserDTO } from "../DTOs/update-user.dto";
+import { MatchingService } from "../transient-services/matching/matching.service";
 import { User } from "./user.entity";
 
 @Injectable()
@@ -21,6 +28,8 @@ export class UserService {
         private blacklistedRegionRepository: Repository<BlacklistedRegion>,
         @InjectRepository(PendingUser)
         private pendingUserRepo: Repository<PendingUser>,
+        @Inject(forwardRef(() => MatchingService))
+        private matchingService: MatchingService,
     ) {}
 
     private async saveFiles(
@@ -83,8 +92,7 @@ export class UserService {
             user.blacklistedRegions = await Promise.all(
                 createUserDto.blacklistedRegions.map(async (region) => {
                     const blacklistedRegion = new BlacklistedRegion();
-                    blacklistedRegion.latitude = region.latitude;
-                    blacklistedRegion.longitude = region.longitude;
+                    blacklistedRegion.location = region.location;
                     blacklistedRegion.radius = region.radius;
                     return await this.blacklistedRegionRepository.save(
                         blacklistedRegion,
@@ -95,6 +103,7 @@ export class UserService {
         return await this.userRepository.save(user);
     }
 
+    // TODO: Only to be updated by that specific user!
     async updateUser(
         id: string,
         updateUserDto: UpdateUserDTO,
@@ -137,8 +146,7 @@ export class UserService {
             user.blacklistedRegions = await Promise.all(
                 updateUserDto.blacklistedRegions.map(async (region) => {
                     const blacklistedRegion = new BlacklistedRegion();
-                    blacklistedRegion.latitude = region.latitude;
-                    blacklistedRegion.longitude = region.longitude;
+                    blacklistedRegion.location = region.location;
                     blacklistedRegion.radius = region.radius;
                     return await this.blacklistedRegionRepository.save(
                         blacklistedRegion,
@@ -184,6 +192,7 @@ export class UserService {
         return user;
     }
 
+    // TODO: Only to be updated by that specific user!
     async updatePushToken(userId: string, pushToken: string): Promise<User> {
         const user = await this.userRepository.findOneBy({ id: userId });
         if (!user) {
@@ -192,5 +201,24 @@ export class UserService {
 
         user.pushToken = pushToken;
         return await this.userRepository.save(user);
+    }
+
+    // TODO: Only to be updated by that specific user!
+    async updateLocation(
+        userId: string,
+        { latitude, longitude }: LocationUpdateDTO,
+    ): Promise<User> {
+        const user = await this.userRepository.findOneBy({ id: userId });
+        if (!user) {
+            throw new NotFoundException(`User with ID ${userId} not found`);
+        }
+
+        user.location = { type: "Point", coordinates: [longitude, latitude] };
+        const updatedUser = await this.userRepository.save(user);
+
+        // Check for matches and send notifications
+        await this.matchingService.checkAndNotifyMatches(user);
+
+        return updatedUser;
     }
 }

@@ -39,7 +39,7 @@ const VerifyEmail = ({ navigation }) => {
 
         const regApi = new RegistrationApi();
         await regApi.registrationControllerVerifyEmail({
-            verifyEmailDto: { email: state.email, verificationCode },
+            verifyEmailDTO: { email: state.email, verificationCode },
         });
 
         navigation.navigate(ROUTES.Onboarding.Password);

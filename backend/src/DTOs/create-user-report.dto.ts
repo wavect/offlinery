@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsEnum, IsString } from "class-validator";
 import { EIncidentType } from "../types/user.types";
 
-export class CreateUserReportDto {
+export class CreateUserReportDTO {
     @ApiProperty({
         description: "The description of the incident",
         example: "The user was being disrespectful in chat",

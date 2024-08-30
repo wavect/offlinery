@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { CreateUserReportDto } from "../DTOs/create-user-report.dto";
+import { CreateUserReportDTO } from "../DTOs/create-user-report.dto";
 import { UserReport } from "./user-report.entity";
 import { UserReportService } from "./user-report.service";
 
@@ -20,7 +20,7 @@ export class UserReportController {
         type: UserReport,
     })
     async create(
-        @Body() createUserReportDto: CreateUserReportDto,
+        @Body() createUserReportDto: CreateUserReportDTO,
     ): Promise<UserReport> {
         return this.userReportService.create(createUserReportDto);
     }

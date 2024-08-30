@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Point } from "geojson";
+import {
+    Column,
+    Entity,
+    Index,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from "typeorm";
 import { User } from "../user/user.entity";
 
 @Entity()
@@ -6,11 +13,13 @@ export class BlacklistedRegion {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column("float")
-    latitude: number;
-
-    @Column("float")
-    longitude: number;
+    @Index({ spatial: true })
+    @Column({
+        type: "geography",
+        spatialFeatureType: "Point",
+        srid: 4326,
+    })
+    location: Point;
 
     @Column("float")
     radius: number;
