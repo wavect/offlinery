@@ -12,12 +12,10 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
 import type { BlacklistedRegionDTOLocation } from "./BlacklistedRegionDTOLocation";
 import {
-  BlacklistedRegionDTOLocationFromJSON,
-  BlacklistedRegionDTOLocationFromJSONTyped,
-  BlacklistedRegionDTOLocationToJSON,
+    BlacklistedRegionDTOLocationFromJSON,
+    BlacklistedRegionDTOLocationToJSON,
 } from "./BlacklistedRegionDTOLocation";
 
 /**
@@ -26,56 +24,56 @@ import {
  * @interface BlacklistedRegionDTO
  */
 export interface BlacklistedRegionDTO {
-  /**
-   *
-   * @type {BlacklistedRegionDTOLocation}
-   * @memberof BlacklistedRegionDTO
-   */
-  location: BlacklistedRegionDTOLocation;
-  /**
-   * Radius of the blacklisted region in meters
-   * @type {number}
-   * @memberof BlacklistedRegionDTO
-   */
-  radius: number;
+    /**
+     *
+     * @type {BlacklistedRegionDTOLocation}
+     * @memberof BlacklistedRegionDTO
+     */
+    location: BlacklistedRegionDTOLocation;
+    /**
+     * Radius of the blacklisted region in meters
+     * @type {number}
+     * @memberof BlacklistedRegionDTO
+     */
+    radius: number;
 }
 
 /**
  * Check if a given object implements the BlacklistedRegionDTO interface.
  */
 export function instanceOfBlacklistedRegionDTO(
-  value: object,
+    value: object,
 ): value is BlacklistedRegionDTO {
-  if (!("location" in value) || value["location"] === undefined) return false;
-  if (!("radius" in value) || value["radius"] === undefined) return false;
-  return true;
+    if (!("location" in value) || value["location"] === undefined) return false;
+    if (!("radius" in value) || value["radius"] === undefined) return false;
+    return true;
 }
 
 export function BlacklistedRegionDTOFromJSON(json: any): BlacklistedRegionDTO {
-  return BlacklistedRegionDTOFromJSONTyped(json, false);
+    return BlacklistedRegionDTOFromJSONTyped(json, false);
 }
 
 export function BlacklistedRegionDTOFromJSONTyped(
-  json: any,
-  ignoreDiscriminator: boolean,
+    json: any,
+    ignoreDiscriminator: boolean,
 ): BlacklistedRegionDTO {
-  if (json == null) {
-    return json;
-  }
-  return {
-    location: BlacklistedRegionDTOLocationFromJSON(json["location"]),
-    radius: json["radius"],
-  };
+    if (json == null) {
+        return json;
+    }
+    return {
+        location: BlacklistedRegionDTOLocationFromJSON(json["location"]),
+        radius: json["radius"],
+    };
 }
 
 export function BlacklistedRegionDTOToJSON(
-  value?: BlacklistedRegionDTO | null,
+    value?: BlacklistedRegionDTO | null,
 ): any {
-  if (value == null) {
-    return value;
-  }
-  return {
-    location: BlacklistedRegionDTOLocationToJSON(value["location"]),
-    radius: value["radius"],
-  };
+    if (value == null) {
+        return value;
+    }
+    return {
+        location: BlacklistedRegionDTOLocationToJSON(value["location"]),
+        radius: value["radius"],
+    };
 }

@@ -1,20 +1,37 @@
-import React, { useState, useRef } from "react";
-import { Image, StyleSheet, View, Dimensions, TouchableOpacity, Modal, Text, FlatList } from "react-native";
+import { RouteProp } from "@react-navigation/native";
+import React, { useRef, useState } from "react";
+import {
+    Dimensions,
+    FlatList,
+    Image,
+    Modal,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
+import { useSharedValue } from "react-native-reanimated";
+import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import { UserPublicDTO } from "../../types/PublicProfile.types";
-import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
-import { useSharedValue } from 'react-native-reanimated';
 import { Color } from "../../GlobalStyles";
-import {RouteProp} from "@react-navigation/native";
-import {i18n, TR} from "../../localization/translate.service";
+import { i18n, TR } from "../../localization/translate.service";
+import { UserPublicDTO } from "../../types/PublicProfile.types";
 
 interface IProfileViewProps {
-    route?: RouteProp<{ params: { user: UserPublicDTO, bottomContainerChildren?: React.ReactNode } }, 'params'>
+    route?: RouteProp<
+        {
+            params: {
+                user: UserPublicDTO;
+                bottomContainerChildren?: React.ReactNode;
+            };
+        },
+        "params"
+    >;
 }
 
-const ProfileView = ({route}: IProfileViewProps) => {
+const ProfileView = ({ route }: IProfileViewProps) => {
     const progressValue = useSharedValue<number>(0);
-    const width = Dimensions.get('window').width;
+    const width = Dimensions.get("window").width;
     const [fullScreenVisible, setFullScreenVisible] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const carouselRef = useRef<ICarouselInstance>(null);
@@ -31,9 +48,10 @@ const ProfileView = ({route}: IProfileViewProps) => {
             <Image source={{ uri: item }} style={styles.previewImage} />
         </TouchableOpacity>
     );
-    const user: UserPublicDTO|undefined = route?.params?.user;
-    if (!user) return <Text>{i18n.t(TR.errNoUserProvided)}</Text>
-    const bottomContainerChildren: React.ReactNode = route?.params?.bottomContainerChildren
+    const user: UserPublicDTO | undefined = route?.params?.user;
+    if (!user) return <Text>{i18n.t(TR.errNoUserProvided)}</Text>;
+    const bottomContainerChildren: React.ReactNode =
+        route?.params?.bottomContainerChildren;
 
     return (
         <OPageContainer
@@ -45,18 +63,26 @@ const ProfileView = ({route}: IProfileViewProps) => {
                 <Carousel
                     ref={carouselRef}
                     loop
-                    width={width - 32}  // Adjust width to account for padding
+                    width={width - 32} // Adjust width to account for padding
                     height={(width - 32) * 0.8}
                     autoPlay={false}
                     data={user.imageURIs}
                     scrollAnimationDuration={1000}
                     onProgressChange={(_, absoluteProgress) => {
                         progressValue.value = absoluteProgress;
-                        setCurrentImageIndex(Math.floor(absoluteProgress) % user.imageURIs.length);
+                        setCurrentImageIndex(
+                            Math.floor(absoluteProgress) %
+                                user.imageURIs.length,
+                        );
                     }}
                     renderItem={({ item, index }) => (
-                        <TouchableOpacity onPress={() => setFullScreenVisible(true)}>
-                            <Image source={{ uri: item }} style={styles.carouselImage} />
+                        <TouchableOpacity
+                            onPress={() => setFullScreenVisible(true)}
+                        >
+                            <Image
+                                source={{ uri: item }}
+                                style={styles.carouselImage}
+                            />
                         </TouchableOpacity>
                     )}
                 />
@@ -68,7 +94,9 @@ const ProfileView = ({route}: IProfileViewProps) => {
                                 styles.paginationDot,
                                 {
                                     backgroundColor:
-                                        currentImageIndex === index ? Color.primaryLight : Color.lightGray,
+                                        currentImageIndex === index
+                                            ? Color.primaryLight
+                                            : Color.lightGray,
                                 },
                             ]}
                         />
@@ -76,14 +104,16 @@ const ProfileView = ({route}: IProfileViewProps) => {
                 </View>
             </View>
 
-            {user.imageURIs.length > 2 && <FlatList
-                data={user.imageURIs}
-                renderItem={renderPreviewImage}
-                keyExtractor={(item, index) => index.toString()}
-                horizontal={false}
-                numColumns={4}
-                style={styles.previewList}
-            />}
+            {user.imageURIs.length > 2 && (
+                <FlatList
+                    data={user.imageURIs}
+                    renderItem={renderPreviewImage}
+                    keyExtractor={(item, index) => index.toString()}
+                    horizontal={false}
+                    numColumns={4}
+                    style={styles.previewList}
+                />
+            )}
 
             <Modal
                 animationType="fade"
@@ -114,17 +144,17 @@ const ProfileView = ({route}: IProfileViewProps) => {
 const styles = StyleSheet.create({
     carouselContainer: {
         marginBottom: 20,
-        alignItems: 'center',
+        alignItems: "center",
     },
     carouselImage: {
-        width: '100%',
-        height: '100%',
+        width: "100%",
+        height: "100%",
         borderRadius: 10,
     },
     paginationContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
         marginTop: 10,
     },
     paginationDot: {
@@ -142,22 +172,22 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
     },
     previewImage: {
-        width: '100%',
-        height: '100%',
+        width: "100%",
+        height: "100%",
         borderRadius: 5,
     },
     fullScreenContainer: {
         flex: 1,
-        backgroundColor: 'black',
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: "black",
+        justifyContent: "center",
+        alignItems: "center",
     },
     fullScreenImage: {
-        width: '100%',
-        height: '100%',
+        width: "100%",
+        height: "100%",
     },
     closeButton: {
-        position: 'absolute',
+        position: "absolute",
         top: 40,
         right: 20,
         zIndex: 1,
@@ -166,14 +196,14 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 30,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        justifyContent: "center",
+        alignItems: "center",
     },
     closeButtonText: {
-        color: 'white',
+        color: "white",
         fontSize: 35,
-        fontWeight: 'bold',
+        fontWeight: "bold",
     },
 });
 

@@ -3,7 +3,7 @@ import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 const baseButtonStyle = {
     justifyContent: "center",
     alignItems: "center",
-    width: '90%',
+    width: "90%",
     height: 65,
     borderRadius: 100,
     overflow: "hidden",

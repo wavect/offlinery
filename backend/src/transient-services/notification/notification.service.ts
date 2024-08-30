@@ -1,8 +1,8 @@
-import {forwardRef, Inject, Injectable, Logger} from '@nestjs/common';
-import {Expo, ExpoPushTicket, ExpoPushToken} from 'expo-server-sdk';
-import {OfflineryNotification} from "./notification-message.type";
-import {UserService} from "../../user/user.service";
-import {StorePushTokenDTO} from "../../DTOs/store-push-token.dto";
+import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
+import { Expo, ExpoPushTicket, ExpoPushToken } from "expo-server-sdk";
+import { StorePushTokenDTO } from "../../DTOs/store-push-token.dto";
+import { UserService } from "../../user/user.service";
+import { OfflineryNotification } from "./notification-message.type";
 
 @Injectable()
 export class NotificationService {
@@ -11,28 +11,38 @@ export class NotificationService {
 
     constructor(
         @Inject(forwardRef(() => UserService))
-        private readonly userService: UserService) {
-    this.expo = new Expo();
+        private readonly userService: UserService,
+    ) {
+        this.expo = new Expo();
     }
 
     async storePushToken(storePushTokenDTO: StorePushTokenDTO) {
-        return await this.userService.updatePushToken(storePushTokenDTO.userId, storePushTokenDTO.pushToken);
+        return await this.userService.updatePushToken(
+            storePushTokenDTO.userId,
+            storePushTokenDTO.pushToken,
+        );
     }
 
     /** @dev The ExpoPushToken remains the same for the user infinitely, except they reinstall the app, etc. */
-    async sendPushNotification(pushToken: ExpoPushToken, messages: OfflineryNotification[]) {
+    async sendPushNotification(
+        pushToken: ExpoPushToken,
+        messages: OfflineryNotification[],
+    ) {
         // TODO: ensure messages and pushToken are the same, maybe have some wrapper functions or whatever, or load directly from userEntity, etc.
         if (!Expo.isExpoPushToken(pushToken)) {
-            this.logger.error(`Push token ${pushToken} is not a valid Expo push token`);
+            this.logger.error(
+                `Push token ${pushToken} is not a valid Expo push token`,
+            );
             return [];
         }
 
         const tickets: ExpoPushTicket[] = [];
         try {
             const chunks = this.expo.chunkPushNotifications(messages);
-            for (let chunk of chunks) {
+            for (const chunk of chunks) {
                 try {
-                    let ticketChunk = await this.expo.sendPushNotificationsAsync(chunk);
+                    const ticketChunk =
+                        await this.expo.sendPushNotificationsAsync(chunk);
                     tickets.push(...ticketChunk);
                 } catch (error) {
                     this.logger.error(error);

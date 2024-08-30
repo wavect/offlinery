@@ -13,5 +13,5 @@ export default {
         height: 926,
         overflow: "hidden",
         backgroundColor: "transparent",
-    }
-}
+    },
+};

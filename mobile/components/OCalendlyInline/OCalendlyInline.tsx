@@ -1,16 +1,16 @@
 import * as React from "react";
+import { WebView } from "react-native-webview";
+import { i18n, TR } from "../../localization/translate.service";
 import {
+    formatCalendlyUrl,
+    IframeTitle,
+    LoadingSpinner,
     PageSettings,
     Prefill,
     Utm,
-    IframeTitle,
-    formatCalendlyUrl,
-    LoadingSpinner,
 } from "./OCalendlyBase";
+import styles from "./OCalendlyInline.styles";
 import CalendlyLoadingSpinner from "./OCalendlyLoadingSpinner";
-import styles from './OCalendlyInline.styles'
-import { WebView } from 'react-native-webview';
-import {i18n, TR} from "../../localization/translate.service";
 
 export interface Props {
     url: string;
@@ -23,7 +23,6 @@ export interface Props {
 }
 
 class InlineWidget extends React.Component<Props, { isLoading: boolean }> {
-
     constructor(props: Props) {
         super(props);
 
@@ -48,18 +47,24 @@ class InlineWidget extends React.Component<Props, { isLoading: boolean }> {
             utm: this.props.utm,
             embedType: "Inline",
         });
-        const LoadingSpinnerComponent = this.props.LoadingSpinner || CalendlyLoadingSpinner;
+        const LoadingSpinnerComponent =
+            this.props.LoadingSpinner || CalendlyLoadingSpinner;
 
-        return <>
+        return (
+            <>
                 {this.state.isLoading && <LoadingSpinnerComponent />}
                 <WebView
                     style={styles.webView}
-                    originWhitelist={['*']}
-                    title={this.props.iframeTitle || i18n.t(TR.calendlySchedulingPageDefault)}
+                    originWhitelist={["*"]}
+                    title={
+                        this.props.iframeTitle ||
+                        i18n.t(TR.calendlySchedulingPageDefault)
+                    }
                     onLoadEnd={this.onLoadEnd}
                     source={{ uri: src }}
                 />
             </>
+        );
     }
 }
 

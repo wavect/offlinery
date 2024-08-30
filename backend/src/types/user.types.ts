@@ -1,4 +1,3 @@
-
 export enum EGender {
     WOMAN = "woman",
     MAN = "man",
@@ -12,7 +11,7 @@ export enum EDateMode {
 export enum EApproachChoice {
     APPROACH = "approach",
     BE_APPROACHED = "be_approached",
-    BOTH = "both"
+    BOTH = "both",
 }
 
 export enum EVerificationStatus {
@@ -22,21 +21,15 @@ export enum EVerificationStatus {
     NOT_NEEDED = "not_needed",
 }
 
-// TODO: Maybe to own entity?
-interface LatLng {
-    latitude: number;
-    longitude: number;
-}
-
 export enum EIncidentType {
-    Disrespectful = 'Disrespectful',
-    SexualHarassment = 'Sexual harassment',
-    Violent = 'Violent behavior',
-    Other = 'Other',
+    Disrespectful = "Disrespectful",
+    SexualHarassment = "Sexual harassment",
+    Violent = "Violent behavior",
+    Other = "Other",
 }
 
 export enum EEncounterStatus {
-    NOT_MET ="not_met",
+    NOT_MET = "not_met",
     MET_NOT_INTERESTED = "met_not_interested",
     MET_INTERESTED = "met_interested",
 }

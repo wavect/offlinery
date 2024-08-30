@@ -1,6 +1,6 @@
 import * as React from "react";
+import { View } from "react-native";
 import "./OCalendlyInline.styles";
-import {View} from "react-native";
 import styles from "./OCalendlyInline.styles";
 
 class LoadingSpinner extends React.Component {

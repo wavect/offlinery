@@ -1,20 +1,19 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {User} from "../user/user.entity";
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
-import {Encounter} from "./encounter.entity";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Encounter } from "./encounter.entity";
 
 @Injectable()
 export class EncounterService {
-
     constructor(
         @InjectRepository(Encounter)
-        private encounterRepository: Repository<Encounter>) {}
+        private encounterRepository: Repository<Encounter>,
+    ) {}
 
     async findEncounterById(id: string): Promise<Encounter> {
         const encounter = await this.encounterRepository.findOne({
             where: { id },
-            relations: ['users'] // Include related entities if needed
+            relations: ["users"], // Include related entities if needed
         });
 
         if (!encounter) {
@@ -30,7 +29,9 @@ export class EncounterService {
         });
 
         if (!encounters) {
-            throw new NotFoundException(`Encounters from user with ID ${userId} not found`);
+            throw new NotFoundException(
+                `Encounters from user with ID ${userId} not found`,
+            );
         }
 
         return encounters;
