@@ -12,72 +12,72 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
 /**
  *
  * @export
  * @interface BlacklistedRegionDTO
  */
 export interface BlacklistedRegionDTO {
-  /**
-   * Latitude of the center of the blacklisted region
-   * @type {number}
-   * @memberof BlacklistedRegionDTO
-   */
-  latitude: number;
-  /**
-   * Longitude of the center of the blacklisted region
-   * @type {number}
-   * @memberof BlacklistedRegionDTO
-   */
-  longitude: number;
-  /**
-   * Radius of the blacklisted region in meters
-   * @type {number}
-   * @memberof BlacklistedRegionDTO
-   */
-  radius: number;
+    /**
+     * Latitude of the center of the blacklisted region
+     * @type {number}
+     * @memberof BlacklistedRegionDTO
+     */
+    latitude: number;
+    /**
+     * Longitude of the center of the blacklisted region
+     * @type {number}
+     * @memberof BlacklistedRegionDTO
+     */
+    longitude: number;
+    /**
+     * Radius of the blacklisted region in meters
+     * @type {number}
+     * @memberof BlacklistedRegionDTO
+     */
+    radius: number;
 }
 
 /**
  * Check if a given object implements the BlacklistedRegionDTO interface.
  */
 export function instanceOfBlacklistedRegionDTO(
-  value: object,
+    value: object,
 ): value is BlacklistedRegionDTO {
-  if (!("latitude" in value) || value["latitude"] === undefined) return false;
-  if (!("longitude" in value) || value["longitude"] === undefined) return false;
-  if (!("radius" in value) || value["radius"] === undefined) return false;
-  return true;
+    if (!("latitude" in value) || value["latitude"] === undefined) return false;
+    if (!("longitude" in value) || value["longitude"] === undefined)
+        return false;
+    if (!("radius" in value) || value["radius"] === undefined) return false;
+    return true;
 }
 
 export function BlacklistedRegionDTOFromJSON(json: any): BlacklistedRegionDTO {
-  return BlacklistedRegionDTOFromJSONTyped(json, false);
+    return BlacklistedRegionDTOFromJSONTyped(json, false);
 }
 
 export function BlacklistedRegionDTOFromJSONTyped(
-  json: any,
-  ignoreDiscriminator: boolean,
+    json: any,
+    ignoreDiscriminator: boolean,
 ): BlacklistedRegionDTO {
-  if (json == null) {
-    return json;
-  }
-  return {
-    latitude: json["latitude"],
-    longitude: json["longitude"],
-    radius: json["radius"],
-  };
+    if (json == null) {
+        return json;
+    }
+    return {
+        latitude: json["latitude"],
+        longitude: json["longitude"],
+        radius: json["radius"],
+    };
 }
 
 export function BlacklistedRegionDTOToJSON(
-  value?: BlacklistedRegionDTO | null,
+    value?: BlacklistedRegionDTO | null,
 ): any {
-  if (value == null) {
-    return value;
-  }
-  return {
-    latitude: value["latitude"],
-    longitude: value["longitude"],
-    radius: value["radius"],
-  };
+    if (value == null) {
+        return value;
+    }
+    return {
+        latitude: value["latitude"],
+        longitude: value["longitude"],
+        radius: value["radius"],
+    };
 }

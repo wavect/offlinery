@@ -12,15 +12,10 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
-import type { User } from "./User";
-import { UserFromJSON, UserFromJSONTyped, UserToJSON } from "./User";
 import type { Encounter } from "./Encounter";
-import {
-  EncounterFromJSON,
-  EncounterFromJSONTyped,
-  EncounterToJSON,
-} from "./Encounter";
+import { EncounterFromJSON, EncounterToJSON } from "./Encounter";
+import type { User } from "./User";
+import { UserFromJSON, UserToJSON } from "./User";
 
 /**
  *
@@ -28,134 +23,134 @@ import {
  * @interface UserReport
  */
 export interface UserReport {
-  /**
-   *
-   * @type {number}
-   * @memberof UserReport
-   */
-  id: number;
-  /**
-   *
-   * @type {string}
-   * @memberof UserReport
-   */
-  incidentDescription: string;
-  /**
-   *
-   * @type {boolean}
-   * @memberof UserReport
-   */
-  keepReporterInTheLoop: boolean;
-  /**
-   *
-   * @type {string}
-   * @memberof UserReport
-   */
-  incidentType: UserReportIncidentTypeEnum;
-  /**
-   *
-   * @type {Date}
-   * @memberof UserReport
-   */
-  reportedOn: Date;
-  /**
-   *
-   * @type {User}
-   * @memberof UserReport
-   */
-  reportedUser: User;
-  /**
-   *
-   * @type {User}
-   * @memberof UserReport
-   */
-  reportingUser: User;
-  /**
-   *
-   * @type {Encounter}
-   * @memberof UserReport
-   */
-  reportedEncounter: Encounter;
+    /**
+     *
+     * @type {number}
+     * @memberof UserReport
+     */
+    id: number;
+    /**
+     *
+     * @type {string}
+     * @memberof UserReport
+     */
+    incidentDescription: string;
+    /**
+     *
+     * @type {boolean}
+     * @memberof UserReport
+     */
+    keepReporterInTheLoop: boolean;
+    /**
+     *
+     * @type {string}
+     * @memberof UserReport
+     */
+    incidentType: UserReportIncidentTypeEnum;
+    /**
+     *
+     * @type {Date}
+     * @memberof UserReport
+     */
+    reportedOn: Date;
+    /**
+     *
+     * @type {User}
+     * @memberof UserReport
+     */
+    reportedUser: User;
+    /**
+     *
+     * @type {User}
+     * @memberof UserReport
+     */
+    reportingUser: User;
+    /**
+     *
+     * @type {Encounter}
+     * @memberof UserReport
+     */
+    reportedEncounter: Encounter;
 }
 
 /**
  * @export
  */
 export const UserReportIncidentTypeEnum = {
-  Disrespectful: "Disrespectful",
-  Sexual_harassment: "Sexual harassment",
-  Violent_behavior: "Violent behavior",
-  Other: "Other",
+    Disrespectful: "Disrespectful",
+    Sexual_harassment: "Sexual harassment",
+    Violent_behavior: "Violent behavior",
+    Other: "Other",
 } as const;
 export type UserReportIncidentTypeEnum =
-  (typeof UserReportIncidentTypeEnum)[keyof typeof UserReportIncidentTypeEnum];
+    (typeof UserReportIncidentTypeEnum)[keyof typeof UserReportIncidentTypeEnum];
 
 /**
  * Check if a given object implements the UserReport interface.
  */
 export function instanceOfUserReport(value: object): value is UserReport {
-  if (!("id" in value) || value["id"] === undefined) return false;
-  if (
-    !("incidentDescription" in value) ||
-    value["incidentDescription"] === undefined
-  )
-    return false;
-  if (
-    !("keepReporterInTheLoop" in value) ||
-    value["keepReporterInTheLoop"] === undefined
-  )
-    return false;
-  if (!("incidentType" in value) || value["incidentType"] === undefined)
-    return false;
-  if (!("reportedOn" in value) || value["reportedOn"] === undefined)
-    return false;
-  if (!("reportedUser" in value) || value["reportedUser"] === undefined)
-    return false;
-  if (!("reportingUser" in value) || value["reportingUser"] === undefined)
-    return false;
-  if (
-    !("reportedEncounter" in value) ||
-    value["reportedEncounter"] === undefined
-  )
-    return false;
-  return true;
+    if (!("id" in value) || value["id"] === undefined) return false;
+    if (
+        !("incidentDescription" in value) ||
+        value["incidentDescription"] === undefined
+    )
+        return false;
+    if (
+        !("keepReporterInTheLoop" in value) ||
+        value["keepReporterInTheLoop"] === undefined
+    )
+        return false;
+    if (!("incidentType" in value) || value["incidentType"] === undefined)
+        return false;
+    if (!("reportedOn" in value) || value["reportedOn"] === undefined)
+        return false;
+    if (!("reportedUser" in value) || value["reportedUser"] === undefined)
+        return false;
+    if (!("reportingUser" in value) || value["reportingUser"] === undefined)
+        return false;
+    if (
+        !("reportedEncounter" in value) ||
+        value["reportedEncounter"] === undefined
+    )
+        return false;
+    return true;
 }
 
 export function UserReportFromJSON(json: any): UserReport {
-  return UserReportFromJSONTyped(json, false);
+    return UserReportFromJSONTyped(json, false);
 }
 
 export function UserReportFromJSONTyped(
-  json: any,
-  ignoreDiscriminator: boolean,
+    json: any,
+    ignoreDiscriminator: boolean,
 ): UserReport {
-  if (json == null) {
-    return json;
-  }
-  return {
-    id: json["id"],
-    incidentDescription: json["incidentDescription"],
-    keepReporterInTheLoop: json["keepReporterInTheLoop"],
-    incidentType: json["incidentType"],
-    reportedOn: new Date(json["reportedOn"]),
-    reportedUser: UserFromJSON(json["reportedUser"]),
-    reportingUser: UserFromJSON(json["reportingUser"]),
-    reportedEncounter: EncounterFromJSON(json["reportedEncounter"]),
-  };
+    if (json == null) {
+        return json;
+    }
+    return {
+        id: json["id"],
+        incidentDescription: json["incidentDescription"],
+        keepReporterInTheLoop: json["keepReporterInTheLoop"],
+        incidentType: json["incidentType"],
+        reportedOn: new Date(json["reportedOn"]),
+        reportedUser: UserFromJSON(json["reportedUser"]),
+        reportingUser: UserFromJSON(json["reportingUser"]),
+        reportedEncounter: EncounterFromJSON(json["reportedEncounter"]),
+    };
 }
 
 export function UserReportToJSON(value?: UserReport | null): any {
-  if (value == null) {
-    return value;
-  }
-  return {
-    id: value["id"],
-    incidentDescription: value["incidentDescription"],
-    keepReporterInTheLoop: value["keepReporterInTheLoop"],
-    incidentType: value["incidentType"],
-    reportedOn: value["reportedOn"].toISOString(),
-    reportedUser: UserToJSON(value["reportedUser"]),
-    reportingUser: UserToJSON(value["reportingUser"]),
-    reportedEncounter: EncounterToJSON(value["reportedEncounter"]),
-  };
+    if (value == null) {
+        return value;
+    }
+    return {
+        id: value["id"],
+        incidentDescription: value["incidentDescription"],
+        keepReporterInTheLoop: value["keepReporterInTheLoop"],
+        incidentType: value["incidentType"],
+        reportedOn: value["reportedOn"].toISOString(),
+        reportedUser: UserToJSON(value["reportedUser"]),
+        reportingUser: UserToJSON(value["reportingUser"]),
+        reportedEncounter: EncounterToJSON(value["reportedEncounter"]),
+    };
 }

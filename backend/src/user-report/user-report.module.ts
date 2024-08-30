@@ -5,9 +5,9 @@ import { UserReport } from "./user-report.entity";
 import { UserReportService } from "./user-report.service";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserReport])],
-  providers: [UserReportService],
-  controllers: [UserReportController],
-  exports: [UserReportService],
+    imports: [TypeOrmModule.forFeature([UserReport])],
+    providers: [UserReportService],
+    controllers: [UserReportController],
+    exports: [UserReportService],
 })
 export class UserReportModule {}

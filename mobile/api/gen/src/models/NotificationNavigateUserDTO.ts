@@ -12,13 +12,8 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
 import type { UserPublicDTO } from "./UserPublicDTO";
-import {
-  UserPublicDTOFromJSON,
-  UserPublicDTOFromJSONTyped,
-  UserPublicDTOToJSON,
-} from "./UserPublicDTO";
+import { UserPublicDTOFromJSON, UserPublicDTOToJSON } from "./UserPublicDTO";
 
 /**
  *
@@ -26,68 +21,71 @@ import {
  * @interface NotificationNavigateUserDTO
  */
 export interface NotificationNavigateUserDTO {
-  /**
-   *
-   * @type {string}
-   * @memberof NotificationNavigateUserDTO
-   */
-  screen: NotificationNavigateUserDTOScreenEnum;
-  /**
-   *
-   * @type {UserPublicDTO}
-   * @memberof NotificationNavigateUserDTO
-   */
-  navigateToPerson: UserPublicDTO;
+    /**
+     *
+     * @type {string}
+     * @memberof NotificationNavigateUserDTO
+     */
+    screen: NotificationNavigateUserDTOScreenEnum;
+    /**
+     *
+     * @type {UserPublicDTO}
+     * @memberof NotificationNavigateUserDTO
+     */
+    navigateToPerson: UserPublicDTO;
 }
 
 /**
  * @export
  */
 export const NotificationNavigateUserDTOScreenEnum = {
-  Main_NavigateToApproach: "Main_NavigateToApproach",
+    Main_NavigateToApproach: "Main_NavigateToApproach",
 } as const;
 export type NotificationNavigateUserDTOScreenEnum =
-  (typeof NotificationNavigateUserDTOScreenEnum)[keyof typeof NotificationNavigateUserDTOScreenEnum];
+    (typeof NotificationNavigateUserDTOScreenEnum)[keyof typeof NotificationNavigateUserDTOScreenEnum];
 
 /**
  * Check if a given object implements the NotificationNavigateUserDTO interface.
  */
 export function instanceOfNotificationNavigateUserDTO(
-  value: object,
+    value: object,
 ): value is NotificationNavigateUserDTO {
-  if (!("screen" in value) || value["screen"] === undefined) return false;
-  if (!("navigateToPerson" in value) || value["navigateToPerson"] === undefined)
-    return false;
-  return true;
+    if (!("screen" in value) || value["screen"] === undefined) return false;
+    if (
+        !("navigateToPerson" in value) ||
+        value["navigateToPerson"] === undefined
+    )
+        return false;
+    return true;
 }
 
 export function NotificationNavigateUserDTOFromJSON(
-  json: any,
+    json: any,
 ): NotificationNavigateUserDTO {
-  return NotificationNavigateUserDTOFromJSONTyped(json, false);
+    return NotificationNavigateUserDTOFromJSONTyped(json, false);
 }
 
 export function NotificationNavigateUserDTOFromJSONTyped(
-  json: any,
-  ignoreDiscriminator: boolean,
+    json: any,
+    ignoreDiscriminator: boolean,
 ): NotificationNavigateUserDTO {
-  if (json == null) {
-    return json;
-  }
-  return {
-    screen: json["screen"],
-    navigateToPerson: UserPublicDTOFromJSON(json["navigateToPerson"]),
-  };
+    if (json == null) {
+        return json;
+    }
+    return {
+        screen: json["screen"],
+        navigateToPerson: UserPublicDTOFromJSON(json["navigateToPerson"]),
+    };
 }
 
 export function NotificationNavigateUserDTOToJSON(
-  value?: NotificationNavigateUserDTO | null,
+    value?: NotificationNavigateUserDTO | null,
 ): any {
-  if (value == null) {
-    return value;
-  }
-  return {
-    screen: value["screen"],
-    navigateToPerson: UserPublicDTOToJSON(value["navigateToPerson"]),
-  };
+    if (value == null) {
+        return value;
+    }
+    return {
+        screen: value["screen"],
+        navigateToPerson: UserPublicDTOToJSON(value["navigateToPerson"]),
+    };
 }

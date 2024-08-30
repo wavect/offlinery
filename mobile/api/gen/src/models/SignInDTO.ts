@@ -12,60 +12,59 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
 /**
  *
  * @export
  * @interface SignInDTO
  */
 export interface SignInDTO {
-  /**
-   *
-   * @type {string}
-   * @memberof SignInDTO
-   */
-  email: string;
-  /**
-   *
-   * @type {string}
-   * @memberof SignInDTO
-   */
-  clearPassword: string;
+    /**
+     *
+     * @type {string}
+     * @memberof SignInDTO
+     */
+    email: string;
+    /**
+     *
+     * @type {string}
+     * @memberof SignInDTO
+     */
+    clearPassword: string;
 }
 
 /**
  * Check if a given object implements the SignInDTO interface.
  */
 export function instanceOfSignInDTO(value: object): value is SignInDTO {
-  if (!("email" in value) || value["email"] === undefined) return false;
-  if (!("clearPassword" in value) || value["clearPassword"] === undefined)
-    return false;
-  return true;
+    if (!("email" in value) || value["email"] === undefined) return false;
+    if (!("clearPassword" in value) || value["clearPassword"] === undefined)
+        return false;
+    return true;
 }
 
 export function SignInDTOFromJSON(json: any): SignInDTO {
-  return SignInDTOFromJSONTyped(json, false);
+    return SignInDTOFromJSONTyped(json, false);
 }
 
 export function SignInDTOFromJSONTyped(
-  json: any,
-  ignoreDiscriminator: boolean,
+    json: any,
+    ignoreDiscriminator: boolean,
 ): SignInDTO {
-  if (json == null) {
-    return json;
-  }
-  return {
-    email: json["email"],
-    clearPassword: json["clearPassword"],
-  };
+    if (json == null) {
+        return json;
+    }
+    return {
+        email: json["email"],
+        clearPassword: json["clearPassword"],
+    };
 }
 
 export function SignInDTOToJSON(value?: SignInDTO | null): any {
-  if (value == null) {
-    return value;
-  }
-  return {
-    email: value["email"],
-    clearPassword: value["clearPassword"],
-  };
+    if (value == null) {
+        return value;
+    }
+    return {
+        email: value["email"],
+        clearPassword: value["clearPassword"],
+    };
 }
