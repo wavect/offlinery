@@ -13,13 +13,13 @@
  */
 
 import type {
-    RegistrationForVerificationDto,
-    VerifyEmailDto,
+    RegistrationForVerificationDTO,
+    VerifyEmailDTO,
 } from "../models/index";
 import {
-    RegistrationForVerificationDtoFromJSON,
-    RegistrationForVerificationDtoToJSON,
-    VerifyEmailDtoToJSON,
+    RegistrationForVerificationDTOFromJSON,
+    RegistrationForVerificationDTOToJSON,
+    VerifyEmailDTOToJSON,
 } from "../models/index";
 import * as runtime from "../runtime";
 
@@ -27,11 +27,11 @@ import * as runtime from "../runtime";
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
 export interface RegistrationControllerRegisterUserForEmailVerificationRequest {
-    registrationForVerificationDto: RegistrationForVerificationDto;
+    registrationForVerificationDTO: RegistrationForVerificationDTO;
 }
 
 export interface RegistrationControllerVerifyEmailRequest {
-    verifyEmailDto: VerifyEmailDto;
+    verifyEmailDTO: VerifyEmailDTO;
 }
 
 /**
@@ -44,7 +44,7 @@ export interface RegistrationApiInterface {
     /**
      *
      * @summary Creates a user with only an email to verify.
-     * @param {RegistrationForVerificationDto} registrationForVerificationDto User email.
+     * @param {RegistrationForVerificationDTO} registrationForVerificationDTO User email.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RegistrationApiInterface
@@ -52,7 +52,7 @@ export interface RegistrationApiInterface {
     registrationControllerRegisterUserForEmailVerificationRaw(
         requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<RegistrationForVerificationDto>>;
+    ): Promise<runtime.ApiResponse<RegistrationForVerificationDTO>>;
 
     /**
      * Creates a user with only an email to verify.
@@ -60,12 +60,12 @@ export interface RegistrationApiInterface {
     registrationControllerRegisterUserForEmailVerification(
         requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<RegistrationForVerificationDto>;
+    ): Promise<RegistrationForVerificationDTO>;
 
     /**
      *
      * @summary Verify email with verification code.
-     * @param {VerifyEmailDto} verifyEmailDto User email and verification code.
+     * @param {VerifyEmailDTO} verifyEmailDTO User email and verification code.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RegistrationApiInterface
@@ -97,11 +97,11 @@ export class RegistrationApi
     async registrationControllerRegisterUserForEmailVerificationRaw(
         requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<RegistrationForVerificationDto>> {
-        if (requestParameters["registrationForVerificationDto"] == null) {
+    ): Promise<runtime.ApiResponse<RegistrationForVerificationDTO>> {
+        if (requestParameters["registrationForVerificationDTO"] == null) {
             throw new runtime.RequiredError(
-                "registrationForVerificationDto",
-                'Required parameter "registrationForVerificationDto" was null or undefined when calling registrationControllerRegisterUserForEmailVerification().',
+                "registrationForVerificationDTO",
+                'Required parameter "registrationForVerificationDTO" was null or undefined when calling registrationControllerRegisterUserForEmailVerification().',
             );
         }
 
@@ -117,15 +117,15 @@ export class RegistrationApi
                 method: "POST",
                 headers: headerParameters,
                 query: queryParameters,
-                body: RegistrationForVerificationDtoToJSON(
-                    requestParameters["registrationForVerificationDto"],
+                body: RegistrationForVerificationDTOToJSON(
+                    requestParameters["registrationForVerificationDTO"],
                 ),
             },
             initOverrides,
         );
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
-            RegistrationForVerificationDtoFromJSON(jsonValue),
+            RegistrationForVerificationDTOFromJSON(jsonValue),
         );
     }
 
@@ -135,7 +135,7 @@ export class RegistrationApi
     async registrationControllerRegisterUserForEmailVerification(
         requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<RegistrationForVerificationDto> {
+    ): Promise<RegistrationForVerificationDTO> {
         const response =
             await this.registrationControllerRegisterUserForEmailVerificationRaw(
                 requestParameters,
@@ -151,10 +151,10 @@ export class RegistrationApi
         requestParameters: RegistrationControllerVerifyEmailRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters["verifyEmailDto"] == null) {
+        if (requestParameters["verifyEmailDTO"] == null) {
             throw new runtime.RequiredError(
-                "verifyEmailDto",
-                'Required parameter "verifyEmailDto" was null or undefined when calling registrationControllerVerifyEmail().',
+                "verifyEmailDTO",
+                'Required parameter "verifyEmailDTO" was null or undefined when calling registrationControllerVerifyEmail().',
             );
         }
 
@@ -170,7 +170,7 @@ export class RegistrationApi
                 method: "PUT",
                 headers: headerParameters,
                 query: queryParameters,
-                body: VerifyEmailDtoToJSON(requestParameters["verifyEmailDto"]),
+                body: VerifyEmailDTOToJSON(requestParameters["verifyEmailDTO"]),
             },
             initOverrides,
         );

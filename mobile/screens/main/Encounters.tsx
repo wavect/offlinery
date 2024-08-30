@@ -10,13 +10,20 @@ import {
     View,
 } from "react-native";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
+import { EncounterApi } from "../../api/gen/src";
 import OEncounter from "../../components/OEncounter/OEncounter";
 import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import { useEncountersContext } from "../../context/EncountersContext";
+import {
+    EACTION_ENCOUNTERS,
+    useEncountersContext,
+} from "../../context/EncountersContext";
+import { useUserContext } from "../../context/UserContext";
 import { i18n, TR } from "../../localization/translate.service";
+import { IEncounterProfile } from "../../types/PublicProfile.types";
 
 const Encounters = ({ navigation }) => {
-    const { state } = useEncountersContext();
+    const { state: encounterState, dispatch } = useEncountersContext();
+    const { state: userState } = useUserContext();
     const today = new Date();
     const twoWeeksBefore = new Date();
     twoWeeksBefore.setDate(today.getDate() - 14);
@@ -25,6 +32,56 @@ const Encounters = ({ navigation }) => {
     const [metEndDateFilter, setMetEndDateFilter] = useState<Date>(today);
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+
+    React.useEffect(() => {
+        async function fetchEncounters() {
+            try {
+                const api = new EncounterApi();
+                const encounters =
+                    await api.encounterControllerGetEncountersByUser(
+                        {
+                            userId: userState.id!,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${userState.jwtAccessToken}`,
+                            },
+                        },
+                    );
+                const mappedEncounters: IEncounterProfile[] = [];
+
+                encounters.forEach((encounter) => {
+                    const otherUser = encounter.users.filter(
+                        (u) => u.id !== userState.id,
+                    )[0];
+                    mappedEncounters.push({
+                        encounterId: encounter.id,
+                        firstName: otherUser.firstName,
+                        age: otherUser.age.toString(),
+                        bio: otherUser.bio,
+                        imageURIs: otherUser.imageURIs,
+                        personalRelationship: {
+                            isNearbyRightNow: false, // @@dev do we know that by now?
+                            status: encounter.status,
+                            reported: encounter.reported,
+                            lastLocationPassedBy:
+                                encounter.lastLocationPassedBy ?? "",
+                            lastTimePassedBy: encounter.lastDateTimePassedBy,
+                        },
+                        rating: otherUser.trustScore, // Is that the trustScore?
+                    });
+                });
+
+                dispatch({
+                    type: EACTION_ENCOUNTERS.SET_ENCOUNTERS,
+                    payload: mappedEncounters,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchEncounters();
+    });
 
     const onMetStartDateFilterChange = (event: any, selectedDate?: Date) => {
         setShowStartDatePicker(Platform.OS === "ios");
@@ -111,9 +168,9 @@ const Encounters = ({ navigation }) => {
                     </View>
                 </View>
 
-                {(state.encounters.length && (
+                {(encounterState.encounters.length && (
                     <ScrollView style={styles.encountersList}>
-                        {state.encounters.map((encounter, idx) => (
+                        {encounterState.encounters.map((encounter, idx) => (
                             <OEncounter
                                 key={idx}
                                 encounterProfile={encounter}

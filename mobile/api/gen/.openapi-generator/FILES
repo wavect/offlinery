@@ -18,7 +18,7 @@ src/models/CreateUserReportDto.ts
 src/models/Encounter.ts
 src/models/EncounterPublicDTO.ts
 src/models/NotificationNavigateUserDTO.ts
-src/models/RegistrationForVerificationDto.ts
+src/models/RegistrationForVerificationDTO.ts
 src/models/SignInDTO.ts
 src/models/SignInResponseDTO.ts
 src/models/StorePushTokenDTO.ts
@@ -27,7 +27,7 @@ src/models/User.ts
 src/models/UserPrivateDTO.ts
 src/models/UserPublicDTO.ts
 src/models/UserReport.ts
-src/models/VerifyEmailDto.ts
+src/models/VerifyEmailDTO.ts
 src/models/index.ts
 src/runtime.ts
 tsconfig.esm.json
