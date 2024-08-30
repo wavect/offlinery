@@ -25,11 +25,6 @@ const ProfileSettings = ({ navigation }) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
 
-    if (!state.id) {
-        // TODO REMOVE
-        dispatch({ type: EACTION_USER.SET_ID, payload: 1 });
-    }
-
     const setFirstName = async (firstName: string) => {
         dispatch({ type: EACTION_USER.SET_FIRSTNAME, payload: firstName });
     };
@@ -68,8 +63,8 @@ const ProfileSettings = ({ navigation }) => {
                 id: state.id!,
                 user: {
                     firstName: state.firstName,
-                    approachFromTime: state.approachFromTime,
-                    approachToTime: state.approachToTime,
+                    approachFromTime: state.approachFromTime.toISOString(),
+                    approachToTime: state.approachToTime.toISOString(),
                     bio: state.bio,
                     birthDay: state.birthDay,
                     gender: state.gender,
@@ -81,7 +76,7 @@ const ProfileSettings = ({ navigation }) => {
 
             await userApi.userControllerUpdateUser(
                 request,
-                getJwtHeader(state.jwtAccessToken ?? ""),
+                getJwtHeader(state.jwtAccessToken),
             );
 
             navigation.navigate(ROUTES.MainTabView, {
@@ -101,8 +96,8 @@ const ProfileSettings = ({ navigation }) => {
     ];
 
     const SettingsButton = (props: {
-        onPress;
-        icon;
+        onPress: any;
+        icon: any;
         text: string;
         style?: any;
     }) => {

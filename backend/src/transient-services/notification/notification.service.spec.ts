@@ -4,15 +4,10 @@ import { DataSource, DataSourceOptions } from "typeorm";
 import { BlacklistedRegionModule } from "../../blacklisted-region/blacklisted-region.module";
 import { EAppScreens } from "../../DTOs/notification-navigate-user.dto";
 import { UserPublicDTO } from "../../DTOs/user-public.dto";
-import {
-    EApproachChoice,
-    EDateMode,
-    EGender,
-    EVerificationStatus,
-} from "../../types/user.types";
 import { UserReport } from "../../user-report/user-report.entity";
 import { UserReportModule } from "../../user-report/user-report.module";
 import { UserModule } from "../../user/user.module";
+import { getAge } from "../../utils/date.utils";
 import { OfflineryNotification } from "./notification-message.type";
 import { NotificationController } from "./notification.controller";
 import { NotificationService } from "./notification.service";
@@ -22,18 +17,10 @@ const testPushToken = "ExponentPushToken[MbIGoaN3gTd61gYRRCRz8C]"; // TODO
 
 const mockUser: UserPublicDTO = {
     id: "123456789",
-    isActive: true,
     firstName: "John",
-    age: new Date("1990-01-01"),
-    gender: EGender.MAN,
-    genderDesire: EGender.WOMAN,
+    age: getAge(new Date("1990-01-01")),
     imageURIs: ["image1.jpg", "image2.jpg", "image3.jpg"],
-    verificationStatus: EVerificationStatus.VERIFIED,
-    approachChoice: EApproachChoice.APPROACH,
-    approachFromTime: new Date("2023-08-21T08:00:00"),
-    approachToTime: new Date("2023-08-21T18:00:00"),
     bio: "Hi, I am John. Nice to meet you!",
-    dateMode: EDateMode.LIVE,
 };
 
 describe("NotificationService", () => {

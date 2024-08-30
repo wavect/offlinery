@@ -43,7 +43,7 @@ const Encounters = ({ navigation }) => {
                         {
                             userId: userState.id!,
                         },
-                        getJwtHeader(userState.jwtAccessToken ?? ""),
+                        getJwtHeader(userState.jwtAccessToken),
                     );
                 const mappedEncounters: IEncounterProfile[] = [];
 
