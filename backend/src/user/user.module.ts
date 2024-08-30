@@ -1,8 +1,8 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { PendingUser } from "src/registration/pending-user/pending-user.entity";
 import { BlacklistedRegion } from "../blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "../encounter/encounter.entity";
+import { PendingUser } from "../registration/pending-user/pending-user.entity";
 import { MatchingModule } from "../transient-services/matching/matching.module";
 import { UserReport } from "../user-report/user-report.entity";
 import { UserController } from "./user.controller";

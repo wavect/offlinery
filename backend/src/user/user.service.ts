@@ -8,15 +8,15 @@ import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import * as fs from "fs";
 import * as path from "path";
-import { PendingUser } from "src/registration/pending-user/pending-user.entity";
-import { EVerificationStatus } from "src/types/user.types";
 import { Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 import { BlacklistedRegion } from "../blacklisted-region/blacklisted-region.entity";
 import { CreateUserDTO } from "../DTOs/create-user.dto";
 import { LocationUpdateDTO } from "../DTOs/location-update.dto";
 import { UpdateUserDTO } from "../DTOs/update-user.dto";
+import { PendingUser } from "../registration/pending-user/pending-user.entity";
 import { MatchingService } from "../transient-services/matching/matching.service";
+import { EVerificationStatus } from "../types/user.types";
 import { User } from "./user.entity";
 
 @Injectable()
