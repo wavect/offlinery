@@ -18,7 +18,7 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "openapi:generate": "npx @openapitools/openapi-generator-cli generate -i ./swagger.json -g typescript-fetch -o ../mobile/api/gen/ -c openapi-config.json -t ./custom-templates",
+        "openapi:generate": "npx @openapitools/openapi-generator-cli generate -i ./swagger.json -g typescript-fetch -o ../mobile/api/gen/ -c openapi-config.json -t ./custom-templates && cd .. && pnpm run format:all",
         "pre-commit": "pnpm run format && pnpm run lint"
     },
     "dependencies": {
