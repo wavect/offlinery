@@ -5,8 +5,8 @@ import { BlacklistedRegion } from "./blacklisted-region.entity";
 import { BlacklistedRegionService } from "./blacklisted-region.service";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BlacklistedRegion])],
-  providers: [BlacklistedRegionService],
-  controllers: [BlacklistedRegionController],
+    imports: [TypeOrmModule.forFeature([BlacklistedRegion])],
+    providers: [BlacklistedRegionService],
+    controllers: [BlacklistedRegionController],
 })
 export class BlacklistedRegionModule {}

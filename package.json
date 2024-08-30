@@ -1,6 +1,11 @@
 {
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "pre-commit:backend": "cd backend && pnpm run pre-commit",
+    "pre-commit:mobile": "cd mobile && pnpm run pre-commit",
+    "pre-commit:all": "pnpm run pre-commit:backend && pnpm run pre-commit:mobile",
+    "format:backend": "cd backend && pnpm run format",
+    "format:all": "pnpm run format:backend && pnpm run pre-commit:mobile"
   },
   "devDependencies": {
     "husky": "^9.1.5",

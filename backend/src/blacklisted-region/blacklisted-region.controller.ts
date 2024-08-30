@@ -6,12 +6,12 @@ import { BlacklistedRegion } from "./blacklisted-region.entity";
 
 @ApiTags("BlacklistedRegion")
 @Controller({
-  version: "1",
-  path: "blacklisted-region",
+    version: "1",
+    path: "blacklisted-region",
 })
 export class BlacklistedRegionController {
-  constructor(
-    @InjectRepository(BlacklistedRegion)
-    private blacklistedRegionRepository: Repository<BlacklistedRegion>,
-  ) {}
+    constructor(
+        @InjectRepository(BlacklistedRegion)
+        private blacklistedRegionRepository: Repository<BlacklistedRegion>,
+    ) {}
 }

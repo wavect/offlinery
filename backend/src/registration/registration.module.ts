@@ -12,28 +12,28 @@ import { RegistrationController } from "./registration.controller";
 import { RegistrationService } from "./registration.service";
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([PendingUser, User]),
-    MailerModule.forRoot({
-      transport: {
-        host: TYPED_ENV.EMAIL_HOST,
-        auth: {
-          user: TYPED_ENV.EMAIL_USERNAME,
-          pass: TYPED_ENV.EMAIL_PASSWORD,
-        },
-      },
-      defaults: {
-        from: '"No Reply" <noreply@offlinery.com>',
-      },
-      template: {
-        dir: join(__dirname, "templates"),
-        adapter: new HandlebarsAdapter(),
-      },
-    }),
-  ],
-  providers: [RegistrationService, PendingUserService],
-  controllers: [RegistrationController],
-  exports: [RegistrationService, PendingUserService],
+    imports: [
+        ConfigModule.forRoot(),
+        TypeOrmModule.forFeature([PendingUser, User]),
+        MailerModule.forRoot({
+            transport: {
+                host: TYPED_ENV.EMAIL_HOST,
+                auth: {
+                    user: TYPED_ENV.EMAIL_USERNAME,
+                    pass: TYPED_ENV.EMAIL_PASSWORD,
+                },
+            },
+            defaults: {
+                from: '"No Reply" <noreply@offlinery.com>',
+            },
+            template: {
+                dir: join(__dirname, "templates"),
+                adapter: new HandlebarsAdapter(),
+            },
+        }),
+    ],
+    providers: [RegistrationService, PendingUserService],
+    controllers: [RegistrationController],
+    exports: [RegistrationService, PendingUserService],
 })
 export class RegistrationModule {}

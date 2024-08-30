@@ -3,5 +3,5 @@ import { NotificationNavigateUserDTO } from "../../DTOs/notification-navigate-us
 
 /** @dev Stricter typed Notification type */
 export type OfflineryNotification = ExpoPushMessage & {
-  data: NotificationNavigateUserDTO;
+    data: NotificationNavigateUserDTO;
 };

@@ -12,24 +12,20 @@
  * Do not edit the class manually.
  */
 
-import * as runtime from "../runtime";
 import type { EncounterPublicDTO } from "../models/index";
-import {
-  EncounterPublicDTOFromJSON,
-  EncounterPublicDTOToJSON,
-} from "../models/index";
+import { EncounterPublicDTOFromJSON } from "../models/index";
+import * as runtime from "../runtime";
 
 // We import this type even if it's unused to avoid additional
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
-import { ImagePickerAsset } from "expo-image-picker";
 export interface EncounterControllerGetEncounterRequest {
-  id: number;
+    id: number;
 }
 
 export interface EncounterControllerGetEncountersByUserRequest {
-  userId: string;
-  id: number;
+    userId: string;
+    id: number;
 }
 
 /**
@@ -39,166 +35,166 @@ export interface EncounterControllerGetEncountersByUserRequest {
  * @interface EncounterApiInterface
  */
 export interface EncounterApiInterface {
-  /**
-   *
-   * @summary Get a encounter by ID
-   * @param {number} id Encounter ID
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof EncounterApiInterface
-   */
-  encounterControllerGetEncounterRaw(
-    requestParameters: EncounterControllerGetEncounterRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<EncounterPublicDTO>>;
+    /**
+     *
+     * @summary Get a encounter by ID
+     * @param {number} id Encounter ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EncounterApiInterface
+     */
+    encounterControllerGetEncounterRaw(
+        requestParameters: EncounterControllerGetEncounterRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<EncounterPublicDTO>>;
 
-  /**
-   * Get a encounter by ID
-   */
-  encounterControllerGetEncounter(
-    requestParameters: EncounterControllerGetEncounterRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<EncounterPublicDTO>;
+    /**
+     * Get a encounter by ID
+     */
+    encounterControllerGetEncounter(
+        requestParameters: EncounterControllerGetEncounterRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<EncounterPublicDTO>;
 
-  /**
-   *
-   * @summary Get a encounters of user
-   * @param {string} userId
-   * @param {number} id Encounter ID
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof EncounterApiInterface
-   */
-  encounterControllerGetEncountersByUserRaw(
-    requestParameters: EncounterControllerGetEncountersByUserRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<EncounterPublicDTO>>;
+    /**
+     *
+     * @summary Get a encounters of user
+     * @param {string} userId
+     * @param {number} id Encounter ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EncounterApiInterface
+     */
+    encounterControllerGetEncountersByUserRaw(
+        requestParameters: EncounterControllerGetEncountersByUserRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<EncounterPublicDTO>>;
 
-  /**
-   * Get a encounters of user
-   */
-  encounterControllerGetEncountersByUser(
-    requestParameters: EncounterControllerGetEncountersByUserRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<EncounterPublicDTO>;
+    /**
+     * Get a encounters of user
+     */
+    encounterControllerGetEncountersByUser(
+        requestParameters: EncounterControllerGetEncountersByUserRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<EncounterPublicDTO>;
 }
 
 /**
  *
  */
 export class EncounterApi
-  extends runtime.BaseAPI
-  implements EncounterApiInterface
+    extends runtime.BaseAPI
+    implements EncounterApiInterface
 {
-  /**
-   * Get a encounter by ID
-   */
-  async encounterControllerGetEncounterRaw(
-    requestParameters: EncounterControllerGetEncounterRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<EncounterPublicDTO>> {
-    if (requestParameters["id"] == null) {
-      throw new runtime.RequiredError(
-        "id",
-        'Required parameter "id" was null or undefined when calling encounterControllerGetEncounter().',
-      );
+    /**
+     * Get a encounter by ID
+     */
+    async encounterControllerGetEncounterRaw(
+        requestParameters: EncounterControllerGetEncounterRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<EncounterPublicDTO>> {
+        if (requestParameters["id"] == null) {
+            throw new runtime.RequiredError(
+                "id",
+                'Required parameter "id" was null or undefined when calling encounterControllerGetEncounter().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request(
+            {
+                path: `/encounter/{id}`.replace(
+                    `{${"id"}}`,
+                    encodeURIComponent(String(requestParameters["id"])),
+                ),
+                method: "GET",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            EncounterPublicDTOFromJSON(jsonValue),
+        );
     }
 
-    const queryParameters: any = {};
-
-    const headerParameters: runtime.HTTPHeaders = {};
-
-    const response = await this.request(
-      {
-        path: `/encounter/{id}`.replace(
-          `{${"id"}}`,
-          encodeURIComponent(String(requestParameters["id"])),
-        ),
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides,
-    );
-
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      EncounterPublicDTOFromJSON(jsonValue),
-    );
-  }
-
-  /**
-   * Get a encounter by ID
-   */
-  async encounterControllerGetEncounter(
-    requestParameters: EncounterControllerGetEncounterRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<EncounterPublicDTO> {
-    const response = await this.encounterControllerGetEncounterRaw(
-      requestParameters,
-      initOverrides,
-    );
-    return await response.value();
-  }
-
-  /**
-   * Get a encounters of user
-   */
-  async encounterControllerGetEncountersByUserRaw(
-    requestParameters: EncounterControllerGetEncountersByUserRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<EncounterPublicDTO>> {
-    if (requestParameters["userId"] == null) {
-      throw new runtime.RequiredError(
-        "userId",
-        'Required parameter "userId" was null or undefined when calling encounterControllerGetEncountersByUser().',
-      );
+    /**
+     * Get a encounter by ID
+     */
+    async encounterControllerGetEncounter(
+        requestParameters: EncounterControllerGetEncounterRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<EncounterPublicDTO> {
+        const response = await this.encounterControllerGetEncounterRaw(
+            requestParameters,
+            initOverrides,
+        );
+        return await response.value();
     }
 
-    if (requestParameters["id"] == null) {
-      throw new runtime.RequiredError(
-        "id",
-        'Required parameter "id" was null or undefined when calling encounterControllerGetEncountersByUser().',
-      );
+    /**
+     * Get a encounters of user
+     */
+    async encounterControllerGetEncountersByUserRaw(
+        requestParameters: EncounterControllerGetEncountersByUserRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<EncounterPublicDTO>> {
+        if (requestParameters["userId"] == null) {
+            throw new runtime.RequiredError(
+                "userId",
+                'Required parameter "userId" was null or undefined when calling encounterControllerGetEncountersByUser().',
+            );
+        }
+
+        if (requestParameters["id"] == null) {
+            throw new runtime.RequiredError(
+                "id",
+                'Required parameter "id" was null or undefined when calling encounterControllerGetEncountersByUser().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request(
+            {
+                path: `/encounter/{userId}`
+                    .replace(
+                        `{${"userId"}}`,
+                        encodeURIComponent(String(requestParameters["userId"])),
+                    )
+                    .replace(
+                        `{${"id"}}`,
+                        encodeURIComponent(String(requestParameters["id"])),
+                    ),
+                method: "GET",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            EncounterPublicDTOFromJSON(jsonValue),
+        );
     }
 
-    const queryParameters: any = {};
-
-    const headerParameters: runtime.HTTPHeaders = {};
-
-    const response = await this.request(
-      {
-        path: `/encounter/{userId}`
-          .replace(
-            `{${"userId"}}`,
-            encodeURIComponent(String(requestParameters["userId"])),
-          )
-          .replace(
-            `{${"id"}}`,
-            encodeURIComponent(String(requestParameters["id"])),
-          ),
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides,
-    );
-
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      EncounterPublicDTOFromJSON(jsonValue),
-    );
-  }
-
-  /**
-   * Get a encounters of user
-   */
-  async encounterControllerGetEncountersByUser(
-    requestParameters: EncounterControllerGetEncountersByUserRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<EncounterPublicDTO> {
-    const response = await this.encounterControllerGetEncountersByUserRaw(
-      requestParameters,
-      initOverrides,
-    );
-    return await response.value();
-  }
+    /**
+     * Get a encounters of user
+     */
+    async encounterControllerGetEncountersByUser(
+        requestParameters: EncounterControllerGetEncountersByUserRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<EncounterPublicDTO> {
+        const response = await this.encounterControllerGetEncountersByUserRaw(
+            requestParameters,
+            initOverrides,
+        );
+        return await response.value();
+    }
 }

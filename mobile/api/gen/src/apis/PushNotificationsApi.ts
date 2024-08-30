@@ -12,19 +12,15 @@
  * Do not edit the class manually.
  */
 
-import * as runtime from "../runtime";
 import type { StorePushTokenDTO } from "../models/index";
-import {
-  StorePushTokenDTOFromJSON,
-  StorePushTokenDTOToJSON,
-} from "../models/index";
+import { StorePushTokenDTOToJSON } from "../models/index";
+import * as runtime from "../runtime";
 
 // We import this type even if it's unused to avoid additional
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
-import { ImagePickerAsset } from "expo-image-picker";
 export interface NotificationControllerStorePushTokenRequest {
-  storePushTokenDTO: StorePushTokenDTO;
+    storePushTokenDTO: StorePushTokenDTO;
 }
 
 /**
@@ -34,79 +30,81 @@ export interface NotificationControllerStorePushTokenRequest {
  * @interface PushNotificationsApiInterface
  */
 export interface PushNotificationsApiInterface {
-  /**
-   *
-   * @summary Store user\'s push token
-   * @param {StorePushTokenDTO} storePushTokenDTO
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof PushNotificationsApiInterface
-   */
-  notificationControllerStorePushTokenRaw(
-    requestParameters: NotificationControllerStorePushTokenRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<void>>;
+    /**
+     *
+     * @summary Store user\'s push token
+     * @param {StorePushTokenDTO} storePushTokenDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PushNotificationsApiInterface
+     */
+    notificationControllerStorePushTokenRaw(
+        requestParameters: NotificationControllerStorePushTokenRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
 
-  /**
-   * Store user\'s push token
-   */
-  notificationControllerStorePushToken(
-    requestParameters: NotificationControllerStorePushTokenRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<void>;
+    /**
+     * Store user\'s push token
+     */
+    notificationControllerStorePushToken(
+        requestParameters: NotificationControllerStorePushTokenRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
 }
 
 /**
  *
  */
 export class PushNotificationsApi
-  extends runtime.BaseAPI
-  implements PushNotificationsApiInterface
+    extends runtime.BaseAPI
+    implements PushNotificationsApiInterface
 {
-  /**
-   * Store user\'s push token
-   */
-  async notificationControllerStorePushTokenRaw(
-    requestParameters: NotificationControllerStorePushTokenRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters["storePushTokenDTO"] == null) {
-      throw new runtime.RequiredError(
-        "storePushTokenDTO",
-        'Required parameter "storePushTokenDTO" was null or undefined when calling notificationControllerStorePushToken().',
-      );
+    /**
+     * Store user\'s push token
+     */
+    async notificationControllerStorePushTokenRaw(
+        requestParameters: NotificationControllerStorePushTokenRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["storePushTokenDTO"] == null) {
+            throw new runtime.RequiredError(
+                "storePushTokenDTO",
+                'Required parameter "storePushTokenDTO" was null or undefined when calling notificationControllerStorePushToken().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        const response = await this.request(
+            {
+                path: `/api/push-token`,
+                method: "POST",
+                headers: headerParameters,
+                query: queryParameters,
+                body: StorePushTokenDTOToJSON(
+                    requestParameters["storePushTokenDTO"],
+                ),
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
     }
 
-    const queryParameters: any = {};
-
-    const headerParameters: runtime.HTTPHeaders = {};
-
-    headerParameters["Content-Type"] = "application/json";
-
-    const response = await this.request(
-      {
-        path: `/api/push-token`,
-        method: "POST",
-        headers: headerParameters,
-        query: queryParameters,
-        body: StorePushTokenDTOToJSON(requestParameters["storePushTokenDTO"]),
-      },
-      initOverrides,
-    );
-
-    return new runtime.VoidApiResponse(response);
-  }
-
-  /**
-   * Store user\'s push token
-   */
-  async notificationControllerStorePushToken(
-    requestParameters: NotificationControllerStorePushTokenRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<void> {
-    await this.notificationControllerStorePushTokenRaw(
-      requestParameters,
-      initOverrides,
-    );
-  }
+    /**
+     * Store user\'s push token
+     */
+    async notificationControllerStorePushToken(
+        requestParameters: NotificationControllerStorePushTokenRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.notificationControllerStorePushTokenRaw(
+            requestParameters,
+            initOverrides,
+        );
+    }
 }

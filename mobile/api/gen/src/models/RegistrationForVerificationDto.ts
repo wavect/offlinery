@@ -12,56 +12,55 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
 /**
  *
  * @export
  * @interface RegistrationForVerificationDto
  */
 export interface RegistrationForVerificationDto {
-  /**
-   *
-   * @type {string}
-   * @memberof RegistrationForVerificationDto
-   */
-  email: string;
+    /**
+     *
+     * @type {string}
+     * @memberof RegistrationForVerificationDto
+     */
+    email: string;
 }
 
 /**
  * Check if a given object implements the RegistrationForVerificationDto interface.
  */
 export function instanceOfRegistrationForVerificationDto(
-  value: object,
+    value: object,
 ): value is RegistrationForVerificationDto {
-  if (!("email" in value) || value["email"] === undefined) return false;
-  return true;
+    if (!("email" in value) || value["email"] === undefined) return false;
+    return true;
 }
 
 export function RegistrationForVerificationDtoFromJSON(
-  json: any,
+    json: any,
 ): RegistrationForVerificationDto {
-  return RegistrationForVerificationDtoFromJSONTyped(json, false);
+    return RegistrationForVerificationDtoFromJSONTyped(json, false);
 }
 
 export function RegistrationForVerificationDtoFromJSONTyped(
-  json: any,
-  ignoreDiscriminator: boolean,
+    json: any,
+    ignoreDiscriminator: boolean,
 ): RegistrationForVerificationDto {
-  if (json == null) {
-    return json;
-  }
-  return {
-    email: json["email"],
-  };
+    if (json == null) {
+        return json;
+    }
+    return {
+        email: json["email"],
+    };
 }
 
 export function RegistrationForVerificationDtoToJSON(
-  value?: RegistrationForVerificationDto | null,
+    value?: RegistrationForVerificationDto | null,
 ): any {
-  if (value == null) {
-    return value;
-  }
-  return {
-    email: value["email"],
-  };
+    if (value == null) {
+        return value;
+    }
+    return {
+        email: value["email"],
+    };
 }

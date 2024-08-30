@@ -12,9 +12,8 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
 import type { User } from "./User";
-import { UserFromJSON, UserFromJSONTyped, UserToJSON } from "./User";
+import { UserFromJSON, UserToJSON } from "./User";
 
 /**
  *
@@ -22,81 +21,82 @@ import { UserFromJSON, UserFromJSONTyped, UserToJSON } from "./User";
  * @interface BlacklistedRegion
  */
 export interface BlacklistedRegion {
-  /**
-   *
-   * @type {number}
-   * @memberof BlacklistedRegion
-   */
-  id: number;
-  /**
-   *
-   * @type {number}
-   * @memberof BlacklistedRegion
-   */
-  latitude: number;
-  /**
-   *
-   * @type {number}
-   * @memberof BlacklistedRegion
-   */
-  longitude: number;
-  /**
-   *
-   * @type {number}
-   * @memberof BlacklistedRegion
-   */
-  radius: number;
-  /**
-   *
-   * @type {User}
-   * @memberof BlacklistedRegion
-   */
-  user: User;
+    /**
+     *
+     * @type {number}
+     * @memberof BlacklistedRegion
+     */
+    id: number;
+    /**
+     *
+     * @type {number}
+     * @memberof BlacklistedRegion
+     */
+    latitude: number;
+    /**
+     *
+     * @type {number}
+     * @memberof BlacklistedRegion
+     */
+    longitude: number;
+    /**
+     *
+     * @type {number}
+     * @memberof BlacklistedRegion
+     */
+    radius: number;
+    /**
+     *
+     * @type {User}
+     * @memberof BlacklistedRegion
+     */
+    user: User;
 }
 
 /**
  * Check if a given object implements the BlacklistedRegion interface.
  */
 export function instanceOfBlacklistedRegion(
-  value: object,
+    value: object,
 ): value is BlacklistedRegion {
-  if (!("id" in value) || value["id"] === undefined) return false;
-  if (!("latitude" in value) || value["latitude"] === undefined) return false;
-  if (!("longitude" in value) || value["longitude"] === undefined) return false;
-  if (!("radius" in value) || value["radius"] === undefined) return false;
-  if (!("user" in value) || value["user"] === undefined) return false;
-  return true;
+    if (!("id" in value) || value["id"] === undefined) return false;
+    if (!("latitude" in value) || value["latitude"] === undefined) return false;
+    if (!("longitude" in value) || value["longitude"] === undefined)
+        return false;
+    if (!("radius" in value) || value["radius"] === undefined) return false;
+    if (!("user" in value) || value["user"] === undefined) return false;
+    return true;
 }
 
 export function BlacklistedRegionFromJSON(json: any): BlacklistedRegion {
-  return BlacklistedRegionFromJSONTyped(json, false);
+    return BlacklistedRegionFromJSONTyped(json, false);
 }
 
 export function BlacklistedRegionFromJSONTyped(
-  json: any,
-  ignoreDiscriminator: boolean,
+    json: any,
+    ignoreDiscriminator: boolean,
 ): BlacklistedRegion {
-  if (json == null) {
-    return json;
-  }
-  return {
-    id: json["id"],
-    latitude: json["latitude"],
-    longitude: json["longitude"],
-    radius: json["radius"],
-    user: UserFromJSON(json["user"]),
-  };
+    if (json == null) {
+        return json;
+    }
+    return {
+        id: json["id"],
+        latitude: json["latitude"],
+        longitude: json["longitude"],
+        radius: json["radius"],
+        user: UserFromJSON(json["user"]),
+    };
 }
 
 export function BlacklistedRegionToJSON(value?: BlacklistedRegion | null): any {
-  if (value == null) {
-    return value;
-  }
-  return {
-    id: value["id"],
-    latitude: value["latitude"],
-    longitude: value["longitude"],
-    radius: value["radius"],
-    user: UserToJSON(value["user"]),
-  };
+    if (value == null) {
+        return value;
+    }
+    return {
+        id: value["id"],
+        latitude: value["latitude"],
+        longitude: value["longitude"],
+        radius: value["radius"],
+        user: UserToJSON(value["user"]),
+    };
 }

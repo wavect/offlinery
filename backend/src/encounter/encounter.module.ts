@@ -6,9 +6,9 @@ import { Encounter } from "./encounter.entity";
 import { EncounterService } from "./encounter.service";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Encounter, User])],
-  providers: [EncounterService],
-  controllers: [EncounterController],
-  exports: [EncounterService],
+    imports: [TypeOrmModule.forFeature([Encounter, User])],
+    providers: [EncounterService],
+    controllers: [EncounterController],
+    exports: [EncounterService],
 })
 export class EncounterModule {}

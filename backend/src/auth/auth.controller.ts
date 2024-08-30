@@ -7,16 +7,19 @@ import { AuthService } from "./auth.service";
 
 @ApiTags("Auth")
 @Controller({
-  version: "1",
-  path: "auth",
+    version: "1",
+    path: "auth",
 })
 export class AuthController {
-  constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService) {}
 
-  @Public()
-  @HttpCode(HttpStatus.OK)
-  @Post("login")
-  signIn(@Body() signInDTO: SignInDTO): Promise<SignInResponseDTO> {
-    return this.authService.signIn(signInDTO.email, signInDTO.clearPassword);
-  }
+    @Public()
+    @HttpCode(HttpStatus.OK)
+    @Post("login")
+    signIn(@Body() signInDTO: SignInDTO): Promise<SignInResponseDTO> {
+        return this.authService.signIn(
+            signInDTO.email,
+            signInDTO.clearPassword,
+        );
+    }
 }

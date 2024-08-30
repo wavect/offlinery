@@ -9,17 +9,17 @@ import { User } from "./user.entity";
 import { UserService } from "./user.service";
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      User,
-      BlacklistedRegion,
-      UserReport,
-      Encounter,
-      PendingUser,
-    ]),
-  ],
-  providers: [UserService],
-  controllers: [UserController],
-  exports: [UserService],
+    imports: [
+        TypeOrmModule.forFeature([
+            User,
+            BlacklistedRegion,
+            UserReport,
+            Encounter,
+            PendingUser,
+        ]),
+    ],
+    providers: [UserService],
+    controllers: [UserController],
+    exports: [UserService],
 })
 export class UserModule {}

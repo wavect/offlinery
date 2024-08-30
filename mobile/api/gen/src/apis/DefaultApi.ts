@@ -17,7 +17,6 @@ import * as runtime from "../runtime";
 // We import this type even if it's unused to avoid additional
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
-import { ImagePickerAsset } from "expo-image-picker";
 /**
  * DefaultApi - interface
  *
@@ -25,59 +24,59 @@ import { ImagePickerAsset } from "expo-image-picker";
  * @interface DefaultApiInterface
  */
 export interface DefaultApiInterface {
-  /**
-   *
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof DefaultApiInterface
-   */
-  appControllerGetUptimeRaw(
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<string>>;
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApiInterface
+     */
+    appControllerGetUptimeRaw(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<string>>;
 
-  /**
-   */
-  appControllerGetUptime(
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<string>;
+    /**
+     */
+    appControllerGetUptime(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<string>;
 }
 
 /**
  *
  */
 export class DefaultApi extends runtime.BaseAPI implements DefaultApiInterface {
-  /**
-   */
-  async appControllerGetUptimeRaw(
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<string>> {
-    const queryParameters: any = {};
+    /**
+     */
+    async appControllerGetUptimeRaw(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<string>> {
+        const queryParameters: any = {};
 
-    const headerParameters: runtime.HTTPHeaders = {};
+        const headerParameters: runtime.HTTPHeaders = {};
 
-    const response = await this.request(
-      {
-        path: `/main/uptime`,
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides,
-    );
+        const response = await this.request(
+            {
+                path: `/main/uptime`,
+                method: "GET",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
 
-    if (this.isJsonMime(response.headers.get("content-type"))) {
-      return new runtime.JSONApiResponse<string>(response);
-    } else {
-      return new runtime.TextApiResponse(response) as any;
+        if (this.isJsonMime(response.headers.get("content-type"))) {
+            return new runtime.JSONApiResponse<string>(response);
+        } else {
+            return new runtime.TextApiResponse(response) as any;
+        }
     }
-  }
 
-  /**
-   */
-  async appControllerGetUptime(
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<string> {
-    const response = await this.appControllerGetUptimeRaw(initOverrides);
-    return await response.value();
-  }
+    /**
+     */
+    async appControllerGetUptime(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<string> {
+        const response = await this.appControllerGetUptimeRaw(initOverrides);
+        return await response.value();
+    }
 }

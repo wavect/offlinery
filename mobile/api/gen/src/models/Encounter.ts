@@ -12,15 +12,10 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
-import type { UserReport } from "./UserReport";
-import {
-  UserReportFromJSON,
-  UserReportFromJSONTyped,
-  UserReportToJSON,
-} from "./UserReport";
 import type { User } from "./User";
-import { UserFromJSON, UserFromJSONTyped, UserToJSON } from "./User";
+import { UserFromJSON, UserToJSON } from "./User";
+import type { UserReport } from "./UserReport";
+import { UserReportFromJSON, UserReportToJSON } from "./UserReport";
 
 /**
  *
@@ -28,121 +23,123 @@ import { UserFromJSON, UserFromJSONTyped, UserToJSON } from "./User";
  * @interface Encounter
  */
 export interface Encounter {
-  /**
-   *
-   * @type {string}
-   * @memberof Encounter
-   */
-  id: string;
-  /**
-   *
-   * @type {string}
-   * @memberof Encounter
-   */
-  status: EncounterStatusEnum;
-  /**
-   *
-   * @type {Date}
-   * @memberof Encounter
-   */
-  lastDateTimePassedBy: Date;
-  /**
-   *
-   * @type {string}
-   * @memberof Encounter
-   */
-  lastLongitudePassedBy: string;
-  /**
-   *
-   * @type {string}
-   * @memberof Encounter
-   */
-  lastLatitudePassedBy: string;
-  /**
-   *
-   * @type {Array<User>}
-   * @memberof Encounter
-   */
-  users: Array<User>;
-  /**
-   *
-   * @type {Array<UserReport>}
-   * @memberof Encounter
-   */
-  userReports: Array<UserReport>;
+    /**
+     *
+     * @type {string}
+     * @memberof Encounter
+     */
+    id: string;
+    /**
+     *
+     * @type {string}
+     * @memberof Encounter
+     */
+    status: EncounterStatusEnum;
+    /**
+     *
+     * @type {Date}
+     * @memberof Encounter
+     */
+    lastDateTimePassedBy: Date;
+    /**
+     *
+     * @type {string}
+     * @memberof Encounter
+     */
+    lastLongitudePassedBy: string;
+    /**
+     *
+     * @type {string}
+     * @memberof Encounter
+     */
+    lastLatitudePassedBy: string;
+    /**
+     *
+     * @type {Array<User>}
+     * @memberof Encounter
+     */
+    users: Array<User>;
+    /**
+     *
+     * @type {Array<UserReport>}
+     * @memberof Encounter
+     */
+    userReports: Array<UserReport>;
 }
 
 /**
  * @export
  */
 export const EncounterStatusEnum = {
-  not_met: "not_met",
-  met_not_interested: "met_not_interested",
-  met_interested: "met_interested",
+    not_met: "not_met",
+    met_not_interested: "met_not_interested",
+    met_interested: "met_interested",
 } as const;
 export type EncounterStatusEnum =
-  (typeof EncounterStatusEnum)[keyof typeof EncounterStatusEnum];
+    (typeof EncounterStatusEnum)[keyof typeof EncounterStatusEnum];
 
 /**
  * Check if a given object implements the Encounter interface.
  */
 export function instanceOfEncounter(value: object): value is Encounter {
-  if (!("id" in value) || value["id"] === undefined) return false;
-  if (!("status" in value) || value["status"] === undefined) return false;
-  if (
-    !("lastDateTimePassedBy" in value) ||
-    value["lastDateTimePassedBy"] === undefined
-  )
-    return false;
-  if (
-    !("lastLongitudePassedBy" in value) ||
-    value["lastLongitudePassedBy"] === undefined
-  )
-    return false;
-  if (
-    !("lastLatitudePassedBy" in value) ||
-    value["lastLatitudePassedBy"] === undefined
-  )
-    return false;
-  if (!("users" in value) || value["users"] === undefined) return false;
-  if (!("userReports" in value) || value["userReports"] === undefined)
-    return false;
-  return true;
+    if (!("id" in value) || value["id"] === undefined) return false;
+    if (!("status" in value) || value["status"] === undefined) return false;
+    if (
+        !("lastDateTimePassedBy" in value) ||
+        value["lastDateTimePassedBy"] === undefined
+    )
+        return false;
+    if (
+        !("lastLongitudePassedBy" in value) ||
+        value["lastLongitudePassedBy"] === undefined
+    )
+        return false;
+    if (
+        !("lastLatitudePassedBy" in value) ||
+        value["lastLatitudePassedBy"] === undefined
+    )
+        return false;
+    if (!("users" in value) || value["users"] === undefined) return false;
+    if (!("userReports" in value) || value["userReports"] === undefined)
+        return false;
+    return true;
 }
 
 export function EncounterFromJSON(json: any): Encounter {
-  return EncounterFromJSONTyped(json, false);
+    return EncounterFromJSONTyped(json, false);
 }
 
 export function EncounterFromJSONTyped(
-  json: any,
-  ignoreDiscriminator: boolean,
+    json: any,
+    ignoreDiscriminator: boolean,
 ): Encounter {
-  if (json == null) {
-    return json;
-  }
-  return {
-    id: json["id"],
-    status: json["status"],
-    lastDateTimePassedBy: new Date(json["lastDateTimePassedBy"]),
-    lastLongitudePassedBy: json["lastLongitudePassedBy"],
-    lastLatitudePassedBy: json["lastLatitudePassedBy"],
-    users: (json["users"] as Array<any>).map(UserFromJSON),
-    userReports: (json["userReports"] as Array<any>).map(UserReportFromJSON),
-  };
+    if (json == null) {
+        return json;
+    }
+    return {
+        id: json["id"],
+        status: json["status"],
+        lastDateTimePassedBy: new Date(json["lastDateTimePassedBy"]),
+        lastLongitudePassedBy: json["lastLongitudePassedBy"],
+        lastLatitudePassedBy: json["lastLatitudePassedBy"],
+        users: (json["users"] as Array<any>).map(UserFromJSON),
+        userReports: (json["userReports"] as Array<any>).map(
+            UserReportFromJSON,
+        ),
+    };
 }
 
 export function EncounterToJSON(value?: Encounter | null): any {
-  if (value == null) {
-    return value;
-  }
-  return {
-    id: value["id"],
-    status: value["status"],
-    lastDateTimePassedBy: value["lastDateTimePassedBy"].toISOString(),
-    lastLongitudePassedBy: value["lastLongitudePassedBy"],
-    lastLatitudePassedBy: value["lastLatitudePassedBy"],
-    users: (value["users"] as Array<any>).map(UserToJSON),
-    userReports: (value["userReports"] as Array<any>).map(UserReportToJSON),
-  };
+    if (value == null) {
+        return value;
+    }
+    return {
+        id: value["id"],
+        status: value["status"],
+        lastDateTimePassedBy: value["lastDateTimePassedBy"].toISOString(),
+        lastLongitudePassedBy: value["lastLongitudePassedBy"],
+        lastLatitudePassedBy: value["lastLatitudePassedBy"],
+        users: (value["users"] as Array<any>).map(UserToJSON),
+        userReports: (value["userReports"] as Array<any>).map(UserReportToJSON),
+    };
 }
