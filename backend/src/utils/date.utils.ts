@@ -1,10 +1,16 @@
 export const getAge = (birthday: Date | string): number => {
-    let birthdayDate: Date;
-    if (typeof birthday === "string") {
-        birthdayDate = new Date(birthday);
-    } else {
-        birthdayDate = birthday;
+    const birthdayDate = new Date(birthday);
+    const today = new Date();
+
+    let age = today.getFullYear() - birthdayDate.getFullYear();
+    const monthDiff = today.getMonth() - birthdayDate.getMonth();
+
+    if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < birthdayDate.getDate())
+    ) {
+        age--;
     }
-    const timeDiff = Math.abs(Date.now() - birthdayDate.getTime());
-    return Math.floor(timeDiff / (1000 * 3600 * 24) / 365.25);
+
+    return Math.max(0, age);
 };
