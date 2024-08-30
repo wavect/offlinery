@@ -2,10 +2,10 @@ import { Color, FontFamily } from "../../GlobalStyles";
 
 export default {
     container: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: '20px',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "20px",
     },
     offlineryFlexBox: {
         lineHeight: 52,
@@ -16,10 +16,10 @@ export default {
         alignItems: "center",
     },
     headlineContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
     },
     headlineText: {
         fontSize: 48,
@@ -39,7 +39,7 @@ export default {
         fontWeight: "500",
         fontFamily: FontFamily.montserratLight,
         width: 390,
-        textAlign: 'center',
+        textAlign: "center",
         marginBottom: 70,
     },
-}
+};

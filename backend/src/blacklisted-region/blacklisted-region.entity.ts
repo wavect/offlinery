@@ -1,6 +1,12 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, Index} from 'typeorm';
-import { User } from '../user/user.entity';
-import {Point} from "geojson";
+import { Point } from "geojson";
+import {
+    Column,
+    Entity,
+    Index,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from "typeorm";
+import { User } from "../user/user.entity";
 
 @Entity()
 export class BlacklistedRegion {
@@ -9,15 +15,15 @@ export class BlacklistedRegion {
 
     @Index({ spatial: true })
     @Column({
-        type: 'geography',
-        spatialFeatureType: 'Point',
-        srid: 4326
+        type: "geography",
+        spatialFeatureType: "Point",
+        srid: 4326,
     })
     location: Point;
 
-    @Column('float')
+    @Column("float")
     radius: number;
 
-    @ManyToOne(() => User, user => user.blacklistedRegions)
+    @ManyToOne(() => User, (user) => user.blacklistedRegions)
     user: User;
 }

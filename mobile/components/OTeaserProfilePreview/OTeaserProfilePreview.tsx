@@ -1,62 +1,92 @@
-import {UserPublicDTO} from "../../types/PublicProfile.types";
 import * as React from "react";
-import {Image, Pressable, StyleProp, StyleSheet, Text, View, ViewStyle} from "react-native";
-import {Color, FontFamily, FontSize} from "../../GlobalStyles";
-import {GestureResponderEvent} from "react-native/Libraries/Types/CoreEventTypes";
-import {ROUTES} from "../../screens/routes";
-
+import {
+    Image,
+    Pressable,
+    StyleProp,
+    StyleSheet,
+    Text,
+    View,
+    ViewStyle,
+} from "react-native";
+import { GestureResponderEvent } from "react-native/Libraries/Types/CoreEventTypes";
+import { Color, FontFamily, FontSize } from "../../GlobalStyles";
+import { ROUTES } from "../../screens/routes";
+import { UserPublicDTO } from "../../types/PublicProfile.types";
 
 interface IOTeaserProfileProps {
-    prefixText?: string
-    publicProfile: UserPublicDTO
-    showOpenProfileButton: boolean
+    prefixText?: string;
+    publicProfile: UserPublicDTO;
+    showOpenProfileButton: boolean;
     secondButton?: {
-        onPress: (event: GestureResponderEvent) => void
-        text: string
-        style?: StyleProp<ViewStyle>
-    },
-    navigation?: any,
+        onPress: (event: GestureResponderEvent) => void;
+        text: string;
+        style?: StyleProp<ViewStyle>;
+    };
+    navigation?: any;
 }
 
 /** @dev This component looks a bit differently to the OEncounter component and does not require the EncountersContext */
 const OTeaserProfilePreview = (props: IOTeaserProfileProps) => {
-    const {navigation, secondButton, publicProfile, showOpenProfileButton, prefixText} = props;
+    const {
+        navigation,
+        secondButton,
+        publicProfile,
+        showOpenProfileButton,
+        prefixText,
+    } = props;
 
-    return <View style={styles.outerContainer}>
-        <View style={styles.profileContainer}>
-            <Image
-                style={styles.profileImage}
-                contentFit="cover"
-                source={{uri: publicProfile.imageURIs[0]}}
-            />
-            <View style={styles.profileDetails}>
-                <Text
-                    style={styles.nameAge}>{`${prefixText ?? ''}${publicProfile.firstName}, ${publicProfile.age}`}</Text>
-                <Text
-                    style={styles.encounterInfo}>{publicProfile.bio}</Text>
+    return (
+        <View style={styles.outerContainer}>
+            <View style={styles.profileContainer}>
+                <Image
+                    style={styles.profileImage}
+                    contentFit="cover"
+                    source={{ uri: publicProfile.imageURIs[0] }}
+                />
+                <View style={styles.profileDetails}>
+                    <Text
+                        style={styles.nameAge}
+                    >{`${prefixText ?? ""}${publicProfile.firstName}, ${publicProfile.age}`}</Text>
+                    <Text style={styles.encounterInfo}>
+                        {publicProfile.bio}
+                    </Text>
 
-                {showOpenProfileButton && <View style={styles.buttonContainer}>
-                    <Pressable style={styles.button}
-                        onPress={() => navigation.navigate(ROUTES.Main.ProfileView, {user: publicProfile})}>
-                        <Text style={styles.buttonText}>
-                            Profile
-                        </Text>
-                    </Pressable>
-                    {secondButton && <Pressable style={[styles.button, secondButton.style]}
-                                                onPress={secondButton.onPress}>
-                        <Text style={styles.buttonText}>
-                            {secondButton.text}
-                        </Text>
-                    </Pressable>}
-                </View>}
+                    {showOpenProfileButton && (
+                        <View style={styles.buttonContainer}>
+                            <Pressable
+                                style={styles.button}
+                                onPress={() =>
+                                    navigation.navigate(
+                                        ROUTES.Main.ProfileView,
+                                        {
+                                            user: publicProfile,
+                                        },
+                                    )
+                                }
+                            >
+                                <Text style={styles.buttonText}>Profile</Text>
+                            </Pressable>
+                            {secondButton && (
+                                <Pressable
+                                    style={[styles.button, secondButton.style]}
+                                    onPress={secondButton.onPress}
+                                >
+                                    <Text style={styles.buttonText}>
+                                        {secondButton.text}
+                                    </Text>
+                                </Pressable>
+                            )}
+                        </View>
+                    )}
+                </View>
             </View>
         </View>
-    </View>
-}
+    );
+};
 
 const styles = StyleSheet.create({
     profileContainer: {
-        flexDirection: 'row',
+        flexDirection: "row",
     },
     outerContainer: {
         marginBottom: 20,
@@ -85,8 +115,8 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
+        flexDirection: "row",
+        justifyContent: "flex-start",
         marginTop: 5,
     },
     button: {
@@ -105,4 +135,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default OTeaserProfilePreview
+export default OTeaserProfilePreview;

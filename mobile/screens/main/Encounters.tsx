@@ -1,45 +1,55 @@
-import * as React from "react";
-import {useState} from "react";
-import {Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {Color, FontFamily, FontSize} from "../../GlobalStyles";
-import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import * as React from "react";
+import { useState } from "react";
+import {
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
+import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 import OEncounter from "../../components/OEncounter/OEncounter";
-import {useEncountersContext} from "../../context/EncountersContext";
-import {i18n, TR} from "../../localization/translate.service";
+import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
+import { useEncountersContext } from "../../context/EncountersContext";
+import { i18n, TR } from "../../localization/translate.service";
 
-const Encounters = ({navigation}) => {
-    const {state} = useEncountersContext()
-    const today = new Date()
+const Encounters = ({ navigation }) => {
+    const { state } = useEncountersContext();
+    const today = new Date();
     const twoWeeksBefore = new Date();
     twoWeeksBefore.setDate(today.getDate() - 14);
-    const [metStartDateFilter, setMetStartDateFilter] = useState<Date>(twoWeeksBefore)
-    const [metEndDateFilter, setMetEndDateFilter] = useState<Date>(today)
+    const [metStartDateFilter, setMetStartDateFilter] =
+        useState<Date>(twoWeeksBefore);
+    const [metEndDateFilter, setMetEndDateFilter] = useState<Date>(today);
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
     const onMetStartDateFilterChange = (event: any, selectedDate?: Date) => {
-        setShowStartDatePicker(Platform.OS === 'ios');
+        setShowStartDatePicker(Platform.OS === "ios");
         if (selectedDate) {
             setMetStartDateFilter(selectedDate);
         }
     };
 
     const onMetEndDateFilterChange = (event: any, selectedDate?: Date) => {
-        setShowEndDatePicker(Platform.OS === 'ios');
+        setShowEndDatePicker(Platform.OS === "ios");
         if (selectedDate) {
             setMetEndDateFilter(selectedDate);
         }
     };
 
     return (
-        <OPageContainer subtitle={i18n.t(TR.peopleYouMightHaveMet)}
-                        doNotUseScrollView={true}>
+        <OPageContainer
+            subtitle={i18n.t(TR.peopleYouMightHaveMet)}
+            doNotUseScrollView={true}
+        >
             <View style={styles.container}>
                 <View style={styles.dateRangeContainer}>
                     <View style={styles.dateContainer}>
                         <Text style={styles.dateLabel}>From</Text>
-                        {Platform.OS === 'ios' ? (
+                        {Platform.OS === "ios" ? (
                             <RNDateTimePicker
                                 display="default"
                                 mode="date"
@@ -50,8 +60,12 @@ const Encounters = ({navigation}) => {
                             />
                         ) : (
                             <>
-                                <TouchableOpacity onPress={() => setShowStartDatePicker(true)}>
-                                    <Text style={styles.androidDateButton}>{metStartDateFilter.toDateString()}</Text>
+                                <TouchableOpacity
+                                    onPress={() => setShowStartDatePicker(true)}
+                                >
+                                    <Text style={styles.androidDateButton}>
+                                        {metStartDateFilter.toDateString()}
+                                    </Text>
                                 </TouchableOpacity>
                                 {showStartDatePicker && (
                                     <RNDateTimePicker
@@ -66,7 +80,7 @@ const Encounters = ({navigation}) => {
                     </View>
                     <View style={styles.dateContainer}>
                         <Text style={styles.dateLabel}>To</Text>
-                        {Platform.OS === 'ios' ? (
+                        {Platform.OS === "ios" ? (
                             <RNDateTimePicker
                                 display="default"
                                 mode="date"
@@ -77,8 +91,12 @@ const Encounters = ({navigation}) => {
                             />
                         ) : (
                             <>
-                                <TouchableOpacity onPress={() => setShowEndDatePicker(true)}>
-                                    <Text style={styles.androidDateButton}>{metEndDateFilter.toDateString()}</Text>
+                                <TouchableOpacity
+                                    onPress={() => setShowEndDatePicker(true)}
+                                >
+                                    <Text style={styles.androidDateButton}>
+                                        {metEndDateFilter.toDateString()}
+                                    </Text>
                                 </TouchableOpacity>
                                 {showEndDatePicker && (
                                     <RNDateTimePicker
@@ -93,26 +111,35 @@ const Encounters = ({navigation}) => {
                     </View>
                 </View>
 
-                {state.encounters.length
-                    && <ScrollView style={styles.encountersList}>
-                        {state.encounters.map((encounter, idx) => <OEncounter key={idx} encounterProfile={encounter}
-                                                                              showActions={true}
-                                                                              navigation={navigation}/>)}
+                {(state.encounters.length && (
+                    <ScrollView style={styles.encountersList}>
+                        {state.encounters.map((encounter, idx) => (
+                            <OEncounter
+                                key={idx}
+                                encounterProfile={encounter}
+                                showActions={true}
+                                navigation={navigation}
+                            />
+                        ))}
                     </ScrollView>
+                )) || (
                     // No encounters, just show small text in the middle of the screen
-                    || <View style={styles.noEncountersContainer}>
-                        <Text style={styles.noEncountersTextLg}>Nobody was nearby..</Text>
-                        <Text style={styles.noEncountersTextSm}>(hint: mingle with the crowd)</Text>
-                    </View>}
-
-
+                    <View style={styles.noEncountersContainer}>
+                        <Text style={styles.noEncountersTextLg}>
+                            Nobody was nearby..
+                        </Text>
+                        <Text style={styles.noEncountersTextSm}>
+                            (hint: mingle with the crowd)
+                        </Text>
+                    </View>
+                )}
             </View>
         </OPageContainer>
     );
 };
 
 const styles = StyleSheet.create({
-    iosDatePicker: {marginLeft: -10},
+    iosDatePicker: { marginLeft: -10 },
     androidDateButton: {
         fontSize: FontSize.size_md,
         fontFamily: FontFamily.montserratRegular,
@@ -125,8 +152,8 @@ const styles = StyleSheet.create({
     },
     noEncountersContainer: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: "center",
+        alignItems: "center",
     },
     noEncountersTextLg: {
         fontFamily: FontFamily.montserratMedium,
@@ -142,19 +169,19 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     encounterDropdownPicker: {
-        maxWidth: '95%',
+        maxWidth: "95%",
         height: 35,
         maxHeight: 35,
         minHeight: 35,
     },
     dateRangeContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
         marginBottom: 30,
     },
     dateContainer: {
         flex: 1,
-        alignItems: "flex-start"
+        alignItems: "flex-start",
     },
     dateLabel: {
         fontSize: FontSize.size_md,
@@ -164,7 +191,7 @@ const styles = StyleSheet.create({
     },
     encountersList: {
         flex: 1,
-        height: '100%',
+        height: "100%",
         minHeight: 400,
     },
 });

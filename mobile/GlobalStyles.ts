@@ -15,30 +15,30 @@ export const FontSize = {
 };
 /* Colors */
 export const Color = {
-    black: '#000',
+    black: "#000",
     white: "#fff",
-    red: '#ff0000',
-    redLight: '#fb3310',
-    primaryLight: '#81c5c9',
-    primary: '#36797d',
+    red: "#ff0000",
+    redLight: "#fb3310",
+    primaryLight: "#81c5c9",
+    primary: "#36797d",
     gray: "#757575",
-    lightGray: '#a9a9a9',
-    brightGray: '#efefef',
+    lightGray: "#a9a9a9",
+    brightGray: "#efefef",
     stateLayersSurfaceDimOpacity08: "rgba(222, 216, 225, 0.08)",
     schemesPrimary: "#65558f",
 };
 
 export const Title = {
     fontSize: 40,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: "600",
+    color: "#000",
     marginBottom: 8,
-}
+};
 export const Subtitle = {
     fontSize: 16,
-    color: '#aaa',
+    color: "#aaa",
     marginBottom: 24,
-}
+};
 
 export const Padding = {
     p_5xl: 24,
@@ -50,7 +50,7 @@ export const Padding = {
     p_7xs: 6,
     p_xl: 20,
     p_9xs: 4,
-}
+};
 
 export const BorderRadius = {
     br_81xl: 100,
@@ -58,4 +58,4 @@ export const BorderRadius = {
     br_5xs: 8,
     br_7xs: 6,
     br_9xs: 4,
-}
+};

@@ -92,12 +92,12 @@ export type PageSettings = Optional<{
 }>;
 
 export const formatCalendlyUrl = ({
-                                      url,
-                                      prefill = {},
-                                      pageSettings = {},
-                                      utm = {},
-                                      embedType,
-                                  }: {
+    url,
+    prefill = {},
+    pageSettings = {},
+    utm = {},
+    embedType,
+}: {
     url: string;
     prefill?: Prefill;
     pageSettings?: PageSettings;
@@ -113,7 +113,7 @@ export const formatCalendlyUrl = ({
         primaryColor,
         textColor,
         hideGdprBanner,
-    } = sanitizedPageSettings
+    } = sanitizedPageSettings;
 
     const {
         customAnswers,
@@ -150,7 +150,9 @@ export const formatCalendlyUrl = ({
         textColor ? `text_color=${textColor}` : null,
         hideGdprBanner ? `hide_gdpr_banner=1` : null,
         name ? `name=${encodeURIComponent(name)}` : null,
-        smsReminderNumber ? `phone_number=${encodeURIComponent(smsReminderNumber)}` : null,
+        smsReminderNumber
+            ? `phone_number=${encodeURIComponent(smsReminderNumber)}`
+            : null,
         location ? `location=${encodeURIComponent(location)}` : null,
         firstName ? `first_name=${encodeURIComponent(firstName)}` : null,
         lastName ? `last_name=${encodeURIComponent(lastName)}` : null,
@@ -194,12 +196,12 @@ const formatDate = (d: Date) => {
 const CUSTOM_ANSWER_PATTERN = /^a\d{1,2}$/;
 const formatCustomAnswers = (customAnswers: object) => {
     const customAnswersFiltered = Object.keys(customAnswers).filter((key) =>
-        key.match(CUSTOM_ANSWER_PATTERN)
+        key.match(CUSTOM_ANSWER_PATTERN),
     );
 
     if (!customAnswersFiltered.length) return [];
 
     return customAnswersFiltered.map(
-        (key) => `${key}=${encodeURIComponent(customAnswers[key])}`
+        (key) => `${key}=${encodeURIComponent(customAnswers[key])}`,
     );
 };

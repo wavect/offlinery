@@ -1,49 +1,70 @@
-import {IEncounterProfile} from "../../types/PublicProfile.types";
 import * as React from "react";
-import {useState} from "react";
-import {Image, Pressable, StyleSheet, Text, View} from "react-native";
-import {Dropdown} from "react-native-element-dropdown";
-import {Color, FontFamily, FontSize} from "../../GlobalStyles";
-import {ROUTES} from "../../screens/routes";
-import {EACTION_ENCOUNTERS, useEncountersContext} from "../../context/EncountersContext";
-import {i18n, TR} from "../../localization/translate.service";
-import {EncounterStatusEnum} from "../../api/gen/src";
+import { useState } from "react";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
+import { EncounterStatusEnum } from "../../api/gen/src";
+import {
+    EACTION_ENCOUNTERS,
+    useEncountersContext,
+} from "../../context/EncountersContext";
+import { Color, FontFamily, FontSize } from "../../GlobalStyles";
+import { i18n, TR } from "../../localization/translate.service";
+import { ROUTES } from "../../screens/routes";
+import { IEncounterProfile } from "../../types/PublicProfile.types";
 
 interface ISingleEncounterProps {
-    encounterProfile: IEncounterProfile
-    showActions: boolean
-    navigation: any
+    encounterProfile: IEncounterProfile;
+    showActions: boolean;
+    navigation: any;
 }
 
 const OEncounter = (props: ISingleEncounterProps) => {
-    const {dispatch} = useEncountersContext()
-    const {encounterProfile, showActions, navigation} = props;
-    const {personalRelationship} = encounterProfile
+    const { dispatch } = useEncountersContext();
+    const { encounterProfile, showActions, navigation } = props;
+    const { personalRelationship } = encounterProfile;
     const [dateStates] = useState([
-        {label: i18n.t(TR.encounterInterest.notMet), value: EncounterStatusEnum.not_met},
-        {label: i18n.t(TR.encounterInterest.metNotInterested), value: EncounterStatusEnum.met_not_interested},
-        {label: i18n.t(TR.encounterInterest.metInterested), value: EncounterStatusEnum.met_interested},
-    ])
+        {
+            label: i18n.t(TR.encounterInterest.notMet),
+            value: EncounterStatusEnum.not_met,
+        },
+        {
+            label: i18n.t(TR.encounterInterest.metNotInterested),
+            value: EncounterStatusEnum.met_not_interested,
+        },
+        {
+            label: i18n.t(TR.encounterInterest.metInterested),
+            value: EncounterStatusEnum.met_interested,
+        },
+    ]);
 
-    const setDateStatus = (item: { label: string, value: EncounterStatusEnum }) => {
+    const setDateStatus = (item: {
+        label: string;
+        value: EncounterStatusEnum;
+    }) => {
         dispatch({
             type: EACTION_ENCOUNTERS.SET_DATE_STATUS,
-            payload: {encounterId: encounterProfile.encounterId, value: item.value},
-        })
+            payload: {
+                encounterId: encounterProfile.encounterId,
+                value: item.value,
+            },
+        });
     };
-    const dateStatus = encounterProfile.personalRelationship?.status
+    const dateStatus = encounterProfile.personalRelationship?.status;
 
     return (
         <View style={styles.encounterContainer}>
             <Image
                 style={styles.profileImage}
                 contentFit="cover"
-                source={{uri: encounterProfile.imageURIs[0]}}
+                source={{ uri: encounterProfile.imageURIs[0] }}
             />
             <View style={styles.encounterDetails}>
-                <Text style={styles.nameAge}>{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>
                 <Text
-                    style={styles.encounterInfo}>{`${personalRelationship?.lastTimePassedBy} near ${personalRelationship?.lastLocationPassedBy}`}</Text>
+                    style={styles.nameAge}
+                >{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>
+                <Text
+                    style={styles.encounterInfo}
+                >{`${personalRelationship?.lastTimePassedBy} near ${personalRelationship?.lastLocationPassedBy}`}</Text>
 
                 {showActions && (
                     <View style={styles.encounterDropdownContainer}>
@@ -57,7 +78,9 @@ const OEncounter = (props: ISingleEncounterProps) => {
                             containerStyle={styles.dropdownContainerStyle}
                             style={[
                                 styles.encounterDropdownPicker,
-                                personalRelationship?.reported ? styles.encounterDropdownPickerDisabled : null
+                                personalRelationship?.reported
+                                    ? styles.encounterDropdownPickerDisabled
+                                    : null,
                             ]}
                             placeholderStyle={styles.dropdownPlaceholderStyle}
                             selectedTextStyle={styles.dropdownSelectedTextStyle}
@@ -66,37 +89,67 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     </View>
                 )}
             </View>
-            {showActions && <View style={styles.rightColumn}>
-                <Text style={styles.trustScore}
-                      onPress={() => alert(i18n.t(TR.ratingDescr))}>{i18n.t(TR.trust)}
-                    ({encounterProfile.rating})</Text>
-                {dateStatus === EncounterStatusEnum.met_not_interested &&
-                    <Pressable style={personalRelationship?.reported ? styles.buttonDisabled : styles.buttonDanger}
-                               disabled={personalRelationship?.reported}
-                               onPress={() => navigation.navigate(ROUTES.Main.ReportEncounter, {personToReport: encounterProfile})}>
-                        <Text style={styles.buttonText}>
-                            {personalRelationship?.reported ? i18n.t(TR.reported) : i18n.t(TR.report)}
-                        </Text>
-                    </Pressable>}
+            {showActions && (
+                <View style={styles.rightColumn}>
+                    <Text
+                        style={styles.trustScore}
+                        onPress={() => alert(i18n.t(TR.ratingDescr))}
+                    >
+                        {i18n.t(TR.trust)}({encounterProfile.rating})
+                    </Text>
+                    {dateStatus === EncounterStatusEnum.met_not_interested && (
+                        <Pressable
+                            style={
+                                personalRelationship?.reported
+                                    ? styles.buttonDisabled
+                                    : styles.buttonDanger
+                            }
+                            disabled={personalRelationship?.reported}
+                            onPress={() =>
+                                navigation.navigate(
+                                    ROUTES.Main.ReportEncounter,
+                                    {
+                                        personToReport: encounterProfile,
+                                    },
+                                )
+                            }
+                        >
+                            <Text style={styles.buttonText}>
+                                {personalRelationship?.reported
+                                    ? i18n.t(TR.reported)
+                                    : i18n.t(TR.report)}
+                            </Text>
+                        </Pressable>
+                    )}
 
-                {dateStatus === EncounterStatusEnum.not_met && personalRelationship?.isNearbyRightNow &&
-                    <Pressable style={styles.buttonBlack}
-                               onPress={() => navigation.navigate(ROUTES.HouseRules, {
-                                   nextPage: ROUTES.Main.NavigateToApproach,
-                                   propsForNextScreen: {navigateToPerson: encounterProfile}
-                               })}>
-                        <Text style={styles.buttonText}>
-                            {i18n.t(TR.navigate)}
-                        </Text>
-                    </Pressable>}
-            </View>}
+                    {dateStatus === EncounterStatusEnum.not_met &&
+                        personalRelationship?.isNearbyRightNow && (
+                            <Pressable
+                                style={styles.buttonBlack}
+                                onPress={() =>
+                                    navigation.navigate(ROUTES.HouseRules, {
+                                        nextPage:
+                                            ROUTES.Main.NavigateToApproach,
+                                        propsForNextScreen: {
+                                            navigateToPerson: encounterProfile,
+                                        },
+                                    })
+                                }
+                            >
+                                <Text style={styles.buttonText}>
+                                    {i18n.t(TR.navigate)}
+                                </Text>
+                            </Pressable>
+                        )}
+                </View>
+            )}
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     encounterContainer: {
-        flexDirection: 'row',
+        flexDirection: "row",
         marginBottom: 20,
         borderBottomWidth: 1,
         borderBottomColor: Color.lightGray,
@@ -124,8 +177,8 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     rightColumn: {
-        justifyContent: 'space-between',
-        alignItems: 'flex-end',
+        justifyContent: "space-between",
+        alignItems: "flex-end",
     },
     trustScore: {
         fontFamily: FontFamily.montserratSemiBold,
@@ -140,7 +193,7 @@ const styles = StyleSheet.create({
     },
     buttonDanger: {
         backgroundColor: Color.red,
-        borderColor: '#c00f0c',
+        borderColor: "#c00f0c",
         borderWidth: 1,
         borderRadius: 8,
         padding: 7,
@@ -167,7 +220,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     dropdownContainerStyle: {
-        backgroundColor: 'white',
+        backgroundColor: "white",
         borderRadius: 8,
     },
     encounterDropdownPicker: {
@@ -194,4 +247,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default OEncounter
+export default OEncounter;

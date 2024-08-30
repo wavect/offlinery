@@ -12,72 +12,72 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from "../runtime";
 /**
- * GeoJSON Point representing the location of the blacklisted region
+ * GeoJSON Point representing the location of the blacklisted region (0:lon, 1:lat)
  * @export
  * @interface BlacklistedRegionDTOLocation
  */
 export interface BlacklistedRegionDTOLocation {
-  /**
-   *
-   * @type {string}
-   * @memberof BlacklistedRegionDTOLocation
-   */
-  type?: BlacklistedRegionDTOLocationTypeEnum;
-  /**
-   *
-   * @type {Array<number>}
-   * @memberof BlacklistedRegionDTOLocation
-   */
-  coordinates?: Array<number>;
+    /**
+     *
+     * @type {string}
+     * @memberof BlacklistedRegionDTOLocation
+     */
+    type?: BlacklistedRegionDTOLocationTypeEnum;
+    /**
+     *
+     * @type {Array<number>}
+     * @memberof BlacklistedRegionDTOLocation
+     */
+    coordinates?: Array<number>;
 }
 
 /**
  * @export
  */
 export const BlacklistedRegionDTOLocationTypeEnum = {
-  Point: "Point",
+    Point: "Point",
 } as const;
 export type BlacklistedRegionDTOLocationTypeEnum =
-  (typeof BlacklistedRegionDTOLocationTypeEnum)[keyof typeof BlacklistedRegionDTOLocationTypeEnum];
+    (typeof BlacklistedRegionDTOLocationTypeEnum)[keyof typeof BlacklistedRegionDTOLocationTypeEnum];
 
 /**
  * Check if a given object implements the BlacklistedRegionDTOLocation interface.
  */
 export function instanceOfBlacklistedRegionDTOLocation(
-  value: object,
+    value: object,
 ): value is BlacklistedRegionDTOLocation {
-  return true;
+    return true;
 }
 
 export function BlacklistedRegionDTOLocationFromJSON(
-  json: any,
+    json: any,
 ): BlacklistedRegionDTOLocation {
-  return BlacklistedRegionDTOLocationFromJSONTyped(json, false);
+    return BlacklistedRegionDTOLocationFromJSONTyped(json, false);
 }
 
 export function BlacklistedRegionDTOLocationFromJSONTyped(
-  json: any,
-  ignoreDiscriminator: boolean,
+    json: any,
+    ignoreDiscriminator: boolean,
 ): BlacklistedRegionDTOLocation {
-  if (json == null) {
-    return json;
-  }
-  return {
-    type: json["type"] == null ? undefined : json["type"],
-    coordinates: json["coordinates"] == null ? undefined : json["coordinates"],
-  };
+    if (json == null) {
+        return json;
+    }
+    return {
+        type: json["type"] == null ? undefined : json["type"],
+        coordinates:
+            json["coordinates"] == null ? undefined : json["coordinates"],
+    };
 }
 
 export function BlacklistedRegionDTOLocationToJSON(
-  value?: BlacklistedRegionDTOLocation | null,
+    value?: BlacklistedRegionDTOLocation | null,
 ): any {
-  if (value == null) {
-    return value;
-  }
-  return {
-    type: value["type"],
-    coordinates: value["coordinates"],
-  };
+    if (value == null) {
+        return value;
+    }
+    return {
+        type: value["type"],
+        coordinates: value["coordinates"],
+    };
 }

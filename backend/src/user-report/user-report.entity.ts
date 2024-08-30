@@ -1,21 +1,27 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm';
-import { User } from '../user/user.entity';
-import {EIncidentType} from "../types/user.types";
-import {Encounter} from "../encounter/encounter.entity";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from "typeorm";
+import { Encounter } from "../encounter/encounter.entity";
+import { EIncidentType } from "../types/user.types";
+import { User } from "../user/user.entity";
 
 @Entity()
 export class UserReport {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column('text')
+    @Column("text")
     incidentDescription: string;
 
     @Column()
     keepReporterInTheLoop: boolean;
 
     @Column({
-        type: 'enum',
+        type: "enum",
         enum: EIncidentType,
     })
     incidentType: EIncidentType;
@@ -23,12 +29,12 @@ export class UserReport {
     @CreateDateColumn()
     reportedOn: Date;
 
-    @ManyToOne(() => User, user => user.receivedReports)
+    @ManyToOne(() => User, (user) => user.receivedReports)
     reportedUser: User;
 
-    @ManyToOne(() => User, user => user.issuedReports)
+    @ManyToOne(() => User, (user) => user.issuedReports)
     reportingUser: User;
 
-    @ManyToOne(() => Encounter, encounter => encounter.userReports)
+    @ManyToOne(() => Encounter, (encounter) => encounter.userReports)
     reportedEncounter: Encounter;
 }

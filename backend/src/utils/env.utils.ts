@@ -1,14 +1,13 @@
-
-export const TYPED_ENV: IEnv = process.env as any as IEnv
+export const TYPED_ENV: IEnv = process.env as any as IEnv;
 
 interface IEnv {
-    DB_ROOT_PASSWORD: string
-    DB_DATABASE: string
-    DB_USER: string
-    DB_PASSWORD: string
-    DB_HOST: string
-    DB_PORT: string
-    JWT_SECRET: string
+    DB_ROOT_PASSWORD: string;
+    DB_DATABASE: string;
+    DB_USER: string;
+    DB_PASSWORD: string;
+    DB_HOST: string;
+    DB_PORT: string;
+    JWT_SECRET: string;
     EMAIL_HOST: string;
     EMAIL_USERNAME: string;
     EMAIL_PASSWORD: string;
@@ -21,7 +20,7 @@ export const validateEnv = () => {
             throw new Error(`Environment variable '${key}' is not defined.`);
         }
     }
-}
+};
 
 try {
     validateEnv();

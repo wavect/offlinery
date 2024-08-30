@@ -1,31 +1,38 @@
+import * as Location from "expo-location";
+import { LocationAccuracy } from "expo-location";
 import * as React from "react";
-import {useEffect, useState} from "react";
-import {Linking, Platform, StyleSheet, Text, View} from "react-native";
-import {OPageContainer} from "../../components/OPageContainer/OPageContainer";
+import { useEffect, useState } from "react";
+import { Linking, Platform, StyleSheet, Text, View } from "react-native";
 import MapView, {
-    Marker, Polyline,
+    Marker,
+    Polyline,
     PROVIDER_DEFAULT,
-    PROVIDER_GOOGLE, Region
+    PROVIDER_GOOGLE,
+    Region,
 } from "react-native-maps";
-import {BorderRadius, Color, FontFamily, FontSize} from "../../GlobalStyles";
-import {useUserContext} from "../../context/UserContext";
-import * as Location from 'expo-location';
-import {LocationAccuracy} from 'expo-location';
+import { BorderRadius, Color, FontFamily, FontSize } from "../../GlobalStyles";
+import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "../../components/OTeaserProfilePreview/OTeaserProfilePreview";
-import {IEncounterProfile} from "../../types/PublicProfile.types";
-import {getPublicProfileFromEncounter} from "../../context/EncountersContext";
-import {calculateDistance, getRegionForCoordinates} from "../../utils/map.utils";
-import {i18n, TR} from "../../localization/translate.service";
+import { getPublicProfileFromEncounter } from "../../context/EncountersContext";
+import { useUserContext } from "../../context/UserContext";
+import { i18n, TR } from "../../localization/translate.service";
+import { IEncounterProfile } from "../../types/PublicProfile.types";
+import {
+    calculateDistance,
+    getRegionForCoordinates,
+} from "../../utils/map.utils";
 
-const NavigateToApproach = ({route, navigation}) => {
-    const {state, dispatch} = useUserContext()
-    const navigateToPerson: IEncounterProfile = route.params?.navigateToPerson
+const NavigateToApproach = ({ route, navigation }) => {
+    const { state, dispatch } = useUserContext();
+    const navigateToPerson: IEncounterProfile = route.params?.navigateToPerson;
 
     // TODO: Load from backend, add to encounter profile!
-    const destination = {latitude: 47.270620, longitude: 11.492670}; // Example: San Francisco
+    const destination = { latitude: 47.27062, longitude: 11.49267 }; // Example: San Francisco
     const [mapRegion, setMapRegion] = useState<Region | null>(null);
 
-    const [location, setLocation] = useState<Location.LocationObject | null>(null);
+    const [location, setLocation] = useState<Location.LocationObject | null>(
+        null,
+    );
     const mapRef = React.useRef(null);
     const [distance, setDistance] = useState<number | null>(null);
 
@@ -33,43 +40,51 @@ const NavigateToApproach = ({route, navigation}) => {
     // TODO: Maybe make map to a separate component
     useEffect(() => {
         (async () => {
-            let {status} = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== "granted") {
                 alert(i18n.t(TR.permissionToLocationDenied));
                 return;
             }
 
-            const location = await Location.getCurrentPositionAsync({accuracy: LocationAccuracy.BestForNavigation});
+            const location = await Location.getCurrentPositionAsync({
+                accuracy: LocationAccuracy.BestForNavigation,
+            });
             setLocation(location);
         })();
     }, []);
 
     useEffect(() => {
-       if (location) {
-           const calculatedDistance = calculateDistance(
-               location.coords.latitude,
-               location.coords.longitude,
-               destination.latitude,
-               destination.longitude
-           );
-           setDistance(calculatedDistance);
+        if (location) {
+            const calculatedDistance = calculateDistance(
+                location.coords.latitude,
+                location.coords.longitude,
+                destination.latitude,
+                destination.longitude,
+            );
+            setDistance(calculatedDistance);
 
-           // Calculate the region that includes both points
-           const newRegion = getRegionForCoordinates([
-               {latitude: location.coords.latitude, longitude: location.coords.longitude},
-               destination
-           ]);
-           setMapRegion(newRegion);
-       }
+            // Calculate the region that includes both points
+            const newRegion = getRegionForCoordinates([
+                {
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                },
+                destination,
+            ]);
+            setMapRegion(newRegion);
+        }
     }, [location]);
 
     const openMapsApp = () => {
-        const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
+        const scheme = Platform.select({
+            ios: "maps:0,0?q=",
+            android: "geo:0,0?q=",
+        });
         const latLng = `${destination.latitude},${destination.longitude}`;
         const label = i18n.t(TR.destination);
         const url = Platform.select({
             ios: `${scheme}${label}@${latLng}`,
-            android: `${scheme}${latLng}(${label})`
+            android: `${scheme}${latLng}(${label})`,
         });
 
         Linking.openURL(url!);
@@ -77,12 +92,17 @@ const NavigateToApproach = ({route, navigation}) => {
 
     return (
         <OPageContainer>
-            <OTeaserProfilePreview prefixText={i18n.t(TR.findWithSpace)} navigation={navigation}
-                                   publicProfile={getPublicProfileFromEncounter(navigateToPerson)}
-                                   showOpenProfileButton={true} secondButton={{
-                onPress: openMapsApp, text: `${i18n.t(TR.navigateTo)} ${navigateToPerson.firstName}`,
-                style: styles.navigateBtn,
-            }}/>
+            <OTeaserProfilePreview
+                prefixText={i18n.t(TR.findWithSpace)}
+                navigation={navigation}
+                publicProfile={getPublicProfileFromEncounter(navigateToPerson)}
+                showOpenProfileButton={true}
+                secondButton={{
+                    onPress: openMapsApp,
+                    text: `${i18n.t(TR.navigateTo)} ${navigateToPerson.firstName}`,
+                    style: styles.navigateBtn,
+                }}
+            />
             <MapView
                 ref={mapRef}
                 style={styles.map}
@@ -93,32 +113,54 @@ const NavigateToApproach = ({route, navigation}) => {
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 }}
-                provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
+                provider={
+                    Platform.OS === "android"
+                        ? PROVIDER_GOOGLE
+                        : PROVIDER_DEFAULT
+                }
             >
                 {location && (
-                    <Marker coordinate={location.coords} title={i18n.t(TR.yourLocation)} pinColor={Color.black}/>
+                    <Marker
+                        coordinate={location.coords}
+                        title={i18n.t(TR.yourLocation)}
+                        pinColor={Color.black}
+                    />
                 )}
-                <Marker coordinate={destination} title={navigateToPerson.firstName} />
+                <Marker
+                    coordinate={destination}
+                    title={navigateToPerson.firstName}
+                />
                 {location && (
                     <>
                         <Polyline
                             coordinates={[
-                                { latitude: location.coords.latitude, longitude: location.coords.longitude },
-                                destination
+                                {
+                                    latitude: location.coords.latitude,
+                                    longitude: location.coords.longitude,
+                                },
+                                destination,
                             ]}
                             strokeColor={Color.primary}
                             strokeWidth={2}
                         />
                         <Marker
                             coordinate={{
-                                latitude: (location.coords.latitude + destination.latitude) / 2,
-                                longitude: (location.coords.longitude + destination.longitude) / 2,
+                                latitude:
+                                    (location.coords.latitude +
+                                        destination.latitude) /
+                                    2,
+                                longitude:
+                                    (location.coords.longitude +
+                                        destination.longitude) /
+                                    2,
                             }}
                             anchor={{ x: 0.5, y: 0.5 }}
                         >
                             <View style={styles.distanceMarker}>
                                 <Text style={styles.distanceText}>
-                                    {distance ? `${distance.toFixed(2)} km` : i18n.t(TR.calculating)}
+                                    {distance
+                                        ? `${distance.toFixed(2)} km`
+                                        : i18n.t(TR.calculating)}
                                 </Text>
                             </View>
                         </Marker>
@@ -131,8 +173,8 @@ const NavigateToApproach = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
     map: {
-        width: '100%',
-        height: '100%',
+        width: "100%",
+        height: "100%",
         minHeight: 300,
         borderRadius: BorderRadius.br_5xs,
     },
@@ -141,7 +183,7 @@ const styles = StyleSheet.create({
         borderColor: Color.primaryLight,
     },
     distanceMarker: {
-        backgroundColor: 'white',
+        backgroundColor: "white",
         padding: 5,
         borderRadius: 5,
         borderColor: Color.primary,

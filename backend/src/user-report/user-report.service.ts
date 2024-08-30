@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UserReport } from './user-report.entity';
-import { CreateUserReportDTO } from '../DTOs/create-user-report.dto';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { CreateUserReportDTO } from "../DTOs/create-user-report.dto";
+import { UserReport } from "./user-report.entity";
 
 @Injectable()
 export class UserReportService {
@@ -11,8 +11,11 @@ export class UserReportService {
         private userReportRepository: Repository<UserReport>,
     ) {}
 
-    async create(createUserReportDto: CreateUserReportDTO): Promise<UserReport> {
-        const userReport = this.userReportRepository.create(createUserReportDto);
+    async create(
+        createUserReportDto: CreateUserReportDTO,
+    ): Promise<UserReport> {
+        const userReport =
+            this.userReportRepository.create(createUserReportDto);
         return await this.userReportRepository.save(userReport);
     }
 

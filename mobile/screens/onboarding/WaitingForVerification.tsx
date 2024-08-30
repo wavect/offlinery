@@ -1,34 +1,53 @@
+import { A } from "@expo/html-elements";
 import * as React from "react";
-import {StyleSheet, Text, View} from "react-native";
-import {Color, FontFamily, FontSize, Subtitle, SubtitleBright} from "../../GlobalStyles";
-import {OShowcase} from "../../components/OShowcase/OShowcase";
-import {OLinearBackground} from "../../components/OLinearBackground/OLinearBackground";
-import {OButtonWide} from "../../components/OButtonWide/OButtonWide";
-import {ROUTES} from "../routes";
-import {EVerificationStatus, useUserContext} from "../../context/UserContext";
-import {A} from "@expo/html-elements";
-import {i18n, TR} from "../../localization/translate.service";
+import { StyleSheet, Text, View } from "react-native";
+import { Color, FontFamily, FontSize } from "../../GlobalStyles";
+import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
+import { OLinearBackground } from "../../components/OLinearBackground/OLinearBackground";
+import { OShowcase } from "../../components/OShowcase/OShowcase";
+import { EVerificationStatus, useUserContext } from "../../context/UserContext";
+import { i18n, TR } from "../../localization/translate.service";
+import { ROUTES } from "../routes";
 
-const WaitingForVerification = ({navigation}) => {
-    const {state} = useUserContext()
+const WaitingForVerification = ({ navigation }) => {
+    const { state } = useUserContext();
     return (
         <OLinearBackground>
             <View style={styles.layoutContainer}>
-                <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)}/>
+                <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)} />
 
-                <OButtonWide filled={true} text={i18n.t(TR.verificationInProgress)} style={{marginBottom: 14}}
-                             disabled={state.verificationStatus !== EVerificationStatus.VERIFIED}
-                             onPress={() => navigation.navigate(ROUTES.Main.HeatMap)} variant="light"/>
+                <OButtonWide
+                    filled={true}
+                    text={i18n.t(TR.verificationInProgress)}
+                    style={{ marginBottom: 14 }}
+                    disabled={
+                        state.verificationStatus !==
+                        EVerificationStatus.VERIFIED
+                    }
+                    onPress={() => navigation.navigate(ROUTES.Main.HeatMap)}
+                    variant="light"
+                />
 
-                    <OButtonWide filled={false} text={i18n.t(TR.bookNewCall)} variant="light" style={{marginBottom: 15}}
-                                 onPress={() => navigation.navigate(ROUTES.Onboarding.BookSafetyCall)}/>
-                    <Text style={styles.subtitleBookCall}>{i18n.t(TR.pleaseDoNotMakeDoubleBookings)}</Text>
+                <OButtonWide
+                    filled={false}
+                    text={i18n.t(TR.bookNewCall)}
+                    variant="light"
+                    style={{ marginBottom: 15 }}
+                    onPress={() =>
+                        navigation.navigate(ROUTES.Onboarding.BookSafetyCall)
+                    }
+                />
+                <Text style={styles.subtitleBookCall}>
+                    {i18n.t(TR.pleaseDoNotMakeDoubleBookings)}
+                </Text>
 
-                <A href="mailto:office@wavect.io" style={[styles.bottomText, styles.bottomTextContainer]}>
+                <A
+                    href="mailto:office@wavect.io"
+                    style={[styles.bottomText, styles.bottomTextContainer]}
+                >
                     {i18n.t(TR.somethingWrongQ)}
                 </A>
             </View>
-
         </OLinearBackground>
     );
 };
@@ -116,12 +135,11 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     layoutContainer: {
-        flexDirection: 'column',
-        alignItems: 'center',
+        flexDirection: "column",
+        alignItems: "center",
         flex: 1,
-        justifyContent: 'flex-end',
+        justifyContent: "flex-end",
     },
 });
-
 
 export default WaitingForVerification;

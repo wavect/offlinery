@@ -1,22 +1,29 @@
-import {PipeTransform, Injectable, ArgumentMetadata, BadRequestException, Logger} from '@nestjs/common';
-import { validate } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
-import { ClassConstructor } from 'class-transformer/types/interfaces';
+import {
+    BadRequestException,
+    Injectable,
+    Logger,
+    PipeTransform,
+} from "@nestjs/common";
+import { plainToInstance } from "class-transformer";
+import { ClassConstructor } from "class-transformer/types/interfaces";
+import { validate } from "class-validator";
 
 @Injectable()
-export class ParseJsonPipe<T extends object> implements PipeTransform<any, Promise<T>> {
+export class ParseJsonPipe<T extends object>
+    implements PipeTransform<any, Promise<T>>
+{
     private readonly logger = new Logger(ParseJsonPipe.name);
 
     constructor(private readonly classType: ClassConstructor<T>) {}
 
-    async transform(value: any, metadata: ArgumentMetadata): Promise<T> {
-        this.logger.debug("user obj, ", value)
-        if (typeof value === 'string') {
+    async transform(value: any): Promise<T> {
+        this.logger.debug("user obj, ", value);
+        if (typeof value === "string") {
             try {
                 const parsedValue = JSON.parse(value);
                 return this.validateAndTransform(parsedValue);
             } catch (error) {
-                throw new BadRequestException('Invalid JSON string');
+                throw new BadRequestException("Invalid JSON string");
             }
         } else if (value instanceof Blob) {
             try {
@@ -24,14 +31,18 @@ export class ParseJsonPipe<T extends object> implements PipeTransform<any, Promi
                 const parsedValue = JSON.parse(text);
                 return this.validateAndTransform(parsedValue);
             } catch (error) {
-                this.logger.error('ParseJsonBlob error', error);
-                throw new BadRequestException('Invalid JSON format or validation failed');
+                this.logger.error("ParseJsonBlob error", error);
+                throw new BadRequestException(
+                    "Invalid JSON format or validation failed",
+                );
             }
-        } else if (typeof value === 'object' && value !== null) {
+        } else if (typeof value === "object" && value !== null) {
             return this.validateAndTransform(value);
         }
 
-        throw new BadRequestException('Invalid input: Expected a JSON string, Blob, or object');
+        throw new BadRequestException(
+            "Invalid input: Expected a JSON string, Blob, or object",
+        );
     }
 
     private async validateAndTransform(value: any): Promise<T> {

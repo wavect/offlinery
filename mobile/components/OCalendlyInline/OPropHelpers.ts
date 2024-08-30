@@ -7,9 +7,7 @@ function sanitizeColorString(str: string): string {
     return str;
 }
 
-export function sanitizePageSettingsProps(
-    props: PageSettings
-) {
+export function sanitizePageSettingsProps(props: PageSettings) {
     if (props?.primaryColor) {
         props.primaryColor = sanitizeColorString(props.primaryColor);
     }

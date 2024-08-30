@@ -1,6 +1,13 @@
-import React, {useEffect, useState} from "react";
-import {Pressable, Text, GestureResponderEvent, StyleProp, ViewStyle, ActivityIndicator} from "react-native";
-import oButtonWideStyles from './OButtonWide.styles';
+import React, { useEffect, useState } from "react";
+import {
+    ActivityIndicator,
+    GestureResponderEvent,
+    Pressable,
+    StyleProp,
+    Text,
+    ViewStyle,
+} from "react-native";
+import oButtonWideStyles from "./OButtonWide.styles";
 
 type StyleVariant = "dark" | "light";
 
@@ -14,43 +21,67 @@ interface IOButtonWideProps {
     countdownEnableSeconds?: number;
     isLoading?: boolean;
     /** @dev Override button text in loading state */
-    loadingBtnText?: string
+    loadingBtnText?: string;
 }
 
-const getButtonStyle = (isDisabled: boolean, filled: boolean, variant: StyleVariant): StyleProp<ViewStyle> => {
+const getButtonStyle = (
+    isDisabled: boolean,
+    filled: boolean,
+    variant: StyleVariant,
+): StyleProp<ViewStyle> => {
     if (filled) {
         if (isDisabled) return oButtonWideStyles.buttonFilledDisabled;
-        return variant === "dark" ? oButtonWideStyles.buttonFilledDark : oButtonWideStyles.buttonFilledLight;
+        return variant === "dark"
+            ? oButtonWideStyles.buttonFilledDark
+            : oButtonWideStyles.buttonFilledLight;
     } else {
         const baseStyle = [oButtonWideStyles.buttonOutlined];
-        if (isDisabled) return [...baseStyle, oButtonWideStyles.buttonOutlinedDisabled];
-        return [...baseStyle, variant === "dark" ? oButtonWideStyles.buttonOutlinedDark : oButtonWideStyles.buttonOutlinedLight];
+        if (isDisabled)
+            return [...baseStyle, oButtonWideStyles.buttonOutlinedDisabled];
+        return [
+            ...baseStyle,
+            variant === "dark"
+                ? oButtonWideStyles.buttonOutlinedDark
+                : oButtonWideStyles.buttonOutlinedLight,
+        ];
     }
 };
 
-const getLabelStyle = (isDisabled: boolean, filled: boolean, variant: StyleVariant) => {
+const getLabelStyle = (
+    isDisabled: boolean,
+    filled: boolean,
+    variant: StyleVariant,
+) => {
     if (isDisabled) {
-        return filled ? oButtonWideStyles.btnDisabledLabelDark : oButtonWideStyles.btnDisabledLabelLight;
+        return filled
+            ? oButtonWideStyles.btnDisabledLabelDark
+            : oButtonWideStyles.btnDisabledLabelLight;
     }
     if (filled) {
-        return variant === "dark" ? oButtonWideStyles.btnFilledLabelDark : oButtonWideStyles.btnFilledLabelLight;
+        return variant === "dark"
+            ? oButtonWideStyles.btnFilledLabelDark
+            : oButtonWideStyles.btnFilledLabelLight;
     }
-    return variant === "dark" ? oButtonWideStyles.btnOutlineLabelDark : oButtonWideStyles.btnOutlineLabelLight;
+    return variant === "dark"
+        ? oButtonWideStyles.btnOutlineLabelDark
+        : oButtonWideStyles.btnOutlineLabelLight;
 };
 
 export const OButtonWide: React.FC<IOButtonWideProps> = ({
-                                                             loadingBtnText,
-                                                             isLoading,
-                                                             text,
-                                                             filled,
-                                                             variant,
-                                                             onPress,
-                                                             style,
-                                                             disabled = false,
-                                                             countdownEnableSeconds = 0
-                                                         }) => {
+    loadingBtnText,
+    isLoading,
+    text,
+    filled,
+    variant,
+    onPress,
+    style,
+    disabled = false,
+    countdownEnableSeconds = 0,
+}) => {
     const [countdown, setCountdown] = useState(countdownEnableSeconds);
-    const [isBtnCountdownActive, setIsBtnCountdownActive] = useState(countdownEnableSeconds > 0);
+    const [isBtnCountdownActive, setIsBtnCountdownActive] = useState(
+        countdownEnableSeconds > 0,
+    );
 
     useEffect(() => {
         if (countdown > 0) {
@@ -76,13 +107,24 @@ export const OButtonWide: React.FC<IOButtonWideProps> = ({
         <Pressable
             onPress={onPress}
             disabled={isDisabled}
-            style={[getButtonStyle(isDisabled, filled, variant), oButtonWideStyles.button, style]}
+            style={[
+                getButtonStyle(isDisabled, filled, variant),
+                oButtonWideStyles.button,
+                style,
+            ]}
         >
             <Text style={getLabelStyle(isDisabled, filled, variant)}>
-                {isLoading ? <>
-                    <ActivityIndicator size="small" style={{marginRight: 6}}/>
-                    {(loadingBtnText || buttonText).toUpperCase()}
-                </> : buttonText.toUpperCase()}
+                {isLoading ? (
+                    <>
+                        <ActivityIndicator
+                            size="small"
+                            style={{ marginRight: 6 }}
+                        />
+                        {(loadingBtnText || buttonText).toUpperCase()}
+                    </>
+                ) : (
+                    buttonText.toUpperCase()
+                )}
             </Text>
         </Pressable>
     );

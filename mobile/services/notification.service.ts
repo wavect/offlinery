@@ -1,33 +1,31 @@
-import * as Notifications from 'expo-notifications';
-import {NotificationNavigateUserDTO, PushNotificationsApi, StorePushTokenDTO} from "../api/gen/src";
-import {Platform} from "react-native";
-import {Color} from "../GlobalStyles";
-import Constants from 'expo-constants';
-import {useNavigation} from "@react-navigation/native";
+import Constants from "expo-constants";
+import * as Notifications from "expo-notifications";
+import { Platform } from "react-native";
+import { PushNotificationsApi, StorePushTokenDTO } from "../api/gen/src";
+import { Color } from "../GlobalStyles";
 
-const notificationsApi = new PushNotificationsApi()
+const notificationsApi = new PushNotificationsApi();
 export const registerForPushNotificationsAsync = async (userId: string) => {
-
-    if (Platform.OS === 'android') {
-        await Notifications.setNotificationChannelAsync('default', {
-            name: 'default',
+    if (Platform.OS === "android") {
+        await Notifications.setNotificationChannelAsync("default", {
+            name: "default",
             importance: Notifications.AndroidImportance.MAX,
             vibrationPattern: [0, 250, 250, 250],
             lightColor: Color.primaryLight,
         });
     }
 
-
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
 
-    if (existingStatus !== 'granted') {
+    if (existingStatus !== "granted") {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
     }
 
-    if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
+    if (finalStatus !== "granted") {
+        alert("Failed to get push token for push notification!");
         return;
     }
 
@@ -45,9 +43,10 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
     let token: string;
     try {
         const projectId =
-            Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
+            Constants?.expoConfig?.extra?.eas?.projectId ??
+            Constants?.easConfig?.projectId;
         if (!projectId) {
-            throw new Error('Project ID not found');
+            throw new Error("Project ID not found");
         }
         token = (
             await Notifications.getExpoPushTokenAsync({
@@ -56,25 +55,26 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
         ).data;
         console.log("Notification token", token);
     } catch (err) {
-        console.error(' Failed to get expo push token', err)
+        console.error(" Failed to get expo push token", err);
         return;
     }
 
     // Send this token to your backend
     const storePushTokenDTO: StorePushTokenDTO = {
         userId: userId,
-        pushToken: token
+        pushToken: token,
     };
-    console.log("Pushing token: ", token)
+    console.log("Pushing token: ", token);
 
     try {
-        await notificationsApi.notificationControllerStorePushToken({ storePushTokenDTO });
-        console.log('Push token successfully sent to backend');
+        await notificationsApi.notificationControllerStorePushToken({
+            storePushTokenDTO,
+        });
+        console.log("Push token successfully sent to backend");
     } catch (err) {
         // TODO
-        console.error('Failed to send push token to backend:', err);
+        console.error("Failed to send push token to backend:", err);
     }
 
     return token;
-}
-
+};

@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { BlacklistedRegion } from './blacklisted-region.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { BlacklistedRegion } from "./blacklisted-region.entity";
 
 @Injectable()
 export class BlacklistedRegionService {

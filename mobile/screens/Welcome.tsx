@@ -1,18 +1,18 @@
+import { useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
-import {Text, StyleSheet, View, ActivityIndicator} from "react-native";
-import {Color, FontSize, FontFamily} from "../GlobalStyles";
-import {OShowcase} from "../components/OShowcase/OShowcase";
-import {OLinearBackground} from "../components/OLinearBackground/OLinearBackground";
-import {OButtonWide} from "../components/OButtonWide/OButtonWide";
-import {ROUTES} from "./routes";
-import {isAuthenticated, useUserContext} from "../context/UserContext";
-import {useCallback, useEffect, useState} from "react";
-import {useFocusEffect} from "@react-navigation/native";
-import {OTermsDisclaimer} from "../components/OTermsDisclaimer/OTermsDisclaimer";
-import {i18n, TR} from "../localization/translate.service";
+import { useCallback, useState } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { Color, FontFamily, FontSize } from "../GlobalStyles";
+import { OButtonWide } from "../components/OButtonWide/OButtonWide";
+import { OLinearBackground } from "../components/OLinearBackground/OLinearBackground";
+import { OShowcase } from "../components/OShowcase/OShowcase";
+import { OTermsDisclaimer } from "../components/OTermsDisclaimer/OTermsDisclaimer";
+import { isAuthenticated, useUserContext } from "../context/UserContext";
+import { i18n, TR } from "../localization/translate.service";
+import { ROUTES } from "./routes";
 
-const Welcome = ({navigation}) => {
-    const {state, dispatch} = useUserContext()
+const Welcome = ({ navigation }) => {
+    const { state, dispatch } = useUserContext();
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -37,46 +37,70 @@ const Welcome = ({navigation}) => {
                         setIsLoading(false);
                     }
                 } catch (error) {
-                    console.error('Error checking authentication:', error);
+                    console.error("Error checking authentication:", error);
                     setIsLoading(false);
                 }
             };
 
             checkAuthentication();
-        }, [navigation])
+        }, [navigation]),
     );
 
     /** @dev Status auth status loaded, but false */
-    const AuthScreen = () => <>
-        <OTermsDisclaimer style={styles.troubleSigningInFlexBox} />
+    const AuthScreen = () => (
+        <>
+            <OTermsDisclaimer style={styles.troubleSigningInFlexBox} />
 
-        <OButtonWide filled={true} text={i18n.t(TR.createAccount)} style={{marginBottom: 14}}
-                     onPress={() => navigation.navigate(ROUTES.Onboarding.Email)} variant="light"/>
-        <OButtonWide filled={false} text={i18n.t(TR.signIn)} style={{marginBottom: 90}} variant="light"
-                     onPress={() => navigation.navigate(ROUTES.Login)}/>
+            <OButtonWide
+                filled={true}
+                text={i18n.t(TR.createAccount)}
+                style={{ marginBottom: 14 }}
+                onPress={() => navigation.navigate(ROUTES.Onboarding.Email)}
+                variant="light"
+            />
+            <OButtonWide
+                filled={false}
+                text={i18n.t(TR.signIn)}
+                style={{ marginBottom: 90 }}
+                variant="light"
+                onPress={() => navigation.navigate(ROUTES.Login)}
+            />
 
-        <Text style={[styles.troubleSigningIn, styles.troubleSigningInFlexBox]}>
-            {i18n.t(TR.troubleSignIn)}
-        </Text>
-    </>
+            <Text
+                style={[
+                    styles.troubleSigningIn,
+                    styles.troubleSigningInFlexBox,
+                ]}
+            >
+                {i18n.t(TR.troubleSignIn)}
+            </Text>
+        </>
+    );
 
     const LoadingScreen = () => {
-        return <>
-            <ActivityIndicator size="large" color={Color.white}/>
-            <Text style={styles.loadingText}>{i18n.t(TR.gettingReadyToAmazeYou)}</Text>
-        </>
-    }
-
+        return (
+            <>
+                <ActivityIndicator size="large" color={Color.white} />
+                <Text style={styles.loadingText}>
+                    {i18n.t(TR.gettingReadyToAmazeYou)}
+                </Text>
+            </>
+        );
+    };
 
     return (
         <OLinearBackground>
-            <View style={[styles.layoutContainer, isLoading ? {justifyContent: 'center'} : null]}>
-                <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)}/>
+            <View
+                style={[
+                    styles.layoutContainer,
+                    isLoading ? { justifyContent: "center" } : null,
+                ]}
+            >
+                <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)} />
 
-                {isLoading && <LoadingScreen/>}
-                {!isLoading && !isAuthenticated(state) && <AuthScreen/>}
+                {isLoading && <LoadingScreen />}
+                {!isLoading && !isAuthenticated(state) && <AuthScreen />}
             </View>
-
         </OLinearBackground>
     );
 };
@@ -164,12 +188,11 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     layoutContainer: {
-        flexDirection: 'column',
-        alignItems: 'center',
+        flexDirection: "column",
+        alignItems: "center",
         flex: 1,
-        justifyContent: 'flex-end',
+        justifyContent: "flex-end",
     },
 });
-
 
 export default Welcome;
