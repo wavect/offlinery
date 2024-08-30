@@ -25,7 +25,6 @@ export interface EncounterControllerGetEncounterRequest {
 
 export interface EncounterControllerGetEncountersByUserRequest {
     userId: string;
-    id: number;
 }
 
 /**
@@ -58,9 +57,8 @@ export interface EncounterApiInterface {
 
     /**
      *
-     * @summary Get a encounters of user
-     * @param {string} userId
-     * @param {number} id Encounter ID
+     * @summary Get encounters of a user
+     * @param {string} userId User ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EncounterApiInterface
@@ -68,15 +66,15 @@ export interface EncounterApiInterface {
     encounterControllerGetEncountersByUserRaw(
         requestParameters: EncounterControllerGetEncountersByUserRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<EncounterPublicDTO>>;
+    ): Promise<runtime.ApiResponse<Array<EncounterPublicDTO>>>;
 
     /**
-     * Get a encounters of user
+     * Get encounters of a user
      */
     encounterControllerGetEncountersByUser(
         requestParameters: EncounterControllerGetEncountersByUserRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<EncounterPublicDTO>;
+    ): Promise<Array<EncounterPublicDTO>>;
 }
 
 /**
@@ -137,23 +135,16 @@ export class EncounterApi
     }
 
     /**
-     * Get a encounters of user
+     * Get encounters of a user
      */
     async encounterControllerGetEncountersByUserRaw(
         requestParameters: EncounterControllerGetEncountersByUserRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<EncounterPublicDTO>> {
+    ): Promise<runtime.ApiResponse<Array<EncounterPublicDTO>>> {
         if (requestParameters["userId"] == null) {
             throw new runtime.RequiredError(
                 "userId",
                 'Required parameter "userId" was null or undefined when calling encounterControllerGetEncountersByUser().',
-            );
-        }
-
-        if (requestParameters["id"] == null) {
-            throw new runtime.RequiredError(
-                "id",
-                'Required parameter "id" was null or undefined when calling encounterControllerGetEncountersByUser().',
             );
         }
 
@@ -163,15 +154,10 @@ export class EncounterApi
 
         const response = await this.request(
             {
-                path: `/encounter/{userId}`
-                    .replace(
-                        `{${"userId"}}`,
-                        encodeURIComponent(String(requestParameters["userId"])),
-                    )
-                    .replace(
-                        `{${"id"}}`,
-                        encodeURIComponent(String(requestParameters["id"])),
-                    ),
+                path: `/encounter/user/{userId}`.replace(
+                    `{${"userId"}}`,
+                    encodeURIComponent(String(requestParameters["userId"])),
+                ),
                 method: "GET",
                 headers: headerParameters,
                 query: queryParameters,
@@ -180,17 +166,17 @@ export class EncounterApi
         );
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
-            EncounterPublicDTOFromJSON(jsonValue),
+            jsonValue.map(EncounterPublicDTOFromJSON),
         );
     }
 
     /**
-     * Get a encounters of user
+     * Get encounters of a user
      */
     async encounterControllerGetEncountersByUser(
         requestParameters: EncounterControllerGetEncountersByUserRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<EncounterPublicDTO> {
+    ): Promise<Array<EncounterPublicDTO>> {
         const response = await this.encounterControllerGetEncountersByUserRaw(
             requestParameters,
             initOverrides,

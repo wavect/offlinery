@@ -4,6 +4,7 @@ import { LocationObject } from "expo-location";
 import React, { createContext, Dispatch, useContext, useReducer } from "react";
 import { Platform } from "react-native";
 import {
+    BlacklistedRegionDTO,
     BlacklistedRegionDTOLocationTypeEnum,
     CreateUserDTO,
     UserApi,
@@ -68,6 +69,20 @@ export interface MapRegion {
      */
     uiRadius?: number;
 }
+export const mapRegionToBlacklistedRegionDTO = (
+    region: MapRegion,
+): BlacklistedRegionDTO => {
+    return {
+        radius: region.radius,
+        location: {
+            type: BlacklistedRegionDTOLocationTypeEnum.Point,
+            coordinates: [
+                region.longitude, // idx 0
+                region.latitude, // idx 1
+            ],
+        },
+    };
+};
 
 export type ImageIdx = "0" | "1" | "2" | "3" | "4" | "5";
 
@@ -353,15 +368,9 @@ export const registerUser = async (
         genderDesire: state.genderDesire!,
         verificationStatus: state.verificationStatus,
         approachChoice: state.approachChoice,
-        blacklistedRegions: state.blacklistedRegions.map((r) => {
-            return {
-                radius: r.radius,
-                location: {
-                    type: BlacklistedRegionDTOLocationTypeEnum.Point,
-                    coordinates: [r.longitude, r.latitude],
-                },
-            };
-        }),
+        blacklistedRegions: state.blacklistedRegions.map((r) =>
+            mapRegionToBlacklistedRegionDTO(r),
+        ),
         approachFromTime: state.approachFromTime,
         approachToTime: state.approachToTime,
         bio: state.bio,

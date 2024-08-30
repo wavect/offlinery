@@ -13,21 +13,18 @@ import {
     EApproachChoice,
     Gender,
     getUserImagesForUpload,
+    mapRegionToBlacklistedRegionDTO,
     useUserContext,
 } from "../../context/UserContext";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { i18n, TR } from "../../localization/translate.service";
+import { getJwtHeader } from "../../utils/misc.utils";
 import { ROUTES } from "../routes";
 
 const userApi = new UserApi();
 const ProfileSettings = ({ navigation }) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
-
-    if (!state.id) {
-        // TODO REMOVE
-        dispatch({ type: EACTION_USER.SET_ID, payload: 1 });
-    }
 
     const setFirstName = async (firstName: string) => {
         dispatch({ type: EACTION_USER.SET_FIRSTNAME, payload: firstName });
@@ -67,20 +64,23 @@ const ProfileSettings = ({ navigation }) => {
                 id: state.id!,
                 user: {
                     firstName: state.firstName,
-                    approachFromTime: state.approachFromTime,
-                    approachToTime: state.approachToTime,
+                    approachFromTime: state.approachFromTime.toISOString(),
+                    approachToTime: state.approachToTime.toISOString(),
                     bio: state.bio,
                     birthDay: state.birthDay,
                     gender: state.gender,
                     genderDesire: state.genderDesire,
-                    blacklistedRegions: state.blacklistedRegions,
+                    blacklistedRegions: state.blacklistedRegions.map((r) =>
+                        mapRegionToBlacklistedRegionDTO(r),
+                    ),
                 },
                 images: getUserImagesForUpload(state),
             };
 
-            await userApi.userControllerUpdateUser(request, {
-                headers: { Authorization: `Bearer ${state.jwtAccessToken}` },
-            });
+            await userApi.userControllerUpdateUser(
+                request,
+                getJwtHeader(state.jwtAccessToken),
+            );
 
             navigation.navigate(ROUTES.MainTabView, {
                 screen: ROUTES.Main.FindPeople,
@@ -99,8 +99,8 @@ const ProfileSettings = ({ navigation }) => {
     ];
 
     const SettingsButton = (props: {
-        onPress;
-        icon;
+        onPress: any;
+        icon: any;
         text: string;
         style?: any;
     }) => {
