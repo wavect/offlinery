@@ -28,14 +28,9 @@ export class EncounterController {
         return encounter.convertToPublicDTO();
     }
 
-    @Get(":userId")
-    @ApiOperation({ summary: "Get a encounters of user" })
-    @ApiParam({ name: "id", type: "number", description: "Encounter ID" })
-    @ApiResponse({
-        status: 200,
-        description: "The encounter has been successfully retrieved.",
-        type: EncounterPublicDTO,
-    })
+    @Get("user/:userId")
+    @ApiOperation({ summary: "Get encounters of a user" })
+    @ApiParam({ name: "userId", type: "string", description: "User ID" })
     @ApiResponse({ status: 404, description: "Encounter not found." })
     async getEncountersByUser(
         @Param("userId") userId: string,

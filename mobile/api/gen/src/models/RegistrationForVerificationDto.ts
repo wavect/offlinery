@@ -15,37 +15,37 @@
 /**
  *
  * @export
- * @interface RegistrationForVerificationDto
+ * @interface RegistrationForVerificationDTO
  */
-export interface RegistrationForVerificationDto {
+export interface RegistrationForVerificationDTO {
     /**
      *
      * @type {string}
-     * @memberof RegistrationForVerificationDto
+     * @memberof RegistrationForVerificationDTO
      */
     email: string;
 }
 
 /**
- * Check if a given object implements the RegistrationForVerificationDto interface.
+ * Check if a given object implements the RegistrationForVerificationDTO interface.
  */
-export function instanceOfRegistrationForVerificationDto(
+export function instanceOfRegistrationForVerificationDTO(
     value: object,
-): value is RegistrationForVerificationDto {
+): value is RegistrationForVerificationDTO {
     if (!("email" in value) || value["email"] === undefined) return false;
     return true;
 }
 
-export function RegistrationForVerificationDtoFromJSON(
+export function RegistrationForVerificationDTOFromJSON(
     json: any,
-): RegistrationForVerificationDto {
-    return RegistrationForVerificationDtoFromJSONTyped(json, false);
+): RegistrationForVerificationDTO {
+    return RegistrationForVerificationDTOFromJSONTyped(json, false);
 }
 
-export function RegistrationForVerificationDtoFromJSONTyped(
+export function RegistrationForVerificationDTOFromJSONTyped(
     json: any,
     ignoreDiscriminator: boolean,
-): RegistrationForVerificationDto {
+): RegistrationForVerificationDTO {
     if (json == null) {
         return json;
     }
@@ -54,8 +54,8 @@ export function RegistrationForVerificationDtoFromJSONTyped(
     };
 }
 
-export function RegistrationForVerificationDtoToJSON(
-    value?: RegistrationForVerificationDto | null,
+export function RegistrationForVerificationDTOToJSON(
+    value?: RegistrationForVerificationDTO | null,
 ): any {
     if (value == null) {
         return value;

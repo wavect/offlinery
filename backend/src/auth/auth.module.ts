@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { UserModule } from "../user/user.module";
 import { TYPED_ENV } from "../utils/env.utils";
@@ -9,6 +10,7 @@ import { AuthService } from "./auth.service";
     controllers: [AuthController],
     providers: [AuthService],
     imports: [
+        ConfigModule.forRoot(),
         UserModule,
         JwtModule.register({
             global: true,

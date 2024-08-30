@@ -22,8 +22,9 @@ import {
 } from "../../context/UserContext";
 import { BorderRadius, Color, Subtitle } from "../../GlobalStyles";
 import { i18n, TR } from "../../localization/translate.service";
+import { getJwtHeader } from "../../utils/misc.utils";
 
-const HeatMap = ({ navigation }) => {
+const HeatMap = () => {
     const { state, dispatch } = useUserContext();
     const [activeRegionIndex, setActiveRegionIndex] = React.useState<
         number | null
@@ -81,11 +82,7 @@ const HeatMap = ({ navigation }) => {
                             blacklistedRegions: regions,
                         },
                     },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${state.jwtAccessToken}`,
-                        },
-                    },
+                    getJwtHeader(state.jwtAccessToken),
                 );
             } catch (error) {
                 console.error("Error updating blacklisted regions:", error);
