@@ -6,6 +6,7 @@ import helmet from "helmet";
 import * as path from "path";
 import { AppModule } from "./app.module";
 import { NotificationNavigateUserDTO } from "./DTOs/notification-navigate-user.dto";
+import { validateEnv } from "./utils/env.utils";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
@@ -17,6 +18,7 @@ async function bootstrap() {
         },
     });
     setupSwagger(app);
+    setupTypedEnvs();
 
     // @dev https://docs.nestjs.com/techniques/versioning
     app.enableVersioning({
@@ -52,6 +54,16 @@ const setupSwagger = (app: INestApplication) => {
     writeFileSync(outputPath, JSON.stringify(document), { encoding: "utf8" });
 
     SwaggerModule.setup("api", app, document);
+};
+
+/** @dev TypedENVs for better development experience. If a required env is not defined then backend should throw an error. */
+const setupTypedEnvs = () => {
+    try {
+        validateEnv();
+    } catch (error) {
+        console.error(error);
+        process.exit(1);
+    }
 };
 
 bootstrap()
