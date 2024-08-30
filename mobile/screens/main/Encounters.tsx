@@ -20,6 +20,7 @@ import {
 import { useUserContext } from "../../context/UserContext";
 import { i18n, TR } from "../../localization/translate.service";
 import { IEncounterProfile } from "../../types/PublicProfile.types";
+import { getJwtHeader } from "../../utils/misc.utils";
 
 const Encounters = ({ navigation }) => {
     const { state: encounterState, dispatch } = useEncountersContext();
@@ -42,11 +43,7 @@ const Encounters = ({ navigation }) => {
                         {
                             userId: userState.id!,
                         },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${userState.jwtAccessToken}`,
-                            },
-                        },
+                        getJwtHeader(userState.jwtAccessToken ?? ""),
                     );
                 const mappedEncounters: IEncounterProfile[] = [];
 

@@ -17,6 +17,7 @@ import {
 } from "../../context/UserContext";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { i18n, TR } from "../../localization/translate.service";
+import { getJwtHeader } from "../../utils/misc.utils";
 import { ROUTES } from "../routes";
 
 const userApi = new UserApi();
@@ -78,9 +79,10 @@ const ProfileSettings = ({ navigation }) => {
                 images: getUserImagesForUpload(state),
             };
 
-            await userApi.userControllerUpdateUser(request, {
-                headers: { Authorization: `Bearer ${state.jwtAccessToken}` },
-            });
+            await userApi.userControllerUpdateUser(
+                request,
+                getJwtHeader(state.jwtAccessToken ?? ""),
+            );
 
             navigation.navigate(ROUTES.MainTabView, {
                 screen: ROUTES.Main.FindPeople,
