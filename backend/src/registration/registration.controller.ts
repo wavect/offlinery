@@ -1,4 +1,11 @@
-import { Body, Controller, HttpStatus, Post, Put } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    HttpStatus,
+    Logger,
+    Post,
+    Put,
+} from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Public } from "src/auth/auth.guard";
 import { RegistrationForVerificationDTO } from "src/DTOs/registration-for-verification.dto";
@@ -11,6 +18,8 @@ import { RegistrationService } from "./registration.service";
     path: "registration",
 })
 export class RegistrationController {
+    private readonly logger = new Logger(RegistrationController.name);
+
     constructor(private readonly registrationService: RegistrationService) {}
 
     @Post()
@@ -33,6 +42,7 @@ export class RegistrationController {
     async registerUserForEmailVerification(
         @Body() emailDto: RegistrationForVerificationDTO,
     ): Promise<RegistrationForVerificationDTO> {
+        this.logger.debug(`User registers his email: ${emailDto.email}`);
         const email = await this.registrationService.registerPendingUser(
             emailDto.email,
         );

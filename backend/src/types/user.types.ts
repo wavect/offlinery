@@ -21,6 +21,12 @@ export enum EVerificationStatus {
     NOT_NEEDED = "not_needed",
 }
 
+/** @dev Dedicated Enum for email verification for separation of concerns */
+export enum EEmailVerificationStatus {
+    VERIFIED = "verified",
+    PENDING = "pending",
+}
+
 export enum EIncidentType {
     Disrespectful = "Disrespectful",
     SexualHarassment = "Sexual harassment",

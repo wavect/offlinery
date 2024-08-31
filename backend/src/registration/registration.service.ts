@@ -1,13 +1,14 @@
 import { MailerService } from "@nestjs-modules/mailer";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { EVerificationStatus } from "src/types/user.types";
+import { EEmailVerificationStatus } from "src/types/user.types";
 import { User } from "src/user/user.entity";
 import { Repository } from "typeorm";
 import { PendingUser } from "./pending-user/pending-user.entity";
 
 @Injectable()
 export class RegistrationService {
+    private readonly logger = new Logger(RegistrationService.name);
     readonly VERIFICATION_CODE_EXPIRATION_IN_MIN = 15;
 
     constructor(
@@ -22,9 +23,7 @@ export class RegistrationService {
         try {
             const existingPendingUser = await this.pendingUserRepo.findOneBy({
                 email,
-                verificationStatus:
-                    EVerificationStatus.VERIFIED ||
-                    EVerificationStatus.NOT_NEEDED,
+                verificationStatus: EEmailVerificationStatus.VERIFIED,
             });
             const existingVerifiedUser = await this.userRepo.findOneBy({
                 email,
@@ -39,24 +38,24 @@ export class RegistrationService {
             if (!pendingUser) {
                 pendingUser = new PendingUser();
                 pendingUser.email = email;
-                pendingUser.verificationStatus = EVerificationStatus.PENDING;
+                pendingUser.verificationStatus =
+                    EEmailVerificationStatus.PENDING;
             }
 
             pendingUser.verificationCodeIssuedAt = new Date();
 
             let verificationNumber: string = "";
             for (let index = 0; index <= 5; index++) {
-                const randomNumber = Math.floor(
-                    Math.random() * (9 - 0) + 0,
-                ).toString();
+                const randomNumber = Math.floor(Math.random() * 9).toString();
 
                 verificationNumber = verificationNumber.concat(randomNumber);
             }
 
+            // Send email before saving as pending user
+            await this.sendMail(pendingUser.email, verificationNumber);
+
             pendingUser.verificationCode = verificationNumber;
             await this.pendingUserRepo.save(pendingUser);
-
-            await this.sendMail(pendingUser.email, verificationNumber);
 
             return pendingUser.email;
         } catch (error) {
@@ -82,7 +81,7 @@ export class RegistrationService {
                 throw new Error("Verification code has expired.");
             }
 
-            user.verificationStatus = EVerificationStatus.VERIFIED;
+            user.verificationStatus = EEmailVerificationStatus.VERIFIED;
             await this.pendingUserRepo.save(user);
         } catch (error) {
             console.error(error);
@@ -91,18 +90,14 @@ export class RegistrationService {
     }
 
     private async sendMail(to: string, verificationCode: string) {
-        try {
-            await this.mailService.sendMail({
-                to,
-                subject: "Welcome to Offlinery! Confirm your Email",
-                template: "../../mail/templates/email-verification.hbs",
-                context: {
-                    name: to,
-                    verificationCode,
-                },
-            });
-        } catch (error) {
-            console.error(error);
-        }
+        await this.mailService.sendMail({
+            to,
+            subject: "Welcome to Offlinery! Confirm your Email",
+            template: "../../mail/templates/email-verification.hbs",
+            context: {
+                name: to,
+                verificationCode,
+            },
+        });
     }
 }
