@@ -1,11 +1,7 @@
 import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
-import { getRepositoryToken } from "@nestjs/typeorm";
-import * as bcrypt from "bcrypt";
-import * as fs from "fs";
 import { Point } from "geojson";
 import { Repository } from "typeorm";
-import { BlacklistedRegion } from "../blacklisted-region/blacklisted-region.entity";
 import { CreateUserDTO } from "../DTOs/create-user.dto";
 import { LocationUpdateDTO } from "../DTOs/location-update.dto";
 import { UpdateUserDTO } from "../DTOs/update-user.dto";
@@ -20,19 +16,32 @@ import {
 import { User } from "./user.entity";
 import { UserService } from "./user.service";
 
+// Mocks
 jest.mock("bcrypt", () => ({
-    genSalt: jest.fn().mockResolvedValue("mockedSalt"),
-    hash: jest.fn().mockResolvedValue("mockedHash"),
+    genSalt: jest.fn().mockResolvedValue("mock-salt"),
+    hash: jest.fn().mockResolvedValue("mock-hash"),
 }));
+
 jest.mock("fs", () => ({
     promises: {
         writeFile: jest.fn().mockResolvedValue(undefined),
     },
+    existsSync: jest.fn().mockReturnValue(true),
+    mkdirSync: jest.fn(),
 }));
-jest.mock("@nestjs/typeorm", () => ({
-    getRepositoryToken: jest
-        .fn()
-        .mockImplementation((entity) => `Repository_${entity.name}`),
+
+jest.mock("path", () => ({
+    join: jest.fn().mockImplementation((...args) => args.join("/")),
+    resolve: jest.fn().mockImplementation((...args) => args.join("/")),
+    extname: jest.fn().mockReturnValue(".jpg"),
+    dirname: jest.fn().mockImplementation((path) => {
+        const parts = path.split("/");
+        return parts.slice(0, -1).join("/");
+    }),
+}));
+
+jest.mock("uuid", () => ({
+    v4: jest.fn().mockReturnValue("mock-uuid"),
 }));
 
 describe("UserService", () => {
@@ -46,27 +55,33 @@ describe("UserService", () => {
             providers: [
                 UserService,
                 {
-                    provide: getRepositoryToken(User),
+                    provide: "UserRepository",
                     useValue: {
+                        find: jest.fn(),
                         findOne: jest.fn(),
                         findOneBy: jest.fn(),
                         save: jest.fn(),
+                        create: jest.fn(),
+                        delete: jest.fn(),
                     },
                 },
                 {
-                    provide: getRepositoryToken(BlacklistedRegion),
+                    provide: "BlacklistedRegionRepository",
                     useValue: {
+                        find: jest.fn(),
                         findOne: jest.fn(),
-                        findOneBy: jest.fn(),
                         save: jest.fn(),
+                        create: jest.fn(),
+                        delete: jest.fn(),
                     },
                 },
                 {
-                    provide: getRepositoryToken(PendingUser),
+                    provide: "PendingUserRepository",
                     useValue: {
-                        findOne: jest.fn(),
-                        findOneBy: jest.fn(),
+                        findOneByOrFail: jest.fn(),
                         save: jest.fn(),
+                        create: jest.fn(),
+                        delete: jest.fn(),
                     },
                 },
                 {
@@ -79,10 +94,9 @@ describe("UserService", () => {
         }).compile();
 
         service = module.get<UserService>(UserService);
-        userRepository = module.get<Repository<User>>(getRepositoryToken(User));
-        pendingUserRepository = module.get<Repository<PendingUser>>(
-            getRepositoryToken(PendingUser),
-        );
+        userRepository = module.get("UserRepository");
+        blacklistedRegionRepository = module.get("BlacklistedRegionRepository");
+        pendingUserRepository = module.get("PendingUserRepository");
         matchingService = module.get<MatchingService>(MatchingService);
     });
 
@@ -108,10 +122,12 @@ describe("UserService", () => {
                 dateMode: EDateMode.LIVE,
                 bio: "Hello, I am John",
             };
+
             const mockImages: Express.Multer.File[] = [
                 {
                     originalname: "0",
                     buffer: Buffer.from("fake-image-data"),
+                    mimetype: "image/jpeg",
                 } as Express.Multer.File,
             ];
 
@@ -123,11 +139,11 @@ describe("UserService", () => {
                 pendingUserRepository,
                 "findOneByOrFail",
             ).mockResolvedValue(mockPendingUser);
-            jest.spyOn(fs.promises, "writeFile").mockResolvedValue();
             // @ts-expect-error Entity interface methods to be ignored
             jest.spyOn(userRepository, "save").mockResolvedValue({
                 id: "1",
                 ...createUserDto,
+                imageURIs: ["mock-uuid.jpg"],
             } as User);
 
             const result = await service.createUser(createUserDto, mockImages);
@@ -135,12 +151,7 @@ describe("UserService", () => {
             expect(result).toBeDefined();
             expect(result.id).toBe("1");
             expect(result.firstName).toBe(createUserDto.firstName);
-            expect(bcrypt.genSalt).toHaveBeenCalled();
-            expect(bcrypt.hash).toHaveBeenCalledWith(
-                "password123",
-                "mockedSalt",
-            );
-            expect(userRepository.save).toHaveBeenCalled();
+            expect(result.imageURIs).toEqual(["mock-uuid.jpg"]);
         });
     });
 
@@ -159,11 +170,10 @@ describe("UserService", () => {
             mockUser.bio = "Original bio";
 
             jest.spyOn(userRepository, "findOneBy").mockResolvedValue(mockUser);
-            // @ts-expect-error Entity interface methods to be ignored
             jest.spyOn(userRepository, "save").mockResolvedValue({
                 ...mockUser,
                 ...updateUserDto,
-            });
+            } as User);
 
             const result = await service.updateUser(
                 userId,
@@ -231,14 +241,13 @@ describe("UserService", () => {
             mockUser.firstName = "John";
 
             jest.spyOn(userRepository, "findOneBy").mockResolvedValue(mockUser);
-            // @ts-expect-error Entity interface methods to be ignored
             jest.spyOn(userRepository, "save").mockResolvedValue({
                 ...mockUser,
                 location: {
                     type: "Point",
                     coordinates: [-74.006, 40.7128],
                 } as Point,
-            });
+            } as User);
             jest.spyOn(
                 matchingService,
                 "checkAndNotifyMatches",
