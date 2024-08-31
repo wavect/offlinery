@@ -1,9 +1,9 @@
+import { Subtitle } from "@/GlobalStyles";
+import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import { Subtitle } from "../../GlobalStyles";
-import { i18n, TR } from "../../localization/translate.service";
 import { ROUTES } from "../routes";
 
 const SafetyCheck = ({ navigation }) => {

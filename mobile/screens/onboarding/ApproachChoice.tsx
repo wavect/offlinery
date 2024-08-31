@@ -1,14 +1,14 @@
-import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Color, Subtitle } from "../../GlobalStyles";
+import { Color, Subtitle } from "@/GlobalStyles";
 import {
     UserApproachChoiceEnum,
     UserVerificationStatusEnum,
-} from "../../api/gen/src";
-import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import { EACTION_USER, useUserContext } from "../../context/UserContext";
-import { TR, i18n } from "../../localization/translate.service";
+} from "@/api/gen/src";
+import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import { EACTION_USER, useUserContext } from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
+import * as React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { ROUTES } from "../routes";
 
 const ApproachChoice = ({ navigation }) => {

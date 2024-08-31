@@ -1,13 +1,13 @@
+import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import { EACTION_USER, useUserContext } from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
 import RNDateTimePicker, {
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
-import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import { EACTION_USER, useUserContext } from "../../context/UserContext";
-import { i18n, TR } from "../../localization/translate.service";
 import { ROUTES } from "../routes";
 
 const Birthday = ({ navigation }) => {

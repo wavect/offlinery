@@ -1,4 +1,4 @@
-import { EncounterStatusEnum } from "../api/gen/src";
+import { EncounterStatusEnum } from "@/api/gen/src";
 
 export interface IEncounterProfile {
     encounterId: string;

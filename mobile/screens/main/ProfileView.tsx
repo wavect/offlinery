@@ -1,3 +1,7 @@
+import { Color } from "@/GlobalStyles";
+import { UserPublicDTO } from "@/api/gen/src";
+import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import { TR, i18n } from "@/localization/translate.service";
 import { RouteProp } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
 import {
@@ -12,10 +16,6 @@ import {
 } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import { Color } from "../../GlobalStyles";
-import { i18n, TR } from "../../localization/translate.service";
-import { UserPublicDTO } from "../../types/PublicProfile.types";
 
 interface IProfileViewProps {
     route?: RouteProp<

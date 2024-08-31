@@ -1,3 +1,4 @@
+import { Subtitle, Title } from "@/GlobalStyles";
 import * as React from "react";
 import {
     KeyboardAvoidingView,
@@ -6,7 +7,6 @@ import {
     Text,
     View,
 } from "react-native";
-import { Subtitle, Title } from "../../GlobalStyles";
 import styles from "./OPageContainer.styles";
 
 interface IOPageContainerProps {

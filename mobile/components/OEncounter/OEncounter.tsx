@@ -1,16 +1,16 @@
+import { Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { EncounterStatusEnum } from "@/api/gen/src";
+import {
+    EACTION_ENCOUNTERS,
+    useEncountersContext,
+} from "@/context/EncountersContext";
+import { TR, i18n } from "@/localization/translate.service";
+import { ROUTES } from "@/screens/routes";
+import { IEncounterProfile } from "@/types/PublicProfile.types";
 import * as React from "react";
 import { useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import { EncounterStatusEnum } from "../../api/gen/src";
-import {
-    EACTION_ENCOUNTERS,
-    useEncountersContext,
-} from "../../context/EncountersContext";
-import { Color, FontFamily, FontSize } from "../../GlobalStyles";
-import { i18n, TR } from "../../localization/translate.service";
-import { ROUTES } from "../../screens/routes";
-import { IEncounterProfile } from "../../types/PublicProfile.types";
 
 interface ISingleEncounterProps {
     encounterProfile: IEncounterProfile;

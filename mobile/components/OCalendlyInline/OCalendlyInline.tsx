@@ -1,6 +1,6 @@
+import { i18n, TR } from "@/localization/translate.service";
 import * as React from "react";
 import { WebView } from "react-native-webview";
-import { i18n, TR } from "../../localization/translate.service";
 import {
     formatCalendlyUrl,
     IframeTitle,

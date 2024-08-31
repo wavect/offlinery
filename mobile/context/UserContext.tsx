@@ -1,8 +1,3 @@
-import * as ImagePicker from "expo-image-picker";
-import { ImagePickerAsset } from "expo-image-picker";
-import { LocationObject } from "expo-location";
-import React, { createContext, Dispatch, useContext, useReducer } from "react";
-import { Platform } from "react-native";
 import {
     BlacklistedRegionDTO,
     BlacklistedRegionDTOLocationTypeEnum,
@@ -14,8 +9,13 @@ import {
     UserGenderEnum,
     UserPublicDTO,
     UserVerificationStatusEnum,
-} from "../api/gen/src";
-import { getAge } from "../utils/date.utils";
+} from "@/api/gen/src";
+import { getAge } from "@/utils/date.utils";
+import * as ImagePicker from "expo-image-picker";
+import { ImagePickerAsset } from "expo-image-picker";
+import { LocationObject } from "expo-location";
+import React, { createContext, Dispatch, useContext, useReducer } from "react";
+import { Platform } from "react-native";
 
 export interface IUserData {
     /** @dev Backend assigned ID for registered users */

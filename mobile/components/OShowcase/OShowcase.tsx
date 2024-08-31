@@ -1,7 +1,7 @@
+import { Color } from "@/GlobalStyles";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { Text, View } from "react-native";
-import { Color } from "../../GlobalStyles";
 import oShowcaseStyles from "./OShowcase.styles";
 
 interface IOShowcaseProps {

@@ -1,3 +1,8 @@
+import { BorderRadius, Color, Subtitle } from "@/GlobalStyles";
+import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import { EACTION_USER, MapRegion, useUserContext } from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
 import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import * as Location from "expo-location";
@@ -13,15 +18,6 @@ import MapView, {
     PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
 } from "react-native-maps";
-import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import {
-    EACTION_USER,
-    MapRegion,
-    useUserContext,
-} from "../../context/UserContext";
-import { BorderRadius, Color, Subtitle } from "../../GlobalStyles";
-import { i18n, TR } from "../../localization/translate.service";
 import { ROUTES } from "../routes";
 
 const DontApproachMeHere = ({ navigation }) => {

@@ -1,3 +1,14 @@
+import { Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { EncounterApi } from "@/api/gen/src";
+import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import {
+    EACTION_ENCOUNTERS,
+    useEncountersContext,
+} from "@/context/EncountersContext";
+import { useUserContext } from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
+import { IEncounterProfile } from "@/types/PublicProfile.types";
+import { getJwtHeader } from "@/utils/misc.utils";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import * as React from "react";
 import { useState } from "react";
@@ -9,19 +20,9 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import { Color, FontFamily, FontSize } from "../../GlobalStyles";
-import { EncounterApi } from "../../api/gen/src";
 import OEncounter from "../../components/OEncounter/OEncounter";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import {
-    EACTION_ENCOUNTERS,
-    useEncountersContext,
-} from "../../context/EncountersContext";
-import { useUserContext } from "../../context/UserContext";
-import { i18n, TR } from "../../localization/translate.service";
-import { IEncounterProfile } from "../../types/PublicProfile.types";
-import { getJwtHeader } from "../../utils/misc.utils";
 
+const api = new EncounterApi();
 const Encounters = ({ navigation }) => {
     const { state: encounterState, dispatch } = useEncountersContext();
     const { state: userState } = useUserContext();
@@ -37,7 +38,6 @@ const Encounters = ({ navigation }) => {
     React.useEffect(() => {
         async function fetchEncounters() {
             try {
-                const api = new EncounterApi();
                 const encounters =
                     await api.encounterControllerGetEncountersByUser(
                         {
@@ -54,7 +54,7 @@ const Encounters = ({ navigation }) => {
                     mappedEncounters.push({
                         encounterId: encounter.id,
                         firstName: otherUser.firstName,
-                        age: otherUser.age.toString(),
+                        age: otherUser.age,
                         bio: otherUser.bio,
                         imageURIs: otherUser.imageURIs,
                         personalRelationship: {

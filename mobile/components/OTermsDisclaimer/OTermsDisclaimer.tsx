@@ -1,8 +1,8 @@
+import { FontFamily, FontSize } from "@/GlobalStyles";
+import { TR, i18n } from "@/localization/translate.service";
 import { A } from "@expo/html-elements";
 import * as React from "react";
 import { StyleProp, StyleSheet, Text, ViewStyle } from "react-native";
-import { FontFamily, FontSize } from "../../GlobalStyles";
-import { i18n, TR } from "../../localization/translate.service";
 
 interface IOTermsDisclaimerProps {
     style?: StyleProp<ViewStyle>;

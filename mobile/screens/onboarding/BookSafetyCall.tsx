@@ -1,15 +1,15 @@
-import * as React from "react";
-import { useState } from "react";
-import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
-import OCalendlyInline from "../../components/OCalendlyInline/OCalendlyInline";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
+import { Color } from "@/GlobalStyles";
+import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import OCalendlyInline from "@/components/OCalendlyInline/OCalendlyInline";
+import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
     EACTION_USER,
     registerUser,
     useUserContext,
-} from "../../context/UserContext";
-import { Color } from "../../GlobalStyles";
-import { i18n, TR } from "../../localization/translate.service";
+} from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
+import * as React from "react";
+import { useState } from "react";
 import { ROUTES } from "../routes";
 
 const BookSafetyCall = ({ navigation }) => {

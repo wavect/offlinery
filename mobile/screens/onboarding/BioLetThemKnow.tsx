@@ -1,18 +1,18 @@
-import * as React from "react";
-import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import OTeaserProfilePreview from "../../components/OTeaserProfilePreview/OTeaserProfilePreview";
-import { OTextInput } from "../../components/OTextInput/OTextInput";
+import { Subtitle } from "@/GlobalStyles";
+import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
+import { OTextInput } from "@/components/OTextInput/OTextInput";
 import {
     EACTION_USER,
     getPublicProfileFromUserData,
     registerUser,
     useUserContext,
-} from "../../context/UserContext";
-import { Subtitle } from "../../GlobalStyles";
-import { i18n, TR } from "../../localization/translate.service";
+} from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
+import * as React from "react";
+import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { ROUTES } from "../routes";
 
 const MAX_LENGTH_BIO = 60;

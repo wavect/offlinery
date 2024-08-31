@@ -1,16 +1,16 @@
-import * as Location from "expo-location";
-import { LocationAccuracy } from "expo-location";
-import { useState } from "react";
-import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
-import { Color } from "../../GlobalStyles";
+import { Color } from "@/GlobalStyles";
 import {
     UpdateUserDTO,
     UserApi,
     UserApproachChoiceEnum,
     UserDateModeEnum,
-} from "../../api/gen/src";
-import { EACTION_USER, useUserContext } from "../../context/UserContext";
-import { TR, i18n } from "../../localization/translate.service";
+} from "@/api/gen/src";
+import { EACTION_USER, useUserContext } from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
+import * as Location from "expo-location";
+import { LocationAccuracy } from "expo-location";
+import { useState } from "react";
+import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
 
 interface IOGoLiveToggleProps {
     style?: StyleProp<ViewStyle>;

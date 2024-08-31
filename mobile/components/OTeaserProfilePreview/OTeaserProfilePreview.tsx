@@ -1,3 +1,6 @@
+import { Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { UserPublicDTO } from "@/api/gen/src";
+import { ROUTES } from "@/screens/routes";
 import * as React from "react";
 import {
     Image,
@@ -9,13 +12,10 @@ import {
     ViewStyle,
 } from "react-native";
 import { GestureResponderEvent } from "react-native/Libraries/Types/CoreEventTypes";
-import { Color, FontFamily, FontSize } from "../../GlobalStyles";
-import { ROUTES } from "../../screens/routes";
-import { UserPublicDTO } from "../../types/PublicProfile.types";
 
 interface IOTeaserProfileProps {
     prefixText?: string;
-    publicProfile: UserPublicDTO;
+    publicProfile: Omit<UserPublicDTO, "id">;
     showOpenProfileButton: boolean;
     secondButton?: {
         onPress: (event: GestureResponderEvent) => void;

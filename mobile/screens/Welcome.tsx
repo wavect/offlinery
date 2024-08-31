@@ -1,14 +1,14 @@
+import { Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
+import { OShowcase } from "@/components/OShowcase/OShowcase";
+import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
+import { isAuthenticated, useUserContext } from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
 import { useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { Color, FontFamily, FontSize } from "../GlobalStyles";
-import { OButtonWide } from "../components/OButtonWide/OButtonWide";
-import { OLinearBackground } from "../components/OLinearBackground/OLinearBackground";
-import { OShowcase } from "../components/OShowcase/OShowcase";
-import { OTermsDisclaimer } from "../components/OTermsDisclaimer/OTermsDisclaimer";
-import { isAuthenticated, useUserContext } from "../context/UserContext";
-import { i18n, TR } from "../localization/translate.service";
 import { ROUTES } from "./routes";
 
 const Welcome = ({ navigation }) => {

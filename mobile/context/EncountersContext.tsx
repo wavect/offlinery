@@ -1,6 +1,6 @@
+import { EncounterStatusEnum, UserPublicDTO } from "@/api/gen/src";
+import { IEncounterProfile } from "@/types/PublicProfile.types";
 import React, { createContext, Dispatch, useContext, useReducer } from "react";
-import { EncounterStatusEnum, UserPublicDTO } from "../api/gen/src";
-import { IEncounterProfile } from "../types/PublicProfile.types";
 
 export interface IEncounters {
     encounters: IEncounterProfile[];

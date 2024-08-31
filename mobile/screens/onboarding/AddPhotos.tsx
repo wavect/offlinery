@@ -1,19 +1,19 @@
+import { BorderRadius, Color } from "@/GlobalStyles";
+import { BASE_PATH } from "@/api/gen/src";
+import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import {
+    EACTION_USER,
+    IUserAction,
+    IUserData,
+    ImageIdx,
+    useUserContext,
+} from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
-import { BorderRadius, Color } from "../../GlobalStyles";
-import { BASE_PATH } from "../../api/gen/src";
-import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import {
-    EACTION_USER,
-    ImageIdx,
-    IUserAction,
-    IUserData,
-    useUserContext,
-} from "../../context/UserContext";
-import { i18n, TR } from "../../localization/translate.service";
 import { ROUTES } from "../routes";
 
 interface IPhotoContainerProps {

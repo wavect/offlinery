@@ -1,3 +1,4 @@
+import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
@@ -9,7 +10,6 @@ import {
     View,
     ViewStyle,
 } from "react-native";
-import { BorderRadius, Color, FontFamily, FontSize } from "../../GlobalStyles";
 
 interface IOTextInputWideProps {
     value: string;

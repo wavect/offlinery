@@ -1,22 +1,23 @@
-import * as React from "react";
-import { useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
-import { Dropdown } from "react-native-element-dropdown";
-import { Color, FontFamily, FontSize } from "../../GlobalStyles";
+import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import {
     CreateUserReportDTO,
     CreateUserReportDTOIncidentTypeEnum,
     UserReportsApi,
-} from "../../api/gen/src";
-import { OCheckbox } from "../../components/OCheckbox/OCheckbox";
-import OEncounter from "../../components/OEncounter/OEncounter";
-import { OTextInput } from "../../components/OTextInput/OTextInput";
+} from "@/api/gen/src";
+import { OCheckbox } from "@/components/OCheckbox/OCheckbox";
+import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import { OTextInput } from "@/components/OTextInput/OTextInput";
 import {
     EACTION_ENCOUNTERS,
     useEncountersContext,
-} from "../../context/EncountersContext";
-import { useUserContext } from "../../context/UserContext";
-import { i18n, TR } from "../../localization/translate.service";
+} from "@/context/EncountersContext";
+import { useUserContext } from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
+import * as React from "react";
+import { useState } from "react";
+import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
+import OEncounter from "../../components/OEncounter/OEncounter";
 
 const reportApi = new UserReportsApi();
 const ReportEncounter = ({ route, navigation }) => {
@@ -56,10 +57,12 @@ const ReportEncounter = ({ route, navigation }) => {
                 keepReporterInTheLoop: keepMeInTheLoop,
                 incidentType: incidentType!,
                 reportedUserId: personToReport.id, // Assuming personToReport has an id field
-                reportingUserId: state.id!, // You need to provide the current user's ID here
             };
 
-            await reportApi.userReportControllerCreate({ createUserReportDTO });
+            await reportApi.userReportControllerCreate({
+                userId: state.id!,
+                createUserReportDTO,
+            });
 
             dispatch({
                 type: EACTION_ENCOUNTERS.SET_REPORTED,

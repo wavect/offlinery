@@ -1,27 +1,27 @@
+import { FontFamily, FontSize } from "@/GlobalStyles";
+import {
+    UserApi,
+    UserApproachChoiceEnum,
+    UserControllerUpdateUserRequest,
+    UserGenderEnum,
+} from "@/api/gen/src";
+import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import { OTextInput } from "@/components/OTextInput/OTextInput";
+import {
+    EACTION_USER,
+    getUserImagesForUpload,
+    mapRegionToBlacklistedRegionDTO,
+    useUserContext,
+} from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
+import { getJwtHeader } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import { FontFamily, FontSize } from "../../GlobalStyles";
-import {
-    UserApi,
-    UserApproachChoiceEnum,
-    UserControllerUpdateUserRequest,
-    UserGenderEnum,
-} from "../../api/gen/src";
-import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import { OTextInput } from "../../components/OTextInput/OTextInput";
-import {
-    EACTION_USER,
-    getUserImagesForUpload,
-    mapRegionToBlacklistedRegionDTO,
-    useUserContext,
-} from "../../context/UserContext";
-import { TR, i18n } from "../../localization/translate.service";
-import { getJwtHeader } from "../../utils/misc.utils";
 import { ROUTES } from "../routes";
 
 const userApi = new UserApi();

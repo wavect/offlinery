@@ -1,8 +1,8 @@
+import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
+import { OShowcase } from "@/components/OShowcase/OShowcase";
+import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
 import { StyleSheet, View } from "react-native";
-import { OLinearBackground } from "../components/OLinearBackground/OLinearBackground";
-import { OShowcase } from "../components/OShowcase/OShowcase";
-import { i18n, TR } from "../localization/translate.service";
 
 const Splash = () => {
     return (

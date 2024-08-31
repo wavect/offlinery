@@ -1,3 +1,4 @@
+import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { useState } from "react";
@@ -11,7 +12,6 @@ import {
     View,
     ViewStyle,
 } from "react-native";
-import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 
 interface IOTextInputProps {
     value: string;

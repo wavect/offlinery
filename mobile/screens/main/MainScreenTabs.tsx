@@ -1,3 +1,15 @@
+import { Color, Title } from "@/GlobalStyles";
+import {
+    LocationUpdateDTO,
+    NotificationNavigateUserDTO,
+    UserApi,
+    UserDateModeEnum,
+} from "@/api/gen/src";
+import { OGoLiveToggle } from "@/components/OGoLiveToggle/OGoLiveToggle";
+import { useUserContext } from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
+import { registerForPushNotificationsAsync } from "@/services/notification.service";
+import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Location from "expo-location";
@@ -7,19 +19,7 @@ import * as TaskManager from "expo-task-manager";
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
-import { Color, Title } from "../../GlobalStyles";
-import {
-    LocationUpdateDTO,
-    NotificationNavigateUserDTO,
-    UserApi,
-    UserDateModeEnum,
-} from "../../api/gen/src";
-import { OGoLiveToggle } from "../../components/OGoLiveToggle/OGoLiveToggle";
-import { useUserContext } from "../../context/UserContext";
-import { TR, i18n } from "../../localization/translate.service";
 import HeatMap from "../../screens/main/HeatMap";
-import { registerForPushNotificationsAsync } from "../../services/notification.service";
-import { IEncounterProfile } from "../../types/PublicProfile.types";
 import { ROUTES } from "../routes";
 import { EncounterScreenStack } from "./EncounterStackNavigator";
 import ProfileSettings from "./ProfileSettings";

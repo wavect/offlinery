@@ -1,8 +1,8 @@
+import { EncountersProvider } from "@/context/EncountersContext";
+import { i18n, TR } from "@/localization/translate.service";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 import { memo } from "react";
-import { EncountersProvider } from "../../context/EncountersContext";
-import { i18n, TR } from "../../localization/translate.service";
 import { ROUTES } from "../routes";
 import Encounters from "./Encounters";
 import NavigateToApproach from "./NavigateToApproach";

@@ -1,3 +1,14 @@
+import { BorderRadius, Color, Subtitle } from "@/GlobalStyles";
+import { UserApi } from "@/api/gen/src";
+import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import {
+    EACTION_USER,
+    MapRegion,
+    mapRegionToBlacklistedRegionDTO,
+    useUserContext,
+} from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
+import { getJwtHeader } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import * as Location from "expo-location";
@@ -13,17 +24,8 @@ import MapView, {
     PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
 } from "react-native-maps";
-import { UserApi } from "../../api/gen/src";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import {
-    EACTION_USER,
-    MapRegion,
-    useUserContext,
-} from "../../context/UserContext";
-import { BorderRadius, Color, Subtitle } from "../../GlobalStyles";
-import { i18n, TR } from "../../localization/translate.service";
-import { getJwtHeader } from "../../utils/misc.utils";
 
+const userApi = new UserApi();
 const HeatMap = () => {
     const { state, dispatch } = useUserContext();
     const [activeRegionIndex, setActiveRegionIndex] = React.useState<
@@ -74,12 +76,13 @@ const HeatMap = () => {
     useEffect(() => {
         async function updateBlacklistedRegion(regions: MapRegion[]) {
             try {
-                const userApi = new UserApi();
                 await userApi.userControllerUpdateUser(
                     {
-                        id: state.id!,
+                        userId: state.id!,
                         user: {
-                            blacklistedRegions: regions,
+                            blacklistedRegions: regions.map((r) =>
+                                mapRegionToBlacklistedRegionDTO(r),
+                            ),
                         },
                     },
                     getJwtHeader(state.jwtAccessToken),

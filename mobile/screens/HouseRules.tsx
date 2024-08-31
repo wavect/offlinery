@@ -1,11 +1,11 @@
+import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
+import { OShowcase } from "@/components/OShowcase/OShowcase";
+import { TR, i18n } from "@/localization/translate.service";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { BorderRadius, Color, FontFamily, FontSize } from "../GlobalStyles";
-import { OButtonWide } from "../components/OButtonWide/OButtonWide";
-import { OLinearBackground } from "../components/OLinearBackground/OLinearBackground";
-import { OShowcase } from "../components/OShowcase/OShowcase";
-import { i18n, TR } from "../localization/translate.service";
 
 const HouseRules = ({ route, navigation }) => {
     const forceWaitSeconds = route.params?.forceWaitSeconds ?? 5;

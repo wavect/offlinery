@@ -1,3 +1,10 @@
+import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
+import { getPublicProfileFromEncounter } from "@/context/EncountersContext";
+import { TR, i18n } from "@/localization/translate.service";
+import { IEncounterProfile } from "@/types/PublicProfile.types";
+import { calculateDistance, getRegionForCoordinates } from "@/utils/map.utils";
 import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import * as React from "react";
@@ -5,25 +12,13 @@ import { useEffect, useState } from "react";
 import { Linking, Platform, StyleSheet, Text, View } from "react-native";
 import MapView, {
     Marker,
-    Polyline,
     PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
+    Polyline,
     Region,
 } from "react-native-maps";
-import { BorderRadius, Color, FontFamily, FontSize } from "../../GlobalStyles";
-import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import OTeaserProfilePreview from "../../components/OTeaserProfilePreview/OTeaserProfilePreview";
-import { getPublicProfileFromEncounter } from "../../context/EncountersContext";
-import { useUserContext } from "../../context/UserContext";
-import { i18n, TR } from "../../localization/translate.service";
-import { IEncounterProfile } from "../../types/PublicProfile.types";
-import {
-    calculateDistance,
-    getRegionForCoordinates,
-} from "../../utils/map.utils";
 
 const NavigateToApproach = ({ route, navigation }) => {
-    const { state, dispatch } = useUserContext();
     const navigateToPerson: IEncounterProfile = route.params?.navigateToPerson;
 
     // TODO: Load from backend, add to encounter profile!
