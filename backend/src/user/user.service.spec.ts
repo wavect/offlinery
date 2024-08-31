@@ -10,6 +10,7 @@ import { MatchingService } from "../transient-services/matching/matching.service
 import {
     EApproachChoice,
     EDateMode,
+    EEmailVerificationStatus,
     EGender,
     EVerificationStatus,
 } from "../types/user.types";
@@ -132,7 +133,8 @@ describe("UserService", () => {
 
             const mockPendingUser = new PendingUser();
             mockPendingUser.email = createUserDto.email;
-            mockPendingUser.verificationStatus = EVerificationStatus.VERIFIED;
+            mockPendingUser.verificationStatus =
+                EEmailVerificationStatus.VERIFIED;
 
             jest.spyOn(
                 pendingUserRepository,

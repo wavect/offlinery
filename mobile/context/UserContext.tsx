@@ -14,7 +14,7 @@ import { getAge } from "@/utils/date.utils";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
 import { LocationObject } from "expo-location";
-import React, { createContext, Dispatch, useContext, useReducer } from "react";
+import React, { Dispatch, createContext, useContext, useReducer } from "react";
 import { Platform } from "react-native";
 
 export interface IUserData {

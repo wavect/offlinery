@@ -23,8 +23,8 @@ import {
 } from "@expo-google-fonts/montserrat";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { UserProvider } from "./context/UserContext";
 import { Color } from "./GlobalStyles";
+import { UserProvider } from "./context/UserContext";
 import HouseRules from "./screens/HouseRules";
 import Login from "./screens/Login";
 import { MainScreenTabs } from "./screens/main/MainScreenTabs";

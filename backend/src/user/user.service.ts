@@ -16,7 +16,7 @@ import { LocationUpdateDTO } from "../DTOs/location-update.dto";
 import { UpdateUserDTO } from "../DTOs/update-user.dto";
 import { PendingUser } from "../registration/pending-user/pending-user.entity";
 import { MatchingService } from "../transient-services/matching/matching.service";
-import { EVerificationStatus } from "../types/user.types";
+import { EEmailVerificationStatus } from "../types/user.types";
 import { User } from "./user.entity";
 
 @Injectable()
@@ -72,7 +72,7 @@ export class UserService {
         // Double check if user's email actually is verified.
         await this.pendingUserRepo.findOneByOrFail({
             email: user.email,
-            verificationStatus: EVerificationStatus.VERIFIED,
+            verificationStatus: EEmailVerificationStatus.VERIFIED,
         });
 
         // @dev https://docs.nestjs.com/security/encryption-and-hashing

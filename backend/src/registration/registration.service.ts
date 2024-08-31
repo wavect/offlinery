@@ -59,7 +59,7 @@ export class RegistrationService {
 
             return pendingUser.email;
         } catch (error) {
-            console.error(error);
+            this.logger.error(error);
             throw error;
         }
     }
@@ -84,7 +84,7 @@ export class RegistrationService {
             user.verificationStatus = EEmailVerificationStatus.VERIFIED;
             await this.pendingUserRepo.save(user);
         } catch (error) {
-            console.error(error);
+            this.logger.error(error);
             throw error;
         }
     }
