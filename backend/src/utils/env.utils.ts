@@ -18,24 +18,29 @@ const envSchema = z.object({
     BE_PORT: z.string().transform(Number),
 });
 
-// Parse and validate the environment variables
-const envParse = envSchema.safeParse(process.env);
-
-if (!envParse.success) {
-    console.error(
-        "❌ Invalid environment variables:",
-        JSON.stringify(envParse.error.format(), null, 4),
-    );
-    process.exit(1);
-}
-
-// Export the validated environment variables
-export const TYPED_ENV = envParse.data;
-
 // Type for the validated environment
 export type TypedEnv = z.infer<typeof envSchema>;
 
 // Function to validate the environment
-export function validateEnv(): void {
+let lazyEnv: TypedEnv; // internal variable
+export function validateEnv(): TypedEnv {
+    if (lazyEnv) {
+        return lazyEnv; // just validate once
+    }
+    const envParse = envSchema.safeParse(process.env);
+
+    if (!envParse.success) {
+        console.error(
+            "❌ Invalid environment variables:",
+            JSON.stringify(envParse.error.format(), null, 4),
+        );
+        throw new Error("Invalid environment variables");
+    }
+
     console.log("✅ Environment variables validated successfully");
+    lazyEnv = envParse.data;
+    return lazyEnv;
 }
+
+// Export the validated environment variables
+export const TYPED_ENV = validateEnv();

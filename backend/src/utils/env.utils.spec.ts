@@ -1,6 +1,11 @@
-/* eslint @typescript-eslint/no-var-requires: "off" */
+// NOTE: Do not import env.utilts.ts globally here as it would immediately validate the envs and make the test probably fail
 
-describe("env.utils", () => {
+// Mock dotenv
+jest.mock("dotenv", () => ({
+    config: jest.fn(),
+}));
+
+describe("Environment Validation", () => {
     const originalEnv = process.env;
 
     beforeEach(() => {
@@ -12,84 +17,91 @@ describe("env.utils", () => {
         process.env = originalEnv;
     });
 
-    describe("TYPED_ENV", () => {
-        it("should contain all expected environment variables", () => {
-            const expectedKeys = [
-                "DB_ROOT_PASSWORD",
-                "DB_DATABASE",
-                "DB_USER",
-                "DB_PASSWORD",
-                "DB_HOST",
-                "DB_PORT",
-                "JWT_SECRET",
-                "EMAIL_HOST",
-                "EMAIL_USERNAME",
-                "EMAIL_PASSWORD",
-            ];
+    it("should validate correct environment variables", () => {
+        process.env = {
+            DB_HOST: "localhost",
+            DB_PORT: "5432",
+            DB_USER: "user",
+            DB_PASSWORD: "password",
+            DB_DATABASE: "database",
+            JWT_SECRET: "secret",
+            EMAIL_HOST: "smtp.example.com",
+            EMAIL_USERNAME: "user@example.com",
+            EMAIL_PASSWORD: "emailpassword",
+            BE_PORT: "3000",
+        };
 
-            expectedKeys.forEach((key) => {
-                process.env[key] = "test-value";
-            });
-
-            // Re-import to get updated TYPED_ENV
-            jest.resetModules();
-            const { TYPED_ENV } = require("./env.utils");
-
-            expectedKeys.forEach((key) => {
-                expect(TYPED_ENV).toHaveProperty(key);
-            });
+        const { validateEnv } = require("./env.utils");
+        const result = validateEnv();
+        expect(result).toEqual({
+            DB_HOST: "localhost",
+            DB_PORT: 5432,
+            DB_USER: "user",
+            DB_PASSWORD: "password",
+            DB_DATABASE: "database",
+            JWT_SECRET: "secret",
+            EMAIL_HOST: "smtp.example.com",
+            EMAIL_USERNAME: "user@example.com",
+            EMAIL_PASSWORD: "emailpassword",
+            BE_PORT: 3000,
         });
     });
 
-    describe("validateEnv", () => {
-        it("should not throw an error when all environment variables are defined", () => {
-            const requiredEnvVars = {
-                DB_ROOT_PASSWORD: "root",
-                DB_DATABASE: "mydb",
-                DB_USER: "user",
-                DB_PASSWORD: "pass",
-                DB_HOST: "localhost",
-                DB_PORT: "5432",
-                JWT_SECRET: "secret",
-                EMAIL_HOST: "smtp.example.com",
-                EMAIL_USERNAME: "user@example.com",
-                EMAIL_PASSWORD: "emailpass",
-            };
+    it("should throw an error for missing environment variables", () => {
+        process.env = {};
 
-            Object.assign(process.env, requiredEnvVars);
+        expect(() => require("./env.utils")).toThrow(
+            "Invalid environment variables",
+        );
+    });
 
-            // Re-import to get updated TYPED_ENV
-            jest.resetModules();
-            const { validateEnv } = require("./env.utils");
+    it("should return the same object on subsequent calls", () => {
+        process.env = {
+            DB_HOST: "localhost",
+            DB_PORT: "5432",
+            DB_USER: "user",
+            DB_PASSWORD: "password",
+            DB_DATABASE: "database",
+            JWT_SECRET: "secret",
+            EMAIL_HOST: "smtp.example.com",
+            EMAIL_USERNAME: "user@example.com",
+            EMAIL_PASSWORD: "emailpassword",
+            BE_PORT: "3000",
+        };
 
-            expect(() => validateEnv()).not.toThrow();
-        });
+        const { validateEnv } = require("./env.utils");
+        const result1 = validateEnv();
+        const result2 = validateEnv();
 
-        it("should throw an error when an environment variable is undefined", () => {
-            const requiredEnvVars = {
-                DB_ROOT_PASSWORD: "root",
-                // DB_DATABASE is intentionally omitted
-                DB_USER: "user",
-                DB_PASSWORD: "pass",
-                DB_HOST: "localhost",
-                DB_PORT: "5432",
-                JWT_SECRET: "secret",
-                EMAIL_HOST: "smtp.example.com",
-                EMAIL_USERNAME: "user@example.com",
-                EMAIL_PASSWORD: "emailpass",
-            };
+        expect(result1).toBe(result2);
+    });
 
-            // Clear all env vars and set only the ones in requiredEnvVars
-            process.env = {};
-            Object.assign(process.env, requiredEnvVars);
+    it("should export TYPED_ENV with correct values", () => {
+        process.env = {
+            DB_HOST: "localhost",
+            DB_PORT: "5432",
+            DB_USER: "user",
+            DB_PASSWORD: "password",
+            DB_DATABASE: "database",
+            JWT_SECRET: "secret",
+            EMAIL_HOST: "smtp.example.com",
+            EMAIL_USERNAME: "user@example.com",
+            EMAIL_PASSWORD: "emailpassword",
+            BE_PORT: "3000",
+        };
 
-            // Re-import to get updated TYPED_ENV
-            jest.resetModules();
-            const { validateEnv } = require("./env.utils");
-
-            expect(() => validateEnv()).toThrow(
-                "Environment variable 'DB_DATABASE' is not defined.",
-            );
+        const { TYPED_ENV } = require("./env.utils");
+        expect(TYPED_ENV).toEqual({
+            DB_HOST: "localhost",
+            DB_PORT: 5432,
+            DB_USER: "user",
+            DB_PASSWORD: "password",
+            DB_DATABASE: "database",
+            JWT_SECRET: "secret",
+            EMAIL_HOST: "smtp.example.com",
+            EMAIL_USERNAME: "user@example.com",
+            EMAIL_PASSWORD: "emailpassword",
+            BE_PORT: 3000,
         });
     });
 });
