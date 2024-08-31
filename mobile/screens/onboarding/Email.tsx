@@ -6,11 +6,13 @@ import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
+import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { ROUTES } from "../routes";
 
 const Email = ({ navigation }) => {
     const { state, dispatch } = useUserContext();
+    const [isLoading, setLoading] = useState(false);
 
     const setEmail = (email: string) => {
         dispatch({ type: EACTION_USER.SET_EMAIL, payload: email });
@@ -27,6 +29,7 @@ const Email = ({ navigation }) => {
 
     const onContinue = async () => {
         try {
+            setLoading(true);
             const regApi = new RegistrationApi();
             const result =
                 await regApi.registrationControllerRegisterUserForEmailVerification(
@@ -44,6 +47,7 @@ const Email = ({ navigation }) => {
         } catch (error) {
             console.error(error);
         }
+        setLoading(false);
     };
 
     return (
@@ -55,6 +59,7 @@ const Email = ({ navigation }) => {
                     filled={true}
                     disabled={isInvalidEmail()}
                     variant="dark"
+                    isLoading={isLoading}
                     onPress={onContinue}
                 />
             }
