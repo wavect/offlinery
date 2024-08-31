@@ -95,7 +95,6 @@ describe("UserService", () => {
 
         service = module.get<UserService>(UserService);
         userRepository = module.get("UserRepository");
-        blacklistedRegionRepository = module.get("BlacklistedRegionRepository");
         pendingUserRepository = module.get("PendingUserRepository");
         matchingService = module.get<MatchingService>(MatchingService);
     });
