@@ -30,6 +30,7 @@
         "expo-localization": "~15.0.3",
         "expo-location": "~17.0.1",
         "expo-notifications": "~0.28.16",
+        "expo-splash-screen": "~0.27.5",
         "expo-status-bar": "~1.12.1",
         "expo-task-manager": "~11.8.2",
         "i18n-js": "^4.4.3",
@@ -48,9 +49,9 @@
         "react-native-webview": "13.8.6"
     },
     "devDependencies": {
-        "babel-plugin-module-resolver": "^5.0.2",
         "@babel/core": "^7.20.0",
         "@types/react": "~18.2.45",
+        "babel-plugin-module-resolver": "^5.0.2",
         "prettier": "^3.3.3",
         "typescript": "^5.3.3"
     },
