@@ -6,7 +6,7 @@ import helmet from "helmet";
 import * as path from "path";
 import { AppModule } from "./app.module";
 import { NotificationNavigateUserDTO } from "./DTOs/notification-navigate-user.dto";
-import { validateEnv } from "./utils/env.utils";
+import { TYPED_ENV, validateEnv } from "./utils/env.utils";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
@@ -28,13 +28,13 @@ async function bootstrap() {
     // security base line
     app.use(helmet());
 
-    await app.listen(3000);
+    await app.listen(TYPED_ENV.BE_PORT);
 }
 
 const VERSION = "1";
 const BE_ENDPOINT =
     process.env.NODE_ENV === "development"
-        ? `http://localhost:${process.env.BE_PORT}`
+        ? `http://localhost:${TYPED_ENV.BE_PORT}`
         : "https://offlinery.onrender.com";
 
 const setupSwagger = (app: INestApplication) => {

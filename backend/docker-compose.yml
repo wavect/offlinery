@@ -2,13 +2,15 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgis/postgis # postgres with PostGis (coordinates, etc. enabled)
+    image: postgis/postgis:16-master # postgres with PostGis (coordinates, etc. enabled)
     container_name: postgres
     restart: always
     environment:
       POSTGRES_DB: ${DB_DATABASE:-offlinery}
       POSTGRES_USER: ${DB_USER:-offlinery}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-offlinery}
+      #POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+      #POSTGRES_HOST_AUTH_METHOD: scram-sha-256
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -16,7 +18,7 @@ services:
     networks:
       - app_network
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_DATABASE}']
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-offlinery} -d ${DB_DATABASE:-offlinery}']
       interval: 10s
       timeout: 5s
       retries: 5

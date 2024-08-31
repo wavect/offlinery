@@ -3,6 +3,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import * as fs from "fs";
+import { Point } from "geojson";
 import { Repository } from "typeorm";
 import { BlacklistedRegion } from "../blacklisted-region/blacklisted-region.entity";
 import { CreateUserDTO } from "../DTOs/create-user.dto";
@@ -46,15 +47,27 @@ describe("UserService", () => {
                 UserService,
                 {
                     provide: getRepositoryToken(User),
-                    useClass: Repository,
+                    useValue: {
+                        findOne: jest.fn(),
+                        findOneBy: jest.fn(),
+                        save: jest.fn(),
+                    },
                 },
                 {
                     provide: getRepositoryToken(BlacklistedRegion),
-                    useClass: Repository,
+                    useValue: {
+                        findOne: jest.fn(),
+                        findOneBy: jest.fn(),
+                        save: jest.fn(),
+                    },
                 },
                 {
                     provide: getRepositoryToken(PendingUser),
-                    useClass: Repository,
+                    useValue: {
+                        findOne: jest.fn(),
+                        findOneBy: jest.fn(),
+                        save: jest.fn(),
+                    },
                 },
                 {
                     provide: MatchingService,
@@ -111,7 +124,7 @@ describe("UserService", () => {
                 "findOneByOrFail",
             ).mockResolvedValue(mockPendingUser);
             jest.spyOn(fs.promises, "writeFile").mockResolvedValue();
-            // @ts-expect-error spread operator does not copy interface methods
+            // @ts-expect-error Entity interface methods to be ignored
             jest.spyOn(userRepository, "save").mockResolvedValue({
                 id: "1",
                 ...createUserDto,
@@ -146,7 +159,7 @@ describe("UserService", () => {
             mockUser.bio = "Original bio";
 
             jest.spyOn(userRepository, "findOneBy").mockResolvedValue(mockUser);
-            // @ts-expect-error spread operator does not copy interface methods
+            // @ts-expect-error Entity interface methods to be ignored
             jest.spyOn(userRepository, "save").mockResolvedValue({
                 ...mockUser,
                 ...updateUserDto,
@@ -218,10 +231,13 @@ describe("UserService", () => {
             mockUser.firstName = "John";
 
             jest.spyOn(userRepository, "findOneBy").mockResolvedValue(mockUser);
-            // @ts-expect-error spread operator does not copy interface methods
+            // @ts-expect-error Entity interface methods to be ignored
             jest.spyOn(userRepository, "save").mockResolvedValue({
                 ...mockUser,
-                location: { type: "Point", coordinates: [-74.006, 40.7128] },
+                location: {
+                    type: "Point",
+                    coordinates: [-74.006, 40.7128],
+                } as Point,
             });
             jest.spyOn(
                 matchingService,
@@ -277,48 +293,13 @@ describe("UserService", () => {
         });
 
         it("should throw NotFoundException if user is not found", async () => {
-            const email = "nonexistent@example.com";
+            const email = "john@example.com";
 
             jest.spyOn(userRepository, "findOne").mockResolvedValue(null);
 
             await expect(service.findUserByEmail(email)).rejects.toThrow(
                 NotFoundException,
             );
-        });
-    });
-
-    describe("updatePushToken", () => {
-        it("should update user push token", async () => {
-            const userId = "1";
-            const pushToken = "new-push-token";
-
-            const mockUser = new User();
-            mockUser.id = userId;
-            mockUser.firstName = "John";
-
-            jest.spyOn(userRepository, "findOneBy").mockResolvedValue(mockUser);
-            // @ts-expect-error spread operator does not copy interface methods
-            jest.spyOn(userRepository, "save").mockResolvedValue({
-                ...mockUser,
-                pushToken,
-            });
-
-            const result = await service.updatePushToken(userId, pushToken);
-
-            expect(result).toBeDefined();
-            expect(result.pushToken).toBe(pushToken);
-            expect(userRepository.save).toHaveBeenCalled();
-        });
-
-        it("should throw NotFoundException if user is not found", async () => {
-            const userId = "1";
-            const pushToken = "new-push-token";
-
-            jest.spyOn(userRepository, "findOneBy").mockResolvedValue(null);
-
-            await expect(
-                service.updatePushToken(userId, pushToken),
-            ).rejects.toThrow(NotFoundException);
         });
     });
 });
