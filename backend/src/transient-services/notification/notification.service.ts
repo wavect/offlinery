@@ -16,9 +16,9 @@ export class NotificationService {
         this.expo = new Expo();
     }
 
-    async storePushToken(storePushTokenDTO: StorePushTokenDTO) {
+    async storePushToken(userId: string, storePushTokenDTO: StorePushTokenDTO) {
         return await this.userService.updatePushToken(
-            storePushTokenDTO.userId,
+            userId,
             storePushTokenDTO.pushToken,
         );
     }

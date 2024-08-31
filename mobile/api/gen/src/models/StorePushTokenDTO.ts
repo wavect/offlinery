@@ -19,12 +19,6 @@
  */
 export interface StorePushTokenDTO {
     /**
-     * The unique identifier of the user
-     * @type {string}
-     * @memberof StorePushTokenDTO
-     */
-    userId: string;
-    /**
      * The Expo push token for the user's device
      * @type {string}
      * @memberof StorePushTokenDTO
@@ -38,7 +32,6 @@ export interface StorePushTokenDTO {
 export function instanceOfStorePushTokenDTO(
     value: object,
 ): value is StorePushTokenDTO {
-    if (!("userId" in value) || value["userId"] === undefined) return false;
     if (!("pushToken" in value) || value["pushToken"] === undefined)
         return false;
     return true;
@@ -56,7 +49,6 @@ export function StorePushTokenDTOFromJSONTyped(
         return json;
     }
     return {
-        userId: json["userId"],
         pushToken: json["pushToken"],
     };
 }
@@ -66,7 +58,6 @@ export function StorePushTokenDTOToJSON(value?: StorePushTokenDTO | null): any {
         return value;
     }
     return {
-        userId: value["userId"],
         pushToken: value["pushToken"],
     };
 }

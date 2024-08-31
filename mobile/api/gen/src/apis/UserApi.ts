@@ -322,7 +322,7 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
 
         const response = await this.request(
             {
-                path: `/user/{userId}/location`.replace(
+                path: `/user/location/{userId}`.replace(
                     `{${"userId"}}`,
                     encodeURIComponent(String(requestParameters["userId"])),
                 ),

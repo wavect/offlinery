@@ -126,7 +126,7 @@ export class UserController {
         return user.convertToPublicDTO();
     }
 
-    @Put(`:${USER_ID_PARAM}/location`)
+    @Put(`location/:${USER_ID_PARAM}`)
     @OnlyOwnUserData()
     @ApiOperation({ summary: "Update user location" })
     @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })

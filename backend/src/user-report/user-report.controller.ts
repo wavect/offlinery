@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Param, Post } from "@nestjs/common";
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { OnlyOwnUserData, USER_ID_PARAM } from "../auth/auth-own-data.guard";
 import { CreateUserReportDTO } from "../DTOs/create-user-report.dto";
 import { UserReport } from "./user-report.entity";
 import { UserReportService } from "./user-report.service";
@@ -12,7 +13,13 @@ import { UserReportService } from "./user-report.service";
 export class UserReportController {
     constructor(private readonly userReportService: UserReportService) {}
 
-    @Post()
+    @Post(`:${USER_ID_PARAM}`)
+    @OnlyOwnUserData()
+    @ApiParam({
+        name: USER_ID_PARAM,
+        type: "string",
+        description: "Reporting User ID",
+    })
     @ApiOperation({ summary: "Create a new user report" })
     @ApiResponse({
         status: 201,
@@ -20,31 +27,12 @@ export class UserReportController {
         type: UserReport,
     })
     async create(
-        @Body() createUserReportDto: CreateUserReportDTO,
+        @Param(USER_ID_PARAM) reportingUserId: string,
+        @Body() createUserReportDTO: CreateUserReportDTO,
     ): Promise<UserReport> {
-        return this.userReportService.create(createUserReportDto);
-    }
-
-    @Get()
-    @ApiOperation({ summary: "Get all user reports" })
-    @ApiResponse({
-        status: 200,
-        description: "Return all user reports.",
-        type: [UserReport],
-    })
-    async findAll(): Promise<UserReport[]> {
-        return this.userReportService.findAll();
-    }
-
-    @Get(":id")
-    @ApiOperation({ summary: "Get a user report by id" })
-    @ApiResponse({
-        status: 200,
-        description: "Return the user report.",
-        type: UserReport,
-    })
-    @ApiResponse({ status: 404, description: "User report not found." })
-    async findOne(@Param("id") id: string): Promise<UserReport> {
-        return this.userReportService.findOne(+id);
+        return this.userReportService.create(
+            reportingUserId,
+            createUserReportDTO,
+        );
     }
 }

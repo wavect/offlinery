@@ -31,10 +31,4 @@ export class CreateUserReportDTO {
     })
     @IsString()
     reportedUserId: string;
-
-    @ApiProperty({
-        description: "The ID of the user making the report",
-    })
-    @IsString()
-    reportingUserId: string;
 }

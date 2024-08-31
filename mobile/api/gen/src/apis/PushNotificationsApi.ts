@@ -20,6 +20,7 @@ import * as runtime from "../runtime";
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
 export interface NotificationControllerStorePushTokenRequest {
+    userId: string;
     storePushTokenDTO: StorePushTokenDTO;
 }
 
@@ -33,6 +34,7 @@ export interface PushNotificationsApiInterface {
     /**
      *
      * @summary Store user\'s push token
+     * @param {string} userId
      * @param {StorePushTokenDTO} storePushTokenDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -66,6 +68,13 @@ export class PushNotificationsApi
         requestParameters: NotificationControllerStorePushTokenRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["userId"] == null) {
+            throw new runtime.RequiredError(
+                "userId",
+                'Required parameter "userId" was null or undefined when calling notificationControllerStorePushToken().',
+            );
+        }
+
         if (requestParameters["storePushTokenDTO"] == null) {
             throw new runtime.RequiredError(
                 "storePushTokenDTO",
@@ -81,7 +90,10 @@ export class PushNotificationsApi
 
         const response = await this.request(
             {
-                path: `/api/push-token`,
+                path: `/api/push-token/{userId}`.replace(
+                    `{${"userId"}}`,
+                    encodeURIComponent(String(requestParameters["userId"])),
+                ),
                 method: "POST",
                 headers: headerParameters,
                 query: queryParameters,

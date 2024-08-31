@@ -20,11 +20,8 @@ import * as runtime from "../runtime";
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
 export interface UserReportControllerCreateRequest {
+    userId: string;
     createUserReportDTO: CreateUserReportDTO;
-}
-
-export interface UserReportControllerFindOneRequest {
-    id: string;
 }
 
 /**
@@ -37,6 +34,7 @@ export interface UserReportsApiInterface {
     /**
      *
      * @summary Create a new user report
+     * @param {string} userId Reporting User ID
      * @param {CreateUserReportDTO} createUserReportDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -52,45 +50,6 @@ export interface UserReportsApiInterface {
      */
     userReportControllerCreate(
         requestParameters: UserReportControllerCreateRequest,
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<UserReport>;
-
-    /**
-     *
-     * @summary Get all user reports
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserReportsApiInterface
-     */
-    userReportControllerFindAllRaw(
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<Array<UserReport>>>;
-
-    /**
-     * Get all user reports
-     */
-    userReportControllerFindAll(
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<Array<UserReport>>;
-
-    /**
-     *
-     * @summary Get a user report by id
-     * @param {string} id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserReportsApiInterface
-     */
-    userReportControllerFindOneRaw(
-        requestParameters: UserReportControllerFindOneRequest,
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<UserReport>>;
-
-    /**
-     * Get a user report by id
-     */
-    userReportControllerFindOne(
-        requestParameters: UserReportControllerFindOneRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<UserReport>;
 }
@@ -109,6 +68,13 @@ export class UserReportsApi
         requestParameters: UserReportControllerCreateRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<UserReport>> {
+        if (requestParameters["userId"] == null) {
+            throw new runtime.RequiredError(
+                "userId",
+                'Required parameter "userId" was null or undefined when calling userReportControllerCreate().',
+            );
+        }
+
         if (requestParameters["createUserReportDTO"] == null) {
             throw new runtime.RequiredError(
                 "createUserReportDTO",
@@ -124,7 +90,10 @@ export class UserReportsApi
 
         const response = await this.request(
             {
-                path: `/user-reports`,
+                path: `/user-reports/{userId}`.replace(
+                    `{${"userId"}}`,
+                    encodeURIComponent(String(requestParameters["userId"])),
+                ),
                 method: "POST",
                 headers: headerParameters,
                 query: queryParameters,
@@ -148,92 +117,6 @@ export class UserReportsApi
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<UserReport> {
         const response = await this.userReportControllerCreateRaw(
-            requestParameters,
-            initOverrides,
-        );
-        return await response.value();
-    }
-
-    /**
-     * Get all user reports
-     */
-    async userReportControllerFindAllRaw(
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<Array<UserReport>>> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request(
-            {
-                path: `/user-reports`,
-                method: "GET",
-                headers: headerParameters,
-                query: queryParameters,
-            },
-            initOverrides,
-        );
-
-        return new runtime.JSONApiResponse(response, (jsonValue) =>
-            jsonValue.map(UserReportFromJSON),
-        );
-    }
-
-    /**
-     * Get all user reports
-     */
-    async userReportControllerFindAll(
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<Array<UserReport>> {
-        const response =
-            await this.userReportControllerFindAllRaw(initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Get a user report by id
-     */
-    async userReportControllerFindOneRaw(
-        requestParameters: UserReportControllerFindOneRequest,
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<UserReport>> {
-        if (requestParameters["id"] == null) {
-            throw new runtime.RequiredError(
-                "id",
-                'Required parameter "id" was null or undefined when calling userReportControllerFindOne().',
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request(
-            {
-                path: `/user-reports/{id}`.replace(
-                    `{${"id"}}`,
-                    encodeURIComponent(String(requestParameters["id"])),
-                ),
-                method: "GET",
-                headers: headerParameters,
-                query: queryParameters,
-            },
-            initOverrides,
-        );
-
-        return new runtime.JSONApiResponse(response, (jsonValue) =>
-            UserReportFromJSON(jsonValue),
-        );
-    }
-
-    /**
-     * Get a user report by id
-     */
-    async userReportControllerFindOne(
-        requestParameters: UserReportControllerFindOneRequest,
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<UserReport> {
-        const response = await this.userReportControllerFindOneRaw(
             requestParameters,
             initOverrides,
         );
