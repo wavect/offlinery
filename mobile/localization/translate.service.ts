@@ -1,10 +1,12 @@
 import { getLocales } from "expo-localization";
 import { I18n } from "i18n-js";
+import { de } from "./de";
 import { en } from "./en";
 
 /** @dev Use via i18n.t(ILanguage.KEY) */
 const languages: Record<string, Language> = {
     en,
+    de,
 };
 export const i18n = new I18n(languages);
 
