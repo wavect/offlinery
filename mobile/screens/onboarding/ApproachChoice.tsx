@@ -1,42 +1,41 @@
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { Color, Subtitle } from "../../GlobalStyles";
+import {
+    UserApproachChoiceEnum,
+    UserVerificationStatusEnum,
+} from "../../api/gen/src";
 import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
 import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
-import {
-    EACTION_USER,
-    EApproachChoice,
-    EVerificationStatus,
-    useUserContext,
-} from "../../context/UserContext";
-import { Color, Subtitle } from "../../GlobalStyles";
-import { i18n, TR } from "../../localization/translate.service";
+import { EACTION_USER, useUserContext } from "../../context/UserContext";
+import { TR, i18n } from "../../localization/translate.service";
 import { ROUTES } from "../routes";
 
 const ApproachChoice = ({ navigation }) => {
     const { dispatch } = useUserContext();
 
-    const setApproachChoice = (approachChoice: EApproachChoice) => {
+    const setApproachChoice = (approachChoice: UserApproachChoiceEnum) => {
         dispatch({
             type: EACTION_USER.SET_APPROACH_CHOICE,
             payload: approachChoice,
         });
 
         switch (approachChoice) {
-            case EApproachChoice.APPROACH: // fall through
+            case UserApproachChoiceEnum.approach: // fall through
                 dispatch({
                     type: EACTION_USER.SET_VERIFICATION_STATUS,
-                    payload: EVerificationStatus.PENDING,
+                    payload: UserVerificationStatusEnum.pending,
                 });
                 navigation.navigate(ROUTES.Onboarding.SafetyCheck);
                 break;
-            case EApproachChoice.BE_APPROACHED:
+            case UserApproachChoiceEnum.be_approached:
                 dispatch({
                     type: EACTION_USER.SET_VERIFICATION_STATUS,
-                    payload: EVerificationStatus.NOT_NEEDED,
+                    payload: UserVerificationStatusEnum.not_needed,
                 });
                 navigation.navigate(ROUTES.Onboarding.DontApproachMeHere); // not doing IliveHere for now, to avoid geoFencing their address
                 break;
-            case EApproachChoice.BOTH:
+            case UserApproachChoiceEnum.both:
             // TODO: Not yet supported, since both flows need to be completed
         }
     };
@@ -55,7 +54,9 @@ const ApproachChoice = ({ navigation }) => {
                     text={i18n.t(TR.approach)}
                     filled={true}
                     variant="dark"
-                    onPress={() => setApproachChoice(EApproachChoice.APPROACH)}
+                    onPress={() =>
+                        setApproachChoice(UserApproachChoiceEnum.approach)
+                    }
                 />
                 <Text style={[Subtitle, styles.subtitle]}>
                     {i18n.t(TR.approachDescr)}
@@ -68,7 +69,7 @@ const ApproachChoice = ({ navigation }) => {
                     filled={true}
                     variant="dark"
                     onPress={() =>
-                        setApproachChoice(EApproachChoice.BE_APPROACHED)
+                        setApproachChoice(UserApproachChoiceEnum.be_approached)
                     }
                 />
                 <Text style={[Subtitle, styles.subtitle]}>
@@ -82,7 +83,9 @@ const ApproachChoice = ({ navigation }) => {
                     filled={false}
                     variant="dark"
                     disabled={true}
-                    onPress={() => setApproachChoice(EApproachChoice.BOTH)}
+                    onPress={() =>
+                        setApproachChoice(UserApproachChoiceEnum.both)
+                    }
                 />
                 <Text style={[Subtitle, styles.subtitle]}>
                     {i18n.t(TR.bothDescr)}

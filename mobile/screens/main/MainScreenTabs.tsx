@@ -12,10 +12,11 @@ import {
     LocationUpdateDTO,
     NotificationNavigateUserDTO,
     UserApi,
+    UserDateModeEnum,
 } from "../../api/gen/src";
 import { OGoLiveToggle } from "../../components/OGoLiveToggle/OGoLiveToggle";
-import { EDateMode, useUserContext } from "../../context/UserContext";
-import { i18n, TR } from "../../localization/translate.service";
+import { useUserContext } from "../../context/UserContext";
+import { TR, i18n } from "../../localization/translate.service";
 import HeatMap from "../../screens/main/HeatMap";
 import { registerForPushNotificationsAsync } from "../../services/notification.service";
 import { IEncounterProfile } from "../../types/PublicProfile.types";
@@ -47,7 +48,7 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
 
             try {
                 await userApi.userControllerUpdateLocation({
-                    id: state.id,
+                    userId: state.id,
                     locationUpdateDTO: locationUpdateDTO,
                 });
                 console.log("Location updated successfully");
@@ -150,7 +151,7 @@ export const MainScreenTabs = ({ navigation }) => {
     const [locationStarted, setLocationStarted] = useState(false);
     useEffect(() => {
         (async () => {
-            if (state.dateMode === EDateMode.LIVE) {
+            if (state.dateMode === UserDateModeEnum.live) {
                 const { status } =
                     await Location.requestBackgroundPermissionsAsync();
                 if (status === "granted") {

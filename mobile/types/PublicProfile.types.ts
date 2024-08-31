@@ -3,7 +3,7 @@ import { EncounterStatusEnum } from "../api/gen/src";
 export interface IEncounterProfile {
     encounterId: string;
     firstName: string;
-    age: string;
+    age: number;
     bio: string;
     imageURIs: string[];
     rating?: number;

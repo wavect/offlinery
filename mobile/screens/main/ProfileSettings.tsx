@@ -4,20 +4,23 @@ import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import { UserApi, UserControllerUpdateUserRequest } from "../../api/gen/src";
+import { FontFamily, FontSize } from "../../GlobalStyles";
+import {
+    UserApi,
+    UserApproachChoiceEnum,
+    UserControllerUpdateUserRequest,
+    UserGenderEnum,
+} from "../../api/gen/src";
 import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
 import { OPageContainer } from "../../components/OPageContainer/OPageContainer";
 import { OTextInput } from "../../components/OTextInput/OTextInput";
 import {
     EACTION_USER,
-    EApproachChoice,
-    Gender,
     getUserImagesForUpload,
     mapRegionToBlacklistedRegionDTO,
     useUserContext,
 } from "../../context/UserContext";
-import { FontFamily, FontSize } from "../../GlobalStyles";
-import { i18n, TR } from "../../localization/translate.service";
+import { TR, i18n } from "../../localization/translate.service";
 import { getJwtHeader } from "../../utils/misc.utils";
 import { ROUTES } from "../routes";
 
@@ -50,10 +53,13 @@ const ProfileSettings = ({ navigation }) => {
             payload: birthday || state.birthDay,
         });
     };
-    const setGender = (item: { label: string; value: Gender }) => {
+    const setGender = (item: { label: string; value: UserGenderEnum }) => {
         dispatch({ type: EACTION_USER.SET_GENDER, payload: item.value });
     };
-    const setGenderDesire = (item: { label: string; value: Gender }) => {
+    const setGenderDesire = (item: {
+        label: string;
+        value: UserGenderEnum;
+    }) => {
         dispatch({ type: EACTION_USER.SET_GENDER_DESIRE, payload: item.value });
     };
 
@@ -61,7 +67,7 @@ const ProfileSettings = ({ navigation }) => {
         try {
             setLoading(true);
             const request: UserControllerUpdateUserRequest = {
-                id: state.id!,
+                userId: state.id!,
                 user: {
                     firstName: state.firstName,
                     approachFromTime: state.approachFromTime.toISOString(),
@@ -93,7 +99,7 @@ const ProfileSettings = ({ navigation }) => {
         }
     };
 
-    const genderItems: { label: string; value: Gender }[] = [
+    const genderItems: { label: string; value: UserGenderEnum }[] = [
         { label: i18n.t(TR.woman), value: "woman" },
         { label: i18n.t(TR.man), value: "man" },
     ];
@@ -143,7 +149,7 @@ const ProfileSettings = ({ navigation }) => {
                     />
                 </View>
 
-                {state.approachChoice !== EApproachChoice.APPROACH && (
+                {state.approachChoice !== UserApproachChoiceEnum.approach && (
                     <View style={styles.timePickerContainer}>
                         <Text style={[styles.label, { marginBottom: 8 }]}>
                             {i18n.t(TR.approachMeBetween)}

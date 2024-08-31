@@ -2,15 +2,15 @@ import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import { useState } from "react";
 import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
-import { UpdateUserDTO, UserApi } from "../../api/gen/src";
-import {
-    EACTION_USER,
-    EApproachChoice,
-    EDateMode,
-    useUserContext,
-} from "../../context/UserContext";
 import { Color } from "../../GlobalStyles";
-import { i18n, TR } from "../../localization/translate.service";
+import {
+    UpdateUserDTO,
+    UserApi,
+    UserApproachChoiceEnum,
+    UserDateModeEnum,
+} from "../../api/gen/src";
+import { EACTION_USER, useUserContext } from "../../context/UserContext";
+import { TR, i18n } from "../../localization/translate.service";
 
 interface IOGoLiveToggleProps {
     style?: StyleProp<ViewStyle>;
@@ -35,16 +35,16 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 return;
             }
 
-            const newDateMode: EDateMode = isEnabled
-                ? EDateMode.LIVE
-                : EDateMode.GHOST;
+            const newDateMode: UserDateModeEnum = isEnabled
+                ? UserDateModeEnum.live
+                : UserDateModeEnum.ghost;
             const userApi = new UserApi();
             const updateUserDTO: UpdateUserDTO = {
                 dateMode: newDateMode,
             };
 
             await userApi.userControllerUpdateUser({
-                id: state.id!,
+                userId: state.id!,
                 user: updateUserDTO,
             });
             console.log("Date mode updated successfully on the backend");
@@ -79,11 +79,11 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
 
     const getSuccessMessage = () => {
         switch (state.approachChoice) {
-            case EApproachChoice.BOTH: // fall through
-            case EApproachChoice.APPROACH:
+            case UserApproachChoiceEnum.both: // fall through
+            case UserApproachChoiceEnum.approach:
                 return i18n.t(TR.youAreLiveApproachDescr);
                 break;
-            case EApproachChoice.BE_APPROACHED:
+            case UserApproachChoiceEnum.be_approached:
                 return i18n.t(TR.youAreLiveBeApproachedDescr);
                 break;
         }

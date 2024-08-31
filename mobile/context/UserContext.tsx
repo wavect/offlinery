@@ -8,12 +8,14 @@ import {
     BlacklistedRegionDTOLocationTypeEnum,
     CreateUserDTO,
     UserApi,
+    UserApproachChoiceEnum,
     UserControllerCreateUserRequest,
+    UserDateModeEnum,
+    UserGenderEnum,
     UserPublicDTO,
+    UserVerificationStatusEnum,
 } from "../api/gen/src";
 import { getAge } from "../utils/date.utils";
-
-export type Gender = "woman" | "man";
 
 export interface IUserData {
     /** @dev Backend assigned ID for registered users */
@@ -23,23 +25,20 @@ export interface IUserData {
     firstName: string;
     clearPassword: string;
     birthDay: Date;
-    gender?: Gender;
-    genderDesire?: Gender;
+    gender?: UserGenderEnum;
+    genderDesire?: UserGenderEnum;
     imageURIs: {
         [key in ImageIdx]?: ImagePicker.ImagePickerAsset;
     };
-    verificationStatus: EVerificationStatus;
-    approachChoice: EApproachChoice;
-    /*street: string
-      postalCode: string
-      country: string*/
+    verificationStatus: UserVerificationStatusEnum;
+    approachChoice: UserApproachChoiceEnum;
     /** @dev Regions the user that wants to be approached marked as blacklisted */
     blacklistedRegions: MapRegion[];
     approachFromTime: Date;
     approachToTime: Date;
     bio: string;
     currentLocation?: LocationObject;
-    dateMode: EDateMode;
+    dateMode: UserDateModeEnum;
     /** @dev Set once logged in */
     jwtAccessToken?: string;
 }
@@ -98,11 +97,11 @@ export interface IUserAction {
         | Date
         | boolean
         | IImageAction
-        | EApproachChoice
-        | EVerificationStatus
+        | UserApproachChoiceEnum
+        | UserVerificationStatusEnum
         | MapRegion[]
         | LocationObject
-        | EDateMode
+        | UserDateModeEnum
         | Partial<IUserData>
         | number;
 }
@@ -120,9 +119,6 @@ export enum EACTION_USER {
     SET_IMAGE = "SET_IMAGE",
     SET_VERIFICATION_STATUS = "SET_VERIFICATION_STATUS",
     SET_APPROACH_CHOICE = "SET_APPROACH_CHOICE",
-    /*SET_STREET = 'SET_STREET',
-      SET_POSTAL_CODE = 'SET_POSTAL_CODE',
-      SET_COUNTRY = 'SET_COUNTRY',*/
     SET_BLACKLISTED_REGIONS = "SET_BLACKLISTED_REGIONS",
     SET_APPROACH_FROM_TIME = "SET_APPROACH_FROM_TIME",
     SET_APPROACH_TO_TIME = "SET_APPROACH_TO_TIME",
@@ -135,24 +131,6 @@ export enum EACTION_USER {
 interface IUserContextType {
     state: IUserData;
     dispatch: Dispatch<IUserAction>;
-}
-
-export enum EDateMode {
-    GHOST = "ghost",
-    LIVE = "live",
-}
-
-export enum EApproachChoice {
-    APPROACH = "approach",
-    BE_APPROACHED = "be_approached",
-    BOTH = "both",
-}
-
-export enum EVerificationStatus {
-    VERIFIED = "verified",
-    PENDING = "pending",
-    /** @dev Not needed if not approaching right now (e.g. women) */
-    NOT_NEEDED = "not_needed",
 }
 
 export const DEFAULT_FROM_TIME = new Date();
@@ -177,17 +155,14 @@ const initialState: IUserData = {
         "4": undefined,
         "5": undefined,
     },
-    verificationStatus: EVerificationStatus.NOT_NEEDED,
-    approachChoice: EApproachChoice.BOTH,
-    /*street: "",
-      postalCode: "",
-      country: "",*/
+    verificationStatus: UserVerificationStatusEnum.not_needed,
+    approachChoice: UserApproachChoiceEnum.both,
     blacklistedRegions: [],
     approachFromTime: DEFAULT_FROM_TIME,
     approachToTime: DEFAULT_TO_TIME,
     bio: "No pick-up lines please. Just be chill.",
     currentLocation: undefined,
-    dateMode: EDateMode.GHOST,
+    dateMode: UserDateModeEnum.ghost,
     jwtAccessToken: undefined,
 };
 
@@ -254,12 +229,12 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
         case EACTION_USER.SET_GENDER:
             return {
                 ...state,
-                gender: action.payload as Gender,
+                gender: action.payload as UserGenderEnum,
             };
         case EACTION_USER.SET_GENDER_DESIRE:
             return {
                 ...state,
-                genderDesire: action.payload as Gender,
+                genderDesire: action.payload as UserGenderEnum,
             };
         case EACTION_USER.SET_IMAGE:
             const { imageIdx, image } = action.payload as IImageAction;
@@ -270,12 +245,13 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
         case EACTION_USER.SET_VERIFICATION_STATUS:
             return {
                 ...state,
-                verificationStatus: action.payload as EVerificationStatus,
+                verificationStatus:
+                    action.payload as UserVerificationStatusEnum,
             };
         case EACTION_USER.SET_APPROACH_CHOICE:
             return {
                 ...state,
-                approachChoice: action.payload as EApproachChoice,
+                approachChoice: action.payload as UserApproachChoiceEnum,
             };
         /* case EACTION_USER.SET_STREET:
                  return {
@@ -320,7 +296,7 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
         case EACTION_USER.SET_DATE_MODE:
             return {
                 ...state,
-                dateMode: action.payload as EDateMode,
+                dateMode: action.payload as UserDateModeEnum,
             };
         default:
             return state;

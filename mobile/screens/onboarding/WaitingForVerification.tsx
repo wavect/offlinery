@@ -2,11 +2,12 @@ import { A } from "@expo/html-elements";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
+import { UserVerificationStatusEnum } from "../../api/gen/src";
 import { OButtonWide } from "../../components/OButtonWide/OButtonWide";
 import { OLinearBackground } from "../../components/OLinearBackground/OLinearBackground";
 import { OShowcase } from "../../components/OShowcase/OShowcase";
-import { EVerificationStatus, useUserContext } from "../../context/UserContext";
-import { i18n, TR } from "../../localization/translate.service";
+import { useUserContext } from "../../context/UserContext";
+import { TR, i18n } from "../../localization/translate.service";
 import { ROUTES } from "../routes";
 
 const WaitingForVerification = ({ navigation }) => {
@@ -22,7 +23,7 @@ const WaitingForVerification = ({ navigation }) => {
                     style={{ marginBottom: 14 }}
                     disabled={
                         state.verificationStatus !==
-                        EVerificationStatus.VERIFIED
+                        UserVerificationStatusEnum.verified
                     }
                     onPress={() => navigation.navigate(ROUTES.Main.HeatMap)}
                     variant="light"
