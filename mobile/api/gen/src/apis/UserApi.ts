@@ -38,16 +38,16 @@ export interface UserControllerCreateUserRequest {
 }
 
 export interface UserControllerGetUserRequest {
-    id: number;
+    userId: number;
 }
 
 export interface UserControllerUpdateLocationRequest {
-    id: string;
+    userId: string;
     locationUpdateDTO: LocationUpdateDTO;
 }
 
 export interface UserControllerUpdateUserRequest {
-    id: string;
+    userId: string;
     user?: UpdateUserDTO;
     images?: ImagePickerAsset[];
 }
@@ -84,7 +84,7 @@ export interface UserApiInterface {
     /**
      *
      * @summary Get a user by ID
-     * @param {number} id User ID
+     * @param {number} userId User ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApiInterface
@@ -105,7 +105,7 @@ export interface UserApiInterface {
     /**
      *
      * @summary Update user location
-     * @param {string} id User ID
+     * @param {string} userId User ID
      * @param {LocationUpdateDTO} locationUpdateDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -127,7 +127,7 @@ export interface UserApiInterface {
     /**
      *
      * @summary Update an existing user
-     * @param {string} id
+     * @param {string} userId
      * @param {UpdateUserDTO} [user]
      * @param {Array<Blob>} [images] An array of image files
      * @param {*} [options] Override http request option.
@@ -250,10 +250,10 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         requestParameters: UserControllerGetUserRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<User>> {
-        if (requestParameters["id"] == null) {
+        if (requestParameters["userId"] == null) {
             throw new runtime.RequiredError(
-                "id",
-                'Required parameter "id" was null or undefined when calling userControllerGetUser().',
+                "userId",
+                'Required parameter "userId" was null or undefined when calling userControllerGetUser().',
             );
         }
 
@@ -263,9 +263,9 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
 
         const response = await this.request(
             {
-                path: `/user/{id}`.replace(
-                    `{${"id"}}`,
-                    encodeURIComponent(String(requestParameters["id"])),
+                path: `/user/{userId}`.replace(
+                    `{${"userId"}}`,
+                    encodeURIComponent(String(requestParameters["userId"])),
                 ),
                 method: "GET",
                 headers: headerParameters,
@@ -300,10 +300,10 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         requestParameters: UserControllerUpdateLocationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<UserPublicDTO>> {
-        if (requestParameters["id"] == null) {
+        if (requestParameters["userId"] == null) {
             throw new runtime.RequiredError(
-                "id",
-                'Required parameter "id" was null or undefined when calling userControllerUpdateLocation().',
+                "userId",
+                'Required parameter "userId" was null or undefined when calling userControllerUpdateLocation().',
             );
         }
 
@@ -322,9 +322,9 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
 
         const response = await this.request(
             {
-                path: `/user/{id}/location`.replace(
-                    `{${"id"}}`,
-                    encodeURIComponent(String(requestParameters["id"])),
+                path: `/user/{userId}/location`.replace(
+                    `{${"userId"}}`,
+                    encodeURIComponent(String(requestParameters["userId"])),
                 ),
                 method: "PUT",
                 headers: headerParameters,
@@ -362,10 +362,10 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         requestParameters: UserControllerUpdateUserRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<UserPublicDTO>> {
-        if (requestParameters["id"] == null) {
+        if (requestParameters["userId"] == null) {
             throw new runtime.RequiredError(
-                "id",
-                'Required parameter "id" was null or undefined when calling userControllerUpdateUser().',
+                "userId",
+                'Required parameter "userId" was null or undefined when calling userControllerUpdateUser().',
             );
         }
 
@@ -411,9 +411,9 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         }
         const response = await this.request(
             {
-                path: `/user/{id}`.replace(
-                    `{${"id"}}`,
-                    encodeURIComponent(String(requestParameters["id"])),
+                path: `/user/{userId}`.replace(
+                    `{${"userId"}}`,
+                    encodeURIComponent(String(requestParameters["userId"])),
                 ),
                 method: "PUT",
                 headers: headerParameters,

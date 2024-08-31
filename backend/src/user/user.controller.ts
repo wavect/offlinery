@@ -21,6 +21,7 @@ import {
     ApiResponse,
     ApiTags,
 } from "@nestjs/swagger";
+import { OnlyOwnUserData, USER_ID_PARAM } from "../auth/auth-own-data.guard";
 import { Public } from "../auth/auth.guard";
 import { CreateUserRequestDTO } from "../DTOs/create-user-request.dto";
 import { CreateUserDTO } from "../DTOs/create-user.dto";
@@ -73,7 +74,8 @@ export class UserController {
         ).convertToPublicDTO();
     }
 
-    @Put(":id")
+    @Put(`:${USER_ID_PARAM}`)
+    @OnlyOwnUserData()
     @UseInterceptors(FilesInterceptor("images", 6))
     @ApiConsumes("multipart/form-data")
     @ApiBody({
@@ -82,7 +84,7 @@ export class UserController {
     })
     @ApiOperation({ summary: "Update an existing user" })
     async updateUser(
-        @Param("id") id: string,
+        @Param(USER_ID_PARAM) userId: string,
         @Body("user", new ParseJsonPipe(UpdateUserDTO))
         updateUserDto: UpdateUserDTO,
         @UploadedFiles(
@@ -100,30 +102,34 @@ export class UserController {
         images?: Express.Multer.File[],
     ): Promise<UserPublicDTO> {
         return (
-            await this.userService.updateUser(id, updateUserDto, images)
+            await this.userService.updateUser(userId, updateUserDto, images)
         ).convertToPublicDTO();
     }
 
-    @Get(":id")
+    @Get(`:${USER_ID_PARAM}`)
+    @OnlyOwnUserData()
     @ApiOperation({ summary: "Get a user by ID" })
-    @ApiParam({ name: "id", type: "number", description: "User ID" })
+    @ApiParam({ name: USER_ID_PARAM, type: "number", description: "User ID" })
     @ApiResponse({
         status: 200,
         description: "The user has been successfully retrieved.",
         type: User,
     })
     @ApiResponse({ status: 404, description: "User not found." })
-    async getUser(@Param("id") id: string): Promise<UserPublicDTO> {
-        const user = await this.userService.findUserById(id);
+    async getUser(
+        @Param(USER_ID_PARAM) userId: string,
+    ): Promise<UserPublicDTO> {
+        const user = await this.userService.findUserById(userId);
         if (!user) {
-            throw new NotFoundException(`User with ID ${id} not found`);
+            throw new NotFoundException(`User with ID ${userId} not found`);
         }
         return user.convertToPublicDTO();
     }
 
-    @Put(":id/location")
+    @Put(`:${USER_ID_PARAM}/location`)
+    @OnlyOwnUserData()
     @ApiOperation({ summary: "Update user location" })
-    @ApiParam({ name: "id", type: "string", description: "User ID" })
+    @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })
     @ApiBody({ type: LocationUpdateDTO })
     @ApiResponse({
         status: 200,
@@ -132,11 +138,11 @@ export class UserController {
     })
     @ApiResponse({ status: 404, description: "User not found." })
     async updateLocation(
-        @Param("id") id: string,
+        @Param(USER_ID_PARAM) userId: string,
         @Body() locationUpdateDTO: LocationUpdateDTO,
     ): Promise<UserPublicDTO> {
         const updatedUser = await this.userService.updateLocation(
-            id,
+            userId,
             locationUpdateDTO,
         );
         return updatedUser.convertToPublicDTO();
