@@ -12,7 +12,7 @@ export const de: Language = {
     termsDisclaimer: {
         p1: "Durch Tippen auf „Konto erstellen“ oder „Anmelden“ stimmst du unseren ",
         terms: "Allgemeinen Geschäftsbedingungen",
-        p2: " zu. ",
+        p2: " zu. Unsere ",
         privacyCookie: "Datenschutz- und Cookie-Richtlinie.",
     },
     yourEmail: "Deine E-Mail",
