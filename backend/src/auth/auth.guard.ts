@@ -1,3 +1,4 @@
+import { TYPED_ENV } from "@/utils/env.utils";
 import {
     CanActivate,
     ExecutionContext,
@@ -8,7 +9,6 @@ import {
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
-import { TYPED_ENV } from "../utils/env.utils";
 
 export const IS_PUBLIC_KEY = "isPublic";
 /** @dev Use this above controller methods to declare routes as public since all routes are private by default! */

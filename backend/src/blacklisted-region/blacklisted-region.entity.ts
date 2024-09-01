@@ -1,3 +1,4 @@
+import { User } from "@/user/user.entity";
 import { Point } from "geojson";
 import {
     Column,
@@ -6,7 +7,6 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from "typeorm";
-import { User } from "../user/user.entity";
 
 @Entity()
 export class BlacklistedRegion {

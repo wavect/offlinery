@@ -1,8 +1,8 @@
+import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
+import { UserService } from "@/user/user.service";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import { SignInResponseDTO } from "../DTOs/sign-in-response.dto";
-import { UserService } from "../user/user.service";
 
 @Injectable()
 export class AuthService {

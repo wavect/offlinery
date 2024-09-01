@@ -1,8 +1,8 @@
+import { CreateUserReportDTO } from "@/DTOs/create-user-report.dto";
+import { User } from "@/user/user.entity";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { CreateUserReportDTO } from "../DTOs/create-user-report.dto";
-import { User } from "../user/user.entity";
 import { UserReport } from "./user-report.entity";
 
 @Injectable()

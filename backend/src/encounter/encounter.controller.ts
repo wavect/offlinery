@@ -1,7 +1,7 @@
+import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
+import { EncounterPublicDTO } from "@/DTOs/encounter-public.dto";
 import { Controller, Get, NotFoundException, Param } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { OnlyOwnUserData, USER_ID_PARAM } from "../auth/auth-own-data.guard";
-import { EncounterPublicDTO } from "../DTOs/encounter-public.dto";
 import { EncounterService } from "./encounter.service";
 
 @ApiTags("Encounter")

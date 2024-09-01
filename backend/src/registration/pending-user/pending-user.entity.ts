@@ -1,7 +1,7 @@
+import { EEmailVerificationStatus } from "@/types/user.types";
 import { PendingUserPublicDTO } from "src/DTOs/pending-user.dto";
 import { IEntityToDTOInterface } from "src/interfaces/IEntityToDTO.interface";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { EEmailVerificationStatus } from "../../types/user.types";
 
 @Entity()
 export class PendingUser

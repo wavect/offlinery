@@ -1,6 +1,6 @@
+import { User } from "@/user/user.entity";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "../user/user.entity";
 import { EncounterController } from "./encounter.controller";
 import { Encounter } from "./encounter.entity";
 import { EncounterService } from "./encounter.service";

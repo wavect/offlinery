@@ -1,13 +1,13 @@
+import { BlacklistedRegion } from "@/blacklisted-region/blacklisted-region.entity";
+import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
+import { I18nTranslations } from "@/translations/i18n.generated";
+import { EDateMode } from "@/types/user.types";
+import { User } from "@/user/user.entity";
+import { getAge } from "@/utils/date.utils";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
-import { BlacklistedRegion } from "../../blacklisted-region/blacklisted-region.entity";
-import { EAppScreens } from "../../DTOs/notification-navigate-user.dto";
-import { I18nTranslations } from "../../translations/i18n.generated";
-import { EDateMode } from "../../types/user.types";
-import { User } from "../../user/user.entity";
-import { getAge } from "../../utils/date.utils";
 import { OfflineryNotification } from "../notification/notification-message.type";
 import { NotificationService } from "../notification/notification.service";
 

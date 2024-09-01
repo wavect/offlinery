@@ -1,3 +1,5 @@
+import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard"; // Assume this service exists to handle user-related operations
+import { StorePushTokenDTO } from "@/DTOs/store-push-token.dto";
 import {
     Body,
     Controller,
@@ -7,8 +9,6 @@ import {
     Post,
 } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { OnlyOwnUserData, USER_ID_PARAM } from "../../auth/auth-own-data.guard"; // Assume this service exists to handle user-related operations
-import { StorePushTokenDTO } from "../../DTOs/store-push-token.dto";
 import { NotificationService } from "./notification.service";
 
 @ApiTags("Push Notifications")

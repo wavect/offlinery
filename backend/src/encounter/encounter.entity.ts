@@ -1,3 +1,8 @@
+import { EncounterPublicDTO } from "@/DTOs/encounter-public.dto";
+import { IEntityToDTOInterface } from "@/interfaces/IEntityToDTO.interface";
+import { EEncounterStatus } from "@/types/user.types";
+import { UserReport } from "@/user-report/user-report.entity";
+import { User } from "@/user/user.entity";
 import {
     Column,
     Entity,
@@ -5,11 +10,6 @@ import {
     OneToMany,
     PrimaryGeneratedColumn,
 } from "typeorm";
-import { EncounterPublicDTO } from "../DTOs/encounter-public.dto";
-import { IEntityToDTOInterface } from "../interfaces/IEntityToDTO.interface";
-import { EEncounterStatus } from "../types/user.types";
-import { UserReport } from "../user-report/user-report.entity";
-import { User } from "../user/user.entity";
 
 @Entity()
 export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {

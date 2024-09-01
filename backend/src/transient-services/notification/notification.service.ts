@@ -1,7 +1,7 @@
+import { StorePushTokenDTO } from "@/DTOs/store-push-token.dto";
+import { UserService } from "@/user/user.service";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { Expo, ExpoPushTicket, ExpoPushToken } from "expo-server-sdk";
-import { StorePushTokenDTO } from "../../DTOs/store-push-token.dto";
-import { UserService } from "../../user/user.service";
 import { OfflineryNotification } from "./notification-message.type";
 
 @Injectable()

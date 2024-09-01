@@ -1,3 +1,6 @@
+import { Encounter } from "@/encounter/encounter.entity";
+import { EIncidentType } from "@/types/user.types";
+import { User } from "@/user/user.entity";
 import {
     Column,
     CreateDateColumn,
@@ -5,9 +8,6 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from "typeorm";
-import { Encounter } from "../encounter/encounter.entity";
-import { EIncidentType } from "../types/user.types";
-import { User } from "../user/user.entity";
 
 @Entity()
 export class UserReport {

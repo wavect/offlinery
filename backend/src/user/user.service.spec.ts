@@ -1,12 +1,8 @@
-import { NotFoundException } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
-import { Point } from "geojson";
-import { Repository } from "typeorm";
-import { CreateUserDTO } from "../DTOs/create-user.dto";
-import { LocationUpdateDTO } from "../DTOs/location-update.dto";
-import { UpdateUserDTO } from "../DTOs/update-user.dto";
-import { PendingUser } from "../registration/pending-user/pending-user.entity";
-import { MatchingService } from "../transient-services/matching/matching.service";
+import { CreateUserDTO } from "@/DTOs/create-user.dto";
+import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { UpdateUserDTO } from "@/DTOs/update-user.dto";
+import { PendingUser } from "@/registration/pending-user/pending-user.entity";
+import { MatchingService } from "@/transient-services/matching/matching.service";
 import {
     EApproachChoice,
     EDateMode,
@@ -14,7 +10,11 @@ import {
     EGender,
     ELanguage,
     EVerificationStatus,
-} from "../types/user.types";
+} from "@/types/user.types";
+import { NotFoundException } from "@nestjs/common";
+import { Test, TestingModule } from "@nestjs/testing";
+import { Point } from "geojson";
+import { Repository } from "typeorm";
 import { User } from "./user.entity";
 import { UserService } from "./user.service";
 

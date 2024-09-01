@@ -1,11 +1,11 @@
-import { BlacklistedRegion } from "../blacklisted-region/blacklisted-region.entity";
+import { BlacklistedRegion } from "@/blacklisted-region/blacklisted-region.entity";
 import {
     EApproachChoice,
     EDateMode,
     EGender,
     EVerificationStatus,
-} from "../types/user.types";
-import { getAge } from "../utils/date.utils";
+} from "@/types/user.types";
+import { getAge } from "@/utils/date.utils";
 import { User } from "./user.entity";
 
 describe("User Entity", () => {

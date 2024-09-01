@@ -1,7 +1,7 @@
+import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
+import { SignInDTO } from "@/DTOs/sign-in.dto";
 import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { SignInResponseDTO } from "../DTOs/sign-in-response.dto";
-import { SignInDTO } from "../DTOs/sign-in.dto";
 import { Public } from "./auth.guard";
 import { AuthService } from "./auth.service";
 

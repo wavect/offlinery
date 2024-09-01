@@ -1,3 +1,13 @@
+import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
+import { Public } from "@/auth/auth.guard";
+import { CreateUserRequestDTO } from "@/DTOs/create-user-request.dto";
+import { CreateUserDTO } from "@/DTOs/create-user.dto";
+import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { UpdateUserRequestDTO } from "@/DTOs/update-user-request.dto";
+import { UpdateUserDTO } from "@/DTOs/update-user.dto";
+import { UserPublicDTO } from "@/DTOs/user-public.dto";
+import { CustomParseFilePipe } from "@/pipes/CustomParseFile.pipe";
+import { ParseJsonPipe } from "@/pipes/ParseJson.pipe";
 import {
     Body,
     Controller,
@@ -21,16 +31,6 @@ import {
     ApiResponse,
     ApiTags,
 } from "@nestjs/swagger";
-import { OnlyOwnUserData, USER_ID_PARAM } from "../auth/auth-own-data.guard";
-import { Public } from "../auth/auth.guard";
-import { CreateUserRequestDTO } from "../DTOs/create-user-request.dto";
-import { CreateUserDTO } from "../DTOs/create-user.dto";
-import { LocationUpdateDTO } from "../DTOs/location-update.dto";
-import { UpdateUserRequestDTO } from "../DTOs/update-user-request.dto";
-import { UpdateUserDTO } from "../DTOs/update-user.dto";
-import { UserPublicDTO } from "../DTOs/user-public.dto";
-import { CustomParseFilePipe } from "../pipes/CustomParseFile.pipe";
-import { ParseJsonPipe } from "../pipes/ParseJson.pipe";
 import { User } from "./user.entity";
 import { UserService } from "./user.service";
 

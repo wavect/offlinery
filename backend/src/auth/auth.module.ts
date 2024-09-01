@@ -1,8 +1,8 @@
+import { UserModule } from "@/user/user.module";
+import { TYPED_ENV } from "@/utils/env.utils";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
-import { UserModule } from "../user/user.module";
-import { TYPED_ENV } from "../utils/env.utils";
 import { UserSpecificAuthGuard } from "./auth-own-data.guard";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
