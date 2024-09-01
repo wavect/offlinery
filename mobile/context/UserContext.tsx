@@ -7,9 +7,11 @@ import {
     UserControllerCreateUserRequest,
     UserDateModeEnum,
     UserGenderEnum,
+    UserPreferredLanguageEnum,
     UserPublicDTO,
     UserVerificationStatusEnum,
 } from "@/api/gen/src";
+import { i18n } from "@/localization/translate.service";
 import { getAge } from "@/utils/date.utils";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
@@ -253,21 +255,6 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
                 ...state,
                 approachChoice: action.payload as UserApproachChoiceEnum,
             };
-        /* case EACTION_USER.SET_STREET:
-                 return {
-                     ...state,
-                     street: action.payload as string,
-                 };
-             case EACTION_USER.SET_POSTAL_CODE:
-                 return {
-                     ...state,
-                     postalCode: action.payload as string,
-                 };
-             case EACTION_USER.SET_COUNTRY:
-                 return {
-                     ...state,
-                     country: action.payload as string,
-                 };*/
         case EACTION_USER.SET_BLACKLISTED_REGIONS:
             return {
                 ...state,
@@ -351,6 +338,9 @@ export const registerUser = async (
         approachToTime: state.approachToTime,
         bio: state.bio,
         dateMode: state.dateMode,
+        preferredLanguage:
+            (i18n.locale as UserPreferredLanguageEnum) ??
+            UserPreferredLanguageEnum.en,
     };
 
     const requestParameters: UserControllerCreateUserRequest = {

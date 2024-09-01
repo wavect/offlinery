@@ -172,6 +172,12 @@ export interface User {
      * @memberof User
      */
     location: object;
+    /**
+     *
+     * @type {string}
+     * @memberof User
+     */
+    preferredLanguage: UserPreferredLanguageEnum;
 }
 
 /**
@@ -227,6 +233,16 @@ export type UserDateModeEnum =
     (typeof UserDateModeEnum)[keyof typeof UserDateModeEnum];
 
 /**
+ * @export
+ */
+export const UserPreferredLanguageEnum = {
+    en: "en",
+    de: "de",
+} as const;
+export type UserPreferredLanguageEnum =
+    (typeof UserPreferredLanguageEnum)[keyof typeof UserPreferredLanguageEnum];
+
+/**
  * Check if a given object implements the User interface.
  */
 export function instanceOfUser(value: object): value is User {
@@ -280,6 +296,11 @@ export function instanceOfUser(value: object): value is User {
     if (!("encounters" in value) || value["encounters"] === undefined)
         return false;
     if (!("location" in value) || value["location"] === undefined) return false;
+    if (
+        !("preferredLanguage" in value) ||
+        value["preferredLanguage"] === undefined
+    )
+        return false;
     return true;
 }
 
@@ -325,6 +346,7 @@ export function UserFromJSONTyped(
         encounters: (json["encounters"] as Array<any>).map(EncounterFromJSON),
         trustScore: json["trustScore"] == null ? undefined : json["trustScore"],
         location: json["location"],
+        preferredLanguage: json["preferredLanguage"],
     };
 }
 
@@ -363,5 +385,6 @@ export function UserToJSON(value?: User | null): any {
         encounters: (value["encounters"] as Array<any>).map(EncounterToJSON),
         trustScore: value["trustScore"],
         location: value["location"],
+        preferredLanguage: value["preferredLanguage"],
     };
 }

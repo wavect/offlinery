@@ -15,6 +15,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    ELanguage,
     EVerificationStatus,
 } from "../types/user.types";
 import { UserReport } from "../user-report/user-report.entity";
@@ -135,4 +136,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
         nullable: true,
     })
     location: Point;
+
+    @Column({ nullable: true })
+    preferredLanguage: ELanguage;
 }

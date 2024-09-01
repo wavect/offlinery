@@ -108,6 +108,12 @@ export interface UpdateUserDTO {
      * @memberof UpdateUserDTO
      */
     clearPassword?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof UpdateUserDTO
+     */
+    preferredLanguage?: UpdateUserDTOPreferredLanguageEnum;
 }
 
 /**
@@ -163,6 +169,16 @@ export type UpdateUserDTODateModeEnum =
     (typeof UpdateUserDTODateModeEnum)[keyof typeof UpdateUserDTODateModeEnum];
 
 /**
+ * @export
+ */
+export const UpdateUserDTOPreferredLanguageEnum = {
+    en: "en",
+    de: "de",
+} as const;
+export type UpdateUserDTOPreferredLanguageEnum =
+    (typeof UpdateUserDTOPreferredLanguageEnum)[keyof typeof UpdateUserDTOPreferredLanguageEnum];
+
+/**
  * Check if a given object implements the UpdateUserDTO interface.
  */
 export function instanceOfUpdateUserDTO(value: object): value is UpdateUserDTO {
@@ -213,6 +229,10 @@ export function UpdateUserDTOFromJSONTyped(
         dateMode: json["dateMode"] == null ? undefined : json["dateMode"],
         clearPassword:
             json["clearPassword"] == null ? undefined : json["clearPassword"],
+        preferredLanguage:
+            json["preferredLanguage"] == null
+                ? undefined
+                : json["preferredLanguage"],
     };
 }
 
@@ -240,5 +260,6 @@ export function UpdateUserDTOToJSON(value?: UpdateUserDTO | null): any {
         bio: value["bio"],
         dateMode: value["dateMode"],
         clearPassword: value["clearPassword"],
+        preferredLanguage: value["preferredLanguage"],
     };
 }

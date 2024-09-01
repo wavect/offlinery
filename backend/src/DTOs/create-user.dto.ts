@@ -3,6 +3,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    ELanguage,
     EVerificationStatus,
 } from "../types/user.types";
 import { BlacklistedRegionDTO } from "./blacklisted-region.dto";
@@ -61,4 +62,7 @@ export class CreateUserDTO {
 
     @ApiProperty({ enum: EDateMode })
     dateMode: EDateMode;
+
+    @ApiProperty({ enum: ELanguage })
+    preferredLanguage: ELanguage;
 }

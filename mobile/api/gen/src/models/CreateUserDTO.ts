@@ -108,6 +108,12 @@ export interface CreateUserDTO {
      * @memberof CreateUserDTO
      */
     dateMode: CreateUserDTODateModeEnum;
+    /**
+     *
+     * @type {string}
+     * @memberof CreateUserDTO
+     */
+    preferredLanguage: CreateUserDTOPreferredLanguageEnum;
 }
 
 /**
@@ -163,6 +169,16 @@ export type CreateUserDTODateModeEnum =
     (typeof CreateUserDTODateModeEnum)[keyof typeof CreateUserDTODateModeEnum];
 
 /**
+ * @export
+ */
+export const CreateUserDTOPreferredLanguageEnum = {
+    en: "en",
+    de: "de",
+} as const;
+export type CreateUserDTOPreferredLanguageEnum =
+    (typeof CreateUserDTOPreferredLanguageEnum)[keyof typeof CreateUserDTOPreferredLanguageEnum];
+
+/**
  * Check if a given object implements the CreateUserDTO interface.
  */
 export function instanceOfCreateUserDTO(value: object): value is CreateUserDTO {
@@ -196,6 +212,11 @@ export function instanceOfCreateUserDTO(value: object): value is CreateUserDTO {
         return false;
     if (!("bio" in value) || value["bio"] === undefined) return false;
     if (!("dateMode" in value) || value["dateMode"] === undefined) return false;
+    if (
+        !("preferredLanguage" in value) ||
+        value["preferredLanguage"] === undefined
+    )
+        return false;
     return true;
 }
 
@@ -230,6 +251,7 @@ export function CreateUserDTOFromJSONTyped(
         approachToTime: new Date(json["approachToTime"]),
         bio: json["bio"],
         dateMode: json["dateMode"],
+        preferredLanguage: json["preferredLanguage"],
     };
 }
 
@@ -257,5 +279,6 @@ export function CreateUserDTOToJSON(value?: CreateUserDTO | null): any {
         approachToTime: value["approachToTime"].toISOString(),
         bio: value["bio"],
         dateMode: value["dateMode"],
+        preferredLanguage: value["preferredLanguage"],
     };
 }

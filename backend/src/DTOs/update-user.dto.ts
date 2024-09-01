@@ -3,6 +3,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    ELanguage,
     EVerificationStatus,
 } from "../types/user.types";
 import { BlacklistedRegionDTO } from "./blacklisted-region.dto";
@@ -60,4 +61,7 @@ export class UpdateUserDTO {
 
     @ApiProperty({ type: "string", required: false })
     clearPassword?: string;
+
+    @ApiProperty({ enum: ELanguage, required: false })
+    preferredLanguage: ELanguage;
 }

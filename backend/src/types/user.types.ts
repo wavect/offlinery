@@ -14,6 +14,11 @@ export enum EApproachChoice {
     BOTH = "both",
 }
 
+export enum ELanguage {
+    en = "en",
+    de = "de",
+}
+
 export enum EVerificationStatus {
     VERIFIED = "verified",
     PENDING = "pending",
