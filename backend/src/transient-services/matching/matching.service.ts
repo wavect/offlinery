@@ -1,8 +1,10 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
 import { BlacklistedRegion } from "../../blacklisted-region/blacklisted-region.entity";
 import { EAppScreens } from "../../DTOs/notification-navigate-user.dto";
+import { I18nTranslations } from "../../translations/i18n.generated";
 import { EDateMode } from "../../types/user.types";
 import { User } from "../../user/user.entity";
 import { getAge } from "../../utils/date.utils";
@@ -12,6 +14,7 @@ import { NotificationService } from "../notification/notification.service";
 @Injectable()
 export class MatchingService {
     constructor(
+        private readonly i18n: I18nService<I18nTranslations>,
         @InjectRepository(User)
         private userRepository: Repository<User>,
         @InjectRepository(BlacklistedRegion)
@@ -84,8 +87,10 @@ export class MatchingService {
             const notification: OfflineryNotification = {
                 to: user.pushToken,
                 sound: "default",
-                title: "New Match Nearby!",
-                body: `There's a potential match in your area!`,
+                title: this.i18n.t("main.notification.newMatch.title", {
+                    args: { firstName: user.firstName },
+                }),
+                body: this.i18n.t("main.notification.newMatch.body"),
                 data: {
                     screen: EAppScreens.NAVIGATE_TO_APPROACH,
                     navigateToPerson: user.convertToPublicDTO(),

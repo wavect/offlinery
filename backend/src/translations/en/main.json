@@ -1,0 +1,8 @@
+{
+  "notification": {
+    "newMatch": {
+      "title": "{firstName} is nearby! 🔥",
+      "body": "Find. Approach. IRL."
+    }
+  }
+}

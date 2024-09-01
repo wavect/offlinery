@@ -63,5 +63,5 @@ export class UpdateUserDTO {
     clearPassword?: string;
 
     @ApiProperty({ enum: ELanguage, required: false })
-    preferredLanguage: ELanguage;
+    preferredLanguage?: ELanguage;
 }

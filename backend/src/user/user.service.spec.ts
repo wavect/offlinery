@@ -12,6 +12,7 @@ import {
     EDateMode,
     EEmailVerificationStatus,
     EGender,
+    ELanguage,
     EVerificationStatus,
 } from "../types/user.types";
 import { User } from "./user.entity";
@@ -121,6 +122,7 @@ describe("UserService", () => {
                 approachToTime: new Date(),
                 dateMode: EDateMode.LIVE,
                 bio: "Hello, I am John",
+                preferredLanguage: ELanguage.en,
             };
 
             const mockImages: Express.Multer.File[] = [

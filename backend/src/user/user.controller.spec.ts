@@ -7,6 +7,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    ELanguage,
     EVerificationStatus,
 } from "../types/user.types";
 import { UserController } from "./user.controller";
@@ -58,6 +59,7 @@ describe("UserController", () => {
                 approachToTime: new Date(),
                 dateMode: EDateMode.LIVE,
                 bio: "Hello, I am John",
+                preferredLanguage: ELanguage.en,
             };
             const mockImages: Express.Multer.File[] = [];
             const mockUser = new User();

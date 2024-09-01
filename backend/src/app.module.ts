@@ -5,6 +5,13 @@ import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { ThrottlerModule } from "@nestjs/throttler";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import {
+    AcceptLanguageResolver,
+    HeaderResolver,
+    I18nModule,
+    QueryResolver,
+} from "nestjs-i18n";
+import * as path from "node:path";
 import { join } from "path";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -16,6 +23,7 @@ import { RegistrationModule } from "./registration/registration.module";
 import { MatchingModule } from "./transient-services/matching/matching.module";
 import { NotificationModule } from "./transient-services/notification/notification.module";
 import { typeOrmAsyncConfig } from "./typeorm.config";
+import { ELanguage } from "./types/user.types";
 import { UserReportModule } from "./user-report/user-report.module";
 import { UserModule } from "./user/user.module";
 import { TYPED_ENV } from "./utils/env.utils";
@@ -27,15 +35,27 @@ import { TYPED_ENV } from "./utils/env.utils";
             load: [() => TYPED_ENV],
         }),
         TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
-        // @dev https://docs.nestjs.com/techniques/caching
         CacheModule.register({
             isGlobal: true,
         }),
-        /* right now directly saved in UserService
-            MulterModule.register({
-               dest: './uploads'
-            }),*/
-        // @dev https://docs.nestjs.com/security/rate-limiting
+        I18nModule.forRoot({
+            fallbackLanguage: ELanguage.en,
+            loaderOptions: {
+                path: path.join("src", "translations"), // Updated path
+                watch: true,
+            },
+            resolvers: [
+                { use: QueryResolver, options: ["lang"] },
+                new HeaderResolver(["x-custom-lang"]),
+                AcceptLanguageResolver,
+            ],
+            typesOutputPath: path.join(
+                "src",
+                "translations",
+                "i18n.generated.ts",
+            ),
+            logging: true,
+        }),
         ThrottlerModule.forRoot([
             {
                 ttl: 60000,
@@ -43,7 +63,6 @@ import { TYPED_ENV } from "./utils/env.utils";
             },
         ]),
         ServeStaticModule.forRoot({
-            // serve images
             rootPath: join(__dirname, "..", "uploads/img"),
             serveRoot: "/img",
         }),
@@ -64,7 +83,6 @@ import { TYPED_ENV } from "./utils/env.utils";
             useClass: CacheInterceptor,
         },
         {
-            // @dev By default all routes should be private, except the ones we declare as public (security)
             provide: APP_GUARD,
             useClass: AuthGuard,
         },
