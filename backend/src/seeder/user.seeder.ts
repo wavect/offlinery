@@ -83,6 +83,7 @@ export class UserSeeder {
                 const pendingUser = new PendingUser();
                 pendingUser.email = email;
                 pendingUser.verificationCode = "1";
+                pendingUser.verificationCodeIssuedAt = new Date();
                 pendingUser.verificationStatus =
                     EEmailVerificationStatus.VERIFIED;
                 await this.pendingUserRepo.save(pendingUser);
