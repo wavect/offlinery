@@ -27,7 +27,7 @@ const mockUser: UserPublicDTO = {
     bio: "Hi, I am John. Nice to meet you!",
 };
 
-describe("NotificationService", () => {
+describe.only("NotificationService", () => {
     let notificationService: NotificationService;
     let i18nService: I18nService<I18nTranslations>;
 
