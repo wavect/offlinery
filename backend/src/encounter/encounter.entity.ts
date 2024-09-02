@@ -3,9 +3,11 @@ import { IEntityToDTOInterface } from "@/interfaces/IEntityToDTO.interface";
 import { EEncounterStatus } from "@/types/user.types";
 import { UserReport } from "@/user-report/user-report.entity";
 import { User } from "@/user/user.entity";
+import { Point } from "geojson";
 import {
     Column,
     Entity,
+    Index,
     ManyToMany,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -33,11 +35,14 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
     @Column({ type: "timestamptz" })
     lastDateTimePassedBy: Date;
 
-    @Column()
-    lastLongitudePassedBy: string;
-
-    @Column()
-    lastLatitudePassedBy: string;
+    @Index({ spatial: true })
+    @Column({
+        type: "geography",
+        spatialFeatureType: "Point",
+        srid: 4326,
+        nullable: true,
+    })
+    lastLocationPassedBy: Point;
 
     /** @dev Users that have met, typically 2.
      *
