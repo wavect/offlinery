@@ -1,3 +1,4 @@
+import { SeederModule } from "@/seeder/seeder.module";
 import { CacheInterceptor, CacheModule } from "@nestjs/cache-manager";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
@@ -74,6 +75,7 @@ import { TYPED_ENV } from "./utils/env.utils";
         AuthModule,
         EncounterModule,
         RegistrationModule,
+        SeederModule,
     ],
     controllers: [AppController],
     providers: [
