@@ -13,7 +13,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { randomBytes } from "crypto";
 import * as path from "node:path";
-import stream from "stream";
+import { Readable } from "stream";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -30,7 +30,7 @@ export class UserSeeder {
         // Generate a random filename
         const filename = `1`;
         const buffer = randomBytes(1024 * 1024);
-        const fileStream = new stream.Readable();
+        const fileStream = new Readable();
         fileStream.push(buffer);
         fileStream.push(null);
 
