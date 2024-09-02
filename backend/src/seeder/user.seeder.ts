@@ -11,11 +11,10 @@ import {
 import { UserService } from "@/user/user.service";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import crypto from "crypto";
 import * as path from "node:path";
+import stream from "stream";
 import { Repository } from "typeorm";
-
-const crypto = require("crypto");
-const stream = require("stream");
 
 @Injectable()
 export class UserSeeder {
@@ -46,7 +45,7 @@ export class UserSeeder {
             destination: "uploads/",
             filename: filename,
             path: path.join("uploads", filename),
-            stream,
+            stream: fileStream,
         };
 
         return file;
