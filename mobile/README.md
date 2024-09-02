@@ -19,3 +19,8 @@ Make sure the `BASE_PATH` in `api/gen/`is set properly.
 ### Production
 
 The production backend is deployed on the free tier on render.com once you push to `main`.
+
+## Release
+1. Run `npx expo-doctor`
+2. Build with EAS: `eas build --platform android|ios|all`
+3. Submit to App stores `eas submit`
