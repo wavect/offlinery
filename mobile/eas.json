@@ -5,12 +5,22 @@
     "build": {
         "development": {
             "developmentClient": true,
-            "distribution": "internal"
+            "distribution": "internal",
+            "env": {
+                "API_URL": "https://offlinery.onrender.com/v1"
+            }
         },
         "preview": {
-            "distribution": "internal"
+            "distribution": "internal",
+            "env": {
+                "API_URL": "https://offlinery.onrender.com/v1"
+            }
         },
-        "production": {}
+        "production": {
+            "env": {
+                "API_URL": "https://offlinery.onrender.com/v1"
+            }
+        }
     },
     "submit": {
         "production": {}
