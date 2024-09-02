@@ -5,6 +5,7 @@ import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackgro
 import { OShowcase } from "@/components/OShowcase/OShowcase";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
 import { OTextInputWide } from "@/components/OTextInputWide/OTextInputWide";
+import { OTroubleSignIn } from "@/components/OTroubleSignIn/OTroubleSignIn";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
@@ -120,9 +121,7 @@ const Login = ({ navigation }) => {
 
                         <OTermsDisclaimer style={styles.termsDisclaimer} />
 
-                        <Text style={styles.troubleSigningIn}>
-                            {i18n.t(TR.troubleSignIn)}
-                        </Text>
+                        <OTroubleSignIn />
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
@@ -153,16 +152,6 @@ const styles = StyleSheet.create({
     termsDisclaimer: {
         marginTop: 20,
         color: Color.white,
-    },
-    troubleSigningIn: {
-        fontSize: 16,
-        lineHeight: 24,
-        marginTop: 10,
-        textDecorationLine: "underline",
-        fontFamily: FontFamily.montserratLight,
-        fontWeight: "500",
-        color: Color.white,
-        textAlign: "center",
     },
     errorMessage: {
         color: Color.redLight,

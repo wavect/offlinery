@@ -3,6 +3,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
 import { OShowcase } from "@/components/OShowcase/OShowcase";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
+import { OTroubleSignIn } from "@/components/OTroubleSignIn/OTroubleSignIn";
 import { isAuthenticated, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { useFocusEffect } from "@react-navigation/native";
@@ -66,14 +67,7 @@ const Welcome = ({ navigation }) => {
                 onPress={() => navigation.navigate(ROUTES.Login)}
             />
 
-            <Text
-                style={[
-                    styles.troubleSigningIn,
-                    styles.troubleSigningInFlexBox,
-                ]}
-            >
-                {i18n.t(TR.troubleSignIn)}
-            </Text>
+            <OTroubleSignIn style={styles.troubleSigningInFlexBox} />
         </>
     );
 
@@ -112,18 +106,12 @@ const styles = StyleSheet.create({
         color: Color.white,
         textAlign: "center",
         alignItems: "center",
-    },
-    troubleSigningIn: {
+        justifyContent: "center",
         fontSize: 16,
         lineHeight: 24,
         marginBottom: 22,
         width: 230,
         height: 45,
-        textDecorationLine: "underline",
-        fontFamily: FontFamily.montserratLight,
-        display: "flex",
-        fontWeight: "500",
-        justifyContent: "center",
     },
     termsText: {
         fontFamily: FontFamily.montserratLight,
