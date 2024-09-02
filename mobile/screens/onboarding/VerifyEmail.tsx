@@ -3,16 +3,37 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { ROUTES } from "../routes";
 
 const VerifyEmail = ({ navigation }) => {
     const { state, dispatch } = useUserContext();
-    const [code, setCode] = React.useState<string[]>(new Array(6).fill(""));
+    const [code, setCode] = useState<string[]>(new Array(6).fill(""));
+    const [timer, setTimer] = useState(0);
+    const [isResendDisabled, setIsResendDisabled] = useState(true);
+    const [isLoading, setLoading] = useState(false);
+
     const inputs = React.useRef<TextInput[]>([]);
 
     const isInvalidCode = () => code.some((digit) => digit === "");
+
+    useEffect(() => {
+        sendVerificationCode();
+    }, []);
+
+    useEffect(() => {
+        if (timer > 0) {
+            setIsResendDisabled(true);
+            const countdown = setInterval(() => {
+                setTimer((prevTimer) => prevTimer - 1);
+            }, 1000);
+
+            return () => clearInterval(countdown);
+        } else {
+            setIsResendDisabled(false);
+        }
+    }, [timer]);
 
     const handleChange = (text: string, index: number) => {
         const newCode = [...code];
@@ -45,6 +66,44 @@ const VerifyEmail = ({ navigation }) => {
         navigation.navigate(ROUTES.Onboarding.Password);
     };
 
+    const sendVerificationCode = async () => {
+        try {
+            setLoading(true);
+            const regApi = new RegistrationApi();
+            const result =
+                await regApi.registrationControllerRegisterUserForEmailVerification(
+                    {
+                        registrationForVerificationRequestDTO: {
+                            email: state.email,
+                        },
+                    },
+                );
+
+            if (!result.email) {
+                throw new Error("Error registering email");
+            }
+
+            const issuedAt = result.verificationCodeIssuedAt.getTime();
+            const difference = Date.now() - issuedAt;
+            const remainingTime =
+                result.timeout / 1000 - Math.floor(difference / 1000);
+
+            setTimer(remainingTime > 0 ? remainingTime : 0);
+            setIsResendDisabled(remainingTime > 0);
+        } catch (error) {
+            console.error(error);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const formatTime = (seconds: number) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    };
+
     return (
         <OPageContainer
             title={i18n.t(TR.enterVerificationCode)}
@@ -75,6 +134,20 @@ const VerifyEmail = ({ navigation }) => {
                     />
                 ))}
             </View>
+            <View style={styles.resendContainer}>
+                <OButtonWide
+                    text={
+                        isResendDisabled
+                            ? `${i18n.t(TR.verificationCodeResend)} (${formatTime(timer)})`
+                            : i18n.t(TR.verificationCodeResend)
+                    }
+                    isLoading={isLoading}
+                    disabled={isResendDisabled}
+                    filled={true}
+                    variant="dark"
+                    onPress={sendVerificationCode}
+                ></OButtonWide>
+            </View>
         </OPageContainer>
     );
 };
@@ -93,6 +166,10 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         textAlign: "center",
         fontSize: 20,
+    },
+    resendContainer: {
+        marginTop: 16,
+        alignItems: "center",
     },
 });
 
