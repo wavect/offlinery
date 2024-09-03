@@ -7,6 +7,7 @@ import {
     IUserAction,
     IUserData,
     ImageIdx,
+    isImagePicker,
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
@@ -61,7 +62,8 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
         }
     };
 
-    const uri = state.imageURIs[imageIdx]?.uri;
+    const img = state.imageURIs[imageIdx];
+    const uri = isImagePicker(img) ? img.uri : undefined;
     // If uri is set here, we can access the image on the local device.
     // Otherwise we need to access the image via our backend.
     const currImg =

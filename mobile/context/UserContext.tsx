@@ -15,7 +15,6 @@ import { i18n } from "@/localization/translate.service";
 import { getAge } from "@/utils/date.utils";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
-import { LocationObject } from "expo-location";
 import React, { Dispatch, createContext, useContext, useReducer } from "react";
 import { Platform } from "react-native";
 
@@ -30,7 +29,7 @@ export interface IUserData {
     gender?: UserGenderEnum;
     genderDesire?: UserGenderEnum;
     imageURIs: {
-        [key in ImageIdx]?: ImagePicker.ImagePickerAsset;
+        [key in ImageIdx]?: ImagePicker.ImagePickerAsset | string;
     };
     verificationStatus: UserVerificationStatusEnum;
     approachChoice: UserApproachChoiceEnum;
@@ -39,7 +38,6 @@ export interface IUserData {
     approachFromTime: Date;
     approachToTime: Date;
     bio: string;
-    currentLocation?: LocationObject;
     dateMode: UserDateModeEnum;
     /** @dev Set once logged in */
     jwtAccessToken?: string;
@@ -102,7 +100,6 @@ export interface IUserAction {
         | UserApproachChoiceEnum
         | UserVerificationStatusEnum
         | MapRegion[]
-        | LocationObject
         | UserDateModeEnum
         | Partial<IUserData>
         | number;
@@ -125,7 +122,6 @@ export enum EACTION_USER {
     SET_APPROACH_FROM_TIME = "SET_APPROACH_FROM_TIME",
     SET_APPROACH_TO_TIME = "SET_APPROACH_TO_TIME",
     SET_BIO = "SET_BIO",
-    SET_CURRENT_LOCATION = "SET_CURRENT_LOCATION",
     SET_DATE_MODE = "SET_DATE_MODE",
     SET_JWT_ACCESS_TOKEN = "SET_JWT_ACCESS_TOKEN",
 }
@@ -163,7 +159,6 @@ const initialState: IUserData = {
     approachFromTime: DEFAULT_FROM_TIME,
     approachToTime: DEFAULT_TO_TIME,
     bio: "No pick-up lines please. Just be chill.",
-    currentLocation: undefined,
     dateMode: UserDateModeEnum.ghost,
     jwtAccessToken: undefined,
 };
@@ -172,7 +167,9 @@ export const getSavedImageURIs = (state: IUserData): string[] => {
     const imgs: string[] = [];
     for (const img of Object.values(state.imageURIs)) {
         // return first image as people can upload image into any slot without filling out all of them as of now
-        if (img) imgs.push(img.uri);
+        if (img) {
+            isImagePicker(img) ? imgs.push(img.uri) : imgs.push(img);
+        }
     }
     return imgs;
 };
@@ -275,11 +272,6 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
                 ...state,
                 bio: action.payload as string,
             };
-        case EACTION_USER.SET_CURRENT_LOCATION:
-            return {
-                ...state,
-                currentLocation: action.payload as LocationObject,
-            };
         case EACTION_USER.SET_DATE_MODE:
             return {
                 ...state,
@@ -370,7 +362,7 @@ export const getUserImagesForUpload = (
     state: IUserData,
 ): ImagePickerAsset[] => {
     return Object.values(state.imageURIs)
-        .filter((image) => image && image.uri)
+        .filter(isImagePicker)
         .map((image) => ({
             ...image,
             uri:
@@ -378,4 +370,15 @@ export const getUserImagesForUpload = (
                     ? image.uri.replace("file://", "")
                     : image.uri,
         }));
+};
+
+export const isImagePicker = (
+    image: ImagePickerAsset | string | undefined,
+): image is ImagePickerAsset => {
+    return (
+        image !== undefined &&
+        typeof image === "object" &&
+        image !== null &&
+        "uri" in image
+    );
 };
