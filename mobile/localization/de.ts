@@ -9,9 +9,11 @@ export const de: Language = {
     gettingReadyToAmazeYou: "Bereit, dich zu beeindrucken..",
     datingAppsAreBroken: "Dating apps are Broken",
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
+    verificationCodeResend: "Code neu senden",
+    invalidEmail: "Email ungültig oder existiert bereits.",
     termsDisclaimer: {
-        p1: "Durch Tippen auf „Konto erstellen“ oder „Anmelden“ stimmst du unseren ",
-        terms: "Allgemeinen Geschäftsbedingungen",
+        p1: "Durch Tippen auf 'Konto erstellen' oder 'Anmelden' stimmst du unseren ",
+        terms: "AGBs",
         p2: " zu. Unsere ",
         privacyCookie: "Datenschutz- und Cookie-Richtlinie.",
     },

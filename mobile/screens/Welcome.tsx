@@ -102,16 +102,6 @@ const Welcome = ({ navigation }) => {
 const styles = StyleSheet.create({
     troubleSigningInFlexBox: {
         display: "flex",
-        letterSpacing: 0,
-        color: Color.white,
-        textAlign: "center",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: 16,
-        lineHeight: 24,
-        marginBottom: 22,
-        width: 230,
-        height: 45,
     },
     termsText: {
         fontFamily: FontFamily.montserratLight,
