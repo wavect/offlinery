@@ -1,7 +1,7 @@
 import { RegistrationApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
-import { EACTION_USER, useUserContext } from "@/context/UserContext";
+import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
@@ -68,10 +68,6 @@ const VerifyEmail = ({ navigation }) => {
 
     const sendVerificationCode = async () => {
         try {
-            dispatch({
-                type: EACTION_USER.SET_EMAIL_ERROR_MESSAGE,
-                payload: "",
-            });
             setLoading(true);
             const regApi = new RegistrationApi();
             const result =
@@ -96,11 +92,9 @@ const VerifyEmail = ({ navigation }) => {
             setIsResendDisabled(remainingTime > 0);
         } catch (error) {
             console.error(error);
-            dispatch({
-                type: EACTION_USER.SET_EMAIL_ERROR_MESSAGE,
-                payload: i18n.t(TR.invalidEmail),
+            navigation.navigate(ROUTES.Onboarding.Email, {
+                errorMessage: i18n.t(TR.invalidEmail),
             });
-            navigation.goBack();
         } finally {
             setLoading(false);
         }

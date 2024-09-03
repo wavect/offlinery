@@ -9,12 +9,28 @@ import * as React from "react";
 import { StyleSheet, Text } from "react-native";
 import { ROUTES } from "../routes";
 
-const Email = ({ navigation }) => {
+const Email = ({ route, navigation }) => {
     const { state, dispatch } = useUserContext();
+    const [showErrorMessage, setShowErrorMessage] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState("");
+
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener("focus", () => {
+            const params = route.params || {};
+            if (params.errorMessage) {
+                setErrorMessage(params.errorMessage);
+                setShowErrorMessage(true);
+            }
+        });
+
+        return unsubscribe;
+    }, [navigation, route]);
 
     const setEmail = (email: string) => {
+        setShowErrorMessage(false);
         dispatch({ type: EACTION_USER.SET_EMAIL, payload: email });
     };
+
     const setCheckboxChecked = (wantsEmailUpdates: boolean) => {
         dispatch({
             type: EACTION_USER.SET_EMAIL_UPDATES,
@@ -49,12 +65,9 @@ const Email = ({ navigation }) => {
                 placeholder={i18n.t(TR.yourEmail)}
                 style={styles.inputField}
             />
-            {state.emailErrorMessage ? (
-                <Text style={styles.errorMessage}>
-                    {state.emailErrorMessage}
-                </Text>
-            ) : null}
-
+            {showErrorMessage && (
+                <Text style={styles.errorMessage}>{errorMessage}</Text>
+            )}
             <OCheckbox
                 onValueChange={setCheckboxChecked}
                 checkboxState={state.wantsEmailUpdates}
