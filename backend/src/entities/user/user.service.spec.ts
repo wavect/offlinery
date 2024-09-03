@@ -1,7 +1,7 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
-import { PendingUser } from "@/registration/pending-user/pending-user.entity";
+import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { MatchingService } from "@/transient-services/matching/matching.service";
 import {
     EApproachChoice,

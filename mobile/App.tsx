@@ -168,12 +168,6 @@ export default function App() {
                             component={AddPhotos}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        {/* user should just blacklist their home themselves for now (otherwise we need to do geofencing)
-                            <Stack.Screen
-                                name={ROUTES.Onboarding.ILiveHere}
-                                component={_ILiveHere}
-                                options={DEFAULT_SCREEN_PROPS}
-                            />*/}
                         <Stack.Screen
                             name={ROUTES.Onboarding.DontApproachMeHere}
                             component={DontApproachMeHere}

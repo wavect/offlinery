@@ -1,5 +1,6 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
-import { PendingUser } from "@/registration/pending-user/pending-user.entity";
+import { PendingUser } from "@/entities/pending-user/pending-user.entity";
+import { UserService } from "@/entities/user/user.service";
 import {
     EApproachChoice,
     EDateMode,
@@ -8,7 +9,6 @@ import {
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
-import { UserService } from "@/user/user.service";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { randomBytes } from "crypto";

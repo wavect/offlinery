@@ -50,7 +50,7 @@ const Welcome = ({ navigation }) => {
     /** @dev Status auth status loaded, but false */
     const AuthScreen = () => (
         <>
-            <OTermsDisclaimer style={styles.troubleSigningInFlexBox} />
+            <OTermsDisclaimer />
 
             <OButtonWide
                 filled={true}
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 24,
         marginBottom: 22,
-        width: 230,
+        width: "88%",
         height: 45,
     },
     termsText: {

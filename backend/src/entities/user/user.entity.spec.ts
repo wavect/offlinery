@@ -1,4 +1,4 @@
-import { BlacklistedRegion } from "@/blacklisted-region/blacklisted-region.entity";
+import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import {
     EApproachChoice,
     EDateMode,

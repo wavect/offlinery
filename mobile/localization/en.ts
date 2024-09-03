@@ -9,7 +9,7 @@ export const en = {
     datingAppsAreBroken: "Dating apps are Broken",
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
     termsDisclaimer: {
-        p1: "By tapping “Create account” or “Sign in”, you agree to our ",
+        p1: "By tapping 'Create account' or 'Sign in', you agree to our ",
         terms: "Terms",
         p2: ". See how we process your data in our ",
         privacyCookie: "Privacy and Cookie Policy.",

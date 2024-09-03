@@ -1,6 +1,6 @@
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
-import { User } from "@/user/user.entity";
-import { UserService } from "@/user/user.service";
+import { User } from "@/entities/user/user.entity";
+import { UserService } from "@/entities/user/user.service";
 import { TYPED_ENV } from "@/utils/env.utils";
 import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";

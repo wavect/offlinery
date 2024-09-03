@@ -11,9 +11,10 @@ import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { getJwtHeader } from "@/utils/misc.utils";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import * as React from "react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
     Platform,
+    RefreshControl,
     ScrollView,
     StyleSheet,
     Text,
@@ -23,6 +24,7 @@ import {
 import OEncounter from "../../components/OEncounter/OEncounter";
 
 const api = new EncounterApi();
+
 const Encounters = ({ navigation }) => {
     const { state: encounterState, dispatch } = useEncountersContext();
     const { state: userState } = useUserContext();
@@ -34,51 +36,58 @@ const Encounters = ({ navigation }) => {
     const [metEndDateFilter, setMetEndDateFilter] = useState<Date>(today);
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+
+    const fetchEncounters = useCallback(async () => {
+        try {
+            const encounters = await api.encounterControllerGetEncountersByUser(
+                {
+                    userId: userState.id!,
+                },
+                getJwtHeader(userState.jwtAccessToken),
+            );
+            const mappedEncounters: IEncounterProfile[] = [];
+
+            encounters.forEach((encounter) => {
+                const otherUser = encounter.users.filter(
+                    (u) => u.id !== userState.id,
+                )[0];
+                mappedEncounters.push({
+                    encounterId: encounter.id,
+                    firstName: otherUser.firstName,
+                    age: otherUser.age,
+                    bio: otherUser.bio,
+                    imageURIs: otherUser.imageURIs,
+                    personalRelationship: {
+                        isNearbyRightNow: false,
+                        status: encounter.status,
+                        reported: encounter.reported,
+                        lastLocationPassedBy:
+                            encounter.lastLocationPassedBy ?? "",
+                        lastTimePassedBy: encounter.lastDateTimePassedBy,
+                    },
+                    rating: otherUser.trustScore,
+                });
+            });
+
+            dispatch({
+                type: EACTION_ENCOUNTERS.SET_ENCOUNTERS,
+                payload: mappedEncounters,
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }, [userState.id, userState.jwtAccessToken, dispatch]);
 
     React.useEffect(() => {
-        async function fetchEncounters() {
-            try {
-                const encounters =
-                    await api.encounterControllerGetEncountersByUser(
-                        {
-                            userId: userState.id!,
-                        },
-                        getJwtHeader(userState.jwtAccessToken),
-                    );
-                const mappedEncounters: IEncounterProfile[] = [];
-
-                encounters.forEach((encounter) => {
-                    const otherUser = encounter.users.filter(
-                        (u) => u.id !== userState.id,
-                    )[0];
-                    mappedEncounters.push({
-                        encounterId: encounter.id,
-                        firstName: otherUser.firstName,
-                        age: otherUser.age,
-                        bio: otherUser.bio,
-                        imageURIs: otherUser.imageURIs,
-                        personalRelationship: {
-                            isNearbyRightNow: false, // @@dev do we know that by now?
-                            status: encounter.status,
-                            reported: encounter.reported,
-                            lastLocationPassedBy:
-                                encounter.lastLocationPassedBy ?? "",
-                            lastTimePassedBy: encounter.lastDateTimePassedBy,
-                        },
-                        rating: otherUser.trustScore, // Is that the trustScore?
-                    });
-                });
-
-                dispatch({
-                    type: EACTION_ENCOUNTERS.SET_ENCOUNTERS,
-                    payload: mappedEncounters,
-                });
-            } catch (error) {
-                console.error(error);
-            }
-        }
         fetchEncounters();
-    });
+    }, [fetchEncounters]);
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        await fetchEncounters();
+        setRefreshing(false);
+    }, [fetchEncounters]);
 
     const onMetStartDateFilterChange = (event: any, selectedDate?: Date) => {
         setShowStartDatePicker(Platform.OS === "ios");
@@ -93,6 +102,39 @@ const Encounters = ({ navigation }) => {
             setMetEndDateFilter(selectedDate);
         }
     };
+
+    const renderContent = () => (
+        <ScrollView
+            style={styles.encountersList}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            contentContainerStyle={
+                encounterState.encounters.length === 0 &&
+                styles.emptyListContainer
+            }
+        >
+            {encounterState.encounters.length > 0 ? (
+                encounterState.encounters.map((encounter, idx) => (
+                    <OEncounter
+                        key={idx}
+                        encounterProfile={encounter}
+                        showActions={true}
+                        navigation={navigation}
+                    />
+                ))
+            ) : (
+                <View style={styles.noEncountersContainer}>
+                    <Text style={styles.noEncountersTextLg}>
+                        Nobody was nearby..
+                    </Text>
+                    <Text style={styles.noEncountersTextSm}>
+                        (hint: mingle with the crowd)
+                    </Text>
+                </View>
+            )}
+        </ScrollView>
+    );
 
     return (
         <OPageContainer
@@ -165,34 +207,18 @@ const Encounters = ({ navigation }) => {
                     </View>
                 </View>
 
-                {(encounterState.encounters.length && (
-                    <ScrollView style={styles.encountersList}>
-                        {encounterState.encounters.map((encounter, idx) => (
-                            <OEncounter
-                                key={idx}
-                                encounterProfile={encounter}
-                                showActions={true}
-                                navigation={navigation}
-                            />
-                        ))}
-                    </ScrollView>
-                )) || (
-                    // No encounters, just show small text in the middle of the screen
-                    <View style={styles.noEncountersContainer}>
-                        <Text style={styles.noEncountersTextLg}>
-                            Nobody was nearby..
-                        </Text>
-                        <Text style={styles.noEncountersTextSm}>
-                            (hint: mingle with the crowd)
-                        </Text>
-                    </View>
-                )}
+                {renderContent()}
             </View>
         </OPageContainer>
     );
 };
 
 const styles = StyleSheet.create({
+    emptyListContainer: {
+        flexGrow: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
     iosDatePicker: { marginLeft: -10 },
     androidDateButton: {
         fontSize: FontSize.size_md,
