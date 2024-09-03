@@ -15,30 +15,37 @@
 /**
  *
  * @export
- * @interface RegistrationForVerificationDTO
+ * @interface RegistrationForVerificationResponseDTO
  */
-export interface RegistrationForVerificationDTO {
+export interface RegistrationForVerificationResponseDTO {
     /**
      *
      * @type {string}
-     * @memberof RegistrationForVerificationDTO
+     * @memberof RegistrationForVerificationResponseDTO
      */
     email: string;
     /**
+     * The timeout when the user can resend a verification code in milliseconds.
+     * @type {number}
+     * @memberof RegistrationForVerificationResponseDTO
+     */
+    timeout: number;
+    /**
      * Timestamp when the verification code was issued.
      * @type {Date}
-     * @memberof RegistrationForVerificationDTO
+     * @memberof RegistrationForVerificationResponseDTO
      */
     verificationCodeIssuedAt: Date;
 }
 
 /**
- * Check if a given object implements the RegistrationForVerificationDTO interface.
+ * Check if a given object implements the RegistrationForVerificationResponseDTO interface.
  */
-export function instanceOfRegistrationForVerificationDTO(
+export function instanceOfRegistrationForVerificationResponseDTO(
     value: object,
-): value is RegistrationForVerificationDTO {
+): value is RegistrationForVerificationResponseDTO {
     if (!("email" in value) || value["email"] === undefined) return false;
+    if (!("timeout" in value) || value["timeout"] === undefined) return false;
     if (
         !("verificationCodeIssuedAt" in value) ||
         value["verificationCodeIssuedAt"] === undefined
@@ -47,33 +54,35 @@ export function instanceOfRegistrationForVerificationDTO(
     return true;
 }
 
-export function RegistrationForVerificationDTOFromJSON(
+export function RegistrationForVerificationResponseDTOFromJSON(
     json: any,
-): RegistrationForVerificationDTO {
-    return RegistrationForVerificationDTOFromJSONTyped(json, false);
+): RegistrationForVerificationResponseDTO {
+    return RegistrationForVerificationResponseDTOFromJSONTyped(json, false);
 }
 
-export function RegistrationForVerificationDTOFromJSONTyped(
+export function RegistrationForVerificationResponseDTOFromJSONTyped(
     json: any,
     ignoreDiscriminator: boolean,
-): RegistrationForVerificationDTO {
+): RegistrationForVerificationResponseDTO {
     if (json == null) {
         return json;
     }
     return {
         email: json["email"],
+        timeout: json["timeout"],
         verificationCodeIssuedAt: new Date(json["verificationCodeIssuedAt"]),
     };
 }
 
-export function RegistrationForVerificationDTOToJSON(
-    value?: RegistrationForVerificationDTO | null,
+export function RegistrationForVerificationResponseDTOToJSON(
+    value?: RegistrationForVerificationResponseDTO | null,
 ): any {
     if (value == null) {
         return value;
     }
     return {
         email: value["email"],
+        timeout: value["timeout"],
         verificationCodeIssuedAt:
             value["verificationCodeIssuedAt"].toISOString(),
     };

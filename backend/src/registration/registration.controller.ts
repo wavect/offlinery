@@ -8,7 +8,10 @@ import {
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Public } from "src/auth/auth.guard";
-import { RegistrationForVerificationDTO } from "src/DTOs/registration-for-verification.dto";
+import {
+    RegistrationForVerificationRequestDTO,
+    RegistrationForVerificationResponseDTO,
+} from "src/DTOs/registration-for-verification.dto";
 import { VerifyEmailDTO } from "src/DTOs/verify-email.dto";
 import { RegistrationService } from "./registration.service";
 
@@ -26,27 +29,26 @@ export class RegistrationController {
     @Public()
     @ApiOperation({ summary: "Creates a user with only an email to verify." })
     @ApiBody({
-        type: RegistrationForVerificationDTO,
+        type: RegistrationForVerificationRequestDTO,
         description: "User email.",
     })
     @ApiResponse({
         status: 200,
         description:
             "Email successfully registered. Still needs to be verified.",
-        type: RegistrationForVerificationDTO,
+        type: RegistrationForVerificationResponseDTO,
     })
     @ApiResponse({
         status: HttpStatus.CONFLICT,
         description: "Email already exists.",
     })
     async registerUserForEmailVerification(
-        @Body() emailDto: RegistrationForVerificationDTO,
-    ): Promise<RegistrationForVerificationDTO> {
+        @Body() emailDto: RegistrationForVerificationRequestDTO,
+    ): Promise<RegistrationForVerificationResponseDTO> {
         this.logger.debug(`User registers his email: ${emailDto.email}`);
-        const email = await this.registrationService.registerPendingUser(
+        return await this.registrationService.registerPendingUser(
             emailDto.email,
         );
-        return { email };
     }
 
     @Put("verify-email")

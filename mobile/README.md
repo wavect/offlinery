@@ -2,6 +2,12 @@
 
 Install `Expo Go` on your smart phone. This allows you to conveniently run your app. Since we already use native plugins we can't really use the web app version.
 
+## Default user (App)
+Also available in production (for app stores etc.)
+
+- Email: `office@wavect.io`
+- Password: `TeSTmE93!pQ`
+
 ## New packages
 
 Always install new packages with `npx expo install {package}` NOT with pnpm, yarn or npm directly.
