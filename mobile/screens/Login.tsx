@@ -49,7 +49,12 @@ const Login = ({ navigation }) => {
                         // TODO: Not working yet, ..user is too different! e.g. images
                     },
                 });
-                navigation.navigate(ROUTES.MainTabView);
+
+                if (user.verificationStatus === "pending") {
+                    navigation.navigate(ROUTES.Onboarding.WaitingVerification);
+                } else {
+                    navigation.navigate(ROUTES.MainTabView);
+                }
             }
         } catch (err) {
             console.error(err);
