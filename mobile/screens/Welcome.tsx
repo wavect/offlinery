@@ -50,7 +50,7 @@ const Welcome = ({ navigation }) => {
     /** @dev Status auth status loaded, but false */
     const AuthScreen = () => (
         <>
-            <OTermsDisclaimer style={styles.troubleSigningInFlexBox} />
+            <OTermsDisclaimer />
 
             <OButtonWide
                 filled={true}
