@@ -43,6 +43,7 @@ export interface IUserData {
     dateMode: UserDateModeEnum;
     /** @dev Set once logged in */
     jwtAccessToken?: string;
+    emailErrorMessage?: string;
 }
 
 export const isAuthenticated = (state: IUserData) => {
@@ -128,6 +129,8 @@ export enum EACTION_USER {
     SET_CURRENT_LOCATION = "SET_CURRENT_LOCATION",
     SET_DATE_MODE = "SET_DATE_MODE",
     SET_JWT_ACCESS_TOKEN = "SET_JWT_ACCESS_TOKEN",
+    // TODO: @dev We probably want to move error messages into a seperate context
+    SET_EMAIL_ERROR_MESSAGE = "SET_EMAIL_ERROR_MESSAGE",
 }
 
 interface IUserContextType {
@@ -284,6 +287,11 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             return {
                 ...state,
                 dateMode: action.payload as UserDateModeEnum,
+            };
+        case EACTION_USER.SET_EMAIL_ERROR_MESSAGE:
+            return {
+                ...state,
+                emailErrorMessage: action.payload as string,
             };
         default:
             return state;

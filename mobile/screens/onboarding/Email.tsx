@@ -3,9 +3,10 @@ import { OCheckbox } from "@/components/OCheckbox/OCheckbox";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
+import { Color, FontFamily } from "@/GlobalStyles";
 import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { ROUTES } from "../routes";
 
 const Email = ({ navigation }) => {
@@ -48,6 +49,11 @@ const Email = ({ navigation }) => {
                 placeholder={i18n.t(TR.yourEmail)}
                 style={styles.inputField}
             />
+            {state.emailErrorMessage ? (
+                <Text style={styles.errorMessage}>
+                    {state.emailErrorMessage}
+                </Text>
+            ) : null}
 
             <OCheckbox
                 onValueChange={setCheckboxChecked}
@@ -79,6 +85,13 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         alignItems: "center",
+    },
+    errorMessage: {
+        color: Color.redLight,
+        fontSize: 16,
+        fontFamily: FontFamily.montserratSemiBold,
+        textAlign: "center",
+        marginBottom: 10,
     },
 });
 
