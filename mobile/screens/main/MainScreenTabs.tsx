@@ -9,7 +9,12 @@ import { OGoLiveToggle } from "@/components/OGoLiveToggle/OGoLiveToggle";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { registerForPushNotificationsAsync } from "@/services/notification.service";
+import {
+    SECURE_VALUE,
+    getSecurelyStoredValue,
+} from "@/services/secure-storage.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
+import { getJwtHeader } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Location from "expo-location";
@@ -31,15 +36,19 @@ const LOCATION_TASK_NAME = "background-location-task";
 // Define the background task for location tracking
 TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     if (error) {
-        console.error(error);
+        console.error(`Task error ${error}`);
         return;
     }
     if (data) {
         const locations = (data as any).locations as Location.LocationObject[];
-        const { state } = useUserContext();
+        const jwtToken = await getSecurelyStoredValue(
+            SECURE_VALUE.JWT_ACCESS_TOKEN,
+        );
+        const userId = await getSecurelyStoredValue(SECURE_VALUE.USER_ID);
+
         const userApi = new UserApi();
 
-        if (locations && locations.length > 0 && state.id) {
+        if (locations && locations.length > 0 && userId) {
             const location = locations[locations.length - 1];
             const locationUpdateDTO: LocationUpdateDTO = {
                 latitude: location.coords.latitude,
@@ -47,11 +56,16 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
             };
 
             try {
-                await userApi.userControllerUpdateLocation({
-                    userId: state.id,
-                    locationUpdateDTO: locationUpdateDTO,
-                });
-                console.log("Location updated successfully");
+                await userApi.userControllerUpdateLocation(
+                    {
+                        userId,
+                        locationUpdateDTO: locationUpdateDTO,
+                    },
+                    getJwtHeader(jwtToken!),
+                );
+                console.log(
+                    `[TASK:LOCATION_UPDATE]: User Location updated successfully`,
+                );
             } catch (error) {
                 console.error("Error updating location:", error);
             }
@@ -77,7 +91,7 @@ export const MainScreenTabs = ({ navigation }) => {
                 i18n.t(TR.noUserIdAssignedCannotListenToNotifications),
             );
         } else {
-            registerForPushNotificationsAsync(state.id)
+            registerForPushNotificationsAsync(state.id, state.jwtAccessToken!)
                 .then((token) => {
                     if (!token) {
                         console.error(
