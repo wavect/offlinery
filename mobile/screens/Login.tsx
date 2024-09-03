@@ -1,5 +1,9 @@
 import { Color, FontFamily } from "@/GlobalStyles";
-import { AuthApi, AuthControllerSignInRequest } from "@/api/gen/src";
+import {
+    AuthApi,
+    AuthControllerSignInRequest,
+    UserPrivateDTO,
+} from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
 import { OShowcase } from "@/components/OShowcase/OShowcase";
@@ -7,8 +11,13 @@ import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer
 import { OTextInputWide } from "@/components/OTextInputWide/OTextInputWide";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import {
+    SECURE_VALUE,
+    getSecurelyStoredValue,
+    saveValueLocallySecurely,
+} from "@/services/secure-storage.service";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     KeyboardAvoidingView,
     Platform,
@@ -25,6 +34,52 @@ const Login = ({ navigation }) => {
     const [isLoading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
+    const userAuthenticatedUpdate = (
+        user: UserPrivateDTO,
+        jwtAccessToken: string,
+    ) => {
+        // also fill userData when logged in
+        // Note: We still save the accessToken into the user context to avoid reading from secure storage all the time when making api requests (performance, security, ..)
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: {
+                jwtAccessToken,
+                ...(user as any),
+                // TODO: Not working yet, ..user is too different! e.g. images
+            },
+        });
+
+        if (user.verificationStatus === "pending") {
+            navigation.navigate(ROUTES.Onboarding.WaitingVerification);
+        } else {
+            navigation.navigate(ROUTES.MainTabView);
+        }
+    };
+
+    useEffect(() => {
+        getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN).then(
+            async (jwtAccessToken) => {
+                if (!jwtAccessToken) {
+                    // needs to authenticate regularly
+                    return;
+                } else {
+                    const signInRes = await authApi.authControllerSignInByJWT({
+                        signInJwtDTO: {
+                            jwtAccessToken,
+                        },
+                    });
+                    if (signInRes.accessToken) {
+                        // still defined
+                        userAuthenticatedUpdate(
+                            signInRes.user,
+                            signInRes.accessToken,
+                        );
+                    }
+                }
+            },
+        );
+    }, []);
+
     const login = async () => {
         setLoading(true);
         setErrorMessage(""); // Reset the error message
@@ -40,21 +95,14 @@ const Login = ({ navigation }) => {
             if (signInRes.accessToken) {
                 // everything seems to be valid
                 const user = signInRes.user;
-                // also fill userData when logged in
-                dispatch({
-                    type: EACTION_USER.UPDATE_MULTIPLE,
-                    payload: {
-                        jwtAccessToken: signInRes.accessToken,
-                        ...(user as any),
-                        // TODO: Not working yet, ..user is too different! e.g. images
-                    },
-                });
 
-                if (user.verificationStatus === "pending") {
-                    navigation.navigate(ROUTES.Onboarding.WaitingVerification);
-                } else {
-                    navigation.navigate(ROUTES.MainTabView);
-                }
+                // save jwtAccessToken in secure storage to stay logged in if app is closed
+                await saveValueLocallySecurely(
+                    SECURE_VALUE.JWT_ACCESS_TOKEN,
+                    signInRes.accessToken,
+                );
+
+                userAuthenticatedUpdate(user, signInRes.accessToken);
             }
         } catch (err) {
             console.error(err);

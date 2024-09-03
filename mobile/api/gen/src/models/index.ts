@@ -11,6 +11,7 @@ export * from "./LocationUpdateDTO";
 export * from "./NotificationNavigateUserDTO";
 export * from "./RegistrationForVerificationDTO";
 export * from "./SignInDTO";
+export * from "./SignInJwtDTO";
 export * from "./SignInResponseDTO";
 export * from "./StorePushTokenDTO";
 export * from "./UpdateUserDTO";

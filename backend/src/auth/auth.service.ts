@@ -1,20 +1,44 @@
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
+import { User } from "@/user/user.entity";
 import { UserService } from "@/user/user.service";
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { TYPED_ENV } from "@/utils/env.utils";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
+    private readonly logger = new Logger(AuthService.name);
+
     constructor(
         private usersService: UserService,
         private jwtService: JwtService,
     ) {}
 
+    async signInWithJWT(accessToken: string): Promise<SignInResponseDTO> {
+        this.logger.debug(`Trying to sign in user with JWT`);
+        // will throw if unauthorized/invalid
+        const userJwtRes: Pick<User, "id"> = await this.jwtService.verifyAsync(
+            accessToken,
+            {
+                secret: TYPED_ENV.JWT_SECRET,
+            },
+        );
+        const user: User = await this.usersService.findUserById(userJwtRes.id);
+        if (!user) {
+            throw new UnauthorizedException();
+        }
+        return {
+            accessToken,
+            user: user.convertToPrivateDTO(),
+        };
+    }
+
     async signIn(
         email: string,
         clearPassword: string,
     ): Promise<SignInResponseDTO> {
+        this.logger.debug(`Trying to sign in user: ${email}`);
         const user = await this.usersService.findUserByEmail(email);
         if (!user) {
             throw new UnauthorizedException();
@@ -31,7 +55,6 @@ export class AuthService {
         }
 
         const payload = { sub: user.id, email: user.email };
-        console.log("user: ", user.convertToPrivateDTO());
         return {
             accessToken: await this.jwtService.signAsync(payload),
             user: user.convertToPrivateDTO(),

@@ -22,6 +22,7 @@ src/models/LocationUpdateDTO.ts
 src/models/NotificationNavigateUserDTO.ts
 src/models/RegistrationForVerificationDTO.ts
 src/models/SignInDTO.ts
+src/models/SignInJwtDTO.ts
 src/models/SignInResponseDTO.ts
 src/models/StorePushTokenDTO.ts
 src/models/UpdateUserDTO.ts
