@@ -147,7 +147,7 @@ export const de: Language = {
         "Kein Benutzer-ID zugewiesen! Kann keine Benachrichtigungen empfangen!",
     couldNotFetchNotificationToken:
         "Benachrichtigungstoken konnte nicht abgerufen werden",
-    findPeople: "Menschen finden",
+    findPeople: "Finden",
     encounters: "Begegnungen",
     settings: "Einstellungen",
     destination: "Ziel",
@@ -155,11 +155,11 @@ export const de: Language = {
     yourLocation: "Dein Standort",
     calculating: "Berechne..",
     changePreferencesDescr:
-        "Ändere deine Präferenzen oder aktualisiere dein Profil.",
+        "Ändere deine Einstellungen oder aktualisiere dein Profil.",
     bio: "Bio",
-    updateImages: "Bilder aktualisieren",
-    updateSafeZones: "Sichere Zonen aktualisieren",
-    errNoUserProvided: "Fehler: Kein Benutzer angegeben",
+    updateImages: "Bilder updaten",
+    updateSafeZones: "Safe Zones updaten",
+    errNoUserProvided: "Fehler: Kein Nutzer angegeben",
     reportIncident: {
         disrespectful: "Respektlos",
         sexualHarassment: "Sexuelle Belästigung",
@@ -167,7 +167,7 @@ export const de: Language = {
         other: "Andere",
     },
     onlyReportThatWasDisrespectful:
-        "Bitte melde nur Personen, die respektlos waren, ein Nein nicht akzeptiert haben oder sich auf andere Weise ungebührlich verhalten haben.",
+        "Bitte melde nur Personen, die respektlos waren, ein Nein nicht akzeptiert haben oder sich auf andere Weise unangemessen verhalten haben.",
     typeOfIncident: "Art des Vorfalls",
     selectIncidentType: "Vorfallstyp auswählen",
     search: "Suchen..",
