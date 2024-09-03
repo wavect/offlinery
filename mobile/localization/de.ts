@@ -47,7 +47,7 @@ export const de: Language = {
     noAccessToMediaLib: "Kein Zugriff auf die Mediathek.",
     addPhotos: "Fotos hinzufügen",
     clickToUploadImages: "Klicken, um Bilder hochzuladen.",
-    continue: "Fortfahren",
+    continue: "Weiter",
     iWantTo: "Ich möchte",
     approach: "Ansprechen",
     beApproached: "Angesprochen werden",
