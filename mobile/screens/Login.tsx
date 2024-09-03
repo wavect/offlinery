@@ -10,7 +10,12 @@ import { OShowcase } from "@/components/OShowcase/OShowcase";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
 import { OTextInputWide } from "@/components/OTextInputWide/OTextInputWide";
 import { OTroubleSignIn } from "@/components/OTroubleSignIn/OTroubleSignIn";
-import { EACTION_USER, useUserContext } from "@/context/UserContext";
+import {
+    EACTION_USER,
+    IUserData,
+    MapRegion,
+    useUserContext,
+} from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import {
     SECURE_VALUE,
@@ -39,14 +44,35 @@ const Login = ({ navigation }) => {
         user: UserPrivateDTO,
         jwtAccessToken: string,
     ) => {
+        const userData: IUserData = {
+            ...user,
+            approachFromTime: new Date(user.approachFromTime),
+            approachToTime: new Date(user.approachToTime),
+            blacklistedRegions: user.blacklistedRegions
+                .map((br) => {
+                    if (br.location.coordinates?.length !== 2) {
+                        return undefined;
+                    }
+
+                    return {
+                        radius: br.radius,
+                        longitude: br.location.coordinates[0],
+                        latitude: br.location.coordinates[1],
+                    } satisfies MapRegion;
+                })
+                .filter((br) => br !== undefined),
+            clearPassword: "",
+            imageURIs: Object.fromEntries(
+                user.imageURIs.map((value, index) => [index, value]),
+            ),
+            jwtAccessToken,
+        };
         // also fill userData when logged in
         // Note: We still save the accessToken into the user context to avoid reading from secure storage all the time when making api requests (performance, security, ..)
         dispatch({
             type: EACTION_USER.UPDATE_MULTIPLE,
             payload: {
-                jwtAccessToken,
-                ...(user as any),
-                // TODO: Not working yet, ..user is too different! e.g. images
+                ...userData,
             },
         });
 

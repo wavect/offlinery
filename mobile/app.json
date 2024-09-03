@@ -26,11 +26,15 @@
             "bundleIdentifier": "io.wavect.offlinery"
         },
         "android": {
+            "versionCode": 2,
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
             },
             "permissions": [
+                "android.permission.CAMERA",
+                "android.permission.READ_MEDIA_IMAGES",
+                "android.permission.READ_EXTERNAL_STORAGE",
                 "android.permission.RECORD_AUDIO",
                 "android.permission.ACCESS_COARSE_LOCATION",
                 "android.permission.ACCESS_FINE_LOCATION",
