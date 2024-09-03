@@ -13,12 +13,13 @@
  */
 
 import type {
-    RegistrationForVerificationDTO,
+    RegistrationForVerificationRequestDTO,
+    RegistrationForVerificationResponseDTO,
     VerifyEmailDTO,
 } from "../models/index";
 import {
-    RegistrationForVerificationDTOFromJSON,
-    RegistrationForVerificationDTOToJSON,
+    RegistrationForVerificationRequestDTOToJSON,
+    RegistrationForVerificationResponseDTOFromJSON,
     VerifyEmailDTOToJSON,
 } from "../models/index";
 import * as runtime from "../runtime";
@@ -27,7 +28,7 @@ import * as runtime from "../runtime";
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
 export interface RegistrationControllerRegisterUserForEmailVerificationRequest {
-    registrationForVerificationDTO: RegistrationForVerificationDTO;
+    registrationForVerificationRequestDTO: RegistrationForVerificationRequestDTO;
 }
 
 export interface RegistrationControllerVerifyEmailRequest {
@@ -44,7 +45,7 @@ export interface RegistrationApiInterface {
     /**
      *
      * @summary Creates a user with only an email to verify.
-     * @param {RegistrationForVerificationDTO} registrationForVerificationDTO User email.
+     * @param {RegistrationForVerificationRequestDTO} registrationForVerificationRequestDTO User email.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RegistrationApiInterface
@@ -52,7 +53,7 @@ export interface RegistrationApiInterface {
     registrationControllerRegisterUserForEmailVerificationRaw(
         requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<RegistrationForVerificationDTO>>;
+    ): Promise<runtime.ApiResponse<RegistrationForVerificationResponseDTO>>;
 
     /**
      * Creates a user with only an email to verify.
@@ -60,7 +61,7 @@ export interface RegistrationApiInterface {
     registrationControllerRegisterUserForEmailVerification(
         requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<RegistrationForVerificationDTO>;
+    ): Promise<RegistrationForVerificationResponseDTO>;
 
     /**
      *
@@ -97,11 +98,13 @@ export class RegistrationApi
     async registrationControllerRegisterUserForEmailVerificationRaw(
         requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<RegistrationForVerificationDTO>> {
-        if (requestParameters["registrationForVerificationDTO"] == null) {
+    ): Promise<runtime.ApiResponse<RegistrationForVerificationResponseDTO>> {
+        if (
+            requestParameters["registrationForVerificationRequestDTO"] == null
+        ) {
             throw new runtime.RequiredError(
-                "registrationForVerificationDTO",
-                'Required parameter "registrationForVerificationDTO" was null or undefined when calling registrationControllerRegisterUserForEmailVerification().',
+                "registrationForVerificationRequestDTO",
+                'Required parameter "registrationForVerificationRequestDTO" was null or undefined when calling registrationControllerRegisterUserForEmailVerification().',
             );
         }
 
@@ -117,15 +120,15 @@ export class RegistrationApi
                 method: "POST",
                 headers: headerParameters,
                 query: queryParameters,
-                body: RegistrationForVerificationDTOToJSON(
-                    requestParameters["registrationForVerificationDTO"],
+                body: RegistrationForVerificationRequestDTOToJSON(
+                    requestParameters["registrationForVerificationRequestDTO"],
                 ),
             },
             initOverrides,
         );
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
-            RegistrationForVerificationDTOFromJSON(jsonValue),
+            RegistrationForVerificationResponseDTOFromJSON(jsonValue),
         );
     }
 
@@ -135,7 +138,7 @@ export class RegistrationApi
     async registrationControllerRegisterUserForEmailVerification(
         requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<RegistrationForVerificationDTO> {
+    ): Promise<RegistrationForVerificationResponseDTO> {
         const response =
             await this.registrationControllerRegisterUserForEmailVerificationRaw(
                 requestParameters,

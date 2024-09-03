@@ -1,3 +1,4 @@
+import { RegistrationForVerificationResponseDTO } from "@/DTOs/registration-for-verification.dto";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -10,6 +11,7 @@ import { PendingUser } from "./pending-user/pending-user.entity";
 export class RegistrationService {
     private readonly logger = new Logger(RegistrationService.name);
     readonly VERIFICATION_CODE_EXPIRATION_IN_MIN = 15;
+    readonly RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS = 120 * 1000;
 
     constructor(
         @InjectRepository(PendingUser)
@@ -19,7 +21,9 @@ export class RegistrationService {
         private readonly mailService: MailerService,
     ) {}
 
-    public async registerPendingUser(email: string): Promise<string> {
+    public async registerPendingUser(
+        email: string,
+    ): Promise<RegistrationForVerificationResponseDTO> {
         try {
             const existingPendingUser = await this.pendingUserRepo.findOneBy({
                 email,
@@ -42,6 +46,20 @@ export class RegistrationService {
                     EEmailVerificationStatus.PENDING;
             }
 
+            // We already issued a verification code in the last xxx seconds.
+            if (
+                Date.now() <
+                new Date(pendingUser.verificationCodeIssuedAt).getTime() +
+                    this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS
+            ) {
+                return {
+                    email: pendingUser.email,
+                    timeout: this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
+                    verificationCodeIssuedAt:
+                        pendingUser.verificationCodeIssuedAt,
+                };
+            }
+
             pendingUser.verificationCodeIssuedAt = new Date();
 
             let verificationNumber: string = "";
@@ -57,7 +75,11 @@ export class RegistrationService {
             pendingUser.verificationCode = verificationNumber;
             await this.pendingUserRepo.save(pendingUser);
 
-            return pendingUser.email;
+            return {
+                email: pendingUser.email,
+                verificationCodeIssuedAt: pendingUser.verificationCodeIssuedAt,
+                timeout: this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
+            };
         } catch (error) {
             this.logger.error(error);
             throw error;
