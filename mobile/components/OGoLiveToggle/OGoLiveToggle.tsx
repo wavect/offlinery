@@ -9,8 +9,6 @@ import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { getJwtHeader } from "@/utils/misc.utils";
 import * as Location from "expo-location";
-import { LocationAccuracy } from "expo-location";
-import { useState } from "react";
 import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
 
 interface IOGoLiveToggleProps {
@@ -19,7 +17,7 @@ interface IOGoLiveToggleProps {
 
 export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
     const { dispatch, state } = useUserContext();
-    const [isEnabled, setIsEnabled] = useState(false);
+
     const toggleSwitch = async () => {
         try {
             const { status: fStatus } =
@@ -36,9 +34,10 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 return;
             }
 
-            const newDateMode: UserDateModeEnum = isEnabled
-                ? UserDateModeEnum.live
-                : UserDateModeEnum.ghost;
+            const newDateMode: UserDateModeEnum =
+                state.dateMode === UserDateModeEnum.ghost
+                    ? UserDateModeEnum.live
+                    : UserDateModeEnum.ghost;
             const userApi = new UserApi();
             const updateUserDTO: UpdateUserDTO = {
                 dateMode: newDateMode,
@@ -52,23 +51,13 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 getJwtHeader(state.jwtAccessToken),
             );
 
-            console.log("Date mode updated successfully on the backend");
-
-            setIsEnabled((previousState) => !previousState);
             dispatch({
                 type: EACTION_USER.SET_DATE_MODE,
                 payload: newDateMode,
             });
 
             // Load location and inform user about state
-            if (isEnabled) {
-                const location = await Location.getCurrentPositionAsync({
-                    accuracy: LocationAccuracy.BestForNavigation,
-                });
-                dispatch({
-                    type: EACTION_USER.SET_CURRENT_LOCATION,
-                    payload: location,
-                });
+            if (newDateMode === UserDateModeEnum.live) {
                 alert(`${i18n.t(TR.youAreLive)} ${getSuccessMessage()}`);
             } else {
                 alert(i18n.t(TR.ghostModeDescr));
@@ -98,13 +87,19 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
         <View style={[props.style, { alignItems: "center" }]}>
             <Switch
                 trackColor={{ false: Color.lightGray, true: Color.primary }}
-                thumbColor={isEnabled ? Color.white : Color.lightGray}
+                thumbColor={
+                    state.dateMode === UserDateModeEnum.live
+                        ? Color.white
+                        : Color.lightGray
+                }
                 ios_backgroundColor="#3e3e3e"
                 onValueChange={toggleSwitch}
-                value={isEnabled}
+                value={state.dateMode === UserDateModeEnum.live}
             />
             <Text style={{ marginTop: 5, fontSize: 12, color: Color.gray }}>
-                {isEnabled ? i18n.t(TR.live) : i18n.t(TR.ghostMode)}
+                {state.dateMode === UserDateModeEnum.live
+                    ? i18n.t(TR.live)
+                    : i18n.t(TR.ghostMode)}
             </Text>
         </View>
     );

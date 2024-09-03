@@ -128,6 +128,10 @@ const Login = ({ navigation }) => {
                     SECURE_VALUE.JWT_ACCESS_TOKEN,
                     signInRes.accessToken,
                 );
+                await saveValueLocallySecurely(
+                    SECURE_VALUE.USER_ID,
+                    signInRes.user.id,
+                );
 
                 userAuthenticatedUpdate(user, signInRes.accessToken);
             }
