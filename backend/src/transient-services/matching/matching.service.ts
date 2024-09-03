@@ -1,13 +1,13 @@
-import { BlacklistedRegion } from "@/blacklisted-region/blacklisted-region.entity";
 import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
-import { EncounterService } from "@/encounter/encounter.service";
+import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
+import { EncounterService } from "@/entities/encounter/encounter.service";
+import { User } from "@/entities/user/user.entity";
 import { I18nTranslations } from "@/translations/i18n.generated";
 import {
     EApproachChoice,
     EDateMode,
     EVerificationStatus,
 } from "@/types/user.types";
-import { User } from "@/user/user.entity";
 import { getAge } from "@/utils/date.utils";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";

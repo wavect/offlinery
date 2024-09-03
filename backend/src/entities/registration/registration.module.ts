@@ -1,13 +1,13 @@
+import { PendingUser } from "@/entities/pending-user/pending-user.entity";
+import { PendingUserService } from "@/entities/pending-user/pending-user.service";
+import { User } from "@/entities/user/user.entity";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { join } from "path";
-import { User } from "src/user/user.entity";
 import { TYPED_ENV } from "src/utils/env.utils";
-import { PendingUser } from "./pending-user/pending-user.entity";
-import { PendingUserService } from "./pending-user/pending-user.service";
 import { RegistrationController } from "./registration.controller";
 import { RegistrationService } from "./registration.service";
 

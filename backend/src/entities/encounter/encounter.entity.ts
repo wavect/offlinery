@@ -1,8 +1,8 @@
 import { EncounterPublicDTO } from "@/DTOs/encounter-public.dto";
+import { UserReport } from "@/entities/user-report/user-report.entity";
+import { User } from "@/entities/user/user.entity";
 import { IEntityToDTOInterface } from "@/interfaces/IEntityToDTO.interface";
 import { EEncounterStatus } from "@/types/user.types";
-import { UserReport } from "@/user-report/user-report.entity";
-import { User } from "@/user/user.entity";
 import { Point } from "geojson";
 import {
     Column,

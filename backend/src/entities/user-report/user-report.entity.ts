@@ -1,6 +1,6 @@
-import { Encounter } from "@/encounter/encounter.entity";
+import { Encounter } from "@/entities/encounter/encounter.entity";
+import { User } from "@/entities/user/user.entity";
 import { EIncidentType } from "@/types/user.types";
-import { User } from "@/user/user.entity";
 import {
     Column,
     CreateDateColumn,

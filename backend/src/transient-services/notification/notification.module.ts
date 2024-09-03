@@ -1,4 +1,4 @@
-import { UserModule } from "@/user/user.module";
+import { UserModule } from "@/entities/user/user.module";
 import { forwardRef, Module } from "@nestjs/common";
 import { NotificationController } from "./notification.controller";
 import { NotificationService } from "./notification.service";

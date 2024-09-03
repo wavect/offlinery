@@ -1,4 +1,4 @@
-import { UserModule } from "@/user/user.module";
+import { UserModule } from "@/entities/user/user.module";
 import { TYPED_ENV } from "@/utils/env.utils";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";

@@ -1,3 +1,8 @@
+import { BlacklistedRegionModule } from "@/entities/blacklisted-region/blacklisted-region.module";
+import { EncounterModule } from "@/entities/encounter/encounter.module";
+import { RegistrationModule } from "@/entities/registration/registration.module";
+import { UserReportModule } from "@/entities/user-report/user-report.module";
+import { UserModule } from "@/entities/user/user.module";
 import { SeederModule } from "@/seeder/seeder.module";
 import { CacheInterceptor, CacheModule } from "@nestjs/cache-manager";
 import { Module } from "@nestjs/common";
@@ -18,15 +23,10 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthGuard } from "./auth/auth.guard";
 import { AuthModule } from "./auth/auth.module";
-import { BlacklistedRegionModule } from "./blacklisted-region/blacklisted-region.module";
-import { EncounterModule } from "./encounter/encounter.module";
-import { RegistrationModule } from "./registration/registration.module";
 import { MatchingModule } from "./transient-services/matching/matching.module";
 import { NotificationModule } from "./transient-services/notification/notification.module";
 import { typeOrmAsyncConfig } from "./typeorm.config";
 import { ELanguage } from "./types/user.types";
-import { UserReportModule } from "./user-report/user-report.module";
-import { UserModule } from "./user/user.module";
 import { TYPED_ENV } from "./utils/env.utils";
 
 @Module({
