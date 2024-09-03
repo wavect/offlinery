@@ -4,9 +4,11 @@
     "main": "expo/AppEntry.js",
     "scripts": {
         "start": "expo start",
+        "start:dev": "NODE_ENV=development expo start --watch",
         "start:prod": "expo start --no-dev",
         "android": "expo run:android",
         "ios": "expo run:ios",
+        "ios:dev": "NODE_ENV=development expo run:ios",
         "web": "expo start --web",
         "install:all": "pnpm i && npx expo install",
         "pre-commit": "npx prettier . --write"

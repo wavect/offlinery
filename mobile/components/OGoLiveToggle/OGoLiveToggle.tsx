@@ -7,6 +7,7 @@ import {
 } from "@/api/gen/src";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { getJwtHeader } from "@/utils/misc.utils";
 import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import { useState } from "react";
@@ -43,10 +44,14 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 dateMode: newDateMode,
             };
 
-            await userApi.userControllerUpdateUser({
-                userId: state.id!,
-                user: updateUserDTO,
-            });
+            await userApi.userControllerUpdateUser(
+                {
+                    userId: state.id!,
+                    user: updateUserDTO,
+                },
+                getJwtHeader(state.jwtAccessToken),
+            );
+
             console.log("Date mode updated successfully on the backend");
 
             setIsEnabled((previousState) => !previousState);
