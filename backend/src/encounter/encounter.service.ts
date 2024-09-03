@@ -1,5 +1,6 @@
+import { DateRangeDTO } from "@/DTOs/date-range.dto";
 import { User } from "@/user/user.entity";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Encounter } from "./encounter.entity";
@@ -11,18 +12,37 @@ export class EncounterService {
         private encounterRepository: Repository<Encounter>,
     ) {}
 
-    async findEncountersByUser(userId: string): Promise<Encounter[]> {
-        const encounters = await this.encounterRepository.find({
-            where: { id: userId },
-        });
+    async findEncountersByUser(
+        userId: string,
+        dateRange: DateRangeDTO,
+    ): Promise<Encounter[]> {
+        let query = this.encounterRepository
+            .createQueryBuilder("encounter")
+            .leftJoinAndSelect("encounter.users", "user")
+            .where("user.id = :userId", { userId });
 
-        if (!encounters) {
-            throw new NotFoundException(
-                `Encounters from user with ID ${userId} not found`,
+        if (dateRange.startDate && dateRange.endDate) {
+            query = query.andWhere(
+                "encounter.lastDateTimePassedBy BETWEEN :startDate AND :endDate",
+                {
+                    startDate: dateRange.startDate,
+                    endDate: dateRange.endDate,
+                },
+            );
+        } else if (dateRange.startDate) {
+            query = query.andWhere(
+                "encounter.lastDateTimePassedBy >= :startDate",
+                { startDate: dateRange.startDate },
+            );
+        } else if (dateRange.endDate) {
+            query = query.andWhere(
+                "encounter.lastDateTimePassedBy <= :endDate",
+                { endDate: dateRange.endDate },
             );
         }
 
-        return encounters;
+        // do not fail if none found
+        return await query.getMany();
     }
 
     async saveEncountersForUser(

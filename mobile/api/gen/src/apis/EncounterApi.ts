@@ -12,8 +12,11 @@
  * Do not edit the class manually.
  */
 
-import type { EncounterPublicDTO } from "../models/index";
-import { EncounterPublicDTOFromJSON } from "../models/index";
+import type { DateRangeDTO, EncounterPublicDTO } from "../models/index";
+import {
+    DateRangeDTOToJSON,
+    EncounterPublicDTOFromJSON,
+} from "../models/index";
 import * as runtime from "../runtime";
 
 // We import this type even if it's unused to avoid additional
@@ -21,6 +24,7 @@ import * as runtime from "../runtime";
 // are larger than the benefits, we can try another approach.
 export interface EncounterControllerGetEncountersByUserRequest {
     userId: string;
+    dateRangeDTO: DateRangeDTO;
 }
 
 /**
@@ -32,8 +36,9 @@ export interface EncounterControllerGetEncountersByUserRequest {
 export interface EncounterApiInterface {
     /**
      *
-     * @summary Get encounters of a user
+     * @summary Get encounters of a user within a date range
      * @param {string} userId User ID
+     * @param {DateRangeDTO} dateRangeDTO date range DTO for filtering
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EncounterApiInterface
@@ -44,7 +49,7 @@ export interface EncounterApiInterface {
     ): Promise<runtime.ApiResponse<Array<EncounterPublicDTO>>>;
 
     /**
-     * Get encounters of a user
+     * Get encounters of a user within a date range
      */
     encounterControllerGetEncountersByUser(
         requestParameters: EncounterControllerGetEncountersByUserRequest,
@@ -60,7 +65,7 @@ export class EncounterApi
     implements EncounterApiInterface
 {
     /**
-     * Get encounters of a user
+     * Get encounters of a user within a date range
      */
     async encounterControllerGetEncountersByUserRaw(
         requestParameters: EncounterControllerGetEncountersByUserRequest,
@@ -73,9 +78,18 @@ export class EncounterApi
             );
         }
 
+        if (requestParameters["dateRangeDTO"] == null) {
+            throw new runtime.RequiredError(
+                "dateRangeDTO",
+                'Required parameter "dateRangeDTO" was null or undefined when calling encounterControllerGetEncountersByUser().',
+            );
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
 
         const response = await this.request(
             {
@@ -86,6 +100,7 @@ export class EncounterApi
                 method: "GET",
                 headers: headerParameters,
                 query: queryParameters,
+                body: DateRangeDTOToJSON(requestParameters["dateRangeDTO"]),
             },
             initOverrides,
         );
@@ -96,7 +111,7 @@ export class EncounterApi
     }
 
     /**
-     * Get encounters of a user
+     * Get encounters of a user within a date range
      */
     async encounterControllerGetEncountersByUser(
         requestParameters: EncounterControllerGetEncountersByUserRequest,
