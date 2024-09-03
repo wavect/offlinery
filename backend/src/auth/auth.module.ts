@@ -18,7 +18,7 @@ import { AuthService } from "./auth.service";
         JwtModule.register({
             global: true,
             secret: TYPED_ENV.JWT_SECRET,
-            signOptions: { expiresIn: "60s" },
+            signOptions: { expiresIn: "60m" },
         }),
     ],
     exports: [UserSpecificAuthGuard],
