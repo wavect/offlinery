@@ -21,6 +21,8 @@ import {
     Put,
     UploadedFiles,
     UseInterceptors,
+    UsePipes,
+    ValidationPipe,
 } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import {
@@ -53,6 +55,7 @@ export class UserController {
         description: "User data and images",
     })
     @ApiOperation({ summary: "Create a new user with images" })
+    @UsePipes(new ValidationPipe({ transform: true }))
     async createUser(
         @Body("user", new ParseJsonPipe(CreateUserDTO))
         createUserDto: CreateUserDTO,
@@ -83,6 +86,7 @@ export class UserController {
         description: "User data and images",
     })
     @ApiOperation({ summary: "Update an existing user" })
+    @UsePipes(new ValidationPipe({ transform: true }))
     async updateUser(
         @Param(USER_ID_PARAM) userId: string,
         @Body("user", new ParseJsonPipe(UpdateUserDTO))
