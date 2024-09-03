@@ -6,6 +6,7 @@ import { User } from "@/user/user.entity";
 import { getAge } from "@/utils/date.utils";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { find as findTimeZoneByLocation } from "geo-tz";
 import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
 import { OfflineryNotification } from "../notification/notification-message.type";
@@ -23,10 +24,47 @@ export class MatchingService {
         private notificationService: NotificationService,
     ) {}
 
+    private isWithinApproachTime(
+        user: User,
+        lat: number,
+        lon: number,
+    ): boolean {
+        const timezoneOfUserLocation = findTimeZoneByLocation(lat, lon);
+        const currentTime = new Date().toLocaleString("en-US", {
+            timeZone: timezoneOfUserLocation[0],
+        });
+        const localTime = new Date(currentTime);
+
+        const approachFromTime = new Date(user.approachFromTime);
+        const approachToTime = new Date(user.approachToTime);
+
+        // Set the date of approachFromTime and approachToTime to today
+        approachFromTime.setFullYear(
+            localTime.getFullYear(),
+            localTime.getMonth(),
+            localTime.getDate(),
+        );
+        approachToTime.setFullYear(
+            localTime.getFullYear(),
+            localTime.getMonth(),
+            localTime.getDate(),
+        );
+
+        // Handle case where approachToTime is on the next day
+        if (approachToTime < approachFromTime) {
+            approachToTime.setDate(approachToTime.getDate() + 1);
+        }
+
+        // Check if current time is within the approach time range
+        return localTime >= approachFromTime && localTime <= approachToTime;
+    }
+
     private async findNearbyMatches(user: User): Promise<User[]> {
         if (!user || !user.location || user.dateMode !== EDateMode.LIVE) {
             return [];
         }
+        const lon = user.location.coordinates[0];
+        const lat = user.location.coordinates[1];
 
         // Check if user is within any of their blacklisted regions
         const isInBlacklistedRegion =
@@ -36,13 +74,16 @@ export class MatchingService {
                 .andWhere(
                     "ST_DWithin(region.location::geography, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, region.radius)",
                     {
-                        lon: user.location.coordinates[0],
-                        lat: user.location.coordinates[1],
+                        lon,
+                        lat,
                     },
                 )
                 .getCount()) > 0;
 
         if (isInBlacklistedRegion) {
+            return [];
+        }
+        if (!this.isWithinApproachTime(user, lat, lon)) {
             return [];
         }
 
