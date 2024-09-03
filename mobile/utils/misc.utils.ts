@@ -10,6 +10,7 @@ export const getJwtHeader = (jwt?: string): RequestInit => {
     return {
         headers: {
             Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
         },
     };
 };

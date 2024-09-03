@@ -43,16 +43,10 @@ export interface Encounter {
     lastDateTimePassedBy: Date;
     /**
      *
-     * @type {string}
+     * @type {object}
      * @memberof Encounter
      */
-    lastLongitudePassedBy: string;
-    /**
-     *
-     * @type {string}
-     * @memberof Encounter
-     */
-    lastLatitudePassedBy: string;
+    lastLocationPassedBy: object;
     /**
      *
      * @type {Array<User>}
@@ -90,13 +84,8 @@ export function instanceOfEncounter(value: object): value is Encounter {
     )
         return false;
     if (
-        !("lastLongitudePassedBy" in value) ||
-        value["lastLongitudePassedBy"] === undefined
-    )
-        return false;
-    if (
-        !("lastLatitudePassedBy" in value) ||
-        value["lastLatitudePassedBy"] === undefined
+        !("lastLocationPassedBy" in value) ||
+        value["lastLocationPassedBy"] === undefined
     )
         return false;
     if (!("users" in value) || value["users"] === undefined) return false;
@@ -120,8 +109,7 @@ export function EncounterFromJSONTyped(
         id: json["id"],
         status: json["status"],
         lastDateTimePassedBy: new Date(json["lastDateTimePassedBy"]),
-        lastLongitudePassedBy: json["lastLongitudePassedBy"],
-        lastLatitudePassedBy: json["lastLatitudePassedBy"],
+        lastLocationPassedBy: json["lastLocationPassedBy"],
         users: (json["users"] as Array<any>).map(UserFromJSON),
         userReports: (json["userReports"] as Array<any>).map(
             UserReportFromJSON,
@@ -137,8 +125,7 @@ export function EncounterToJSON(value?: Encounter | null): any {
         id: value["id"],
         status: value["status"],
         lastDateTimePassedBy: value["lastDateTimePassedBy"].toISOString(),
-        lastLongitudePassedBy: value["lastLongitudePassedBy"],
-        lastLatitudePassedBy: value["lastLatitudePassedBy"],
+        lastLocationPassedBy: value["lastLocationPassedBy"],
         users: (value["users"] as Array<any>).map(UserToJSON),
         userReports: (value["userReports"] as Array<any>).map(UserReportToJSON),
     };

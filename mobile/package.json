@@ -6,6 +6,7 @@
         "start": "expo start",
         "start:dev": "NODE_ENV=development expo start --watch",
         "start:prod": "expo start --no-dev",
+        "start:tunnel": "expo start --tunnel",
         "android": "expo run:android",
         "ios": "expo run:ios",
         "ios:dev": "NODE_ENV=development expo run:ios",

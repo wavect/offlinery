@@ -1,9 +1,9 @@
+import { Color, FontFamily } from "@/GlobalStyles";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OCheckbox } from "@/components/OCheckbox/OCheckbox";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
-import { Color, FontFamily } from "@/GlobalStyles";
 import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
 import { StyleSheet, Text } from "react-native";

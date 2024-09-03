@@ -67,7 +67,6 @@ export const registerForPushNotificationsAsync = async (
     const storePushTokenDTO: StorePushTokenDTO = {
         pushToken: token,
     };
-    console.log("Pushing token: ", token);
 
     try {
         await notificationsApi.notificationControllerStorePushToken(

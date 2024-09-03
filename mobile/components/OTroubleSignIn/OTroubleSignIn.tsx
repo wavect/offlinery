@@ -1,5 +1,5 @@
 import { Color, FontFamily } from "@/GlobalStyles";
-import { i18n, TR } from "@/localization/translate.service";
+import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
 import { Linking, StyleSheet, Text } from "react-native";
 import { StyleProp } from "react-native/Libraries/StyleSheet/StyleSheet";
