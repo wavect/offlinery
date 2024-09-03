@@ -4,15 +4,17 @@ import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { PendingUser } from "@/registration/pending-user/pending-user.entity";
 import { MatchingService } from "@/transient-services/matching/matching.service";
-import { EEmailVerificationStatus } from "@/types/user.types";
+import { EApproachChoice, EEmailVerificationStatus } from "@/types/user.types";
 import {
     forwardRef,
     Inject,
     Injectable,
+    Logger,
     NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
+import { Expo } from "expo-server-sdk";
 import * as fs from "fs";
 import * as path from "path";
 import { Repository } from "typeorm";
@@ -21,6 +23,8 @@ import { User } from "./user.entity";
 
 @Injectable()
 export class UserService {
+    private readonly logger = new Logger(UserService.name);
+
     constructor(
         @InjectRepository(User)
         private userRepository: Repository<User>,
@@ -192,11 +196,17 @@ export class UserService {
         return user;
     }
 
-    // TODO: Only to be updated by that specific user!
     async updatePushToken(userId: string, pushToken: string): Promise<User> {
         const user = await this.userRepository.findOneBy({ id: userId });
         if (!user) {
             throw new NotFoundException(`User with ID ${userId} not found`);
+        }
+
+        if (!Expo.isExpoPushToken(pushToken)) {
+            this.logger.error(
+                `Push token ${pushToken} is not a valid Expo push token`,
+            );
+            throw new Error(`Expo push token is invalid: ${pushToken}`);
         }
 
         user.pushToken = pushToken;
@@ -216,8 +226,16 @@ export class UserService {
         user.location = { type: "Point", coordinates: [longitude, latitude] };
         const updatedUser = await this.userRepository.save(user);
 
-        // Check for matches and send notifications
-        await this.matchingService.checkAndNotifyMatches(user);
+        // Check for matches and send notifications (from a semantic perspective we only send notifications if a person to be approached sends a location update)
+        if (
+            user.approachChoice in
+            [EApproachChoice.BOTH, EApproachChoice.BE_APPROACHED]
+        ) {
+            this.logger.debug(
+                `Sending notifications to users that want to potentially approach userId ${user.id}`,
+            );
+            await this.matchingService.checkAndNotifyMatches(user);
+        }
 
         return updatedUser;
     }

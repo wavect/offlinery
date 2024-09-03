@@ -1,3 +1,4 @@
+import { User } from "@/user/user.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -22,5 +23,20 @@ export class EncounterService {
         }
 
         return encounters;
+    }
+
+    async saveEncountersForUser(
+        userToBeApproached: User,
+        usersThatWantToApproach: User[],
+    ) {
+        for (const u of usersThatWantToApproach) {
+            const encounter = new Encounter();
+            encounter.users = [userToBeApproached, u];
+            encounter.lastDateTimePassedBy = new Date();
+            encounter.lastLocationPassedBy = userToBeApproached.location;
+            encounter.userReports = [];
+
+            await this.encounterRepository.save(encounter);
+        }
     }
 }

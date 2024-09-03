@@ -83,10 +83,8 @@ describe.only("NotificationService", () => {
                     },
                 },
             ];
-            const res = await notificationService.sendPushNotification(
-                testPushToken,
-                messages,
-            );
+            const res =
+                await notificationService.sendPushNotification(messages);
             expect(res.length).toBe(1);
             expect(res[0].status).toBe("ok");
         });
