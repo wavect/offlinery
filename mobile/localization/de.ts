@@ -190,7 +190,7 @@ export const de: Language = {
         "Zugriff auf den Standort im Hintergrund wurde verweigert.",
     youAreLive: "Du bist live!",
     ghostModeDescr:
-        "Geistermodus. Niemand wird dich sehen! Drücke den Schalter oben, um live zu gehen.",
+        "Geistmodus. Niemand wird dich sehen! Drücke den Schalter oben, um live zu gehen.",
     errRequestingPermissions:
         "Ein Fehler ist bei der Anforderung der Berechtigungen aufgetreten.",
     youAreLiveApproachDescr:
@@ -198,6 +198,6 @@ export const de: Language = {
     youAreLiveBeApproachedDescr:
         "Personen, die dich interessant finden könnten, erhalten Benachrichtigungen, wenn du in der Nähe bist!",
     live: "Live",
-    ghostMode: "Geistermodus",
+    ghostMode: "Geistmodus",
     saving: "Speichern..",
 };
