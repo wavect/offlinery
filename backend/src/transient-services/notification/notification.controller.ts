@@ -7,39 +7,37 @@ import {
     HttpStatus,
     Param,
     Post,
+    Req,
 } from "@nestjs/common";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { NotificationService } from "./notification.service";
 
 @ApiTags("Push Notifications")
-@Controller("api")
+@Controller({
+    version: "1",
+    path: "notification",
+})
 export class NotificationController {
     constructor(private notificationService: NotificationService) {}
 
     @Post(`push-token/:${USER_ID_PARAM}`)
     @OnlyOwnUserData()
-    @ApiOperation({ summary: "Store user's push token" })
-    @ApiResponse({
-        status: 201,
-        description: "The push token has been successfully stored.",
-    })
-    @ApiResponse({ status: 400, description: "Bad Request." })
-    @ApiResponse({ status: 401, description: "Unauthorized." })
-    @ApiResponse({ status: 500, description: "Internal server error." })
     async storePushToken(
+        @Req() req,
         @Param(USER_ID_PARAM) userId: string,
-        @Body() storePushTokenDto: StorePushTokenDTO,
+        @Body() storePushTokenDTO: StorePushTokenDTO,
     ) {
         try {
             await this.notificationService.storePushToken(
                 userId,
-                storePushTokenDto,
+                storePushTokenDTO,
             );
             return {
                 statusCode: HttpStatus.CREATED,
                 message: "Push token stored successfully",
             };
         } catch (error) {
+            console.log("hallo");
             // Log the error here
             throw new HttpException(
                 {

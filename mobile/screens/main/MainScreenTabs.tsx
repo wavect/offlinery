@@ -45,7 +45,6 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
             SECURE_VALUE.JWT_ACCESS_TOKEN,
         );
         const userId = await getSecurelyStoredValue(SECURE_VALUE.USER_ID);
-
         const userApi = new UserApi();
 
         if (locations && locations.length > 0 && userId) {
@@ -139,7 +138,7 @@ export const MainScreenTabs = ({ navigation }) => {
                             imageURIs:
                                 notificationData.navigateToPerson.imageURIs,
                             encounterId: notificationData.navigateToPerson.id, // TODO: Is a different ID most likely (relationship ID)
-                            age: notificationData.navigateToPerson.age.toString(),
+                            age: notificationData.navigateToPerson.age,
                         }; // TODO: FIX union types on backend to be consistent/clean
                         // Navigate to the specified screen, passing the user object as a prop
                         navigation.navigate(ROUTES.Main.Encounters, {
@@ -168,8 +167,10 @@ export const MainScreenTabs = ({ navigation }) => {
             if (state.dateMode === UserDateModeEnum.live) {
                 const { status } =
                     await Location.requestBackgroundPermissionsAsync();
-                if (status === "granted") {
-                    // TODO: Only do this if Ghost mode disabled! also set to backend that no matches to be done!
+                if (status === "granted" && state.id) {
+                    console.log(
+                        `Live mode: Starting task ${LOCATION_TASK_NAME}`,
+                    );
                     await Location.startLocationUpdatesAsync(
                         LOCATION_TASK_NAME,
                         {

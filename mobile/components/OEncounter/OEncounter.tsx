@@ -91,12 +91,14 @@ const OEncounter = (props: ISingleEncounterProps) => {
             </View>
             {showActions && (
                 <View style={styles.rightColumn}>
-                    <Text
-                        style={styles.trustScore}
-                        onPress={() => alert(i18n.t(TR.ratingDescr))}
-                    >
-                        {i18n.t(TR.trust)}({encounterProfile.rating})
-                    </Text>
+                    {encounterProfile.rating && (
+                        <Text
+                            style={styles.trustScore}
+                            onPress={() => alert(i18n.t(TR.ratingDescr))}
+                        >
+                            {i18n.t(TR.trust)}({encounterProfile.rating})
+                        </Text>
+                    )}
                     {dateStatus === EncounterStatusEnum.met_not_interested && (
                         <Pressable
                             style={

@@ -9,9 +9,11 @@ export const de: Language = {
     gettingReadyToAmazeYou: "Bereit, dich zu beeindrucken..",
     datingAppsAreBroken: "Dating apps are Broken",
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
+    verificationCodeResend: "Code neu senden",
+    invalidEmail: "Email ungültig oder existiert bereits.",
     termsDisclaimer: {
-        p1: "Durch Tippen auf „Konto erstellen“ oder „Anmelden“ stimmst du unseren ",
-        terms: "Allgemeinen Geschäftsbedingungen",
+        p1: "Durch Tippen auf 'Konto erstellen' oder 'Anmelden' stimmst du unseren ",
+        terms: "AGBs",
         p2: " zu. Unsere ",
         privacyCookie: "Datenschutz- und Cookie-Richtlinie.",
     },
@@ -45,7 +47,7 @@ export const de: Language = {
     noAccessToMediaLib: "Kein Zugriff auf die Mediathek.",
     addPhotos: "Fotos hinzufügen",
     clickToUploadImages: "Klicken, um Bilder hochzuladen.",
-    continue: "Fortfahren",
+    continue: "Weiter",
     iWantTo: "Ich möchte",
     approach: "Ansprechen",
     beApproached: "Angesprochen werden",
@@ -147,7 +149,7 @@ export const de: Language = {
         "Kein Benutzer-ID zugewiesen! Kann keine Benachrichtigungen empfangen!",
     couldNotFetchNotificationToken:
         "Benachrichtigungstoken konnte nicht abgerufen werden",
-    findPeople: "Menschen finden",
+    findPeople: "Finden",
     encounters: "Begegnungen",
     settings: "Einstellungen",
     destination: "Ziel",
@@ -155,11 +157,11 @@ export const de: Language = {
     yourLocation: "Dein Standort",
     calculating: "Berechne..",
     changePreferencesDescr:
-        "Ändere deine Präferenzen oder aktualisiere dein Profil.",
+        "Ändere deine Einstellungen oder aktualisiere dein Profil.",
     bio: "Bio",
-    updateImages: "Bilder aktualisieren",
-    updateSafeZones: "Sichere Zonen aktualisieren",
-    errNoUserProvided: "Fehler: Kein Benutzer angegeben",
+    updateImages: "Bilder updaten",
+    updateSafeZones: "Safe Zones updaten",
+    errNoUserProvided: "Fehler: Kein Nutzer angegeben",
     reportIncident: {
         disrespectful: "Respektlos",
         sexualHarassment: "Sexuelle Belästigung",
@@ -167,7 +169,7 @@ export const de: Language = {
         other: "Andere",
     },
     onlyReportThatWasDisrespectful:
-        "Bitte melde nur Personen, die respektlos waren, ein Nein nicht akzeptiert haben oder sich auf andere Weise ungebührlich verhalten haben.",
+        "Bitte melde nur Personen, die respektlos waren, ein Nein nicht akzeptiert haben oder sich auf andere Weise unangemessen verhalten haben.",
     typeOfIncident: "Art des Vorfalls",
     selectIncidentType: "Vorfallstyp auswählen",
     search: "Suchen..",
@@ -190,7 +192,7 @@ export const de: Language = {
         "Zugriff auf den Standort im Hintergrund wurde verweigert.",
     youAreLive: "Du bist live!",
     ghostModeDescr:
-        "Geistermodus. Niemand wird dich sehen! Drücke den Schalter oben, um live zu gehen.",
+        "Geistmodus. Niemand wird dich sehen! Drücke den Schalter oben, um live zu gehen.",
     errRequestingPermissions:
         "Ein Fehler ist bei der Anforderung der Berechtigungen aufgetreten.",
     youAreLiveApproachDescr:
@@ -198,6 +200,6 @@ export const de: Language = {
     youAreLiveBeApproachedDescr:
         "Personen, die dich interessant finden könnten, erhalten Benachrichtigungen, wenn du in der Nähe bist!",
     live: "Live",
-    ghostMode: "Geistermodus",
+    ghostMode: "Geistmodus",
     saving: "Speichern..",
 };

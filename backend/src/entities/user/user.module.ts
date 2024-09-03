@@ -1,8 +1,8 @@
-import { BlacklistedRegion } from "@/blacklisted-region/blacklisted-region.entity";
-import { Encounter } from "@/encounter/encounter.entity";
-import { PendingUser } from "@/registration/pending-user/pending-user.entity";
+import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
+import { Encounter } from "@/entities/encounter/encounter.entity";
+import { PendingUser } from "@/entities/pending-user/pending-user.entity";
+import { UserReport } from "@/entities/user-report/user-report.entity";
 import { MatchingModule } from "@/transient-services/matching/matching.module";
-import { UserReport } from "@/user-report/user-report.entity";
 import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserController } from "./user.controller";

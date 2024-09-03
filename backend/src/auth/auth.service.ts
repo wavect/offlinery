@@ -1,6 +1,6 @@
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
-import { User } from "@/user/user.entity";
-import { UserService } from "@/user/user.service";
+import { User } from "@/entities/user/user.entity";
+import { UserService } from "@/entities/user/user.service";
 import { TYPED_ENV } from "@/utils/env.utils";
 import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
@@ -16,8 +16,6 @@ export class AuthService {
     ) {}
 
     async signInWithJWT(accessToken: string): Promise<SignInResponseDTO> {
-        this.logger.debug(`Trying to sign in user with JWT`);
-        // will throw if unauthorized/invalid
         const userJwtRes: Pick<User, "id"> = await this.jwtService.verifyAsync(
             accessToken,
             {
@@ -38,7 +36,6 @@ export class AuthService {
         email: string,
         clearPassword: string,
     ): Promise<SignInResponseDTO> {
-        this.logger.debug(`Trying to sign in user: ${email}`);
         const user = await this.usersService.findUserByEmail(email);
         if (!user) {
             throw new UnauthorizedException();

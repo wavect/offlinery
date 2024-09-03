@@ -33,7 +33,6 @@ export interface NotificationControllerStorePushTokenRequest {
 export interface PushNotificationsApiInterface {
     /**
      *
-     * @summary Store user\'s push token
      * @param {string} userId
      * @param {StorePushTokenDTO} storePushTokenDTO
      * @param {*} [options] Override http request option.
@@ -46,7 +45,6 @@ export interface PushNotificationsApiInterface {
     ): Promise<runtime.ApiResponse<void>>;
 
     /**
-     * Store user\'s push token
      */
     notificationControllerStorePushToken(
         requestParameters: NotificationControllerStorePushTokenRequest,
@@ -62,7 +60,6 @@ export class PushNotificationsApi
     implements PushNotificationsApiInterface
 {
     /**
-     * Store user\'s push token
      */
     async notificationControllerStorePushTokenRaw(
         requestParameters: NotificationControllerStorePushTokenRequest,
@@ -90,7 +87,7 @@ export class PushNotificationsApi
 
         const response = await this.request(
             {
-                path: `/api/push-token/{userId}`.replace(
+                path: `/notification/push-token/{userId}`.replace(
                     `{${"userId"}}`,
                     encodeURIComponent(String(requestParameters["userId"])),
                 ),
@@ -108,7 +105,6 @@ export class PushNotificationsApi
     }
 
     /**
-     * Store user\'s push token
      */
     async notificationControllerStorePushToken(
         requestParameters: NotificationControllerStorePushTokenRequest,

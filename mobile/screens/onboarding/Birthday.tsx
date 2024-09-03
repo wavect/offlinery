@@ -7,15 +7,19 @@ import RNDateTimePicker, {
 } from "@react-native-community/datetimepicker";
 import * as React from "react";
 import { useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { Platform, StyleSheet, TextInput, View } from "react-native";
 import { ROUTES } from "../routes";
 
 const Birthday = ({ navigation }) => {
     const { state, dispatch } = useUserContext();
-    const [showDatePicker, setShowDatePicker] = useState(false);
+    const isIOS = Platform.OS === "ios";
+    // Android is a date dialog, while on iOS it kind of is embedded on the screen and still is usable if shown consistently
+    const [showDatePicker, setShowDatePicker] = useState(isIOS);
 
     const onDatePickerEvent = (event: DateTimePickerEvent, date?: Date) => {
-        setShowDatePicker(!showDatePicker);
+        if (!isIOS) {
+            setShowDatePicker(!showDatePicker);
+        }
         dispatch({
             type: EACTION_USER.SET_BIRTHDAY,
             payload: date || new Date(2000, 1, 1),
