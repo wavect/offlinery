@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
 import {
     EApproachChoice,
     EDateMode,
@@ -13,6 +14,7 @@ export class CreateUserDTO {
     firstName: string;
 
     @ApiProperty({ type: "string", format: "email" })
+    @Transform(({ value }) => value.toLowerCase())
     email: string;
 
     @ApiProperty({ type: "string" })

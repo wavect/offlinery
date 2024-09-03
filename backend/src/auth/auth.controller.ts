@@ -1,7 +1,15 @@
 import { SignInJwtDTO } from "@/DTOs/sign-in-jwt.dto";
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { SignInDTO } from "@/DTOs/sign-in.dto";
-import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    HttpCode,
+    HttpStatus,
+    Post,
+    UsePipes,
+    ValidationPipe,
+} from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { Public } from "./auth.guard";
 import { AuthService } from "./auth.service";
@@ -16,6 +24,7 @@ export class AuthController {
 
     @Public()
     @HttpCode(HttpStatus.OK)
+    @UsePipes(new ValidationPipe({ transform: true }))
     @Post("login")
     signIn(@Body() signInDTO: SignInDTO): Promise<SignInResponseDTO> {
         return this.authService.signIn(
