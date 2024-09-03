@@ -20,7 +20,6 @@ import { TR, i18n } from "@/localization/translate.service";
 import {
     SECURE_VALUE,
     getSecurelyStoredValue,
-    saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -109,7 +108,7 @@ const Login = ({ navigation }) => {
 
     const login = async () => {
         setLoading(true);
-        setErrorMessage(""); // Reset the error message
+        setErrorMessage("");
 
         const signInDTO: AuthControllerSignInRequest = {
             signInDTO: {
@@ -120,28 +119,14 @@ const Login = ({ navigation }) => {
         try {
             const signInRes = await authApi.authControllerSignIn(signInDTO);
             if (signInRes.accessToken) {
-                // everything seems to be valid
                 const user = signInRes.user;
-
-                // save jwtAccessToken in secure storage to stay logged in if app is closed
-                await saveValueLocallySecurely(
-                    SECURE_VALUE.JWT_ACCESS_TOKEN,
-                    signInRes.accessToken,
-                );
-                await saveValueLocallySecurely(
-                    SECURE_VALUE.USER_ID,
-                    signInRes.user.id,
-                );
-
                 userAuthenticatedUpdate(user, signInRes.accessToken);
             }
         } catch (err) {
             console.error(err);
             setErrorMessage(i18n.t(TR.invalidCredentials));
         } finally {
-            // always stop loading
             setLoading(false);
-            /** @dev Delete clear password once logged in */
             setClearPassword("");
         }
     };
