@@ -1,3 +1,4 @@
+import { SignInJwtDTO } from "@/DTOs/sign-in-jwt.dto";
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { SignInDTO } from "@/DTOs/sign-in.dto";
 import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
@@ -21,5 +22,12 @@ export class AuthController {
             signInDTO.email,
             signInDTO.clearPassword,
         );
+    }
+
+    @Public()
+    @HttpCode(HttpStatus.OK)
+    @Post("login/jwt")
+    signInByJWT(@Body() signInDTO: SignInJwtDTO): Promise<SignInResponseDTO> {
+        return this.authService.signInWithJWT(signInDTO.jwtAccessToken);
     }
 }

@@ -12,8 +12,16 @@
  * Do not edit the class manually.
  */
 
-import type { SignInDTO, SignInResponseDTO } from "../models/index";
-import { SignInDTOToJSON, SignInResponseDTOFromJSON } from "../models/index";
+import type {
+    SignInDTO,
+    SignInJwtDTO,
+    SignInResponseDTO,
+} from "../models/index";
+import {
+    SignInDTOToJSON,
+    SignInJwtDTOToJSON,
+    SignInResponseDTOFromJSON,
+} from "../models/index";
 import * as runtime from "../runtime";
 
 // We import this type even if it's unused to avoid additional
@@ -21,6 +29,10 @@ import * as runtime from "../runtime";
 // are larger than the benefits, we can try another approach.
 export interface AuthControllerSignInRequest {
     signInDTO: SignInDTO;
+}
+
+export interface AuthControllerSignInByJWTRequest {
+    signInJwtDTO: SignInJwtDTO;
 }
 
 /**
@@ -46,6 +58,25 @@ export interface AuthApiInterface {
      */
     authControllerSignIn(
         requestParameters: AuthControllerSignInRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<SignInResponseDTO>;
+
+    /**
+     *
+     * @param {SignInJwtDTO} signInJwtDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApiInterface
+     */
+    authControllerSignInByJWTRaw(
+        requestParameters: AuthControllerSignInByJWTRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<SignInResponseDTO>>;
+
+    /**
+     */
+    authControllerSignInByJWT(
+        requestParameters: AuthControllerSignInByJWTRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<SignInResponseDTO>;
 }
@@ -96,6 +127,54 @@ export class AuthApi extends runtime.BaseAPI implements AuthApiInterface {
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<SignInResponseDTO> {
         const response = await this.authControllerSignInRaw(
+            requestParameters,
+            initOverrides,
+        );
+        return await response.value();
+    }
+
+    /**
+     */
+    async authControllerSignInByJWTRaw(
+        requestParameters: AuthControllerSignInByJWTRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<SignInResponseDTO>> {
+        if (requestParameters["signInJwtDTO"] == null) {
+            throw new runtime.RequiredError(
+                "signInJwtDTO",
+                'Required parameter "signInJwtDTO" was null or undefined when calling authControllerSignInByJWT().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        const response = await this.request(
+            {
+                path: `/auth/login/jwt`,
+                method: "POST",
+                headers: headerParameters,
+                query: queryParameters,
+                body: SignInJwtDTOToJSON(requestParameters["signInJwtDTO"]),
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            SignInResponseDTOFromJSON(jsonValue),
+        );
+    }
+
+    /**
+     */
+    async authControllerSignInByJWT(
+        requestParameters: AuthControllerSignInByJWTRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<SignInResponseDTO> {
+        const response = await this.authControllerSignInByJWTRaw(
             requestParameters,
             initOverrides,
         );
