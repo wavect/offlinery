@@ -1,4 +1,5 @@
 import { BlacklistedRegion } from "@/blacklisted-region/blacklisted-region.entity";
+import { EncounterModule } from "@/encounter/encounter.module";
 import { User } from "@/user/user.entity";
 import { UserModule } from "@/user/user.module";
 import { forwardRef, Module } from "@nestjs/common";
@@ -12,6 +13,7 @@ import { MatchingService } from "./matching.service";
         TypeOrmModule.forFeature([User, BlacklistedRegion]),
         forwardRef(() => UserModule),
         forwardRef(() => NotificationModule),
+        EncounterModule,
     ],
     providers: [MatchingService],
     controllers: [MatchingController],

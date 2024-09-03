@@ -30,7 +30,6 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${DB_UI_EMAIL:-admin@admin.com}
       PGADMIN_DEFAULT_PASSWORD: ${DB_UI_PASSWORD:-123}
       PGADMIN_LISTEN_PORT: ${DB_UI_PORT:-8091}
-      
     ports:
       - ${DB_UI_PORT:-8091}:${DB_UI_PORT:-8091}
     networks:
