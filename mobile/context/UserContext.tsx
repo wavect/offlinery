@@ -12,6 +12,10 @@ import {
     UserVerificationStatusEnum,
 } from "@/api/gen/src";
 import { i18n } from "@/localization/translate.service";
+import {
+    SECURE_VALUE,
+    saveValueLocallySecurely,
+} from "@/services/secure-storage.service";
 import { getAge } from "@/utils/date.utils";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
@@ -191,11 +195,19 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
         case EACTION_USER.UPDATE_MULTIPLE:
             return { ...state, ...(action.payload as Partial<IUserData>) };
         case EACTION_USER.SET_ID:
+            saveValueLocallySecurely(
+                SECURE_VALUE.USER_ID,
+                action.payload as string,
+            ).then();
             return {
                 ...state,
                 id: action.payload as string,
             };
         case EACTION_USER.SET_JWT_ACCESS_TOKEN:
+            saveValueLocallySecurely(
+                SECURE_VALUE.JWT_ACCESS_TOKEN,
+                action.payload as string,
+            ).then();
             return {
                 ...state,
                 jwtAccessToken: action.payload as string,
