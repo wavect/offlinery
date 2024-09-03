@@ -1,7 +1,8 @@
-import { BlacklistedRegion } from "@/blacklisted-region/blacklisted-region.entity";
 import { UserPrivateDTO } from "@/DTOs/user-private.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
-import { Encounter } from "@/encounter/encounter.entity";
+import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
+import { Encounter } from "@/entities/encounter/encounter.entity";
+import { UserReport } from "@/entities/user-report/user-report.entity";
 import { IEntityToDTOInterface } from "@/interfaces/IEntityToDTO.interface";
 import {
     EApproachChoice,
@@ -10,7 +11,6 @@ import {
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
-import { UserReport } from "@/user-report/user-report.entity";
 import { getAge } from "@/utils/date.utils";
 import { Point } from "geojson";
 import {
