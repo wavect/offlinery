@@ -73,8 +73,8 @@ export class MatchingService {
         ) {
             return [];
         }
-        const lon = user.location.coordinates[0];
-        const lat = user.location.coordinates[1];
+        const lon = userToBeApproached.location.coordinates[0];
+        const lat = userToBeApproached.location.coordinates[1];
 
         // Check if user is within any of their blacklisted regions
         const isInBlacklistedRegion =
@@ -95,7 +95,7 @@ export class MatchingService {
         if (isInBlacklistedRegion) {
             return [];
         }
-        if (!this.isWithinApproachTime(user, lat, lon)) {
+        if (!this.isWithinApproachTime(userToBeApproached, lat, lon)) {
             return [];
         }
 
