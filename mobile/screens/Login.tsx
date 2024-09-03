@@ -17,12 +17,8 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import {
-    SECURE_VALUE,
-    getSecurelyStoredValue,
-} from "@/services/secure-storage.service";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
     KeyboardAvoidingView,
     Platform,
@@ -68,11 +64,14 @@ const Login = ({ navigation }) => {
         };
         // also fill userData when logged in
         // Note: We still save the accessToken into the user context to avoid reading from secure storage all the time when making api requests (performance, security, ..)
+        const payload: Partial<IUserData> = {
+            ...userData,
+            jwtAccessToken,
+        };
+        console.log(`storing...`, user);
         dispatch({
             type: EACTION_USER.UPDATE_MULTIPLE,
-            payload: {
-                ...userData,
-            },
+            payload,
         });
 
         if (user.verificationStatus === "pending") {
@@ -81,30 +80,6 @@ const Login = ({ navigation }) => {
             navigation.navigate(ROUTES.MainTabView);
         }
     };
-
-    useEffect(() => {
-        getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN).then(
-            async (jwtAccessToken) => {
-                if (!jwtAccessToken) {
-                    // needs to authenticate regularly
-                    return;
-                } else {
-                    const signInRes = await authApi.authControllerSignInByJWT({
-                        signInJwtDTO: {
-                            jwtAccessToken,
-                        },
-                    });
-                    if (signInRes.accessToken) {
-                        // still defined
-                        userAuthenticatedUpdate(
-                            signInRes.user,
-                            signInRes.accessToken,
-                        );
-                    }
-                }
-            },
-        );
-    }, []);
 
     const login = async () => {
         setLoading(true);

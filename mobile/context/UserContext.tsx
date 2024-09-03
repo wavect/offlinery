@@ -14,6 +14,7 @@ import {
 import { i18n } from "@/localization/translate.service";
 import {
     SECURE_VALUE,
+    getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 import { getAge } from "@/utils/date.utils";
@@ -193,6 +194,29 @@ export const getPublicProfileFromUserData = (
 const userReducer = (state: IUserData, action: IUserAction): IUserData => {
     switch (action.type) {
         case EACTION_USER.UPDATE_MULTIPLE:
+            const payload: Partial<IUserData> =
+                action.payload as Partial<IUserData>;
+            console.log("---");
+            console.log("payload received ", payload);
+            if (payload.id) {
+                saveValueLocallySecurely(
+                    SECURE_VALUE.USER_ID,
+                    payload.id,
+                ).then();
+            }
+            if (payload.jwtAccessToken) {
+                console.log("STORING JWT");
+                saveValueLocallySecurely(
+                    SECURE_VALUE.JWT_ACCESS_TOKEN,
+                    payload.jwtAccessToken,
+                ).then();
+
+                getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN).then(
+                    (res) => {
+                        console.log("after lookup: ", res);
+                    },
+                );
+            }
             return { ...state, ...(action.payload as Partial<IUserData>) };
         case EACTION_USER.SET_ID:
             saveValueLocallySecurely(
