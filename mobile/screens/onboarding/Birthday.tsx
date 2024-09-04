@@ -26,6 +26,15 @@ const Birthday = ({ navigation }) => {
         });
     };
 
+    const getMinimumAge = () => {
+        const today = new Date();
+        return new Date(
+            today.getFullYear() - 14,
+            today.getMonth(),
+            today.getDate(),
+        );
+    };
+
     return (
         <OPageContainer
             title={i18n.t(TR.myBirthDayIs)}
@@ -45,7 +54,9 @@ const Birthday = ({ navigation }) => {
                 <TextInput
                     style={styles.input}
                     showSoftInputOnFocus={false}
-                    value={state.birthDay.toLocaleDateString()}
+                    value={state.birthDay.toLocaleDateString(undefined, {
+                        timeZone: "utc",
+                    })}
                     onPress={() => setShowDatePicker(true)}
                     placeholder="01.01.2000"
                     placeholderTextColor="#999"
@@ -56,8 +67,9 @@ const Birthday = ({ navigation }) => {
                         mode="date"
                         onChange={onDatePickerEvent}
                         minimumDate={new Date(1900, 1, 1)}
-                        maximumDate={new Date(2010, 1, 1)}
+                        maximumDate={getMinimumAge()}
                         value={state.birthDay}
+                        timeZoneName="UTC"
                     />
                 )}
             </View>
