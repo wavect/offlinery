@@ -27,7 +27,7 @@ import { RegistrationService } from "./registration.service";
                 from: '"No Reply" <noreply@offlinery.com>',
             },
             template: {
-                dir: join(__dirname, "templates"),
+                dir: join(__dirname, "../../mail/templates"),
                 adapter: new HandlebarsAdapter(),
             },
         }),
