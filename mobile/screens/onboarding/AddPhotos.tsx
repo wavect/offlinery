@@ -63,24 +63,28 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
     };
 
     const img = state.imageURIs[imageIdx];
-    const uri = isImagePicker(img) ? img.uri : undefined;
-    // If uri is set here, we can access the image on the local device.
-    // Otherwise we need to access the image via our backend.
-    const currImg =
-        uri ??
-        `${BASE_PATH.replace("/v1", "")}/img/${state.imageURIs[imageIdx]}`;
 
-    return (
-        <Pressable style={styles.photoContainer} onPress={openMediaLibrary}>
-            {currImg ? (
-                <Image style={styles.previewImage} source={{ uri: currImg }} />
-            ) : (
+    if (!img) {
+        return (
+            <Pressable style={styles.photoContainer} onPress={openMediaLibrary}>
                 <MaterialIcons
                     name="add-circle-outline"
                     size={30}
                     color={Color.primary}
                 />
-            )}
+            </Pressable>
+        );
+    }
+
+    // If the image is an `ImagePicker` we can directly access image on the user's device
+    // otherwise we need to fetch it from the server.
+    const uri = isImagePicker(img)
+        ? img.uri
+        : `${BASE_PATH.replace("/v1", "")}/img/${img}`;
+
+    return (
+        <Pressable style={styles.photoContainer} onPress={openMediaLibrary}>
+            <Image style={styles.previewImage} source={{ uri }} />
         </Pressable>
     );
 };
