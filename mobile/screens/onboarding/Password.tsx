@@ -26,7 +26,10 @@ const Password = ({ route, navigation }) => {
     };
 
     const setValidatePassword = (pwd: string) => {
-        dispatch({ type: EACTION_USER.SET_CLEAR_PASSWORD, payload: pwd });
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { clearPassword: pwd },
+        });
 
         if (isStrongPassword()) {
             setPasswordError("");

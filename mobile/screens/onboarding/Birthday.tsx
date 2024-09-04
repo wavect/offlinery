@@ -21,8 +21,8 @@ const Birthday = ({ navigation }) => {
             setShowDatePicker(!showDatePicker);
         }
         dispatch({
-            type: EACTION_USER.SET_BIRTHDAY,
-            payload: date || new Date(2000, 1, 1),
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { birthDay: date || new Date(2000, 1, 1) },
         });
     };
 

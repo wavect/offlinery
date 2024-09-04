@@ -21,7 +21,6 @@ interface ISingleEncounterProps {
 const OEncounter = (props: ISingleEncounterProps) => {
     const { dispatch } = useEncountersContext();
     const { encounterProfile, showActions, navigation } = props;
-    const { personalRelationship } = encounterProfile;
     const [dateStates] = useState([
         {
             label: i18n.t(TR.encounterInterest.notMet),
@@ -42,14 +41,16 @@ const OEncounter = (props: ISingleEncounterProps) => {
         value: EncounterStatusEnum;
     }) => {
         dispatch({
-            type: EACTION_ENCOUNTERS.SET_DATE_STATUS,
-            payload: {
-                encounterId: encounterProfile.encounterId,
-                value: item.value,
-            },
+            type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,
+            payload: [
+                {
+                    encounterId: encounterProfile.encounterId,
+                    status: item.value,
+                },
+            ],
         });
     };
-    const dateStatus = encounterProfile.personalRelationship?.status;
+    const dateStatus = encounterProfile.status;
 
     return (
         <View style={styles.encounterContainer}>
@@ -64,7 +65,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                 >{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>
                 <Text
                     style={styles.encounterInfo}
-                >{`${personalRelationship?.lastTimePassedBy} near ${personalRelationship?.lastLocationPassedBy}`}</Text>
+                >{`${encounterProfile.lastTimePassedBy} near ${encounterProfile.lastLocationPassedBy}`}</Text>
 
                 {showActions && (
                     <View style={styles.encounterDropdownContainer}>
@@ -74,11 +75,11 @@ const OEncounter = (props: ISingleEncounterProps) => {
                             valueField="value"
                             value={dateStatus}
                             onChange={setDateStatus}
-                            disable={personalRelationship?.reported}
+                            disable={encounterProfile.reported}
                             containerStyle={styles.dropdownContainerStyle}
                             style={[
                                 styles.encounterDropdownPicker,
-                                personalRelationship?.reported
+                                encounterProfile.reported
                                     ? styles.encounterDropdownPickerDisabled
                                     : null,
                             ]}
@@ -102,11 +103,11 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     {dateStatus === EncounterStatusEnum.met_not_interested && (
                         <Pressable
                             style={
-                                personalRelationship?.reported
+                                encounterProfile.reported
                                     ? styles.buttonDisabled
                                     : styles.buttonDanger
                             }
-                            disabled={personalRelationship?.reported}
+                            disabled={encounterProfile.reported}
                             onPress={() =>
                                 navigation.navigate(
                                     ROUTES.Main.ReportEncounter,
@@ -117,7 +118,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                             }
                         >
                             <Text style={styles.buttonText}>
-                                {personalRelationship?.reported
+                                {encounterProfile.reported
                                     ? i18n.t(TR.reported)
                                     : i18n.t(TR.report)}
                             </Text>
@@ -125,7 +126,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     )}
 
                     {dateStatus === EncounterStatusEnum.not_met &&
-                        personalRelationship?.isNearbyRightNow && (
+                        encounterProfile.isNearbyRightNow && (
                             <Pressable
                                 style={styles.buttonBlack}
                                 onPress={() =>

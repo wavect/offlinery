@@ -63,20 +63,17 @@ const Encounters = ({ navigation }) => {
                     age: otherUser.age,
                     bio: otherUser.bio,
                     imageURIs: otherUser.imageURIs,
-                    personalRelationship: {
-                        isNearbyRightNow: false,
-                        status: encounter.status,
-                        reported: encounter.reported,
-                        lastLocationPassedBy:
-                            encounter.lastLocationPassedBy ?? "",
-                        lastTimePassedBy: encounter.lastDateTimePassedBy,
-                    },
+                    isNearbyRightNow: false,
+                    status: encounter.status,
+                    reported: encounter.reported,
+                    lastLocationPassedBy: encounter.lastLocationPassedBy ?? "",
+                    lastTimePassedBy: encounter.lastDateTimePassedBy,
                     rating: otherUser.trustScore,
                 });
             });
 
             dispatch({
-                type: EACTION_ENCOUNTERS.SET_ENCOUNTERS,
+                type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,
                 payload: mappedEncounters,
             });
         } catch (error) {

@@ -1,8 +1,8 @@
+import { Color, FontFamily } from "@/GlobalStyles";
 import { RegistrationApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { useUserContext } from "@/context/UserContext";
-import { Color, FontFamily } from "@/GlobalStyles";
 import { TR, i18n } from "@/localization/translate.service";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";

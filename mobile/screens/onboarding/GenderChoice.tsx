@@ -12,7 +12,7 @@ const GenderChoice = ({ navigation }) => {
     const { dispatch } = useUserContext();
 
     const setGender = (gender: UserGenderEnum) => {
-        dispatch({ type: EACTION_USER.SET_GENDER, payload: gender });
+        dispatch({ type: EACTION_USER.UPDATE_MULTIPLE, payload: { gender } });
         navigation.navigate(ROUTES.Onboarding.GenderLookingFor);
     };
 

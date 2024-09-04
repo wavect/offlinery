@@ -28,13 +28,13 @@ const Email = ({ route, navigation }) => {
 
     const setEmail = (email: string) => {
         setShowErrorMessage(false);
-        dispatch({ type: EACTION_USER.SET_EMAIL, payload: email });
+        dispatch({ type: EACTION_USER.UPDATE_MULTIPLE, payload: { email } });
     };
 
     const setCheckboxChecked = (wantsEmailUpdates: boolean) => {
         dispatch({
-            type: EACTION_USER.SET_EMAIL_UPDATES,
-            payload: wantsEmailUpdates,
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { wantsEmailUpdates },
         });
     };
 

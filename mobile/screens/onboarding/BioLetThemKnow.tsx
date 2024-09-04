@@ -22,7 +22,7 @@ const BioLetThemKnow = ({ navigation }) => {
 
     const setBio = (bio: string) => {
         if (bio.length > MAX_LENGTH_BIO) return;
-        dispatch({ type: EACTION_USER.SET_BIO, payload: bio });
+        dispatch({ type: EACTION_USER.UPDATE_MULTIPLE, payload: { bio } });
     };
 
     const startUserRegistration = async () => {
@@ -34,7 +34,10 @@ const BioLetThemKnow = ({ navigation }) => {
         } finally {
             setLoading(false);
             /** @dev Delete clear password once logged in */
-            dispatch({ type: EACTION_USER.SET_CLEAR_PASSWORD, payload: "" });
+            dispatch({
+                type: EACTION_USER.UPDATE_MULTIPLE,
+                payload: { clearPassword: "" },
+            });
         }
     };
 

@@ -17,6 +17,11 @@ Always install new packages with `npx expo install {package}` NOT with pnpm, yar
 
 Run `pnpm install:all`
 
+### Weird too long path error on Windows
+Follow this: https://github.com/ninja-build/ninja/issues/1900#issuecomment-1817532728
+
+Rebuild then with `npx expo run:android --no-build-cache` (keep your Android folder)
+
 ## Backend
 
 ### Can't reach backend?
