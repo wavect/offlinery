@@ -25,15 +25,11 @@ export class RegistrationService {
         email: string,
     ): Promise<RegistrationForVerificationResponseDTO> {
         try {
-            const existingPendingUser = await this.pendingUserRepo.findOneBy({
-                email,
-                verificationStatus: EEmailVerificationStatus.VERIFIED,
-            });
             const existingVerifiedUser = await this.userRepo.findOneBy({
                 email,
             });
 
-            if (existingPendingUser || existingVerifiedUser) {
+            if (existingVerifiedUser) {
                 throw new Error("Email already exists.");
             }
 
