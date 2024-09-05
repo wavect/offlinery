@@ -1,10 +1,26 @@
 import { IUserData } from "@/context/UserContext";
+import {
+    getSecurelyStoredValue,
+    saveValueLocallySecurely,
+} from "@/services/secure-storage.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
-import { MMKV } from "react-native-mmkv";
 
-// extra encryption, if we are paranoid: https://github.com/Tencent/MMKV/wiki/android_advance#encryption (also for ios)
-// @dev For sensitive values like the JWToken please use the secure-storage.service.ts (slightly slower)
-const storage = new MMKV();
+/** @dev React-native-mmkv is blazing fast as it uses native modules. For that reason it does not work with Expo Go. To keep Expo Go working, we fallback to secure service if not available. */
+const getStorageLib = () => {
+    try {
+        // extra encryption, if we are paranoid: https://github.com/Tencent/MMKV/wiki/android_advance#encryption (also for ios)
+        // @dev For sensitive values like the JWToken please use the secure-storage.service.ts (slightly slower)
+
+        // Try to use MMKV in development on native platforms
+        const MMKV = require("react-native-mmkv").MMKV;
+        return new MMKV();
+    } catch {
+        // Fallback to SecureStore if MMKV is not available (e.g., in Expo Go)
+        return false;
+    }
+};
+/** @dev If MMKV store defined use it, otherwise is false to use secure-service instead. */
+const storage = getStorageLib();
 
 export const LOCAL_VALUE = {
     USER_DATA: "user_data",
@@ -15,7 +31,12 @@ export const getLocallyStoredUserData = (): Omit<
     IUserData,
     "jwtAccessToken"
 > | null => {
-    const userDataString = storage.getString(LOCAL_VALUE.USER_DATA);
+    let userDataString: string | null;
+    if (!storage) {
+        userDataString = getSecurelyStoredValue(LOCAL_VALUE.USER_DATA);
+    } else {
+        userDataString = storage.getString(LOCAL_VALUE.USER_DATA);
+    }
     return userDataString ? (JSON.parse(userDataString) as IUserData) : null;
 };
 
@@ -43,16 +64,30 @@ export const saveUserData = (userData: Omit<IUserData, "jwtAccessToken">) => {
     }
 
     const userDataString = JSON.stringify(userData);
-    storage.set(LOCAL_VALUE.USER_DATA, userDataString);
+    if (!storage) {
+        saveValueLocallySecurely(LOCAL_VALUE.USER_DATA, userDataString);
+    } else {
+        storage.set(LOCAL_VALUE.USER_DATA, userDataString);
+    }
 };
 
 export const getLocallyStoredEncounters = (): IEncounterProfile[] => {
-    const encounterDataString = storage.getString(LOCAL_VALUE.ENCOUNTERS);
+    let encounterDataString: string | null;
+    if (!storage) {
+        encounterDataString = getSecurelyStoredValue(LOCAL_VALUE.ENCOUNTERS);
+    } else {
+        encounterDataString = storage.getString(LOCAL_VALUE.ENCOUNTERS);
+    }
     return encounterDataString
         ? (JSON.parse(encounterDataString) as IEncounterProfile[])
         : [];
 };
 
 export const saveEncountersLocally = (encounters: IEncounterProfile[]) => {
-    storage.set(LOCAL_VALUE.ENCOUNTERS, JSON.stringify(encounters));
+    const encounterDataString = JSON.stringify(encounters);
+    if (!storage) {
+        saveValueLocallySecurely(LOCAL_VALUE.ENCOUNTERS, encounterDataString);
+    } else {
+        storage.set(LOCAL_VALUE.ENCOUNTERS, encounterDataString);
+    }
 };

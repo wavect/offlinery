@@ -77,11 +77,9 @@
                     "android": {
                         "enableProguardInReleaseBuilds": true,
                         "extraProguardRules": "-keep public class com.horcrux.svg.** {*;}",
-                        "allowBackup": false,
-                        "newArchEnabled": true
+                        "allowBackup": false
                     },
                     "ios": {
-                        "newArchEnabled": true
                     }
                 }
             ],
