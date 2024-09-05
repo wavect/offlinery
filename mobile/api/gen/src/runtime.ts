@@ -12,7 +12,10 @@
  * Do not edit the class manually.
  */
 
-export const BASE_PATH = "http://localhost:3000/v1".replace(/\/+$/, "");
+export const BASE_PATH = "https://offlinery.onrender.com/v1".replace(
+    /\/+$/,
+    "",
+);
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path

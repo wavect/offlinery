@@ -1,18 +1,13 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { AuthApi, UserPrivateDTO } from "@/api/gen/src";
+import { AuthApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
 import { OShowcase } from "@/components/OShowcase/OShowcase";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
 import { OTroubleSignIn } from "@/components/OTroubleSignIn/OTroubleSignIn";
-import {
-    EACTION_USER,
-    IUserData,
-    MapRegion,
-    isAuthenticated,
-    useUserContext,
-} from "@/context/UserContext";
+import { isAuthenticated, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { userAuthenticatedUpdate } from "@/services/auth.service";
 import {
     SECURE_VALUE,
     getSecurelyStoredValue,
@@ -30,7 +25,7 @@ const Welcome = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     const checkAuthStatus = async () => {
-        const jwtAccessToken = await getSecurelyStoredValue(
+        const jwtAccessToken = getSecurelyStoredValue(
             SECURE_VALUE.JWT_ACCESS_TOKEN,
         );
 
@@ -44,57 +39,16 @@ const Welcome = ({ navigation }) => {
                 },
             });
             if (signInRes.accessToken) {
-                userAuthenticatedUpdate(signInRes.user, signInRes.accessToken);
+                userAuthenticatedUpdate(
+                    dispatch,
+                    navigation,
+                    signInRes.user,
+                    signInRes.accessToken,
+                );
             }
         }
 
         return isAuthenticated(state);
-    };
-
-    const userAuthenticatedUpdate = (
-        user: UserPrivateDTO,
-        jwtAccessToken: string,
-    ) => {
-        const userData: IUserData = {
-            ...user,
-            approachFromTime: new Date(user.approachFromTime),
-            approachToTime: new Date(user.approachToTime),
-            blacklistedRegions: user.blacklistedRegions
-                .map((br) => {
-                    if (br.location.coordinates?.length !== 2) {
-                        return undefined;
-                    }
-
-                    return {
-                        radius: br.radius,
-                        longitude: br.location.coordinates[0],
-                        latitude: br.location.coordinates[1],
-                    } satisfies MapRegion;
-                })
-                .filter((br) => br !== undefined),
-            clearPassword: "",
-            imageURIs: Object.fromEntries(
-                user.imageURIs.map((value, index) => [index, value]),
-            ),
-            jwtAccessToken,
-        };
-        // also fill userData when logged in
-        // Note: We still save the accessToken into the user context to avoid reading from secure storage all the time when making api requests (performance, security, ..)
-        const payload: Partial<IUserData> = {
-            ...userData,
-            jwtAccessToken,
-        };
-        console.log(`storing...`, user);
-        dispatch({
-            type: EACTION_USER.UPDATE_MULTIPLE,
-            payload,
-        });
-
-        if (user.verificationStatus === "pending") {
-            navigation.navigate(ROUTES.Onboarding.WaitingVerification);
-        } else {
-            navigation.navigate(ROUTES.MainTabView);
-        }
     };
 
     useFocusEffect(

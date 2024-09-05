@@ -12,7 +12,10 @@ const GenderLookingFor = ({ navigation }) => {
     const { dispatch } = useUserContext();
 
     const setGender = (gender: UserGenderEnum) => {
-        dispatch({ type: EACTION_USER.SET_GENDER_DESIRE, payload: gender });
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { genderDesire: gender },
+        });
         navigation.navigate(ROUTES.Onboarding.AddPhotos);
     };
 

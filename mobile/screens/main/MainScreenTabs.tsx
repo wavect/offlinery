@@ -13,6 +13,7 @@ import {
     SECURE_VALUE,
     getSecurelyStoredValue,
 } from "@/services/secure-storage.service";
+import { getLocallyStoredUserData } from "@/services/storage.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { getJwtHeader } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -41,10 +42,14 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     }
     if (data) {
         const locations = (data as any).locations as Location.LocationObject[];
-        const jwtToken = await getSecurelyStoredValue(
-            SECURE_VALUE.JWT_ACCESS_TOKEN,
-        );
-        const userId = await getSecurelyStoredValue(SECURE_VALUE.USER_ID);
+        const userId = getLocallyStoredUserData()?.id;
+        const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
+        if (!userId || !jwtToken) {
+            console.error(
+                "UserID and/or jwtToken undefined in location task service.",
+            );
+            return;
+        }
         const userApi = new UserApi();
 
         if (locations && locations.length > 0 && userId) {

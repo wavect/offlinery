@@ -50,10 +50,12 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
                 // remove, override, add image
                 const image = result.assets[0];
                 dispatch({
-                    type: EACTION_USER.SET_IMAGE,
+                    type: EACTION_USER.UPDATE_MULTIPLE,
                     payload: {
-                        imageIdx,
-                        image: { ...image, fileName: imageIdx },
+                        imageURIs: {
+                            ...state.imageURIs,
+                            [imageIdx]: { ...image, fileName: imageIdx },
+                        },
                     },
                 });
             }

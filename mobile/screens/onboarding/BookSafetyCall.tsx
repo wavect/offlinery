@@ -33,7 +33,10 @@ const BookSafetyCall = ({ navigation }) => {
         } finally {
             setLoading(false);
             /** @dev Delete clear password once logged in */
-            dispatch({ type: EACTION_USER.SET_CLEAR_PASSWORD, payload: "" });
+            dispatch({
+                type: EACTION_USER.UPDATE_MULTIPLE,
+                payload: { clearPassword: "" },
+            });
         }
     };
 

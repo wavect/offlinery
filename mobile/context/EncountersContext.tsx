@@ -1,4 +1,5 @@
-import { EncounterStatusEnum, UserPublicDTO } from "@/api/gen/src";
+import { UserPublicDTO } from "@/api/gen/src";
+import { saveEncountersLocally } from "@/services/storage.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import React, { Dispatch, createContext, useContext, useReducer } from "react";
 
@@ -6,11 +7,13 @@ export interface IEncounters {
     encounters: IEncounterProfile[];
 }
 
+/** @dev Partial Encounter BUT encounterID is mandatory since the update logic needs it as we are saving an array */
+export type PartialEncounterProfile = {
+    encounterId: string;
+} & Partial<Omit<IEncounterProfile, "encounterId">>;
+
 export enum EACTION_ENCOUNTERS {
-    SET_ENCOUNTERS = "SET_ENCOUNTERS",
-    SET_REPORTED = "SET_REPORTED",
-    SET_DATE_STATUS = "SET_DATE_STATUS",
-    SET_NEARBY_RIGHT_NOW = "SET_NEARBY_RIGHT_NOW",
+    UPDATE_MULTIPLE = "UPDATE_MULTIPLE",
 }
 
 interface IEncountersContextType {
@@ -18,14 +21,9 @@ interface IEncountersContextType {
     dispatch: Dispatch<IEncountersAction>;
 }
 
-interface IRelationshipUpdatePayload {
-    encounterId: string;
-    value: boolean | EncounterStatusEnum;
-}
-
 export interface IEncountersAction {
     type: EACTION_ENCOUNTERS;
-    payload: IEncounterProfile[] | IRelationshipUpdatePayload;
+    payload: PartialEncounterProfile[];
 }
 
 const initialState: IEncounters = {
@@ -48,64 +46,26 @@ const userReducer = (
     action: IEncountersAction,
 ): IEncounters => {
     switch (action.type) {
-        case EACTION_ENCOUNTERS.SET_ENCOUNTERS:
+        case EACTION_ENCOUNTERS.UPDATE_MULTIPLE:
+            const payload: PartialEncounterProfile[] =
+                action.payload satisfies PartialEncounterProfile[];
+
+            const currentEncounters = state.encounters;
+            // @dev Need to update by ID and for that reason the PartialEncounterProfile[] array enforces the ID in the type to be added.
+            const updatedEncounters: IEncounterProfile[] =
+                currentEncounters.map((encounter) => {
+                    const partialEncounter = payload.find(
+                        (e) => e.encounterId === encounter.encounterId,
+                    );
+                    return partialEncounter
+                        ? { ...encounter, ...partialEncounter }
+                        : encounter;
+                });
+            saveEncountersLocally(updatedEncounters);
+
             return {
                 ...state,
-                encounters: action.payload as IEncounterProfile[],
-            };
-        case EACTION_ENCOUNTERS.SET_REPORTED:
-            const reportedUpdate = action.payload as IRelationshipUpdatePayload;
-            return {
-                ...state,
-                encounters: state.encounters.map(
-                    (encounter): IEncounterProfile =>
-                        encounter.encounterId === reportedUpdate.encounterId
-                            ? ({
-                                  ...encounter,
-                                  personalRelationship: {
-                                      ...encounter.personalRelationship,
-                                      reported: reportedUpdate.value as boolean,
-                                  },
-                              } as IEncounterProfile)
-                            : encounter,
-                ),
-            };
-        case EACTION_ENCOUNTERS.SET_DATE_STATUS:
-            const dateStatusUpdate =
-                action.payload as IRelationshipUpdatePayload;
-            return {
-                ...state,
-                encounters: state.encounters.map(
-                    (encounter): IEncounterProfile =>
-                        encounter.encounterId === dateStatusUpdate.encounterId
-                            ? ({
-                                  ...encounter,
-                                  personalRelationship: {
-                                      ...encounter.personalRelationship,
-                                      status: dateStatusUpdate.value as EncounterStatusEnum,
-                                  },
-                              } as IEncounterProfile)
-                            : encounter,
-                ),
-            };
-        case EACTION_ENCOUNTERS.SET_NEARBY_RIGHT_NOW:
-            const isNearbyRightNowUpdate =
-                action.payload as IRelationshipUpdatePayload;
-            return {
-                ...state,
-                encounters: state.encounters.map(
-                    (encounter): IEncounterProfile =>
-                        encounter.encounterId === dateStatusUpdate.encounterId
-                            ? ({
-                                  ...encounter,
-                                  personalRelationship: {
-                                      ...encounter.personalRelationship,
-                                      isNearbyRightNow:
-                                          isNearbyRightNowUpdate.value as boolean,
-                                  },
-                              } as IEncounterProfile)
-                            : encounter,
-                ),
+                encounters: updatedEncounters,
             };
         default:
             return state;

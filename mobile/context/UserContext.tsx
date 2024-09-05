@@ -14,9 +14,9 @@ import {
 import { i18n } from "@/localization/translate.service";
 import {
     SECURE_VALUE,
-    getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
+import { updateUserDataLocally } from "@/services/storage.service";
 import { getAge } from "@/utils/date.utils";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
@@ -73,6 +73,7 @@ export interface MapRegion {
      */
     uiRadius?: number;
 }
+
 export const mapRegionToBlacklistedRegionDTO = (
     region: MapRegion,
 ): BlacklistedRegionDTO => {
@@ -87,48 +88,29 @@ export const mapRegionToBlacklistedRegionDTO = (
         },
     };
 };
+export const mapBlacklistedRegionDTOToMapRegion = (
+    blacklistedRegionDTO: BlacklistedRegionDTO,
+): MapRegion | undefined => {
+    if (blacklistedRegionDTO.location.coordinates?.length !== 2) {
+        return undefined;
+    }
+
+    return {
+        radius: blacklistedRegionDTO.radius,
+        longitude: blacklistedRegionDTO.location.coordinates[0],
+        latitude: blacklistedRegionDTO.location.coordinates[1],
+    } satisfies MapRegion;
+};
 
 export type ImageIdx = "0" | "1" | "2" | "3" | "4" | "5";
 
-export interface IImageAction {
-    imageIdx: ImageIdx;
-    image: ImagePicker.ImagePickerAsset;
-}
-
 export interface IUserAction {
     type: EACTION_USER;
-    payload:
-        | string
-        | Date
-        | boolean
-        | IImageAction
-        | UserApproachChoiceEnum
-        | UserVerificationStatusEnum
-        | MapRegion[]
-        | UserDateModeEnum
-        | Partial<IUserData>
-        | number;
+    payload: Partial<IUserData>;
 }
 
 export enum EACTION_USER {
-    SET_ID = "SET_ID",
     UPDATE_MULTIPLE = "UPDATE_MULTIPLE",
-    SET_EMAIL_UPDATES = "SET_EMAIL_UPDATES",
-    SET_EMAIL = "SET_EMAIL",
-    SET_FIRSTNAME = "SET_FIRSTNAME",
-    SET_CLEAR_PASSWORD = "SET_CLEAR_PASSWORD",
-    SET_BIRTHDAY = "SET_BIRTHDAY",
-    SET_GENDER = "SET_GENDER",
-    SET_GENDER_DESIRE = "SET_GENDER_DESIRE",
-    SET_IMAGE = "SET_IMAGE",
-    SET_VERIFICATION_STATUS = "SET_VERIFICATION_STATUS",
-    SET_APPROACH_CHOICE = "SET_APPROACH_CHOICE",
-    SET_BLACKLISTED_REGIONS = "SET_BLACKLISTED_REGIONS",
-    SET_APPROACH_FROM_TIME = "SET_APPROACH_FROM_TIME",
-    SET_APPROACH_TO_TIME = "SET_APPROACH_TO_TIME",
-    SET_BIO = "SET_BIO",
-    SET_DATE_MODE = "SET_DATE_MODE",
-    SET_JWT_ACCESS_TOKEN = "SET_JWT_ACCESS_TOKEN",
 }
 
 interface IUserContextType {
@@ -196,123 +178,16 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
         case EACTION_USER.UPDATE_MULTIPLE:
             const payload: Partial<IUserData> =
                 action.payload as Partial<IUserData>;
-            console.log("---");
-            console.log("payload received ", payload);
-            if (payload.id) {
-                saveValueLocallySecurely(
-                    SECURE_VALUE.USER_ID,
-                    payload.id,
-                ).then();
-            }
+            // @dev cache locally
+            updateUserDataLocally(payload);
             if (payload.jwtAccessToken) {
-                console.log("STORING JWT");
+                // jwtAccessToken is not saved in local storage, but in secure local storage for extra security
                 saveValueLocallySecurely(
                     SECURE_VALUE.JWT_ACCESS_TOKEN,
                     payload.jwtAccessToken,
-                ).then();
-
-                getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN).then(
-                    (res) => {
-                        console.log("after lookup: ", res);
-                    },
                 );
             }
-            return { ...state, ...(action.payload as Partial<IUserData>) };
-        case EACTION_USER.SET_ID:
-            saveValueLocallySecurely(
-                SECURE_VALUE.USER_ID,
-                action.payload as string,
-            ).then();
-            return {
-                ...state,
-                id: action.payload as string,
-            };
-        case EACTION_USER.SET_JWT_ACCESS_TOKEN:
-            saveValueLocallySecurely(
-                SECURE_VALUE.JWT_ACCESS_TOKEN,
-                action.payload as string,
-            ).then();
-            return {
-                ...state,
-                jwtAccessToken: action.payload as string,
-            };
-        case EACTION_USER.SET_EMAIL_UPDATES:
-            return {
-                ...state,
-                wantsEmailUpdates: action.payload as boolean,
-            };
-        case EACTION_USER.SET_EMAIL:
-            return {
-                ...state,
-                email: action.payload as string,
-            };
-        case EACTION_USER.SET_FIRSTNAME:
-            return {
-                ...state,
-                firstName: action.payload as string,
-            };
-        case EACTION_USER.SET_CLEAR_PASSWORD:
-            return {
-                ...state,
-                clearPassword: action.payload as string,
-            };
-        case EACTION_USER.SET_BIRTHDAY:
-            return {
-                ...state,
-                birthDay: action.payload as Date,
-            };
-        case EACTION_USER.SET_GENDER:
-            return {
-                ...state,
-                gender: action.payload as UserGenderEnum,
-            };
-        case EACTION_USER.SET_GENDER_DESIRE:
-            return {
-                ...state,
-                genderDesire: action.payload as UserGenderEnum,
-            };
-        case EACTION_USER.SET_IMAGE:
-            const { imageIdx, image } = action.payload as IImageAction;
-            return {
-                ...state,
-                imageURIs: { ...state.imageURIs, [imageIdx]: image },
-            };
-        case EACTION_USER.SET_VERIFICATION_STATUS:
-            return {
-                ...state,
-                verificationStatus:
-                    action.payload as UserVerificationStatusEnum,
-            };
-        case EACTION_USER.SET_APPROACH_CHOICE:
-            return {
-                ...state,
-                approachChoice: action.payload as UserApproachChoiceEnum,
-            };
-        case EACTION_USER.SET_BLACKLISTED_REGIONS:
-            return {
-                ...state,
-                blacklistedRegions: action.payload as MapRegion[],
-            };
-        case EACTION_USER.SET_APPROACH_FROM_TIME:
-            return {
-                ...state,
-                approachFromTime: action.payload as Date,
-            };
-        case EACTION_USER.SET_APPROACH_TO_TIME:
-            return {
-                ...state,
-                approachToTime: action.payload as Date,
-            };
-        case EACTION_USER.SET_BIO:
-            return {
-                ...state,
-                bio: action.payload as string,
-            };
-        case EACTION_USER.SET_DATE_MODE:
-            return {
-                ...state,
-                dateMode: action.payload as UserDateModeEnum,
-            };
+            return { ...state, ...payload };
         default:
             return state;
     }
@@ -382,7 +257,10 @@ export const registerUser = async (
 
         // Update the user state with the returned ID
         if (user.id) {
-            dispatch({ type: EACTION_USER.SET_ID, payload: user.id });
+            dispatch({
+                type: EACTION_USER.UPDATE_MULTIPLE,
+                payload: { id: user.id },
+            });
         }
 
         // Navigate to the next screen or update the UI as needed

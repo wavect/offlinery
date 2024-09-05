@@ -52,8 +52,10 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
             );
 
             dispatch({
-                type: EACTION_USER.SET_DATE_MODE,
-                payload: newDateMode,
+                type: EACTION_USER.UPDATE_MULTIPLE,
+                payload: {
+                    dateMode: newDateMode,
+                },
             });
 
             // Load location and inform user about state
