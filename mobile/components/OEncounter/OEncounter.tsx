@@ -1,5 +1,6 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { EncounterStatusEnum } from "@/api/gen/src";
+import OMessageModal from "@/components/OMessageModal/OMessageModal";
 import {
     EACTION_ENCOUNTERS,
     useEncountersContext,
@@ -35,6 +36,8 @@ const OEncounter = (props: ISingleEncounterProps) => {
             value: EncounterStatusEnum.met_interested,
         },
     ]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [message, setMessage] = useState("");
 
     const setDateStatus = (item: {
         label: string;
@@ -52,111 +55,154 @@ const OEncounter = (props: ISingleEncounterProps) => {
     };
     const dateStatus = encounterProfile.status;
 
+    const handleSendMessage = () => {
+        setModalVisible(false);
+        setMessage("");
+    };
+
     return (
         <View style={styles.encounterContainer}>
-            <Image
-                style={styles.profileImage}
-                contentFit="cover"
-                source={{ uri: encounterProfile.imageURIs[0] }}
-            />
-            <View style={styles.encounterDetails}>
-                <Text
-                    style={styles.nameAge}
-                >{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>
-                <Text
-                    style={styles.encounterInfo}
-                >{`${encounterProfile.lastTimePassedBy} near ${encounterProfile.lastLocationPassedBy}`}</Text>
+            <View style={styles.mainContent}>
+                <Image
+                    style={styles.profileImage}
+                    contentFit="cover"
+                    source={{ uri: encounterProfile.imageURIs[0] }}
+                />
+                <View style={styles.encounterDetails}>
+                    <Text
+                        style={styles.nameAge}
+                    >{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>
+                    <Text
+                        style={styles.encounterInfo}
+                    >{`${encounterProfile.lastTimePassedBy} near ${encounterProfile.lastLocationPassedBy}`}</Text>
 
+                    {showActions && (
+                        <View style={styles.encounterDropdownContainer}>
+                            <Dropdown
+                                data={dateStates}
+                                labelField="label"
+                                valueField="value"
+                                value={dateStatus}
+                                onChange={setDateStatus}
+                                disable={encounterProfile.reported}
+                                containerStyle={styles.dropdownContainerStyle}
+                                style={[
+                                    styles.encounterDropdownPicker,
+                                    encounterProfile.reported
+                                        ? styles.encounterDropdownPickerDisabled
+                                        : null,
+                                ]}
+                                placeholderStyle={
+                                    styles.dropdownPlaceholderStyle
+                                }
+                                selectedTextStyle={
+                                    styles.dropdownSelectedTextStyle
+                                }
+                                itemTextStyle={styles.dropdownItemTextStyle}
+                            />
+                        </View>
+                    )}
+                </View>
                 {showActions && (
-                    <View style={styles.encounterDropdownContainer}>
-                        <Dropdown
-                            data={dateStates}
-                            labelField="label"
-                            valueField="value"
-                            value={dateStatus}
-                            onChange={setDateStatus}
-                            disable={encounterProfile.reported}
-                            containerStyle={styles.dropdownContainerStyle}
-                            style={[
-                                styles.encounterDropdownPicker,
-                                encounterProfile.reported
-                                    ? styles.encounterDropdownPickerDisabled
-                                    : null,
-                            ]}
-                            placeholderStyle={styles.dropdownPlaceholderStyle}
-                            selectedTextStyle={styles.dropdownSelectedTextStyle}
-                            itemTextStyle={styles.dropdownItemTextStyle}
-                        />
-                    </View>
-                )}
-            </View>
-            {showActions && (
-                <View style={styles.rightColumn}>
-                    {encounterProfile.rating && (
-                        <Text
-                            style={styles.trustScore}
-                            onPress={() => alert(i18n.t(TR.ratingDescr))}
-                        >
-                            {i18n.t(TR.trust)}({encounterProfile.rating})
-                        </Text>
-                    )}
-                    {dateStatus === EncounterStatusEnum.met_not_interested && (
-                        <Pressable
-                            style={
-                                encounterProfile.reported
-                                    ? styles.buttonDisabled
-                                    : styles.buttonDanger
-                            }
-                            disabled={encounterProfile.reported}
-                            onPress={() =>
-                                navigation.navigate(
-                                    ROUTES.Main.ReportEncounter,
-                                    {
-                                        personToReport: encounterProfile,
-                                    },
-                                )
-                            }
-                        >
-                            <Text style={styles.buttonText}>
-                                {encounterProfile.reported
-                                    ? i18n.t(TR.reported)
-                                    : i18n.t(TR.report)}
+                    <View style={styles.rightColumn}>
+                        {encounterProfile.rating && (
+                            <Text
+                                style={styles.trustScore}
+                                onPress={() => alert(i18n.t(TR.ratingDescr))}
+                            >
+                                {i18n.t(TR.trust)}({encounterProfile.rating})
                             </Text>
-                        </Pressable>
-                    )}
-
-                    {dateStatus === EncounterStatusEnum.not_met &&
-                        encounterProfile.isNearbyRightNow && (
+                        )}
+                        {dateStatus === EncounterStatusEnum.met_interested && (
                             <Pressable
                                 style={styles.buttonBlack}
-                                onPress={() =>
-                                    navigation.navigate(ROUTES.HouseRules, {
-                                        nextPage:
-                                            ROUTES.Main.NavigateToApproach,
-                                        propsForNextScreen: {
-                                            navigateToPerson: encounterProfile,
-                                        },
-                                    })
-                                }
+                                onPress={() => setModalVisible(true)}
                             >
                                 <Text style={styles.buttonText}>
-                                    {i18n.t(TR.navigate)}
+                                    {i18n.t(TR.leaveMessageBtnLbl)}
                                 </Text>
                             </Pressable>
                         )}
-                </View>
-            )}
+                        {dateStatus ===
+                            EncounterStatusEnum.met_not_interested && (
+                            <Pressable
+                                style={
+                                    encounterProfile.reported
+                                        ? styles.buttonDisabled
+                                        : styles.buttonDanger
+                                }
+                                disabled={encounterProfile.reported}
+                                onPress={() =>
+                                    navigation.navigate(
+                                        ROUTES.Main.ReportEncounter,
+                                        {
+                                            personToReport: encounterProfile,
+                                        },
+                                    )
+                                }
+                            >
+                                <Text style={styles.buttonText}>
+                                    {encounterProfile.reported
+                                        ? i18n.t(TR.reported)
+                                        : i18n.t(TR.report)}
+                                </Text>
+                            </Pressable>
+                        )}
+
+                        {dateStatus === EncounterStatusEnum.not_met &&
+                            encounterProfile.isNearbyRightNow && (
+                                <Pressable
+                                    style={styles.buttonBlack}
+                                    onPress={() =>
+                                        navigation.navigate(ROUTES.HouseRules, {
+                                            nextPage:
+                                                ROUTES.Main.NavigateToApproach,
+                                            propsForNextScreen: {
+                                                navigateToPerson:
+                                                    encounterProfile,
+                                            },
+                                        })
+                                    }
+                                >
+                                    <Text style={styles.buttonText}>
+                                        {i18n.t(TR.navigate)}
+                                    </Text>
+                                </Pressable>
+                            )}
+                    </View>
+                )}
+            </View>
+
+            {dateStatus === EncounterStatusEnum.met_interested &&
+                encounterProfile.receivedMessage && (
+                    <View style={styles.receivedMessageContainer}>
+                        <Text style={styles.receivedMessageTitle}>
+                            {i18n.t(TR.receivedMessage)}:
+                        </Text>
+                        <Text style={styles.receivedMessageText}>
+                            {encounterProfile.receivedMessage}
+                        </Text>
+                    </View>
+                )}
+
+            <OMessageModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onSend={handleSendMessage}
+            />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     encounterContainer: {
-        flexDirection: "row",
         marginBottom: 20,
         borderBottomWidth: 1,
         borderBottomColor: Color.lightGray,
         paddingBottom: 10,
+    },
+    mainContent: {
+        flexDirection: "row",
         zIndex: 1,
         elevation: 1,
     },
@@ -216,9 +262,6 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.montserratLight,
         fontSize: FontSize.size_md,
     },
-    encounterDropwdownContainer: {
-        zIndex: 3000,
-    },
     encounterDropdownContainer: {
         marginTop: 5,
     },
@@ -246,6 +289,20 @@ const styles = StyleSheet.create({
     },
     dropdownItemTextStyle: {
         fontSize: FontSize.size_sm,
+        fontFamily: FontFamily.montserratRegular,
+    },
+    receivedMessageContainer: {
+        marginTop: 10,
+        borderWidth: 1,
+        borderColor: Color.lightGray,
+        borderRadius: 8,
+        padding: 10,
+    },
+    receivedMessageTitle: {
+        fontFamily: FontFamily.montserratSemiBold,
+        marginBottom: 5,
+    },
+    receivedMessageText: {
         fontFamily: FontFamily.montserratRegular,
     },
 });

@@ -21,6 +21,7 @@ export class EncounterPublicDTO {
 
     @ApiProperty({
         nullable: true,
+        type: "string",
         description: "Last rough location passed by",
     })
     lastLocationPassedBy?: string;

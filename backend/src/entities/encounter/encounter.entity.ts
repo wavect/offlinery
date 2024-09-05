@@ -20,7 +20,7 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
             id: this.id,
             status: this.status,
             lastDateTimePassedBy: this.lastDateTimePassedBy,
-            lastLocationPassedBy: undefined, // TODO, derive a rough human readable string (translation??) that can be shown locally
+            lastLocationPassedBy: undefined, // TODO, derive a rough human readable string (translation??) that can be shown locally, or just give random radius point or so and let users open map or so?
             reported: this.userReports?.length > 0, // TODO: Here we might want to make this boolean specific to the user querying? Otherwise technically only one user can report.
             users: this.users.map((u) => u.convertToPublicDTO()),
         };

@@ -51,7 +51,8 @@ const userReducer = (
                 action.payload satisfies PartialEncounterProfile[];
 
             const currentEncounters = state.encounters;
-            // @dev Need to update by ID and for that reason the PartialEncounterProfile[] array enforces the ID in the type to be added.
+
+            // Update existing encounters and collect new ones
             const updatedEncounters: IEncounterProfile[] =
                 currentEncounters.map((encounter) => {
                     const partialEncounter = payload.find(
@@ -61,11 +62,27 @@ const userReducer = (
                         ? { ...encounter, ...partialEncounter }
                         : encounter;
                 });
+
+            // Find new encounters that don't exist in the current state
+            const newEncounters = payload.filter(
+                (payloadEncounter) =>
+                    !currentEncounters.some(
+                        (stateEncounter) =>
+                            stateEncounter.encounterId ===
+                            payloadEncounter.encounterId,
+                    ),
+            ) as IEncounterProfile[]; // NOTE: Just assuming that we fully define new encounters correctly, might need to be reevaluated!
+
+            // Combine updated and new encounters
+            const allEncounters: IEncounterProfile[] = [
+                ...updatedEncounters,
+                ...newEncounters,
+            ];
             saveEncountersLocally(updatedEncounters);
 
             return {
                 ...state,
-                encounters: updatedEncounters,
+                encounters: allEncounters,
             };
         default:
             return state;

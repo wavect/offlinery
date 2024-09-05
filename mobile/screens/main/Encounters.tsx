@@ -1,5 +1,5 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { DateRangeDTO, EncounterApi } from "@/api/gen/src";
+import { DateRangeDTO, EncounterApi, EncounterPublicDTO } from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
     EACTION_ENCOUNTERS,
@@ -8,7 +8,6 @@ import {
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
-import { getJwtHeader } from "@/utils/misc.utils";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import * as React from "react";
 import { useCallback, useState } from "react";
@@ -44,14 +43,154 @@ const Encounters = ({ navigation }) => {
                 startDate: metStartDateFilter,
                 endDate: metEndDateFilter,
             };
-            const encounters = await api.encounterControllerGetEncountersByUser(
+            const encounters: EncounterPublicDTO[] =
+                /* todo: await api.encounterControllerGetEncountersByUser(
                 {
                     userId: userState.id!,
                     dateRangeDTO,
                 },
                 getJwtHeader(userState.jwtAccessToken),
-            );
+            );*/ [];
             const mappedEncounters: IEncounterProfile[] = [];
+
+            // TODO: TEMP FOR DEBUG
+            encounters.push(
+                {
+                    id: "9",
+                    status: "not_met",
+                    lastDateTimePassedBy: new Date().toLocaleDateString(),
+                    lastLocationPassedBy: "Altstadt",
+                    reported: false,
+                    users: [
+                        {
+                            ...userState,
+                            age: 23,
+                            id: userState.id!,
+                            imageURIs: [
+                                "https://images.pexels.com/photos/27972251/pexels-photo-27972251/free-photo-of-strand-frau-surfer-ozean.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                            ],
+                        },
+                        {
+                            id: "3",
+                            firstName: "Christina",
+                            age: 28,
+                            bio: "Hi :)",
+                            imageURIs: [
+                                "https://images.pexels.com/photos/23947682/pexels-photo-23947682/free-photo-of-kamera-buch-offen-stillleben.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                            ],
+                            trustScore: 2,
+                        },
+                    ],
+                },
+                {
+                    id: "4",
+                    status: "met_interested",
+                    lastDateTimePassedBy: new Date().toLocaleDateString(),
+                    lastLocationPassedBy: "Altstadt",
+                    reported: false,
+                    users: [
+                        {
+                            ...userState,
+                            age: 23,
+                            id: userState.id!,
+                            imageURIs: [
+                                "https://images.pexels.com/photos/27972251/pexels-photo-27972251/free-photo-of-strand-frau-surfer-ozean.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                            ],
+                        },
+                        {
+                            id: "3",
+                            firstName: "Christina",
+                            age: 28,
+                            bio: "Hi :)",
+                            imageURIs: [
+                                "https://images.pexels.com/photos/23947682/pexels-photo-23947682/free-photo-of-kamera-buch-offen-stillleben.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                            ],
+                            trustScore: 2,
+                        },
+                    ],
+                },
+                {
+                    id: "41",
+                    status: "met_interested",
+                    lastDateTimePassedBy: new Date().toLocaleDateString(),
+                    lastLocationPassedBy: "Altstadt",
+                    reported: false,
+                    users: [
+                        {
+                            ...userState,
+                            age: 23,
+                            id: userState.id!,
+                            imageURIs: [
+                                "https://images.pexels.com/photos/27972251/pexels-photo-27972251/free-photo-of-strand-frau-surfer-ozean.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                            ],
+                        },
+                        {
+                            id: "3",
+                            firstName: "Christina",
+                            age: 28,
+                            bio: "Hi :)",
+                            imageURIs: [
+                                "https://images.pexels.com/photos/23947682/pexels-photo-23947682/free-photo-of-kamera-buch-offen-stillleben.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                            ],
+                            trustScore: 2,
+                        },
+                    ],
+                },
+                {
+                    id: "2",
+                    status: "met_not_interested",
+                    lastDateTimePassedBy: new Date().toLocaleDateString(),
+                    lastLocationPassedBy: "Altstadt",
+                    reported: false,
+                    users: [
+                        {
+                            ...userState,
+                            age: 23,
+                            id: userState.id!,
+                            imageURIs: [
+                                "https://images.pexels.com/photos/27972251/pexels-photo-27972251/free-photo-of-strand-frau-surfer-ozean.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                            ],
+                        },
+                        {
+                            id: "3",
+                            firstName: "Christina",
+                            age: 28,
+                            bio: "Hi :)",
+                            imageURIs: [
+                                "https://images.pexels.com/photos/23947682/pexels-photo-23947682/free-photo-of-kamera-buch-offen-stillleben.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                            ],
+                            trustScore: 2,
+                        },
+                    ],
+                },
+                {
+                    id: "8",
+                    status: "met_not_interested",
+                    lastDateTimePassedBy: new Date().toLocaleDateString(),
+                    lastLocationPassedBy: "Altstadt",
+                    reported: true,
+                    users: [
+                        {
+                            ...userState,
+                            age: 23,
+                            id: userState.id!,
+                            imageURIs: [
+                                "https://images.pexels.com/photos/27972251/pexels-photo-27972251/free-photo-of-strand-frau-surfer-ozean.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                            ],
+                        },
+                        {
+                            id: "3",
+                            firstName: "Christina",
+                            age: 28,
+                            bio: "Hi :)",
+                            imageURIs: [
+                                "https://images.pexels.com/photos/23947682/pexels-photo-23947682/free-photo-of-kamera-buch-offen-stillleben.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                            ],
+                            trustScore: 2,
+                        },
+                    ],
+                },
+            );
 
             encounters.forEach((encounter) => {
                 const otherUser = encounter.users.filter(
@@ -69,6 +208,7 @@ const Encounters = ({ navigation }) => {
                     lastLocationPassedBy: encounter.lastLocationPassedBy ?? "",
                     lastTimePassedBy: encounter.lastDateTimePassedBy,
                     rating: otherUser.trustScore,
+                    receivedMessage: "Mein Insta: @antonia",
                 });
             });
 
