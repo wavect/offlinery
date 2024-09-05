@@ -138,6 +138,7 @@ const ProfileSettings = ({ navigation }) => {
             subtitle={i18n.t(TR.changePreferencesDescr)}
             bottomContainerChildren={
                 <OButtonWide
+                    style={{ marginTop: 10 }}
                     text={i18n.t(TR.save)}
                     filled={true}
                     variant="dark"
@@ -154,7 +155,7 @@ const ProfileSettings = ({ navigation }) => {
                         value={state.firstName}
                         setValue={setFirstName}
                         placeholder={i18n.t(TR.enterFirstName)}
-                        style={styles.input}
+                        style={styles.multiLineInput}
                     />
                 </View>
 
@@ -365,7 +366,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         marginBottom: 20,
-        marginTop: 12,
+        marginTop: 24,
     },
     settingsButton: {
         backgroundColor: "#f0f0f0",
