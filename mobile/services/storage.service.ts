@@ -65,12 +65,13 @@ export const updateUserDataLocally = (
 
 export const saveUserData = (userData: Omit<IUserData, "jwtAccessToken">) => {
     // jwtAccessToken should be stored in more secure local storage, see secure-storage.service.ts
-    if ((userData as IUserData).jwtAccessToken) {
+    const internalUserDataObj = { ...userData }; // clone object to not remove accessToken for user.context.ts too etc.
+    if ((internalUserDataObj as IUserData).jwtAccessToken) {
         // if the type check didn't work, we manually delete the jwt token from the object to not save it.
-        (userData as IUserData).jwtAccessToken = undefined;
+        (internalUserDataObj as IUserData).jwtAccessToken = undefined;
     }
 
-    const userDataString = JSON.stringify(userData);
+    const userDataString = JSON.stringify(internalUserDataObj);
     if (!storage) {
         saveValueLocallySecurely(LOCAL_VALUE.USER_DATA, userDataString);
     } else {
