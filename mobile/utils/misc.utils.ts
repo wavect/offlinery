@@ -1,20 +1,18 @@
-import { AuthApi } from "@/api/gen/src";
+import { AuthApi, SignInResponseDTO } from "@/api/gen/src";
 import {
+    SECURE_VALUE,
     getSecurelyStoredValue,
     saveValueLocallySecurely,
-    SECURE_VALUE,
 } from "@/services/secure-storage.service";
+
+export const REFRESH_REMAINING_MINUTE = 1;
 
 export const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-export const blockedSequence = () => {};
-
 /**
- * @DEV
- * ---
- * JWT Intercept & Refresh
+ * @DEV JWT Intercept & Refresh
  */
 export const includeJWT = async (): Promise<RequestInit> => {
     const jwtToken = await getSecurelyStoredValue(
@@ -28,44 +26,28 @@ export const includeJWT = async (): Promise<RequestInit> => {
         throw new Error("User does not have an refresh token!");
     }
 
-    console.log(
-        `RT = ${refreshToken.slice(0, 6)} and AT = ${jwtToken?.slice(0, 6)}`,
-    );
-
-    const isExpiring = expiresSoon(jwtToken!);
-
-    if (isExpiring) {
+    if (jwtExpiresSoon(jwtToken!)) {
         try {
-            console.log(
-                `+++ [TOKEN EXPIRED] - Requesting new token: ${refreshToken}`,
-            );
+            console.log(`Token has expired. Requesting a new token.`);
             const authApi = new AuthApi();
-            console.log(`Refreshing... with RT=${refreshToken}`);
-
-            const refreshResponse = await authApi.authControllerRefreshJwtToken(
-                {
+            const refreshResponse: SignInResponseDTO =
+                (await authApi.authControllerRefreshJwtToken({
                     refreshJwtDTO: {
                         refreshToken: refreshToken,
                     },
-                },
-            );
+                })) as SignInResponseDTO;
 
-            console.log("Token refreshed!", refreshResponse);
-            console.log(`Storing new RT => ${refreshResponse.refreshToken}`);
             await saveValueLocallySecurely(
                 SECURE_VALUE.JWT_REFRESH_TOKEN,
                 refreshResponse.refreshToken,
             );
-
-            console.log(`Storing new AT => ${refreshResponse.accessToken}`);
             await saveValueLocallySecurely(
                 SECURE_VALUE.JWT_ACCESS_TOKEN,
                 refreshResponse.accessToken,
             );
+            console.log("JWT and Refresh update successful.");
         } catch (e) {
-            console.log("error: ", e);
-            console.log(`error ${e}`);
-            console.log("error is??", JSON.stringify(e));
+            console.error("Error during refreshing tokens: ", e);
         }
     }
 
@@ -80,19 +62,13 @@ export const includeJWT = async (): Promise<RequestInit> => {
     };
 };
 
-export const expiresSoon = (token: string) => {
+export const jwtExpiresSoon = (token: string) => {
     const decodedJWT = decodeJWT(token);
-
-    console.log();
     const expirationDate = new Date(decodedJWT.exp * 1000);
     const currentDate = new Date();
     const timeDifference = expirationDate.getTime() - currentDate.getTime();
     const minutesDifference = timeDifference / (1000 * 60);
-
-    console.log("Minutes remaining until refresh: ", minutesDifference);
-
-    // timeDifference is in minutes
-    return minutesDifference <= 0.15;
+    return minutesDifference <= REFRESH_REMAINING_MINUTE; // Refresh prior to invalidation
 };
 
 function decodeJWT(token: string) {
@@ -106,6 +82,5 @@ function decodeJWT(token: string) {
             })
             .join(""),
     );
-
-    return JSON.parse(jsonPayload); // Convert to JSON object
+    return JSON.parse(jsonPayload);
 }

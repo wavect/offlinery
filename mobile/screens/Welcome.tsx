@@ -15,9 +15,10 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import {
     SECURE_VALUE,
+    getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
-import { expiresSoon } from "@/utils/misc.utils";
+import { jwtExpiresSoon } from "@/utils/misc.utils";
 import { useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
@@ -35,22 +36,19 @@ const Welcome = ({ navigation }) => {
             /**
              * TO TEST THE FLOW, RESET THE TOKENS HERE
              */
-            // const storedRefreshToken = await getSecurelyStoredValue(
-            //     SECURE_VALUE.JWT_REFRESH_TOKEN,
-            // );
-            // const storedAccessToken = await getSecurelyStoredValue(
-            //     SECURE_VALUE.JWT_ACCESS_TOKEN,
-            // );
-
-            const storedRefreshToken = null;
-            const storedAccessToken = null;
+            const storedRefreshToken = await getSecurelyStoredValue(
+                SECURE_VALUE.JWT_REFRESH_TOKEN,
+            );
+            const storedAccessToken = await getSecurelyStoredValue(
+                SECURE_VALUE.JWT_ACCESS_TOKEN,
+            );
 
             if (!storedRefreshToken && !storedAccessToken) {
-                console.log("no auth stored. login");
+                console.log("No JWT or JWT_RT found, force re-login");
                 return false;
             }
 
-            if (expiresSoon(storedAccessToken!)) {
+            if (jwtExpiresSoon(storedAccessToken!)) {
                 console.log(
                     "Access token will expires soon, requesting new one...",
                 );
@@ -78,15 +76,15 @@ const Welcome = ({ navigation }) => {
                 );
             } else {
                 // user has a valid access token
-                console.log("Using valid Access Token");
+                console.log("JWT found. Trying JWT Authentication.");
                 const signInRes = await authApi.authControllerSignInByJWT({
                     signInJwtDTO: {
                         jwtAccessToken: storedAccessToken!,
                     },
                 });
 
-                console.log("Valid Access Token Sign in ", signInRes);
                 if (signInRes.accessToken) {
+                    console.log("JWT authentication succeeded.");
                     userAuthenticatedUpdate(
                         signInRes.user,
                         signInRes.accessToken,
@@ -95,10 +93,9 @@ const Welcome = ({ navigation }) => {
                 }
             }
         } catch (e) {
-            console.log("AUTH error, clearing auth state");
             await saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
             await saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
-            console.log("Auth resetted. Needs login.");
+            console.log("Forcing user to re-login.");
         }
 
         return isAuthenticated(state);

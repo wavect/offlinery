@@ -1,15 +1,26 @@
 import { Color, Title } from "@/GlobalStyles";
-import { NotificationNavigateUserDTO, UserDateModeEnum } from "@/api/gen/src";
+import {
+    LocationUpdateDTO,
+    NotificationNavigateUserDTO,
+    UserApi,
+    UserDateModeEnum,
+} from "@/api/gen/src";
 import { OGoLiveToggle } from "@/components/OGoLiveToggle/OGoLiveToggle";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { registerForPushNotificationsAsync } from "@/services/notification.service";
+import {
+    SECURE_VALUE,
+    getSecurelyStoredValue,
+} from "@/services/secure-storage.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
+import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
 import { Subscription } from "expo-notifications";
+import * as TaskManager from "expo-task-manager";
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
@@ -23,41 +34,44 @@ const Tab = createBottomTabNavigator();
 const LOCATION_TASK_NAME = "background-location-task";
 
 // Define the background task for location tracking
-// TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
-//     console.log('Starting task')
-//     if (error) {
-//         console.error(`Task error ${error}`);
-//         return;
-//     }
-//     if (data) {
-//         const locations = (data as any).locations as Location.LocationObject[];
-//         const userId = await getSecurelyStoredValue(SECURE_VALUE.USER_ID);
-//         const userApi = new UserApi();
-//
-//         if (locations && locations.length > 0 && userId) {
-//             const location = locations[locations.length - 1];
-//             const locationUpdateDTO: LocationUpdateDTO = {
-//                 latitude: location.coords.latitude,
-//                 longitude: location.coords.longitude,
-//             };
-//
-//             try {
-//                 await userApi.userControllerUpdateLocation(
-//                     {
-//                         userId,
-//                         locationUpdateDTO: locationUpdateDTO,
-//                     },
-//                     await includeJWT(),
-//                 );
-//                 console.log(
-//                     `[TASK:LOCATION_UPDATE]: User Location updated successfully`,
-//                 );
-//             } catch (error) {
-//                 console.error("Error updating location:", JSON.stringify(error));
-//             }
-//         }
-//     }
-// });
+TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
+    console.log("Starting task");
+    if (error) {
+        console.error(`Task error ${error}`);
+        return;
+    }
+    if (data) {
+        const locations = (data as any).locations as Location.LocationObject[];
+        const userId = await getSecurelyStoredValue(SECURE_VALUE.USER_ID);
+        const userApi = new UserApi();
+
+        if (locations && locations.length > 0 && userId) {
+            const location = locations[locations.length - 1];
+            const locationUpdateDTO: LocationUpdateDTO = {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+            };
+
+            try {
+                await userApi.userControllerUpdateLocation(
+                    {
+                        userId,
+                        locationUpdateDTO: locationUpdateDTO,
+                    },
+                    await includeJWT(),
+                );
+                console.log(
+                    `[TASK:LOCATION_UPDATE]: User Location updated successfully`,
+                );
+            } catch (error) {
+                console.error(
+                    "Error updating location:",
+                    JSON.stringify(error),
+                );
+            }
+        }
+    }
+});
 
 export const MainScreenTabs = ({ navigation }) => {
     const { state, dispatch } = useUserContext();
@@ -71,7 +85,6 @@ export const MainScreenTabs = ({ navigation }) => {
     const responseListener = useRef<Subscription>();
 
     useEffect(() => {
-        console.log("CREATING PUSH NOTIFICATION ASYNC");
         // 0 might be a valid ID too
         if (!state.id) {
             console.error(

@@ -198,10 +198,6 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             const payload: Partial<IUserData> =
                 action.payload as Partial<IUserData>;
 
-            console.log("UPDATING STORE:");
-            console.log(payload.jwtAccessToken);
-            console.log(payload.refreshToken);
-
             if (payload.id) {
                 saveValueLocallySecurely(
                     SECURE_VALUE.USER_ID,
@@ -214,10 +210,8 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
                     payload.jwtAccessToken,
                 ).then();
 
-                if (!payload.jwtAccessToken) {
-                    console.warn(
-                        "NO JWT TOKEN SUBMITTED. NO REFRESH POSSIBLE.",
-                    );
+                if (!payload.refreshToken) {
+                    console.warn("No refresh token submitted.");
                 } else {
                     saveValueLocallySecurely(
                         SECURE_VALUE.JWT_REFRESH_TOKEN,
