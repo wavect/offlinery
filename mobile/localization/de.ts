@@ -88,7 +88,7 @@ export const de: Language = {
     myLocation: "Mein Standort",
     youAreHere: "Du bist hier.",
     longPressMapSafeZoneInstruction:
-        "Lange auf der Karte drücken, um eine kreisförmige Region hinzuzufügen. Tippe auf eine Region, um sie auszuwählen und ihren Radius anzupassen.",
+        "Lange tippen, um eine Inkognito Region hinzuzufügen. Tippe auf eine Region, ihren Radius anzupassen.",
     adjustRegionRadius: "Regionradius anpassen",
     whatIsYourEmail: "Wie lautet deine E-Mail?",
     whatIsYourEmailDescr:

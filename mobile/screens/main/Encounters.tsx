@@ -1,10 +1,5 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import {
-    DateRangeDTO,
-    EncounterApi,
-    EncounterPublicDTO,
-    MessagePublicDTO,
-} from "@/api/gen/src";
+import { DateRangeDTO, EncounterApi, MessagePublicDTO } from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
     EACTION_ENCOUNTERS,
@@ -13,7 +8,7 @@ import {
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
-import { getJwtHeader } from "@/utils/misc.utils";
+import { includeJWT } from "@/utils/misc.utils";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import * as React from "react";
 import { useCallback, useState } from "react";
@@ -70,14 +65,13 @@ const Encounters = ({ navigation }) => {
                 startDate: metStartDateFilter,
                 endDate: metEndDateFilter,
             };
-            const encounters: EncounterPublicDTO[] =
-                await api.encounterControllerGetEncountersByUser(
-                    {
-                        userId: userState.id!,
-                        dateRangeDTO,
-                    },
-                    getJwtHeader(userState.jwtAccessToken),
-                );
+            const encounters = await api.encounterControllerGetEncountersByUser(
+                {
+                    userId: userState.id!,
+                    dateRangeDTO,
+                },
+                await includeJWT(),
+            );
             const mappedEncounters: IEncounterProfile[] = [];
 
             encounters.forEach((encounter) => {

@@ -15,7 +15,7 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { getJwtHeader } from "@/utils/misc.utils";
+import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as React from "react";
@@ -92,10 +92,7 @@ const ProfileSettings = ({ navigation }) => {
                 images: getUserImagesForUpload(state),
             };
 
-            await userApi.userControllerUpdateUser(
-                request,
-                getJwtHeader(state.jwtAccessToken),
-            );
+            await userApi.userControllerUpdateUser(request, await includeJWT());
 
             navigation.navigate(ROUTES.MainTabView, {
                 screen: ROUTES.Main.FindPeople,
@@ -138,6 +135,7 @@ const ProfileSettings = ({ navigation }) => {
             subtitle={i18n.t(TR.changePreferencesDescr)}
             bottomContainerChildren={
                 <OButtonWide
+                    style={{ marginTop: 10 }}
                     text={i18n.t(TR.save)}
                     filled={true}
                     variant="dark"
@@ -308,7 +306,7 @@ const styles = StyleSheet.create({
     },
     dropdown: {
         marginTop: 8,
-        height: 50,
+        height: 45,
         borderColor: "gray",
         borderWidth: 0.5,
         borderRadius: 8,
@@ -336,6 +334,8 @@ const styles = StyleSheet.create({
     },
     input: {
         marginTop: 8,
+        height: 45,
+        width: "100%",
     },
     label: {
         fontSize: 16,
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         marginBottom: 20,
-        marginTop: 12,
+        marginTop: 24,
     },
     settingsButton: {
         backgroundColor: "#f0f0f0",

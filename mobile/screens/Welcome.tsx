@@ -1,5 +1,5 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { AuthApi } from "@/api/gen/src";
+import { AuthApi, SignInResponseDTO } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
 import { OShowcase } from "@/components/OShowcase/OShowcase";
@@ -11,7 +11,9 @@ import { userAuthenticatedUpdate } from "@/services/auth.service";
 import {
     SECURE_VALUE,
     getSecurelyStoredValue,
+    saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
+import { jwtExpiresSoon } from "@/utils/misc.utils";
 import { useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
@@ -25,32 +27,71 @@ const Welcome = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     const checkAuthStatus = async () => {
-        const jwtAccessToken = getSecurelyStoredValue(
-            SECURE_VALUE.JWT_ACCESS_TOKEN,
-        );
+        try {
+            const storedRefreshToken = await getSecurelyStoredValue(
+                SECURE_VALUE.JWT_REFRESH_TOKEN,
+            );
+            const storedAccessToken = await getSecurelyStoredValue(
+                SECURE_VALUE.JWT_ACCESS_TOKEN,
+            );
 
-        if (!jwtAccessToken) {
-            // needs to authenticate regularly
-            return;
-        } else {
-            const signInRes = await authApi.authControllerSignInByJWT({
-                signInJwtDTO: {
-                    jwtAccessToken,
-                },
-            });
-            if (signInRes.accessToken) {
-                userAuthenticatedUpdate(
-                    dispatch,
-                    navigation,
-                    signInRes.user,
-                    signInRes.accessToken,
-                );
+            if (!storedRefreshToken && !storedAccessToken) {
+                console.log("No JWT or JWT_RT found, force re-login");
+                return false;
             }
+
+            if (jwtExpiresSoon(storedAccessToken!)) {
+                console.log(
+                    "Access token will expires soon, requesting new one...",
+                );
+
+                /**@DEV fix generator type bug */
+                const refreshResponse: SignInResponseDTO =
+                    (await authApi.authControllerRefreshJwtToken({
+                        refreshJwtDTO: {
+                            refreshToken: storedRefreshToken!,
+                        },
+                    })) as SignInResponseDTO;
+
+                console.log("refresh token received: ", refreshResponse);
+
+                await saveValueLocallySecurely(
+                    SECURE_VALUE.JWT_ACCESS_TOKEN,
+                    refreshResponse.accessToken,
+                );
+                await saveValueLocallySecurely(
+                    SECURE_VALUE.JWT_REFRESH_TOKEN,
+                    refreshResponse.refreshToken,
+                );
+                console.log("Tokens refreshed.");
+            } else {
+                // user has a valid access token
+                console.log("JWT found, authenticating via JWT.");
+                const signInRes = await authApi.authControllerSignInByJWT({
+                    signInJwtDTO: {
+                        jwtAccessToken: storedAccessToken!,
+                    },
+                });
+
+                if (signInRes.accessToken) {
+                    console.log("JWT authentication succeeded.");
+                    userAuthenticatedUpdate(
+                        dispatch,
+                        navigation,
+                        signInRes.user,
+                        signInRes.accessToken,
+                        signInRes.refreshToken,
+                    );
+                }
+            }
+        } catch (e) {
+            await saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
+            await saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
+            console.log("Forcing user to re-login.");
         }
 
         return isAuthenticated(state);
     };
-
     useFocusEffect(
         useCallback(() => {
             const checkAuthentication = async () => {

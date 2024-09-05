@@ -8,11 +8,12 @@
         "start:prod": "expo start --no-dev",
         "start:tunnel": "expo start --tunnel",
         "android": "expo run:android",
-        "ios": "expo run:ios",
+        "ios": "NODE_ENV=production expo run:ios",
         "ios:dev": "NODE_ENV=development expo run:ios",
         "web": "expo start --web",
         "install:all": "pnpm i && npx expo install",
-        "pre-commit": "npx prettier . --write"
+        "pre-commit": "npx prettier . --write",
+        "clean:ios": "rm -rf ios/Pods && rm -rf ios/build"
     },
     "dependencies": {
         "@expo-google-fonts/montserrat": "^0.2.3",

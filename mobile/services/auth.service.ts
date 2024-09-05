@@ -14,6 +14,7 @@ export const userAuthenticatedUpdate = (
     navigation: any,
     user: UserPrivateDTO,
     jwtAccessToken: string,
+    jwtRefreshToken: string,
 ) => {
     const userData: IUserData = {
         ...user,
@@ -29,13 +30,16 @@ export const userAuthenticatedUpdate = (
             user.imageURIs.map((value, index) => [index, value]),
         ),
         jwtAccessToken,
+        refreshToken: jwtRefreshToken,
     };
     // also fill userData when logged in
     // Note: We still save the accessToken into the user context to avoid reading from secure storage all the time when making api requests (performance, security, ..)
     const payload: Partial<IUserData> = {
         ...userData,
         jwtAccessToken,
+        refreshToken: jwtRefreshToken,
     };
+
     dispatch({
         type: EACTION_USER.UPDATE_MULTIPLE,
         payload,

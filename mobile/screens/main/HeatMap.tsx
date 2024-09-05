@@ -8,14 +8,14 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { getJwtHeader } from "@/utils/misc.utils";
+import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import MapView, {
     Circle,
     LongPressEvent,
@@ -85,7 +85,7 @@ const HeatMap = () => {
                             ),
                         },
                     },
-                    getJwtHeader(state.jwtAccessToken),
+                    await includeJWT(),
                 );
             } catch (error) {
                 console.error("Error updating blacklisted regions:", error);
@@ -168,7 +168,7 @@ const HeatMap = () => {
                     }}
                     onLongPress={handleMapLongPress}
                     provider={
-                        Platform.OS === "android"
+                        process.env.NODE_ENV === "production"
                             ? PROVIDER_GOOGLE
                             : PROVIDER_DEFAULT
                     }
