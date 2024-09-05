@@ -155,7 +155,7 @@ const ProfileSettings = ({ navigation }) => {
                         value={state.firstName}
                         setValue={setFirstName}
                         placeholder={i18n.t(TR.enterFirstName)}
-                        style={styles.multiLineInput}
+                        style={styles.input}
                     />
                 </View>
 
