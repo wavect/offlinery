@@ -1,5 +1,4 @@
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
-import { PendingUserService } from "@/entities/pending-user/pending-user.service";
 import { User } from "@/entities/user/user.entity";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
@@ -32,8 +31,8 @@ import { RegistrationService } from "./registration.service";
             },
         }),
     ],
-    providers: [RegistrationService, PendingUserService],
+    providers: [RegistrationService],
     controllers: [RegistrationController],
-    exports: [RegistrationService, PendingUserService],
+    exports: [RegistrationService],
 })
 export class RegistrationModule {}
