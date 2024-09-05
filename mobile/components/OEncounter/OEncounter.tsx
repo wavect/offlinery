@@ -1,5 +1,9 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { EncounterPublicDTOStatusEnum } from "@/api/gen/src";
+import {
+    EncounterApi,
+    EncounterPublicDTOStatusEnum,
+    UpdateEncounterStatusDTO,
+} from "@/api/gen/src";
 import {
     IOButtonSmallVariant,
     OButtonSmall,
@@ -24,6 +28,7 @@ interface ISingleEncounterProps {
     navigation: any;
 }
 
+const encounterApi = new EncounterApi();
 const OEncounter = (props: ISingleEncounterProps) => {
     const { dispatch } = useEncountersContext();
     const { dispatch: userDispatch, state } = useUserContext();
@@ -43,12 +48,21 @@ const OEncounter = (props: ISingleEncounterProps) => {
         },
     ]);
     const [modalVisible, setModalVisible] = useState(false);
-    const [message, setMessage] = useState("");
 
-    const setDateStatus = (item: {
+    const setDateStatus = async (item: {
         label: string;
         value: EncounterPublicDTOStatusEnum;
     }) => {
+        const updateEncounterStatusDTO: UpdateEncounterStatusDTO = {
+            encounterId: encounterProfile.encounterId,
+            status: item.value,
+        };
+
+        await encounterApi.encounterControllerUpdateStatus({
+            updateEncounterStatusDTO,
+            userId: state.id!,
+        });
+
         dispatch({
             type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,
             payload: [
