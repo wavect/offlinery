@@ -8,7 +8,7 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { getJwtHeader } from "@/utils/misc.utils";
+import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import * as Location from "expo-location";
@@ -85,7 +85,7 @@ const HeatMap = () => {
                             ),
                         },
                     },
-                    getJwtHeader(state.jwtAccessToken),
+                    await includeJWT(),
                 );
             } catch (error) {
                 console.error("Error updating blacklisted regions:", error);

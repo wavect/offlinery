@@ -38,6 +38,7 @@ const Login = ({ navigation }) => {
     const userAuthenticatedUpdate = (
         user: UserPrivateDTO,
         jwtAccessToken: string,
+        refreshToken: string,
     ) => {
         const userData: IUserData = {
             ...user,
@@ -67,8 +68,8 @@ const Login = ({ navigation }) => {
         const payload: Partial<IUserData> = {
             ...userData,
             jwtAccessToken,
+            refreshToken,
         };
-        console.log(`storing...`, user);
         dispatch({
             type: EACTION_USER.UPDATE_MULTIPLE,
             payload,
@@ -91,11 +92,17 @@ const Login = ({ navigation }) => {
                 clearPassword: state.clearPassword,
             },
         };
+
         try {
             const signInRes = await authApi.authControllerSignIn(signInDTO);
+
             if (signInRes.accessToken) {
                 const user = signInRes.user;
-                userAuthenticatedUpdate(user, signInRes.accessToken);
+                userAuthenticatedUpdate(
+                    user,
+                    signInRes.accessToken,
+                    signInRes.refreshToken,
+                );
             }
         } catch (err) {
             console.error(err);

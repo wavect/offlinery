@@ -46,6 +46,7 @@ export interface IUserData {
     dateMode: UserDateModeEnum;
     /** @dev Set once logged in */
     jwtAccessToken?: string;
+    refreshToken?: string;
 }
 
 export const isAuthenticated = (state: IUserData) => {
@@ -196,8 +197,11 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
         case EACTION_USER.UPDATE_MULTIPLE:
             const payload: Partial<IUserData> =
                 action.payload as Partial<IUserData>;
-            console.log("---");
-            console.log("payload received ", payload);
+
+            console.log("UPDATING STORE:");
+            console.log(payload.jwtAccessToken);
+            console.log(payload.refreshToken);
+
             if (payload.id) {
                 saveValueLocallySecurely(
                     SECURE_VALUE.USER_ID,
@@ -205,11 +209,21 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
                 ).then();
             }
             if (payload.jwtAccessToken) {
-                console.log("STORING JWT");
                 saveValueLocallySecurely(
                     SECURE_VALUE.JWT_ACCESS_TOKEN,
                     payload.jwtAccessToken,
                 ).then();
+
+                if (!payload.jwtAccessToken) {
+                    console.warn(
+                        "NO JWT TOKEN SUBMITTED. NO REFRESH POSSIBLE.",
+                    );
+                } else {
+                    saveValueLocallySecurely(
+                        SECURE_VALUE.JWT_REFRESH_TOKEN,
+                        payload.refreshToken!,
+                    ).then();
+                }
 
                 getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN).then(
                     (res) => {

@@ -12,7 +12,8 @@
         "ios:dev": "NODE_ENV=development expo run:ios",
         "web": "expo start --web",
         "install:all": "pnpm i && npx expo install",
-        "pre-commit": "npx prettier . --write"
+        "pre-commit": "npx prettier . --write",
+        "clean:ios": "rm -rf ios/Pods && rm -rf ios/build"
     },
     "dependencies": {
         "@expo-google-fonts/montserrat": "^0.2.3",

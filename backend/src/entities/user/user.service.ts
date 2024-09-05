@@ -107,7 +107,6 @@ export class UserService {
         return await this.userRepository.save(user);
     }
 
-    // TODO: Only to be updated by that specific user!
     async updateUser(
         id: string,
         updateUserDto: UpdateUserDTO,
@@ -170,6 +169,7 @@ export class UserService {
         await this.userRepository.delete(id);
     }
 
+    /** @Deprecated in favor of @findUserByProperty */
     async findUserById(id: string): Promise<User> {
         const user = await this.userRepository.findOne({
             where: { id },
@@ -183,6 +183,7 @@ export class UserService {
         return user;
     }
 
+    /** @Deprecated in favor of @findUserByProperty */
     async findUserByEmail(email: string): Promise<User> {
         const user = await this.userRepository.findOne({
             where: { email },
@@ -213,7 +214,6 @@ export class UserService {
         return await this.userRepository.save(user);
     }
 
-    // TODO: Only to be updated by that specific user!
     async updateLocation(
         userId: string,
         { latitude, longitude }: LocationUpdateDTO,
@@ -238,5 +238,33 @@ export class UserService {
         }
 
         return updatedUser;
+    }
+
+    async storeRefreshToken(
+        userId: string,
+        refreshToken: string,
+        expiresAt: Date,
+    ): Promise<any> {
+        await this.userRepository.update(userId, {
+            refreshToken,
+            refreshTokenExpires: expiresAt,
+        });
+    }
+
+    async findUserByRefreshToken(
+        refreshToken: string,
+    ): Promise<User | undefined> {
+        return this.userRepository.findOne({
+            where: {
+                refreshToken,
+            },
+        });
+    }
+
+    async removeRefreshToken(userId: string): Promise<void> {
+        await this.userRepository.update(userId, {
+            refreshToken: null,
+            refreshTokenExpires: null,
+        });
     }
 }

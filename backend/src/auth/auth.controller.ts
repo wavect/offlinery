@@ -1,4 +1,4 @@
-import { SignInJwtDTO } from "@/DTOs/sign-in-jwt.dto";
+import { RefreshJwtDTO, SignInJwtDTO } from "@/DTOs/sign-in-jwt.dto";
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { SignInDTO } from "@/DTOs/sign-in.dto";
 import {
@@ -38,5 +38,12 @@ export class AuthController {
     @Post("login/jwt")
     signInByJWT(@Body() signInDTO: SignInJwtDTO): Promise<SignInResponseDTO> {
         return this.authService.signInWithJWT(signInDTO.jwtAccessToken);
+    }
+
+    @Public()
+    @HttpCode(HttpStatus.OK)
+    @Post("token/refresh")
+    refreshJwtToken(@Body() signInDTO: RefreshJwtDTO): Promise<any> {
+        return this.authService.refreshAccessToken(signInDTO.refreshToken);
     }
 }

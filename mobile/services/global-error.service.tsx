@@ -78,6 +78,7 @@ const GlobalErrorHandler: React.FC<GlobalErrorHandlerProps> = ({
     const [error, setError] = useState<Error | null>(null);
 
     const handleError: ErrorBoundaryProps["onError"] = (error, stackTrace) => {
+        console.log("Error detection on!");
         console.error("Caught an error:", error, stackTrace);
         setError(error);
     };

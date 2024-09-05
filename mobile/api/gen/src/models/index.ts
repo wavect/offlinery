@@ -10,6 +10,7 @@ export * from "./Encounter";
 export * from "./EncounterPublicDTO";
 export * from "./LocationUpdateDTO";
 export * from "./NotificationNavigateUserDTO";
+export * from "./RefreshJwtDTO";
 export * from "./RegistrationForVerificationRequestDTO";
 export * from "./RegistrationForVerificationResponseDTO";
 export * from "./SignInDTO";

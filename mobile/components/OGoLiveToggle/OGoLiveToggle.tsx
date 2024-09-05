@@ -7,7 +7,7 @@ import {
 } from "@/api/gen/src";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { getJwtHeader } from "@/utils/misc.utils";
+import { includeJWT } from "@/utils/misc.utils";
 import * as Location from "expo-location";
 import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
 
@@ -48,7 +48,7 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                     userId: state.id!,
                     user: updateUserDTO,
                 },
-                getJwtHeader(state.jwtAccessToken),
+                await includeJWT("updateController"),
             );
 
             dispatch({

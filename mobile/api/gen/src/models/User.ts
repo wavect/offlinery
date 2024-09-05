@@ -135,6 +135,18 @@ export interface User {
      * @type {string}
      * @memberof User
      */
+    refreshToken: string;
+    /**
+     *
+     * @type {Date}
+     * @memberof User
+     */
+    refreshTokenExpires: Date;
+    /**
+     *
+     * @type {string}
+     * @memberof User
+     */
     dateMode: UserDateModeEnum;
     /**
      *
@@ -286,6 +298,13 @@ export function instanceOfUser(value: object): value is User {
     if (!("approachToTime" in value) || value["approachToTime"] === undefined)
         return false;
     if (!("bio" in value) || value["bio"] === undefined) return false;
+    if (!("refreshToken" in value) || value["refreshToken"] === undefined)
+        return false;
+    if (
+        !("refreshTokenExpires" in value) ||
+        value["refreshTokenExpires"] === undefined
+    )
+        return false;
     if (!("dateMode" in value) || value["dateMode"] === undefined) return false;
     if (!("pushToken" in value) || value["pushToken"] === undefined)
         return false;
@@ -335,6 +354,8 @@ export function UserFromJSONTyped(
         approachFromTime: new Date(json["approachFromTime"]),
         approachToTime: new Date(json["approachToTime"]),
         bio: json["bio"],
+        refreshToken: json["refreshToken"],
+        refreshTokenExpires: new Date(json["refreshTokenExpires"]),
         dateMode: json["dateMode"],
         pushToken: json["pushToken"],
         receivedReports: (json["receivedReports"] as Array<any>).map(
@@ -374,6 +395,8 @@ export function UserToJSON(value?: User | null): any {
         approachFromTime: value["approachFromTime"].toISOString(),
         approachToTime: value["approachToTime"].toISOString(),
         bio: value["bio"],
+        refreshToken: value["refreshToken"],
+        refreshTokenExpires: value["refreshTokenExpires"].toISOString(),
         dateMode: value["dateMode"],
         pushToken: value["pushToken"],
         receivedReports: (value["receivedReports"] as Array<any>).map(

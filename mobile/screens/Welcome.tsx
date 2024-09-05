@@ -1,5 +1,5 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { AuthApi, UserPrivateDTO } from "@/api/gen/src";
+import { AuthApi, SignInResponseDTO, UserPrivateDTO } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
 import { OShowcase } from "@/components/OShowcase/OShowcase";
@@ -15,8 +15,9 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import {
     SECURE_VALUE,
-    getSecurelyStoredValue,
+    saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
+import { expiresSoon } from "@/utils/misc.utils";
 import { useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
@@ -30,30 +31,91 @@ const Welcome = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     const checkAuthStatus = async () => {
-        const jwtAccessToken = await getSecurelyStoredValue(
-            SECURE_VALUE.JWT_ACCESS_TOKEN,
-        );
+        try {
+            /**
+             * TO TEST THE FLOW, RESET THE TOKENS HERE
+             */
+            // const storedRefreshToken = await getSecurelyStoredValue(
+            //     SECURE_VALUE.JWT_REFRESH_TOKEN,
+            // );
+            // const storedAccessToken = await getSecurelyStoredValue(
+            //     SECURE_VALUE.JWT_ACCESS_TOKEN,
+            // );
 
-        if (!jwtAccessToken) {
-            // needs to authenticate regularly
-            return;
-        } else {
-            const signInRes = await authApi.authControllerSignInByJWT({
-                signInJwtDTO: {
-                    jwtAccessToken,
-                },
-            });
-            if (signInRes.accessToken) {
-                userAuthenticatedUpdate(signInRes.user, signInRes.accessToken);
+            const storedRefreshToken = null;
+            const storedAccessToken = null;
+
+            if (!storedRefreshToken && !storedAccessToken) {
+                console.log("no auth stored. login");
+                return false;
             }
+
+            if (expiresSoon(storedAccessToken!)) {
+                console.log(
+                    "Access token will expires soon, requesting new one...",
+                );
+
+                /**@DEV fix generator type bug */
+                const refreshResponse: SignInResponseDTO =
+                    (await authApi.authControllerRefreshJwtToken({
+                        refreshJwtDTO: {
+                            refreshToken: storedRefreshToken!,
+                        },
+                    })) as SignInResponseDTO;
+
+                console.log("refreshing token...");
+                const refreshToken = await saveValueLocallySecurely(
+                    SECURE_VALUE.JWT_ACCESS_TOKEN,
+                    refreshResponse.accessToken,
+                );
+                const jwtAccessToken = await saveValueLocallySecurely(
+                    SECURE_VALUE.JWT_REFRESH_TOKEN,
+                    refreshResponse.refreshToken,
+                );
+
+                console.log(
+                    `Updated new tokens: ${refreshToken} ${jwtAccessToken}`,
+                );
+            } else {
+                // user has a valid access token
+                console.log("Using valid Access Token");
+                const signInRes = await authApi.authControllerSignInByJWT({
+                    signInJwtDTO: {
+                        jwtAccessToken: storedAccessToken!,
+                    },
+                });
+
+                console.log("Valid Access Token Sign in ", signInRes);
+                if (signInRes.accessToken) {
+                    userAuthenticatedUpdate(
+                        signInRes.user,
+                        signInRes.accessToken,
+                        signInRes.refreshToken,
+                    );
+                }
+            }
+        } catch (e) {
+            console.log("AUTH error, clearing auth state");
+            await saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
+            await saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
+            console.log("Auth resetted. Needs login.");
         }
 
         return isAuthenticated(state);
     };
 
+    /**
+     * Called after the user did a sign-in.
+     * This stores the JWT and the REFRESH_TOKEN into the secure storage.
+     * ---
+     * @param user
+     * @param jwtAccessToken
+     * @param refreshToken
+     */
     const userAuthenticatedUpdate = (
         user: UserPrivateDTO,
         jwtAccessToken: string,
+        refreshToken: string,
     ) => {
         const userData: IUserData = {
             ...user,
@@ -83,8 +145,9 @@ const Welcome = ({ navigation }) => {
         const payload: Partial<IUserData> = {
             ...userData,
             jwtAccessToken,
+            refreshToken,
         };
-        console.log(`storing...`, user);
+
         dispatch({
             type: EACTION_USER.UPDATE_MULTIPLE,
             payload,
