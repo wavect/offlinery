@@ -36,8 +36,10 @@ const Login = ({ navigation }) => {
                 clearPassword: state.clearPassword,
             },
         };
+
         try {
             const signInRes = await authApi.authControllerSignIn(signInDTO);
+
             if (signInRes.accessToken) {
                 const user = signInRes.user;
                 userAuthenticatedUpdate(
@@ -45,6 +47,7 @@ const Login = ({ navigation }) => {
                     navigation,
                     user,
                     signInRes.accessToken,
+                    signInRes.refreshToken,
                 );
             }
         } catch (err) {

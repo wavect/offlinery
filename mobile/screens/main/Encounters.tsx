@@ -8,7 +8,7 @@ import {
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
-import { getJwtHeader } from "@/utils/misc.utils";
+import { includeJWT } from "@/utils/misc.utils";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import * as React from "react";
 import { useCallback, useState } from "react";
@@ -49,7 +49,7 @@ const Encounters = ({ navigation }) => {
                     userId: userState.id!,
                     dateRangeDTO,
                 },
-                getJwtHeader(userState.jwtAccessToken),
+                await includeJWT(),
             );
             const mappedEncounters: IEncounterProfile[] = [];
 

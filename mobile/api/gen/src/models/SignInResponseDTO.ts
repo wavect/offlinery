@@ -29,6 +29,12 @@ export interface SignInResponseDTO {
     accessToken: string;
     /**
      *
+     * @type {string}
+     * @memberof SignInResponseDTO
+     */
+    refreshToken: string;
+    /**
+     *
      * @type {UserPrivateDTO}
      * @memberof SignInResponseDTO
      */
@@ -42,6 +48,8 @@ export function instanceOfSignInResponseDTO(
     value: object,
 ): value is SignInResponseDTO {
     if (!("accessToken" in value) || value["accessToken"] === undefined)
+        return false;
+    if (!("refreshToken" in value) || value["refreshToken"] === undefined)
         return false;
     if (!("user" in value) || value["user"] === undefined) return false;
     return true;
@@ -60,6 +68,7 @@ export function SignInResponseDTOFromJSONTyped(
     }
     return {
         accessToken: json["accessToken"],
+        refreshToken: json["refreshToken"],
         user: UserPrivateDTOFromJSON(json["user"]),
     };
 }
@@ -70,6 +79,7 @@ export function SignInResponseDTOToJSON(value?: SignInResponseDTO | null): any {
     }
     return {
         accessToken: value["accessToken"],
+        refreshToken: value["refreshToken"],
         user: UserPrivateDTOToJSON(value["user"]),
     };
 }

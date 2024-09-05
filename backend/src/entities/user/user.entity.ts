@@ -110,6 +110,12 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
     @Column()
     bio: string;
 
+    @Column({ nullable: true })
+    refreshToken: string;
+
+    @Column({ nullable: true })
+    refreshTokenExpires: Date;
+
     @Column()
     dateMode: EDateMode;
 

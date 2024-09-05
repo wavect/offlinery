@@ -15,7 +15,7 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { getJwtHeader } from "@/utils/misc.utils";
+import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as React from "react";
@@ -92,10 +92,7 @@ const ProfileSettings = ({ navigation }) => {
                 images: getUserImagesForUpload(state),
             };
 
-            await userApi.userControllerUpdateUser(
-                request,
-                getJwtHeader(state.jwtAccessToken),
-            );
+            await userApi.userControllerUpdateUser(request, await includeJWT());
 
             navigation.navigate(ROUTES.MainTabView, {
                 screen: ROUTES.Main.FindPeople,

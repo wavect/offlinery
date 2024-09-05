@@ -46,6 +46,7 @@ export interface IUserData {
     dateMode: UserDateModeEnum;
     /** @dev Set once logged in */
     jwtAccessToken?: string;
+    refreshToken?: string;
 }
 
 export const isAuthenticated = (state: IUserData) => {
@@ -123,7 +124,7 @@ DEFAULT_FROM_TIME.setHours(9, 0, 0, 0);
 export const DEFAULT_TO_TIME = new Date();
 DEFAULT_TO_TIME.setHours(19, 0, 0, 0);
 
-const initialState: IUserData = {
+export const initialUserState: IUserData = {
     id: undefined,
     wantsEmailUpdates: false,
     email: process.env.NODE_ENV === "development" ? "office@wavect.io" : "",
@@ -178,14 +179,25 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
         case EACTION_USER.UPDATE_MULTIPLE:
             const payload: Partial<IUserData> =
                 action.payload as Partial<IUserData>;
+
             // @dev cache locally
             updateUserDataLocally(payload);
+
             if (payload.jwtAccessToken) {
                 // jwtAccessToken is not saved in local storage, but in secure local storage for extra security
                 saveValueLocallySecurely(
                     SECURE_VALUE.JWT_ACCESS_TOKEN,
                     payload.jwtAccessToken,
                 );
+
+                if (!payload.refreshToken) {
+                    console.warn("No refresh token submitted.");
+                } else {
+                    saveValueLocallySecurely(
+                        SECURE_VALUE.JWT_REFRESH_TOKEN,
+                        payload.refreshToken!,
+                    );
+                }
             }
             return { ...state, ...payload };
         default:
@@ -198,7 +210,7 @@ const UserContext = createContext<IUserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
 }) => {
-    const [state, dispatch] = useReducer(userReducer, initialState);
+    const [state, dispatch] = useReducer(userReducer, initialUserState);
 
     return (
         <UserContext.Provider value={{ state, dispatch }}>
