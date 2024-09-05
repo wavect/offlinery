@@ -4,6 +4,7 @@ import {
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
+import { isComplete } from "@/utils/misc.utils";
 
 /** @dev React-native-mmkv is blazing fast as it uses native modules. For that reason it does not work with Expo Go. To keep Expo Go working, we fallback to secure service if not available. */
 const getStorageLib = () => {
@@ -43,17 +44,23 @@ export const getLocallyStoredUserData = (): Omit<
 export const updateUserDataLocally = (
     partialUserData: Omit<Partial<IUserData>, "jwtAccessToken">,
 ) => {
-    const currentUserData = getLocallyStoredUserData();
-    if (!currentUserData) {
-        throw new Error(
-            "updateUserDataSecurely: Use saveUserDataSecurely instead first time!",
+    if (isComplete<Omit<IUserData, "jwtAccessToken">>(partialUserData)) {
+        saveUserData(
+            partialUserData satisfies Omit<IUserData, "jwtAccessToken">,
         );
+    } else {
+        const currentUserData = getLocallyStoredUserData();
+        if (!currentUserData) {
+            throw new Error(
+                "updateUserDataSecurely: Use saveUserDataSecurely instead first time!",
+            );
+        }
+        const updatedUserData: Omit<IUserData, "jwtAccessToken"> = {
+            ...currentUserData,
+            ...partialUserData,
+        };
+        saveUserData(updatedUserData);
     }
-    const updatedUserData: Omit<IUserData, "jwtAccessToken"> = {
-        ...currentUserData,
-        ...partialUserData,
-    };
-    saveUserData(updatedUserData);
 };
 
 export const saveUserData = (userData: Omit<IUserData, "jwtAccessToken">) => {
@@ -83,6 +90,7 @@ export const getLocallyStoredEncounters = (): IEncounterProfile[] => {
         : [];
 };
 
+/** @dev Since encounters is an array, we always update the full storage directly in Encounters.context.ts */
 export const saveEncountersLocally = (encounters: IEncounterProfile[]) => {
     const encounterDataString = JSON.stringify(encounters);
     if (!storage) {

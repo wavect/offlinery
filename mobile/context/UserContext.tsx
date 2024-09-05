@@ -73,6 +73,7 @@ export interface MapRegion {
      */
     uiRadius?: number;
 }
+
 export const mapRegionToBlacklistedRegionDTO = (
     region: MapRegion,
 ): BlacklistedRegionDTO => {
