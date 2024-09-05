@@ -39,17 +39,17 @@ jobs:
     - name: Install dependencies
       run: pnpm install && cd backend && pnpm install
 
-    - name: Load environment variables
-      run: |
-        cd backend
-        if [ -f .env-template ]; then
-          set -a
-          source .env-template
-          set +a
-        else
-          echo ".env-template file not found in backend directory"
-          exit 1
-        fi
+  #  - name: Load environment variables
+  #    run: |
+  #      cd backend
+  #      if [ -f .env-template ]; then
+  #        set -a
+  #        source .env-template
+  #        set +a
+  #      else
+  #        echo ".env-template file not found in backend directory"
+  #        exit 1
+  #      fi
 
     - name: Run tests
       run: pnpm test
