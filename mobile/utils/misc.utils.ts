@@ -85,8 +85,8 @@ export const jwtExpiresSoon = (token: string) => {
 };
 
 function decodeJWT(token: string) {
-    const base64Url = token.split(".")[1]; // Get the payload part of the JWT
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/"); // Convert from Base64URL to Base64
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
     const jsonPayload = decodeURIComponent(
         atob(base64)
             .split("")
