@@ -183,10 +183,6 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             // @dev cache locally
             updateUserDataLocally(payload);
 
-            if (payload.id) {
-                saveValueLocallySecurely(SECURE_VALUE.USER_ID, payload.id);
-            }
-
             if (payload.jwtAccessToken) {
                 // jwtAccessToken is not saved in local storage, but in secure local storage for extra security
                 saveValueLocallySecurely(
