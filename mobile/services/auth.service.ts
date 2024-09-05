@@ -40,7 +40,6 @@ export const userAuthenticatedUpdate = (
         refreshToken: jwtRefreshToken,
     };
 
-    console.log("PATCHING => ", payload);
     dispatch({
         type: EACTION_USER.UPDATE_MULTIPLE,
         payload,

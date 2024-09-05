@@ -124,7 +124,7 @@ DEFAULT_FROM_TIME.setHours(9, 0, 0, 0);
 export const DEFAULT_TO_TIME = new Date();
 DEFAULT_TO_TIME.setHours(19, 0, 0, 0);
 
-const initialState: IUserData = {
+export const initialUserState: IUserData = {
     id: undefined,
     wantsEmailUpdates: false,
     email: process.env.NODE_ENV === "development" ? "office@wavect.io" : "",
@@ -214,7 +214,7 @@ const UserContext = createContext<IUserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
 }) => {
-    const [state, dispatch] = useReducer(userReducer, initialState);
+    const [state, dispatch] = useReducer(userReducer, initialUserState);
 
     return (
         <UserContext.Provider value={{ state, dispatch }}>

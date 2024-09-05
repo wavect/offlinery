@@ -1,4 +1,4 @@
-import { IUserData } from "@/context/UserContext";
+import { initialUserState, IUserData } from "@/context/UserContext";
 import {
     getSecurelyStoredValue,
     saveValueLocallySecurely,
@@ -46,31 +46,22 @@ export const updateUserDataLocally = (
         "jwtAccessToken" | "refreshToken"
     >,
 ) => {
-    const currentUserData = getLocallyStoredUserData();
-    if (!currentUserData) {
-        throw new Error(
-            "updateUserDataSecurely: Use saveUserDataSecurely instead first time!",
-        );
-    }
-    const updatedUserData: Omit<IUserData, "jwtAccessToken" | "refreshToken"> =
-        {
-            ...currentUserData,
-            ...partialUserData,
-        };
-
-    console.log("---> UPDATING USER DATA : ", updatedUserData);
-    saveUserData(updatedUserData);
+    saveUserData({
+        ...(getLocallyStoredUserData() ?? initialUserState),
+        ...partialUserData,
+    });
 };
 
-export const saveUserData = (userData: Omit<IUserData, "jwtAccessToken">) => {
+export const saveUserData = (
+    userData: Omit<IUserData, "jwtAccessToken" | "refreshToken">,
+) => {
     // jwtAccessToken should be stored in more secure local storage, see secure-storage.service.ts
     const internalUserDataObj = { ...userData }; // clone object to not remove accessToken for user.context.ts too etc.
+    // if the type check didn't work, we manually delete the jwt token from the object to not save it.
     if ((internalUserDataObj as IUserData).jwtAccessToken) {
-        // if the type check didn't work, we manually delete the jwt token from the object to not save it.
         (internalUserDataObj as IUserData).jwtAccessToken = undefined;
     }
     if ((internalUserDataObj as IUserData).refreshToken) {
-        // if the type check didn't work, we manually delete the jwt token from the object to not save it.
         (internalUserDataObj as IUserData).refreshToken = undefined;
     }
 

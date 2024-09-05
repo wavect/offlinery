@@ -4,7 +4,6 @@ import {
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
-import { getLocallyStoredUserData } from "@/services/storage.service";
 
 export const REFRESH_REMAINING_MINUTE = 1;
 
@@ -22,9 +21,6 @@ export const includeJWT = async (): Promise<RequestInit> => {
     const refreshToken = await getSecurelyStoredValue(
         SECURE_VALUE.JWT_REFRESH_TOKEN,
     );
-
-    const userData = getLocallyStoredUserData();
-    console.log("userdata: ", userData);
 
     if (!refreshToken) {
         throw new Error("User does not have an refresh token!");
