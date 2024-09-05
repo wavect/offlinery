@@ -21,6 +21,7 @@ import MapView, {
     LongPressEvent,
     Marker,
     MarkerDragEvent,
+    PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
 } from "react-native-maps";
 
@@ -166,7 +167,11 @@ const HeatMap = () => {
                         longitudeDelta: 0.0421,
                     }}
                     onLongPress={handleMapLongPress}
-                    provider={PROVIDER_GOOGLE}
+                    provider={
+                        process.env.NODE_ENV === "production"
+                            ? PROVIDER_GOOGLE
+                            : PROVIDER_DEFAULT
+                    }
                 >
                     {state.blacklistedRegions.map((region, index) => (
                         <React.Fragment key={`region-${index}`}>
