@@ -33,6 +33,12 @@ export interface Encounter {
     id: string;
     /**
      *
+     * @type {boolean}
+     * @memberof Encounter
+     */
+    isNearbyRightNow: boolean;
+    /**
+     *
      * @type {object}
      * @memberof Encounter
      */
@@ -74,6 +80,11 @@ export interface Encounter {
  */
 export function instanceOfEncounter(value: object): value is Encounter {
     if (!("id" in value) || value["id"] === undefined) return false;
+    if (
+        !("isNearbyRightNow" in value) ||
+        value["isNearbyRightNow"] === undefined
+    )
+        return false;
     if (!("userStatuses" in value) || value["userStatuses"] === undefined)
         return false;
     if (
@@ -106,6 +117,7 @@ export function EncounterFromJSONTyped(
     }
     return {
         id: json["id"],
+        isNearbyRightNow: json["isNearbyRightNow"],
         userStatuses: json["userStatuses"],
         lastDateTimePassedBy: new Date(json["lastDateTimePassedBy"]),
         lastLocationPassedBy: json["lastLocationPassedBy"],
@@ -123,6 +135,7 @@ export function EncounterToJSON(value?: Encounter | null): any {
     }
     return {
         id: value["id"],
+        isNearbyRightNow: value["isNearbyRightNow"],
         userStatuses: value["userStatuses"],
         lastDateTimePassedBy: value["lastDateTimePassedBy"].toISOString(),
         lastLocationPassedBy: value["lastLocationPassedBy"],
