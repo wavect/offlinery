@@ -62,6 +62,19 @@ export const includeJWT = async (): Promise<RequestInit> => {
     };
 };
 
+type RequiredKeys<T> = {
+    [K in keyof T]-?: {} extends Pick<T, K> ? never : K;
+}[keyof T];
+
+/** @dev Utility function to check if Partial<T> has all properties defined and satisfies the T type. */
+export function isComplete<T>(obj: Partial<T>): obj is T {
+    return (
+        (Object.keys(obj) as Array<keyof T>).length >=
+        (Object.keys({} as { [K in RequiredKeys<T>]: true }) as Array<keyof T>)
+            .length
+    );
+}
+
 export const jwtExpiresSoon = (token: string) => {
     const decodedJWT = decodeJWT(token);
     const expirationDate = new Date(decodedJWT.exp * 1000);

@@ -1,18 +1,13 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { AuthApi, SignInResponseDTO, UserPrivateDTO } from "@/api/gen/src";
+import { AuthApi, SignInResponseDTO } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
 import { OShowcase } from "@/components/OShowcase/OShowcase";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
 import { OTroubleSignIn } from "@/components/OTroubleSignIn/OTroubleSignIn";
-import {
-    EACTION_USER,
-    IUserData,
-    MapRegion,
-    isAuthenticated,
-    useUserContext,
-} from "@/context/UserContext";
+import { isAuthenticated, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { userAuthenticatedUpdate } from "@/services/auth.service";
 import {
     SECURE_VALUE,
     getSecurelyStoredValue,
@@ -61,19 +56,15 @@ const Welcome = ({ navigation }) => {
                         },
                     })) as SignInResponseDTO;
 
-                console.log("refreshing token...");
-                const refreshToken = await saveValueLocallySecurely(
+                await saveValueLocallySecurely(
                     SECURE_VALUE.JWT_ACCESS_TOKEN,
                     refreshResponse.accessToken,
                 );
-                const jwtAccessToken = await saveValueLocallySecurely(
+                await saveValueLocallySecurely(
                     SECURE_VALUE.JWT_REFRESH_TOKEN,
                     refreshResponse.refreshToken,
                 );
-
-                console.log(
-                    `Updated new tokens: ${refreshToken} ${jwtAccessToken}`,
-                );
+                console.log("Tokens refreshed.");
             } else {
                 // user has a valid access token
                 console.log("JWT found. Trying JWT Authentication.");
@@ -86,9 +77,10 @@ const Welcome = ({ navigation }) => {
                 if (signInRes.accessToken) {
                     console.log("JWT authentication succeeded.");
                     userAuthenticatedUpdate(
+                        dispatch,
+                        navigation,
                         signInRes.user,
                         signInRes.accessToken,
-                        signInRes.refreshToken,
                     );
                 }
             }
@@ -100,63 +92,6 @@ const Welcome = ({ navigation }) => {
 
         return isAuthenticated(state);
     };
-
-    /**
-     * Called after the user did a sign-in.
-     * This stores the JWT and the REFRESH_TOKEN into the secure storage.
-     * ---
-     * @param user
-     * @param jwtAccessToken
-     * @param refreshToken
-     */
-    const userAuthenticatedUpdate = (
-        user: UserPrivateDTO,
-        jwtAccessToken: string,
-        refreshToken: string,
-    ) => {
-        const userData: IUserData = {
-            ...user,
-            approachFromTime: new Date(user.approachFromTime),
-            approachToTime: new Date(user.approachToTime),
-            blacklistedRegions: user.blacklistedRegions
-                .map((br) => {
-                    if (br.location.coordinates?.length !== 2) {
-                        return undefined;
-                    }
-
-                    return {
-                        radius: br.radius,
-                        longitude: br.location.coordinates[0],
-                        latitude: br.location.coordinates[1],
-                    } satisfies MapRegion;
-                })
-                .filter((br) => br !== undefined),
-            clearPassword: "",
-            imageURIs: Object.fromEntries(
-                user.imageURIs.map((value, index) => [index, value]),
-            ),
-            jwtAccessToken,
-        };
-        // also fill userData when logged in
-        // Note: We still save the accessToken into the user context to avoid reading from secure storage all the time when making api requests (performance, security, ..)
-        const payload: Partial<IUserData> = {
-            ...userData,
-            jwtAccessToken,
-            refreshToken,
-        };
-
-        dispatch({
-            type: EACTION_USER.UPDATE_MULTIPLE,
-            payload,
-        });
-
-        if (user.verificationStatus === "pending") {
-            navigation.navigate(ROUTES.Onboarding.WaitingVerification);
-        } else {
-            navigation.navigate(ROUTES.MainTabView);
-        }
-    };
-
     useFocusEffect(
         useCallback(() => {
             const checkAuthentication = async () => {

@@ -108,8 +108,8 @@ const HeatMap = () => {
 
     const setBlacklistedRegions = (blacklistedRegions: MapRegion[]) => {
         dispatch({
-            type: EACTION_USER.SET_BLACKLISTED_REGIONS,
-            payload: blacklistedRegions,
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { blacklistedRegions },
         });
     };
 

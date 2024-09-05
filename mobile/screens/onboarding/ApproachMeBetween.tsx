@@ -19,14 +19,14 @@ const ApproachMeBetween = ({ navigation }) => {
 
     const onFromTimeChange = (event: DateTimePickerEvent, date?: Date) => {
         dispatch({
-            type: EACTION_USER.SET_APPROACH_FROM_TIME,
-            payload: date || DEFAULT_FROM_TIME,
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { approachFromTime: date || DEFAULT_FROM_TIME },
         });
     };
     const onToTimeChange = (event: DateTimePickerEvent, date?: Date) => {
         dispatch({
-            type: EACTION_USER.SET_APPROACH_TO_TIME,
-            payload: date || DEFAULT_TO_TIME,
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { approachToTime: date || DEFAULT_TO_TIME },
         });
     };
 

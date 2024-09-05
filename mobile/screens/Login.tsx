@@ -1,22 +1,14 @@
 import { Color, FontFamily } from "@/GlobalStyles";
-import {
-    AuthApi,
-    AuthControllerSignInRequest,
-    UserPrivateDTO,
-} from "@/api/gen/src";
+import { AuthApi, AuthControllerSignInRequest } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
 import { OShowcase } from "@/components/OShowcase/OShowcase";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
 import { OTextInputWide } from "@/components/OTextInputWide/OTextInputWide";
 import { OTroubleSignIn } from "@/components/OTroubleSignIn/OTroubleSignIn";
-import {
-    EACTION_USER,
-    IUserData,
-    MapRegion,
-    useUserContext,
-} from "@/context/UserContext";
+import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { userAuthenticatedUpdate } from "@/services/auth.service";
 import * as React from "react";
 import { useState } from "react";
 import {
@@ -27,60 +19,12 @@ import {
     Text,
     View,
 } from "react-native";
-import { ROUTES } from "./routes";
 
 const authApi = new AuthApi();
 const Login = ({ navigation }) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
-    const userAuthenticatedUpdate = (
-        user: UserPrivateDTO,
-        jwtAccessToken: string,
-        refreshToken: string,
-    ) => {
-        const userData: IUserData = {
-            ...user,
-            approachFromTime: new Date(user.approachFromTime),
-            approachToTime: new Date(user.approachToTime),
-            blacklistedRegions: user.blacklistedRegions
-                .map((br) => {
-                    if (br.location.coordinates?.length !== 2) {
-                        return undefined;
-                    }
-
-                    return {
-                        radius: br.radius,
-                        longitude: br.location.coordinates[0],
-                        latitude: br.location.coordinates[1],
-                    } satisfies MapRegion;
-                })
-                .filter((br) => br !== undefined),
-            clearPassword: "",
-            imageURIs: Object.fromEntries(
-                user.imageURIs.map((value, index) => [index, value]),
-            ),
-            jwtAccessToken,
-        };
-        // also fill userData when logged in
-        // Note: We still save the accessToken into the user context to avoid reading from secure storage all the time when making api requests (performance, security, ..)
-        const payload: Partial<IUserData> = {
-            ...userData,
-            jwtAccessToken,
-            refreshToken,
-        };
-        dispatch({
-            type: EACTION_USER.UPDATE_MULTIPLE,
-            payload,
-        });
-
-        if (user.verificationStatus === "pending") {
-            navigation.navigate(ROUTES.Onboarding.WaitingVerification);
-        } else {
-            navigation.navigate(ROUTES.MainTabView);
-        }
-    };
 
     const login = async () => {
         setLoading(true);
@@ -99,6 +43,8 @@ const Login = ({ navigation }) => {
             if (signInRes.accessToken) {
                 const user = signInRes.user;
                 userAuthenticatedUpdate(
+                    dispatch,
+                    navigation,
                     user,
                     signInRes.accessToken,
                     signInRes.refreshToken,
@@ -117,12 +63,12 @@ const Login = ({ navigation }) => {
         return state.email.length && state.clearPassword.length;
     };
     const setEmail = (email: string) => {
-        dispatch({ type: EACTION_USER.SET_EMAIL, payload: email });
+        dispatch({ type: EACTION_USER.UPDATE_MULTIPLE, payload: { email } });
     };
     const setClearPassword = (clearPassword: string) => {
         dispatch({
-            type: EACTION_USER.SET_CLEAR_PASSWORD,
-            payload: clearPassword,
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { clearPassword },
         });
     };
 

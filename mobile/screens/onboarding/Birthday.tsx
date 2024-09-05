@@ -21,9 +21,18 @@ const Birthday = ({ navigation }) => {
             setShowDatePicker(!showDatePicker);
         }
         dispatch({
-            type: EACTION_USER.SET_BIRTHDAY,
-            payload: date || new Date(2000, 1, 1),
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { birthDay: date || new Date(2000, 1, 1) },
         });
+    };
+
+    const getMinimumAge = () => {
+        const today = new Date();
+        return new Date(
+            today.getFullYear() - 14,
+            today.getMonth(),
+            today.getDate(),
+        );
     };
 
     return (
@@ -45,7 +54,9 @@ const Birthday = ({ navigation }) => {
                 <TextInput
                     style={styles.input}
                     showSoftInputOnFocus={false}
-                    value={state.birthDay.toLocaleDateString()}
+                    value={state.birthDay.toLocaleDateString(undefined, {
+                        timeZone: "utc",
+                    })}
                     onPress={() => setShowDatePicker(true)}
                     placeholder="01.01.2000"
                     placeholderTextColor="#999"
@@ -56,8 +67,9 @@ const Birthday = ({ navigation }) => {
                         mode="date"
                         onChange={onDatePickerEvent}
                         minimumDate={new Date(1900, 1, 1)}
-                        maximumDate={new Date(2010, 1, 1)}
+                        maximumDate={getMinimumAge()}
                         value={state.birthDay}
+                        timeZoneName="UTC"
                     />
                 )}
             </View>

@@ -93,6 +93,7 @@ export const en = {
     verify: "Verify",
     verificationCodeSent: "The 6-digit code we sent you per email",
     verificationCodeResend: "Resend Code",
+    verificationCodeInvalid: "Invalid Verification Code",
     invalidEmail: "Email is either invalid or already exists.",
     myFirstNameIs: "My first name is",
     myFirstNameDescr: "This is how you will appear in Offlinery.",

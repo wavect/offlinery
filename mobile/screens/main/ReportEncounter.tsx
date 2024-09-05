@@ -65,11 +65,13 @@ const ReportEncounter = ({ route, navigation }) => {
             });
 
             dispatch({
-                type: EACTION_ENCOUNTERS.SET_REPORTED,
-                payload: {
-                    encounterId: personToReport.encounterId,
-                    value: true,
-                },
+                type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,
+                payload: [
+                    {
+                        encounterId: personToReport.encounterId,
+                        reported: true,
+                    },
+                ],
             });
             navigation.goBack();
         } catch (err) {

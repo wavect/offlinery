@@ -30,37 +30,46 @@ const ProfileSettings = ({ navigation }) => {
     const [isLoading, setLoading] = useState(false);
 
     const setFirstName = async (firstName: string) => {
-        dispatch({ type: EACTION_USER.SET_FIRSTNAME, payload: firstName });
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { firstName },
+        });
     };
     const setApproachFromTime = (fromTime?: Date) => {
         dispatch({
-            type: EACTION_USER.SET_APPROACH_FROM_TIME,
-            payload: fromTime || state.approachFromTime,
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { approachFromTime: fromTime || state.approachFromTime },
         });
     };
     const setApproachToTime = (toTime?: Date) => {
         dispatch({
-            type: EACTION_USER.SET_APPROACH_TO_TIME,
-            payload: toTime || state.approachToTime,
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { approachToTime: toTime || state.approachToTime },
         });
     };
     const setBio = (bio: string) => {
-        dispatch({ type: EACTION_USER.SET_BIO, payload: bio });
+        dispatch({ type: EACTION_USER.UPDATE_MULTIPLE, payload: { bio } });
     };
     const setBirthday = (birthday?: Date) => {
         dispatch({
-            type: EACTION_USER.SET_BIRTHDAY,
-            payload: birthday || state.birthDay,
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { birthDay: birthday || state.birthDay },
         });
     };
     const setGender = (item: { label: string; value: UserGenderEnum }) => {
-        dispatch({ type: EACTION_USER.SET_GENDER, payload: item.value });
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { gender: item.value },
+        });
     };
     const setGenderDesire = (item: {
         label: string;
         value: UserGenderEnum;
     }) => {
-        dispatch({ type: EACTION_USER.SET_GENDER_DESIRE, payload: item.value });
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { genderDesire: item.value },
+        });
     };
 
     const handleSave = async () => {

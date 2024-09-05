@@ -1,10 +1,11 @@
+import { Color, FontFamily } from "@/GlobalStyles";
 import { RegistrationApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import { ROUTES } from "../routes";
 
 const VerifyEmail = ({ navigation }) => {
@@ -13,6 +14,7 @@ const VerifyEmail = ({ navigation }) => {
     const [timer, setTimer] = useState(0);
     const [isResendDisabled, setIsResendDisabled] = useState(true);
     const [isLoading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = React.useState("");
 
     const inputs = React.useRef<TextInput[]>([]);
 
@@ -59,11 +61,16 @@ const VerifyEmail = ({ navigation }) => {
         const verificationCode = code.join("");
 
         const regApi = new RegistrationApi();
-        await regApi.registrationControllerVerifyEmail({
-            verifyEmailDTO: { email: state.email, verificationCode },
-        });
-
-        navigation.navigate(ROUTES.Onboarding.Password);
+        try {
+            await regApi.registrationControllerVerifyEmail({
+                verifyEmailDTO: { email: state.email, verificationCode },
+            });
+            navigation.navigate(ROUTES.Onboarding.Password);
+            setErrorMessage("");
+        } catch (error) {
+            console.error(error);
+            setErrorMessage(i18n.t(TR.verificationCodeInvalid));
+        }
     };
 
     const sendVerificationCode = async () => {
@@ -136,6 +143,9 @@ const VerifyEmail = ({ navigation }) => {
                     />
                 ))}
             </View>
+            {errorMessage && (
+                <Text style={styles.errorMessage}>{errorMessage}</Text>
+            )}
             <View style={styles.resendContainer}>
                 <OButtonWide
                     text={
@@ -172,6 +182,13 @@ const styles = StyleSheet.create({
     resendContainer: {
         marginTop: 16,
         alignItems: "center",
+    },
+    errorMessage: {
+        color: Color.redLight,
+        fontSize: 16,
+        fontFamily: FontFamily.montserratSemiBold,
+        textAlign: "center",
+        marginBottom: 10,
     },
 });
 

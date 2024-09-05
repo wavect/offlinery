@@ -16,22 +16,27 @@ const ApproachChoice = ({ navigation }) => {
 
     const setApproachChoice = (approachChoice: UserApproachChoiceEnum) => {
         dispatch({
-            type: EACTION_USER.SET_APPROACH_CHOICE,
-            payload: approachChoice,
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { approachChoice },
         });
 
         switch (approachChoice) {
             case UserApproachChoiceEnum.approach: // fall through
                 dispatch({
-                    type: EACTION_USER.SET_VERIFICATION_STATUS,
-                    payload: UserVerificationStatusEnum.pending,
+                    type: EACTION_USER.UPDATE_MULTIPLE,
+                    payload: {
+                        verificationStatus: UserVerificationStatusEnum.pending,
+                    },
                 });
                 navigation.navigate(ROUTES.Onboarding.SafetyCheck);
                 break;
             case UserApproachChoiceEnum.be_approached:
                 dispatch({
-                    type: EACTION_USER.SET_VERIFICATION_STATUS,
-                    payload: UserVerificationStatusEnum.not_needed,
+                    type: EACTION_USER.UPDATE_MULTIPLE,
+                    payload: {
+                        verificationStatus:
+                            UserVerificationStatusEnum.not_needed,
+                    },
                 });
                 navigation.navigate(ROUTES.Onboarding.DontApproachMeHere); // not doing IliveHere for now, to avoid geoFencing their address
                 break;
