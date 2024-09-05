@@ -1,4 +1,4 @@
-import { UserSeeder } from "@/seeder/user.seeder";
+import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { INestApplication, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
@@ -30,7 +30,7 @@ async function bootstrap() {
     app.use(helmet());
 
     // Seed default user
-    const userSeederService = app.get(UserSeeder);
+    const userSeederService = app.get(DefaultUserSeeder);
     await userSeederService.seedDefaultUser();
 
     await app.listen(TYPED_ENV.BE_PORT);

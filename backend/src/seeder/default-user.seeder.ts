@@ -17,8 +17,8 @@ import { Readable } from "stream";
 import { Repository } from "typeorm";
 
 @Injectable()
-export class UserSeeder {
-    private readonly logger = new Logger(UserSeeder.name);
+export class DefaultUserSeeder {
+    private readonly logger = new Logger(DefaultUserSeeder.name);
 
     constructor(
         private userService: UserService,

@@ -5,7 +5,7 @@ import { Message } from "@/entities/messages/message.entity";
 import { User } from "@/entities/user/user.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { Encounter } from "./encounter.entity";
 
 @Injectable()
@@ -55,11 +55,19 @@ export class EncounterService {
         usersThatWantToApproach: User[],
     ) {
         for (const u of usersThatWantToApproach) {
-            const encounter = new Encounter();
+            // encounter should always be unique for a userId <> userId combination (not enforced on DB level as not possible)
+            // @dev If encounter exists already, update the values, otherwise create new one.
+            const encounter: Encounter =
+                (await this.encounterRepository.findOne({
+                    relations: ["users"],
+                    where: {
+                        users: { id: In([userToBeApproached.id, u.id]) },
+                    },
+                })) ?? new Encounter();
+
             encounter.users = [userToBeApproached, u];
             encounter.lastDateTimePassedBy = new Date();
             encounter.lastLocationPassedBy = userToBeApproached.location;
-            encounter.userReports = [];
 
             await this.encounterRepository.save(encounter);
         }
