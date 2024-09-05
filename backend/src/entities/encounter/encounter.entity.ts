@@ -25,11 +25,15 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
             reported: this.userReports?.length > 0, // TODO: Here we might want to make this boolean specific to the user querying? Otherwise technically only one user can report.
             users: this.users.map((u) => u.convertToPublicDTO()),
             messages: this.messages.map((m) => m.convertToPublicDTO()),
+            isNearbyRightNow: this.isNearbyRightNow,
         };
     }
 
     @PrimaryGeneratedColumn("uuid")
     id: string;
+
+    @Column({ type: "boolean", default: false })
+    isNearbyRightNow: boolean;
 
     @Column({ type: "jsonb", default: {} })
     userStatuses: Record<string, EEncounterStatus>;

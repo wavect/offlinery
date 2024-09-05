@@ -3,6 +3,7 @@ import {
     EncounterApi,
     EncounterPublicDTOStatusEnum,
     UpdateEncounterStatusDTO,
+    UserApproachChoiceEnum,
 } from "@/api/gen/src";
 import {
     IOButtonSmallVariant,
@@ -159,7 +160,10 @@ const OEncounter = (props: ISingleEncounterProps) => {
                             />
                         )}
 
-                        {dateStatus === EncounterPublicDTOStatusEnum.not_met &&
+                        {state.approachChoice !==
+                            UserApproachChoiceEnum.be_approached &&
+                            dateStatus ===
+                                EncounterPublicDTOStatusEnum.not_met &&
                             encounterProfile.isNearbyRightNow && (
                                 <OButtonSmall
                                     label={i18n.t(TR.navigate)}
