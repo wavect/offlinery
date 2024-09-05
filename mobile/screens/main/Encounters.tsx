@@ -1,5 +1,5 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { DateRangeDTO, EncounterApi } from "@/api/gen/src";
+import { DateRangeDTO, EncounterApi, MessagePublicDTO } from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
     EACTION_ENCOUNTERS,
@@ -38,6 +38,27 @@ const Encounters = ({ navigation }) => {
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
 
+    function sortMessagesByLatest(
+        messages: MessagePublicDTO[],
+    ): MessagePublicDTO[] {
+        return messages.sort(
+            (a, b) =>
+                new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime(),
+        );
+    }
+
+    function findLatestReceivedMessage(
+        messages: MessagePublicDTO[] | null,
+        otherUserId: string,
+    ): MessagePublicDTO | undefined {
+        if (!messages || !messages.length) {
+            return;
+        }
+        return sortMessagesByLatest(messages).find(
+            (m) => m.senderUserId === otherUserId,
+        );
+    }
+
     const fetchEncounters = useCallback(async () => {
         try {
             const dateRangeDTO: DateRangeDTO = {
@@ -69,6 +90,10 @@ const Encounters = ({ navigation }) => {
                     lastLocationPassedBy: encounter.lastLocationPassedBy ?? "",
                     lastTimePassedBy: encounter.lastDateTimePassedBy,
                     rating: otherUser.trustScore,
+                    lastReceivedMessage: findLatestReceivedMessage(
+                        encounter.messages,
+                        otherUser.id,
+                    ),
                 });
             });
 

@@ -1,6 +1,9 @@
 import { DateRangeDTO } from "@/DTOs/date-range.dto";
+import { PushMessageDTO } from "@/DTOs/push-message.dto";
+import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
+import { Message } from "@/entities/messages/message.entity";
 import { User } from "@/entities/user/user.entity";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Encounter } from "./encounter.entity";
@@ -10,6 +13,8 @@ export class EncounterService {
     constructor(
         @InjectRepository(Encounter)
         private encounterRepository: Repository<Encounter>,
+        @InjectRepository(Message)
+        private messageRepository: Repository<Message>,
     ) {}
 
     async findEncountersByUser(
@@ -58,5 +63,50 @@ export class EncounterService {
 
             await this.encounterRepository.save(encounter);
         }
+    }
+
+    async updateStatus(
+        userId: string,
+        updateStatusDTO: UpdateEncounterStatusDTO,
+    ): Promise<Encounter> {
+        const { encounterId, status } = updateStatusDTO;
+        const encounter = await this.encounterRepository.findOneBy({
+            id: encounterId,
+        });
+        if (!encounter) {
+            throw new NotFoundException(
+                `Encounter with ID ${encounterId} not found`,
+            );
+        }
+
+        encounter.userStatuses[userId] = status;
+        return this.encounterRepository.save(encounter);
+    }
+
+    async pushMessage(
+        userId: string,
+        pushMessageDTO: PushMessageDTO,
+    ): Promise<Encounter> {
+        const { encounterId, content } = pushMessageDTO;
+        const encounter = await this.encounterRepository.findOne({
+            where: { id: encounterId },
+            relations: { messages: true },
+        });
+        if (!encounter) {
+            throw new NotFoundException(
+                `Encounter with ID ${encounterId} not found`,
+            );
+        }
+
+        const newMessage = this.messageRepository.create({
+            content,
+            sentAt: new Date(),
+            sender: { id: userId },
+            encounter,
+        });
+
+        await this.messageRepository.save(newMessage);
+        encounter.messages.push(newMessage);
+        return this.encounterRepository.save(encounter);
     }
 }

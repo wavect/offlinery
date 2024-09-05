@@ -1,12 +1,16 @@
 import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
 import { DateRangeDTO } from "@/DTOs/date-range.dto";
 import { EncounterPublicDTO } from "@/DTOs/encounter-public.dto";
+import { PushMessageDTO } from "@/DTOs/push-message.dto";
+import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
 import {
     Body,
     Controller,
     Get,
     NotFoundException,
     Param,
+    Post,
+    Put,
 } from "@nestjs/common";
 import {
     ApiBody,
@@ -48,5 +52,49 @@ export class EncounterController {
             );
         }
         return encounters.map((e) => e.convertToPublicDTO());
+    }
+
+    @Put(`:${USER_ID_PARAM}/status`)
+    @OnlyOwnUserData()
+    @ApiOperation({ summary: "Update encounter status" })
+    @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })
+    @ApiBody({ type: UpdateEncounterStatusDTO })
+    @ApiResponse({
+        status: 200,
+        type: EncounterPublicDTO,
+        description: "Encounter status updated successfully.",
+    })
+    @ApiResponse({ status: 404, description: "Encounter not found." })
+    async updateStatus(
+        @Param(USER_ID_PARAM) userId: string,
+        @Body() updateStatusDTO: UpdateEncounterStatusDTO,
+    ): Promise<EncounterPublicDTO> {
+        const updatedEncounter = await this.encounterService.updateStatus(
+            userId,
+            updateStatusDTO,
+        );
+        return updatedEncounter.convertToPublicDTO();
+    }
+
+    @Post(`:${USER_ID_PARAM}/message`)
+    @OnlyOwnUserData()
+    @ApiOperation({ summary: "Push a new message to the encounter" })
+    @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })
+    @ApiBody({ type: PushMessageDTO })
+    @ApiResponse({
+        status: 201,
+        type: EncounterPublicDTO,
+        description: "Message added successfully.",
+    })
+    @ApiResponse({ status: 404, description: "Encounter not found." })
+    async pushMessage(
+        @Param(USER_ID_PARAM) userId: string,
+        @Body() pushMessageDTO: PushMessageDTO,
+    ): Promise<EncounterPublicDTO> {
+        const updatedEncounter = await this.encounterService.pushMessage(
+            userId,
+            pushMessageDTO,
+        );
+        return updatedEncounter.convertToPublicDTO();
     }
 }
