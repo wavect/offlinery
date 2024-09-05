@@ -1,4 +1,4 @@
-name: Run pnpm tests
+name: Run unit tests
 
 on:
   push:
@@ -9,7 +9,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
 
@@ -40,5 +39,20 @@ jobs:
     - name: Install dependencies
       run: pnpm install && cd backend && pnpm install
 
+    - name: Load environment variables
+      run: |
+        cd backend
+        if [ -f .env-template ]; then
+          set -a
+          source .env-template
+          set +a
+        else
+          echo ".env-template file not found in backend directory"
+          exit 1
+        fi
+
     - name: Run tests
       run: pnpm test
+      env:
+        # This ensures that the environment variables are available to the test command
+        SHELL: /bin/bash
