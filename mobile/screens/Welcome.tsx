@@ -66,7 +66,7 @@ const Welcome = ({ navigation }) => {
                 console.log("Tokens refreshed.");
             } else {
                 // user has a valid access token
-                console.log("JWT found. Trying JWT Authentication.");
+                console.log("JWT found, authenticating via JWT.");
                 const signInRes = await authApi.authControllerSignInByJWT({
                     signInJwtDTO: {
                         jwtAccessToken: storedAccessToken!,
