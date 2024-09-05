@@ -4,7 +4,6 @@ import {
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
-import { isComplete } from "@/utils/misc.utils";
 
 /** @dev React-native-mmkv is blazing fast as it uses native modules. For that reason it does not work with Expo Go. To keep Expo Go working, we fallback to secure service if not available. */
 const getStorageLib = () => {
@@ -42,25 +41,25 @@ export const getLocallyStoredUserData = (): Omit<
 };
 
 export const updateUserDataLocally = (
-    partialUserData: Omit<Partial<IUserData>, "jwtAccessToken">,
+    partialUserData: Omit<
+        Partial<IUserData>,
+        "jwtAccessToken" | "refreshToken"
+    >,
 ) => {
-    if (isComplete<Omit<IUserData, "jwtAccessToken">>(partialUserData)) {
-        saveUserData(
-            partialUserData satisfies Omit<IUserData, "jwtAccessToken">,
+    const currentUserData = getLocallyStoredUserData();
+    if (!currentUserData) {
+        throw new Error(
+            "updateUserDataSecurely: Use saveUserDataSecurely instead first time!",
         );
-    } else {
-        const currentUserData = getLocallyStoredUserData();
-        if (!currentUserData) {
-            throw new Error(
-                "updateUserDataSecurely: Use saveUserDataSecurely instead first time!",
-            );
-        }
-        const updatedUserData: Omit<IUserData, "jwtAccessToken"> = {
+    }
+    const updatedUserData: Omit<IUserData, "jwtAccessToken" | "refreshToken"> =
+        {
             ...currentUserData,
             ...partialUserData,
         };
-        saveUserData(updatedUserData);
-    }
+
+    console.log("---> UPDATING USER DATA : ", updatedUserData);
+    saveUserData(updatedUserData);
 };
 
 export const saveUserData = (userData: Omit<IUserData, "jwtAccessToken">) => {
@@ -70,8 +69,13 @@ export const saveUserData = (userData: Omit<IUserData, "jwtAccessToken">) => {
         // if the type check didn't work, we manually delete the jwt token from the object to not save it.
         (internalUserDataObj as IUserData).jwtAccessToken = undefined;
     }
+    if ((internalUserDataObj as IUserData).refreshToken) {
+        // if the type check didn't work, we manually delete the jwt token from the object to not save it.
+        (internalUserDataObj as IUserData).refreshToken = undefined;
+    }
 
     const userDataString = JSON.stringify(internalUserDataObj);
+
     if (!storage) {
         saveValueLocallySecurely(LOCAL_VALUE.USER_DATA, userDataString);
     } else {

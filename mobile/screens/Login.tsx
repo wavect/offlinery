@@ -41,6 +41,7 @@ const Login = ({ navigation }) => {
             const signInRes = await authApi.authControllerSignIn(signInDTO);
 
             if (signInRes.accessToken) {
+                console.log("logging in...", signInRes.accessToken);
                 const user = signInRes.user;
                 userAuthenticatedUpdate(
                     dispatch,

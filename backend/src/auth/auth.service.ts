@@ -17,35 +17,33 @@ export class AuthService {
     ) {}
 
     async signInWithJWT(accessToken: string): Promise<SignInResponseDTO> {
-        try {
-            const userJwtRes: Pick<User, "id"> =
-                await this.jwtService.verifyAsync(accessToken, {
-                    secret: TYPED_ENV.JWT_SECRET,
-                });
-            const user: User = await this.usersService.findUserById(
-                userJwtRes.id,
-            );
-            if (!user) {
-                throw new UnauthorizedException();
-            }
-            const refreshToken = user.refreshToken;
-            if (!refreshToken) {
-                console.log(
-                    "User migration: Has a valid JWT but no refresh. Needs new login",
-                );
-                return null;
-            }
-            console.log(
-                `User signed in with existing JWT ${accessToken} and ${refreshToken}`,
-            );
-            return {
-                accessToken,
-                refreshToken,
-                user: user.convertToPrivateDTO(),
-            };
-        } catch (e) {
-            console.log("Validation failed. Needs re-sign-in");
+        const userJwtRes: Pick<User, "id"> = await this.jwtService.verifyAsync(
+            accessToken,
+            {
+                secret: TYPED_ENV.JWT_SECRET,
+            },
+        );
+        const user: User = await this.usersService.findUserById(userJwtRes.id);
+        if (!user) {
+            throw new UnauthorizedException();
         }
+        const refreshToken = user.refreshToken;
+        if (!refreshToken) {
+            console.log(
+                "User migration: Has a valid JWT but no refresh. Needs new login",
+            );
+            return null;
+        }
+        console.log(
+            `User signed in with existing JWT ${accessToken} and ${refreshToken}`,
+        );
+
+        console.log("returning user: ", user.convertToPrivateDTO());
+        return {
+            accessToken,
+            refreshToken,
+            user: user.convertToPrivateDTO(),
+        };
     }
 
     async signIn(
@@ -68,8 +66,7 @@ export class AuthService {
         const refreshToken = await this.generateRefreshToken(user);
 
         console.log(`User signed in with Password, creating new JWT and AT `);
-        console.log("New JWT: ", accessToken);
-        console.log("new RET: ", refreshToken);
+        console.log(`AT: ${!!accessToken}, RT: ${refreshToken}`);
 
         return {
             accessToken,

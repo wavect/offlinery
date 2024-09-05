@@ -42,7 +42,9 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     }
     if (data) {
         const locations = (data as any).locations as Location.LocationObject[];
-        const userId = getLocallyStoredUserData()?.id;
+        const user = getLocallyStoredUserData();
+        console.log("User Connected: ", user?.id?.slice(0, 8));
+        const userId = user?.id;
         const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
         if (!userId || !jwtToken) {
             console.error(
@@ -98,7 +100,7 @@ export const MainScreenTabs = ({ navigation }) => {
                 i18n.t(TR.noUserIdAssignedCannotListenToNotifications),
             );
         } else {
-            registerForPushNotificationsAsync(state.id, state.jwtAccessToken!)
+            registerForPushNotificationsAsync(state.id)
                 .then((token) => {
                     if (!token) {
                         console.error(

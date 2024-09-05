@@ -28,9 +28,6 @@ const Welcome = ({ navigation }) => {
 
     const checkAuthStatus = async () => {
         try {
-            /**
-             * TO TEST THE FLOW, RESET THE TOKENS HERE
-             */
             const storedRefreshToken = await getSecurelyStoredValue(
                 SECURE_VALUE.JWT_REFRESH_TOKEN,
             );
@@ -56,6 +53,8 @@ const Welcome = ({ navigation }) => {
                         },
                     })) as SignInResponseDTO;
 
+                console.log("refresh token received: ", refreshResponse);
+
                 await saveValueLocallySecurely(
                     SECURE_VALUE.JWT_ACCESS_TOKEN,
                     refreshResponse.accessToken,
@@ -68,11 +67,14 @@ const Welcome = ({ navigation }) => {
             } else {
                 // user has a valid access token
                 console.log("JWT found. Trying JWT Authentication.");
+                console.log("storedAccess: ", storedAccessToken);
                 const signInRes = await authApi.authControllerSignInByJWT({
                     signInJwtDTO: {
                         jwtAccessToken: storedAccessToken!,
                     },
                 });
+
+                console.log("server returned: ", signInRes);
 
                 if (signInRes.accessToken) {
                     console.log("JWT authentication succeeded.");
@@ -81,6 +83,7 @@ const Welcome = ({ navigation }) => {
                         navigation,
                         signInRes.user,
                         signInRes.accessToken,
+                        signInRes.refreshToken,
                     );
                 }
             }
