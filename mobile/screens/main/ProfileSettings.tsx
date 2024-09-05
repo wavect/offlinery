@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     },
     dropdown: {
         marginTop: 8,
-        height: 50,
+        height: 45,
         borderColor: "gray",
         borderWidth: 0.5,
         borderRadius: 8,
@@ -336,6 +336,8 @@ const styles = StyleSheet.create({
     },
     input: {
         marginTop: 8,
+        height: 45,
+        width: "100%",
     },
     label: {
         fontSize: 16,
