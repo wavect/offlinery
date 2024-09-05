@@ -37,7 +37,6 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post("login/jwt")
     signInByJWT(@Body() signInDTO: SignInJwtDTO): Promise<SignInResponseDTO> {
-        console.log("request received: ", signInDTO);
         return this.authService.signInWithJWT(signInDTO.jwtAccessToken);
     }
 

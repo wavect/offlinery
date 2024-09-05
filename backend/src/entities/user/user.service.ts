@@ -169,7 +169,6 @@ export class UserService {
         await this.userRepository.delete(id);
     }
 
-    /** @Deprecated in favor of @findUserByProperty */
     async findUserById(id: string): Promise<User> {
         const user = await this.userRepository.findOne({
             where: { id },
@@ -183,7 +182,6 @@ export class UserService {
         return user;
     }
 
-    /** @Deprecated in favor of @findUserByProperty */
     async findUserByEmail(email: string): Promise<User> {
         const user = await this.userRepository.findOne({
             where: { email },
