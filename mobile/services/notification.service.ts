@@ -70,7 +70,7 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
                 userId,
                 storePushTokenDTO,
             },
-            await includeJWT("noti-token"),
+            await includeJWT(),
         );
     } catch (err) {
         // TODO

@@ -48,7 +48,7 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                     userId: state.id!,
                     user: updateUserDTO,
                 },
-                await includeJWT("updateController"),
+                await includeJWT(),
             );
 
             dispatch({
