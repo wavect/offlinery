@@ -1,5 +1,6 @@
-import { EncounterStatusEnum } from "@/api/gen/src";
+import { EncounterStatusEnum, MessagePublicDTO } from "@/api/gen/src";
 
+// TODO: Can we get rid of this type?
 export interface IEncounterProfile {
     encounterId: string;
     firstName: string;
@@ -16,5 +17,5 @@ export interface IEncounterProfile {
     lastLocationPassedBy?: string;
     reported?: boolean;
     /** @dev Custom message or contact details the other user sent to this user (one time message for now) */
-    receivedMessage?: string;
+    lastReceivedMessage?: MessagePublicDTO;
 }

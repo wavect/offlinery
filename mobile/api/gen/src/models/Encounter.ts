@@ -12,6 +12,8 @@
  * Do not edit the class manually.
  */
 
+import type { Message } from "./Message";
+import { MessageFromJSON, MessageToJSON } from "./Message";
 import type { User } from "./User";
 import { UserFromJSON, UserToJSON } from "./User";
 import type { UserReport } from "./UserReport";
@@ -31,10 +33,10 @@ export interface Encounter {
     id: string;
     /**
      *
-     * @type {string}
+     * @type {object}
      * @memberof Encounter
      */
-    status: EncounterStatusEnum;
+    userStatuses: object;
     /**
      *
      * @type {Date}
@@ -59,25 +61,21 @@ export interface Encounter {
      * @memberof Encounter
      */
     userReports: Array<UserReport>;
+    /**
+     *
+     * @type {Array<Message>}
+     * @memberof Encounter
+     */
+    messages: Array<Message>;
 }
-
-/**
- * @export
- */
-export const EncounterStatusEnum = {
-    not_met: "not_met",
-    met_not_interested: "met_not_interested",
-    met_interested: "met_interested",
-} as const;
-export type EncounterStatusEnum =
-    (typeof EncounterStatusEnum)[keyof typeof EncounterStatusEnum];
 
 /**
  * Check if a given object implements the Encounter interface.
  */
 export function instanceOfEncounter(value: object): value is Encounter {
     if (!("id" in value) || value["id"] === undefined) return false;
-    if (!("status" in value) || value["status"] === undefined) return false;
+    if (!("userStatuses" in value) || value["userStatuses"] === undefined)
+        return false;
     if (
         !("lastDateTimePassedBy" in value) ||
         value["lastDateTimePassedBy"] === undefined
@@ -91,6 +89,7 @@ export function instanceOfEncounter(value: object): value is Encounter {
     if (!("users" in value) || value["users"] === undefined) return false;
     if (!("userReports" in value) || value["userReports"] === undefined)
         return false;
+    if (!("messages" in value) || value["messages"] === undefined) return false;
     return true;
 }
 
@@ -107,13 +106,14 @@ export function EncounterFromJSONTyped(
     }
     return {
         id: json["id"],
-        status: json["status"],
+        userStatuses: json["userStatuses"],
         lastDateTimePassedBy: new Date(json["lastDateTimePassedBy"]),
         lastLocationPassedBy: json["lastLocationPassedBy"],
         users: (json["users"] as Array<any>).map(UserFromJSON),
         userReports: (json["userReports"] as Array<any>).map(
             UserReportFromJSON,
         ),
+        messages: (json["messages"] as Array<any>).map(MessageFromJSON),
     };
 }
 
@@ -123,10 +123,11 @@ export function EncounterToJSON(value?: Encounter | null): any {
     }
     return {
         id: value["id"],
-        status: value["status"],
+        userStatuses: value["userStatuses"],
         lastDateTimePassedBy: value["lastDateTimePassedBy"].toISOString(),
         lastLocationPassedBy: value["lastLocationPassedBy"],
         users: (value["users"] as Array<any>).map(UserToJSON),
         userReports: (value["userReports"] as Array<any>).map(UserReportToJSON),
+        messages: (value["messages"] as Array<any>).map(MessageToJSON),
     };
 }

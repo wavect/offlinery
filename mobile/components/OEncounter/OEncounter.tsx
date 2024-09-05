@@ -1,16 +1,21 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { EncounterStatusEnum } from "@/api/gen/src";
+import { EncounterPublicDTOStatusEnum } from "@/api/gen/src";
+import {
+    IOButtonSmallVariant,
+    OButtonSmall,
+} from "@/components/OButtonSmall/OButtonSmall";
 import OMessageModal from "@/components/OMessageModal/OMessageModal";
 import {
     EACTION_ENCOUNTERS,
     useEncountersContext,
 } from "@/context/EncountersContext";
+import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import * as React from "react";
 import { useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 interface ISingleEncounterProps {
@@ -21,19 +26,20 @@ interface ISingleEncounterProps {
 
 const OEncounter = (props: ISingleEncounterProps) => {
     const { dispatch } = useEncountersContext();
+    const { dispatch: userDispatch, state } = useUserContext();
     const { encounterProfile, showActions, navigation } = props;
     const [dateStates] = useState([
         {
             label: i18n.t(TR.encounterInterest.notMet),
-            value: EncounterStatusEnum.not_met,
+            value: EncounterPublicDTOStatusEnum.not_met,
         },
         {
             label: i18n.t(TR.encounterInterest.metNotInterested),
-            value: EncounterStatusEnum.met_not_interested,
+            value: EncounterPublicDTOStatusEnum.met_not_interested,
         },
         {
             label: i18n.t(TR.encounterInterest.metInterested),
-            value: EncounterStatusEnum.met_interested,
+            value: EncounterPublicDTOStatusEnum.met_interested,
         },
     ]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -41,7 +47,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
 
     const setDateStatus = (item: {
         label: string;
-        value: EncounterStatusEnum;
+        value: EncounterPublicDTOStatusEnum;
     }) => {
         dispatch({
             type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,
@@ -54,11 +60,6 @@ const OEncounter = (props: ISingleEncounterProps) => {
         });
     };
     const dateStatus = encounterProfile.status;
-
-    const handleSendMessage = () => {
-        setModalVisible(false);
-        setMessage("");
-    };
 
     return (
         <View style={styles.encounterContainer}>
@@ -113,25 +114,21 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                 {i18n.t(TR.trust)}({encounterProfile.rating})
                             </Text>
                         )}
-                        {dateStatus === EncounterStatusEnum.met_interested && (
-                            <Pressable
-                                style={styles.buttonBlack}
+                        {dateStatus ===
+                            EncounterPublicDTOStatusEnum.met_interested && (
+                            <OButtonSmall
+                                label={i18n.t(TR.leaveMessageBtnLbl)}
+                                containerStyle={styles.button}
                                 onPress={() => setModalVisible(true)}
-                            >
-                                <Text style={styles.buttonText}>
-                                    {i18n.t(TR.leaveMessageBtnLbl)}
-                                </Text>
-                            </Pressable>
+                                variant={IOButtonSmallVariant.Black}
+                            />
                         )}
                         {dateStatus ===
-                            EncounterStatusEnum.met_not_interested && (
-                            <Pressable
-                                style={
-                                    encounterProfile.reported
-                                        ? styles.buttonDisabled
-                                        : styles.buttonDanger
-                                }
-                                disabled={encounterProfile.reported}
+                            EncounterPublicDTOStatusEnum.met_not_interested && (
+                            <OButtonSmall
+                                isDisabled={encounterProfile.reported}
+                                variant={IOButtonSmallVariant.Danger}
+                                containerStyle={styles.button}
                                 onPress={() =>
                                     navigation.navigate(
                                         ROUTES.Main.ReportEncounter,
@@ -140,19 +137,20 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                         },
                                     )
                                 }
-                            >
-                                <Text style={styles.buttonText}>
-                                    {encounterProfile.reported
+                                label={
+                                    encounterProfile.reported
                                         ? i18n.t(TR.reported)
-                                        : i18n.t(TR.report)}
-                                </Text>
-                            </Pressable>
+                                        : i18n.t(TR.report)
+                                }
+                            />
                         )}
 
-                        {dateStatus === EncounterStatusEnum.not_met &&
+                        {dateStatus === EncounterPublicDTOStatusEnum.not_met &&
                             encounterProfile.isNearbyRightNow && (
-                                <Pressable
-                                    style={styles.buttonBlack}
+                                <OButtonSmall
+                                    label={i18n.t(TR.navigate)}
+                                    variant={IOButtonSmallVariant.Black}
+                                    containerStyle={styles.button}
                                     onPress={() =>
                                         navigation.navigate(ROUTES.HouseRules, {
                                             nextPage:
@@ -163,24 +161,20 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                             },
                                         })
                                     }
-                                >
-                                    <Text style={styles.buttonText}>
-                                        {i18n.t(TR.navigate)}
-                                    </Text>
-                                </Pressable>
+                                />
                             )}
                     </View>
                 )}
             </View>
 
-            {dateStatus === EncounterStatusEnum.met_interested &&
-                encounterProfile.receivedMessage && (
+            {dateStatus === EncounterPublicDTOStatusEnum.met_interested &&
+                encounterProfile.lastReceivedMessage && (
                     <View style={styles.receivedMessageContainer}>
                         <Text style={styles.receivedMessageTitle}>
                             {i18n.t(TR.receivedMessage)}:
                         </Text>
                         <Text style={styles.receivedMessageText}>
-                            {encounterProfile.receivedMessage}
+                            {encounterProfile.lastReceivedMessage.content}
                         </Text>
                     </View>
                 )}
@@ -188,13 +182,17 @@ const OEncounter = (props: ISingleEncounterProps) => {
             <OMessageModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
-                onSend={handleSendMessage}
+                userId={state.id!}
+                encounterId={encounterProfile.encounterId}
             />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    button: {
+        marginLeft: 5,
+    },
     encounterContainer: {
         marginBottom: 20,
         borderBottomWidth: 1,
@@ -231,36 +229,6 @@ const styles = StyleSheet.create({
     },
     trustScore: {
         fontFamily: FontFamily.montserratSemiBold,
-    },
-    buttonBlack: {
-        backgroundColor: Color.black,
-        borderColor: Color.gray,
-        borderWidth: 1,
-        borderRadius: 8,
-        padding: 7,
-        marginLeft: 5,
-    },
-    buttonDanger: {
-        backgroundColor: Color.red,
-        borderColor: "#c00f0c",
-        borderWidth: 1,
-        borderRadius: 8,
-        padding: 7,
-        marginLeft: 5,
-    },
-    buttonDisabled: {
-        borderRadius: 8,
-        padding: 7,
-        backgroundColor: Color.lightGray,
-        borderColor: Color.gray,
-        color: Color.white,
-        borderWidth: 1,
-        marginLeft: 5,
-    },
-    buttonText: {
-        color: Color.white,
-        fontFamily: FontFamily.montserratLight,
-        fontSize: FontSize.size_md,
     },
     encounterDropdownContainer: {
         marginTop: 5,

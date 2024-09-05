@@ -12,10 +12,17 @@
  * Do not edit the class manually.
  */
 
-import type { DateRangeDTO, EncounterPublicDTO } from "../models/index";
+import type {
+    DateRangeDTO,
+    EncounterPublicDTO,
+    PushMessageDTO,
+    UpdateEncounterStatusDTO,
+} from "../models/index";
 import {
     DateRangeDTOToJSON,
     EncounterPublicDTOFromJSON,
+    PushMessageDTOToJSON,
+    UpdateEncounterStatusDTOToJSON,
 } from "../models/index";
 import * as runtime from "../runtime";
 
@@ -25,6 +32,16 @@ import * as runtime from "../runtime";
 export interface EncounterControllerGetEncountersByUserRequest {
     userId: string;
     dateRangeDTO: DateRangeDTO;
+}
+
+export interface EncounterControllerPushMessageRequest {
+    userId: string;
+    pushMessageDTO: PushMessageDTO;
+}
+
+export interface EncounterControllerUpdateStatusRequest {
+    userId: string;
+    updateEncounterStatusDTO: UpdateEncounterStatusDTO;
 }
 
 /**
@@ -55,6 +72,50 @@ export interface EncounterApiInterface {
         requestParameters: EncounterControllerGetEncountersByUserRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<Array<EncounterPublicDTO>>;
+
+    /**
+     *
+     * @summary Push a new message to the encounter
+     * @param {string} userId User ID
+     * @param {PushMessageDTO} pushMessageDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EncounterApiInterface
+     */
+    encounterControllerPushMessageRaw(
+        requestParameters: EncounterControllerPushMessageRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<EncounterPublicDTO>>;
+
+    /**
+     * Push a new message to the encounter
+     */
+    encounterControllerPushMessage(
+        requestParameters: EncounterControllerPushMessageRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<EncounterPublicDTO>;
+
+    /**
+     *
+     * @summary Update encounter status
+     * @param {string} userId User ID
+     * @param {UpdateEncounterStatusDTO} updateEncounterStatusDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EncounterApiInterface
+     */
+    encounterControllerUpdateStatusRaw(
+        requestParameters: EncounterControllerUpdateStatusRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<EncounterPublicDTO>>;
+
+    /**
+     * Update encounter status
+     */
+    encounterControllerUpdateStatus(
+        requestParameters: EncounterControllerUpdateStatusRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<EncounterPublicDTO>;
 }
 
 /**
@@ -118,6 +179,128 @@ export class EncounterApi
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<Array<EncounterPublicDTO>> {
         const response = await this.encounterControllerGetEncountersByUserRaw(
+            requestParameters,
+            initOverrides,
+        );
+        return await response.value();
+    }
+
+    /**
+     * Push a new message to the encounter
+     */
+    async encounterControllerPushMessageRaw(
+        requestParameters: EncounterControllerPushMessageRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<EncounterPublicDTO>> {
+        if (requestParameters["userId"] == null) {
+            throw new runtime.RequiredError(
+                "userId",
+                'Required parameter "userId" was null or undefined when calling encounterControllerPushMessage().',
+            );
+        }
+
+        if (requestParameters["pushMessageDTO"] == null) {
+            throw new runtime.RequiredError(
+                "pushMessageDTO",
+                'Required parameter "pushMessageDTO" was null or undefined when calling encounterControllerPushMessage().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        const response = await this.request(
+            {
+                path: `/encounter/{userId}/message`.replace(
+                    `{${"userId"}}`,
+                    encodeURIComponent(String(requestParameters["userId"])),
+                ),
+                method: "POST",
+                headers: headerParameters,
+                query: queryParameters,
+                body: PushMessageDTOToJSON(requestParameters["pushMessageDTO"]),
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            EncounterPublicDTOFromJSON(jsonValue),
+        );
+    }
+
+    /**
+     * Push a new message to the encounter
+     */
+    async encounterControllerPushMessage(
+        requestParameters: EncounterControllerPushMessageRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<EncounterPublicDTO> {
+        const response = await this.encounterControllerPushMessageRaw(
+            requestParameters,
+            initOverrides,
+        );
+        return await response.value();
+    }
+
+    /**
+     * Update encounter status
+     */
+    async encounterControllerUpdateStatusRaw(
+        requestParameters: EncounterControllerUpdateStatusRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<EncounterPublicDTO>> {
+        if (requestParameters["userId"] == null) {
+            throw new runtime.RequiredError(
+                "userId",
+                'Required parameter "userId" was null or undefined when calling encounterControllerUpdateStatus().',
+            );
+        }
+
+        if (requestParameters["updateEncounterStatusDTO"] == null) {
+            throw new runtime.RequiredError(
+                "updateEncounterStatusDTO",
+                'Required parameter "updateEncounterStatusDTO" was null or undefined when calling encounterControllerUpdateStatus().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        const response = await this.request(
+            {
+                path: `/encounter/{userId}/status`.replace(
+                    `{${"userId"}}`,
+                    encodeURIComponent(String(requestParameters["userId"])),
+                ),
+                method: "PUT",
+                headers: headerParameters,
+                query: queryParameters,
+                body: UpdateEncounterStatusDTOToJSON(
+                    requestParameters["updateEncounterStatusDTO"],
+                ),
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            EncounterPublicDTOFromJSON(jsonValue),
+        );
+    }
+
+    /**
+     * Update encounter status
+     */
+    async encounterControllerUpdateStatus(
+        requestParameters: EncounterControllerUpdateStatusRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<EncounterPublicDTO> {
+        const response = await this.encounterControllerUpdateStatusRaw(
             requestParameters,
             initOverrides,
         );

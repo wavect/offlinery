@@ -1,5 +1,12 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { EncounterApi, PushMessageDTO } from "@/api/gen/src";
+import {
+    IOButtonSmallVariant,
+    OButtonSmall,
+} from "@/components/OButtonSmall/OButtonSmall";
+import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { getJwtHeader } from "@/utils/misc.utils";
 import React, { useState } from "react";
 import {
     Modal,
@@ -10,11 +17,31 @@ import {
     View,
 } from "react-native";
 
-const OMessageModal = ({ visible, onClose, onSend }) => {
+interface IOMessageModalProps {
+    userId: string;
+    encounterId: string;
+    visible: boolean;
+    onClose: (e: any) => void;
+}
+
+const encounterApi = new EncounterApi();
+const OMessageModal = (props: IOMessageModalProps) => {
+    const { dispatch, state } = useUserContext();
+    const { visible, onClose, encounterId, userId } = props;
     const [message, setMessage] = useState("");
 
-    const handleSend = () => {
-        onSend(message);
+    const handleSend = async () => {
+        const pushMessageDTO: PushMessageDTO = {
+            content: message,
+            encounterId: encounterId,
+        };
+        await encounterApi.encounterControllerPushMessage(
+            {
+                userId,
+                pushMessageDTO,
+            },
+            getJwtHeader(state.jwtAccessToken),
+        );
         setMessage("");
     };
 
@@ -43,19 +70,13 @@ const OMessageModal = ({ visible, onClose, onSend }) => {
                         placeholder={i18n.t(TR.enterMessage)}
                         multiline
                     />
-                    <Pressable
-                        style={[
-                            styles.button,
-                            styles.buttonClose,
-                            !message.trim() && styles.buttonDisabled,
-                        ]}
+                    <OButtonSmall
+                        label={i18n.t(TR.sendMessage)}
+                        variant={IOButtonSmallVariant.Black}
+                        containerStyle={{ width: "100%" }}
+                        isDisabled={!message.trim()}
                         onPress={handleSend}
-                        disabled={!message.trim()}
-                    >
-                        <Text style={styles.textStyle}>
-                            {i18n.t(TR.sendMessage)}
-                        </Text>
-                    </Pressable>
+                    />
                     <Text style={styles.modalFooter}>
                         {i18n.t(TR.messageWarning)}
                     </Text>
@@ -127,25 +148,6 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 10,
         fontFamily: FontFamily.montserratRegular,
-        fontSize: FontSize.size_md,
-    },
-    button: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2,
-        paddingHorizontal: 20,
-    },
-    buttonClose: {
-        backgroundColor: Color.primary,
-    },
-    buttonDisabled: {
-        backgroundColor: Color.lightGray,
-    },
-    textStyle: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center",
-        fontFamily: FontFamily.montserratMedium,
         fontSize: FontSize.size_md,
     },
     modalFooter: {

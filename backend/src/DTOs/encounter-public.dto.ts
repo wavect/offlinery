@@ -1,5 +1,6 @@
+import { MessagePublicDTO } from "@/DTOs/message-public.dto";
+import { EEncounterStatus } from "@/types/user.types";
 import { ApiProperty } from "@nestjs/swagger";
-import { EEncounterStatus } from "../types/user.types";
 import { UserPublicDTO } from "./user-public.dto";
 
 export class EncounterPublicDTO {
@@ -36,4 +37,11 @@ export class EncounterPublicDTO {
         description: "Users that were nearby",
     })
     users: UserPublicDTO[];
+
+    @ApiProperty({
+        type: [MessagePublicDTO],
+        description: "User messages",
+        nullable: true,
+    })
+    messages: MessagePublicDTO[];
 }
