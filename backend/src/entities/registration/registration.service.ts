@@ -1,10 +1,10 @@
 import { RegistrationForVerificationResponseDTO } from "@/DTOs/registration-for-verification.dto";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
+import { EEmailVerificationStatus } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { EEmailVerificationStatus } from "src/types/user.types";
 import { Repository } from "typeorm";
 
 @Injectable()
