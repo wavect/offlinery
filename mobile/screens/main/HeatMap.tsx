@@ -15,13 +15,12 @@ import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import MapView, {
     Circle,
     LongPressEvent,
     Marker,
     MarkerDragEvent,
-    PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
 } from "react-native-maps";
 
@@ -167,11 +166,7 @@ const HeatMap = () => {
                         longitudeDelta: 0.0421,
                     }}
                     onLongPress={handleMapLongPress}
-                    provider={
-                        Platform.OS === "android"
-                            ? PROVIDER_GOOGLE
-                            : PROVIDER_DEFAULT
-                    }
+                    provider={PROVIDER_GOOGLE}
                 >
                     {state.blacklistedRegions.map((region, index) => (
                         <React.Fragment key={`region-${index}`}>
