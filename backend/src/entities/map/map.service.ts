@@ -28,7 +28,7 @@ export class MapService {
             .createQueryBuilder("user")
             .select("user.location")
             .where("user.id != :userId", { userId })
-            .where("user.dateMode != ghost")
+            .where("user.dateMode != 'ghost'")
             .andWhere("user.isActive = :isActive", { isActive: true });
 
         const results = await query.getRawMany();

@@ -117,15 +117,16 @@ const Map = () => {
 
     const getOtherUsersPositions = async () => {
         try {
-            const positions = await mapApi.mapControllerGetUser(
+            const positions = await mapApi.mapControllerGetUserLocations(
                 {
                     userId: state.id!,
                 },
                 await includeJWT(),
             );
+            console.log("positions are: ", positions);
             setLocationsFromOthers(positions);
         } catch (e) {
-            console.warn("Unable to get position from other users");
+            console.warn("Unable to get position from other users ", e);
         }
     };
 
@@ -192,8 +193,6 @@ const Map = () => {
                     zoomControlEnabled={true}
                     zoomEnabled={true}
                     zoomTapEnabled={true}
-                    minZoomLevel={5}
-                    maxZoomLevel={9}
                     onLongPress={handleMapLongPress}
                     provider={PROVIDER_GOOGLE}
                 >

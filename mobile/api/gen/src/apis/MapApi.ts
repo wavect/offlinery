@@ -19,7 +19,7 @@ import * as runtime from "../runtime";
 // We import this type even if it's unused to avoid additional
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
-export interface MapControllerGetUserRequest {
+export interface MapControllerGetUserLocationsRequest {
     userId: string;
 }
 
@@ -32,22 +32,22 @@ export interface MapControllerGetUserRequest {
 export interface MapApiInterface {
     /**
      *
-     * @summary Get a user by ID
+     * @summary Get the locations of other users
      * @param {string} userId User ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MapApiInterface
      */
-    mapControllerGetUserRaw(
-        requestParameters: MapControllerGetUserRequest,
+    mapControllerGetUserLocationsRaw(
+        requestParameters: MapControllerGetUserLocationsRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<Array<WeightedLatLngDTO>>>;
 
     /**
-     * Get a user by ID
+     * Get the locations of other users
      */
-    mapControllerGetUser(
-        requestParameters: MapControllerGetUserRequest,
+    mapControllerGetUserLocations(
+        requestParameters: MapControllerGetUserLocationsRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<Array<WeightedLatLngDTO>>;
 }
@@ -57,16 +57,16 @@ export interface MapApiInterface {
  */
 export class MapApi extends runtime.BaseAPI implements MapApiInterface {
     /**
-     * Get a user by ID
+     * Get the locations of other users
      */
-    async mapControllerGetUserRaw(
-        requestParameters: MapControllerGetUserRequest,
+    async mapControllerGetUserLocationsRaw(
+        requestParameters: MapControllerGetUserLocationsRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<Array<WeightedLatLngDTO>>> {
         if (requestParameters["userId"] == null) {
             throw new runtime.RequiredError(
                 "userId",
-                'Required parameter "userId" was null or undefined when calling mapControllerGetUser().',
+                'Required parameter "userId" was null or undefined when calling mapControllerGetUserLocations().',
             );
         }
 
@@ -93,13 +93,13 @@ export class MapApi extends runtime.BaseAPI implements MapApiInterface {
     }
 
     /**
-     * Get a user by ID
+     * Get the locations of other users
      */
-    async mapControllerGetUser(
-        requestParameters: MapControllerGetUserRequest,
+    async mapControllerGetUserLocations(
+        requestParameters: MapControllerGetUserLocationsRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<Array<WeightedLatLngDTO>> {
-        const response = await this.mapControllerGetUserRaw(
+        const response = await this.mapControllerGetUserLocationsRaw(
             requestParameters,
             initOverrides,
         );
