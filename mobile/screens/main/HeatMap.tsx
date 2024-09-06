@@ -34,6 +34,11 @@ const HeatMap = () => {
     const [location, setLocation] = useState<Location.LocationObject | null>(
         null,
     );
+    /**
+     * The radius displayed in the UI.
+     * It gets updates as the user adjusts the radius.
+     */
+    const [uiRadii, setUiRadii] = useState<number[]>([]);
     const mapRef = React.useRef(null);
     const [mapRegion, setMapRegion] = useState({
         // Uni Ibk
@@ -97,14 +102,14 @@ const HeatMap = () => {
                 const currRegion = newRegions[activeRegionIndex];
                 newRegions[activeRegionIndex] = {
                     ...currRegion,
-                    radius: currRegion.uiRadius ?? currRegion.radius,
+                    radius: uiRadii[activeRegionIndex] ?? currRegion.radius,
                 };
             }
             setBlacklistedRegions(newRegions);
             updateBlacklistedRegion(newRegions);
         }, 1000);
         return () => clearTimeout(timer);
-    }, [state.blacklistedRegions[activeRegionIndex!]?.uiRadius]);
+    }, [uiRadii[activeRegionIndex!]]);
 
     const setBlacklistedRegions = (blacklistedRegions: MapRegion[]) => {
         dispatch({
@@ -116,9 +121,10 @@ const HeatMap = () => {
     const handleMapLongPress = (event: LongPressEvent) => {
         const { coordinate } = event.nativeEvent;
         const { latitude, longitude } = coordinate;
+        setUiRadii([...uiRadii, 100]);
         setBlacklistedRegions([
             ...state.blacklistedRegions,
-            { latitude, longitude, radius: 100, uiRadius: 100 },
+            { latitude, longitude, radius: 100 },
         ]);
         setActiveRegionIndex(state.blacklistedRegions.length);
     };
@@ -130,9 +136,9 @@ const HeatMap = () => {
     const handleRadiusChange = (value: number) => {
         if (activeRegionIndex !== null) {
             const newRegions = [...state.blacklistedRegions];
+            uiRadii[activeRegionIndex] = value;
             newRegions[activeRegionIndex] = {
                 ...newRegions[activeRegionIndex],
-                uiRadius: value,
             };
             setBlacklistedRegions(newRegions);
         }
@@ -177,7 +183,7 @@ const HeatMap = () => {
                         <React.Fragment key={`region-${index}`}>
                             <Circle
                                 center={region}
-                                radius={region.uiRadius ?? region.radius}
+                                radius={uiRadii[index] ?? region.radius}
                                 fillColor={
                                     index === activeRegionIndex
                                         ? "rgba(255, 0, 0, 0.4)"
@@ -238,8 +244,7 @@ const HeatMap = () => {
                         >
                             {i18n.t(TR.adjustRegionRadius)} (
                             {Math.round(
-                                state.blacklistedRegions[activeRegionIndex]
-                                    .uiRadius ??
+                                uiRadii[activeRegionIndex] ??
                                     state.blacklistedRegions[activeRegionIndex]
                                         .radius,
                             )}
@@ -251,8 +256,7 @@ const HeatMap = () => {
                             maximumValue={1000}
                             step={10}
                             value={
-                                state.blacklistedRegions[activeRegionIndex]
-                                    .uiRadius ??
+                                uiRadii[activeRegionIndex] ??
                                 state.blacklistedRegions[activeRegionIndex]
                                     .radius
                             }
