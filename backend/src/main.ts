@@ -1,3 +1,4 @@
+import { RandomUserLocationsSeeder } from "@/seeder/randomUserLocations.seeder";
 import { UserSeeder } from "@/seeder/user.seeder";
 import { INestApplication, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
@@ -5,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { writeFileSync } from "fs";
 import helmet from "helmet";
 import * as path from "path";
+import * as process from "process";
 import { AppModule } from "./app.module";
 import { NotificationNavigateUserDTO } from "./DTOs/notification-navigate-user.dto";
 import { TYPED_ENV, validateEnv } from "./utils/env.utils";
@@ -29,9 +31,16 @@ async function bootstrap() {
     // security base line
     app.use(helmet());
 
-    // Seed default user
-    const userSeederService = app.get(UserSeeder);
-    await userSeederService.seedDefaultUser();
+    // Seed the default user
+    const testUserSeederService = app.get(RandomUserLocationsSeeder);
+    await testUserSeederService.seedRandomUserLocations();
+
+    // Seed Test users if development mode
+    if (process.env.NODE_ENV === "development") {
+        console.log(`✓ Development mode active. Seeding Test Users`);
+        const userSeederService = app.get(UserSeeder);
+        await userSeederService.seedRandomUsers();
+    }
 
     await app.listen(TYPED_ENV.BE_PORT);
 }

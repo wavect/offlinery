@@ -6,6 +6,7 @@ import { RegistrationService } from "@/entities/registration/registration.servic
 import { UserReport } from "@/entities/user-report/user-report.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
+import { RandomUserLocationsSeeder } from "@/seeder/randomUserLocations.seeder";
 import { UserSeeder } from "@/seeder/user.seeder";
 import { MatchingModule } from "@/transient-services/matching/matching.module";
 import { forwardRef, Module } from "@nestjs/common";
@@ -23,7 +24,12 @@ import { TypeOrmModule } from "@nestjs/typeorm";
         RegistrationModule,
         forwardRef(() => MatchingModule),
     ],
-    providers: [UserSeeder, RegistrationService, UserService],
-    exports: [UserSeeder],
+    providers: [
+        UserSeeder,
+        RegistrationService,
+        UserService,
+        RandomUserLocationsSeeder,
+    ],
+    exports: [UserSeeder, RandomUserLocationsSeeder],
 })
 export class SeederModule {}

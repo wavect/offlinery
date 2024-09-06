@@ -1,5 +1,5 @@
 import { BorderRadius, Color, Subtitle } from "@/GlobalStyles";
-import { UserApi } from "@/api/gen/src";
+import { MapApi, UserApi, WeightedLatLngDTO } from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
     EACTION_USER,
@@ -18,15 +18,17 @@ import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import MapView, {
     Circle,
+    Heatmap,
     LongPressEvent,
     Marker,
     MarkerDragEvent,
-    PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
 } from "react-native-maps";
 
 const userApi = new UserApi();
-const HeatMap = () => {
+const mapApi = new MapApi();
+
+const Map = () => {
     const { state, dispatch } = useUserContext();
     const [activeRegionIndex, setActiveRegionIndex] = React.useState<
         number | null
@@ -34,6 +36,8 @@ const HeatMap = () => {
     const [location, setLocation] = useState<Location.LocationObject | null>(
         null,
     );
+    const [locationsFromOthers, setLocationsFromOthers] =
+        useState<WeightedLatLngDTO[]>();
     const mapRef = React.useRef(null);
     const [mapRegion, setMapRegion] = useState({
         // Uni Ibk
@@ -43,10 +47,6 @@ const HeatMap = () => {
         longitudeDelta: 0.0421,
     });
 
-    // TODO: Add heatmap when google maps works on both ios and android, https://github.com/react-native-maps/react-native-maps/tree/master
-    // TODO: Provider Google should also work for IOS, but ONLY WITHOUT EXPO GO!
-    // TODO: Request background permission when setting user live in separate component
-    // TODO: Maybe make map to a separate component
     useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -55,10 +55,8 @@ const HeatMap = () => {
                 return;
             }
 
-            const location = await Location.getCurrentPositionAsync({
-                accuracy: LocationAccuracy.BestForNavigation,
-            });
-            setLocation(location);
+            await getUserPosition();
+            await getOtherUsersPositions();
         })();
     }, []);
 
@@ -105,6 +103,31 @@ const HeatMap = () => {
         }, 1000);
         return () => clearTimeout(timer);
     }, [state.blacklistedRegions[activeRegionIndex!]?.uiRadius]);
+
+    const getUserPosition = async () => {
+        try {
+            const location = await Location.getCurrentPositionAsync({
+                accuracy: LocationAccuracy.BestForNavigation,
+            });
+            setLocation(location);
+        } catch (e) {
+            console.warn("Unable to get user locations");
+        }
+    };
+
+    const getOtherUsersPositions = async () => {
+        try {
+            const positions = await mapApi.mapControllerGetUser(
+                {
+                    userId: state.id!,
+                },
+                await includeJWT(),
+            );
+            setLocationsFromOthers(positions);
+        } catch (e) {
+            console.warn("Unable to get position from other users");
+        }
+    };
 
     const setBlacklistedRegions = (blacklistedRegions: MapRegion[]) => {
         dispatch({
@@ -166,13 +189,19 @@ const HeatMap = () => {
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     }}
+                    zoomControlEnabled={true}
+                    zoomEnabled={true}
+                    zoomTapEnabled={true}
+                    minZoomLevel={5}
+                    maxZoomLevel={9}
                     onLongPress={handleMapLongPress}
-                    provider={
-                        process.env.NODE_ENV === "production"
-                            ? PROVIDER_GOOGLE
-                            : PROVIDER_DEFAULT
-                    }
+                    provider={PROVIDER_GOOGLE}
                 >
+                    <Heatmap
+                        opacity={1}
+                        radius={50}
+                        points={locationsFromOthers}
+                    ></Heatmap>
                     {state.blacklistedRegions.map((region, index) => (
                         <React.Fragment key={`region-${index}`}>
                             <Circle
@@ -222,6 +251,7 @@ const HeatMap = () => {
                         />
                     </Pressable>
                 )}
+
                 <View style={styles.instructions}>
                     <Text style={[Subtitle, styles.instructionText]}>
                         {i18n.t(TR.longPressMapSafeZoneInstruction)}
@@ -302,4 +332,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HeatMap;
+export default Map;
