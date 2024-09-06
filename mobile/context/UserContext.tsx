@@ -65,14 +65,6 @@ export interface MapRegion {
      * call the backend on every `UI`-update.
      */
     radius: number;
-    /**
-     * The radius displayed in the UI.
-     *
-     * @remarks
-     * This is the radius displayed on the UI.
-     * It gets updates as the user adjusts the radius.
-     */
-    uiRadius?: number;
 }
 
 export const mapRegionToBlacklistedRegionDTO = (
