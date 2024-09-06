@@ -173,6 +173,8 @@ export class MatchingService {
             await this.encounterService.saveEncountersForUser(
                 userToBeApproached,
                 nearbyMatches,
+                true, // they are all nearby rn
+                true, // reset older encounters
             );
         }
     }

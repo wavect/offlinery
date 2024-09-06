@@ -1,5 +1,4 @@
 import { RandomUserLocationsSeeder } from "@/seeder/randomUserLocations.seeder";
-import { UserSeeder } from "@/seeder/user.seeder";
 import { INestApplication, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
@@ -7,6 +6,7 @@ import { writeFileSync } from "fs";
 import helmet from "helmet";
 import * as path from "path";
 import * as process from "process";
+import { UserSeeder } from "../dist/seeder/user.seeder";
 import { AppModule } from "./app.module";
 import { NotificationNavigateUserDTO } from "./DTOs/notification-navigate-user.dto";
 import { TYPED_ENV, validateEnv } from "./utils/env.utils";
