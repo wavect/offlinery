@@ -36,5 +36,5 @@ The production backend is deployed on the free tier on render.com once you push 
 ## Release
 
 1. Run `npx expo-doctor`
-2. Build with EAS: `eas build --platform android|ios|all`
+2. Build with EAS: `eas build --platform android|ios|all --local` (use local ideally as it is free)
 3. Submit to App stores `eas submit`
