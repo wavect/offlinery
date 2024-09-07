@@ -1,6 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
+import { defineEnvForTests } from "../test/define-env-for-tests";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+defineEnvForTests();
 
 describe("AppController", () => {
     let appController: AppController;

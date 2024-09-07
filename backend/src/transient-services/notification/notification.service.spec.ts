@@ -1,3 +1,6 @@
+import { defineEnvForTests } from "../../../test/define-env-for-tests";
+defineEnvForTests();
+
 import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
 import { BlacklistedRegionModule } from "@/entities/blacklisted-region/blacklisted-region.module";

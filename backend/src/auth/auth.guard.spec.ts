@@ -4,6 +4,7 @@ import { JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
 import { defineEnvForTests } from "../../test/define-env-for-tests";
 import { AuthGuard } from "./auth.guard";
+defineEnvForTests();
 
 describe("AuthGuard", () => {
     let authGuard: AuthGuard;
@@ -11,7 +12,6 @@ describe("AuthGuard", () => {
     let reflector: Reflector;
 
     beforeEach(async () => {
-        defineEnvForTests();
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 AuthGuard,

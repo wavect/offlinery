@@ -14,13 +14,13 @@ import { defineEnvForTests } from "../../../test/define-env-for-tests";
 import { UserController } from "./user.controller";
 import { User } from "./user.entity";
 import { UserService } from "./user.service";
+defineEnvForTests();
 
 describe("UserController", () => {
     let controller: UserController;
     let userService: UserService;
 
     beforeEach(async () => {
-        defineEnvForTests();
         const module: TestingModule = await Test.createTestingModule({
             controllers: [UserController],
             providers: [
