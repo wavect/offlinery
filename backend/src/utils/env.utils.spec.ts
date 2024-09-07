@@ -1,5 +1,7 @@
 // NOTE: Do not import env.utilts.ts globally here as it would immediately validate the envs and make the test probably fail
 
+jest.unmock("@/utils/env.utils"); // remove global mock to run a real .env test
+
 // Mock dotenv
 jest.mock("dotenv", () => ({
     config: jest.fn(),

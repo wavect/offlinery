@@ -1,4 +1,5 @@
 import { TypedEnv } from "@/utils/env.utils";
+import { mockDeep } from "jest-mock-extended";
 
 export const mockEnvConfig: TypedEnv = {
     DB_HOST: "localhost",
@@ -13,6 +14,7 @@ export const mockEnvConfig: TypedEnv = {
     BE_PORT: 3000,
 };
 
-export function getMockEnv(): TypedEnv {
-    return mockEnvConfig;
-}
+export const validateEnv = jest.fn().mockReturnValue(mockEnvConfig);
+export const TYPED_ENV = mockEnvConfig;
+
+export default mockDeep<typeof import("@/utils/env.utils")>();

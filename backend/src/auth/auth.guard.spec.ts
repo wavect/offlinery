@@ -2,14 +2,7 @@ import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
-import { getMockEnv } from "../../test/mock-env.config";
 import { AuthGuard } from "./auth.guard";
-
-jest.mock("@/utils/env.utils", () => ({
-    ...jest.requireActual("@/utils/env.utils"),
-    validateEnv: jest.fn(),
-    TYPED_ENV: getMockEnv(),
-}));
 
 describe("AuthGuard", () => {
     let authGuard: AuthGuard;
