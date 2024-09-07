@@ -15,7 +15,6 @@ import MapView, {
     LongPressEvent,
     Marker,
     MarkerDragEvent,
-    PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
 } from "react-native-maps";
 import { ROUTES } from "../routes";
@@ -141,11 +140,7 @@ const DontApproachMeHere = ({ navigation }) => {
                         longitudeDelta: 0.0421,
                     }}
                     onLongPress={handleMapLongPress}
-                    provider={
-                        process.env.NODE_ENV === "production"
-                            ? PROVIDER_GOOGLE
-                            : PROVIDER_DEFAULT
-                    }
+                    provider={PROVIDER_GOOGLE}
                 >
                     {state.blacklistedRegions.map((region, index) => (
                         <React.Fragment key={`region-${index}`}>

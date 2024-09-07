@@ -22,7 +22,6 @@ import MapView, {
     LongPressEvent,
     Marker,
     MarkerDragEvent,
-    PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
 } from "react-native-maps";
 
@@ -129,7 +128,6 @@ const Map = () => {
                 },
                 await includeJWT(),
             );
-            console.log("positions are: ", positions);
             setLocationsFromOthers(positions);
         } catch (e) {
             console.warn("Unable to get position from other users ", e);
@@ -200,18 +198,20 @@ const Map = () => {
                     zoomControlEnabled={true}
                     zoomEnabled={true}
                     zoomTapEnabled={true}
+                    maxZoomLevel={13}
                     onLongPress={handleMapLongPress}
-                    provider={
-                        process.env.NODE_ENV === "production"
-                            ? PROVIDER_GOOGLE
-                            : PROVIDER_DEFAULT
-                    }
+                    provider={PROVIDER_GOOGLE}
                 >
                     <Heatmap
-                        opacity={1}
-                        radius={50}
                         points={locationsFromOthers}
-                    ></Heatmap>
+                        opacity={0.5}
+                        radius={100}
+                        gradient={{
+                            colors: ["blue", "green", "yellow", "red"],
+                            startPoints: [0.01, 0.25, 0.5, 0.75],
+                            colorMapSize: 256,
+                        }}
+                    />
                     {state.blacklistedRegions.map((region, index) => (
                         <React.Fragment key={`region-${index}`}>
                             <Circle
