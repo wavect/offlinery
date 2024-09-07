@@ -12,6 +12,11 @@
  * Do not edit the class manually.
  */
 
+import type { MessagePublicDTO } from "./MessagePublicDTO";
+import {
+    MessagePublicDTOFromJSON,
+    MessagePublicDTOToJSON,
+} from "./MessagePublicDTO";
 import type { UserPublicDTO } from "./UserPublicDTO";
 import { UserPublicDTOFromJSON, UserPublicDTOToJSON } from "./UserPublicDTO";
 
@@ -57,6 +62,18 @@ export interface EncounterPublicDTO {
      * @memberof EncounterPublicDTO
      */
     users: Array<UserPublicDTO>;
+    /**
+     * User messages
+     * @type {Array<MessagePublicDTO>}
+     * @memberof EncounterPublicDTO
+     */
+    messages: Array<MessagePublicDTO> | null;
+    /**
+     *
+     * @type {boolean}
+     * @memberof EncounterPublicDTO
+     */
+    isNearbyRightNow: boolean;
 }
 
 /**
@@ -85,6 +102,12 @@ export function instanceOfEncounterPublicDTO(
         return false;
     if (!("reported" in value) || value["reported"] === undefined) return false;
     if (!("users" in value) || value["users"] === undefined) return false;
+    if (!("messages" in value) || value["messages"] === undefined) return false;
+    if (
+        !("isNearbyRightNow" in value) ||
+        value["isNearbyRightNow"] === undefined
+    )
+        return false;
     return true;
 }
 
@@ -109,6 +132,13 @@ export function EncounterPublicDTOFromJSONTyped(
                 : json["lastLocationPassedBy"],
         reported: json["reported"],
         users: (json["users"] as Array<any>).map(UserPublicDTOFromJSON),
+        messages:
+            json["messages"] == null
+                ? null
+                : (json["messages"] as Array<any>).map(
+                      MessagePublicDTOFromJSON,
+                  ),
+        isNearbyRightNow: json["isNearbyRightNow"],
     };
 }
 
@@ -125,5 +155,10 @@ export function EncounterPublicDTOToJSON(
         lastLocationPassedBy: value["lastLocationPassedBy"],
         reported: value["reported"],
         users: (value["users"] as Array<any>).map(UserPublicDTOToJSON),
+        messages:
+            value["messages"] == null
+                ? null
+                : (value["messages"] as Array<any>).map(MessagePublicDTOToJSON),
+        isNearbyRightNow: value["isNearbyRightNow"],
     };
 }

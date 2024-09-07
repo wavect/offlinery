@@ -1,11 +1,11 @@
-import { BlacklistedRegionModule } from "@/blacklisted-region/blacklisted-region.module";
 import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
+import { BlacklistedRegionModule } from "@/entities/blacklisted-region/blacklisted-region.module";
+import { UserReport } from "@/entities/user-report/user-report.entity";
+import { UserReportModule } from "@/entities/user-report/user-report.module";
+import { UserModule } from "@/entities/user/user.module";
 import { I18nTranslations } from "@/translations/i18n.generated";
 import { ELanguage } from "@/types/user.types";
-import { UserReport } from "@/user-report/user-report.entity";
-import { UserReportModule } from "@/user-report/user-report.module";
-import { UserModule } from "@/user/user.module";
 import { getAge } from "@/utils/date.utils";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getDataSourceToken, TypeOrmModule } from "@nestjs/typeorm";

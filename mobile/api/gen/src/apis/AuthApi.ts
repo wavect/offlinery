@@ -13,11 +13,13 @@
  */
 
 import type {
+    RefreshJwtDTO,
     SignInDTO,
     SignInJwtDTO,
     SignInResponseDTO,
 } from "../models/index";
 import {
+    RefreshJwtDTOToJSON,
     SignInDTOToJSON,
     SignInJwtDTOToJSON,
     SignInResponseDTOFromJSON,
@@ -27,6 +29,10 @@ import * as runtime from "../runtime";
 // We import this type even if it's unused to avoid additional
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
+export interface AuthControllerRefreshJwtTokenRequest {
+    refreshJwtDTO: RefreshJwtDTO;
+}
+
 export interface AuthControllerSignInRequest {
     signInDTO: SignInDTO;
 }
@@ -42,6 +48,25 @@ export interface AuthControllerSignInByJWTRequest {
  * @interface AuthApiInterface
  */
 export interface AuthApiInterface {
+    /**
+     *
+     * @param {RefreshJwtDTO} refreshJwtDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthApiInterface
+     */
+    authControllerRefreshJwtTokenRaw(
+        requestParameters: AuthControllerRefreshJwtTokenRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<object>>;
+
+    /**
+     */
+    authControllerRefreshJwtToken(
+        requestParameters: AuthControllerRefreshJwtTokenRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<object>;
+
     /**
      *
      * @param {SignInDTO} signInDTO
@@ -85,6 +110,52 @@ export interface AuthApiInterface {
  *
  */
 export class AuthApi extends runtime.BaseAPI implements AuthApiInterface {
+    /**
+     */
+    async authControllerRefreshJwtTokenRaw(
+        requestParameters: AuthControllerRefreshJwtTokenRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters["refreshJwtDTO"] == null) {
+            throw new runtime.RequiredError(
+                "refreshJwtDTO",
+                'Required parameter "refreshJwtDTO" was null or undefined when calling authControllerRefreshJwtToken().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        const response = await this.request(
+            {
+                path: `/auth/token/refresh`,
+                method: "POST",
+                headers: headerParameters,
+                query: queryParameters,
+                body: RefreshJwtDTOToJSON(requestParameters["refreshJwtDTO"]),
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     */
+    async authControllerRefreshJwtToken(
+        requestParameters: AuthControllerRefreshJwtTokenRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<object> {
+        const response = await this.authControllerRefreshJwtTokenRaw(
+            requestParameters,
+            initOverrides,
+        );
+        return await response.value();
+    }
+
     /**
      */
     async authControllerSignInRaw(

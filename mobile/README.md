@@ -18,6 +18,7 @@ Always install new packages with `npx expo install {package}` NOT with pnpm, yar
 Run `pnpm install:all`
 
 ### Weird too long path error on Windows
+
 Follow this: https://github.com/ninja-build/ninja/issues/1900#issuecomment-1817532728
 
 Rebuild then with `npx expo run:android --no-build-cache` (keep your Android folder)
@@ -35,5 +36,5 @@ The production backend is deployed on the free tier on render.com once you push 
 ## Release
 
 1. Run `npx expo-doctor`
-2. Build with EAS: `eas build --platform android|ios|all`
+2. Build with EAS: `eas build --platform android|ios|all --local` (use local ideally as it is free)
 3. Submit to App stores `eas submit`

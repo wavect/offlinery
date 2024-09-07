@@ -6,6 +6,7 @@ import { I18nTranslations } from "@/translations/i18n.generated";
 import {
     EApproachChoice,
     EDateMode,
+    EEncounterStatus,
     EVerificationStatus,
 } from "@/types/user.types";
 import { getAge } from "@/utils/date.utils";
@@ -66,6 +67,7 @@ export class MatchingService {
     }
 
     private async findNearbyMatches(userToBeApproached: User): Promise<User[]> {
+        // @dev Do not send notifications if user does not share her live location.
         if (
             !userToBeApproached ||
             !userToBeApproached.location ||
@@ -76,7 +78,7 @@ export class MatchingService {
         const lon = userToBeApproached.location.coordinates[0];
         const lat = userToBeApproached.location.coordinates[1];
 
-        // Check if user is within any of their blacklisted regions
+        // @dev Check if user is within any of their blacklisted regions
         const isInBlacklistedRegion =
             (await this.blacklistedRegionRepository
                 .createQueryBuilder("region")
@@ -92,39 +94,44 @@ export class MatchingService {
                 )
                 .getCount()) > 0;
 
+        // @dev Do not send notifications if user is not in a safe space.
         if (isInBlacklistedRegion) {
             return [];
         }
+        // @dev Do not send any notifications if user does not feel safe at this time (time zone sensitive).
         if (!this.isWithinApproachTime(userToBeApproached, lat, lon)) {
             return [];
         }
 
-        // TODO: Also check here whether user to be approached is in approachTime she chose (time zone sensitive, OF-43)
-
         const userAge = getAge(userToBeApproached.birthDay);
 
-        // TODO: This algorithm should be improved over time (e.g. age, etc. based on user settings, attractivity etc.)
-        // TODO: age, distance, etc. should be configurable over time
+        // TODO: This algorithm should be improved over time
         const potentialMatchesThatWantToApproach = await this.userRepository
             .createQueryBuilder("user")
+            // @dev Exclude yourself
             .where("user.id != :userId", { userId: userToBeApproached.id })
+            // @dev Only return users the approached user is interested in gender-wise
             .andWhere("user.gender = :desiredGender", {
                 desiredGender: userToBeApproached.genderDesire,
             })
+            // @dev Only return users that are interested in the user to be approached gender.
             .andWhere("user.genderDesire = :userGender", {
                 userGender: userToBeApproached.gender,
             })
+            // @dev Only send notifications to verified users
             .andWhere(
-                "(user.verificationStatus = :verificationStatusNotNeeded OR user.verificationStatus = :verificationStatusVerified)",
+                "(user.verificationStatus = :verificationStatusVerified)",
                 {
                     verificationStatusVerified: EVerificationStatus.VERIFIED,
-                    verificationStatusNotNeeded: EVerificationStatus.NOT_NEEDED,
                 },
             )
+            // @dev Only send notification to users who are sharing their live location right now.
             .andWhere("user.dateMode = :liveMode", { liveMode: EDateMode.LIVE })
+            // @dev Only send notification to users who want to approach.
             .andWhere("user.approachChoice = :approach", {
                 approach: EApproachChoice.APPROACH,
             })
+            // @dev Are users within x meters - TODO: Make this configurable by users.
             .andWhere(
                 "ST_DWithin(user.location::geography, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, :distance)",
                 {
@@ -133,11 +140,22 @@ export class MatchingService {
                     distance: 750, // 750 meters
                 },
             )
+            // @dev Make sure users are somewhat within age range - TODO: Make this configurable by users.
             .andWhere(
                 "EXTRACT(YEAR FROM AGE(user.birthDay)) BETWEEN :minAge AND :maxAge",
                 {
                     minAge: userAge - 15,
                     maxAge: userAge + 15,
+                },
+            )
+            // @dev filter out users that the user already had an encounter with in the last 24h and that both users have not set to "met, *" (do not resend notification)
+            .andWhere(
+                "(encounter.id IS NULL OR (encounter.lastDateTimePassedBy < :twentyFourHoursAgo AND encounter.status = :notMetStatus))",
+                {
+                    twentyFourHoursAgo: new Date(
+                        Date.now() - 24 * 60 * 60 * 1000,
+                    ),
+                    notMetStatus: EEncounterStatus.NOT_MET,
                 },
             )
             .getMany();
@@ -173,6 +191,8 @@ export class MatchingService {
             await this.encounterService.saveEncountersForUser(
                 userToBeApproached,
                 nearbyMatches,
+                true, // they are all nearby rn
+                true, // reset older encounters
             );
         }
     }

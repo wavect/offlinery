@@ -5,6 +5,9 @@ export class SignInResponseDTO {
     @ApiProperty({ type: "string" })
     accessToken: string;
 
+    @ApiProperty({ type: "string" })
+    refreshToken: string;
+
     @ApiProperty({ type: UserPrivateDTO })
     user: UserPrivateDTO;
 }

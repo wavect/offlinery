@@ -10,6 +10,7 @@ export const de: Language = {
     datingAppsAreBroken: "Dating apps are Broken",
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
     verificationCodeResend: "Code neu senden",
+    verificationCodeInvalid: "Ungültiger Verification Code",
     invalidEmail: "Email ungültig oder existiert bereits.",
     termsDisclaimer: {
         p1: "Durch Tippen auf 'Konto erstellen' oder 'Anmelden' stimmst du unseren ",
@@ -87,7 +88,7 @@ export const de: Language = {
     myLocation: "Mein Standort",
     youAreHere: "Du bist hier.",
     longPressMapSafeZoneInstruction:
-        "Lange auf der Karte drücken, um eine kreisförmige Region hinzuzufügen. Tippe auf eine Region, um sie auszuwählen und ihren Radius anzupassen.",
+        "Lange tippen, um eine Inkognito Region hinzuzufügen. Tippe auf eine Region, ihren Radius anzupassen.",
     adjustRegionRadius: "Regionradius anpassen",
     whatIsYourEmail: "Wie lautet deine E-Mail?",
     whatIsYourEmailDescr:
@@ -202,4 +203,12 @@ export const de: Language = {
     live: "Live",
     ghostMode: "Geistmodus",
     saving: "Speichern..",
+    enterMessage: "Nachricht oder Kontaktdetails eingeben..",
+    sendMessage: "Senden",
+    receivedMessage: "Erhaltene Nachricht",
+    leaveMessage: "Nachricht schreiben",
+    leaveMessageBtnLbl: "Kontakt",
+    messageInstructions:
+        "Falls nicht bereits in Person geschehen, dann füge deine Kontaktdetails hinzu.",
+    messageWarning: "Es wird nur die letzte Nachricht gespeichert.",
 };

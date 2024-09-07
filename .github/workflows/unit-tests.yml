@@ -1,0 +1,58 @@
+name: Run unit tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+
+    - name: Get pnpm store directory
+      id: pnpm-cache
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+    - uses: actions/cache@v3
+      name: Setup pnpm cache
+      with:
+        path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+
+    - name: Install dependencies
+      run: pnpm install && cd backend && pnpm install
+
+  #  - name: Load environment variables
+  #    run: |
+  #      cd backend
+  #      if [ -f .env-template ]; then
+  #        set -a
+  #        source .env-template
+  #        set +a
+  #      else
+  #        echo ".env-template file not found in backend directory"
+  #        exit 1
+  #      fi
+
+    - name: Run tests
+      run: pnpm test
+      env:
+        # This ensures that the environment variables are available to the test command
+        SHELL: /bin/bash

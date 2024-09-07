@@ -15,7 +15,7 @@ import {
 } from "@/services/secure-storage.service";
 import { getLocallyStoredUserData } from "@/services/storage.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
-import { getJwtHeader } from "@/utils/misc.utils";
+import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Location from "expo-location";
@@ -42,7 +42,9 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     }
     if (data) {
         const locations = (data as any).locations as Location.LocationObject[];
-        const userId = getLocallyStoredUserData()?.id;
+        const user = getLocallyStoredUserData();
+        console.log("User Connected: ", user?.id?.slice(0, 8));
+        const userId = user?.id;
         const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
         if (!userId || !jwtToken) {
             console.error(
@@ -65,13 +67,16 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
                         userId,
                         locationUpdateDTO: locationUpdateDTO,
                     },
-                    getJwtHeader(jwtToken!),
+                    await includeJWT(),
                 );
                 console.log(
                     `[TASK:LOCATION_UPDATE]: User Location updated successfully`,
                 );
             } catch (error) {
-                console.error("Error updating location:", error);
+                console.error(
+                    "Error updating location:",
+                    JSON.stringify(error),
+                );
             }
         }
     }
@@ -95,7 +100,7 @@ export const MainScreenTabs = ({ navigation }) => {
                 i18n.t(TR.noUserIdAssignedCannotListenToNotifications),
             );
         } else {
-            registerForPushNotificationsAsync(state.id, state.jwtAccessToken!)
+            registerForPushNotificationsAsync(state.id)
                 .then((token) => {
                     if (!token) {
                         console.error(
