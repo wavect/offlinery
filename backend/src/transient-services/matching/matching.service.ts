@@ -73,7 +73,10 @@ export class MatchingService {
         );
     }
 
-    public async findNearbyMatches(userToBeApproached: User): Promise<User[]> {
+    public async findNearbyMatches(
+        userToBeApproached: User,
+        withinLocation = true,
+    ): Promise<User[]> {
         // @dev Do not send notifications if user does not share her live location.
         if (
             !userToBeApproached ||
@@ -112,42 +115,25 @@ export class MatchingService {
 
         const userAge = getAge(userToBeApproached.birthDay);
 
-        // TODO: This algorithm should be improved over time
-        const potentialMatchesThatWantToApproach = await this.userRepository
+        const potentialMatchesThatWantToApproach = this.userRepository
             .createQueryBuilder("user")
-            // @dev Exclude yourself
             .where("user.id != :userId", { userId: userToBeApproached.id })
-            // @dev Only return users the approached user is interested in gender-wise
             .andWhere("user.gender = :desiredGender", {
                 desiredGender: userToBeApproached.genderDesire,
             })
-            // @dev Only return users that are interested in the user to be approached gender.
             .andWhere("user.genderDesire = :userGender", {
                 userGender: userToBeApproached.gender,
             })
-            // @dev Only send notifications to verified users
             .andWhere(
                 "(user.verificationStatus = :verificationStatusVerified)",
                 {
                     verificationStatusVerified: EVerificationStatus.VERIFIED,
                 },
             )
-            // @dev Only send notification to users who are sharing their live location right now.
             .andWhere("user.dateMode = :liveMode", { liveMode: EDateMode.LIVE })
-            // @dev Only send notification to users who want to approach.
             .andWhere("user.approachChoice = :approach", {
                 approach: EApproachChoice.APPROACH,
             })
-            // @dev Are users within x meters - TODO: Make this configurable by users.
-            .andWhere(
-                "ST_DWithin(user.location::geography, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, :distance)",
-                {
-                    lon: userToBeApproached.location.coordinates[0],
-                    lat: userToBeApproached.location.coordinates[1],
-                    distance: 750, // 750 meters
-                },
-            )
-            // @dev Make sure users are somewhat within age range - TODO: Make this configurable by users.
             .andWhere(
                 "EXTRACT(YEAR FROM AGE(user.birthDay)) BETWEEN :minAge AND :maxAge",
                 {
@@ -155,7 +141,6 @@ export class MatchingService {
                     maxAge: userAge + 15,
                 },
             )
-            // @dev filter out users that the user already had an encounter with in the last 24h and that both users have not set to "met, *" (do not resend notification)
             .andWhere(
                 "(encounter.id IS NULL OR (encounter.lastDateTimePassedBy < :twentyFourHoursAgo AND encounter.status = :notMetStatus))",
                 {
@@ -164,10 +149,20 @@ export class MatchingService {
                     ),
                     notMetStatus: EEncounterStatus.NOT_MET,
                 },
-            )
-            .getMany();
+            );
 
-        return potentialMatchesThatWantToApproach;
+        if (withinLocation) {
+            potentialMatchesThatWantToApproach.andWhere(
+                "ST_DWithin(user.location::geography, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, :distance)",
+                {
+                    lon: userToBeApproached.location.coordinates[0],
+                    lat: userToBeApproached.location.coordinates[1],
+                    distance: 1500, // reachable within 1500m
+                },
+            );
+        }
+
+        return potentialMatchesThatWantToApproach.getMany();
     }
 
     public async checkAndNotifyMatches(
