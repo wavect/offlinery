@@ -109,7 +109,7 @@ const NavigateToApproach = ({ route, navigation }) => {
                     longitudeDelta: 0.0421,
                 }}
                 provider={
-                    Platform.OS === "android"
+                    process.env.NODE_ENV === "production"
                         ? PROVIDER_GOOGLE
                         : PROVIDER_DEFAULT
                 }

@@ -12,9 +12,16 @@ import { getDataSourceToken, TypeOrmModule } from "@nestjs/typeorm";
 import { I18nModule, I18nService } from "nestjs-i18n";
 import * as path from "node:path";
 import { DataSource, DataSourceOptions } from "typeorm";
+import { getMockEnv } from "../../../test/mock-env.config";
 import { OfflineryNotification } from "./notification-message.type";
 import { NotificationController } from "./notification.controller";
 import { NotificationService } from "./notification.service";
+
+jest.mock("@/utils/env.utils", () => ({
+    ...jest.requireActual("@/utils/env.utils"),
+    validateEnv: jest.fn(),
+    TYPED_ENV: getMockEnv(),
+}));
 
 // Sends to Kevin's smartphone rn
 const testPushToken = "ExponentPushToken[MbIGoaN3gTd61gYRRCRz8C]"; // TODO
@@ -27,7 +34,7 @@ const mockUser: UserPublicDTO = {
     bio: "Hi, I am John. Nice to meet you!",
 };
 
-describe.only("NotificationService", () => {
+describe("NotificationService", () => {
     let notificationService: NotificationService;
     let i18nService: I18nService<I18nTranslations>;
 

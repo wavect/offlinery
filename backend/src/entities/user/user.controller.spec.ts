@@ -10,9 +10,16 @@ import {
 } from "@/types/user.types";
 import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
+import { getMockEnv } from "../../../test/mock-env.config";
 import { UserController } from "./user.controller";
 import { User } from "./user.entity";
 import { UserService } from "./user.service";
+
+jest.mock("@/utils/env.utils", () => ({
+    ...jest.requireActual("@/utils/env.utils"),
+    validateEnv: jest.fn(),
+    TYPED_ENV: getMockEnv(),
+}));
 
 describe("UserController", () => {
     let controller: UserController;

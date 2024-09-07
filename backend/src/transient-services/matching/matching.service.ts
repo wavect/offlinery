@@ -31,42 +31,49 @@ export class MatchingService {
         private encounterService: EncounterService,
     ) {}
 
-    private isWithinApproachTime(
-        user: User,
-        lat: number,
-        lon: number,
-    ): boolean {
+    public isWithinApproachTime(user: User, lat: number, lon: number): boolean {
         const timezoneOfUserLocation = findTimeZoneByLocation(lat, lon);
-        const currentTime = new Date().toLocaleString("en-US", {
-            timeZone: timezoneOfUserLocation[0],
-        });
-        const localTime = new Date(currentTime);
+        const localTime = this.getCurrentTime(timezoneOfUserLocation[0]);
 
         const approachFromTime = new Date(user.approachFromTime);
         const approachToTime = new Date(user.approachToTime);
 
-        // Set the date of approachFromTime and approachToTime to today
-        approachFromTime.setFullYear(
-            localTime.getFullYear(),
-            localTime.getMonth(),
-            localTime.getDate(),
-        );
-        approachToTime.setFullYear(
-            localTime.getFullYear(),
-            localTime.getMonth(),
-            localTime.getDate(),
-        );
+        // Convert all times to UTC
+        const localTimeUTC = new Date(localTime.toUTCString());
+        const fromTimeUTC = new Date(approachFromTime.toUTCString());
+        const toTimeUTC = new Date(approachToTime.toUTCString());
 
-        // Handle case where approachToTime is on the next day
-        if (approachToTime < approachFromTime) {
-            approachToTime.setDate(approachToTime.getDate() + 1);
+        // Normalize times to minutes since midnight UTC
+        const toMinutesSinceMidnight = (date: Date) => {
+            return date.getUTCHours() * 60 + date.getUTCMinutes();
+        };
+
+        let localTimeMinutes = toMinutesSinceMidnight(localTimeUTC);
+        const fromTimeMinutes = toMinutesSinceMidnight(fromTimeUTC);
+        let toTimeMinutes = toMinutesSinceMidnight(toTimeUTC);
+
+        // Adjust for cases where the approach time spans midnight UTC
+        if (toTimeMinutes < fromTimeMinutes) {
+            toTimeMinutes += 24 * 60; // Add a full day's worth of minutes
+            if (localTimeMinutes < fromTimeMinutes) {
+                localTimeMinutes += 24 * 60; // Adjust local time if it's after midnight UTC
+            }
         }
 
-        // Check if current time is within the approach time range
-        return localTime >= approachFromTime && localTime <= approachToTime;
+        // Check if local time is within the approach time range
+        return (
+            localTimeMinutes >= fromTimeMinutes &&
+            localTimeMinutes < toTimeMinutes
+        );
     }
 
-    private async findNearbyMatches(userToBeApproached: User): Promise<User[]> {
+    private getCurrentTime(timezone: string): Date {
+        return new Date(
+            new Date().toLocaleString("en-US", { timeZone: timezone }),
+        );
+    }
+
+    public async findNearbyMatches(userToBeApproached: User): Promise<User[]> {
         // @dev Do not send notifications if user does not share her live location.
         if (
             !userToBeApproached ||
@@ -163,7 +170,9 @@ export class MatchingService {
         return potentialMatchesThatWantToApproach;
     }
 
-    async checkAndNotifyMatches(userToBeApproached: User): Promise<void> {
+    public async checkAndNotifyMatches(
+        userToBeApproached: User,
+    ): Promise<void> {
         const nearbyMatches = await this.findNearbyMatches(userToBeApproached);
 
         if (nearbyMatches.length > 0) {
