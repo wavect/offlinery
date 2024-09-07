@@ -1,8 +1,8 @@
 import { StorePushTokenDTO } from "@/DTOs/store-push-token.dto";
 import { UserService } from "@/entities/user/user.service";
+import { OfflineryNotification } from "@/types/notification-message.types";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { Expo, ExpoPushTicket } from "expo-server-sdk";
-import { OfflineryNotification } from "./notification-message.type";
 
 @Injectable()
 export class NotificationService {
@@ -40,6 +40,7 @@ export class NotificationService {
         } catch (error) {
             this.logger.error(error);
         }
+        this.logger.debug(`Sent ${tickets.length} notifications.`);
         return tickets;
     }
 }

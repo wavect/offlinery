@@ -5,7 +5,6 @@ import { UserModule } from "@/entities/user/user.module";
 import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { NotificationModule } from "../notification/notification.module";
-import { MatchingController } from "./matching.controller";
 import { MatchingService } from "./matching.service";
 
 @Module({
@@ -16,7 +15,7 @@ import { MatchingService } from "./matching.service";
         EncounterModule,
     ],
     providers: [MatchingService],
-    controllers: [MatchingController],
+    controllers: [],
     exports: [MatchingService],
 })
 export class MatchingModule {}

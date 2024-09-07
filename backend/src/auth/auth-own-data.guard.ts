@@ -3,6 +3,7 @@ import {
     ExecutionContext,
     ForbiddenException,
     Injectable,
+    Logger,
     SetMetadata,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
@@ -13,6 +14,8 @@ export const USER_ID_PARAM = "userId";
 
 @Injectable()
 export class UserSpecificAuthGuard implements CanActivate {
+    private readonly logger = new Logger(UserSpecificAuthGuard.name);
+
     constructor(private reflector: Reflector) {}
 
     canActivate(context: ExecutionContext): boolean {
@@ -29,11 +32,17 @@ export class UserSpecificAuthGuard implements CanActivate {
         const user = request.user; // Assuming the user object is attached by the AuthGuard
 
         if (!user) {
+            this.logger.debug(
+                `Call to protected route without being authenticated at all!`,
+            );
             throw new ForbiddenException("User not authenticated");
         }
 
         const params = request.params;
         if (params[USER_ID_PARAM] && params[USER_ID_PARAM] !== user.id) {
+            this.logger.warn(
+                `Someone tried to access user data that does not belong to them!`,
+            );
             throw new ForbiddenException("Access denied");
         }
 

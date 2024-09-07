@@ -25,15 +25,19 @@ export class AuthService {
             decoded.email,
         );
         if (!user) {
+            this.logger.debug(
+                `Sign in with JWT failed as user ID does not exist: ${userJwtRes.id} (extracted from JWT: ${accessToken})`,
+            );
             throw new UnauthorizedException();
         }
         const refreshToken = user.refreshToken;
         if (!refreshToken) {
-            console.log(
+            this.logger.debug(
                 "User migration: Has a valid JWT but no refresh. Needs new login",
             );
             return null;
         }
+        this.logger.debug(`User successfully signed in with JWT: ${user.id}`);
         return {
             accessToken,
             refreshToken,
@@ -47,6 +51,9 @@ export class AuthService {
     ): Promise<SignInResponseDTO> {
         const user = await this.usersService.findUserByEmail(email);
         if (!user) {
+            this.logger.debug(
+                `Sign in via email failed as email does not exist in DB: ${email}`,
+            );
             throw new UnauthorizedException();
         }
         const isPasswordValid = await bcrypt.compare(
@@ -54,6 +61,9 @@ export class AuthService {
             user.passwordHash,
         );
         if (!isPasswordValid) {
+            this.logger.debug(
+                `Sign in attempt with password failed as invalid for userId: ${user.id}`,
+            );
             throw new UnauthorizedException();
         }
         const payload = { sub: user.id, email: user.email };
@@ -84,14 +94,19 @@ export class AuthService {
         try {
             const user =
                 await this.usersService.findUserByRefreshToken(refreshToken);
-            console.log("refreshing user...", !!user);
+            this.logger.debug("Refreshing user jwt token", !!user);
             if (!user) {
-                console.log("Invalid Refresh Token sent!");
+                this.logger.debug(
+                    `Invalid Refresh Token sent for user: ${user.id}`,
+                );
                 throw new UnauthorizedException("Invalid refresh token");
             }
             const payload = { sub: user.id, email: user.email };
             const newAccessToken = await this.jwtService.signAsync(payload);
             const newRefreshToken = await this.generateRefreshToken(user);
+            this.logger.debug(
+                `User jwt refresh access token was successful for user ${user.id}`,
+            );
 
             return {
                 accessToken: newAccessToken,
@@ -99,7 +114,7 @@ export class AuthService {
                 user: user.convertToPrivateDTO(),
             };
         } catch (e) {
-            console.log("User refreshment failed! ", e);
+            this.logger.debug("User refreshment failed (jwt refresh) ", e);
         }
     }
 }

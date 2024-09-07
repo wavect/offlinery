@@ -6,6 +6,7 @@ import {
     Controller,
     HttpCode,
     HttpStatus,
+    Logger,
     Post,
     UsePipes,
     ValidationPipe,
@@ -20,6 +21,8 @@ import { AuthService } from "./auth.service";
     path: "auth",
 })
 export class AuthController {
+    private readonly logger = new Logger(AuthController.name);
+
     constructor(private authService: AuthService) {}
 
     @Public()
@@ -27,6 +30,7 @@ export class AuthController {
     @UsePipes(new ValidationPipe({ transform: true }))
     @Post("login")
     signIn(@Body() signInDTO: SignInDTO): Promise<SignInResponseDTO> {
+        this.logger.debug(`Trying to sign in user ${signInDTO.email}`);
         return this.authService.signIn(
             signInDTO.email,
             signInDTO.clearPassword,
@@ -37,6 +41,9 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post("login/jwt")
     signInByJWT(@Body() signInDTO: SignInJwtDTO): Promise<SignInResponseDTO> {
+        this.logger.debug(
+            `Trying to sign in user by JWT ${signInDTO.jwtAccessToken}`,
+        );
         return this.authService.signInWithJWT(signInDTO.jwtAccessToken);
     }
 
@@ -44,6 +51,9 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post("token/refresh")
     refreshJwtToken(@Body() signInDTO: RefreshJwtDTO): Promise<any> {
+        this.logger.debug(
+            `Trying to refresh jwt token with refresh token ${signInDTO.refreshToken}`,
+        );
         return this.authService.refreshAccessToken(signInDTO.refreshToken);
     }
 }

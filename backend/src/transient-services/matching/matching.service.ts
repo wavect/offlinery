@@ -10,16 +10,18 @@ import {
     EVerificationStatus,
 } from "@/types/user.types";
 import { getAge } from "@/utils/date.utils";
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { find as findTimeZoneByLocation } from "geo-tz";
 import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
-import { OfflineryNotification } from "../notification/notification-message.type";
+import { OfflineryNotification } from "../../types/notification-message.types";
 import { NotificationService } from "../notification/notification.service";
 
 @Injectable()
 export class MatchingService {
+    private readonly logger = new Logger(MatchingService.name);
+
     constructor(
         private readonly i18n: I18nService<I18nTranslations>,
         @InjectRepository(User)
@@ -83,6 +85,9 @@ export class MatchingService {
             !userToBeApproached.location ||
             userToBeApproached.dateMode !== EDateMode.LIVE
         ) {
+            this.logger.debug(
+                `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
+            );
             return [];
         }
         const lon = userToBeApproached.location.coordinates[0];
@@ -108,10 +113,16 @@ export class MatchingService {
 
             // @dev Do not send notifications if user is not in a safe space.
             if (isInBlacklistedRegion) {
+               this.logger.debug(
+                `User ${userToBeApproached.id} is right now in blacklisted location - not returning potential matches.`,
+            );
                 return [];
             }
             // @dev Do not send any notifications if user does not feel safe at this time (time zone sensitive).
             if (!this.isWithinApproachTime(userToBeApproached, lat, lon)) {
+               this.logger.debug(
+                `User ${userToBeApproached.id} does not feel safe to be approached right now.`,
+            );
                 return [];
             }
         }
@@ -172,6 +183,10 @@ export class MatchingService {
                     approach: EApproachChoice.APPROACH,
                 });
         }
+          
+           this.logger.debug(
+            `Returning potential matches for user ${userToBeApproached.id}`,
+        );
 
         return potentialMatchesThatWantToApproach.getMany();
     }
