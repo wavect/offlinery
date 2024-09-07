@@ -17,13 +17,13 @@ export class AuthService {
     ) {}
 
     async signInWithJWT(accessToken: string): Promise<SignInResponseDTO> {
-        const userJwtRes: Pick<User, "id"> = await this.jwtService.verifyAsync(
-            accessToken,
-            {
-                secret: TYPED_ENV.JWT_SECRET,
-            },
+        await this.jwtService.verifyAsync(accessToken, {
+            secret: TYPED_ENV.JWT_SECRET,
+        });
+        const decoded = this.jwtService.decode(accessToken);
+        const user: User = await this.usersService.findUserByEmail(
+            decoded.email,
         );
-        const user: User = await this.usersService.findUserById(userJwtRes.id);
         if (!user) {
             throw new UnauthorizedException();
         }
