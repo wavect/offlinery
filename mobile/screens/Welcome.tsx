@@ -55,11 +55,11 @@ const Welcome = ({ navigation }) => {
 
                 console.log("refresh token received: ", refreshResponse);
 
-                await saveValueLocallySecurely(
+                saveValueLocallySecurely(
                     SECURE_VALUE.JWT_ACCESS_TOKEN,
                     refreshResponse.accessToken,
                 );
-                await saveValueLocallySecurely(
+                saveValueLocallySecurely(
                     SECURE_VALUE.JWT_REFRESH_TOKEN,
                     refreshResponse.refreshToken,
                 );
@@ -85,8 +85,8 @@ const Welcome = ({ navigation }) => {
                 }
             }
         } catch (e) {
-            await saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
-            await saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
+            saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
+            saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
             console.log("Forcing user to re-login.");
         }
 

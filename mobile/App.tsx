@@ -21,6 +21,7 @@ import {
     Montserrat_900Black,
     useFonts,
 } from "@expo-google-fonts/montserrat";
+import * as Sentry from "@sentry/react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { Color } from "./GlobalStyles";
@@ -44,6 +45,13 @@ import SafetyCheck from "./screens/onboarding/SafetyCheck";
 import VerifyEmail from "./screens/onboarding/VerifyEmail";
 import WaitingForVerification from "./screens/onboarding/WaitingForVerification";
 import GlobalErrorHandler from "./services/global-error.service";
+
+Sentry.init({
+    dsn: "https://580af3edb138d4a6c73999e61efbe013@o4507911356743680.ingest.de.sentry.io/4507911361003600",
+
+    // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+    // enableSpotlight: __DEV__,
+});
 
 const DEFAULT_SCREEN_PROPS = {
     headerShown: true,
