@@ -33,26 +33,7 @@ export class RandomUserLocationsSeeder {
         }
 
         for (let i = 0; i < this.AMOUNT_OF_USERS; i++) {
-            const user: CreateUserDTO = {
-                firstName: "John",
-                email: "test@test.test",
-                clearPassword: "securePassword123!",
-                wantsEmailUpdates: true,
-                birthDay: new Date("1990-01-01"),
-                gender: EGender.MAN,
-                genderDesire: EGender.WOMAN,
-                verificationStatus: EVerificationStatus.VERIFIED,
-                approachChoice: EApproachChoice.APPROACH,
-                blacklistedRegions: [],
-                approachFromTime: new Date("2024-09-06T09:00:00Z"),
-                approachToTime: new Date("2024-09-06T17:00:00Z"),
-                bio: "I'm a friendly person who loves outdoor activities and trying new cuisines.",
-                dateMode: EDateMode.LIVE,
-                preferredLanguage: ELanguage.en,
-            };
-            if (i !== 0) {
-                user.email = `test-user@test${Math.floor(Math.random() * 999999999)}@gmail.com`;
-            }
+            const user: CreateUserDTO = this.generateRandomUser(i);
 
             const email = user.email;
 
@@ -92,6 +73,47 @@ export class RandomUserLocationsSeeder {
         }
 
         console.log("✓ Test Users Locations updated");
+    }
+
+    private generateRandomUser(index: number): CreateUserDTO {
+        const gender = Math.random() < 0.5 ? EGender.MAN : EGender.WOMAN;
+        const genderDesire =
+            Math.random() < 0.8
+                ? gender === EGender.MAN
+                    ? EGender.WOMAN
+                    : EGender.MAN
+                : gender;
+        const dateMode = Math.random() < 0.2 ? EDateMode.LIVE : EDateMode.GHOST;
+
+        const approachFromTime = new Date();
+        approachFromTime.setHours(Math.floor(Math.random() * 24));
+        approachFromTime.setMinutes(0);
+
+        const approachToTime = new Date(approachFromTime.getTime());
+        approachToTime.setHours(
+            approachToTime.getHours() + 10 + Math.floor(Math.random() * 14),
+        ); // 10-24 hour range
+
+        return {
+            firstName: gender === EGender.MAN ? "John" : "Jane",
+            email:
+                index === 0
+                    ? "test@test.test"
+                    : `test-user@test${Math.floor(Math.random() * 999999999)}@gmail.com`,
+            clearPassword: "securePassword123!",
+            wantsEmailUpdates: true,
+            birthDay: new Date("1990-01-01"),
+            gender,
+            genderDesire,
+            verificationStatus: EVerificationStatus.VERIFIED,
+            approachChoice: EApproachChoice.APPROACH,
+            blacklistedRegions: [],
+            approachFromTime,
+            approachToTime,
+            bio: "I'm a friendly person who loves outdoor activities and trying new cuisines.",
+            dateMode,
+            preferredLanguage: ELanguage.en,
+        };
     }
 
     getRandomLatLong(centerLat, centerLong, radius, spread) {
