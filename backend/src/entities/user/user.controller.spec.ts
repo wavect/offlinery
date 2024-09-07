@@ -10,6 +10,7 @@ import {
 } from "@/types/user.types";
 import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
+import { defineEnvForTests } from "../../../test/define-env-for-tests";
 import { UserController } from "./user.controller";
 import { User } from "./user.entity";
 import { UserService } from "./user.service";
@@ -19,6 +20,7 @@ describe("UserController", () => {
     let userService: UserService;
 
     beforeEach(async () => {
+        defineEnvForTests();
         const module: TestingModule = await Test.createTestingModule({
             controllers: [UserController],
             providers: [
