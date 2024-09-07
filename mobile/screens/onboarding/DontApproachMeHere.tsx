@@ -9,7 +9,7 @@ import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import MapView, {
     Circle,
     LongPressEvent,
@@ -142,7 +142,7 @@ const DontApproachMeHere = ({ navigation }) => {
                     }}
                     onLongPress={handleMapLongPress}
                     provider={
-                        Platform.OS === "android"
+                        process.env.NODE_ENV === "production"
                             ? PROVIDER_GOOGLE
                             : PROVIDER_DEFAULT
                     }
