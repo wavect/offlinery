@@ -1,8 +1,13 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { defineEnvForTests } from "../test/define-env-for-tests";
+import { getMockEnv } from "../test/mock-env.config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-defineEnvForTests();
+
+jest.mock("@/utils/env.utils", () => ({
+    ...jest.requireActual("@/utils/env.utils"),
+    validateEnv: jest.fn(),
+    TYPED_ENV: getMockEnv(),
+}));
 
 describe("AppController", () => {
     let appController: AppController;
