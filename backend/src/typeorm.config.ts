@@ -1,10 +1,10 @@
+import { TYPED_ENV, validateEnv } from "@/utils/env.utils";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import {
     TypeOrmModuleAsyncOptions,
     TypeOrmModuleOptions,
 } from "@nestjs/typeorm";
 import { DataSource, DataSourceOptions } from "typeorm";
-import { TYPED_ENV, validateEnv } from "./utils/env.utils";
 
 const baseConfig: TypeOrmModuleOptions = {
     type: "postgres",

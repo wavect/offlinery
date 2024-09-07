@@ -1,8 +1,12 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
+import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
+import { EncounterService } from "@/entities/encounter/encounter.service";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
+import { User } from "@/entities/user/user.entity";
 import { MatchingService } from "@/transient-services/matching/matching.service";
+import { NotificationService } from "@/transient-services/notification/notification.service";
 import {
     EApproachChoice,
     EDateMode,
@@ -13,37 +17,16 @@ import {
 } from "@/types/user.types";
 import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
+import { getRepositoryToken } from "@nestjs/typeorm";
 import { Point } from "geojson";
-import { Repository } from "typeorm";
-import { User } from "./user.entity";
+import { I18nService } from "nestjs-i18n";
+import { DataSource, Repository } from "typeorm";
 import { UserService } from "./user.service";
 
 // Mocks
 jest.mock("bcrypt", () => ({
     genSalt: jest.fn().mockResolvedValue("mock-salt"),
     hash: jest.fn().mockResolvedValue("mock-hash"),
-}));
-
-jest.mock("fs", () => ({
-    promises: {
-        writeFile: jest.fn().mockResolvedValue(undefined),
-    },
-    existsSync: jest.fn().mockReturnValue(true),
-    mkdirSync: jest.fn(),
-}));
-
-jest.mock("path", () => ({
-    join: jest.fn().mockImplementation((...args) => args.join("/")),
-    resolve: jest.fn().mockImplementation((...args) => args.join("/")),
-    extname: jest.fn().mockReturnValue(".jpg"),
-    dirname: jest.fn().mockImplementation((path) => {
-        const parts = path.split("/");
-        return parts.slice(0, -1).join("/");
-    }),
-}));
-
-jest.mock("uuid", () => ({
-    v4: jest.fn().mockReturnValue("mock-uuid"),
 }));
 
 describe("UserService", () => {
@@ -56,48 +39,49 @@ describe("UserService", () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 UserService,
+                MatchingService,
                 {
-                    provide: "UserRepository",
+                    provide: I18nService,
                     useValue: {
-                        find: jest.fn(),
-                        findOne: jest.fn(),
-                        findOneBy: jest.fn(),
-                        save: jest.fn(),
-                        create: jest.fn(),
-                        delete: jest.fn(),
+                        t: jest.fn().mockReturnValue("Translated text"),
                     },
                 },
                 {
-                    provide: "BlacklistedRegionRepository",
+                    provide: EncounterService,
                     useValue: {
-                        find: jest.fn(),
-                        findOne: jest.fn(),
-                        save: jest.fn(),
-                        create: jest.fn(),
-                        delete: jest.fn(),
+                        saveEncountersForUser: jest.fn(),
                     },
                 },
                 {
-                    provide: "PendingUserRepository",
+                    provide: NotificationService,
                     useValue: {
-                        findOneByOrFail: jest.fn(),
-                        save: jest.fn(),
-                        create: jest.fn(),
-                        delete: jest.fn(),
+                        sendPushNotification: jest.fn(),
                     },
                 },
                 {
-                    provide: MatchingService,
-                    useValue: {
-                        checkAndNotifyMatches: jest.fn(),
-                    },
+                    provide: getRepositoryToken(User),
+                    useClass: Repository,
+                },
+                {
+                    provide: getRepositoryToken(PendingUser),
+                    useClass: Repository,
+                },
+                {
+                    provide: getRepositoryToken(BlacklistedRegion),
+                    useClass: Repository,
+                },
+                {
+                    provide: DataSource,
+                    useValue: {},
                 },
             ],
         }).compile();
 
         service = module.get<UserService>(UserService);
-        userRepository = module.get("UserRepository");
-        pendingUserRepository = module.get("PendingUserRepository");
+        userRepository = module.get<Repository<User>>(getRepositoryToken(User));
+        pendingUserRepository = module.get<Repository<PendingUser>>(
+            getRepositoryToken(PendingUser),
+        );
         matchingService = module.get<MatchingService>(MatchingService);
     });
 
@@ -142,12 +126,21 @@ describe("UserService", () => {
                 pendingUserRepository,
                 "findOneByOrFail",
             ).mockResolvedValue(mockPendingUser);
-            // @ts-expect-error Entity interface methods to be ignored
             jest.spyOn(userRepository, "save").mockResolvedValue({
                 id: "1",
                 ...createUserDto,
+                isActive: true,
+                passwordHash: "abc",
+                passwordSalt: "cde",
+                refreshToken: "aa",
+                refreshTokenExpires: new Date(),
+                pushToken: "aa",
+                receivedReports: [],
+                issuedReports: [],
+                encounters: [],
+                location: null,
                 imageURIs: ["mock-uuid.jpg"],
-            } as User);
+            } as any as User);
 
             const result = await service.createUser(createUserDto, mockImages);
 
@@ -200,7 +193,7 @@ describe("UserService", () => {
 
             await expect(
                 service.updateUser(userId, updateUserDto),
-            ).rejects.toThrow("User not found");
+            ).rejects.toThrow(NotFoundException);
         });
     });
 
@@ -232,7 +225,7 @@ describe("UserService", () => {
     });
 
     describe("updateLocation", () => {
-        it("should update user location and check for matches", async () => {
+        it("should update user location and check for matches when approachChoice is BE_APPROACHED", async () => {
             const userId = "1";
             const locationUpdateDto: LocationUpdateDTO = {
                 latitude: 40.7128,
@@ -242,19 +235,22 @@ describe("UserService", () => {
             const mockUser = new User();
             mockUser.id = userId;
             mockUser.firstName = "John";
+            mockUser.approachChoice = EApproachChoice.BE_APPROACHED;
 
-            jest.spyOn(userRepository, "findOneBy").mockResolvedValue(mockUser);
-            jest.spyOn(userRepository, "save").mockResolvedValue({
+            const updatedUser = {
                 ...mockUser,
                 location: {
                     type: "Point",
                     coordinates: [-74.006, 40.7128],
                 } as Point,
-            } as User);
-            jest.spyOn(
-                matchingService,
-                "checkAndNotifyMatches",
-            ).mockResolvedValue();
+            } as User;
+
+            jest.spyOn(userRepository, "findOneBy").mockResolvedValue(mockUser);
+            jest.spyOn(userRepository, "save").mockResolvedValue(updatedUser);
+
+            const checkAndNotifyMatchesSpy = jest
+                .spyOn(matchingService, "checkAndNotifyMatches")
+                .mockResolvedValue(undefined);
 
             const result = await service.updateLocation(
                 userId,
@@ -266,10 +262,117 @@ describe("UserService", () => {
                 type: "Point",
                 coordinates: [-74.006, 40.7128],
             });
-            expect(userRepository.save).toHaveBeenCalled();
-            expect(matchingService.checkAndNotifyMatches).toHaveBeenCalledWith(
-                mockUser,
+            expect(userRepository.save).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    id: userId,
+                    firstName: "John",
+                    location: {
+                        type: "Point",
+                        coordinates: [-74.006, 40.7128],
+                    },
+                }),
             );
+            expect(checkAndNotifyMatchesSpy).toHaveBeenCalledWith(mockUser);
+        });
+
+        it("should update user location and check for matches when approachChoice is BOTH", async () => {
+            const userId = "1";
+            const locationUpdateDto: LocationUpdateDTO = {
+                latitude: 40.7128,
+                longitude: -74.006,
+            };
+
+            const mockUser = new User();
+            mockUser.id = userId;
+            mockUser.firstName = "John";
+            mockUser.approachChoice = EApproachChoice.BOTH;
+
+            const updatedUser = {
+                ...mockUser,
+                location: {
+                    type: "Point",
+                    coordinates: [-74.006, 40.7128],
+                } as Point,
+            } as User;
+
+            jest.spyOn(userRepository, "findOneBy").mockResolvedValue(mockUser);
+            jest.spyOn(userRepository, "save").mockResolvedValue(updatedUser);
+
+            const checkAndNotifyMatchesSpy = jest
+                .spyOn(matchingService, "checkAndNotifyMatches")
+                .mockResolvedValue(undefined);
+
+            const result = await service.updateLocation(
+                userId,
+                locationUpdateDto,
+            );
+
+            expect(result).toBeDefined();
+            expect(result.location).toEqual({
+                type: "Point",
+                coordinates: [-74.006, 40.7128],
+            });
+            expect(userRepository.save).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    id: userId,
+                    firstName: "John",
+                    location: {
+                        type: "Point",
+                        coordinates: [-74.006, 40.7128],
+                    },
+                }),
+            );
+            expect(checkAndNotifyMatchesSpy).toHaveBeenCalledWith(mockUser);
+        });
+
+        it("should update user location but not check for matches when approachChoice is APPROACH", async () => {
+            const userId = "1";
+            const locationUpdateDto: LocationUpdateDTO = {
+                latitude: 40.7128,
+                longitude: -74.006,
+            };
+
+            const mockUser = new User();
+            mockUser.id = userId;
+            mockUser.firstName = "John";
+            mockUser.approachChoice = EApproachChoice.APPROACH;
+
+            const updatedUser = {
+                ...mockUser,
+                location: {
+                    type: "Point",
+                    coordinates: [-74.006, 40.7128],
+                } as Point,
+            } as User;
+
+            jest.spyOn(userRepository, "findOneBy").mockResolvedValue(mockUser);
+            jest.spyOn(userRepository, "save").mockResolvedValue(updatedUser);
+
+            const checkAndNotifyMatchesSpy = jest
+                .spyOn(matchingService, "checkAndNotifyMatches")
+                .mockResolvedValue(undefined);
+
+            const result = await service.updateLocation(
+                userId,
+                locationUpdateDto,
+            );
+
+            expect(result).toBeDefined();
+            expect(result.location).toEqual({
+                type: "Point",
+                coordinates: [-74.006, 40.7128],
+            });
+            expect(userRepository.save).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    id: userId,
+                    firstName: "John",
+                    location: {
+                        type: "Point",
+                        coordinates: [-74.006, 40.7128],
+                    },
+                }),
+            );
+            expect(checkAndNotifyMatchesSpy).not.toHaveBeenCalled();
         });
 
         it("should throw NotFoundException if user is not found", async () => {
