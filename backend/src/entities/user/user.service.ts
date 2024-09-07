@@ -114,7 +114,7 @@ export class UserService {
     ): Promise<User> {
         const user = await this.userRepository.findOneBy({ id });
         if (!user) {
-            throw new Error("User not found");
+            throw new NotFoundException("User not found");
         }
 
         // Update user properties
@@ -226,8 +226,8 @@ export class UserService {
 
         // Check for matches and send notifications (from a semantic perspective we only send notifications if a person to be approached sends a location update)
         if (
-            user.approachChoice in
-            [EApproachChoice.BOTH, EApproachChoice.BE_APPROACHED]
+            user.approachChoice === EApproachChoice.BOTH ||
+            user.approachChoice === EApproachChoice.BE_APPROACHED
         ) {
             this.logger.debug(
                 `Sending notifications to users that want to potentially approach userId ${user.id}`,
