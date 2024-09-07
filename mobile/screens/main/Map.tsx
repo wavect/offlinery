@@ -22,6 +22,7 @@ import MapView, {
     LongPressEvent,
     Marker,
     MarkerDragEvent,
+    PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
 } from "react-native-maps";
 
