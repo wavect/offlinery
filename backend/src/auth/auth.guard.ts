@@ -3,6 +3,7 @@ import {
     CanActivate,
     ExecutionContext,
     Injectable,
+    Logger,
     SetMetadata,
     UnauthorizedException,
 } from "@nestjs/common";
@@ -17,6 +18,8 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 /** @dev All routes are private by default */
 @Injectable()
 export class AuthGuard implements CanActivate {
+    private readonly logger = new Logger(AuthGuard.name);
+
     constructor(
         private jwtService: JwtService,
         private reflector: Reflector,
@@ -33,12 +36,16 @@ export class AuthGuard implements CanActivate {
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         if (this.isPublicRoute(context)) {
+            this.logger.debug(`Call to public route, bypassing auth.guard`);
             return true;
         }
 
         const request = context.switchToHttp().getRequest();
         const token = this.extractTokenFromHeader(request);
         if (!token) {
+            this.logger.debug(
+                `Unauthorized call attempt to protected route with no token`,
+            );
             throw new UnauthorizedException();
         }
         try {
@@ -48,6 +55,9 @@ export class AuthGuard implements CanActivate {
                 secret: TYPED_ENV.JWT_SECRET,
             });
         } catch {
+            this.logger.debug(
+                `Unauthorized call attempt to protected route with invalid token: ${token}`,
+            );
             throw new UnauthorizedException();
         }
         return true;
