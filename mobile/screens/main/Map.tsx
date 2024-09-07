@@ -36,6 +36,11 @@ const Map = () => {
     const [location, setLocation] = useState<Location.LocationObject | null>(
         null,
     );
+    /**
+     * The radius displayed in the UI.
+     * It gets updates as the user adjusts the radius.
+     */
+    const [uiRadii, setUiRadii] = useState<number[]>([]);
     const [locationsFromOthers, setLocationsFromOthers] =
         useState<WeightedLatLngDTO[]>();
     const mapRef = React.useRef(null);
@@ -95,14 +100,14 @@ const Map = () => {
                 const currRegion = newRegions[activeRegionIndex];
                 newRegions[activeRegionIndex] = {
                     ...currRegion,
-                    radius: currRegion.uiRadius ?? currRegion.radius,
+                    radius: uiRadii[activeRegionIndex] ?? currRegion.radius,
                 };
             }
             setBlacklistedRegions(newRegions);
             updateBlacklistedRegion(newRegions);
         }, 1000);
         return () => clearTimeout(timer);
-    }, [state.blacklistedRegions[activeRegionIndex!]?.uiRadius]);
+    }, [uiRadii[activeRegionIndex!]]);
 
     const getUserPosition = async () => {
         try {
@@ -140,9 +145,10 @@ const Map = () => {
     const handleMapLongPress = (event: LongPressEvent) => {
         const { coordinate } = event.nativeEvent;
         const { latitude, longitude } = coordinate;
+        setUiRadii([...uiRadii, 100]);
         setBlacklistedRegions([
             ...state.blacklistedRegions,
-            { latitude, longitude, radius: 100, uiRadius: 100 },
+            { latitude, longitude, radius: 100 },
         ]);
         setActiveRegionIndex(state.blacklistedRegions.length);
     };
@@ -154,9 +160,9 @@ const Map = () => {
     const handleRadiusChange = (value: number) => {
         if (activeRegionIndex !== null) {
             const newRegions = [...state.blacklistedRegions];
+            uiRadii[activeRegionIndex] = value;
             newRegions[activeRegionIndex] = {
                 ...newRegions[activeRegionIndex],
-                uiRadius: value,
             };
             setBlacklistedRegions(newRegions);
         }
@@ -194,7 +200,11 @@ const Map = () => {
                     zoomEnabled={true}
                     zoomTapEnabled={true}
                     onLongPress={handleMapLongPress}
-                    provider={PROVIDER_GOOGLE}
+                    provider={
+                        process.env.NODE_ENV === "production"
+                            ? PROVIDER_GOOGLE
+                            : PROVIDER_DEFAULT
+                    }
                 >
                     <Heatmap
                         opacity={1}
@@ -205,7 +215,7 @@ const Map = () => {
                         <React.Fragment key={`region-${index}`}>
                             <Circle
                                 center={region}
-                                radius={region.uiRadius ?? region.radius}
+                                radius={uiRadii[index] ?? region.radius}
                                 fillColor={
                                     index === activeRegionIndex
                                         ? "rgba(255, 0, 0, 0.4)"
@@ -267,8 +277,7 @@ const Map = () => {
                         >
                             {i18n.t(TR.adjustRegionRadius)} (
                             {Math.round(
-                                state.blacklistedRegions[activeRegionIndex]
-                                    .uiRadius ??
+                                uiRadii[activeRegionIndex] ??
                                     state.blacklistedRegions[activeRegionIndex]
                                         .radius,
                             )}
@@ -280,8 +289,7 @@ const Map = () => {
                             maximumValue={1000}
                             step={10}
                             value={
-                                state.blacklistedRegions[activeRegionIndex]
-                                    .uiRadius ??
+                                uiRadii[activeRegionIndex] ??
                                 state.blacklistedRegions[activeRegionIndex]
                                     .radius
                             }
