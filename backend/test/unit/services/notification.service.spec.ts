@@ -17,7 +17,7 @@ import * as path from "node:path";
 import { DataSource, DataSourceOptions } from "typeorm";
 
 // Sends to Kevin's smartphone rn
-const testPushToken = "ExponentPushToken[MbIGoaN3gTd61gYRRCRz8C]"; // TODO
+const testPushToken = "ExponentPushToken[MbIGoaN3gTd61gYRRCRz8C]";
 
 const mockUser: UserPublicDTO = {
     id: "123456789",
@@ -75,7 +75,7 @@ describe("NotificationService", () => {
     });
 
     describe("notification service", () => {
-        it("send push notification", async () => {
+        it.skip("send push notification", async () => {
             const messages: OfflineryNotification[] = [
                 {
                     to: testPushToken, // could be also multiple users at once! (we will need that)
