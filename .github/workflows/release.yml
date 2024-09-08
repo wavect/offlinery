@@ -38,11 +38,16 @@ jobs:
           version=${{ github.event.inputs.version || github.ref_name }}
           jq --arg version "$version" '
             .expo.version = $version |
-            .expo.ios.buildNumber = (if .expo.ios.buildNumber then (.expo.ios.buildNumber | tonumber + 1 | tostring) else "1" end) |
-            .expo.android.versionCode = (if .expo.android.versionCode then .expo.android.versionCode + 1 else 1 end)
-          ' app.json > app.json.tmp
-          mv app.json.tmp app.json
-          cat app.json
+            if .expo.ios.buildNumber then .expo.ios.buildNumber = (.expo.ios.buildNumber | tonumber + 1 | tostring) else . end |
+            if .expo.android.versionCode then .expo.android.versionCode = (.expo.android.versionCode + 1) else . end
+          ' app.json | jq -S > app.json.tmp
+          if ! cmp -s app.json app.json.tmp; then
+            mv app.json.tmp app.json
+            echo "app.json updated"
+          else
+            echo "No changes needed in app.json"
+            rm app.json.tmp
+          fi
 
       - name: Create Release Branch and PR
         env:
