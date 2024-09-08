@@ -51,7 +51,7 @@ jobs:
   #        exit 1
   #      fi
 
-    - name: Run tests
+    - name: Run all tests (unit, integration) with coverage
       run: pnpm test
       env:
         # This ensures that the environment variables are available to the test command

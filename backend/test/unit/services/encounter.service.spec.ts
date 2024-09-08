@@ -1,13 +1,13 @@
-import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
-import { Message } from "@/entities/messages/message.entity";
-import { User } from "@/entities/user/user.entity";
-import { EEncounterStatus } from "@/types/user.types";
 import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { Encounter } from "./encounter.entity";
-import { EncounterService } from "./encounter.service";
+import { UpdateEncounterStatusDTO } from "../../../src/DTOs/update-encounter-status.dto";
+import { Encounter } from "../../../src/entities/encounter/encounter.entity";
+import { EncounterService } from "../../../src/entities/encounter/encounter.service";
+import { Message } from "../../../src/entities/messages/message.entity";
+import { User } from "../../../src/entities/user/user.entity";
+import { EEncounterStatus } from "../../../src/types/user.types";
 
 describe("EncounterService", () => {
     let service: EncounterService;

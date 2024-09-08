@@ -1,18 +1,18 @@
-import { CreateUserDTO } from "@/DTOs/create-user.dto";
-import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
-import { UpdateUserDTO } from "@/DTOs/update-user.dto";
+import { NotFoundException } from "@nestjs/common";
+import { Test, TestingModule } from "@nestjs/testing";
+import { CreateUserDTO } from "../../../src/DTOs/create-user.dto";
+import { LocationUpdateDTO } from "../../../src/DTOs/location-update.dto";
+import { UpdateUserDTO } from "../../../src/DTOs/update-user.dto";
+import { UserController } from "../../../src/entities/user/user.controller";
+import { User } from "../../../src/entities/user/user.entity";
+import { UserService } from "../../../src/entities/user/user.service";
 import {
     EApproachChoice,
     EDateMode,
     EGender,
     ELanguage,
     EVerificationStatus,
-} from "@/types/user.types";
-import { NotFoundException } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
-import { UserController } from "./user.controller";
-import { User } from "./user.entity";
-import { UserService } from "./user.service";
+} from "../../../src/types/user.types";
 
 describe("UserController", () => {
     let controller: UserController;
