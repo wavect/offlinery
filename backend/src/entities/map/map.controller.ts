@@ -29,6 +29,9 @@ export class MapController {
             userToBeApproached,
             false,
         );
+
+        console.log("found users : ", nearbyMatches.length);
+
         return nearbyMatches.map((match) => ({
             latitude: match.location.coordinates[1],
             longitude: match.location.coordinates[0],

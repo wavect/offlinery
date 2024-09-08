@@ -131,12 +131,8 @@ export class MatchingService {
 
         const potentialMatchesThatWantToApproach = this.userRepository
             .createQueryBuilder("user")
-            .leftJoinAndSelect(
-                "user.encounters",
-                "encounter",
-                "encounter.users @> ARRAY[:userToBeApproachedId]::uuid[]",
-                { userToBeApproachedId: userToBeApproached.id },
-            )
+            .leftJoinAndSelect("user.encounters", "encounter")
+            .leftJoin("encounter.users", "encounterUser")
             .where("user.id != :userId", { userId: userToBeApproached.id })
             .andWhere("user.gender = :desiredGender", {
                 desiredGender: userToBeApproached.genderDesire,
@@ -166,6 +162,10 @@ export class MatchingService {
                     ),
                     notMetStatus: EEncounterStatus.NOT_MET,
                 },
+            )
+            .andWhere(
+                "(encounterUser.id = :userToBeApproachedId OR encounterUser.id IS NULL)",
+                { userToBeApproachedId: userToBeApproached.id },
             );
 
         // @dev For HeatMap it's not of relevance if users are nearby rn, also we don't want to filter for approachChoice as also BE_APPROACHED users might want to see the heatmap

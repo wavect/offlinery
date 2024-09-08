@@ -17,6 +17,8 @@ import {
     Column,
     Entity,
     Index,
+    JoinTable,
+    ManyToMany,
     OneToMany,
     PrimaryGeneratedColumn,
 } from "typeorm";
@@ -128,7 +130,8 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
     @OneToMany(() => UserReport, (report) => report.reportingUser)
     issuedReports: UserReport[];
 
-    @OneToMany(() => Encounter, (encounter) => encounter.users)
+    @ManyToMany(() => Encounter, (encounter) => encounter.users)
+    @JoinTable()
     encounters: Encounter[];
 
     @Column({ nullable: true })

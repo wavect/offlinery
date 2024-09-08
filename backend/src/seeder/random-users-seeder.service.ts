@@ -14,7 +14,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 @Injectable()
-export class RandomUserLocationsSeeder {
+export class RandomUsersSeeder {
     constructor(
         private userService: UserService,
         @InjectRepository(PendingUser)
@@ -23,10 +23,10 @@ export class RandomUserLocationsSeeder {
 
     private AMOUNT_OF_USERS = 300;
 
-    async seedRandomUserLocations(): Promise<void> {
+    async seedRandomUsers(): Promise<void> {
         try {
             await this.userService.findUserByEmail("test@test.test");
-            console.log(`✓ No Test User Seed. Already seeded.`);
+            console.log("✓ Test Users exist");
             return;
         } catch (e) {
             console.log(`Seeding ${this.AMOUNT_OF_USERS} Test Users...`);
@@ -78,12 +78,13 @@ export class RandomUserLocationsSeeder {
     private generateRandomUser(index: number): CreateUserDTO {
         const gender = Math.random() < 0.5 ? EGender.MAN : EGender.WOMAN;
         const genderDesire =
-            Math.random() < 0.8
+            Math.random() < 0.5
                 ? gender === EGender.MAN
                     ? EGender.WOMAN
                     : EGender.MAN
                 : gender;
-        const dateMode = Math.random() < 0.2 ? EDateMode.LIVE : EDateMode.GHOST;
+        const dateMode =
+            Math.random() < 0.95 ? EDateMode.LIVE : EDateMode.GHOST;
 
         const approachFromTime = new Date();
         approachFromTime.setHours(Math.floor(Math.random() * 24));
