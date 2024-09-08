@@ -1,20 +1,20 @@
-import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
-import { UserPublicDTO } from "@/DTOs/user-public.dto";
-import { BlacklistedRegionModule } from "@/entities/blacklisted-region/blacklisted-region.module";
-import { UserReport } from "@/entities/user-report/user-report.entity";
-import { UserReportModule } from "@/entities/user-report/user-report.module";
-import { UserModule } from "@/entities/user/user.module";
-import { I18nTranslations } from "@/translations/i18n.generated";
-import { OfflineryNotification } from "@/types/notification-message.types";
-import { ELanguage } from "@/types/user.types";
-import { getAge } from "@/utils/date.utils";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getDataSourceToken, TypeOrmModule } from "@nestjs/typeorm";
 import { I18nModule, I18nService } from "nestjs-i18n";
 import * as path from "node:path";
 import { DataSource, DataSourceOptions } from "typeorm";
-import { NotificationController } from "./notification.controller";
-import { NotificationService } from "./notification.service";
+import { EAppScreens } from "../../../src/DTOs/notification-navigate-user.dto";
+import { UserPublicDTO } from "../../../src/DTOs/user-public.dto";
+import { BlacklistedRegionModule } from "../../../src/entities/blacklisted-region/blacklisted-region.module";
+import { UserReport } from "../../../src/entities/user-report/user-report.entity";
+import { UserReportModule } from "../../../src/entities/user-report/user-report.module";
+import { UserModule } from "../../../src/entities/user/user.module";
+import { NotificationController } from "../../../src/transient-services/notification/notification.controller";
+import { NotificationService } from "../../../src/transient-services/notification/notification.service";
+import { I18nTranslations } from "../../../src/translations/i18n.generated";
+import { OfflineryNotification } from "../../../src/types/notification-message.types";
+import { ELanguage } from "../../../src/types/user.types";
+import { getAge } from "../../../src/utils/date.utils";
 
 // Sends to Kevin's smartphone rn
 const testPushToken = "ExponentPushToken[MbIGoaN3gTd61gYRRCRz8C]"; // TODO

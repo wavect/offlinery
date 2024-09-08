@@ -1,7 +1,7 @@
-import { ParseJsonPipe } from "@/pipes/ParseJson.pipe";
 import { BadRequestException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { IsString } from "class-validator";
+import { ParseJsonPipe } from "../../../src/pipes/ParseJson.pipe";
 
 class TestDto {
     @IsString()

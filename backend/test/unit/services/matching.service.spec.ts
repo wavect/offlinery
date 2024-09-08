@@ -1,18 +1,18 @@
-import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
-import { EncounterService } from "@/entities/encounter/encounter.service";
-import { User } from "@/entities/user/user.entity";
+import { Test, TestingModule } from "@nestjs/testing";
+import { getRepositoryToken } from "@nestjs/typeorm";
+import { I18nService } from "nestjs-i18n";
+import { DataSource, Repository } from "typeorm";
+import { BlacklistedRegion } from "../../../src/entities/blacklisted-region/blacklisted-region.entity";
+import { EncounterService } from "../../../src/entities/encounter/encounter.service";
+import { User } from "../../../src/entities/user/user.entity";
+import { MatchingService } from "../../../src/transient-services/matching/matching.service";
+import { NotificationService } from "../../../src/transient-services/notification/notification.service";
 import {
     EApproachChoice,
     EDateMode,
     EGender,
     EVerificationStatus,
-} from "@/types/user.types";
-import { Test, TestingModule } from "@nestjs/testing";
-import { getRepositoryToken } from "@nestjs/typeorm";
-import { I18nService } from "nestjs-i18n";
-import { DataSource, Repository } from "typeorm";
-import { NotificationService } from "../notification/notification.service";
-import { MatchingService } from "./matching.service";
+} from "../../../src/types/user.types";
 
 jest.mock("geo-tz", () => ({
     find: jest.fn().mockReturnValue(["America/New_York"]),
