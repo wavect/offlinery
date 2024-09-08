@@ -31,11 +31,6 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Install dependencies
-        working-directory: ./mobile
-        run: |
-          pnpm install
-
       - name: Update app.json
         working-directory: ./mobile
         run: |
