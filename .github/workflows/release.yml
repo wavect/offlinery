@@ -30,6 +30,7 @@ jobs:
         working-directory: ./mobile
         run: |
           pnpm install -g expo-cli
+          pnpm install -g eas-cli
           pnpm install
 
       - name: Update app.json
@@ -49,6 +50,21 @@ jobs:
             rm app.json.tmp
           fi
 
+      - name: Login to Expo
+        working-directory: ./mobile
+        env:
+          EXPO_CLI_USERNAME: ${{ secrets.EXPO_CLI_USERNAME }}
+          EXPO_CLI_PASSWORD: ${{ secrets.EXPO_CLI_PASSWORD }}
+        run: eas login -u $EXPO_CLI_USERNAME -p $EXPO_CLI_PASSWORD --non-interactive
+
+      - name: Run Expo build
+        working-directory: ./mobile
+        env:
+          EXPO_APPLE_ID: ${{ secrets.EXPO_APPLE_ID }}
+          EXPO_APPLE_PASSWORD: ${{ secrets.EXPO_APPLE_PASSWORD }}
+          EXPO_APPLE_TEAM_ID: ${{ secrets.EXPO_APPLE_TEAM_ID }}
+        run: eas build --platform android --non-interactive # TODO: all
+
       - name: Create Release Branch and PR
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -61,21 +77,6 @@ jobs:
           git commit -m "Update app.json for version $version"
           git push origin release/v$version
           gh pr create --base main --head release/v$version --title "Release v$version" --body "Update app.json for version $version"
-
-      - name: Login to Expo
-        working-directory: ./mobile
-        env:
-          EXPO_CLI_USERNAME: ${{ secrets.EXPO_CLI_USERNAME }}
-          EXPO_CLI_PASSWORD: ${{ secrets.EXPO_CLI_PASSWORD }}
-        run: pnpm expo login -u $EXPO_CLI_USERNAME -p $EXPO_CLI_PASSWORD
-
-      - name: Run Expo build
-        working-directory: ./mobile
-        env:
-          EXPO_APPLE_ID: ${{ secrets.EXPO_APPLE_ID }}
-          EXPO_APPLE_PASSWORD: ${{ secrets.EXPO_APPLE_PASSWORD }}
-          EXPO_APPLE_TEAM_ID: ${{ secrets.EXPO_APPLE_TEAM_ID }}
-        run: pnpm eas build --platform android # TODO: all
 
       - name: Upload to GitHub Release
         uses: actions/upload-release-asset@v1
