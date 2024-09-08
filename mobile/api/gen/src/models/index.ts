@@ -27,3 +27,4 @@ export * from "./UserPrivateDTO";
 export * from "./UserPublicDTO";
 export * from "./UserReport";
 export * from "./VerifyEmailDTO";
+export * from "./WeightedLatLngDTO";

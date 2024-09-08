@@ -26,9 +26,9 @@ import * as TaskManager from "expo-task-manager";
 import * as React from "react";
 import { useCallback, useRef, useState } from "react";
 import { Platform } from "react-native";
-import HeatMap from "../../screens/main/HeatMap";
 import { ROUTES } from "../routes";
 import { EncounterScreenStack } from "./EncounterStackNavigator";
+import Map from "./Map";
 import ProfileSettings from "./ProfileSettings";
 
 const Tab = createBottomTabNavigator();
@@ -251,7 +251,7 @@ export const MainScreenTabs = ({ navigation }) => {
         >
             <Tab.Screen
                 name={ROUTES.Main.FindPeople}
-                component={HeatMap}
+                component={Map}
                 options={{
                     tabBarLabel: i18n.t(TR.findPeople),
                     headerTitle: i18n.t(TR.findPeople),

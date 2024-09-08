@@ -5,6 +5,7 @@ package.json
 src/apis/AuthApi.ts
 src/apis/DefaultApi.ts
 src/apis/EncounterApi.ts
+src/apis/MapApi.ts
 src/apis/PushNotificationsApi.ts
 src/apis/RegistrationApi.ts
 src/apis/UserApi.ts
@@ -38,6 +39,7 @@ src/models/UserPrivateDTO.ts
 src/models/UserPublicDTO.ts
 src/models/UserReport.ts
 src/models/VerifyEmailDTO.ts
+src/models/WeightedLatLngDTO.ts
 src/models/index.ts
 src/runtime.ts
 tsconfig.esm.json

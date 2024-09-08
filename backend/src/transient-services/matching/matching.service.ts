@@ -3,6 +3,7 @@ import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-reg
 import { EncounterService } from "@/entities/encounter/encounter.service";
 import { User } from "@/entities/user/user.entity";
 import { I18nTranslations } from "@/translations/i18n.generated";
+import { OfflineryNotification } from "@/types/notification-message.types";
 import {
     EApproachChoice,
     EDateMode,
@@ -15,7 +16,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { find as findTimeZoneByLocation } from "geo-tz";
 import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
-import { OfflineryNotification } from "../../types/notification-message.types";
 import { NotificationService } from "../notification/notification.service";
 
 @Injectable()
@@ -75,7 +75,10 @@ export class MatchingService {
         );
     }
 
-    public async findNearbyMatches(userToBeApproached: User): Promise<User[]> {
+    public async findNearbyMatches(
+        userToBeApproached: User,
+        enableEnableExtendedChecksForNotification = true,
+    ): Promise<User[]> {
         // @dev Do not send notifications if user does not share her live location.
         if (
             !userToBeApproached ||
@@ -90,35 +93,38 @@ export class MatchingService {
         const lon = userToBeApproached.location.coordinates[0];
         const lat = userToBeApproached.location.coordinates[1];
 
-        // @dev Check if user is within any of their blacklisted regions
-        const isInBlacklistedRegion =
-            (await this.blacklistedRegionRepository
-                .createQueryBuilder("region")
-                .where("region.user = :userId", {
-                    userId: userToBeApproached.id,
-                })
-                .andWhere(
-                    "ST_DWithin(region.location::geography, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, region.radius)",
-                    {
-                        lon,
-                        lat,
-                    },
-                )
-                .getCount()) > 0;
+        // @dev For HeatMap it's not of relevance whether user is within blacklisted region or approachTime rn.
+        if (enableEnableExtendedChecksForNotification) {
+            // @dev Check if user is within any of their blacklisted regions
+            const isInBlacklistedRegion =
+                (await this.blacklistedRegionRepository
+                    .createQueryBuilder("region")
+                    .where("region.user = :userId", {
+                        userId: userToBeApproached.id,
+                    })
+                    .andWhere(
+                        "ST_DWithin(region.location::geography, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, region.radius)",
+                        {
+                            lon,
+                            lat,
+                        },
+                    )
+                    .getCount()) > 0;
 
-        // @dev Do not send notifications if user is not in a safe space.
-        if (isInBlacklistedRegion) {
-            this.logger.debug(
-                `User ${userToBeApproached.id} is right now in blacklisted location - not returning potential matches.`,
-            );
-            return [];
-        }
-        // @dev Do not send any notifications if user does not feel safe at this time (time zone sensitive).
-        if (!this.isWithinApproachTime(userToBeApproached, lat, lon)) {
-            this.logger.debug(
-                `User ${userToBeApproached.id} does not feel safe to be approached right now.`,
-            );
-            return [];
+            // @dev Do not send notifications if user is not in a safe space.
+            if (isInBlacklistedRegion) {
+                this.logger.debug(
+                    `User ${userToBeApproached.id} is right now in blacklisted location - not returning potential matches.`,
+                );
+                return [];
+            }
+            // @dev Do not send any notifications if user does not feel safe at this time (time zone sensitive).
+            if (!this.isWithinApproachTime(userToBeApproached, lat, lon)) {
+                this.logger.debug(
+                    `User ${userToBeApproached.id} does not feel safe to be approached right now.`,
+                );
+                return [];
+            }
         }
 
         const userAge = getAge(userToBeApproached.birthDay);
@@ -126,6 +132,8 @@ export class MatchingService {
         // TODO: This algorithm should be improved over time
         const potentialMatchesThatWantToApproach = await this.userRepository
             .createQueryBuilder("user")
+            .leftJoinAndSelect("user.encounters", "encounter")
+            .leftJoin("encounter.users", "encounterUser")
             // @dev Exclude yourself
             .where("user.id != :userId", { userId: userToBeApproached.id })
             // @dev Only return users the approached user is interested in gender-wise
@@ -145,19 +153,7 @@ export class MatchingService {
             )
             // @dev Only send notification to users who are sharing their live location right now.
             .andWhere("user.dateMode = :liveMode", { liveMode: EDateMode.LIVE })
-            // @dev Only send notification to users who want to approach.
-            .andWhere("user.approachChoice = :approach", {
-                approach: EApproachChoice.APPROACH,
-            })
             // @dev Are users within x meters - TODO: Make this configurable by users.
-            .andWhere(
-                "ST_DWithin(user.location::geography, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, :distance)",
-                {
-                    lon: userToBeApproached.location.coordinates[0],
-                    lat: userToBeApproached.location.coordinates[1],
-                    distance: 750, // 750 meters
-                },
-            )
             // @dev Make sure users are somewhat within age range - TODO: Make this configurable by users.
             .andWhere(
                 "EXTRACT(YEAR FROM AGE(user.birthDay)) BETWEEN :minAge AND :maxAge",
@@ -176,19 +172,42 @@ export class MatchingService {
                     notMetStatus: EEncounterStatus.NOT_MET,
                 },
             )
-            .getMany();
+            .andWhere(
+                "(encounterUser.id = :userToBeApproachedId OR encounterUser.id IS NULL)",
+                { userToBeApproachedId: userToBeApproached.id },
+            );
+
+        // @dev For HeatMap it's not of relevance if users are nearby rn, also we don't want to filter for approachChoice as also BE_APPROACHED users might want to see the heatmap
+        if (enableEnableExtendedChecksForNotification) {
+            potentialMatchesThatWantToApproach
+                .andWhere(
+                    "ST_DWithin(user.location::geography, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, :distance)",
+                    {
+                        lon: userToBeApproached.location.coordinates[0],
+                        lat: userToBeApproached.location.coordinates[1],
+                        distance: 1500, // reachable within 1500m
+                    },
+                )
+                // @dev Only send notification to users who want to approach.
+                .andWhere("user.approachChoice = :approach", {
+                    approach: EApproachChoice.APPROACH,
+                });
+        }
 
         this.logger.debug(
-            `Found ${potentialMatchesThatWantToApproach.length} potential matches for user ${userToBeApproached.id}`,
+            `Returning potential matches for user ${userToBeApproached.id}`,
         );
 
-        return potentialMatchesThatWantToApproach;
+        return potentialMatchesThatWantToApproach.getMany();
     }
 
     public async checkAndNotifyMatches(
         userToBeApproached: User,
     ): Promise<void> {
-        const nearbyMatches = await this.findNearbyMatches(userToBeApproached);
+        const nearbyMatches = await this.findNearbyMatches(
+            userToBeApproached,
+            true,
+        );
 
         if (nearbyMatches.length > 0) {
             const baseNotification: Omit<OfflineryNotification, "to"> = {

@@ -6,6 +6,7 @@ import { IEntityToDTOInterface } from "@/interfaces/IEntityToDTO.interface";
 import { EEncounterStatus } from "@/types/user.types";
 import { Point } from "geojson";
 import {
+    AfterLoad,
     Column,
     Entity,
     Index,
@@ -79,7 +80,14 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
         enum: EEncounterStatus,
         default: EEncounterStatus.NOT_MET,
     })
-    get status(): EEncounterStatus {
+    status: EEncounterStatus;
+
+    @AfterLoad()
+    updateStatusAfterLoad() {
+        this.status = this.calculateStatus();
+    }
+
+    private calculateStatus(): EEncounterStatus {
         const statuses = Object.values(this.userStatuses);
         if (
             statuses.every(
@@ -96,5 +104,14 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
         } else {
             return EEncounterStatus.NOT_MET;
         }
+    }
+
+    public updateStatus(): void {
+        this.status = this.calculateStatus();
+    }
+
+    public setUserStatus(userId: string, status: EEncounterStatus): void {
+        this.userStatuses[userId] = status;
+        this.updateStatus();
     }
 }

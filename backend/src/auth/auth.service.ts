@@ -17,16 +17,16 @@ export class AuthService {
     ) {}
 
     async signInWithJWT(accessToken: string): Promise<SignInResponseDTO> {
-        const userJwtRes: Pick<User, "id"> = await this.jwtService.verifyAsync(
-            accessToken,
-            {
-                secret: TYPED_ENV.JWT_SECRET,
-            },
+        await this.jwtService.verifyAsync(accessToken, {
+            secret: TYPED_ENV.JWT_SECRET,
+        });
+        const decoded = this.jwtService.decode(accessToken);
+        const user: User = await this.usersService.findUserByEmail(
+            decoded.email,
         );
-        const user: User = await this.usersService.findUserById(userJwtRes.id);
         if (!user) {
             this.logger.debug(
-                `Sign in with JWT failed as user ID does not exist: ${userJwtRes.id} (extracted from JWT: ${accessToken})`,
+                `Sign in with JWT failed as user does not exist: ${decoded.email} (extracted from JWT: ${accessToken})`,
             );
             throw new UnauthorizedException();
         }

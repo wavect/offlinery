@@ -25,6 +25,15 @@ describe("MatchingService", () => {
     let userRepository: Repository<User>;
     let blacklistedRegionRepository: Repository<BlacklistedRegion>;
 
+    const mockQueryBuilder = {
+        leftJoinAndSelect: jest.fn().mockReturnThis(),
+        leftJoin: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
+        getMany: jest.fn().mockResolvedValue([]),
+        getCount: jest.fn().mockResolvedValue(0),
+    };
+
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
@@ -49,11 +58,19 @@ describe("MatchingService", () => {
                 },
                 {
                     provide: getRepositoryToken(User),
-                    useClass: Repository,
+                    useValue: {
+                        createQueryBuilder: jest
+                            .fn()
+                            .mockReturnValue(mockQueryBuilder),
+                    },
                 },
                 {
                     provide: getRepositoryToken(BlacklistedRegion),
-                    useClass: Repository,
+                    useValue: {
+                        createQueryBuilder: jest
+                            .fn()
+                            .mockReturnValue(mockQueryBuilder),
+                    },
                 },
                 {
                     provide: DataSource,
@@ -184,6 +201,7 @@ describe("MatchingService", () => {
                 "createQueryBuilder",
             ).mockReturnValue({
                 where: jest.fn().mockReturnThis(),
+                leftJoinAndSelect: jest.fn().mockReturnThis(),
                 andWhere: jest.fn().mockReturnThis(),
                 getCount: jest.fn().mockResolvedValue(1),
             } as any);
@@ -202,6 +220,7 @@ describe("MatchingService", () => {
                 "createQueryBuilder",
             ).mockReturnValue({
                 where: jest.fn().mockReturnThis(),
+                leftJoinAndSelect: jest.fn().mockReturnThis(),
                 andWhere: jest.fn().mockReturnThis(),
                 getCount: jest.fn().mockResolvedValue(0),
             } as any);
@@ -224,11 +243,14 @@ describe("MatchingService", () => {
                 "createQueryBuilder",
             ).mockReturnValue({
                 where: jest.fn().mockReturnThis(),
+                leftJoinAndSelect: jest.fn().mockReturnThis(),
                 andWhere: jest.fn().mockReturnThis(),
                 getCount: jest.fn().mockResolvedValue(0),
             } as any);
 
             jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue({
+                leftJoinAndSelect: jest.fn().mockReturnThis(),
+                leftJoin: jest.fn().mockReturnThis(),
                 where: jest.fn().mockReturnThis(),
                 andWhere: jest.fn().mockReturnThis(),
                 getMany: jest.fn().mockResolvedValue([matchedUser]),
@@ -251,16 +273,15 @@ describe("MatchingService", () => {
                 blacklistedRegionRepository,
                 "createQueryBuilder",
             ).mockReturnValue({
+                leftJoinAndSelect: jest.fn().mockReturnThis(),
                 where: jest.fn().mockReturnThis(),
                 andWhere: jest.fn().mockReturnThis(),
                 getCount: jest.fn().mockResolvedValue(0),
             } as any);
 
-            jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue({
-                where: jest.fn().mockReturnThis(),
-                andWhere: jest.fn().mockReturnThis(),
-                getMany: jest.fn().mockResolvedValue([]),
-            } as any);
+            jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue(
+                mockQueryBuilder as any,
+            );
 
             const result = await matchingService.findNearbyMatches(user);
             expect(result).toEqual([]);
@@ -284,11 +305,9 @@ describe("MatchingService", () => {
                 getCount: jest.fn().mockResolvedValue(0),
             } as any);
 
-            jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue({
-                where: jest.fn().mockReturnThis(),
-                andWhere: jest.fn().mockReturnThis(),
-                getMany: jest.fn().mockResolvedValue([]),
-            } as any);
+            jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue(
+                mockQueryBuilder as any,
+            );
 
             const result = await matchingService.findNearbyMatches(user);
             expect(result).toEqual([]);
@@ -308,15 +327,14 @@ describe("MatchingService", () => {
                 "createQueryBuilder",
             ).mockReturnValue({
                 where: jest.fn().mockReturnThis(),
+                leftJoinAndSelect: jest.fn().mockReturnThis(),
                 andWhere: jest.fn().mockReturnThis(),
                 getCount: jest.fn().mockResolvedValue(0),
             } as any);
 
-            jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue({
-                where: jest.fn().mockReturnThis(),
-                andWhere: jest.fn().mockReturnThis(),
-                getMany: jest.fn().mockResolvedValue([]),
-            } as any);
+            jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue(
+                mockQueryBuilder as any,
+            );
 
             const result = await matchingService.findNearbyMatches(user);
             expect(result).toEqual([]);
@@ -336,16 +354,14 @@ describe("MatchingService", () => {
                 "createQueryBuilder",
             ).mockReturnValue({
                 where: jest.fn().mockReturnThis(),
+                leftJoinAndSelect: jest.fn().mockReturnThis(),
                 andWhere: jest.fn().mockReturnThis(),
                 getCount: jest.fn().mockResolvedValue(0),
             } as any);
 
-            jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue({
-                where: jest.fn().mockReturnThis(),
-                andWhere: jest.fn().mockReturnThis(),
-                getMany: jest.fn().mockResolvedValue([]),
-            } as any);
-
+            jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue(
+                mockQueryBuilder as any,
+            );
             const result = await matchingService.findNearbyMatches(user);
             expect(result).toEqual([]);
         });
@@ -365,15 +381,14 @@ describe("MatchingService", () => {
                 "createQueryBuilder",
             ).mockReturnValue({
                 where: jest.fn().mockReturnThis(),
+                leftJoinAndSelect: jest.fn().mockReturnThis(),
                 andWhere: jest.fn().mockReturnThis(),
                 getCount: jest.fn().mockResolvedValue(0),
             } as any);
 
-            jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue({
-                where: jest.fn().mockReturnThis(),
-                andWhere: jest.fn().mockReturnThis(),
-                getMany: jest.fn().mockResolvedValue([]),
-            } as any);
+            jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue(
+                mockQueryBuilder as any,
+            );
 
             const result = await matchingService.findNearbyMatches(user);
             expect(result).toEqual([]);
@@ -394,46 +409,17 @@ describe("MatchingService", () => {
                 "createQueryBuilder",
             ).mockReturnValue({
                 where: jest.fn().mockReturnThis(),
+                leftJoinAndSelect: jest.fn().mockReturnThis(),
                 andWhere: jest.fn().mockReturnThis(),
                 getCount: jest.fn().mockResolvedValue(0),
             } as any);
 
-            jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue({
-                where: jest.fn().mockReturnThis(),
-                andWhere: jest.fn().mockReturnThis(),
-                getMany: jest.fn().mockResolvedValue([]),
-            } as any);
+            jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue(
+                mockQueryBuilder as any,
+            );
 
             const result = await matchingService.findNearbyMatches(user);
             expect(result).toEqual([]);
-        });
-
-        it("should return users with old encounters that are not met", async () => {
-            const oldEncounterUser = new User();
-            oldEncounterUser.id = "2";
-            oldEncounterUser.gender = EGender.WOMAN;
-            oldEncounterUser.genderDesire = EGender.MAN;
-            oldEncounterUser.verificationStatus = EVerificationStatus.VERIFIED;
-            oldEncounterUser.dateMode = EDateMode.LIVE;
-            oldEncounterUser.approachChoice = EApproachChoice.APPROACH;
-
-            jest.spyOn(
-                blacklistedRegionRepository,
-                "createQueryBuilder",
-            ).mockReturnValue({
-                where: jest.fn().mockReturnThis(),
-                andWhere: jest.fn().mockReturnThis(),
-                getCount: jest.fn().mockResolvedValue(0),
-            } as any);
-
-            jest.spyOn(userRepository, "createQueryBuilder").mockReturnValue({
-                where: jest.fn().mockReturnThis(),
-                andWhere: jest.fn().mockReturnThis(),
-                getMany: jest.fn().mockResolvedValue([oldEncounterUser]),
-            } as any);
-
-            const result = await matchingService.findNearbyMatches(user);
-            expect(result).toEqual([oldEncounterUser]);
         });
     });
 

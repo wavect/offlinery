@@ -1,5 +1,10 @@
 import { BorderRadius, Color, Subtitle } from "@/GlobalStyles";
-import { UserApi } from "@/api/gen/src";
+import {
+    MapApi,
+    UserApi,
+    UserPrivateDTODateModeEnum,
+    WeightedLatLngDTO,
+} from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
     EACTION_USER,
@@ -18,6 +23,7 @@ import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import MapView, {
     Circle,
+    Heatmap,
     LongPressEvent,
     Marker,
     MarkerDragEvent,
@@ -26,7 +32,9 @@ import MapView, {
 } from "react-native-maps";
 
 const userApi = new UserApi();
-const HeatMap = () => {
+const mapApi = new MapApi();
+
+const Map = () => {
     const { state, dispatch } = useUserContext();
     const [activeRegionIndex, setActiveRegionIndex] = React.useState<
         number | null
@@ -39,6 +47,8 @@ const HeatMap = () => {
      * It gets updates as the user adjusts the radius.
      */
     const [uiRadii, setUiRadii] = useState<number[]>([]);
+    const [locationsFromOthers, setLocationsFromOthers] =
+        useState<WeightedLatLngDTO[]>();
     const mapRef = React.useRef(null);
     const [mapRegion, setMapRegion] = useState({
         // Uni Ibk
@@ -54,18 +64,22 @@ const HeatMap = () => {
     // TODO: Maybe make map to a separate component
     useEffect(() => {
         (async () => {
+            if (state.dateMode === UserPrivateDTODateModeEnum.ghost) {
+                // if users are in ghost mode, should not see others as incentive to stay live
+                setLocationsFromOthers([]);
+            } else {
+                await getOtherUsersPositions();
+            }
+
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== "granted") {
                 alert("Permission to access location was denied");
                 return;
             }
 
-            const location = await Location.getCurrentPositionAsync({
-                accuracy: LocationAccuracy.BestForNavigation,
-            });
-            setLocation(location);
+            await getUserPosition();
         })();
-    }, []);
+    }, [state.dateMode]);
 
     useEffect(() => {
         if (location) {
@@ -110,6 +124,31 @@ const HeatMap = () => {
         }, 1000);
         return () => clearTimeout(timer);
     }, [uiRadii[activeRegionIndex!]]);
+
+    const getUserPosition = async () => {
+        try {
+            const location = await Location.getCurrentPositionAsync({
+                accuracy: LocationAccuracy.BestForNavigation,
+            });
+            setLocation(location);
+        } catch (e) {
+            console.warn("Unable to get user locations");
+        }
+    };
+
+    const getOtherUsersPositions = async () => {
+        try {
+            const positions = await mapApi.mapControllerGetUserLocations(
+                {
+                    userId: state.id!,
+                },
+                await includeJWT(),
+            );
+            setLocationsFromOthers(positions);
+        } catch (e) {
+            console.warn("Unable to get position from other users ", e);
+        }
+    };
 
     const setBlacklistedRegions = (blacklistedRegions: MapRegion[]) => {
         dispatch({
@@ -172,6 +211,10 @@ const HeatMap = () => {
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     }}
+                    zoomControlEnabled={true}
+                    zoomEnabled={true}
+                    zoomTapEnabled={true}
+                    maxZoomLevel={13}
                     onLongPress={handleMapLongPress}
                     provider={
                         process.env.NODE_ENV === "production"
@@ -179,6 +222,16 @@ const HeatMap = () => {
                             : PROVIDER_DEFAULT
                     }
                 >
+                    <Heatmap
+                        points={locationsFromOthers}
+                        opacity={0.5}
+                        radius={100}
+                        gradient={{
+                            colors: ["blue", "green", "yellow", "red"],
+                            startPoints: [0.01, 0.25, 0.5, 0.75],
+                            colorMapSize: 256,
+                        }}
+                    />
                     {state.blacklistedRegions.map((region, index) => (
                         <React.Fragment key={`region-${index}`}>
                             <Circle
@@ -228,6 +281,7 @@ const HeatMap = () => {
                         />
                     </Pressable>
                 )}
+
                 <View style={styles.instructions}>
                     <Text style={[Subtitle, styles.instructionText]}>
                         {i18n.t(TR.longPressMapSafeZoneInstruction)}
@@ -306,4 +360,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HeatMap;
+export default Map;
