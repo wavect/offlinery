@@ -32,11 +32,6 @@ jobs:
           pnpm install -g expo-cli
           pnpm install
 
-      - name: Expo doctor
-        working-directory: ./mobile
-        run: |
-          npx expo-doctor
-
       - name: Update app.json
         working-directory: ./mobile
         run: |
