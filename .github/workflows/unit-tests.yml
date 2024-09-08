@@ -51,8 +51,8 @@ jobs:
   #        exit 1
   #      fi
 
-    - name: Run tests
-      run: pnpm test
+    - name: Run all tests (unit, integration) with coverage
+      run: pnpm test:coverage
       env:
         # This ensures that the environment variables are available to the test command
         SHELL: /bin/bash
