@@ -26,7 +26,7 @@ export class AuthService {
         );
         if (!user) {
             this.logger.debug(
-                `Sign in with JWT failed as user ID does not exist: ${userJwtRes.id} (extracted from JWT: ${accessToken})`,
+                `Sign in with JWT failed as user does not exist: ${decoded.email} (extracted from JWT: ${accessToken})`,
             );
             throw new UnauthorizedException();
         }

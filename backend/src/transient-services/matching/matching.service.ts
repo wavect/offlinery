@@ -3,6 +3,7 @@ import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-reg
 import { EncounterService } from "@/entities/encounter/encounter.service";
 import { User } from "@/entities/user/user.entity";
 import { I18nTranslations } from "@/translations/i18n.generated";
+import { OfflineryNotification } from "@/types/notification-message.types";
 import {
     EApproachChoice,
     EDateMode,
@@ -15,7 +16,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { find as findTimeZoneByLocation } from "geo-tz";
 import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
-import { OfflineryNotification } from "../../types/notification-message.types";
 import { NotificationService } from "../notification/notification.service";
 
 @Injectable()
@@ -113,16 +113,16 @@ export class MatchingService {
 
             // @dev Do not send notifications if user is not in a safe space.
             if (isInBlacklistedRegion) {
-               this.logger.debug(
-                `User ${userToBeApproached.id} is right now in blacklisted location - not returning potential matches.`,
-            );
+                this.logger.debug(
+                    `User ${userToBeApproached.id} is right now in blacklisted location - not returning potential matches.`,
+                );
                 return [];
             }
             // @dev Do not send any notifications if user does not feel safe at this time (time zone sensitive).
             if (!this.isWithinApproachTime(userToBeApproached, lat, lon)) {
-               this.logger.debug(
-                `User ${userToBeApproached.id} does not feel safe to be approached right now.`,
-            );
+                this.logger.debug(
+                    `User ${userToBeApproached.id} does not feel safe to be approached right now.`,
+                );
                 return [];
             }
         }
@@ -183,8 +183,8 @@ export class MatchingService {
                     approach: EApproachChoice.APPROACH,
                 });
         }
-          
-           this.logger.debug(
+
+        this.logger.debug(
             `Returning potential matches for user ${userToBeApproached.id}`,
         );
 
