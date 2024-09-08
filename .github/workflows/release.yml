@@ -1,0 +1,85 @@
+name: Expo Build and Release
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'App version'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 6.32.9
+
+      - name: Install dependencies
+        working-directory: ./mobile
+        run: |
+          pnpm install -g expo-cli
+          pnpm install
+
+      - name: Update app.json
+        working-directory: ./mobile
+        run: |
+          version=${{ github.event.inputs.version || github.ref_name }}
+          jq --arg version "$version" '
+            .expo.version = $version |
+            .expo.ios.buildNumber = ((.expo.ios.buildNumber | tonumber) + 1 | tostring) |
+            .expo.android.versionCode = ((.expo.android.versionCode // 0) + 1) |
+            .expo.ios.version = $version |
+            .expo.android.version = $version
+          ' app.json > app.json.tmp
+          mv app.json.tmp app.json
+          cat app.json
+
+      - name: Create Release Branch and PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version=${{ github.event.inputs.version || github.ref_name }}
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git checkout -b release/v$version
+          git add mobile/app.json
+          git commit -m "Update app.json for version $version"
+          git push origin release/v$version
+          gh pr create --base main --head release/v$version --title "Release v$version" --body "Update app.json for version $version"
+
+      - name: Login to Expo
+        working-directory: ./mobile
+        env:
+          EXPO_CLI_USERNAME: ${{ secrets.EXPO_CLI_USERNAME }}
+          EXPO_CLI_PASSWORD: ${{ secrets.EXPO_CLI_PASSWORD }}
+        run: pnpm expo login -u $EXPO_CLI_USERNAME -p $EXPO_CLI_PASSWORD
+
+      - name: Run Expo build
+        working-directory: ./mobile
+        env:
+          EXPO_APPLE_ID: ${{ secrets.EXPO_APPLE_ID }}
+          EXPO_APPLE_PASSWORD: ${{ secrets.EXPO_APPLE_PASSWORD }}
+          EXPO_APPLE_TEAM_ID: ${{ secrets.EXPO_APPLE_TEAM_ID }}
+        run: pnpm expo build --platform android # TODO: all
+
+      - name: Upload to GitHub Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./mobile/expo-build/*
+          asset_name: expo-build-${{ github.ref_name }}.zip
+          asset_content_type: application/zip
