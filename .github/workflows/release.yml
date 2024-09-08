@@ -32,16 +32,19 @@ jobs:
           pnpm install -g expo-cli
           pnpm install
 
+      - name: Expo doctor
+        working-directory: ./mobile
+        run: |
+          npx expo-doctor
+
       - name: Update app.json
         working-directory: ./mobile
         run: |
           version=${{ github.event.inputs.version || github.ref_name }}
           jq --arg version "$version" '
             .expo.version = $version |
-            .expo.ios.buildNumber = ((.expo.ios.buildNumber | tonumber) + 1 | tostring) |
-            .expo.android.versionCode = ((.expo.android.versionCode // 0) + 1) |
-            .expo.ios.version = $version |
-            .expo.android.version = $version
+            .expo.ios.buildNumber = (if .expo.ios.buildNumber then (.expo.ios.buildNumber | tonumber + 1 | tostring) else "1" end) |
+            .expo.android.versionCode = (if .expo.android.versionCode then .expo.android.versionCode + 1 else 1 end)
           ' app.json > app.json.tmp
           mv app.json.tmp app.json
           cat app.json
