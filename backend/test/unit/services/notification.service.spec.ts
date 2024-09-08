@@ -4,6 +4,8 @@ import { BlacklistedRegionModule } from "@/entities/blacklisted-region/blacklist
 import { UserReport } from "@/entities/user-report/user-report.entity";
 import { UserReportModule } from "@/entities/user-report/user-report.module";
 import { UserModule } from "@/entities/user/user.module";
+import { NotificationController } from "@/transient-services/notification/notification.controller";
+import { NotificationService } from "@/transient-services/notification/notification.service";
 import { I18nTranslations } from "@/translations/i18n.generated";
 import { OfflineryNotification } from "@/types/notification-message.types";
 import { ELanguage } from "@/types/user.types";
@@ -13,11 +15,9 @@ import { getDataSourceToken, TypeOrmModule } from "@nestjs/typeorm";
 import { I18nModule, I18nService } from "nestjs-i18n";
 import * as path from "node:path";
 import { DataSource, DataSourceOptions } from "typeorm";
-import { NotificationController } from "./notification.controller";
-import { NotificationService } from "./notification.service";
 
 // Sends to Kevin's smartphone rn
-const testPushToken = "ExponentPushToken[MbIGoaN3gTd61gYRRCRz8C]"; // TODO
+const testPushToken = "ExponentPushToken[MbIGoaN3gTd61gYRRCRz8C]";
 
 const mockUser: UserPublicDTO = {
     id: "123456789",
@@ -53,7 +53,14 @@ describe("NotificationService", () => {
                 I18nModule.forRoot({
                     fallbackLanguage: ELanguage.en,
                     loaderOptions: {
-                        path: path.join(__dirname, "..", "..", "translations"),
+                        path: path.join(
+                            __dirname,
+                            "..",
+                            "..",
+                            "..",
+                            "src",
+                            "translations",
+                        ),
                         watch: true,
                     },
                 }),
@@ -68,7 +75,7 @@ describe("NotificationService", () => {
     });
 
     describe("notification service", () => {
-        it("send push notification", async () => {
+        it.skip("send push notification", async () => {
             const messages: OfflineryNotification[] = [
                 {
                     to: testPushToken, // could be also multiple users at once! (we will need that)

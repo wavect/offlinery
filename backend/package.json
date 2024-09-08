@@ -18,13 +18,17 @@
         "test:cov": "jest --coverage --detectOpenHandles",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
+        "test:unit": "jest --testRegex=\"/test/unit/.*\\.spec\\.ts$\"",
+        "test:integration": "jest --testRegex=\"/test/integration/.*\\.spec\\.ts$\"",
+        "test:coverage": "pnpm test -- --coverage",
+        "test:badges": "pnpm run test:coverage  && jest-coverage-badges",
         "openapi:generate": "npx @openapitools/openapi-generator-cli generate -i ./swagger.json -g typescript-fetch -o ../mobile/api/gen/ -c openapi-config.json -t ./custom-templates && cd .. && pnpm run format:all",
         "pre-commit": "pnpm run format && pnpm run lint",
         "typeorm": "ts-node ./node_modules/typeorm/cli",
-        "migration:run": "npm run typeorm migration:run -- -d ./src/typeorm.config.ts",
-        "migration:generate": "npm run typeorm -- -d ./src/typeorm.config.ts migration:generate ./src/migrations/$npm_config_name",
-        "migration:create": "npm run typeorm -- migration:create ./src/migrations/$npm_config_name",
-        "migration:revert": "npm run typeorm -- -d ./src/typeorm.config.ts migration:revert"
+        "migration:run": "pnpm run typeorm migration:run -- -d ./src/typeorm.config.ts",
+        "migration:generate": "pnpm run typeorm -- -d ./src/typeorm.config.ts migration:generate ./src/migrations/$npm_config_name",
+        "migration:create": "pnpm run typeorm -- migration:create ./src/migrations/$npm_config_name",
+        "migration:revert": "pnpm run typeorm -- -d ./src/typeorm.config.ts migration:revert"
     },
     "dependencies": {
         "@nestjs-modules/mailer": "^2.0.2",
@@ -48,6 +52,7 @@
         "geojson": "^0.5.0",
         "handlebars": "^4.7.8",
         "helmet": "^7.1.0",
+        "jest-coverage-badges": "^1.1.2",
         "nestjs-i18n": "^10.4.5",
         "nodemailer": "^6.9.14",
         "pg": "^8.12.0",
@@ -93,20 +98,31 @@
             "json",
             "ts"
         ],
-        "rootDir": "src",
+        "rootDir": ".",
+        "roots": [
+            "<rootDir>/src",
+            "<rootDir>/test"
+        ],
         "moduleNameMapper": {
-            "^@/(.*)$": "<rootDir>/$1",
-            "^@/utils/env.utils$": "<rootDir>/__mocks__/mock-env.config.ts"
+            "^@/(.*)$": "<rootDir>/src/$1",
+            "^@/utils/env.utils$": "<rootDir>/src/__mocks__/mock-env.config.ts"
         },
-        "setupFilesAfterEnv": ["<rootDir>/__mocks__/jest.setup.ts"],
-        "testRegex": ".*\\.spec\\.ts$",
+        "setupFilesAfterEnv": [
+            "<rootDir>/src/__mocks__/jest.setup.ts"
+        ],
+        "testRegex": "(/tests?/.*|(\\.|/)(test|spec))\\.ts$",
         "transform": {
             "^.+\\.(t|j)s$": "ts-jest"
         },
         "collectCoverageFrom": [
-            "**/*.(t|j)s"
+            "src/**/*.(t|j)s"
         ],
-        "coverageDirectory": "../coverage",
-        "testEnvironment": "node"
+        "coverageDirectory": "./coverage",
+        "testEnvironment": "node",
+        "coverageReporters": [
+            "json-summary",
+            "text",
+            "lcov"
+        ]
     }
 }
