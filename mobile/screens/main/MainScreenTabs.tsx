@@ -1,5 +1,10 @@
 import { Color, Title } from "@/GlobalStyles";
-import { LocationUpdateDTO, UserApi, UserDateModeEnum } from "@/api/gen/src";
+import {
+    LocationUpdateDTO,
+    NotificationNavigateUserDTO,
+    UserApi,
+    UserDateModeEnum,
+} from "@/api/gen/src";
 import { OGoLiveToggle } from "@/components/OGoLiveToggle/OGoLiveToggle";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
@@ -9,6 +14,7 @@ import {
     getSecurelyStoredValue,
 } from "@/services/secure-storage.service";
 import { getLocallyStoredUserData } from "@/services/storage.service";
+import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -127,6 +133,48 @@ export const MainScreenTabs = ({ navigation }) => {
                                     "Received new notification: ",
                                     notification,
                                 );
+                            },
+                        );
+
+                    responseListener.current =
+                        Notifications.addNotificationResponseReceivedListener(
+                            (response) => {
+                                // @dev Remove notification from array to update the "unread notification" bubble in the tab
+                                const filteredNotifications =
+                                    unreadNotifications.filter(
+                                        (n) =>
+                                            n.request.identifier !==
+                                            response.notification.request
+                                                .identifier,
+                                    );
+                                setUnreadNotifications(filteredNotifications);
+
+                                console.log("Notification response", response);
+                                // TODO: At some point we might want to send other notifications too? then we need to be more flexible on the typing and checking it
+                                const notificationData: NotificationNavigateUserDTO =
+                                    response.notification.request.content
+                                        .data as NotificationNavigateUserDTO;
+
+                                // TODO: Move As many types as possible into backend for generation (e.g. PublicUser, Encounter, ..)
+                                const encounterProfile: IEncounterProfile = {
+                                    firstName:
+                                        notificationData.navigateToPerson
+                                            .firstName,
+                                    bio: notificationData.navigateToPerson.bio,
+                                    imageURIs:
+                                        notificationData.navigateToPerson
+                                            .imageURIs,
+                                    encounterId:
+                                        notificationData.navigateToPerson.id, // TODO: Is a different ID most likely (relationship ID)
+                                    age: notificationData.navigateToPerson.age,
+                                };
+                                // Navigate to the specified screen, passing the user object as a prop
+                                navigation.navigate(ROUTES.Main.Encounters, {
+                                    screen: notificationData.screen,
+                                    params: {
+                                        navigateToPerson: encounterProfile,
+                                    },
+                                });
                             },
                         );
                 }
