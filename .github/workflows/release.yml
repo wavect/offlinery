@@ -70,7 +70,7 @@ jobs:
           EXPO_APPLE_ID: ${{ secrets.EXPO_APPLE_ID }}
           EXPO_APPLE_PASSWORD: ${{ secrets.EXPO_APPLE_PASSWORD }}
           EXPO_APPLE_TEAM_ID: ${{ secrets.EXPO_APPLE_TEAM_ID }}
-        run: pnpm expo build --platform android # TODO: all
+        run: pnpm eas build --platform android # TODO: all
 
       - name: Upload to GitHub Release
         uses: actions/upload-release-asset@v1
