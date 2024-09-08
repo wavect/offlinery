@@ -1,0 +1,54 @@
+name: Expo Build and Release
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'App version'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 19.x #v20 might have issues for some reason according to Web
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 6.32.9
+
+      - name: Install dependencies
+        working-directory: ./mobile
+        run: |
+          pnpm install:all
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build on EAS
+        working-directory: ./mobile
+        # TODO: Use all instead of android once iOS ready
+        run: |
+          BUILD_URL=$(eas build --platform android --non-interactive --json | jq -r '.buildUrl')
+          echo "BUILD_URL=$BUILD_URL" >> $GITHUB_ENV
+
+      - name: Update GitHub Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body: |
+            Expo Build URL: ${{ env.BUILD_URL }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

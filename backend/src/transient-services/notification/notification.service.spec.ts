@@ -5,6 +5,7 @@ import { UserReport } from "@/entities/user-report/user-report.entity";
 import { UserReportModule } from "@/entities/user-report/user-report.module";
 import { UserModule } from "@/entities/user/user.module";
 import { I18nTranslations } from "@/translations/i18n.generated";
+import { OfflineryNotification } from "@/types/notification-message.types";
 import { ELanguage } from "@/types/user.types";
 import { getAge } from "@/utils/date.utils";
 import { Test, TestingModule } from "@nestjs/testing";
@@ -12,7 +13,6 @@ import { getDataSourceToken, TypeOrmModule } from "@nestjs/typeorm";
 import { I18nModule, I18nService } from "nestjs-i18n";
 import * as path from "node:path";
 import { DataSource, DataSourceOptions } from "typeorm";
-import { OfflineryNotification } from "./notification-message.type";
 import { NotificationController } from "./notification.controller";
 import { NotificationService } from "./notification.service";
 

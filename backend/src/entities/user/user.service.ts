@@ -209,6 +209,9 @@ export class UserService {
         }
 
         user.pushToken = pushToken;
+        this.logger.debug(
+            `Saved new notification push token for user ${user.id}`,
+        );
         return await this.userRepository.save(user);
     }
 

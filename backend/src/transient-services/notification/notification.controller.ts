@@ -7,7 +7,6 @@ import {
     HttpStatus,
     Param,
     Post,
-    Req,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { NotificationService } from "./notification.service";
@@ -23,7 +22,6 @@ export class NotificationController {
     @Post(`push-token/:${USER_ID_PARAM}`)
     @OnlyOwnUserData()
     async storePushToken(
-        @Req() req,
         @Param(USER_ID_PARAM) userId: string,
         @Body() storePushTokenDTO: StorePushTokenDTO,
     ) {
