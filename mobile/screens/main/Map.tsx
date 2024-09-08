@@ -1,5 +1,10 @@
 import { BorderRadius, Color, Subtitle } from "@/GlobalStyles";
-import { MapApi, UserApi, WeightedLatLngDTO } from "@/api/gen/src";
+import {
+    MapApi,
+    UserApi,
+    UserPrivateDTODateModeEnum,
+    WeightedLatLngDTO,
+} from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
     EACTION_USER,
@@ -54,6 +59,13 @@ const Map = () => {
 
     useEffect(() => {
         (async () => {
+            if (state.dateMode === UserPrivateDTODateModeEnum.ghost) {
+                // if users are in ghost mode, should not see others as incentive to stay live
+                setLocationsFromOthers([]);
+            } else {
+                await getOtherUsersPositions();
+            }
+
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== "granted") {
                 alert("Permission to access location was denied");
@@ -61,9 +73,8 @@ const Map = () => {
             }
 
             await getUserPosition();
-            await getOtherUsersPositions();
         })();
-    }, []);
+    }, [state.dateMode]);
 
     useEffect(() => {
         if (location) {
