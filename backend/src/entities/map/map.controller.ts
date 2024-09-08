@@ -18,7 +18,6 @@ export class MapController {
     ) {}
 
     @Get(`:${USER_ID_PARAM}`)
-    @Public()
     @ApiOperation({ summary: "Get the locations of other users" })
     @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })
     async getUserLocations(
