@@ -131,20 +131,7 @@ const ProfileSettings = ({ navigation }) => {
     };
 
     return (
-        <OPageContainer
-            subtitle={i18n.t(TR.changePreferencesDescr)}
-            bottomContainerChildren={
-                <OButtonWide
-                    style={{ marginTop: 10 }}
-                    text={i18n.t(TR.save)}
-                    filled={true}
-                    variant="dark"
-                    isLoading={isLoading}
-                    loadingBtnText={i18n.t(TR.saving)}
-                    onPress={handleSave}
-                />
-            }
-        >
+        <OPageContainer subtitle={i18n.t(TR.changePreferencesDescr)}>
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>First Name</Text>
@@ -197,7 +184,7 @@ const ProfileSettings = ({ navigation }) => {
                         setValue={setBio}
                         placeholder={i18n.t(TR.noPickUpLinesBeChill)}
                         multiline={true}
-                        style={styles.input}
+                        style={[styles.input, styles.multiline_input]}
                     />
                 </View>
 
@@ -292,14 +279,26 @@ const ProfileSettings = ({ navigation }) => {
                         text={i18n.t(TR.houseRules.mainTitle)}
                     />
                 </View>
+                <View style={styles.buttonContainer}>
+                    <OButtonWide
+                        style={{ marginTop: 10, width: "100%" }}
+                        text={i18n.t(TR.save)}
+                        filled={true}
+                        variant="dark"
+                        isLoading={isLoading}
+                        loadingBtnText={i18n.t(TR.saving)}
+                        onPress={handleSave}
+                    />
+                </View>
             </View>
         </OPageContainer>
     );
 };
 
 const styles = StyleSheet.create({
-    // ... (keep existing styles)
-
+    buttonContainer: {
+        alignItems: "center",
+    },
     dropdownContainer: {
         marginBottom: 16,
         zIndex: 1000,
@@ -337,6 +336,9 @@ const styles = StyleSheet.create({
         height: 45,
         width: "100%",
     },
+    multiline_input: {
+        height: 70,
+    },
     label: {
         fontSize: 16,
         fontWeight: "bold",
@@ -363,7 +365,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         marginBottom: 20,
-        marginTop: 24,
+        marginTop: 6,
     },
     settingsButton: {
         backgroundColor: "#f0f0f0",

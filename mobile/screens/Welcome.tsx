@@ -28,12 +28,10 @@ const Welcome = ({ navigation }) => {
 
     const checkAuthStatus = async () => {
         try {
-            const storedRefreshToken = await getSecurelyStoredValue(
-                SECURE_VALUE.JWT_REFRESH_TOKEN,
-            );
-            const storedAccessToken = await getSecurelyStoredValue(
-                SECURE_VALUE.JWT_ACCESS_TOKEN,
-            );
+            const [storedRefreshToken, storedAccessToken] = await Promise.all([
+                getSecurelyStoredValue(SECURE_VALUE.JWT_REFRESH_TOKEN),
+                getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN),
+            ]);
 
             if (!storedRefreshToken && !storedAccessToken) {
                 console.log("No JWT or JWT_RT found, force re-login");
@@ -55,11 +53,11 @@ const Welcome = ({ navigation }) => {
 
                 console.log("refresh token received: ", refreshResponse);
 
-                await saveValueLocallySecurely(
+                saveValueLocallySecurely(
                     SECURE_VALUE.JWT_ACCESS_TOKEN,
                     refreshResponse.accessToken,
                 );
-                await saveValueLocallySecurely(
+                saveValueLocallySecurely(
                     SECURE_VALUE.JWT_REFRESH_TOKEN,
                     refreshResponse.refreshToken,
                 );
@@ -85,8 +83,8 @@ const Welcome = ({ navigation }) => {
                 }
             }
         } catch (e) {
-            await saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
-            await saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
+            saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
+            saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
             console.log("Forcing user to re-login.");
         }
 
