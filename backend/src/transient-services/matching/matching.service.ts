@@ -154,6 +154,7 @@ export class MatchingService {
             // @dev Only send notification to users who are sharing their live location right now.
             .andWhere("user.dateMode = :liveMode", { liveMode: EDateMode.LIVE })
             // @dev Are users within x meters - TODO: Make this configurable by users.
+            // @dev Make sure users are somewhat within age range - TODO: Make this configurable by users.
             .andWhere(
                 "EXTRACT(YEAR FROM AGE(user.birthDay)) BETWEEN :minAge AND :maxAge",
                 {
@@ -187,6 +188,7 @@ export class MatchingService {
                         distance: 1500, // reachable within 1500m
                     },
                 )
+                // @dev Only send notification to users who want to approach.
                 .andWhere("user.approachChoice = :approach", {
                     approach: EApproachChoice.APPROACH,
                 });
