@@ -129,24 +129,31 @@ export class MatchingService {
 
         const userAge = getAge(userToBeApproached.birthDay);
 
-        const potentialMatchesThatWantToApproach = this.userRepository
+        // TODO: This algorithm should be improved over time
+        const potentialMatchesThatWantToApproach = await this.userRepository
             .createQueryBuilder("user")
             .leftJoinAndSelect("user.encounters", "encounter")
             .leftJoin("encounter.users", "encounterUser")
+            // @dev Exclude yourself
             .where("user.id != :userId", { userId: userToBeApproached.id })
+            // @dev Only return users the approached user is interested in gender-wise
             .andWhere("user.gender = :desiredGender", {
                 desiredGender: userToBeApproached.genderDesire,
             })
+            // @dev Only return users that are interested in the user to be approached gender.
             .andWhere("user.genderDesire = :userGender", {
                 userGender: userToBeApproached.gender,
             })
+            // @dev Only send notifications to verified users
             .andWhere(
                 "(user.verificationStatus = :verificationStatusVerified)",
                 {
                     verificationStatusVerified: EVerificationStatus.VERIFIED,
                 },
             )
+            // @dev Only send notification to users who are sharing their live location right now.
             .andWhere("user.dateMode = :liveMode", { liveMode: EDateMode.LIVE })
+            // @dev Are users within x meters - TODO: Make this configurable by users.
             .andWhere(
                 "EXTRACT(YEAR FROM AGE(user.birthDay)) BETWEEN :minAge AND :maxAge",
                 {
@@ -154,6 +161,7 @@ export class MatchingService {
                     maxAge: userAge + 15,
                 },
             )
+            // @dev filter out users that the user already had an encounter with in the last 24h and that both users have not set to "met, *" (do not resend notification)
             .andWhere(
                 "(encounter.id IS NULL OR (encounter.lastDateTimePassedBy < :twentyFourHoursAgo AND encounter.status = :notMetStatus))",
                 {
