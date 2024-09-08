@@ -118,22 +118,14 @@ export class RandomUsersSeeder {
     }
 
     getRandomLatLong(centerLat, centerLong, radius, spread) {
-        // Convert radius from km to degrees (roughly)
         const radiusDegrees = radius / 111;
-
-        // Generate a random angle
         const angle = Math.random() * 2 * Math.PI;
-
-        // Calculate the offset
         const offsetLat =
             Math.random() * radiusDegrees * spread * Math.sin(angle);
         const offsetLong =
             Math.random() * radiusDegrees * spread * Math.cos(angle);
-
-        // Add offset to center coordinates
         const lat = centerLat + offsetLat;
         const long = centerLong + offsetLong;
-
         return {
             latitude: Number(lat.toFixed(6)),
             longitude: Number(long.toFixed(6)),
