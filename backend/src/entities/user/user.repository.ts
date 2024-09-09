@@ -25,14 +25,30 @@ export class UserRepository extends Repository<User> {
         super(User, dataSource.createEntityManager());
     }
 
+    private createUserMatchBaseQuery(userToBeApproached: User): this {
+        this.queryBuilder = this.createQueryBuilder("user");
+        this.addEncounterJoins()
+            .excludeUser(userToBeApproached.id)
+            .withDesiredGender(userToBeApproached.genderDesire)
+            .withGenderDesire(userToBeApproached.gender)
+            .withVerificationStatusVerified()
+            .withDateModeLiveMode()
+            /** @dev Are users within x meters - TODO: Make this configurable by users. */
+            .withinAgeRange(this.getAge(new Date(userToBeApproached.birthDay)))
+            .filterRecentEncounters()
+            .relatedToUser(userToBeApproached.id);
+
+        return this;
+    }
+
     async getPotentialMatchesForNotifications(user: User): Promise<User[]> {
         const [lon, lat] = user.location.coordinates;
-        // Check if user is within any of their blacklisted regions
         const isInBlacklistedRegion = await this.isUserInBlacklistedRegion(
             user,
             lon,
             lat,
         );
+
         if (isInBlacklistedRegion) {
             this.logger.debug(
                 `User ${user.id} is right now in blacklisted location - not returning potential matches.`,
@@ -40,7 +56,6 @@ export class UserRepository extends Repository<User> {
             return [];
         }
 
-        // Check if it's within approach time
         if (!this.isWithinApproachTime(user, lat, lon)) {
             this.logger.debug(
                 `User ${user.id} does not feel safe to be approached right now.`,
@@ -48,74 +63,59 @@ export class UserRepository extends Repository<User> {
             return [];
         }
 
+        return this.getPotentialMatches(user);
+    }
+
+    async getPotentialMatchesForHeatMap(
+        userToBeApproached: User,
+    ): Promise<User[]> {
+        return this.createUserMatchBaseQuery(userToBeApproached).getMany();
+    }
+
+    async getPotentialMatches(userToBeApproached: User): Promise<User[]> {
         return (
-            this.createBaseQuery()
-                /** @dev Exclude yourself */
-                .excludeUser(user.id)
-                /** @dev Only return users the approached user is interested in gender-wise */
-                .withDesiredGender(user.genderDesire)
-                /** @dev Only return users that are interested in the user to be approached gender. */
-                .withGenderDesire(user.gender)
-                /** @dev Only send notifications to verified users */
-                .withVerificationStatusVerified()
-                /**  @dev Only send notification to users who are sharing their live location right now. */
-                .withDateModeLiveMode()
-                /**  @dev Are users within x meters - TODO: Make this configurable by users. */
-                /**  @dev Make sure users are somewhat within age range - TODO: Make this configurable by users. */
-                .withinAgeRange(this.getAge(new Date(user.birthDay)))
-                /** @dev filter out users that the user already had an encounter with in the last 24h and that both users have not set to "met, *" (do not resend notification) */
-                .filterRecentEncounters()
-                .relatedToUser(user.id)
-                .withinDistance(user.location, 1500) // 1500 meters
-                .withApproachChoice(EApproachChoice.APPROACH)
+            this.createUserMatchBaseQuery(userToBeApproached)
+                /** @BUG (4326)*/
+                // .withinDistance(userToBeApproached.location, 1500)
+                // .withUserWantingToBeApproached()
                 .getMany()
         );
     }
 
-    async getPotentialMatchesForHeatMap(user: User): Promise<User[]> {
-        return (
-            this.createBaseQuery()
-                /** @dev Exclude yourself */
-                .excludeUser(user.id)
-                /** @dev Only return users the approached user is interested in gender-wise */
-                .withDesiredGender(user.genderDesire)
-                /** @dev Only return users that are interested in the user to be approached gender. */
-                .withGenderDesire(user.gender)
-                /** @dev Only send notifications to verified users */
-                .withVerificationStatusVerified()
-                /**  @dev Only send notification to users who are sharing their live location right now. */
-                .withDateModeLiveMode()
-                /**  @dev Are users within x meters - TODO: Make this configurable by users. */
-                /**  @dev Make sure users are somewhat within age range - TODO: Make this configurable by users. */
-                .withinAgeRange(this.getAge(new Date(user.birthDay)))
-                /** @dev filter out users that the user already had an encounter with in the last 24h and that both users have not set to "met, *" (do not resend notification) */
-                .filterRecentEncounters()
-                .relatedToUser(user.id)
-                .getMany()
-        );
-    }
-
-    /**
-     * Chaining Methods
-     */
-
-    private createBaseQuery(): this {
-        this.queryBuilder = this.createQueryBuilder("user")
+    private addEncounterJoins(): this {
+        this.queryBuilder
             .leftJoinAndSelect("user.encounters", "encounter")
             .leftJoin("encounter.users", "encounterUser");
         return this;
     }
 
+    /** Chaining Methods */
+
     private withinDistance(userLocation: Point, distance: number): this {
+        if (
+            !userLocation ||
+            !userLocation.coordinates ||
+            userLocation.coordinates.length !== 2
+        ) {
+            this.logger.warn("Invalid user location provided");
+            return this;
+        }
+
         const [lon, lat] = userLocation.coordinates;
-        this.queryBuilder.andWhere(
-            "ST_DWithin(user.location::geography, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, :distance)",
-            {
-                lon,
-                lat,
-                distance,
-            },
-        );
+
+        try {
+            this.queryBuilder.andWhere(
+                `ST_DWithin(
+                ST_MakePoint(:lon, :lat)::geography,
+                "user"."location"::geography,
+                :distance
+            )`,
+                { lon, lat, distance },
+            );
+        } catch (error) {
+            this.logger.error("Error in withinDistance query:", error);
+        }
+
         return this;
     }
 
@@ -182,10 +182,15 @@ export class UserRepository extends Repository<User> {
         return this;
     }
 
-    private withApproachChoice(approachChoice: EApproachChoice): this {
-        this.queryBuilder.andWhere("user.approachChoice = :approach", {
-            approach: approachChoice,
-        });
+    private withUserWantingToBeApproached(): this {
+        this.queryBuilder.andWhere(
+            '("user"."approachChoice" = :bothChoice OR "user"."approachChoice" = :beApproachedChoice)',
+            {
+                bothChoice: EApproachChoice.BOTH,
+                beApproachedChoice: EApproachChoice.BE_APPROACHED,
+            },
+        );
+
         return this;
     }
 
