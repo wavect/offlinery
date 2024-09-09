@@ -12,7 +12,7 @@ import {
     clearDatabase,
     createRandomAppUser,
 } from "../../_src/builders/db-test-manager";
-import { getIntegrationTestMemoryDbModule } from "../../_src/modules/integration-test.module";
+import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
 
 describe("UserRepository ", () => {
     let userRepository: UserRepository;
@@ -22,7 +22,7 @@ describe("UserRepository ", () => {
 
     beforeAll(async () => {
         const { module, dataSource, mainUser } =
-            await getIntegrationTestMemoryDbModule();
+            await getIntegrationTestModule();
         testingMainUser = mainUser;
         testingModule = module;
         testingDataSource = dataSource;

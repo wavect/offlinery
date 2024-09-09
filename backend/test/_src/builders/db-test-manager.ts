@@ -81,6 +81,6 @@ export const createMainAppUser = async (userRepository: UserRepository) => {
 
 export const clearDatabase = async (dataSource: DataSource) => {
     await dataSource.query(`
-            TRUNCATE TABLE "user", encounter RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE "user", encounter, user_report RESTART IDENTITY CASCADE;
         `);
 };

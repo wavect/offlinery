@@ -4,12 +4,11 @@ import { MatchingModule } from "@/transient-services/matching/matching.module";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { MapController } from "./map.controller";
-import { MapService } from "./map.service";
 
 @Module({
     imports: [TypeOrmModule.forFeature([User]), MatchingModule, UserModule],
-    providers: [MapService],
+    providers: [],
     controllers: [MapController],
-    exports: [MapService],
+    exports: [],
 })
 export class MapModule {}
