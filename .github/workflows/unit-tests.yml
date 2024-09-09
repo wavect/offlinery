@@ -23,17 +23,6 @@ jobs:
         with:
           version: 8
 
-      - name: Verify pnpm installation
-        run: |
-          pnpm --version
-          which pnpm
-          echo $PATH
-
-      - name: Check npm registry
-        run: |
-          npm ping
-          curl -I https://registry.npmjs.org/
-
       - name: Get pnpm store directory
         id: pnpm-cache
         shell: bash
@@ -53,17 +42,19 @@ jobs:
           pnpm install
           cd backend && pnpm install
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
 
       - name: Start Docker containers
         run: docker-compose up -d
 
       - name: Wait for containers to be ready
         run: |
-          # Add appropriate wait logic here, e.g.:
           sleep 30  # Simple wait
-          # or use a more sophisticated check, e.g., checking if a port is open
+          # Add more sophisticated checks here if needed
 
       - name: Run all tests (unit, integration) with coverage
         run: pnpm test
