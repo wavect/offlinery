@@ -18,7 +18,7 @@ import { TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { Point } from "geojson";
 import { Repository } from "typeorm";
-import { getUnitTestingModule } from "../../_src/unit.testing.module";
+import { getUnitTestingModule } from "../../_src/modules/unit.testing.module";
 
 // Mocks
 jest.mock("bcrypt", () => ({

@@ -53,7 +53,7 @@ jobs:
           cd backend
           docker-compose up -d postgres_test
         env:
-          COMPOSE_PROJECT_NAME: myproject  # Add this if you want to name your Docker Compose project
+          COMPOSE_PROJECT_NAME: myproject
 
       - name: Wait for containers to be ready
         run: |
