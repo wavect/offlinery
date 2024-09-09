@@ -1,11 +1,11 @@
+import { PendingUser } from "@/entities/pending-user/pending-user.entity";
+import { RegistrationService } from "@/entities/registration/registration.service";
+import { User } from "@/entities/user/user.entity";
+import { EEmailVerificationStatus } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { PendingUser } from "../../../src/entities/pending-user/pending-user.entity";
-import { RegistrationService } from "../../../src/entities/registration/registration.service";
-import { User } from "../../../src/entities/user/user.entity";
-import { EEmailVerificationStatus } from "../../../src/types/user.types";
 
 describe("RegistrationService", () => {
     let service: RegistrationService;

@@ -1,19 +1,10 @@
-import { NotFoundException } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
-import { getRepositoryToken } from "@nestjs/typeorm";
-import { Point } from "geojson";
-import { I18nService } from "nestjs-i18n";
-import { DataSource, Repository } from "typeorm";
-import { CreateUserDTO } from "../../../src/DTOs/create-user.dto";
-import { LocationUpdateDTO } from "../../../src/DTOs/location-update.dto";
-import { UpdateUserDTO } from "../../../src/DTOs/update-user.dto";
-import { BlacklistedRegion } from "../../../src/entities/blacklisted-region/blacklisted-region.entity";
-import { EncounterService } from "../../../src/entities/encounter/encounter.service";
-import { PendingUser } from "../../../src/entities/pending-user/pending-user.entity";
-import { User } from "../../../src/entities/user/user.entity";
-import { UserService } from "../../../src/entities/user/user.service";
-import { MatchingService } from "../../../src/transient-services/matching/matching.service";
-import { NotificationService } from "../../../src/transient-services/notification/notification.service";
+import { CreateUserDTO } from "@/DTOs/create-user.dto";
+import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { UpdateUserDTO } from "@/DTOs/update-user.dto";
+import { PendingUser } from "@/entities/pending-user/pending-user.entity";
+import { User } from "@/entities/user/user.entity";
+import { UserService } from "@/entities/user/user.service";
+import { MatchingService } from "@/transient-services/matching/matching.service";
 import {
     EApproachChoice,
     EDateMode,
@@ -21,7 +12,13 @@ import {
     EGender,
     ELanguage,
     EVerificationStatus,
-} from "../../../src/types/user.types";
+} from "@/types/user.types";
+import { NotFoundException } from "@nestjs/common";
+import { TestingModule } from "@nestjs/testing";
+import { getRepositoryToken } from "@nestjs/typeorm";
+import { Point } from "geojson";
+import { Repository } from "typeorm";
+import { getUnitTestingModule } from "../_src/unit.testing.module";
 
 // Mocks
 jest.mock("bcrypt", () => ({
@@ -36,46 +33,7 @@ describe("UserService", () => {
     let matchingService: MatchingService;
 
     beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
-            providers: [
-                UserService,
-                MatchingService,
-                {
-                    provide: I18nService,
-                    useValue: {
-                        t: jest.fn().mockReturnValue("Translated text"),
-                    },
-                },
-                {
-                    provide: EncounterService,
-                    useValue: {
-                        saveEncountersForUser: jest.fn(),
-                    },
-                },
-                {
-                    provide: NotificationService,
-                    useValue: {
-                        sendPushNotification: jest.fn(),
-                    },
-                },
-                {
-                    provide: getRepositoryToken(User),
-                    useClass: Repository,
-                },
-                {
-                    provide: getRepositoryToken(PendingUser),
-                    useClass: Repository,
-                },
-                {
-                    provide: getRepositoryToken(BlacklistedRegion),
-                    useClass: Repository,
-                },
-                {
-                    provide: DataSource,
-                    useValue: {},
-                },
-            ],
-        }).compile();
+        const module: TestingModule = await getUnitTestingModule();
 
         service = module.get<UserService>(UserService);
         userRepository = module.get<Repository<User>>(getRepositoryToken(User));
