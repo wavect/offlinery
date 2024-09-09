@@ -42,26 +42,26 @@ export class UserRepository extends Repository<User> {
     }
 
     async getPotentialMatchesForNotifications(user: User): Promise<User[]> {
-        // const [lon, lat] = user.location.coordinates;
-        // const isInBlacklistedRegion = await this.isUserInBlacklistedRegion(
-        //     user,
-        //     lon,
-        //     lat,
-        // );
+        const [lon, lat] = user.location.coordinates;
+        const isInBlacklistedRegion = await this.isUserInBlacklistedRegion(
+            user,
+            lon,
+            lat,
+        );
 
-        // if (isInBlacklistedRegion) {
-        //     this.logger.debug(
-        //         `User ${user.id} is right now in blacklisted location - not returning potential matches.`,
-        //     );
-        //     return [];
-        // }
-        //
-        // if (!this.isWithinApproachTime(user, lat, lon)) {
-        //     this.logger.debug(
-        //         `User ${user.id} does not feel safe to be approached right now.`,
-        //     );
-        //     return [];
-        // }
+        if (isInBlacklistedRegion) {
+            this.logger.debug(
+                `User ${user.id} is right now in blacklisted location - not returning potential matches.`,
+            );
+            return [];
+        }
+
+        if (!this.isWithinApproachTime(user, lat, lon)) {
+            this.logger.debug(
+                `User ${user.id} does not feel safe to be approached right now.`,
+            );
+            return [];
+        }
 
         return this.getPotentialMatches(user);
     }
