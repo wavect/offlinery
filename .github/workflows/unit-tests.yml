@@ -9,50 +9,67 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-    - name: Install pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 8
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
-    - name: Get pnpm store directory
-      id: pnpm-cache
-      shell: bash
-      run: |
-        echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - name: Verify pnpm installation
+        run: |
+          pnpm --version
+          which pnpm
+          echo $PATH
 
-    - uses: actions/cache@v3
-      name: Setup pnpm cache
-      with:
-        path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-pnpm-store-
+      - name: Check npm registry
+        run: |
+          npm ping
+          curl -I https://registry.npmjs.org/
 
-    - name: Install dependencies
-      run: pnpm install && cd backend && pnpm install
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
-  #  - name: Load environment variables
-  #    run: |
-  #      cd backend
-  #      if [ -f .env-template ]; then
-  #        set -a
-  #        source .env-template
-  #        set +a
-  #      else
-  #        echo ".env-template file not found in backend directory"
-  #        exit 1
-  #      fi
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
-    - name: Run all tests (unit, integration) with coverage
-      run: pnpm test
-      env:
-        # This ensures that the environment variables are available to the test command
-        SHELL: /bin/bash
+      - name: Install dependencies
+        run: |
+          pnpm install --network-timeout 100000
+          cd backend && pnpm install --network-timeout 100000
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Start Docker containers
+        run: docker-compose up -d
+
+      - name: Wait for containers to be ready
+        run: |
+          # Add appropriate wait logic here, e.g.:
+          sleep 30  # Simple wait
+          # or use a more sophisticated check, e.g., checking if a port is open
+
+      - name: Run all tests (unit, integration) with coverage
+        run: pnpm test
+        env:
+          SHELL: /bin/bash
+
+      - name: Stop Docker containers
+        run: docker-compose down
+        if: always()
