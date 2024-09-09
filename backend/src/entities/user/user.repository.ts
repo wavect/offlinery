@@ -25,59 +25,74 @@ export class UserRepository extends Repository<User> {
         super(User, dataSource.createEntityManager());
     }
 
-    async getPotentialMatchesForNotifications(
-        userToBeApproached: User,
-    ): Promise<User[]> {
-        const [lon, lat] = userToBeApproached.location.coordinates;
+    async getPotentialMatchesForNotifications(user: User): Promise<User[]> {
+        const [lon, lat] = user.location.coordinates;
         // Check if user is within any of their blacklisted regions
         const isInBlacklistedRegion = await this.isUserInBlacklistedRegion(
-            userToBeApproached,
+            user,
             lon,
             lat,
         );
         if (isInBlacklistedRegion) {
             this.logger.debug(
-                `User ${userToBeApproached.id} is right now in blacklisted location - not returning potential matches.`,
+                `User ${user.id} is right now in blacklisted location - not returning potential matches.`,
             );
             return [];
         }
 
         // Check if it's within approach time
-        if (!this.isWithinApproachTime(userToBeApproached, lat, lon)) {
+        if (!this.isWithinApproachTime(user, lat, lon)) {
             this.logger.debug(
-                `User ${userToBeApproached.id} does not feel safe to be approached right now.`,
+                `User ${user.id} does not feel safe to be approached right now.`,
             );
             return [];
         }
-        console.log(typeof userToBeApproached.birthDay);
 
-        return this.createBaseQuery()
-            .excludeUser(userToBeApproached.id)
-            .withDesiredGender(userToBeApproached.genderDesire)
-            .withGenderDesire(userToBeApproached.gender)
-            .withVerificationStatusVerified()
-            .withDateModeLiveMode()
-            .withinAgeRange(this.getAge(new Date(userToBeApproached.birthDay)))
-            .filterRecentEncounters()
-            .relatedToUser(userToBeApproached.id)
-            .withinDistance(userToBeApproached.location, 1500) // 1500 meters
-            .withApproachChoice(EApproachChoice.APPROACH)
-            .getMany();
+        return (
+            this.createBaseQuery()
+                /** @dev Exclude yourself */
+                .excludeUser(user.id)
+                /** @dev Only return users the approached user is interested in gender-wise */
+                .withDesiredGender(user.genderDesire)
+                /** @dev Only return users that are interested in the user to be approached gender. */
+                .withGenderDesire(user.gender)
+                /** @dev Only send notifications to verified users */
+                .withVerificationStatusVerified()
+                /**  @dev Only send notification to users who are sharing their live location right now. */
+                .withDateModeLiveMode()
+                /**  @dev Are users within x meters - TODO: Make this configurable by users. */
+                /**  @dev Make sure users are somewhat within age range - TODO: Make this configurable by users. */
+                .withinAgeRange(this.getAge(new Date(user.birthDay)))
+                /** @dev filter out users that the user already had an encounter with in the last 24h and that both users have not set to "met, *" (do not resend notification) */
+                .filterRecentEncounters()
+                .relatedToUser(user.id)
+                .withinDistance(user.location, 1500) // 1500 meters
+                .withApproachChoice(EApproachChoice.APPROACH)
+                .getMany()
+        );
     }
 
-    async getPotentialMatchesForHeatMap(
-        userToBeApproached: User,
-    ): Promise<User[]> {
-        return this.createBaseQuery()
-            .excludeUser(userToBeApproached.id)
-            .withDesiredGender(userToBeApproached.genderDesire)
-            .withGenderDesire(userToBeApproached.gender)
-            .withVerificationStatusVerified()
-            .withDateModeLiveMode()
-            .withinAgeRange(this.getAge(new Date(userToBeApproached.birthDay)))
-            .filterRecentEncounters()
-            .relatedToUser(userToBeApproached.id)
-            .getMany();
+    async getPotentialMatchesForHeatMap(user: User): Promise<User[]> {
+        return (
+            this.createBaseQuery()
+                /** @dev Exclude yourself */
+                .excludeUser(user.id)
+                /** @dev Only return users the approached user is interested in gender-wise */
+                .withDesiredGender(user.genderDesire)
+                /** @dev Only return users that are interested in the user to be approached gender. */
+                .withGenderDesire(user.gender)
+                /** @dev Only send notifications to verified users */
+                .withVerificationStatusVerified()
+                /**  @dev Only send notification to users who are sharing their live location right now. */
+                .withDateModeLiveMode()
+                /**  @dev Are users within x meters - TODO: Make this configurable by users. */
+                /**  @dev Make sure users are somewhat within age range - TODO: Make this configurable by users. */
+                .withinAgeRange(this.getAge(new Date(user.birthDay)))
+                /** @dev filter out users that the user already had an encounter with in the last 24h and that both users have not set to "met, *" (do not resend notification) */
+                .filterRecentEncounters()
+                .relatedToUser(user.id)
+                .getMany()
+        );
     }
 
     /**
