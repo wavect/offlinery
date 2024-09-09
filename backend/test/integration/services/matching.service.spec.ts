@@ -46,10 +46,6 @@ describe("MatchingService Integration", () => {
 
         matchingService = module.get<MatchingService>(MatchingService);
         userRepository = module.get<UserRepository>(UserRepository);
-        notificationService =
-            module.get<NotificationService>(NotificationService);
-        encounterService = module.get<EncounterService>(EncounterService);
-        i18nService = module.get<I18nService>(I18nService);
     });
 
     describe("findNearbyMatches: execution path is correct, depending on the enableExtendedChecks flag", () => {
