@@ -49,7 +49,11 @@ jobs:
           docker-compose --version
 
       - name: Start Docker containers
-        run: docker-compose up -d
+        run: |
+          cd backend
+          docker-compose up -d
+        env:
+          COMPOSE_PROJECT_NAME: myproject  # Add this if you want to name your Docker Compose project
 
       - name: Wait for containers to be ready
         run: |
@@ -60,3 +64,9 @@ jobs:
         run: pnpm test
         env:
           SHELL: /bin/bash
+
+      - name: Stop Docker containers
+        run: |
+          cd backend
+          docker-compose down
+        if: always()  # Ensure this step runs even if previous steps fail
