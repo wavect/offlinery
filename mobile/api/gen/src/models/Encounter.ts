@@ -73,7 +73,24 @@ export interface Encounter {
      * @memberof Encounter
      */
     messages: Array<Message>;
+    /**
+     *
+     * @type {string}
+     * @memberof Encounter
+     */
+    status: EncounterStatusEnum;
 }
+
+/**
+ * @export
+ */
+export const EncounterStatusEnum = {
+    not_met: "not_met",
+    met_not_interested: "met_not_interested",
+    met_interested: "met_interested",
+} as const;
+export type EncounterStatusEnum =
+    (typeof EncounterStatusEnum)[keyof typeof EncounterStatusEnum];
 
 /**
  * Check if a given object implements the Encounter interface.
@@ -101,6 +118,7 @@ export function instanceOfEncounter(value: object): value is Encounter {
     if (!("userReports" in value) || value["userReports"] === undefined)
         return false;
     if (!("messages" in value) || value["messages"] === undefined) return false;
+    if (!("status" in value) || value["status"] === undefined) return false;
     return true;
 }
 
@@ -126,6 +144,7 @@ export function EncounterFromJSONTyped(
             UserReportFromJSON,
         ),
         messages: (json["messages"] as Array<any>).map(MessageFromJSON),
+        status: json["status"],
     };
 }
 
@@ -142,5 +161,6 @@ export function EncounterToJSON(value?: Encounter | null): any {
         users: (value["users"] as Array<any>).map(UserToJSON),
         userReports: (value["userReports"] as Array<any>).map(UserReportToJSON),
         messages: (value["messages"] as Array<any>).map(MessageToJSON),
+        status: value["status"],
     };
 }
