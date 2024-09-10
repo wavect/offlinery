@@ -217,7 +217,7 @@ const Map = () => {
                     maxZoomLevel={13}
                     onLongPress={handleMapLongPress}
                     provider={
-                        process.env.NODE_ENV === "production"
+                        process.env.EXPO_PUBLIC_ENVIRONMENT === "production"
                             ? PROVIDER_GOOGLE
                             : PROVIDER_DEFAULT
                     }

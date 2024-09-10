@@ -119,9 +119,15 @@ DEFAULT_TO_TIME.setHours(19, 0, 0, 0);
 export const initialUserState: IUserData = {
     id: undefined,
     wantsEmailUpdates: false,
-    email: process.env.NODE_ENV === "development" ? "office@wavect.io" : "",
+    email:
+        process.env.EXPO_PUBLIC_ENVIRONMENT === "development"
+            ? "office@wavect.io"
+            : "",
     firstName: "",
-    clearPassword: process.env.NODE_ENV === "development" ? "TeSTmE93!pQ" : "",
+    clearPassword:
+        process.env.EXPO_PUBLIC_ENVIRONMENT === "development"
+            ? "TeSTmE93!pQ"
+            : "",
     birthDay: new Date(2000, 1, 1),
     gender: undefined,
     genderDesire: undefined,
