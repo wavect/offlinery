@@ -10,18 +10,13 @@ import Welcome from "./screens/Welcome";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import {
-    Montserrat_100Thin,
-    Montserrat_200ExtraLight,
     Montserrat_300Light,
     Montserrat_400Regular,
     Montserrat_500Medium,
     Montserrat_600SemiBold,
-    Montserrat_700Bold,
-    Montserrat_800ExtraBold,
-    Montserrat_900Black,
-    useFonts,
 } from "@expo-google-fonts/montserrat";
 import * as Sentry from "@sentry/react-native";
+import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { Color } from "./GlobalStyles";
@@ -66,21 +61,28 @@ const DEFAULT_LIGHT_SCREEN_PROPS = {
 };
 const NO_HEADER = { headerShown: false };
 
-// Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
-
 export default function App() {
     let [appIsReady] = useFonts({
-        Montserrat_100Thin,
-        Montserrat_200ExtraLight,
         Montserrat_300Light,
         Montserrat_400Regular,
         Montserrat_500Medium,
         Montserrat_600SemiBold,
+        /* @dev If you need any of these, then make sure to add them in app.json
+        Montserrat_100Thin,
+        Montserrat_200ExtraLight,
         Montserrat_700Bold,
         Montserrat_800ExtraBold,
-        Montserrat_900Black,
+        Montserrat_900Black,*/
     });
+
+    useEffect(() => {
+        async function prepare() {
+            // Keep the splash screen visible while we fetch resources
+            await SplashScreen.preventAutoHideAsync();
+        }
+
+        prepare();
+    }, []);
 
     useEffect(() => {
         if (appIsReady) {

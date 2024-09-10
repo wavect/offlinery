@@ -8,7 +8,10 @@ const Splash = () => {
     return (
         <OLinearBackground>
             <View style={styles.layoutContainer}>
-                <OShowcase subtitle={i18n.t(TR.datingAppsAreBroken)} />
+                <OShowcase
+                    subtitle={i18n.t(TR.datingAppsAreBroken)}
+                    onlyUseSystemFont={true}
+                />
             </View>
         </OLinearBackground>
     );
