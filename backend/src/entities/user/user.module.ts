@@ -2,6 +2,7 @@ import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-reg
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { UserReport } from "@/entities/user-report/user-report.entity";
+import { UserRepository } from "@/entities/user/user.repository";
 import { MatchingModule } from "@/transient-services/matching/matching.module";
 import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -20,8 +21,8 @@ import { UserService } from "./user.service";
         ]),
         forwardRef(() => MatchingModule),
     ],
-    providers: [UserService],
+    providers: [UserService, UserRepository],
     controllers: [UserController],
-    exports: [UserService],
+    exports: [UserService, UserRepository, TypeOrmModule],
 })
 export class UserModule {}
