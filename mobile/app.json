@@ -18,7 +18,9 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "UIBackgroundModes": ["location"],
+        "UIBackgroundModes": [
+          "location"
+        ],
         "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open to show you interesting people nearby.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location even when closed to send you notifications when interesting people are nearby.",
         "NSLocationAlwaysUsageDescription": "This app requires access to your location to inform you when interesting people are nearby."
@@ -53,7 +55,17 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "node_modules/@expo-google-fonts/montserrat/300Light.ttf",
+            "node_modules/@expo-google-fonts/montserrat/400Regular.ttf",
+            "node_modules/@expo-google-fonts/montserrat/500Medium.ttf",
+            "node_modules/@expo-google-fonts/montserrat/600SemiBold.ttf"
+          ]
+        }
+      ],
       [
         "expo-image-picker",
         {
