@@ -12,7 +12,7 @@ on:
 
 jobs:
   build-and-release:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
 
@@ -39,10 +39,11 @@ jobs:
 
       - name: Build on EAS
         working-directory: ./mobile
-        # TODO: Use all instead of android once iOS ready
         run: |
-          BUILD_URL=$(eas build --platform android --non-interactive --json | jq -r '.buildUrl')
+          BUILD_URL=$(eas build --platform all --non-interactive --json | jq -r '.buildUrl')
           echo "BUILD_URL=$BUILD_URL" >> $GITHUB_ENV
+
+      # TODO: We could also automatically submit the builds once we are live
 
       - name: Update GitHub Release
         uses: softprops/action-gh-release@v1

@@ -50,6 +50,12 @@ importers:
       expo-checkbox:
         specifier: ~3.0.0
         version: 3.0.0
+      expo-constants:
+        specifier: ^16.0.2
+        version: 16.0.2(expo@51.0.32(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2)))
+      expo-font:
+        specifier: ~12.0.10
+        version: 12.0.10(expo@51.0.32(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2)))
       expo-image-picker:
         specifier: ~15.0.7
         version: 15.0.7(expo@51.0.32(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2)))
