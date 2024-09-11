@@ -17,12 +17,15 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Install dependencies
         run: |
-          npm install
-          npm install expo
-          npm install -g expo-cli@latest
-          npm install -g eas-cli
+          pnpm install
+          pnpm add -g expo-cli@latest eas-cli
 
       - name: Install Maestro
         run: |
@@ -38,8 +41,8 @@ jobs:
         env:
           EXPO_PUBLIC_ENVIRONMENT: production
         run: |
-          npx expo prebuild -p ios
-          npx expo run:ios --configuration Release --no-packager
+          pnpm exec expo prebuild -p ios
+          pnpm exec expo run:ios --configuration Release --no-packager
 
       - name: Run Maestro tests
         env:
