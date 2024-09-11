@@ -8,6 +8,7 @@ import { OTroubleSignIn } from "@/components/OTroubleSignIn/OTroubleSignIn";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
+import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
 import { Dimensions, StyleSheet, Text } from "react-native";
@@ -18,6 +19,7 @@ const Login = ({ navigation }) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [isInvalidEmail, setIsInvalidEmail] = useState(false);
 
     const login = async () => {
         setLoading(true);
@@ -65,22 +67,43 @@ const Login = ({ navigation }) => {
         });
     };
 
+    const showInvalidEmailError = state.email && !isValidEmail(state.email);
     return (
         <OPageColorContainer>
             <OTextInputWide
                 value={state.email}
-                setValue={setEmail}
+                maxLength={125}
+                autoCapitalize="none"
+                autoComplete="email"
+                keyboardType="email-address"
+                autoCorrect={false}
+                autoFocus={true}
+                inputMode="email"
+                isBottomLabelError={true}
+                bottomLabel={
+                    showInvalidEmailError ? i18n.t(TR.invalidEmail) : undefined
+                }
+                onChangeText={setEmail}
                 placeholder={i18n.t(TR.yourEmail)}
                 topLabel={i18n.t(TR.email)}
-                style={styles.textInputContainer}
+                containerStyle={[
+                    styles.textInputContainer,
+                    showInvalidEmailError ? { marginBottom: 0 } : undefined,
+                ]}
             />
             <OTextInputWide
                 value={state.clearPassword}
-                setValue={setClearPassword}
+                maxLength={100}
+                autoCapitalize="none"
+                autoComplete="current-password"
+                inputMode="text"
+                autoCorrect={false}
+                keyboardType="default"
+                onChangeText={setClearPassword}
                 placeholder={i18n.t(TR.yourPassword)}
                 secureTextEntry={true}
                 topLabel={i18n.t(TR.password)}
-                style={styles.textInputContainer}
+                containerStyle={styles.textInputContainer}
             />
 
             <OButtonWide

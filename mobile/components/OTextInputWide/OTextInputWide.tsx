@@ -10,28 +10,20 @@ import {
     View,
     ViewStyle,
 } from "react-native";
+import { TextInputProps } from "react-native/Libraries/Components/TextInput/TextInput";
 
-interface IOTextInputWideProps {
-    value: string;
-    setValue: React.Dispatch<string>;
-    placeholder: string;
-    style?: StyleProp<ViewStyle>;
-    multiline?: boolean;
+interface IOTextInputWideProps extends TextInputProps {
+    containerStyle?: StyleProp<ViewStyle>;
     topLabel?: string;
     bottomLabel?: string;
     isBottomLabelError?: boolean;
-    secureTextEntry?: boolean;
 }
 
 export const OTextInputWide = (props: IOTextInputWideProps) => {
     const {
         secureTextEntry,
         isBottomLabelError,
-        value,
-        setValue,
-        placeholder,
-        style,
-        multiline,
+        containerStyle,
         topLabel,
         bottomLabel,
     } = props;
@@ -46,15 +38,12 @@ export const OTextInputWide = (props: IOTextInputWideProps) => {
     return (
         <View style={styles.container}>
             {topLabel && <Text style={styles.topLabel}>{topLabel}</Text>}
-            <View style={[styles.inputContainer, style]}>
+            <View style={[styles.inputContainer, containerStyle]}>
                 <TextInput
                     style={styles.input}
-                    value={value}
                     secureTextEntry={secureTextEntry && !isSecureTextVisible}
-                    onChangeText={setValue}
-                    placeholder={placeholder}
-                    multiline={multiline}
                     placeholderTextColor={Color.white}
+                    {...props}
                 />
                 {secureTextEntry && (
                     <TouchableOpacity
@@ -103,11 +92,12 @@ const styles = StyleSheet.create({
         color: Color.white,
         fontSize: FontSize.size_sm,
         fontFamily: FontFamily.montserratRegular,
-        marginTop: 5,
         alignSelf: "flex-start",
+        marginBottom: 12,
+        marginTop: 6,
     },
     bottomLabelError: {
-        color: Color.red,
+        color: Color.lightOrange,
         fontFamily: FontFamily.montserratSemiBold,
     },
     input: {
