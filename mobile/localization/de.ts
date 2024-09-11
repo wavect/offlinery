@@ -11,7 +11,8 @@ export const de: Language = {
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
     verificationCodeResend: "Code neu senden",
     verificationCodeInvalid: "Ungültiger Verification Code",
-    invalidEmail: "Email ungültig oder existiert bereits.",
+    invalidEmailOrExists: "Email ungültig oder existiert bereits.",
+    invalidEmail: "Email ungültig.",
     termsDisclaimer: {
         p1: "Durch Tippen auf 'Konto erstellen' oder 'Anmelden' stimmst du unseren ",
         terms: "AGBs",

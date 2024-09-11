@@ -100,7 +100,7 @@ const VerifyEmail = ({ navigation }) => {
         } catch (error) {
             console.error(error);
             navigation.navigate(ROUTES.Onboarding.Email, {
-                errorMessage: i18n.t(TR.invalidEmail),
+                errorMessage: i18n.t(TR.invalidEmailOrExists),
             });
         } finally {
             setLoading(false);
