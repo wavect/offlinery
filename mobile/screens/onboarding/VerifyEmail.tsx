@@ -1,4 +1,5 @@
 import { Color, FontFamily } from "@/GlobalStyles";
+import { MainStackParamList } from "@/MainStack.navigator";
 import { RegistrationApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
@@ -6,9 +7,15 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const VerifyEmail = ({ navigation }) => {
+const VerifyEmail = ({
+    navigation,
+}: NativeStackScreenProps<
+    MainStackParamList,
+    typeof ROUTES.Onboarding.VerifyEmail
+>) => {
     const { state, dispatch } = useUserContext();
     const [code, setCode] = useState<string[]>(new Array(6).fill(""));
     const [timer, setTimer] = useState(0);

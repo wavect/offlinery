@@ -1,4 +1,5 @@
 import { BorderRadius, Color } from "@/GlobalStyles";
+import { MainStackParamList } from "@/MainStack.navigator";
 import { BASE_PATH } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
@@ -15,6 +16,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
 interface IPhotoContainerProps {
@@ -91,7 +93,13 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
     );
 };
 
-const AddPhotos = ({ route, navigation }) => {
+const AddPhotos = ({
+    route,
+    navigation,
+}: NativeStackScreenProps<
+    MainStackParamList,
+    typeof ROUTES.Onboarding.AddPhotos
+>) => {
     const [mediaLibStatus, requestMediaLibPermission] =
         ImagePicker.useMediaLibraryPermissions();
     const { state, dispatch } = useUserContext();

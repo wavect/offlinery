@@ -1,3 +1,4 @@
+import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
@@ -7,9 +8,16 @@ import { isValidPassword } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet } from "react-native";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const Password = ({ route, navigation }) => {
+const Password = ({
+    route,
+    navigation,
+}: NativeStackScreenProps<
+    MainStackParamList,
+    typeof ROUTES.Onboarding.Password
+>) => {
     const { state, dispatch } = useUserContext();
     const [oldClearPassword, setOldClearPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");

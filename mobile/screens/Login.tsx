@@ -1,4 +1,5 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { MainStackParamList } from "@/MainStack.navigator";
 import { AuthApi, AuthControllerSignInRequest } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
@@ -7,19 +8,22 @@ import { OTextInputWide } from "@/components/OTextInputWide/OTextInputWide";
 import { OTroubleSignIn } from "@/components/OTroubleSignIn/OTroubleSignIn";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { ROUTES } from "@/screens/routes";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
 import { Dimensions, StyleSheet, Text } from "react-native";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 const { width, height } = Dimensions.get("window");
 const authApi = new AuthApi();
-const Login = ({ navigation }) => {
+const Login = ({
+    navigation,
+}: NativeStackScreenProps<MainStackParamList, typeof ROUTES.Login>) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [isInvalidEmail, setIsInvalidEmail] = useState(false);
 
     const login = async () => {
         setLoading(true);

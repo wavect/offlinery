@@ -1,3 +1,4 @@
+import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
@@ -12,9 +13,15 @@ import RNDateTimePicker, {
 } from "@react-native-community/datetimepicker";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const ApproachMeBetween = ({ navigation }) => {
+const ApproachMeBetween = ({
+    navigation,
+}: NativeStackScreenProps<
+    MainStackParamList,
+    typeof ROUTES.Onboarding.ApproachMeBetween
+>) => {
     const { state, dispatch } = useUserContext();
 
     const onFromTimeChange = (event: DateTimePickerEvent, date?: Date) => {

@@ -1,3 +1,4 @@
+import { MainStackParamList } from "@/MainStack.navigator";
 import { AuthApi, SignInResponseDTO } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
@@ -12,16 +13,18 @@ import {
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 import { jwtExpiresSoon } from "@/utils/misc.utils";
-import { useFocusEffect, useTheme } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
 import { Dimensions, Platform, StyleSheet, View } from "react-native";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "./routes";
 
 const authApi = new AuthApi();
 
-const Welcome = ({ navigation }) => {
-    const { colors } = useTheme();
+const Welcome = ({
+    navigation,
+}: NativeStackScreenProps<MainStackParamList, typeof ROUTES.Welcome>) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setIsLoading] = useState(true);
 
