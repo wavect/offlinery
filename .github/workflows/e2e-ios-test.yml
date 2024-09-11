@@ -29,6 +29,7 @@ jobs:
         run: |
           pnpm install
           pnpm add -g expo-cli@latest eas-cli
+          pnpm add @expo-google-fonts/montserrat
 
       - name: Install Maestro
         run: |
@@ -43,8 +44,9 @@ jobs:
       - name: Build iOS app
         env:
           EXPO_PUBLIC_ENVIRONMENT: production
+          CI: 1
         run: |
-          pnpm exec expo prebuild -p ios --non-interactive
+          pnpm exec expo prebuild -p ios
           pnpm exec expo run:ios --configuration Release --no-packager
 
       - name: Run Maestro tests
