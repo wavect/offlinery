@@ -1,0 +1,55 @@
+name: iOS E2E Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  ios-e2e-tests:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install -g expo-cli
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "${HOME}/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Setup Expo and iOS simulator
+        run: |
+          brew install watchman
+          npm install -g eas-cli
+          export EXPO_PUBLIC_ENVIRONMENT=production
+          xcrun simctl create "iPhone 15" com.apple.CoreSimulator.SimDeviceType.iPhone-15
+
+      - name: Build iOS app
+        run: |
+          expo prebuild -p ios
+          expo run:ios --configuration Release --no-packager
+
+      - name: Run Maestro tests
+        run: |
+          xcrun simctl boot "iPhone 15"
+          xcrun simctl install booted ios/build/Build/Products/Release-iphonesimulator/Offlinery.app
+          maestro test -e APP_PATH=ios/build/Build/Products/Release-iphonesimulator/Offlinery.app -e EXPO_PUBLIC_ENVIRONMENT=production ./tests/e2e/ios/login-flow.yaml
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: maestro-test-results
+          path: |
+            ~/.maestro/tests
+            /tmp/maestro

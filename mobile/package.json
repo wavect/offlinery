@@ -10,10 +10,15 @@
         "android": "expo run:android",
         "ios": "EXPO_PUBLIC_ENVIRONMENT=production expo run:ios",
         "ios:dev": "EXPO_PUBLIC_ENVIRONMENT=development expo run:ios",
+        "ios:clean": "rm -rf ios/Pods && rm -rf ios/build",
         "web": "expo start --web",
         "install:all": "pnpm i && npx expo install --fix",
         "pre-commit": "npx prettier . --write",
-        "clean:ios": "rm -rf ios/Pods && rm -rf ios/build"
+        "e2e:ios:build": "expo run:ios --configuration Release",
+        "e2e:ios:start-simulator": "xcrun simctl boot 'iPhone 14'",
+        "e2e:ios:install": "xcrun simctl install booted ios/build/Build/Products/Release-iphonesimulator/Offlinery.app",
+        "e2e:ios:run": "EXPO_PUBLIC_ENVIRONMENT=production maestro test -e APP_PATH=ios/build/Build/Products/Release-iphonesimulator/Offlinery.app -e EXPO_PUBLIC_ENVIRONMENT=${EXPO_PUBLIC_ENVIRONMENT} ./tests/e2e/ios/login-flow.yaml",
+        "e2e:ios:test": "npm run e2e:ios:run"
     },
     "dependencies": {
         "@expo-google-fonts/montserrat": "^0.2.3",
