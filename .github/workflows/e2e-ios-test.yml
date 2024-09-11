@@ -27,9 +27,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pnpm install
+          pnpm install:all
           pnpm add -g expo-cli@latest eas-cli
-          pnpm add @expo-google-fonts/montserrat
 
       - name: Install Maestro
         run: |
