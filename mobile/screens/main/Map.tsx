@@ -27,6 +27,7 @@ import MapView, {
     LongPressEvent,
     Marker,
     MarkerDragEvent,
+    PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
 } from "react-native-maps";
 
@@ -215,7 +216,11 @@ const Map = () => {
                     zoomTapEnabled={true}
                     maxZoomLevel={13}
                     onLongPress={handleMapLongPress}
-                    provider={PROVIDER_GOOGLE}
+                    provider={
+                        process.env.EXPO_PUBLIC_ENVIRONMENT === "production"
+                            ? PROVIDER_GOOGLE
+                            : PROVIDER_DEFAULT
+                    }
                 >
                     <Heatmap
                         points={locationsFromOthers}

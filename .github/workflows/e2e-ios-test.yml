@@ -1,10 +1,8 @@
 name: iOS E2E Tests
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  release:
+    types: [created]
 
 jobs:
   ios-e2e-tests:
