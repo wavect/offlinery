@@ -1,4 +1,4 @@
-import { Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { Color, FontFamily } from "@/GlobalStyles";
 import { AuthApi, SignInResponseDTO } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
@@ -14,15 +14,24 @@ import {
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 import { jwtExpiresSoon } from "@/utils/misc.utils";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useTheme } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+    ActivityIndicator,
+    Dimensions,
+    Platform,
+    StatusBar,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 import { ROUTES } from "./routes";
 
 const authApi = new AuthApi();
 
 const Welcome = ({ navigation }) => {
+    const { colors } = useTheme();
     const { state, dispatch } = useUserContext();
     const [isLoading, setIsLoading] = useState(true);
 
@@ -94,10 +103,8 @@ const Welcome = ({ navigation }) => {
         useCallback(() => {
             const checkAuthentication = async () => {
                 try {
-                    // Assuming you have a function to check authentication status
-                    const isAuthenticated = await checkAuthStatus();
-
-                    if (isAuthenticated) {
+                    const isAuthenticatedUser = await checkAuthStatus();
+                    if (isAuthenticatedUser) {
                         navigation.replace(ROUTES.MainTabView);
                     } else {
                         setIsLoading(false);
@@ -112,139 +119,102 @@ const Welcome = ({ navigation }) => {
         }, [navigation]),
     );
 
-    /** @dev Status auth status loaded, but false */
     const AuthScreen = () => (
-        <>
+        <View style={styles.authContainer}>
             <OTermsDisclaimer />
-
-            <OButtonWide
-                filled={true}
-                text={i18n.t(TR.createAccount)}
-                style={{ marginBottom: 14 }}
-                onPress={() => navigation.navigate(ROUTES.Onboarding.Email)}
-                variant="light"
-            />
-            <OButtonWide
-                filled={false}
-                text={i18n.t(TR.signIn)}
-                style={{ marginBottom: 90 }}
-                variant="light"
-                onPress={() => navigation.navigate(ROUTES.Login)}
-            />
-
-            <OTroubleSignIn style={styles.troubleSigningInFlexBox} />
-        </>
+            <View style={styles.buttonContainer}>
+                <OButtonWide
+                    filled={true}
+                    text={i18n.t(TR.createAccount)}
+                    onPress={() => navigation.navigate(ROUTES.Onboarding.Email)}
+                    variant="light"
+                    style={styles.button}
+                />
+                <OButtonWide
+                    filled={false}
+                    text={i18n.t(TR.signIn)}
+                    variant="light"
+                    onPress={() => navigation.navigate(ROUTES.Login)}
+                    style={styles.button}
+                />
+            </View>
+            <OTroubleSignIn style={styles.troubleSigningIn} />
+        </View>
     );
 
-    const LoadingScreen = () => {
-        return (
-            <>
-                <ActivityIndicator size="large" color={Color.white} />
-                <Text style={styles.loadingText}>
-                    {i18n.t(TR.gettingReadyToAmazeYou)}
-                </Text>
-            </>
-        );
-    };
+    const LoadingScreen = () => (
+        <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={Color.white} />
+            <Text style={[styles.loadingText, { color: Color.white }]}>
+                {i18n.t(TR.gettingReadyToAmazeYou)}
+            </Text>
+        </View>
+    );
 
     return (
-        <OLinearBackground>
-            <View
-                style={[
-                    styles.layoutContainer,
-                    isLoading ? { justifyContent: "center" } : null,
-                ]}
-            >
-                <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)} />
-
-                {isLoading && <LoadingScreen />}
-                {!isLoading && !isAuthenticated(state) && <AuthScreen />}
-            </View>
-        </OLinearBackground>
+        <View style={styles.container}>
+            <StatusBar hidden />
+            <OLinearBackground>
+                <View style={styles.content}>
+                    <OShowcase
+                        subtitle={i18n.t(TR.stopSwipingMeetIrl)}
+                        containerStyle={styles.showCaseStyle}
+                    />
+                    {isLoading ? (
+                        <LoadingScreen />
+                    ) : (
+                        !isAuthenticated(state) && <AuthScreen />
+                    )}
+                </View>
+            </OLinearBackground>
+        </View>
     );
 };
 
+const { width, height } = Dimensions.get("window");
+const aspectRatio = height / width;
+
 const styles = StyleSheet.create({
-    troubleSigningInFlexBox: {
-        display: "flex",
-        letterSpacing: 0,
-        color: Color.white,
-        textAlign: "center",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: 16,
-        lineHeight: 24,
-        marginBottom: 22,
-        width: "88%",
-        height: 45,
+    container: {
+        flex: 1,
     },
-    termsText: {
-        fontFamily: FontFamily.montserratLight,
-        fontWeight: "500",
+    showCaseStyle: {
+        marginTop: height * 0.15,
+    },
+    content: {
+        flex: 1,
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    authContainer: {
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        paddingBottom: Platform.OS === "ios" ? "8%" : "5%",
+    },
+    buttonContainer: {
+        width: "100%",
+        paddingHorizontal: "5%",
+        marginTop: aspectRatio > 1.6 ? "5%" : "2%",
+    },
+    button: {
+        marginBottom: 14,
+        width: "100%",
+    },
+    troubleSigningIn: {
+        width: "90%",
+        marginTop: aspectRatio > 1.6 ? 22 : 10,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
     },
     loadingText: {
-        fontFamily: FontFamily.montserratRegular,
-        color: Color.white,
         marginTop: 12,
-    },
-    termsLink: {
-        textDecorationLine: "underline",
-    },
-    termsContainer: {
-        width: "100%",
-    },
-    termsContainerOuter: {
-        fontSize: FontSize.size_sm,
-        marginBottom: 25,
-        lineHeight: 20,
-        width: 341,
-        height: 81,
-        textShadowColor: "rgba(0, 0, 0, 0.25)",
-        textShadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        textShadowRadius: 4,
-    },
-    noWifi1Icon: {
-        left: 0,
-        width: 53,
-        height: 44,
-    },
-    offlinery: {
-        left: 53,
-        fontSize: 48,
-        fontWeight: "600",
-        fontFamily: FontFamily.montserratRegular,
-        width: 216,
-        height: 54,
-        lineHeight: 52,
-        display: "flex",
-        color: Color.white,
+        fontSize: 16,
         textAlign: "center",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    welcome1: {
-        shadowColor: "rgba(0, 0, 0, 0.25)",
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowRadius: 4,
-        elevation: 4,
-        shadowOpacity: 1,
-        height: 926,
-        backgroundColor: "transparent",
-        overflow: "hidden",
-        width: "100%",
-        flex: 1,
-    },
-    layoutContainer: {
-        flexDirection: "column",
-        alignItems: "center",
-        flex: 1,
-        justifyContent: "flex-end",
+        fontFamily: FontFamily.montserratLight,
     },
 });
 
