@@ -1,4 +1,5 @@
 import { FontFamily, FontSize } from "@/GlobalStyles";
+import { MainStackParamList } from "@/MainStack.navigator";
 import {
     UserApi,
     UserApproachChoiceEnum,
@@ -15,17 +16,23 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
 const userApi = new UserApi();
-const ProfileSettings = ({ navigation }) => {
+const ProfileSettings = ({
+    navigation,
+}: BottomTabScreenProps<MainScreenTabsParamList, typeof ROUTES.MainTabView> &
+    NativeStackScreenProps<MainStackParamList, typeof ROUTES.MainTabView>) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
 

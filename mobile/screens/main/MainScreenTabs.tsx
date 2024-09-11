@@ -1,26 +1,38 @@
 import { Color, Title } from "@/GlobalStyles";
+import { MainStackParamList } from "@/MainStack.navigator";
 import { NotificationNavigateUserDTO } from "@/api/gen/src";
 import { OGoLiveToggle } from "@/components/OGoLiveToggle/OGoLiveToggle";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
+import {
+    MainScreenTabsParamList,
+    MainTabs,
+} from "@/screens/main/MainScreenTabs.navigator";
 import { registerForPushNotificationsAsync } from "@/services/notification.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { MaterialIcons } from "@expo/vector-icons";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
 import { Subscription } from "expo-notifications";
 import * as React from "react";
 import { useCallback, useRef, useState } from "react";
 import { Platform } from "react-native";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 import { EncounterScreenStack } from "./EncounterStackNavigator";
-import Map from "./Map";
+import FindPeople from "./FindPeople";
 import ProfileSettings from "./ProfileSettings";
 
-const Tab = createBottomTabNavigator();
-
-export const MainScreenTabs = ({ navigation }) => {
+export const MainScreenTabs = ({
+    navigation,
+}: BottomTabScreenProps<MainScreenTabsParamList, typeof ROUTES.MainTabView> &
+    NativeStackScreenProps<MainStackParamList, typeof ROUTES.MainTabView> &
+    NativeStackScreenProps<
+        EncounterStackParamList,
+        typeof ROUTES.Main.Encounters
+    >) => {
     const { state, dispatch } = useUserContext();
     const [unreadNotifications, setUnreadNotifications] = useState<
         Notifications.Notification[]
@@ -105,7 +117,7 @@ export const MainScreenTabs = ({ navigation }) => {
                                     age: notificationData.navigateToPerson.age,
                                 };
                                 // Navigate to the specified screen, passing the user object as a prop
-                                navigation.navigate(ROUTES.Main.Encounters, {
+                                navigation.navigate(ROUTES.MainTabView, {
                                     screen: notificationData.screen,
                                     params: {
                                         navigateToPerson: encounterProfile,
@@ -134,7 +146,7 @@ export const MainScreenTabs = ({ navigation }) => {
     );
 
     return (
-        <Tab.Navigator
+        <MainTabs.Navigator
             screenOptions={() => ({
                 headerTitle: "",
                 headerTitleStyle: Title,
@@ -149,9 +161,9 @@ export const MainScreenTabs = ({ navigation }) => {
                 ),
             })}
         >
-            <Tab.Screen
+            <MainTabs.Screen
                 name={ROUTES.Main.FindPeople}
-                component={Map}
+                component={FindPeople}
                 options={{
                     tabBarLabel: i18n.t(TR.findPeople),
                     headerTitle: i18n.t(TR.findPeople),
@@ -164,7 +176,7 @@ export const MainScreenTabs = ({ navigation }) => {
                     ),
                 }}
             />
-            <Tab.Screen
+            <MainTabs.Screen
                 name={ROUTES.Main.Encounters}
                 component={EncounterScreenStack}
                 options={{
@@ -183,7 +195,7 @@ export const MainScreenTabs = ({ navigation }) => {
                     ),
                 }}
             />
-            <Tab.Screen
+            <MainTabs.Screen
                 name={ROUTES.Main.ProfileSettings}
                 component={ProfileSettings}
                 options={{
@@ -198,6 +210,6 @@ export const MainScreenTabs = ({ navigation }) => {
                     ),
                 }}
             />
-        </Tab.Navigator>
+        </MainTabs.Navigator>
     );
 };
