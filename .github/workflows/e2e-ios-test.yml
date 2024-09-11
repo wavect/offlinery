@@ -9,6 +9,9 @@ on:
 jobs:
   ios-e2e-tests:
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./mobile
     steps:
       - uses: actions/checkout@v3
 
@@ -41,7 +44,7 @@ jobs:
         env:
           EXPO_PUBLIC_ENVIRONMENT: production
         run: |
-          pnpm exec expo prebuild -p ios
+          pnpm exec expo prebuild -p ios --non-interactive
           pnpm exec expo run:ios --configuration Release --no-packager
 
       - name: Run Maestro tests
