@@ -30,6 +30,13 @@ jobs:
           pnpm install:all
           pnpm add -g expo-cli@latest eas-cli
 
+      - name: Check font installation
+        run: |
+          ls -R node_modules/@expo-google-fonts
+          cat package.json
+          echo "Font paths from app.json:"
+          grep -A 4 '"fonts":' app.json
+
       - name: Install Maestro
         run: |
           curl -Ls "https://get.maestro.mobile.dev" | bash
@@ -43,18 +50,14 @@ jobs:
       - name: Build iOS app
         env:
           EXPO_PUBLIC_ENVIRONMENT: production
-          CI: 1
         run: |
-          pnpm exec expo prebuild -p ios
-          pnpm exec expo run:ios --configuration Release --no-packager
+          pnpm ios
 
       - name: Run Maestro tests
         env:
           EXPO_PUBLIC_ENVIRONMENT: production
         run: |
-          xcrun simctl boot "iPhone 15"
-          xcrun simctl install booted ios/build/Build/Products/Release-iphonesimulator/Offlinery.app
-          maestro test -e APP_PATH=ios/build/Build/Products/Release-iphonesimulator/Offlinery.app ./tests/e2e/ios/login-flow.yaml
+          pnpm e2e:ios:test
 
       - name: Upload test artifacts
         uses: actions/upload-artifact@v3
