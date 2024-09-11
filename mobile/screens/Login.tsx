@@ -1,8 +1,7 @@
-import { Color, FontFamily } from "@/GlobalStyles";
+import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { AuthApi, AuthControllerSignInRequest } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
-import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
-import { OShowcase } from "@/components/OShowcase/OShowcase";
+import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
 import { OTextInputWide } from "@/components/OTextInputWide/OTextInputWide";
 import { OTroubleSignIn } from "@/components/OTroubleSignIn/OTroubleSignIn";
@@ -11,15 +10,9 @@ import { TR, i18n } from "@/localization/translate.service";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
 import * as React from "react";
 import { useState } from "react";
-import {
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { Dimensions, StyleSheet, Text } from "react-native";
 
+const { width, height } = Dimensions.get("window");
 const authApi = new AuthApi();
 const Login = ({ navigation }) => {
     const { state, dispatch } = useUserContext();
@@ -73,88 +66,79 @@ const Login = ({ navigation }) => {
     };
 
     return (
-        <OLinearBackground>
-            <KeyboardAvoidingView
-                style={styles.container}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
-            >
-                <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                    <View style={styles.content}>
-                        <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)} />
+        <OPageColorContainer>
+            <OTextInputWide
+                value={state.email}
+                setValue={setEmail}
+                placeholder={i18n.t(TR.yourEmail)}
+                topLabel={i18n.t(TR.email)}
+                style={styles.textInputContainer}
+            />
+            <OTextInputWide
+                value={state.clearPassword}
+                setValue={setClearPassword}
+                placeholder={i18n.t(TR.yourPassword)}
+                secureTextEntry={true}
+                topLabel={i18n.t(TR.password)}
+                style={styles.textInputContainer}
+            />
 
-                        <OTextInputWide
-                            value={state.email}
-                            setValue={setEmail}
-                            placeholder={i18n.t(TR.yourEmail)}
-                            topLabel={i18n.t(TR.email)}
-                            style={styles.textInputContainer}
-                        />
-                        <OTextInputWide
-                            value={state.clearPassword}
-                            setValue={setClearPassword}
-                            placeholder={i18n.t(TR.yourPassword)}
-                            secureTextEntry={true}
-                            topLabel={i18n.t(TR.password)}
-                            style={styles.textInputContainer}
-                        />
+            <OButtonWide
+                filled={true}
+                text={i18n.t(TR.signIn)}
+                style={styles.loginButton}
+                isLoading={isLoading}
+                loadingBtnText={i18n.t(TR.signingIn)}
+                disabled={!hasFilledOutLoginForm()}
+                onPress={login}
+                variant="light"
+            />
+            {errorMessage ? (
+                <Text style={styles.errorMessage}>{errorMessage}</Text>
+            ) : null}
 
-                        <OButtonWide
-                            filled={true}
-                            text={i18n.t(TR.signIn)}
-                            style={styles.loginButton}
-                            isLoading={isLoading}
-                            loadingBtnText={i18n.t(TR.signingIn)}
-                            disabled={!hasFilledOutLoginForm()}
-                            onPress={login}
-                            variant="light"
-                        />
-                        {errorMessage ? (
-                            <Text style={styles.errorMessage}>
-                                {errorMessage}
-                            </Text>
-                        ) : null}
+            <OTermsDisclaimer style={styles.termsDisclaimer} />
 
-                        <OTermsDisclaimer style={styles.termsDisclaimer} />
-
-                        <OTroubleSignIn />
-                    </View>
-                </ScrollView>
-            </KeyboardAvoidingView>
-        </OLinearBackground>
+            <OTroubleSignIn />
+        </OPageColorContainer>
     );
 };
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+    },
     container: {
         flex: 1,
     },
     scrollViewContent: {
         flexGrow: 1,
         justifyContent: "center",
+        paddingHorizontal: width * 0.05,
+        paddingVertical: height * 0.03,
     },
     content: {
         alignItems: "center",
-        paddingVertical: 20,
+        width: "100%",
     },
     textInputContainer: {
-        marginBottom: 20,
+        marginBottom: height * 0.02,
         width: "100%",
     },
     loginButton: {
-        marginBottom: 14,
-        width: "90%",
+        marginBottom: height * 0.015,
+        width: "100%",
     },
     termsDisclaimer: {
-        marginTop: 20,
+        marginTop: height * 0.02,
         color: Color.white,
     },
     errorMessage: {
         color: Color.redLight,
-        fontSize: 16,
+        fontSize: FontSize.size_sm,
         fontFamily: FontFamily.montserratSemiBold,
         textAlign: "center",
-        marginBottom: 10,
+        marginBottom: height * 0.01,
     },
 });
 

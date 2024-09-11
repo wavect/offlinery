@@ -1,8 +1,6 @@
-import { Color, FontFamily } from "@/GlobalStyles";
 import { AuthApi, SignInResponseDTO } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
-import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
-import { OShowcase } from "@/components/OShowcase/OShowcase";
+import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
 import { OTroubleSignIn } from "@/components/OTroubleSignIn/OTroubleSignIn";
 import { isAuthenticated, useUserContext } from "@/context/UserContext";
@@ -17,15 +15,7 @@ import { jwtExpiresSoon } from "@/utils/misc.utils";
 import { useFocusEffect, useTheme } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
-import {
-    ActivityIndicator,
-    Dimensions,
-    Platform,
-    StatusBar,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { Dimensions, Platform, StyleSheet, View } from "react-native";
 import { ROUTES } from "./routes";
 
 const authApi = new AuthApi();
@@ -142,32 +132,10 @@ const Welcome = ({ navigation }) => {
         </View>
     );
 
-    const LoadingScreen = () => (
-        <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={Color.white} />
-            <Text style={[styles.loadingText, { color: Color.white }]}>
-                {i18n.t(TR.gettingReadyToAmazeYou)}
-            </Text>
-        </View>
-    );
-
     return (
-        <View style={styles.container}>
-            <StatusBar hidden />
-            <OLinearBackground>
-                <View style={styles.content}>
-                    <OShowcase
-                        subtitle={i18n.t(TR.stopSwipingMeetIrl)}
-                        containerStyle={styles.showCaseStyle}
-                    />
-                    {isLoading ? (
-                        <LoadingScreen />
-                    ) : (
-                        !isAuthenticated(state) && <AuthScreen />
-                    )}
-                </View>
-            </OLinearBackground>
-        </View>
+        <OPageColorContainer isLoading={isLoading}>
+            {!isAuthenticated(state) && <AuthScreen />}
+        </OPageColorContainer>
     );
 };
 
@@ -175,17 +143,6 @@ const { width, height } = Dimensions.get("window");
 const aspectRatio = height / width;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    showCaseStyle: {
-        marginTop: height * 0.15,
-    },
-    content: {
-        flex: 1,
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
     authContainer: {
         width: "100%",
         alignItems: "center",
@@ -204,17 +161,6 @@ const styles = StyleSheet.create({
     troubleSigningIn: {
         width: "90%",
         marginTop: aspectRatio > 1.6 ? 22 : 10,
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    loadingText: {
-        marginTop: 12,
-        fontSize: 16,
-        textAlign: "center",
-        fontFamily: FontFamily.montserratLight,
     },
 });
 
