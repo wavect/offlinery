@@ -55,11 +55,11 @@ jobs:
           sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
           echo "no" | avdmanager create avd --force --name test --package "system-images;android-30;google_apis;x86_64"
 
-      - name: Build Android app
+      - name: Prebuild and Build Android app
         env:
           EXPO_PUBLIC_ENVIRONMENT: production
         run: |
-          pnpm prebuild
+          expo prebuild --platform android
           cd android
           ./gradlew assembleDebug
 
