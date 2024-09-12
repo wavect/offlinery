@@ -61,16 +61,16 @@ jobs:
         run: |
           expo prebuild --platform android
 
-      - name: Fix Android namespace and BuildConfig issues
+      - name: Ensure BuildConfig generation
         run: |
-          sed -i 's/package="io.wavect.offlinery"//g' android/app/src/main/AndroidManifest.xml
-          sed -i '/apply plugin: "com.android.application"/a android { namespace "io.wavect.offlinery" }' android/app/build.gradle
-          sed -i 's/import io.wavect.offlinery.BuildConfig/import io.wavect.offlinery.BuildConfig/' android/app/src/main/java/io/wavect/offlinery/MainApplication.kt
-          sed -i '/android {/a buildFeatures { buildConfig true }' android/app/build.gradle
+          sed -i '/android {/a \    buildFeatures { buildConfig true }' android/app/build.gradle
+          sed -i '/defaultConfig {/a \        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "false"' android/app/build.gradle
+          sed -i '/defaultConfig {/a \        buildConfigField "boolean", "IS_HERMES_ENABLED", "true"' android/app/build.gradle
 
-      - name: Build Android app
+      - name: Clean and Build Android app
         run: |
           cd android
+          ./gradlew clean
           ./gradlew assembleDebug --stacktrace
 
       - name: Start Android emulator
