@@ -79,7 +79,7 @@ export const de: Language = {
     bookSafetyCall: "Sicherheitsanruf buchen",
     retainRightToRejectApplicants:
         "Wir behalten uns das Recht vor, Bewerber abzulehnen, um sicherzustellen, dass sich jeder sicher und respektiert fühlt.",
-    callBookedQuestion: "Anruf gebucht?",
+    callBookedBtnLbl: "Ich werde da sein",
     permissionToLocationDenied: "Zugriff auf den Standort wurde verweigert.",
     dontApproachHere: "Hier nicht ansprechen",
     whatAreSpotsToNotApproachYou:

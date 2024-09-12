@@ -24,12 +24,7 @@ const BookSafetyCall = ({
     // const [hasBookedCall, setCallBooked] = useState(false)
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
-
-    /* later on maybe, but difficult since only page resize event is triggered for some reason
-
-    useCalendlyEventListener({
-        onEventScheduled: (e) => setCallBooked(true),
-    });*/
+    const [hasBookedCall, setHasBookedCall] = useState(false);
 
     const startUserRegistration = async () => {
         setLoading(true);
@@ -47,11 +42,27 @@ const BookSafetyCall = ({
             });
         }
     };
+    const handleEventScheduled = () => {
+        setHasBookedCall(true);
+    };
 
     return (
         <OPageContainer
             title={i18n.t(TR.bookSafetyCall)}
             subtitle={i18n.t(TR.retainRightToRejectApplicants)}
+            bottomContainerChildren={
+                hasBookedCall && (
+                    <View style={styles.callBookBtnContainer}>
+                        <OButtonWide
+                            text={i18n.t(TR.callBookedBtnLbl)}
+                            filled={true}
+                            disabled={!hasBookedCall}
+                            variant="dark"
+                            onPress={startUserRegistration}
+                        />
+                    </View>
+                )
+            }
         >
             <OCalendlyInline
                 url="https://calendly.com/wavect/safety-call"
@@ -69,19 +80,8 @@ const BookSafetyCall = ({
                     firstName: state.firstName,
                     name: state.id,
                 }}
+                onEventScheduled={handleEventScheduled}
             />
-
-            <View style={styles.callBookBtnContainer}>
-                <OButtonWide
-                    text={i18n.t(TR.callBookedQuestion)}
-                    filled={true}
-                    countdownEnableSeconds={10}
-                    isLoading={isLoading}
-                    loadingBtnText={i18n.t(TR.registering)}
-                    variant="dark"
-                    onPress={startUserRegistration}
-                />
-            </View>
         </OPageContainer>
     );
 };
