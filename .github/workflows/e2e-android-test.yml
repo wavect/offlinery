@@ -8,7 +8,7 @@ on:
 
 jobs:
   android-e2e-tests:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./mobile
@@ -52,8 +52,8 @@ jobs:
 
       - name: Setup Android emulator
         run: |
-          sdkmanager "system-images;android-30;google_apis;x86"
-          echo "no" | avdmanager create avd --force --name test --package "system-images;android-30;google_apis;x86"
+          sdkmanager "system-images;android-30;google_apis;x86_64"
+          echo "no" | avdmanager create avd --force --name test --package "system-images;android-30;google_apis;x86_64"
 
       - name: Build Android app
         env:
@@ -68,6 +68,9 @@ jobs:
           $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
           adb wait-for-device
           adb shell input keyevent 82
+          adb shell settings put global window_animation_scale 0.0
+          adb shell settings put global transition_animation_scale 0.0
+          adb shell settings put global animator_duration_scale 0.0
           pnpm e2e:android:test
 
       - name: Upload test artifacts
