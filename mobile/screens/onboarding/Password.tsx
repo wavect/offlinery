@@ -1,14 +1,23 @@
+import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { isValidPassword } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet } from "react-native";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const Password = ({ route, navigation }) => {
+const Password = ({
+    route,
+    navigation,
+}: NativeStackScreenProps<
+    MainStackParamList,
+    typeof ROUTES.Onboarding.Password
+>) => {
     const { state, dispatch } = useUserContext();
     const [oldClearPassword, setOldClearPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
@@ -16,11 +25,6 @@ const Password = ({ route, navigation }) => {
     const [passwordErrorConfirmation, setPasswordErrorConfirmation] =
         useState("");
 
-    const isStrongPassword = () => {
-        return state.clearPassword.match(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,40}$/,
-        );
-    };
     const doPasswordsMatch = (pwd: string) => {
         return state.clearPassword === pwd;
     };
@@ -31,7 +35,7 @@ const Password = ({ route, navigation }) => {
             payload: { clearPassword: pwd },
         });
 
-        if (isStrongPassword()) {
+        if (isValidPassword(state.clearPassword)) {
             setPasswordError("");
         } else {
             setPasswordError(i18n.t(TR.pwdErrSecurityGuideline));
@@ -45,10 +49,6 @@ const Password = ({ route, navigation }) => {
         } else {
             setPasswordErrorConfirmation(i18n.t(TR.pwdErrNotMatching));
         }
-    };
-
-    const isValidPassword = () => {
-        return isStrongPassword() && doPasswordsMatch(passwordConfirmation);
     };
     const isChangePassword = !!route?.params?.isChangePassword;
 
@@ -73,7 +73,10 @@ const Password = ({ route, navigation }) => {
                         isChangePassword ? i18n.t(TR.save) : i18n.t(TR.continue)
                     }
                     filled={true}
-                    disabled={!isValidPassword()}
+                    disabled={
+                        !isValidPassword(state.clearPassword) ||
+                        !doPasswordsMatch(passwordConfirmation)
+                    }
                     variant="dark"
                     onPress={onSave}
                 />

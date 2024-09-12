@@ -1,4 +1,5 @@
 import { BorderRadius, Color, Subtitle } from "@/GlobalStyles";
+import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, MapRegion, useUserContext } from "@/context/UserContext";
@@ -18,9 +19,15 @@ import MapView, {
     PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
 } from "react-native-maps";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const DontApproachMeHere = ({ navigation }) => {
+const DontApproachMeHere = ({
+    navigation,
+}: NativeStackScreenProps<
+    MainStackParamList,
+    typeof ROUTES.Onboarding.DontApproachMeHere
+>) => {
     const { state, dispatch } = useUserContext();
     const [activeRegionIndex, setActiveRegionIndex] = React.useState<
         number | null

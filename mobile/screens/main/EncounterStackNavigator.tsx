@@ -1,32 +1,20 @@
 import { EncountersProvider } from "@/context/EncountersContext";
 import { i18n, TR } from "@/localization/translate.service";
-import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 import { memo } from "react";
 import { ROUTES } from "../routes";
 import Encounters from "./Encounters";
+import { EncounterStack } from "./EncounterStack.navigator";
 import NavigateToApproach from "./NavigateToApproach";
 import ProfileView from "./ProfileView";
 import ReportEncounter from "./ReportEncounter";
 
-const EncounterStack = createStackNavigator();
-
-interface IEncounterStackProps {
-    route?: {
-        params?: {
-            initialRouteName?: string;
-        };
-    };
-}
-
 const NO_HEADER = { headerShown: false };
-export const EncounterScreenStack = memo(({ route }: IEncounterStackProps) => {
-    const initialRouteName =
-        route?.params?.initialRouteName ?? ROUTES.Main.Encounters;
+export const EncounterScreenStack = memo(() => {
     return (
         <EncountersProvider>
             <EncounterStack.Navigator
-                initialRouteName={initialRouteName}
+                initialRouteName={ROUTES.Main.Encounters}
                 screenOptions={NO_HEADER}
             >
                 <EncounterStack.Screen

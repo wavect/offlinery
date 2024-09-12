@@ -2,12 +2,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import * as React from "react";
 import { ROUTES } from "./screens/routes";
 
-const Stack = createStackNavigator();
-
 import Splash from "./screens/Splash";
 import Welcome from "./screens/Welcome";
-
-import { createStackNavigator } from "@react-navigation/stack";
 
 import {
     Montserrat_300Light,
@@ -20,6 +16,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { Color } from "./GlobalStyles";
+import { MainStack } from "./MainStack.navigator";
 import { UserProvider } from "./context/UserContext";
 import HouseRules from "./screens/HouseRules";
 import Login from "./screens/Login";
@@ -104,106 +101,106 @@ export default function App() {
         <GlobalErrorHandler>
             <NavigationContainer>
                 <UserProvider>
-                    <Stack.Navigator
+                    <MainStack.Navigator
                         initialRouteName={ROUTES.Welcome}
                         screenOptions={NO_HEADER}
                     >
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Welcome}
                             component={Welcome}
                             options={NO_HEADER}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Login}
                             component={Login}
                             options={DEFAULT_LIGHT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.HouseRules}
                             component={HouseRules}
                             options={DEFAULT_LIGHT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.Email}
                             component={Email}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.VerifyEmail}
                             component={VerifyEmail}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.Password}
                             component={Password}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.FirstName}
                             component={FirstName}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.BirthDay}
                             component={Birthday}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.GenderChoice}
                             component={GenderChoice}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.GenderLookingFor}
                             component={GenderLookingFor}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.ApproachChoice}
                             component={ApproachChoice}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.SafetyCheck}
                             component={SafetyCheck}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.BookSafetyCall}
                             component={BookSafetyCall}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.AddPhotos}
                             component={AddPhotos}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.DontApproachMeHere}
                             component={DontApproachMeHere}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.ApproachMeBetween}
                             component={ApproachMeBetween}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.BioLetThemKnow}
                             component={BioLetThemKnow}
                             options={DEFAULT_SCREEN_PROPS}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.Onboarding.WaitingVerification}
                             component={WaitingForVerification}
                             options={NO_HEADER}
                         />
-                        <Stack.Screen
+                        <MainStack.Screen
                             name={ROUTES.MainTabView}
                             component={MainScreenTabs}
                             options={NO_HEADER}
                         />
-                    </Stack.Navigator>
+                    </MainStack.Navigator>
                 </UserProvider>
             </NavigationContainer>
         </GlobalErrorHandler>

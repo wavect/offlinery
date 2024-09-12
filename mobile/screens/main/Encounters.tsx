@@ -7,9 +7,12 @@ import {
 } from "@/context/EncountersContext";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
+import { ROUTES } from "@/screens/routes";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { includeJWT } from "@/utils/misc.utils";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import { useCallback, useState } from "react";
 import {
@@ -25,7 +28,12 @@ import OEncounter from "../../components/OEncounter/OEncounter";
 
 const api = new EncounterApi();
 
-const Encounters = ({ navigation }) => {
+const Encounters = ({
+    navigation,
+}: BottomTabScreenProps<
+    MainScreenTabsParamList,
+    typeof ROUTES.MainTabView
+>) => {
     const { state: encounterState, dispatch } = useEncountersContext();
     const { state: userState } = useUserContext();
     const today = new Date();

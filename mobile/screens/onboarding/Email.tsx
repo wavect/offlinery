@@ -1,23 +1,33 @@
 import { Color, FontFamily } from "@/GlobalStyles";
+import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OCheckbox } from "@/components/OCheckbox/OCheckbox";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
+import { useEffect } from "react";
 import { StyleSheet, Text } from "react-native";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const Email = ({ route, navigation }) => {
+const Email = ({
+    route,
+    navigation,
+}: NativeStackScreenProps<
+    MainStackParamList,
+    typeof ROUTES.Onboarding.Email
+>) => {
     const { state, dispatch } = useUserContext();
     const [showErrorMessage, setShowErrorMessage] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState("");
 
-    React.useEffect(() => {
+    useEffect(() => {
         const unsubscribe = navigation.addListener("focus", () => {
-            const params = route.params || {};
-            if (params.errorMessage) {
+            const params = route.params;
+            if (params?.errorMessage) {
                 setErrorMessage(params.errorMessage);
                 setShowErrorMessage(true);
             }
@@ -38,9 +48,6 @@ const Email = ({ route, navigation }) => {
         });
     };
 
-    const isInvalidEmail = () =>
-        !state.email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
-
     const onContinue = async () => {
         navigation.navigate(ROUTES.Onboarding.VerifyEmail);
     };
@@ -52,7 +59,7 @@ const Email = ({ route, navigation }) => {
                 <OButtonWide
                     text={i18n.t(TR.continue)}
                     filled={true}
-                    disabled={isInvalidEmail()}
+                    disabled={!isValidEmail(state.email)}
                     variant="dark"
                     onPress={onContinue}
                 />

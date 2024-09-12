@@ -13,14 +13,23 @@ import {
 } from "@/context/EncountersContext";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
+import { ROUTES } from "@/screens/routes";
 import * as React from "react";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import OEncounter from "../../components/OEncounter/OEncounter";
 
 const reportApi = new UserReportsApi();
-const ReportEncounter = ({ route, navigation }) => {
+const ReportEncounter = ({
+    route,
+    navigation,
+}: NativeStackScreenProps<
+    EncounterStackParamList,
+    typeof ROUTES.Main.ReportEncounter
+>) => {
     const { state } = useUserContext();
     const { dispatch } = useEncountersContext();
     const [isLoading, setLoading] = useState(false);
@@ -56,7 +65,7 @@ const ReportEncounter = ({ route, navigation }) => {
                 incidentDescription: incidentDescription!,
                 keepReporterInTheLoop: keepMeInTheLoop,
                 incidentType: incidentType!,
-                reportedUserId: personToReport.id, // Assuming personToReport has an id field
+                reportedUserId: personToReport.encounterId,
             };
 
             await reportApi.userReportControllerCreate({
