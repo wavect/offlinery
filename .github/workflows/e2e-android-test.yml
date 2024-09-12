@@ -1,15 +1,18 @@
-name: iOS E2E Tests
+name: Android E2E Tests
 
 on:
-  release:
-    types: [created]
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  ios-e2e-tests:
-    runs-on: macos-latest
+  android-e2e-tests:
+    runs-on: macos-latest  # Using macOS for Android emulator support
     defaults:
       run:
         working-directory: ./mobile
+
     steps:
       - uses: actions/checkout@v3
 
@@ -40,22 +43,33 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "${HOME}/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Setup iOS simulator
-        run: |
-          brew install watchman
-          xcrun simctl create "iPhone 15" com.apple.CoreSimulator.SimDeviceType.iPhone-15
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
 
-      - name: Build iOS app
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Setup Android emulator
+        run: |
+          sdkmanager "system-images;android-29;google_apis;x86"
+          echo "no" | avdmanager create avd --force --name test --package "system-images;android-29;google_apis;x86"
+
+      - name: Build Android app
         env:
           EXPO_PUBLIC_ENVIRONMENT: production
         run: |
-          pnpm ios
+          pnpm android
 
-      - name: Run Maestro tests
+      - name: Start Android emulator and run Maestro tests
         env:
           EXPO_PUBLIC_ENVIRONMENT: production
         run: |
-          pnpm e2e:ios:test
+          $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
+          adb wait-for-device
+          pnpm e2e:android:test
 
       - name: Upload test artifacts
         uses: actions/upload-artifact@v3
