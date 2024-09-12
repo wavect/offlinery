@@ -15,12 +15,16 @@
 import type {
     DateRangeDTO,
     EncounterPublicDTO,
+    GetLocationOfEncounterDTO,
+    GetLocationOfEncounterResponseDTO,
     PushMessageDTO,
     UpdateEncounterStatusDTO,
 } from "../models/index";
 import {
     DateRangeDTOToJSON,
     EncounterPublicDTOFromJSON,
+    GetLocationOfEncounterDTOToJSON,
+    GetLocationOfEncounterResponseDTOFromJSON,
     PushMessageDTOToJSON,
     UpdateEncounterStatusDTOToJSON,
 } from "../models/index";
@@ -32,6 +36,11 @@ import * as runtime from "../runtime";
 export interface EncounterControllerGetEncountersByUserRequest {
     userId: string;
     dateRangeDTO: DateRangeDTO;
+}
+
+export interface EncounterControllerGetLocationOfEncounterRequest {
+    userId: string;
+    getLocationOfEncounterDTO: GetLocationOfEncounterDTO;
 }
 
 export interface EncounterControllerPushMessageRequest {
@@ -72,6 +81,28 @@ export interface EncounterApiInterface {
         requestParameters: EncounterControllerGetEncountersByUserRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<Array<EncounterPublicDTO>>;
+
+    /**
+     *
+     * @summary Get current location of encounter.
+     * @param {string} userId User ID
+     * @param {GetLocationOfEncounterDTO} getLocationOfEncounterDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EncounterApiInterface
+     */
+    encounterControllerGetLocationOfEncounterRaw(
+        requestParameters: EncounterControllerGetLocationOfEncounterRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<GetLocationOfEncounterResponseDTO>>;
+
+    /**
+     * Get current location of encounter.
+     */
+    encounterControllerGetLocationOfEncounter(
+        requestParameters: EncounterControllerGetLocationOfEncounterRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<GetLocationOfEncounterResponseDTO>;
 
     /**
      *
@@ -182,6 +213,69 @@ export class EncounterApi
             requestParameters,
             initOverrides,
         );
+        return await response.value();
+    }
+
+    /**
+     * Get current location of encounter.
+     */
+    async encounterControllerGetLocationOfEncounterRaw(
+        requestParameters: EncounterControllerGetLocationOfEncounterRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<GetLocationOfEncounterResponseDTO>> {
+        if (requestParameters["userId"] == null) {
+            throw new runtime.RequiredError(
+                "userId",
+                'Required parameter "userId" was null or undefined when calling encounterControllerGetLocationOfEncounter().',
+            );
+        }
+
+        if (requestParameters["getLocationOfEncounterDTO"] == null) {
+            throw new runtime.RequiredError(
+                "getLocationOfEncounterDTO",
+                'Required parameter "getLocationOfEncounterDTO" was null or undefined when calling encounterControllerGetLocationOfEncounter().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        const response = await this.request(
+            {
+                path: `/encounter/{userId}/encounterLocation`.replace(
+                    `{${"userId"}}`,
+                    encodeURIComponent(String(requestParameters["userId"])),
+                ),
+                method: "GET",
+                headers: headerParameters,
+                query: queryParameters,
+                body: GetLocationOfEncounterDTOToJSON(
+                    requestParameters["getLocationOfEncounterDTO"],
+                ),
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            GetLocationOfEncounterResponseDTOFromJSON(jsonValue),
+        );
+    }
+
+    /**
+     * Get current location of encounter.
+     */
+    async encounterControllerGetLocationOfEncounter(
+        requestParameters: EncounterControllerGetLocationOfEncounterRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<GetLocationOfEncounterResponseDTO> {
+        const response =
+            await this.encounterControllerGetLocationOfEncounterRaw(
+                requestParameters,
+                initOverrides,
+            );
         return await response.value();
     }
 

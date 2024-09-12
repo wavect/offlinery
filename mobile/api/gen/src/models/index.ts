@@ -8,6 +8,8 @@ export * from "./CreateUserReportDTO";
 export * from "./DateRangeDTO";
 export * from "./Encounter";
 export * from "./EncounterPublicDTO";
+export * from "./GetLocationOfEncounterDTO";
+export * from "./GetLocationOfEncounterResponseDTO";
 export * from "./LocationUpdateDTO";
 export * from "./Message";
 export * from "./MessagePublicDTO";
