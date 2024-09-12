@@ -8,7 +8,7 @@ on:
 
 jobs:
   android-e2e-tests:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest  # Using macOS runner for better Android emulator performance
     defaults:
       run:
         working-directory: ./mobile
@@ -42,16 +42,6 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
-        with:
-          sdk-version: '30'
-
-      - name: Accept Android SDK licenses
-        run: yes | sdkmanager --licenses
-
-      - name: Setup Android emulator
-        run: |
-          sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
-          echo "no" | avdmanager create avd --force --name test --package "system-images;android-30;google_apis;x86_64"
 
       - name: Prebuild Android app
         env:
@@ -59,35 +49,24 @@ jobs:
         run: |
           pnpm exec expo prebuild --platform android --clean
 
-      - name: Debug - Print AndroidManifest.xml and build.gradle
-        run: |
-          echo "AndroidManifest.xml content:"
-          cat android/app/src/main/AndroidManifest.xml
-          echo "build.gradle content:"
-          cat android/app/build.gradle
-
-      - name: Clean and Build Android app
+      - name: Build Android app
         run: |
           cd android
-          ./gradlew clean
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug
 
-      - name: Start Android emulator
-        run: |
-          echo "Starting emulator..."
-          nohup $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
-          $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
-          echo "Emulator started."
-
-      - name: Run Maestro tests
-        env:
-          EXPO_PUBLIC_ENVIRONMENT: production
-        run: |
-          adb install android/app/build/outputs/apk/debug/app-debug.apk
-          adb shell settings put global window_animation_scale 0.0
-          adb shell settings put global transition_animation_scale 0.0
-          adb shell settings put global animator_duration_scale 0.0
-          pnpm e2e:android:test
+      - name: Setup and run Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          target: default
+          arch: x86_64
+          profile: Nexus 6
+          script: |
+            adb install mobile/android/app/build/outputs/apk/debug/app-debug.apk
+            adb shell settings put global window_animation_scale 0.0
+            adb shell settings put global transition_animation_scale 0.0
+            adb shell settings put global animator_duration_scale 0.0
+            cd mobile && pnpm e2e:android:test
 
       - name: Upload test artifacts
         uses: actions/upload-artifact@v3
