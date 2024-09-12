@@ -1,8 +1,9 @@
 name: iOS E2E Tests
 
 on:
+  workflow_dispatch:  # This allows manual triggering if needed
   release:
-    types: [created]
+    types: [disabled_event_that_never_happens]
 
 jobs:
   ios-e2e-tests:

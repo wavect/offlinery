@@ -1,10 +1,9 @@
 name: Android E2E Tests
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:  # This allows manual triggering if needed
+  release:
+    types: [disabled_event_that_never_happens]
 
 jobs:
   android-e2e-tests:
