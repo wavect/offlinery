@@ -1,9 +1,16 @@
 import { DateRangeDTO } from "@/DTOs/date-range.dto";
+import { GetLocationOfEncounterResponseDTO } from "@/DTOs/get-location-of-encounter-response.dto";
+import { GetLocationOfEncounterDTO } from "@/DTOs/get-location-of-encounter.dto";
 import { PushMessageDTO } from "@/DTOs/push-message.dto";
 import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
 import { Message } from "@/entities/messages/message.entity";
 import { User } from "@/entities/user/user.entity";
-import { Injectable, Logger, NotFoundException } from "@nestjs/common";
+import {
+    ForbiddenException,
+    Injectable,
+    Logger,
+    NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { In, Repository } from "typeorm";
 import { Encounter } from "./encounter.entity";
@@ -141,6 +148,40 @@ export class EncounterService {
 
         encounter.userStatuses[userId] = status;
         return this.encounterRepository.save(encounter);
+    }
+
+    async getLocationOfEncounter(
+        userId: string,
+        getLocationOfEncounterDTO: GetLocationOfEncounterDTO,
+    ): Promise<GetLocationOfEncounterResponseDTO> {
+        const { encounterId } = getLocationOfEncounterDTO;
+        this.logger.debug(
+            `User ${userId} trying to access location for encounterId ${encounterId}`,
+        );
+        const encounter: Encounter = await this.encounterRepository.findOne({
+            where: { id: encounterId },
+            relations: ["users"],
+        });
+        if (!encounter) {
+            throw new NotFoundException(
+                `Encounter with ID ${encounterId} not found`,
+            );
+        }
+        if (!encounter.isNearbyRightNow) {
+            throw new ForbiddenException(
+                `Users are not nearby. You are not allowed to access another user's location.`,
+            );
+        }
+        const otherUser = encounter.users.find((u) => u.id != userId);
+        if (!otherUser) {
+            throw new NotFoundException(
+                `Other user of Encounter ${encounterId} not found! Requesting user: ${userId}`,
+            );
+        }
+        return {
+            longitude: otherUser.location.coordinates[0],
+            latitude: otherUser.location.coordinates[1],
+        };
     }
 
     async pushMessage(

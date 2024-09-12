@@ -50,6 +50,7 @@ const DEFAULT_SCREEN_PROPS = {
     headerShadowVisible: false,
     headerTitle: "",
     headerBackTitle: "Back",
+    headerTintColor: Color.primary,
 };
 const DEFAULT_LIGHT_SCREEN_PROPS = {
     ...DEFAULT_SCREEN_PROPS,
