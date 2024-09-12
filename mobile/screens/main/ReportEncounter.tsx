@@ -126,7 +126,7 @@ const ReportEncounter = ({
             <Text style={styles.label}>What happened?</Text>
             <OTextInput
                 value={incidentDescription ?? ""}
-                setValue={setIncidentDescription}
+                onChangeText={setIncidentDescription}
                 placeholder={i18n.t(TR.describeIncident)}
                 multiline={true}
             />

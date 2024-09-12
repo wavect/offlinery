@@ -1,4 +1,6 @@
 /* fonts */
+import { StyleProp, TextStyle } from "react-native";
+
 export const FontFamily = {
     montserratSemiBold: "Montserrat_600SemiBold",
     montserratMedium: "Montserrat_500Medium",
@@ -18,9 +20,12 @@ export const Color = {
     black: "#000",
     white: "#fff",
     red: "#ff0000",
+    /** @dev Great to use as error color on blue color backgrounds */
     lightOrange: "#FFD580",
+    /** @dev general error color */
     redLight: "#fb3310",
-    primaryLight: "#81c5c9",
+    primaryBright: "#81c5c9",
+    primaryLight: "#459da1",
     primary: "#36797d",
     gray: "#757575",
     lightGray: "#a9a9a9",
@@ -29,13 +34,13 @@ export const Color = {
     schemesPrimary: "#65558f",
 };
 
-export const Title = {
+export const Title: StyleProp<TextStyle> = {
     fontSize: 40,
     fontWeight: "600",
     color: "#000",
     marginBottom: 8,
 };
-export const Subtitle = {
+export const Subtitle: StyleProp<TextStyle> = {
     fontSize: 16,
     color: "#aaa",
     marginBottom: 24,

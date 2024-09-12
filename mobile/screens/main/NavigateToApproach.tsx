@@ -1,7 +1,9 @@
 import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { EncounterApi, GetLocationOfEncounterDTO } from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
 import { getPublicProfileFromEncounter } from "@/context/EncountersContext";
+import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
@@ -21,6 +23,7 @@ import MapView, {
 } from "react-native-maps";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
+const encounterAPI = new EncounterApi();
 const NavigateToApproach = ({
     route,
     navigation,
@@ -32,16 +35,14 @@ const NavigateToApproach = ({
 
     // TODO: Load from backend, add to encounter profile!
     const destination = { latitude: 47.27062, longitude: 11.49267 }; // Example: San Francisco
+    const { state } = useUserContext();
     const [mapRegion, setMapRegion] = useState<Region | null>(null);
-
     const [location, setLocation] = useState<Location.LocationObject | null>(
         null,
     );
     const mapRef = React.useRef(null);
     const [distance, setDistance] = useState<number | null>(null);
 
-    // TODO: Provider Google should also work for IOS, but ONLY WITHOUT EXPO GO!
-    // TODO: Maybe make map to a separate component
     useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -54,6 +55,14 @@ const NavigateToApproach = ({
                 accuracy: LocationAccuracy.BestForNavigation,
             });
             setLocation(location);
+
+            const getLocationOfEncounterDTO: GetLocationOfEncounterDTO = {
+                encounterId: navigateToPerson.encounterId,
+            };
+            await encounterAPI.encounterControllerGetLocationOfEncounter({
+                userId: state.id!,
+                getLocationOfEncounterDTO,
+            });
         })();
     }, []);
 
@@ -112,8 +121,8 @@ const NavigateToApproach = ({
                 style={styles.map}
                 region={mapRegion || undefined}
                 initialRegion={{
-                    latitude: destination.latitude ?? 47.257832302,
-                    longitude: destination.longitude ?? 11.383665132,
+                    latitude: destination.latitude,
+                    longitude: destination.longitude,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 }}
@@ -184,7 +193,7 @@ const styles = StyleSheet.create({
     },
     navigateBtn: {
         backgroundColor: Color.primary,
-        borderColor: Color.primaryLight,
+        borderColor: Color.primaryBright,
     },
     distanceMarker: {
         backgroundColor: "white",

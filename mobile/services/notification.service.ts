@@ -12,7 +12,7 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
             name: "default",
             importance: Notifications.AndroidImportance.MAX,
             vibrationPattern: [0, 250, 250, 250],
-            lightColor: Color.primaryLight,
+            lightColor: Color.primaryBright,
         });
     }
 

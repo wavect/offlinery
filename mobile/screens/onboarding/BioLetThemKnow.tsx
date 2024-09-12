@@ -13,7 +13,7 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -66,12 +66,12 @@ const BioLetThemKnow = ({
             <View style={styles.inputContainer}>
                 <OTextInput
                     value={state.bio}
-                    setValue={setBio}
-                    style={styles.input}
+                    onChangeText={setBio}
+                    containerStyle={styles.input}
                     placeholder={i18n.t(TR.noPickUpLinesBeChill)}
                 />
                 <View style={styles.characterCountContainer}>
-                    <Text style={styles.characterCount}>
+                    <Text style={Subtitle}>
                         {MAX_LENGTH_BIO - state.bio.length}
                     </Text>
                 </View>
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     subtitle: {
-        ...Subtitle,
+        ...(Subtitle as ViewStyle),
         textAlign: "right",
     },
     inputContainer: {
@@ -106,9 +106,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-end",
         marginTop: 8,
-    },
-    characterCount: {
-        ...Subtitle,
     },
 });
 

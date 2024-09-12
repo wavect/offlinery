@@ -96,7 +96,7 @@ const ProfileView = ({
                                 {
                                     backgroundColor:
                                         currentImageIndex === index
-                                            ? Color.primaryLight
+                                            ? Color.primaryBright
                                             : Color.lightGray,
                                 },
                             ]}

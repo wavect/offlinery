@@ -1,111 +1,107 @@
 {
-  "expo": {
-    "name": "Offlinery",
-    "slug": "offlinery",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true,
-      "config": {
-        "googleMapsApiKey": "AIzaSyCvQCDDpKQW-DlxC44t8edMgC52HvTl4LM",
-        "usesNonExemptEncryption": false
-      },
-      "infoPlist": {
-        "UIBackgroundModes": [
-          "location"
+    "expo": {
+        "name": "Offlinery",
+        "slug": "offlinery",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "userInterfaceStyle": "light",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+        },
+        "ios": {
+            "supportsTablet": true,
+            "config": {
+                "googleMapsApiKey": "AIzaSyCvQCDDpKQW-DlxC44t8edMgC52HvTl4LM",
+                "usesNonExemptEncryption": false
+            },
+            "infoPlist": {
+                "UIBackgroundModes": ["location"],
+                "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open to show you interesting people nearby.",
+                "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location even when closed to send you notifications when interesting people are nearby.",
+                "NSLocationAlwaysUsageDescription": "This app requires access to your location to inform you when interesting people are nearby."
+            },
+            "bundleIdentifier": "io.wavect.offlinery"
+        },
+        "android": {
+            "versionCode": 2,
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/adaptive-icon.png",
+                "backgroundColor": "#ffffff"
+            },
+            "permissions": [
+                "android.permission.CAMERA",
+                "android.permission.READ_MEDIA_IMAGES",
+                "android.permission.READ_EXTERNAL_STORAGE",
+                "android.permission.RECORD_AUDIO",
+                "android.permission.ACCESS_COARSE_LOCATION",
+                "android.permission.ACCESS_FINE_LOCATION",
+                "android.permission.ACCESS_BACKGROUND_LOCATION",
+                "android.permission.FOREGROUND_SERVICE",
+                "android.permission.FOREGROUND_SERVICE_LOCATION"
+            ],
+            "config": {
+                "googleMaps": {
+                    "apiKey": "AIzaSyCvQCDDpKQW-DlxC44t8edMgC52HvTl4LM"
+                }
+            },
+            "package": "io.wavect.offlinery"
+        },
+        "web": {
+            "favicon": "./assets/favicon.png"
+        },
+        "plugins": [
+            ["expo-font"],
+            [
+                "expo-image-picker",
+                {
+                    "photosPermission": "The app accesses your photos to let others know about your appearance."
+                }
+            ],
+            [
+                "expo-location",
+                {
+                    "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
+                    "locationAlwaysPermission": "Allow $(PRODUCT_NAME) to use your location.",
+                    "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
+                    "isIosBackgroundLocationEnabled": true,
+                    "isAndroidBackgroundLocationEnabled": true
+                }
+            ],
+            "expo-localization",
+            [
+                "expo-build-properties",
+                {
+                    "android": {
+                        "enableProguardInReleaseBuilds": true,
+                        "extraProguardRules": "-keep public class com.horcrux.svg.** {*;}",
+                        "allowBackup": false
+                    },
+                    "ios": {}
+                }
+            ],
+            [
+                "expo-secure-store",
+                {
+                    "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+                }
+            ],
+            [
+                "@sentry/react-native/expo",
+                {
+                    "url": "https://sentry.io/",
+                    "project": "react-native",
+                    "organization": "wavect"
+                }
+            ]
         ],
-        "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open to show you interesting people nearby.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location even when closed to send you notifications when interesting people are nearby.",
-        "NSLocationAlwaysUsageDescription": "This app requires access to your location to inform you when interesting people are nearby."
-      },
-      "bundleIdentifier": "io.wavect.offlinery"
-    },
-    "android": {
-      "versionCode": 2,
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.READ_MEDIA_IMAGES",
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.RECORD_AUDIO",
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.ACCESS_BACKGROUND_LOCATION",
-        "android.permission.FOREGROUND_SERVICE",
-        "android.permission.FOREGROUND_SERVICE_LOCATION"
-      ],
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyCvQCDDpKQW-DlxC44t8edMgC52HvTl4LM"
-        }
-      },
-      "package": "io.wavect.offlinery"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      [
-        "expo-font"
-      ],
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "The app accesses your photos to let others know about your appearance."
-        }
-      ],
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
-          "locationAlwaysPermission": "Allow $(PRODUCT_NAME) to use your location.",
-          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
-          "isIosBackgroundLocationEnabled": true,
-          "isAndroidBackgroundLocationEnabled": true
-        }
-      ],
-      "expo-localization",
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "enableProguardInReleaseBuilds": true,
-            "extraProguardRules": "-keep public class com.horcrux.svg.** {*;}",
-            "allowBackup": false
-          },
-          "ios": {}
-        }
-      ],
-      [
-        "expo-secure-store",
-        {
-          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
-        }
-      ],
-      [
-        "@sentry/react-native/expo",
-        {
-          "url": "https://sentry.io/",
-          "project": "react-native",
-          "organization": "wavect"
-        }
-      ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "82312fa2-5baf-4876-a294-ed9ff600a260"
-      }
-    },
-    "owner": "wavect"
-  }
+        "extra": {
+            "eas": {
+                "projectId": "82312fa2-5baf-4876-a294-ed9ff600a260"
+            }
+        },
+        "owner": "wavect"
+    }
 }

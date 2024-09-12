@@ -144,9 +144,9 @@ const ProfileSettings = ({
                     <Text style={styles.label}>First Name</Text>
                     <OTextInput
                         value={state.firstName}
-                        setValue={setFirstName}
+                        onChangeText={setFirstName}
                         placeholder={i18n.t(TR.enterFirstName)}
-                        style={styles.input}
+                        containerStyle={styles.input}
                     />
                 </View>
 
@@ -188,10 +188,10 @@ const ProfileSettings = ({
                     <Text style={styles.label}>{i18n.t(TR.bio)}</Text>
                     <OTextInput
                         value={state.bio}
-                        setValue={setBio}
+                        onChangeText={setBio}
                         placeholder={i18n.t(TR.noPickUpLinesBeChill)}
                         multiline={true}
-                        style={[styles.input, styles.multiline_input]}
+                        containerStyle={[styles.input, styles.multiline_input]}
                     />
                 </View>
 

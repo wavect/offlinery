@@ -21,7 +21,6 @@ const Email = ({
     typeof ROUTES.Onboarding.Email
 >) => {
     const { state, dispatch } = useUserContext();
-    const [showErrorMessage, setShowErrorMessage] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState("");
 
     useEffect(() => {
@@ -29,7 +28,6 @@ const Email = ({
             const params = route.params;
             if (params?.errorMessage) {
                 setErrorMessage(params.errorMessage);
-                setShowErrorMessage(true);
             }
         });
 
@@ -37,7 +35,7 @@ const Email = ({
     }, [navigation, route]);
 
     const setEmail = (email: string) => {
-        setShowErrorMessage(false);
+        setErrorMessage(isValidEmail(email) ? "" : i18n.t(TR.invalidEmail));
         dispatch({ type: EACTION_USER.UPDATE_MULTIPLE, payload: { email } });
     };
 
@@ -68,11 +66,21 @@ const Email = ({
         >
             <OTextInput
                 value={state.email}
-                setValue={setEmail}
+                onChangeText={(email: string) => setEmail(email.trim())}
+                maxLength={125}
+                autoCapitalize="none"
+                autoComplete="email"
+                keyboardType="email-address"
+                autoCorrect={false}
+                autoFocus={true}
+                inputMode="email"
                 placeholder={i18n.t(TR.yourEmail)}
-                style={styles.inputField}
+                containerStyle={[
+                    styles.inputField,
+                    errorMessage ? { marginBottom: 6 } : undefined,
+                ]}
             />
-            {showErrorMessage && (
+            {errorMessage && (
                 <Text style={styles.errorMessage}>{errorMessage}</Text>
             )}
             <OCheckbox
@@ -110,8 +118,8 @@ const styles = StyleSheet.create({
         color: Color.redLight,
         fontSize: 16,
         fontFamily: FontFamily.montserratSemiBold,
-        textAlign: "center",
-        marginBottom: 10,
+        textAlign: "left",
+        marginBottom: 16,
     },
 });
 
