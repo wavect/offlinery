@@ -1,13 +1,19 @@
 import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
 import { OShowcase } from "@/components/OShowcase/OShowcase";
 import { TR, i18n } from "@/localization/translate.service";
+import { ROUTES } from "@/screens/routes";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
-const HouseRules = ({ route, navigation }) => {
+const HouseRules = ({
+    route,
+    navigation,
+}: NativeStackScreenProps<MainStackParamList, typeof ROUTES.HouseRules>) => {
     const forceWaitSeconds = route.params?.forceWaitSeconds ?? 5;
 
     return (

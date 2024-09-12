@@ -1,4 +1,5 @@
 import { Color, Subtitle } from "@/GlobalStyles";
+import { MainStackParamList } from "@/MainStack.navigator";
 import {
     UserApproachChoiceEnum,
     UserVerificationStatusEnum,
@@ -9,9 +10,15 @@ import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const ApproachChoice = ({ navigation }) => {
+const ApproachChoice = ({
+    navigation,
+}: NativeStackScreenProps<
+    MainStackParamList,
+    typeof ROUTES.Onboarding.ApproachChoice
+>) => {
     const { dispatch } = useUserContext();
 
     const setApproachChoice = (approachChoice: UserApproachChoiceEnum) => {

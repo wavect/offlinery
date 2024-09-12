@@ -1,12 +1,19 @@
 import { Subtitle } from "@/GlobalStyles";
+import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const SafetyCheck = ({ navigation }) => {
+const SafetyCheck = ({
+    navigation,
+}: NativeStackScreenProps<
+    MainStackParamList,
+    typeof ROUTES.Onboarding.SafetyCheck
+>) => {
     return (
         <OPageContainer
             title={i18n.t(TR.safetyCheck)}
