@@ -31,13 +31,6 @@ jobs:
           pnpm install:all
           pnpm add -g expo-cli@latest eas-cli
 
-      - name: Check font installation
-        run: |
-          ls -R node_modules/@expo-google-fonts
-          cat package.json
-          echo "Font paths from app.json:"
-          grep -A 4 '"fonts":' app.json
-
       - name: Install Maestro
         run: |
           curl -Ls "https://get.maestro.mobile.dev" | bash
