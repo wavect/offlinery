@@ -55,11 +55,20 @@ jobs:
           sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
           echo "no" | avdmanager create avd --force --name test --package "system-images;android-30;google_apis;x86_64"
 
-      - name: Prebuild and Build Android app
+      - name: Prebuild Android app
         env:
           EXPO_PUBLIC_ENVIRONMENT: production
         run: |
           expo prebuild --platform android
+
+      - name: Fix Android namespace issue
+        run: |
+          sed -i 's/package="io.wavect.offlinery"//g' android/app/src/main/AndroidManifest.xml
+          sed -i '/apply plugin: "com.android.application"/a namespace "io.wavect.offlinery"' android/app/build.gradle
+          sed -i 's/classpath("com.android.tools.build:gradle:7.2.1")/classpath("com.android.tools.build:gradle:7.3.1")/' android/build.gradle
+
+      - name: Build Android app
+        run: |
           cd android
           ./gradlew assembleDebug
 
