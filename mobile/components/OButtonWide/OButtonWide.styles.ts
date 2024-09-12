@@ -1,41 +1,41 @@
-import { Color, FontFamily, FontSize } from "../../GlobalStyles";
+import { Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { Platform } from "react-native";
 
 const baseButtonStyle = {
     justifyContent: "center",
     alignItems: "center",
     width: "90%",
-    height: 65,
+    padding: 18,
     borderRadius: 100,
-    overflow: "hidden",
-    // Add shadow properties
-    shadowColor: "#000",
-    shadowOffset: {
-        width: 0,
-        height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5, // for Android
+    ...Platform.select({
+        ios: {
+            shadowColor: "#000",
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+        },
+        android: {
+            elevation: 5,
+        },
+    }),
 };
 
 const baseLabelStyle = {
-    textAlign: "center",
     lineHeight: 28,
     fontSize: FontSize.size_xl,
     fontFamily: FontFamily.montserratLight,
-    fontWeight: "500",
 };
 
 export default {
     button: baseButtonStyle,
     buttonFilled: {
         ...baseButtonStyle,
-        alignItems: "center",
     },
     buttonOutlined: {
         ...baseButtonStyle,
-        alignItems: "center",
-        backgroundColor: Color.stateLayersSurfaceDimOpacity08,
         borderStyle: "solid",
         borderWidth: 1,
     },
@@ -53,9 +53,11 @@ export default {
     },
     buttonOutlinedDark: {
         borderColor: Color.primary,
+        backgroundColor: Color.white,
     },
     buttonOutlinedLight: {
         borderColor: Color.white,
+        backgroundColor: Color.primaryLight,
     },
     btnLabel: baseLabelStyle,
     btnDisabledLabelDark: {

@@ -18,9 +18,12 @@ export const Color = {
     black: "#000",
     white: "#fff",
     red: "#ff0000",
+    /** @dev Great to use as error color on blue color backgrounds */
     lightOrange: "#FFD580",
+    /** @dev general error color */
     redLight: "#fb3310",
-    primaryLight: "#81c5c9",
+    primaryBright: "#81c5c9",
+    primaryLight: "#459da1",
     primary: "#36797d",
     gray: "#757575",
     lightGray: "#a9a9a9",
