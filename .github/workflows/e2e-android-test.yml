@@ -26,10 +26,16 @@ jobs:
         with:
           version: 8
 
+      - name: Install latest Expo CLI
+        run: npm install -g expo-cli@latest
+
+      - name: Update Expo SDK
+        run: |
+          expo upgrade
+
       - name: Install dependencies
         run: |
           pnpm install:all
-          pnpm add -g expo-cli@latest eas-cli
 
       - name: Install Maestro
         run: |
@@ -59,19 +65,14 @@ jobs:
         env:
           EXPO_PUBLIC_ENVIRONMENT: production
         run: |
-          expo prebuild --platform android
+          expo prebuild --platform android --clean
 
-      - name: Update Kotlin files
+      - name: Debug - Print AndroidManifest.xml and build.gradle
         run: |
-          sed -i '1s/^/package io.wavect.offlinery\n\n/' android/app/src/main/java/io/wavect/offlinery/MainActivity.kt
-          sed -i '1s/^/package io.wavect.offlinery\n\n/' android/app/src/main/java/io/wavect/offlinery/MainApplication.kt
-
-      - name: Debug - Print Kotlin files content
-        run: |
-          echo "MainActivity.kt content:"
-          cat android/app/src/main/java/io/wavect/offlinery/MainActivity.kt
-          echo "MainApplication.kt content:"
-          cat android/app/src/main/java/io/wavect/offlinery/MainApplication.kt
+          echo "AndroidManifest.xml content:"
+          cat android/app/src/main/AndroidManifest.xml
+          echo "build.gradle content:"
+          cat android/app/build.gradle
 
       - name: Clean and Build Android app
         run: |
