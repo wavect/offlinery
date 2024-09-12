@@ -174,6 +174,7 @@ export const MainScreenTabs = ({
                             color={color}
                         />
                     ),
+                    tabBarTestID: "tab-find-people",
                 }}
             />
             <MainTabs.Screen
@@ -193,6 +194,7 @@ export const MainScreenTabs = ({
                             color={color}
                         />
                     ),
+                    tabBarTestID: "tab-encounters",
                 }}
             />
             <MainTabs.Screen
@@ -208,6 +210,7 @@ export const MainScreenTabs = ({
                             color={color}
                         />
                     ),
+                    tabBarTestID: "tab-settings",
                 }}
             />
         </MainTabs.Navigator>

@@ -1,0 +1,65 @@
+name: Android E2E Tests
+
+on:
+  workflow_dispatch:  # This allows manual triggering if needed
+  release:
+    types: [disabled_event_that_never_happens]
+
+jobs:
+  android-e2e-tests:
+    runs-on: macos-latest  # macOS runner typically has more space
+    defaults:
+      run:
+        working-directory: ./mobile
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install:all
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Build Android app
+        run: |
+          pnpm exec expo prebuild --platform android --clean
+          cd android
+          ./gradlew assembleDebug
+
+      - name: Create and start emulator
+        run: |
+          echo "no" | avdmanager --verbose create avd --force --name test --package "system-images;android-29;default;x86_64" --device "pixel" --sdcard 512M
+          echo "hw.ramSize=2048" >> ~/.android/avd/test.avd/config.ini
+          $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-boot-anim -no-window -accel on &
+          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
+
+      - name: Run Maestro test
+        run: |
+          adb install android/app/build/outputs/apk/debug/app-debug.apk
+          pnpm e2e:android:test
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: maestro-test-results
+          path: |
+            ~/.maestro/tests
+            /tmp/maestro
