@@ -108,6 +108,9 @@ export class RegistrationService {
     }
 
     private async sendMail(to: string, verificationCode: string) {
+        this.logger.debug(
+            `Sending new email to ${to} with verificationCode ${verificationCode}`,
+        );
         await this.mailService.sendMail({
             to,
             subject: "Welcome to Offlinery! Confirm your Email",

@@ -7,20 +7,6 @@ const baseButtonStyle = {
     width: "90%",
     padding: 18,
     borderRadius: 100,
-    ...Platform.select({
-        ios: {
-            shadowColor: "#000",
-            shadowOffset: {
-                width: 0,
-                height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-        },
-        android: {
-            elevation: 5,
-        },
-    }),
 };
 
 const baseLabelStyle = {
@@ -33,6 +19,20 @@ export default {
     button: baseButtonStyle,
     buttonFilled: {
         ...baseButtonStyle,
+        ...Platform.select({
+            ios: {
+                shadowColor: "#000",
+                shadowOffset: {
+                    width: 0,
+                    height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+            },
+            android: {
+                elevation: 5,
+            },
+        }),
     },
     buttonOutlined: {
         ...baseButtonStyle,

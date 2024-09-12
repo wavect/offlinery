@@ -66,7 +66,7 @@ const Email = ({
         >
             <OTextInput
                 value={state.email}
-                setValue={setEmail}
+                setValue={(email: string) => setEmail(email.trim())}
                 placeholder={i18n.t(TR.yourEmail)}
                 style={[
                     styles.inputField,

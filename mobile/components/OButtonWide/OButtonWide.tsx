@@ -32,6 +32,7 @@ const getButtonStyle = (
     let style: ViewStyle = { ...oButtonWideStyles.button } as ViewStyle;
 
     if (filled) {
+        style = { ...style, ...(oButtonWideStyles.buttonFilled as ViewStyle) };
         if (isDisabled)
             return { ...style, ...oButtonWideStyles.buttonFilledDisabled };
         return {
