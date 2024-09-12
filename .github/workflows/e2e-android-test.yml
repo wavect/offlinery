@@ -26,16 +26,8 @@ jobs:
         with:
           version: 8
 
-      - name: Install latest Expo CLI
-        run: npm install -g expo-cli@latest
-
-      - name: Update Expo SDK
-        run: |
-          expo upgrade
-
       - name: Install dependencies
-        run: |
-          pnpm install:all
+        run: pnpm install:all
 
       - name: Install Maestro
         run: |
@@ -65,7 +57,7 @@ jobs:
         env:
           EXPO_PUBLIC_ENVIRONMENT: production
         run: |
-          expo prebuild --platform android --clean
+          pnpm exec expo prebuild --platform android --clean
 
       - name: Debug - Print AndroidManifest.xml and build.gradle
         run: |
