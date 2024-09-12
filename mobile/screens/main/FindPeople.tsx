@@ -13,9 +13,12 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
+import { ROUTES } from "@/screens/routes";
 import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import * as React from "react";
@@ -34,7 +37,12 @@ import MapView, {
 const userApi = new UserApi();
 const mapApi = new MapApi();
 
-const Map = () => {
+const FindPeople = (
+    props: BottomTabScreenProps<
+        MainScreenTabsParamList,
+        typeof ROUTES.MainTabView
+    >,
+) => {
     const { state, dispatch } = useUserContext();
     const [activeRegionIndex, setActiveRegionIndex] = React.useState<
         number | null
@@ -360,4 +368,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Map;
+export default FindPeople;

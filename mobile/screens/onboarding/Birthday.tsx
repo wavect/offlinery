@@ -1,3 +1,4 @@
+import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
@@ -8,9 +9,15 @@ import RNDateTimePicker, {
 import * as React from "react";
 import { useState } from "react";
 import { Platform, StyleSheet, TextInput, View } from "react-native";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const Birthday = ({ navigation }) => {
+const Birthday = ({
+    navigation,
+}: NativeStackScreenProps<
+    MainStackParamList,
+    typeof ROUTES.Onboarding.BirthDay
+>) => {
     const { state, dispatch } = useUserContext();
     const isIOS = Platform.OS === "ios";
     // Android is a date dialog, while on iOS it kind of is embedded on the screen and still is usable if shown consistently

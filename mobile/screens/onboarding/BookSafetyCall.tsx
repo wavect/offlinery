@@ -1,4 +1,5 @@
 import { Color } from "@/GlobalStyles";
+import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import OCalendlyInline from "@/components/OCalendlyInline/OCalendlyInline";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
@@ -10,9 +11,15 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
 import { useState } from "react";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const BookSafetyCall = ({ navigation }) => {
+const BookSafetyCall = ({
+    navigation,
+}: NativeStackScreenProps<
+    MainStackParamList,
+    typeof ROUTES.Onboarding.BookSafetyCall
+>) => {
     // const [hasBookedCall, setCallBooked] = useState(false)
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);

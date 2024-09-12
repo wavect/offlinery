@@ -56,15 +56,7 @@
     },
     "plugins": [
       [
-        "expo-font",
-        {
-          "fonts": [
-            "node_modules/@expo-google-fonts/montserrat/300Light.ttf",
-            "node_modules/@expo-google-fonts/montserrat/400Regular.ttf",
-            "node_modules/@expo-google-fonts/montserrat/500Medium.ttf",
-            "node_modules/@expo-google-fonts/montserrat/600SemiBold.ttf"
-          ]
-        }
+        "expo-font"
       ],
       [
         "expo-image-picker",

@@ -2,7 +2,8 @@ import { Color } from "@/GlobalStyles";
 import { UserPublicDTO } from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { TR, i18n } from "@/localization/translate.service";
-import { RouteProp } from "@react-navigation/native";
+import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
+import { ROUTES } from "@/screens/routes";
 import React, { useRef, useState } from "react";
 import {
     Dimensions,
@@ -16,27 +17,27 @@ import {
 } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
-interface IProfileViewProps {
-    route?: RouteProp<
-        {
-            params: {
-                user: UserPublicDTO;
-                bottomContainerChildren?: React.ReactNode;
-            };
-        },
-        "params"
-    >;
-}
-
-const ProfileView = ({ route }: IProfileViewProps) => {
+const ProfileView = ({
+    route,
+}: NativeStackScreenProps<
+    EncounterStackParamList,
+    typeof ROUTES.Main.ProfileView
+>) => {
     const progressValue = useSharedValue<number>(0);
     const width = Dimensions.get("window").width;
     const [fullScreenVisible, setFullScreenVisible] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const carouselRef = useRef<ICarouselInstance>(null);
 
-    const renderPreviewImage = ({ item, index }) => (
+    const renderPreviewImage = ({
+        item,
+        index,
+    }: {
+        item: string;
+        index: number;
+    }) => (
         <TouchableOpacity
             onPress={() => {
                 setCurrentImageIndex(index);

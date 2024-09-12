@@ -3,6 +3,8 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
 import { getPublicProfileFromEncounter } from "@/context/EncountersContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
+import { ROUTES } from "@/screens/routes";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { calculateDistance, getRegionForCoordinates } from "@/utils/map.utils";
 import * as Location from "expo-location";
@@ -17,9 +19,16 @@ import MapView, {
     Polyline,
     Region,
 } from "react-native-maps";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
-const NavigateToApproach = ({ route, navigation }) => {
-    const navigateToPerson: IEncounterProfile = route.params?.navigateToPerson;
+const NavigateToApproach = ({
+    route,
+    navigation,
+}: NativeStackScreenProps<
+    EncounterStackParamList,
+    typeof ROUTES.Main.NavigateToApproach
+>) => {
+    const navigateToPerson: IEncounterProfile = route.params.navigateToPerson;
 
     // TODO: Load from backend, add to encounter profile!
     const destination = { latitude: 47.27062, longitude: 11.49267 }; // Example: San Francisco
