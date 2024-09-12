@@ -61,38 +61,10 @@ jobs:
         run: |
           expo prebuild --platform android
 
-      - name: Update build.gradle
+      - name: Update Kotlin files
         run: |
-          cat << EOF >> android/app/build.gradle
-          
-          android {
-              namespace "io.wavect.offlinery"
-              buildFeatures {
-                  buildConfig true
-              }
-              defaultConfig {
-                  buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "false"
-                  buildConfigField "boolean", "IS_HERMES_ENABLED", "true"
-              }
-          }
-          
-          tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-              kotlinOptions {
-                  freeCompilerArgs += [
-                      "-Xopt-in=kotlin.RequiresOptIn",
-                      "-Xopt-in=kotlin.Experimental",
-                  ]
-              }
-          }
-          EOF
-
-      - name: Update MainActivity.kt
-        run: |
-          sed -i '1iimport io.wavect.offlinery.BuildConfig' android/app/src/main/java/io/wavect/offlinery/MainActivity.kt
-
-      - name: Update MainApplication.kt
-        run: |
-          sed -i '1iimport io.wavect.offlinery.BuildConfig' android/app/src/main/java/io/wavect/offlinery/MainApplication.kt
+          sed -i '1s/^/package io.wavect.offlinery\n\n/' android/app/src/main/java/io/wavect/offlinery/MainActivity.kt
+          sed -i '1s/^/package io.wavect.offlinery\n\n/' android/app/src/main/java/io/wavect/offlinery/MainApplication.kt
 
       - name: Debug - Print Kotlin files content
         run: |
