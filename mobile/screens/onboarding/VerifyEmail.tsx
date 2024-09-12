@@ -45,6 +45,7 @@ const VerifyEmail = ({
     }, [timer]);
 
     const handleChange = (text: string, index: number) => {
+        setErrorMessage("");
         const newCode = [...code];
         newCode[index] = text;
         setCode(newCode);
@@ -77,6 +78,7 @@ const VerifyEmail = ({
         } catch (error) {
             console.error(error);
             setErrorMessage(i18n.t(TR.verificationCodeInvalid));
+            setCode(new Array(6).fill("")); // reset code
         }
     };
 
@@ -141,6 +143,10 @@ const VerifyEmail = ({
                         ref={(ref) =>
                             (inputs.current[index] = ref as TextInput)
                         }
+                        autoCapitalize="none"
+                        autoComplete="off"
+                        inputMode="numeric"
+                        autoCorrect={false}
                         style={styles.otpInput}
                         maxLength={1}
                         keyboardType="number-pad"
