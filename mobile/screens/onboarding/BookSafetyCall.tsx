@@ -11,6 +11,7 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
 import { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -51,7 +52,26 @@ const BookSafetyCall = ({
         <OPageContainer
             title={i18n.t(TR.bookSafetyCall)}
             subtitle={i18n.t(TR.retainRightToRejectApplicants)}
-            bottomContainerChildren={
+        >
+            <OCalendlyInline
+                url="https://calendly.com/wavect/safety-call"
+                pageSettings={{
+                    hideLandingPageDetails: true,
+                    hideEventTypeDetails: true,
+                    primaryColor: Color.primary,
+                    hideGdprBanner: true, // @dev Make sure we cover this in our data privacy policy
+                }}
+                utm={{
+                    utmSource: "MobileApp",
+                }}
+                prefill={{
+                    email: state.email,
+                    firstName: state.firstName,
+                    name: state.id,
+                }}
+            />
+
+            <View style={styles.callBookBtnContainer}>
                 <OButtonWide
                     text={i18n.t(TR.callBookedQuestion)}
                     filled={true}
@@ -61,26 +81,16 @@ const BookSafetyCall = ({
                     variant="dark"
                     onPress={startUserRegistration}
                 />
-            }
-        >
-            <OCalendlyInline
-                url="https://calendly.com/wavect/safety-call"
-                pageSettings={{
-                    hideLandingPageDetails: true,
-                    hideEventTypeDetails: true,
-                    primaryColor: Color.primary,
-                }}
-                utm={{
-                    utmSource: "MobileApp",
-                }}
-                prefill={{
-                    email: state.email,
-                    firstName: state.firstName,
-                    name: state.firstName,
-                }}
-            />
+            </View>
         </OPageContainer>
     );
 };
+
+const styles = StyleSheet.create({
+    callBookBtnContainer: {
+        alignItems: "center",
+        width: "100%",
+    },
+});
 
 export default BookSafetyCall;

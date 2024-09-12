@@ -103,7 +103,7 @@ export default function App() {
             <NavigationContainer>
                 <UserProvider>
                     <MainStack.Navigator
-                        initialRouteName={ROUTES.Welcome}
+                        initialRouteName={ROUTES.Onboarding.BookSafetyCall}
                         screenOptions={NO_HEADER}
                     >
                         <MainStack.Screen
