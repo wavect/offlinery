@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     },
     navigateBtn: {
         backgroundColor: Color.primary,
-        borderColor: Color.primaryLight,
+        borderColor: Color.primaryBright,
     },
     distanceMarker: {
         backgroundColor: "white",

@@ -162,7 +162,7 @@ const VerifyEmail = ({
                     }
                     isLoading={isLoading}
                     disabled={isResendDisabled}
-                    filled={true}
+                    filled={false}
                     variant="dark"
                     onPress={sendVerificationCode}
                 ></OButtonWide>

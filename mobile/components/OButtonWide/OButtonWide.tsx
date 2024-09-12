@@ -5,6 +5,7 @@ import {
     Pressable,
     StyleProp,
     Text,
+    TextStyle,
     ViewStyle,
 } from "react-native";
 import oButtonWideStyles from "./OButtonWide.styles";
@@ -20,7 +21,6 @@ interface IOButtonWideProps {
     disabled?: boolean;
     countdownEnableSeconds?: number;
     isLoading?: boolean;
-    /** @dev Override button text in loading state */
     loadingBtnText?: string;
 }
 
@@ -28,22 +28,29 @@ const getButtonStyle = (
     isDisabled: boolean,
     filled: boolean,
     variant: StyleVariant,
-): StyleProp<ViewStyle> => {
+): ViewStyle => {
+    let style: ViewStyle = { ...oButtonWideStyles.button } as ViewStyle;
+
     if (filled) {
-        if (isDisabled) return oButtonWideStyles.buttonFilledDisabled;
-        return variant === "dark"
-            ? oButtonWideStyles.buttonFilledDark
-            : oButtonWideStyles.buttonFilledLight;
-    } else {
-        const baseStyle = [oButtonWideStyles.buttonOutlined];
+        style = { ...style, ...(oButtonWideStyles.buttonFilled as ViewStyle) };
         if (isDisabled)
-            return [...baseStyle, oButtonWideStyles.buttonOutlinedDisabled];
-        return [
-            ...baseStyle,
-            variant === "dark"
+            return { ...style, ...oButtonWideStyles.buttonFilledDisabled };
+        return {
+            ...style,
+            ...(variant === "dark"
+                ? oButtonWideStyles.buttonFilledDark
+                : oButtonWideStyles.buttonFilledLight),
+        };
+    } else {
+        style = { ...style, ...oButtonWideStyles.buttonOutlined } as ViewStyle;
+        if (isDisabled)
+            return { ...style, ...oButtonWideStyles.buttonOutlinedDisabled };
+        return {
+            ...style,
+            ...(variant === "dark"
                 ? oButtonWideStyles.buttonOutlinedDark
-                : oButtonWideStyles.buttonOutlinedLight,
-        ];
+                : oButtonWideStyles.buttonOutlinedLight),
+        };
     }
 };
 
@@ -51,7 +58,7 @@ const getLabelStyle = (
     isDisabled: boolean,
     filled: boolean,
     variant: StyleVariant,
-) => {
+): StyleProp<TextStyle> => {
     if (isDisabled) {
         return filled
             ? oButtonWideStyles.btnDisabledLabelDark
@@ -85,7 +92,7 @@ export const OButtonWide: React.FC<IOButtonWideProps> = ({
 
     useEffect(() => {
         if (countdown > 0) {
-            const timer = setInterval(() => {
+            const timer: NodeJS.Timeout = setInterval(() => {
                 setCountdown((prevCount) => {
                     if (prevCount <= 1) {
                         clearInterval(timer);
@@ -107,11 +114,7 @@ export const OButtonWide: React.FC<IOButtonWideProps> = ({
         <Pressable
             onPress={onPress}
             disabled={isDisabled}
-            style={[
-                getButtonStyle(isDisabled, filled, variant),
-                oButtonWideStyles.button,
-                style,
-            ]}
+            style={[getButtonStyle(isDisabled, filled, variant), style]}
         >
             <Text style={getLabelStyle(isDisabled, filled, variant)}>
                 {isLoading ? (

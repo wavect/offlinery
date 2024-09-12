@@ -91,7 +91,7 @@ export const de: Language = {
     longPressMapSafeZoneInstruction:
         "Lange tippen, um eine Inkognito Region hinzuzufügen. Tippe auf eine Region, ihren Radius anzupassen.",
     adjustRegionRadius: "Regionradius anpassen",
-    whatIsYourEmail: "Wie lautet deine E-Mail?",
+    whatIsYourEmail: "Was ist deine E-Mail?",
     whatIsYourEmailDescr:
         "Verliere keinen Zugriff auf dein Konto, verifiziere deine E-Mail.",
     wantToReceiveNews:
