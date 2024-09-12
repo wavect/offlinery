@@ -61,15 +61,45 @@ jobs:
         run: |
           expo prebuild --platform android
 
-      - name: Update AndroidManifest.xml
+      - name: Update build.gradle
         run: |
-          sed -i 's/package="io.wavect.offlinery"//g' android/app/src/main/AndroidManifest.xml
+          cat << EOF >> android/app/build.gradle
+          
+          android {
+              namespace "io.wavect.offlinery"
+              buildFeatures {
+                  buildConfig true
+              }
+              defaultConfig {
+                  buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "false"
+                  buildConfigField "boolean", "IS_HERMES_ENABLED", "true"
+              }
+          }
+          
+          tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+              kotlinOptions {
+                  freeCompilerArgs += [
+                      "-Xopt-in=kotlin.RequiresOptIn",
+                      "-Xopt-in=kotlin.Experimental",
+                  ]
+              }
+          }
+          EOF
 
-      - name: Ensure BuildConfig generation
+      - name: Update MainActivity.kt
         run: |
-          sed -i '/android {/a \    buildFeatures { buildConfig true }' android/app/build.gradle
-          sed -i '/defaultConfig {/a \        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "false"' android/app/build.gradle
-          sed -i '/defaultConfig {/a \        buildConfigField "boolean", "IS_HERMES_ENABLED", "true"' android/app/build.gradle
+          sed -i '1iimport io.wavect.offlinery.BuildConfig' android/app/src/main/java/io/wavect/offlinery/MainActivity.kt
+
+      - name: Update MainApplication.kt
+        run: |
+          sed -i '1iimport io.wavect.offlinery.BuildConfig' android/app/src/main/java/io/wavect/offlinery/MainApplication.kt
+
+      - name: Debug - Print Kotlin files content
+        run: |
+          echo "MainActivity.kt content:"
+          cat android/app/src/main/java/io/wavect/offlinery/MainActivity.kt
+          echo "MainApplication.kt content:"
+          cat android/app/src/main/java/io/wavect/offlinery/MainApplication.kt
 
       - name: Clean and Build Android app
         run: |
