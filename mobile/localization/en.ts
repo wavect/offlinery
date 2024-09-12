@@ -72,7 +72,7 @@ export const en = {
     bookSafetyCall: "Book Safety Call",
     retainRightToRejectApplicants:
         "We retain our right to reject applicants to ensure everyone feels safe and respected.",
-    callBookedQuestion: "Call booked?",
+    callBookedBtnLbl: "I'll take the call",
     permissionToLocationDenied: "Permission to access location was denied.",
     dontApproachHere: "Don't approach me here",
     whatAreSpotsToNotApproachYou:
