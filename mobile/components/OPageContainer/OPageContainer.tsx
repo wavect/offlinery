@@ -21,7 +21,10 @@ export const OPageContainer = (props: IOPageContainerProps) => {
     const MainViewContainer = props.doNotUseScrollView ? View : ScrollView;
     return (
         <View style={styles.container}>
-            <MainViewContainer style={styles.content}>
+            <MainViewContainer
+                style={styles.content}
+                keyboardShouldPersistTaps="handled"
+            >
                 {props.title && <Text style={Title}>{props.title}</Text>}
                 {props.subtitle && (
                     <Text style={Subtitle}>{props.subtitle}</Text>
@@ -32,7 +35,7 @@ export const OPageContainer = (props: IOPageContainerProps) => {
             <KeyboardAvoidingView
                 style={styles.buttonContainer}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={Platform.OS === "ios" ? 110 : 140}
+                keyboardVerticalOffset={Platform.OS === "ios" ? 110 : 0}
             >
                 {props.bottomContainerChildren}
             </KeyboardAvoidingView>
