@@ -10,7 +10,7 @@ export const de: Language = {
     datingAppsAreBroken: "Dating apps are Broken",
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
     verificationCodeResend: "Code neu senden",
-    verificationCodeInvalid: "Ungültiger Verification Code",
+    verificationCodeInvalid: "Ungültiger Verifizierungscode",
     invalidEmailOrExists: "Email ungültig oder existiert bereits.",
     invalidEmail: "Email ungültig.",
     termsDisclaimer: {
@@ -109,8 +109,7 @@ export const de: Language = {
     men: "Männer",
     more: "Mehr",
     iAmA: "Ich bin ein",
-    genderMoreComingSoon:
-        "Wir werden diese Option so schnell wie möglich hinzufügen. Du wirst später die Möglichkeit haben, dies auf etwas zu ändern, mit dem du dich wirklich identifizierst.",
+    genderMoreComingSoon: "Diese Option kommt so schnell wie möglich!",
     iLookFor: "Ich suche",
     pwdErrSecurityGuideline:
         "Das Passwort muss mindestens 1 Zahl, 1 Groß- und 1 Kleinbuchstaben enthalten und zwischen 6-40 Zeichen lang sein.",

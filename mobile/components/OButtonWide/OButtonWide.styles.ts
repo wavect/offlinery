@@ -41,6 +41,8 @@ export default {
     },
     buttonFilledDisabled: {
         backgroundColor: Color.lightGray,
+        elevation: 0,
+        shadowColor: "transparent",
     },
     buttonFilledDark: {
         backgroundColor: Color.primary,

@@ -66,9 +66,16 @@ const Email = ({
         >
             <OTextInput
                 value={state.email}
-                setValue={(email: string) => setEmail(email.trim())}
+                onChangeText={(email: string) => setEmail(email.trim())}
+                maxLength={125}
+                autoCapitalize="none"
+                autoComplete="email"
+                keyboardType="email-address"
+                autoCorrect={false}
+                autoFocus={true}
+                inputMode="email"
                 placeholder={i18n.t(TR.yourEmail)}
-                style={[
+                containerStyle={[
                     styles.inputField,
                     errorMessage ? { marginBottom: 6 } : undefined,
                 ]}
