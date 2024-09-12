@@ -61,10 +61,12 @@ jobs:
         run: |
           expo prebuild --platform android
 
-      - name: Fix Android namespace issue
+      - name: Fix Android namespace and BuildConfig issues
         run: |
           sed -i 's/package="io.wavect.offlinery"//g' android/app/src/main/AndroidManifest.xml
           sed -i '/apply plugin: "com.android.application"/a android { namespace "io.wavect.offlinery" }' android/app/build.gradle
+          sed -i 's/import io.wavect.offlinery.BuildConfig/import io.wavect.offlinery.BuildConfig/' android/app/src/main/java/io/wavect/offlinery/MainApplication.kt
+          sed -i '/android {/a buildFeatures { buildConfig true }' android/app/build.gradle
 
       - name: Build Android app
         run: |
