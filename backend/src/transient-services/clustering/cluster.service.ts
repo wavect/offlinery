@@ -12,11 +12,11 @@ export class ClusteringService {
     /** @DEV - cluster users within 1,5 km */
     private readonly CLUSTER_RADIUS = 1500;
     /** @DEV - min weight + radius makes it impossible to spot single users */
-    private readonly MIN_WEIGHT = 10;
-    /** @DEV - how far user positions are shiftes */
-    private readonly MAX_SHIFT = 0.0005;
-    /** @DEV - base radius of a single point in FE - todo move to FE */
-    private readonly HEAT_MAP_BASE_RADIUS = 350;
+    private readonly MIN_WEIGHT_SINGLE_USER = 10;
+    /** @DEV - min weight + radius makes it impossible to spot single users */
+    private readonly CLUSTER_ADDITION_PER_USER = 15;
+    /** @DEV - how far user positions shifts 0.0009 = 100 metres */
+    private readonly MAX_SHIFT = 0.0009;
 
     getClusteredPoints(points: Point[]): ClusteredPoint[] {
         const clusters: ClusteredPoint[] = [];
@@ -34,7 +34,7 @@ export class ClusteringService {
                         cluster.longitude,
                     ) <= this.CLUSTER_RADIUS
                 ) {
-                    cluster.weight += 25;
+                    cluster.weight += this.CLUSTER_ADDITION_PER_USER;
                     foundCluster = true;
                     break;
                 }
@@ -44,19 +44,20 @@ export class ClusteringService {
                 clusters.push({
                     latitude,
                     longitude,
-                    weight: this.MIN_WEIGHT, // Start with minimum weight for privacy
+                    weight: this.MIN_WEIGHT_SINGLE_USER, // Start with minimum weight for privacy
                 });
             }
         }
 
-        /** @DEV with the new cluster setting, this is kind-of deprecated, keeping here
-         *       as an argument that "user positions never reach devices"
-         */
+        /** @DEV - shift the user positions, so real positions never leave the server */
         return clusters.map((cluster) => ({
             latitude: cluster.latitude + (Math.random() - 0.5) * this.MAX_SHIFT,
             longitude:
                 cluster.longitude + (Math.random() - 0.5) * this.MAX_SHIFT,
-            weight: Math.max(this.MIN_WEIGHT, Math.min(cluster.weight, 100)), // Cap weight between MIN_WEIGHT and 10
+            weight: Math.max(
+                this.MIN_WEIGHT_SINGLE_USER,
+                Math.min(cluster.weight, 100),
+            ),
         }));
     }
 

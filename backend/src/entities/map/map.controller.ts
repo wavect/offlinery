@@ -29,8 +29,6 @@ export class MapController {
             userToBeApproached,
             false,
         );
-
-        /** @DEV cluster user positions with focus on privacy */
         return this.clusterService.getClusteredPoints(
             userLocations.map((b) => b.location),
         );
