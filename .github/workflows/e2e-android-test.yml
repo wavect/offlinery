@@ -52,22 +52,29 @@ jobs:
 
       - name: Setup Android emulator
         run: |
-          sdkmanager "system-images;android-30;google_apis;x86_64"
+          sdkmanager "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
           echo "no" | avdmanager create avd --force --name test --package "system-images;android-30;google_apis;x86_64"
 
       - name: Build Android app
         env:
           EXPO_PUBLIC_ENVIRONMENT: production
         run: |
-          pnpm android
+          pnpm prebuild
+          cd android
+          ./gradlew assembleDebug
 
-      - name: Start Android emulator and run Maestro tests
+      - name: Start Android emulator
+        run: |
+          echo "Starting emulator..."
+          nohup $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
+          $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
+          echo "Emulator started."
+
+      - name: Run Maestro tests
         env:
           EXPO_PUBLIC_ENVIRONMENT: production
         run: |
-          $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
-          adb wait-for-device
-          adb shell input keyevent 82
+          adb install android/app/build/outputs/apk/debug/app-debug.apk
           adb shell settings put global window_animation_scale 0.0
           adb shell settings put global transition_animation_scale 0.0
           adb shell settings put global animator_duration_scale 0.0
