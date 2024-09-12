@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+
 export default {
     container: {
         flex: 1,
@@ -12,5 +14,10 @@ export default {
         alignItems: "center",
         width: "100%",
         marginTop: "auto",
+        ...Platform.select({
+            ios: {
+                marginBottom: 10,
+            },
+        }),
     },
 };

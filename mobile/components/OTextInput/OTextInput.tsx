@@ -3,7 +3,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { useState } from "react";
 import {
-    KeyboardTypeOptions,
     StyleProp,
     StyleSheet,
     Text,
@@ -12,19 +11,13 @@ import {
     View,
     ViewStyle,
 } from "react-native";
+import { TextInputProps } from "react-native/Libraries/Components/TextInput/TextInput";
 
-interface IOTextInputProps {
-    value: string;
-    setValue: React.Dispatch<string>;
-    placeholder: string;
-    style?: StyleProp<ViewStyle>;
-    multiline?: boolean;
-    secureTextEntry?: boolean;
+interface IOTextInputProps extends TextInputProps {
+    containerStyle?: StyleProp<ViewStyle>;
     topLabel?: string;
     bottomLabel?: string;
     isBottomLabelError?: boolean;
-    keyboardType?: KeyboardTypeOptions;
-    maxLength?: number;
 }
 
 export const OTextInput = (props: IOTextInputProps) => {
@@ -33,13 +26,7 @@ export const OTextInput = (props: IOTextInputProps) => {
         bottomLabel,
         isBottomLabelError,
         secureTextEntry,
-        value,
-        setValue,
-        placeholder,
-        style,
-        multiline,
-        keyboardType,
-        maxLength,
+        containerStyle,
     } = props;
     const [isSecureTextVisible, setIsSecureTextVisible] =
         useState(!secureTextEntry);
@@ -49,19 +36,14 @@ export const OTextInput = (props: IOTextInputProps) => {
     };
 
     return (
-        <View style={[styles.container, style]}>
+        <View style={[styles.container, containerStyle]}>
             {topLabel && <Text style={styles.topLabel}>{topLabel}</Text>}
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
-                    value={value}
-                    onChangeText={setValue}
-                    placeholder={placeholder}
                     secureTextEntry={secureTextEntry && !isSecureTextVisible}
-                    multiline={multiline}
                     placeholderTextColor="#999"
-                    keyboardType={keyboardType}
-                    maxLength={maxLength}
+                    {...props}
                 />
                 {secureTextEntry && (
                     <TouchableOpacity

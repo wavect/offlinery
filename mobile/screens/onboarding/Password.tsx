@@ -86,9 +86,15 @@ const Password = ({
             {isChangePassword && (
                 <OTextInput
                     value={oldClearPassword}
-                    setValue={setOldClearPassword}
+                    onChangeText={setOldClearPassword}
+                    maxLength={100}
+                    autoCapitalize="none"
+                    autoComplete="current-password"
+                    inputMode="text"
+                    autoCorrect={false}
+                    keyboardType="default"
                     placeholder={i18n.t(TR.enterOldPassword)}
-                    style={styles.inputField}
+                    containerStyle={styles.inputField}
                     secureTextEntry={true}
                     topLabel={i18n.t(TR.currentPassword)}
                 />
@@ -96,9 +102,15 @@ const Password = ({
 
             <OTextInput
                 value={state.clearPassword}
-                setValue={setValidatePassword}
+                onChangeText={setValidatePassword}
+                maxLength={100}
+                autoCapitalize="none"
+                autoComplete="new-password"
+                inputMode="text"
+                autoCorrect={false}
+                keyboardType="default"
                 placeholder={i18n.t(TR.enterPassword)}
-                style={styles.inputField}
+                containerStyle={styles.inputField}
                 isBottomLabelError={!!passwordError}
                 secureTextEntry={true}
                 bottomLabel={passwordError}
@@ -109,13 +121,19 @@ const Password = ({
 
             <OTextInput
                 value={passwordConfirmation}
-                setValue={setValidatePasswordConfirmation}
+                onChangeText={setValidatePasswordConfirmation}
+                maxLength={100}
+                autoCapitalize="none"
+                autoComplete="new-password"
+                inputMode="text"
+                autoCorrect={false}
+                keyboardType="default"
                 placeholder={i18n.t(TR.repeatPassword)}
                 topLabel={i18n.t(TR.repeatPassword)}
                 isBottomLabelError={!!passwordErrorConfirmation}
                 secureTextEntry={true}
                 bottomLabel={passwordErrorConfirmation}
-                style={styles.inputField}
+                containerStyle={styles.inputField}
             />
         </OPageContainer>
     );

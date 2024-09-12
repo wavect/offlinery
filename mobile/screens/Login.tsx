@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
         color: Color.white,
     },
     errorMessage: {
-        color: Color.redLight,
+        color: Color.lightOrange,
         fontSize: FontSize.size_sm,
         fontFamily: FontFamily.montserratSemiBold,
         textAlign: "center",

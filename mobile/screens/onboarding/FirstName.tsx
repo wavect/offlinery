@@ -47,6 +47,12 @@ const FirstName = ({
                     style={styles.input}
                     value={state.firstName}
                     onChangeText={setFirstName}
+                    maxLength={100}
+                    autoCapitalize="words"
+                    autoComplete="given-name"
+                    inputMode="text"
+                    autoCorrect={false}
+                    keyboardType="default"
                     placeholder={i18n.t(TR.enterFirstName)}
                     placeholderTextColor="#999"
                 />

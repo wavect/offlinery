@@ -11,6 +11,7 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
 import { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -23,12 +24,7 @@ const BookSafetyCall = ({
     // const [hasBookedCall, setCallBooked] = useState(false)
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
-
-    /* later on maybe, but difficult since only page resize event is triggered for some reason
-
-    useCalendlyEventListener({
-        onEventScheduled: (e) => setCallBooked(true),
-    });*/
+    const [hasBookedCall, setHasBookedCall] = useState(false);
 
     const startUserRegistration = async () => {
         setLoading(true);
@@ -46,21 +42,26 @@ const BookSafetyCall = ({
             });
         }
     };
+    const handleEventScheduled = () => {
+        setHasBookedCall(true);
+    };
 
     return (
         <OPageContainer
             title={i18n.t(TR.bookSafetyCall)}
             subtitle={i18n.t(TR.retainRightToRejectApplicants)}
             bottomContainerChildren={
-                <OButtonWide
-                    text={i18n.t(TR.callBookedQuestion)}
-                    filled={true}
-                    countdownEnableSeconds={10}
-                    isLoading={isLoading}
-                    loadingBtnText={i18n.t(TR.registering)}
-                    variant="dark"
-                    onPress={startUserRegistration}
-                />
+                hasBookedCall && (
+                    <View style={styles.callBookBtnContainer}>
+                        <OButtonWide
+                            text={i18n.t(TR.callBookedBtnLbl)}
+                            filled={true}
+                            disabled={!hasBookedCall}
+                            variant="dark"
+                            onPress={startUserRegistration}
+                        />
+                    </View>
+                )
             }
         >
             <OCalendlyInline
@@ -69,6 +70,7 @@ const BookSafetyCall = ({
                     hideLandingPageDetails: true,
                     hideEventTypeDetails: true,
                     primaryColor: Color.primary,
+                    hideGdprBanner: true, // @dev Make sure we cover this in our data privacy policy
                 }}
                 utm={{
                     utmSource: "MobileApp",
@@ -76,11 +78,19 @@ const BookSafetyCall = ({
                 prefill={{
                     email: state.email,
                     firstName: state.firstName,
-                    name: state.firstName,
+                    name: state.id,
                 }}
+                onEventScheduled={handleEventScheduled}
             />
         </OPageContainer>
     );
 };
+
+const styles = StyleSheet.create({
+    callBookBtnContainer: {
+        alignItems: "center",
+        width: "100%",
+    },
+});
 
 export default BookSafetyCall;
