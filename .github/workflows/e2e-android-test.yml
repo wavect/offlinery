@@ -8,7 +8,7 @@ on:
 
 jobs:
   android-e2e-tests:
-    runs-on: macos-latest  # Using macOS runner for better Android emulator performance
+    runs-on: macos-latest
     defaults:
       run:
         working-directory: ./mobile
@@ -58,10 +58,11 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          target: default
-          arch: x86_64
+          target: google_apis
+          arch: arm64-v8a
           profile: Nexus 6
           script: |
+            adb devices
             adb install mobile/android/app/build/outputs/apk/debug/app-debug.apk
             adb shell settings put global window_animation_scale 0.0
             adb shell settings put global transition_animation_scale 0.0
