@@ -1,6 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
-import { NativeStackScreenProps } from "@react-native-screens/native-stack";
 import React, { useCallback, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import MapView, {
@@ -10,6 +9,7 @@ import MapView, {
     PROVIDER_GOOGLE,
     Region,
 } from "react-native-maps";
+import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 import { BorderRadius, Color, FontSize, Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
