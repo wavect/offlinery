@@ -1,13 +1,12 @@
 import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
-import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
-import { OShowcase } from "@/components/OShowcase/OShowcase";
+import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 const HouseRules = ({
@@ -17,54 +16,51 @@ const HouseRules = ({
     const forceWaitSeconds = route.params?.forceWaitSeconds ?? 5;
 
     return (
-        <OLinearBackground>
-            <ScrollView contentContainerStyle={styles.container}>
-                <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)} />
-                <RuleItem
-                    title={i18n.t(TR.houseRules.titleRespectful)}
-                    description={i18n.t(TR.houseRules.descrRespectful)}
-                />
-                <RuleItem
-                    title={i18n.t(TR.houseRules.titleAcceptNo)}
-                    description={i18n.t(TR.houseRules.descrAcceptNo)}
-                />
-                <RuleItem
-                    title={i18n.t(TR.houseRules.titleAuthentic)}
-                    description={i18n.t(TR.houseRules.descrAuthentic)}
-                />
-                <RuleItem
-                    title={i18n.t(TR.houseRules.titleWaitWeird)}
-                    description={i18n.t(TR.houseRules.descrWaitWeird)}
-                />
-                <RuleItem
-                    title={i18n.t(TR.houseRules.titleDontRush)}
-                    description={i18n.t(TR.houseRules.descrDontRush)}
+        <OPageColorContainer>
+            <RuleItem
+                title={i18n.t(TR.houseRules.titleRespectful)}
+                description={i18n.t(TR.houseRules.descrRespectful)}
+            />
+            <RuleItem
+                title={i18n.t(TR.houseRules.titleAcceptNo)}
+                description={i18n.t(TR.houseRules.descrAcceptNo)}
+            />
+            <RuleItem
+                title={i18n.t(TR.houseRules.titleAuthentic)}
+                description={i18n.t(TR.houseRules.descrAuthentic)}
+            />
+            <RuleItem
+                title={i18n.t(TR.houseRules.titleWaitWeird)}
+                description={i18n.t(TR.houseRules.descrWaitWeird)}
+            />
+            <RuleItem
+                title={i18n.t(TR.houseRules.titleDontRush)}
+                description={i18n.t(TR.houseRules.descrDontRush)}
+            />
+
+            <View style={styles.buttonContainer}>
+                <OButtonWide
+                    text={i18n.t(TR.iUnderstand)}
+                    filled={true}
+                    variant="light"
+                    countdownEnableSeconds={forceWaitSeconds}
+                    onPress={() =>
+                        navigation.navigate(
+                            route.params.nextPage,
+                            route.params.propsForNextScreen,
+                        )
+                    }
                 />
 
-                <View style={styles.buttonContainer}>
-                    <OButtonWide
-                        text={i18n.t(TR.iUnderstand)}
-                        filled={true}
-                        variant="light"
-                        countdownEnableSeconds={forceWaitSeconds}
-                        onPress={() =>
-                            navigation.navigate(
-                                route.params.nextPage,
-                                route.params.propsForNextScreen,
-                            )
-                        }
-                    />
-
-                    <Text style={styles.violatingRules}>
-                        {i18n.t(TR.violatingRules.p1)}
-                        <Text style={styles.boldText}>
-                            {i18n.t(TR.violatingRules.duration)}
-                        </Text>
-                        {i18n.t(TR.violatingRules.p2)}
+                <Text style={styles.violatingRules}>
+                    {i18n.t(TR.violatingRules.p1)}
+                    <Text style={styles.boldText}>
+                        {i18n.t(TR.violatingRules.duration)}
                     </Text>
-                </View>
-            </ScrollView>
-        </OLinearBackground>
+                    {i18n.t(TR.violatingRules.p2)}
+                </Text>
+            </View>
+        </OPageColorContainer>
     );
 };
 
