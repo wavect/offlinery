@@ -15,7 +15,13 @@ import { TR, i18n } from "@/localization/translate.service";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import {
+    Image,
+    Pressable,
+    StyleSheet,
+    View,
+    useWindowDimensions,
+} from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -23,6 +29,7 @@ interface IPhotoContainerProps {
     imageIdx: ImageIdx;
     dispatch: React.Dispatch<IUserAction>;
     state: IUserData;
+    size: number;
     mediaStatus: ImagePicker.MediaLibraryPermissionResponse | null;
     requestMediaLibPermission: () => Promise<ImagePicker.MediaLibraryPermissionResponse>;
 }
@@ -34,6 +41,7 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
         state,
         mediaStatus,
         requestMediaLibPermission,
+        size,
     } = props;
 
     const openMediaLibrary = async () => {
@@ -68,18 +76,6 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
 
     const img = state.imageURIs[imageIdx];
 
-    if (!img) {
-        return (
-            <Pressable style={styles.photoContainer} onPress={openMediaLibrary}>
-                <MaterialIcons
-                    name="add-circle-outline"
-                    size={30}
-                    color={Color.primary}
-                />
-            </Pressable>
-        );
-    }
-
     // If the image is an `ImagePicker` we can directly access image on the user's device
     // otherwise we need to fetch it from the server.
     const uri = isImagePicker(img)
@@ -87,8 +83,19 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
         : `${BASE_PATH.replace("/v1", "")}/img/${img}`;
 
     return (
-        <Pressable style={styles.photoContainer} onPress={openMediaLibrary}>
-            <Image style={styles.previewImage} source={{ uri }} />
+        <Pressable
+            style={[styles.photoContainer, { width: size, height: size }]}
+            onPress={openMediaLibrary}
+        >
+            {!img ? (
+                <MaterialIcons
+                    name="add-circle-outline"
+                    size={size * 0.2}
+                    color={Color.primary}
+                />
+            ) : (
+                <Image style={styles.previewImage} source={{ uri }} />
+            )}
         </Pressable>
     );
 };
@@ -104,6 +111,14 @@ const AddPhotos = ({
         ImagePicker.useMediaLibraryPermissions();
     const { state, dispatch } = useUserContext();
     const hasAnyImage = Object.values(state.imageURIs).some(Boolean);
+
+    const { width } = useWindowDimensions();
+
+    // Calculate the size of each photo container based on screen width
+    const containerPadding = 20;
+    const gapBetweenContainers = 10;
+    const photoContainerSize =
+        (width - 2 * containerPadding - gapBetweenContainers) / 2;
 
     return (
         <OPageContainer
@@ -128,54 +143,27 @@ const AddPhotos = ({
             subtitle={i18n.t(TR.clickToUploadImages)}
         >
             <View style={styles.container}>
-                <View style={styles.row}>
-                    <PhotoContainer
-                        imageIdx="0"
-                        dispatch={dispatch}
-                        state={state}
-                        mediaStatus={mediaLibStatus}
-                        requestMediaLibPermission={requestMediaLibPermission}
-                    />
-                    <PhotoContainer
-                        imageIdx="1"
-                        dispatch={dispatch}
-                        state={state}
-                        mediaStatus={mediaLibStatus}
-                        requestMediaLibPermission={requestMediaLibPermission}
-                    />
-                </View>
-                <View style={styles.row}>
-                    <PhotoContainer
-                        imageIdx="2"
-                        dispatch={dispatch}
-                        state={state}
-                        mediaStatus={mediaLibStatus}
-                        requestMediaLibPermission={requestMediaLibPermission}
-                    />
-                    <PhotoContainer
-                        imageIdx="3"
-                        dispatch={dispatch}
-                        state={state}
-                        mediaStatus={mediaLibStatus}
-                        requestMediaLibPermission={requestMediaLibPermission}
-                    />
-                </View>
-                <View style={styles.row}>
-                    <PhotoContainer
-                        imageIdx="4"
-                        dispatch={dispatch}
-                        state={state}
-                        mediaStatus={mediaLibStatus}
-                        requestMediaLibPermission={requestMediaLibPermission}
-                    />
-                    <PhotoContainer
-                        imageIdx="5"
-                        dispatch={dispatch}
-                        state={state}
-                        mediaStatus={mediaLibStatus}
-                        requestMediaLibPermission={requestMediaLibPermission}
-                    />
-                </View>
+                {[
+                    ["0", "1"],
+                    ["2", "3"],
+                    ["4", "5"],
+                ].map((row, rowIndex) => (
+                    <View key={rowIndex} style={styles.row}>
+                        {row.map((idx) => (
+                            <PhotoContainer
+                                key={idx}
+                                imageIdx={idx as ImageIdx}
+                                dispatch={dispatch}
+                                state={state}
+                                mediaStatus={mediaLibStatus}
+                                requestMediaLibPermission={
+                                    requestMediaLibPermission
+                                }
+                                size={photoContainerSize}
+                            />
+                        ))}
+                    </View>
+                ))}
             </View>
         </OPageContainer>
     );
@@ -184,12 +172,9 @@ const AddPhotos = ({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
-    },
-    row: {
         flexDirection: "row",
+        flexWrap: "wrap",
         justifyContent: "space-between",
-        marginBottom: 20,
     },
     previewImage: {
         width: "100%",
@@ -197,10 +182,7 @@ const styles = StyleSheet.create({
         borderRadius: BorderRadius.br_5xs,
     },
     photoContainer: {
-        width: 150,
-        height: 150,
-        marginRight: 10,
-        marginBottom: 10,
+        marginBottom: 5,
         borderWidth: 1,
         borderRadius: BorderRadius.br_5xs,
         borderColor: Color.primary,
@@ -209,9 +191,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    plusIcon: {
-        width: 30,
-        height: 30,
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "100%",
+        marginBottom: 10,
     },
 });
 
