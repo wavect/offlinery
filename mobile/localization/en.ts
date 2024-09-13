@@ -44,7 +44,7 @@ export const en = {
     clickToUploadImages: "Click to upload images.",
     continue: "Continue",
     iWantTo: "I want to",
-    approach: "Approach",
+    approach: "Approach someone",
     beApproached: "Be approached",
     approachDescr:
         "Approach people you are interested in. Meet them in-real-life where they are.",
@@ -53,6 +53,7 @@ export const en = {
     both: "Both",
     bothDescr:
         "Want to approach and be approached by people you like? (not yet supported)",
+    changePossible: "No worries, you can change this at any time.",
     approachMeBetween: "Approach me between",
     approachMeBetweenDescr:
         "What are times you feel comfortable being approached at? Default is during the day.",

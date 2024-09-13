@@ -54,12 +54,11 @@ export const de: Language = {
     approach: "Ansprechen",
     beApproached: "Angesprochen werden",
     approachDescr:
-        "Sprich Menschen an, an denen du interessiert bist. Triff sie im echten Leben, wo sie sich im Alltag aufhalten.",
-    beApproachedDescr:
-        "Lass dich von Menschen ansprechen, an denen du interessiert bist. Sicher und respektvoll.",
+        "Du ergreifst die Initiative und sprichst im echten Leben an.",
+    beApproachedDescr: "Werde angesprochen. Sicher und respektvoll.",
     both: "Beides",
-    bothDescr:
-        "Möchtest du sowohl Menschen ansprechen als auch von ihnen angesprochen werden? (noch nicht unterstützt)",
+    bothDescr: "Sprich an und werde angesprochen (noch nicht verfügbar)",
+    changePossible: "Du kannst diese Einstellung jederzeit ändern.",
     approachMeBetween: "Ich fühl mich wohl zwischen",
     approachMeBetweenDescr:
         "Zu welchen Zeiten fühlst du dich wohl, angesprochen zu werden? Standard ist tagsüber.",
