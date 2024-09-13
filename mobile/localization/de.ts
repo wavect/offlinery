@@ -9,7 +9,7 @@ export const de: Language = {
     gettingReadyToAmazeYou: "Bereit, dich zu beeindrucken..",
     datingAppsAreBroken: "Dating apps are Broken",
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
-    verificationCodeResend: "Code neu senden",
+    verificationCodeResend: "Neuer Code",
     verificationCodeInvalid: "Ungültiger Verifizierungscode",
     invalidEmailOrExists: "Email ungültig oder existiert bereits.",
     invalidEmail: "Email ungültig.",
@@ -96,7 +96,8 @@ export const de: Language = {
         "Verliere keinen Zugriff auf dein Konto, verifiziere deine E-Mail.",
     wantToReceiveNews:
         "Ich möchte Nachrichten, Updates und Angebote von Offlinery erhalten.",
-    enterVerificationCode: "Bestätigungscode eingeben",
+    enterVerificationCode: "E-Mail Verifizierung",
+    verificationCodeLoadingBtnLbl: "Sende E-Mail..",
     verify: "Bestätigen",
     verificationCodeSent:
         "Der 6-stellige Code, den wir dir per E-Mail gesendet haben",
