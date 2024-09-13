@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     centerContainer: {
-        marginTop: 40,
+        marginTop: 20,
         alignItems: "center",
         width: "100%",
     },

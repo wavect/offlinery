@@ -54,12 +54,11 @@ export const de: Language = {
     approach: "Ansprechen",
     beApproached: "Angesprochen werden",
     approachDescr:
-        "Sprich Menschen an, an denen du interessiert bist. Triff sie im echten Leben, wo sie sich im Alltag aufhalten.",
-    beApproachedDescr:
-        "Lass dich von Menschen ansprechen, an denen du interessiert bist. Sicher und respektvoll.",
+        "Du ergreifst die Initiative und sprichst im echten Leben an.",
+    beApproachedDescr: "Werde angesprochen. Sicher und respektvoll.",
     both: "Beides",
-    bothDescr:
-        "Möchtest du sowohl Menschen ansprechen als auch von ihnen angesprochen werden? (noch nicht unterstützt)",
+    bothDescr: "Sprich an und werde angesprochen (noch nicht verfügbar)",
+    changePossible: "Du kannst diese Einstellung jederzeit ändern.",
     approachMeBetween: "Ich fühl mich wohl zwischen",
     approachMeBetweenDescr:
         "Zu welchen Zeiten fühlst du dich wohl, angesprochen zu werden? Standard ist tagsüber.",
@@ -127,13 +126,11 @@ export const de: Language = {
     repeatPassword: "Passwort wiederholen",
     safetyCheck: "Sicherheitscheck",
     safetyCheckDescr:
-        "Dies funktioniert nur, wenn jeder eine großartige Erfahrung hat und sich zu jeder Zeit sicher fühlt.",
-    book15MinCall: "15-Minuten-Anruf buchen",
-    book15MinCallDescr:
-        "Dies wird ein Videoanruf sein. Wir stellen sicher, dass du gute Absichten bei der Nutzung dieser App hast.",
-    iPreferKYC: "Ich bevorzuge KYC",
-    iPreferKYCDescr:
-        "Alternativ kannst du ein reguliertes 3rd-Party-KYC durchführen. Dir werden die Gebühren des Anbieters berechnet, da uns echte Kosten entstehen (demnächst).",
+        "Notwendig, damit sich Angesprochene zu jeder Zeit sicher und wohl fühlen",
+    book15MinCall: "Anruf buchen",
+    book15MinCallDescr: "Ein 15-minütiger Verifizierungsanruf.",
+    iPreferKYC: "KYC starten",
+    iPreferKYCDescr: "Reguliertes 3rd-Party-KYC (noch nicht verfügbar).",
     verificationInProgress: "Verifizierung läuft..",
     bookNewCall: "Neuen Anruf buchen",
     pleaseDoNotMakeDoubleBookings: "Bitte keine Doppelbuchungen vornehmen.",
