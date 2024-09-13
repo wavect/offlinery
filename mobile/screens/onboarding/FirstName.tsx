@@ -28,7 +28,6 @@ const FirstName = ({
 
     return (
         <OPageContainer
-            title={i18n.t(TR.myFirstNameIs)}
             bottomContainerChildren={
                 <OButtonWide
                     text={i18n.t(TR.continue)}

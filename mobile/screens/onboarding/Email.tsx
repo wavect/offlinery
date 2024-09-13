@@ -52,7 +52,6 @@ const Email = ({
 
     return (
         <OPageContainer
-            title={i18n.t(TR.whatIsYourEmail)}
             bottomContainerChildren={
                 <OButtonWide
                     text={i18n.t(TR.continue)}

@@ -24,7 +24,7 @@ const GenderChoice = ({
     };
 
     return (
-        <OPageContainer title={i18n.t(TR.iAmA)}>
+        <OPageContainer>
             <View style={styles.optionContainer}>
                 <OButtonWide
                     text={i18n.t(TR.woman)}

@@ -124,7 +124,6 @@ const VerifyEmail = ({
 
     return (
         <OPageContainer
-            title={i18n.t(TR.enterVerificationCode)}
             bottomContainerChildren={
                 <OButtonWide
                     text={i18n.t(TR.verify)}

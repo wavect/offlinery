@@ -44,7 +44,6 @@ const Birthday = ({
 
     return (
         <OPageContainer
-            title={i18n.t(TR.myBirthDayIs)}
             subtitle={i18n.t(TR.yourAgeWillBePublic)}
             bottomContainerChildren={
                 <OButtonWide

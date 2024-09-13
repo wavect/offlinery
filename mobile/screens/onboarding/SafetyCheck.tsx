@@ -15,10 +15,7 @@ const SafetyCheck = ({
     typeof ROUTES.Onboarding.SafetyCheck
 >) => {
     return (
-        <OPageContainer
-            title={i18n.t(TR.safetyCheck)}
-            subtitle={i18n.t(TR.safetyCheckDescr)}
-        >
+        <OPageContainer subtitle={i18n.t(TR.safetyCheckDescr)}>
             <View style={styles.centerContainer}>
                 <OButtonWide
                     text={i18n.t(TR.book15MinCall)}

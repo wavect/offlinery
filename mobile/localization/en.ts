@@ -115,7 +115,6 @@ export const en = {
     pwdErrNotMatching: "Passwords do not match.",
     setStrongPassword: "Set a strong password",
     changePassword: "Change password",
-    setPassword: "Set password",
     save: "Save",
     enterOldPassword: "Enter old password",
     currentPassword: "Current password",

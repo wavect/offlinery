@@ -5,6 +5,7 @@ import { ROUTES } from "./screens/routes";
 import Splash from "./screens/Splash";
 import Welcome from "./screens/Welcome";
 
+import { TR, i18n } from "@/localization/translate.service";
 import {
     Montserrat_300Light,
     Montserrat_400Regular,
@@ -103,7 +104,7 @@ export default function App() {
             <NavigationContainer>
                 <UserProvider>
                     <MainStack.Navigator
-                        initialRouteName={ROUTES.Welcome}
+                        initialRouteName={ROUTES.Onboarding.ApproachChoice}
                         screenOptions={NO_HEADER}
                     >
                         <MainStack.Screen
@@ -124,72 +125,114 @@ export default function App() {
                         <MainStack.Screen
                             name={ROUTES.Onboarding.Email}
                             component={Email}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.whatIsYourEmail),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.VerifyEmail}
                             component={VerifyEmail}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.enterVerificationCode),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.Password}
                             component={Password}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.yourPassword),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.FirstName}
                             component={FirstName}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.myFirstNameIs),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.BirthDay}
                             component={Birthday}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.myBirthDayIs),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.GenderChoice}
                             component={GenderChoice}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.iAmA),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.GenderLookingFor}
                             component={GenderLookingFor}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.iLookFor),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.ApproachChoice}
                             component={ApproachChoice}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.iWantTo),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.SafetyCheck}
                             component={SafetyCheck}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.safetyCheck),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.BookSafetyCall}
                             component={BookSafetyCall}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.bookSafetyCall),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.AddPhotos}
                             component={AddPhotos}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.addPhotos),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.DontApproachMeHere}
                             component={DontApproachMeHere}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.dontApproachHere),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.ApproachMeBetween}
                             component={ApproachMeBetween}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.approachMeBetween),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.BioLetThemKnow}
                             component={BioLetThemKnow}
-                            options={DEFAULT_SCREEN_PROPS}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.letThemKnow),
+                            }}
                         />
                         <MainStack.Screen
                             name={ROUTES.Onboarding.WaitingVerification}

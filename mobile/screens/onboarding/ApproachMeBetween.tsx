@@ -39,7 +39,6 @@ const ApproachMeBetween = ({
 
     return (
         <OPageContainer
-            title={i18n.t(TR.approachMeBetween)}
             subtitle={i18n.t(TR.approachMeBetweenDescr)}
             bottomContainerChildren={
                 <OButtonWide

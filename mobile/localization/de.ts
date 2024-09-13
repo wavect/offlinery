@@ -88,7 +88,7 @@ export const de: Language = {
     myLocation: "Mein Standort",
     youAreHere: "Du bist hier.",
     longPressMapSafeZoneInstruction:
-        "Lange tippen, um eine Inkognito Region hinzuzufügen. Tippe auf eine Region, ihren Radius anzupassen.",
+        "Lange tippen, um eine Sicherheitszone hinzuzufügen. Tippe auf eine Region, ihren Radius anzupassen.",
     adjustRegionRadius: "Regionradius anpassen",
     whatIsYourEmail: "Was ist deine E-Mail?",
     whatIsYourEmailDescr:
@@ -116,7 +116,6 @@ export const de: Language = {
     pwdErrNotMatching: "Passwörter stimmen nicht überein.",
     setStrongPassword: "Starkes Passwort festlegen",
     changePassword: "Passwort ändern",
-    setPassword: "Passwort festlegen",
     save: "Speichern",
     enterOldPassword: "Altes Passwort eingeben",
     currentPassword: "Aktuelles Passwort",
