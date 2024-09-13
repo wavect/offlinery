@@ -95,7 +95,7 @@ export default function App() {
     }, [appIsReady]);
 
     if (!appIsReady) {
-        // TODO: this is using montserrat fonts, we might want to allow the splash screen to fall back to nice looking Arial or other default fonts, css fix likely
+        // @dev Uses system fonts
         return <Splash />;
     }
 
