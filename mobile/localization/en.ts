@@ -125,13 +125,11 @@ export const en = {
     repeatPassword: "Repeat password",
     safetyCheck: "Safety Check",
     safetyCheckDescr:
-        "This will only work if everyone has a great experience and feels safe at all times.",
-    book15MinCall: "Book a 15 Minute call",
-    book15MinCallDescr:
-        "This will be a Video call. Making sure you have good intentions using this app.",
-    iPreferKYC: "I prefer to KYC",
-    iPreferKYCDescr:
-        "Alternatively, you can do a regulated 3rd party KYC. You'll be charged the provider's fee since we incur real costs (coming soon).",
+        "Everyone should have a great experience and feel safe at all times.",
+    book15MinCall: "Book call",
+    book15MinCallDescr: "15 minute verification call.",
+    iPreferKYC: "Start KYC",
+    iPreferKYCDescr: "Regulated 3rd party KYC (coming soon).",
     verificationInProgress: "Verification in progress..",
     bookNewCall: "Book new call",
     pleaseDoNotMakeDoubleBookings: "Please do not make double bookings.",
