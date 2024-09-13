@@ -90,6 +90,7 @@ export const en = {
     wantToReceiveNews:
         "I want to receive news, updates and offers from Offlinery.",
     enterVerificationCode: "Enter Verification Code",
+    verificationCodeLoadingBtnLbl: "Sending email..",
     verify: "Verify",
     verificationCodeSent: "The 6-digit code we sent you per email",
     verificationCodeResend: "Resend Code",
