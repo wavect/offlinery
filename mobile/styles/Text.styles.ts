@@ -15,6 +15,7 @@ const createStyledText = (
     font-weight: ${(props) => (props.bold ? "900" : "200")};
     color: ${defaultColor};
     margin-top: 10px;
+    margin-bottom: 4px;
 `;
 
 export const StyledText = {

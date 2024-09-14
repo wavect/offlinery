@@ -1,17 +1,6 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import styled from "styled-components/native";
 
-export const Container = styled.View`
-    width: 90%;
-    align-items: center;
-`;
-
-export const InputContainer = styled.View`
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-`;
-
 export const StyledTextInput = styled.TextInput`
     flex: 1;
 `;

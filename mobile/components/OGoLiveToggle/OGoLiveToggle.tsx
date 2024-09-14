@@ -188,11 +188,11 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 onValueChange={toggleSwitch}
                 value={state.dateMode === UserDateModeEnum.live}
             />
-            <StyledText.Medium>
+            <StyledText.XSmall>
                 {state.dateMode === UserDateModeEnum.live
                     ? i18n.t(TR.live)
                     : i18n.t(TR.ghostMode)}
-            </StyledText.Medium>
+            </StyledText.XSmall>
         </View>
     );
 };

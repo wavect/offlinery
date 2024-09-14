@@ -73,7 +73,7 @@ export const de: Language = {
     registering: "Erstelle Account..",
     noPickUpLinesBeChill: "Keine Anmachsprüche bitte. Sei einfach lustig.",
     findWithSpace: "Finde ",
-    myBirthDayIs: "Mein Geburtstag ist",
+    myBirthDayIs: "Mein Geburtstag",
     yourAgeWillBePublic: "Dein Alter ist öffentlich",
     bookSafetyCall: "Sicherheitsanruf buchen",
     retainRightToRejectApplicants:
