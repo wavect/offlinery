@@ -6,7 +6,7 @@ import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackgro
 import { OShowcase } from "@/components/OShowcase/OShowcase";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { SSubtitle } from "@/styles/Text.styles";
+import { StyledText } from "@/styles/Text.styles";
 import { A } from "@expo/html-elements";
 import * as React from "react";
 import { StyleSheet, View } from "react-native";
@@ -44,9 +44,9 @@ const WaitingForVerification = ({
                         navigation.navigate(ROUTES.Onboarding.BookSafetyCall)
                     }
                 />
-                <SSubtitle>
+                <StyledText.Subtitle>
                     {i18n.t(TR.pleaseDoNotMakeDoubleBookings)}
-                </SSubtitle>
+                </StyledText.Subtitle>
 
                 <A
                     href="mailto:office@wavect.io"

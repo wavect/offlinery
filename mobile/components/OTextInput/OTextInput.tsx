@@ -1,34 +1,29 @@
-import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { MaterialIcons } from "@expo/vector-icons";
-import * as React from "react";
-import { useState } from "react";
 import {
-    StyleProp,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-    ViewStyle,
-} from "react-native";
-import { TextInputProps } from "react-native/Libraries/Components/TextInput/TextInput";
+    Container,
+    EyeIconButton,
+    OTextInputBottomLabel,
+    OTextInputContainer,
+    OTextInputStyled,
+    OTextInputTopLabel,
+} from "@/styles/Input.styles";
+import { MaterialIcons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { TextInputProps } from "react-native";
 
 interface IOTextInputProps extends Omit<TextInputProps, "secureTextEntry"> {
-    containerStyle?: StyleProp<ViewStyle>;
     topLabel?: string;
     bottomLabel?: string;
     isBottomLabelError?: boolean;
     isSensitiveInformation?: boolean;
 }
 
-export const OTextInput = (props: IOTextInputProps) => {
-    const {
-        topLabel,
-        bottomLabel,
-        isBottomLabelError,
-        isSensitiveInformation,
-        containerStyle,
-    } = props;
+export const OTextInput: React.FC<IOTextInputProps> = ({
+    topLabel,
+    bottomLabel,
+    isBottomLabelError,
+    isSensitiveInformation,
+    ...props
+}) => {
     const [isSecureTextVisible, setIsSecureTextVisible] = useState(
         !isSensitiveInformation,
     );
@@ -38,11 +33,10 @@ export const OTextInput = (props: IOTextInputProps) => {
     };
 
     return (
-        <View style={[styles.container, containerStyle]}>
-            {topLabel && <Text style={styles.topLabel}>{topLabel}</Text>}
-            <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
+        <Container>
+            {topLabel && <OTextInputTopLabel>{topLabel}</OTextInputTopLabel>}
+            <OTextInputContainer>
+                <OTextInputStyled
                     secureTextEntry={
                         isSensitiveInformation && !isSecureTextVisible
                     }
@@ -50,10 +44,7 @@ export const OTextInput = (props: IOTextInputProps) => {
                     {...props}
                 />
                 {isSensitiveInformation && (
-                    <TouchableOpacity
-                        onPress={toggleSecureEntry}
-                        style={styles.eyeIcon}
-                    >
+                    <EyeIconButton onPress={toggleSecureEntry}>
                         <MaterialIcons
                             name={
                                 isSecureTextVisible
@@ -63,61 +54,14 @@ export const OTextInput = (props: IOTextInputProps) => {
                             size={24}
                             color="#999"
                         />
-                    </TouchableOpacity>
+                    </EyeIconButton>
                 )}
-            </View>
+            </OTextInputContainer>
             {bottomLabel && (
-                <Text
-                    style={[
-                        styles.bottomLabel,
-                        isBottomLabelError ? styles.bottomLabelError : null,
-                    ]}
-                >
+                <OTextInputBottomLabel isError={isBottomLabelError}>
                     {bottomLabel}
-                </Text>
+                </OTextInputBottomLabel>
             )}
-        </View>
+        </Container>
     );
 };
-
-const styles = StyleSheet.create({
-    input: {
-        flex: 1,
-        fontSize: 16,
-        paddingVertical: 12,
-    },
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        width: "100%",
-    },
-    eyeIcon: {
-        padding: 4,
-    },
-    container: {
-        width: "90%",
-        alignItems: "center",
-    },
-    topLabel: {
-        color: Color.gray,
-        fontSize: FontSize.size_sm,
-        fontFamily: FontFamily.montserratSemiBold,
-        marginBottom: 5,
-        alignSelf: "flex-start",
-    },
-    bottomLabel: {
-        color: Color.gray,
-        fontSize: FontSize.size_sm,
-        fontFamily: FontFamily.montserratRegular,
-        marginTop: 5,
-        alignSelf: "flex-start",
-    },
-    bottomLabelError: {
-        color: Color.red,
-        fontFamily: FontFamily.montserratSemiBold,
-    },
-});

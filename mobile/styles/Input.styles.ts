@@ -1,0 +1,91 @@
+import { Color, FontFamily, FontSize } from "@/GlobalStyles";
+import styled from "styled-components/native";
+
+export const Container = styled.View`
+    width: 90%;
+    align-items: center;
+`;
+
+export const InputContainer = styled.View`
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+`;
+
+export const StyledTextInput = styled.TextInput`
+    flex: 1;
+`;
+
+export const TopLabel = styled.Text`
+    font-size: ${FontSize.size_sm}px;
+    font-family: ${FontFamily.montserratSemiBold};
+    margin-bottom: 5px;
+    align-self: flex-start;
+`;
+
+export const BottomLabel = styled.Text<{ isError?: boolean }>`
+    font-size: ${FontSize.size_sm}px;
+    align-self: flex-start;
+`;
+
+export const EyeIconButton = styled.TouchableOpacity`
+    padding: 4px;
+`;
+
+// OTextInput specific styles
+export const OTextInputContainer = styled(InputContainer)`
+    border-width: 1px;
+    border-color: #ccc;
+    border-radius: 8px;
+    padding-horizontal: 12px;
+`;
+
+export const OTextInputStyled = styled(StyledTextInput)`
+    font-size: 16px;
+    padding-vertical: 12px;
+`;
+
+export const OTextInputTopLabel = styled(TopLabel)`
+    color: ${Color.gray};
+`;
+
+export const OTextInputBottomLabel = styled(BottomLabel)`
+    color: ${(props) => (props.isError ? Color.red : Color.gray)};
+    font-family: ${(props) =>
+        props.isError
+            ? FontFamily.montserratSemiBold
+            : FontFamily.montserratRegular};
+    margin-top: 5px;
+`;
+
+// OTextInputWide specific styles
+export const OTextInputWideContainer = styled(InputContainer)`
+    height: 65px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: ${Color.stateLayersSurfaceDimOpacity08};
+    border: 1px solid ${Color.white};
+`;
+
+export const OTextInputWideStyled = styled(StyledTextInput)`
+    line-height: 28px;
+    font-size: ${FontSize.size_xl}px;
+    font-family: ${FontFamily.montserratLight};
+    font-weight: 500;
+    padding: 6px;
+    color: ${Color.white};
+`;
+
+export const OTextInputWideTopLabel = styled(TopLabel)`
+    color: ${Color.white};
+`;
+
+export const OTextInputWideBottomLabel = styled(BottomLabel)`
+    color: ${(props) => (props.isError ? Color.lightOrange : Color.white)};
+    font-family: ${(props) =>
+        props.isError
+            ? FontFamily.montserratSemiBold
+            : FontFamily.montserratRegular};
+    margin-bottom: 12px;
+    margin-top: 6px;
+`;

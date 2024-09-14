@@ -1,7 +1,7 @@
-import { Color, FontFamily } from "@/GlobalStyles";
 import { TR, i18n } from "@/localization/translate.service";
+import { StyledText } from "@/styles/Text.styles";
 import * as React from "react";
-import { Linking, StyleSheet, Text } from "react-native";
+import { Linking } from "react-native";
 import { StyleProp } from "react-native/Libraries/StyleSheet/StyleSheet";
 import { TextStyle } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 
@@ -15,24 +15,8 @@ export const OTroubleSignIn = (props: IOTroubleSignIn) => {
     };
 
     return (
-        <Text
-            style={[styles.troubleSigningIn, props.style]}
-            onPress={writeSupportEmail}
-        >
+        <StyledText.Small onPress={writeSupportEmail}>
             {i18n.t(TR.troubleSignIn)}
-        </Text>
+        </StyledText.Small>
     );
 };
-
-const styles = StyleSheet.create({
-    troubleSigningIn: {
-        fontSize: 16,
-        lineHeight: 24,
-        marginTop: 10,
-        textDecorationLine: "underline",
-        fontFamily: FontFamily.montserratLight,
-        fontWeight: "500",
-        color: Color.white,
-        textAlign: "center",
-    },
-});

@@ -4,9 +4,10 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
+import { StyledText } from "@/styles/Text.styles";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 const HouseRules = ({
@@ -52,13 +53,13 @@ const HouseRules = ({
                     }
                 />
 
-                <Text style={styles.violatingRules}>
+                <StyledText.Small>
                     {i18n.t(TR.violatingRules.p1)}
-                    <Text style={styles.boldText}>
+                    <StyledText.Small bold>
                         {i18n.t(TR.violatingRules.duration)}
-                    </Text>
+                    </StyledText.Small>
                     {i18n.t(TR.violatingRules.p2)}
-                </Text>
+                </StyledText.Small>
             </View>
         </OPageColorContainer>
     );
@@ -78,8 +79,8 @@ const RuleItem: React.FC<IRuleItemProps> = ({ title, description }) => (
             style={styles.checkIcon}
         />
         <View style={styles.ruleTextContainer}>
-            <Text style={styles.ruleTitle}>{title}</Text>
-            <Text style={styles.ruleDescription}>{description}</Text>
+            <StyledText.Large>{title}</StyledText.Large>
+            <StyledText.Small>{description}</StyledText.Small>
         </View>
     </View>
 );
@@ -103,19 +104,13 @@ const styles = StyleSheet.create({
     ruleTitle: {
         fontFamily: FontFamily.montserratRegular,
         fontWeight: "600",
-        fontSize: FontSize.size_xl,
-        color: Color.white,
         marginBottom: 5,
     },
     ruleDescription: {
         fontFamily: FontFamily.montserratLight,
-        fontSize: FontSize.size_sm,
-        color: Color.white,
     },
     violatingRules: {
         fontFamily: FontFamily.montserratLight,
-        fontSize: FontSize.size_sm,
-        color: Color.white,
         textAlign: "center",
         marginVertical: 20,
     },

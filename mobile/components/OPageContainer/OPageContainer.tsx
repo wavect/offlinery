@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import styles from "./OPageContainer.styles";
 
-import { SSubtitle, STitle } from "@/styles/Text.styles";
+import { StyledText } from "@/styles/Text.styles";
 import { MaterialIcons as MaterialIconsType } from "@expo/vector-icons";
 type IconName = React.ComponentProps<typeof MaterialIconsType>["name"];
 
@@ -44,8 +44,12 @@ export const OPageContainer = (props: IOPageContainerProps) => {
                 style={styles.content}
                 keyboardShouldPersistTaps="handled"
             >
-                {props.title && <STitle>{props.title}</STitle>}
-                {props.subtitle && <SSubtitle>{props.subtitle}</SSubtitle>}
+                {props.title && (
+                    <StyledText.Title>{props.title}</StyledText.Title>
+                )}
+                {props.subtitle && (
+                    <StyledText.Subtitle>{props.subtitle}</StyledText.Subtitle>
+                )}
                 {props.children}
             </MainViewContainer>
 

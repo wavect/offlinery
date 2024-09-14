@@ -17,6 +17,7 @@ import {
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
+import { StyledText } from "@/styles/Text.styles";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import * as React from "react";
 import { useState } from "react";
@@ -85,9 +86,9 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     source={{ uri: encounterProfile.imageURIs[0] }}
                 />
                 <View style={styles.encounterDetails}>
-                    <Text
+                    <StyledText.Small
                         style={styles.nameAge}
-                    >{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>
+                    >{`${encounterProfile.firstName}, ${encounterProfile.age}`}</StyledText.Small>
                     <Text
                         style={styles.encounterInfo}
                     >{`${encounterProfile.lastTimePassedBy} near ${encounterProfile.lastLocationPassedBy}`}</Text>
