@@ -133,7 +133,7 @@ export const de: Language = {
     verificationInProgress: "Verifizierung läuft..",
     bookNewCall: "Neuen Anruf buchen",
     pleaseDoNotMakeDoubleBookings: "Bitte keine Doppelbuchungen vornehmen.",
-    somethingWrongQ: "Etwas falsch?",
+    somethingWrongQ: "Irgendwas schief gelaufen?",
     peopleYouMightHaveMet:
         "Menschen, die du vielleicht getroffen hast. Bewerte sie, melde sie oder bleibe in Kontakt.",
     weMetFrom: "Wir haben uns getroffen von",

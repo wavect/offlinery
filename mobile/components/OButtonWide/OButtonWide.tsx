@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
     ActivityIndicator,
     GestureResponderEvent,
@@ -24,6 +24,7 @@ interface IOButtonWideProps {
     isLoading?: boolean;
     loadingBtnText?: string;
     size?: "default" | "smaller";
+    subTitle?: string;
 }
 
 const getButtonStyle = (
@@ -88,7 +89,7 @@ const getLabelStyle = (
     return { ...lblStyle, ...styleOverride };
 };
 
-export const OButtonWide: React.FC<IOButtonWideProps> = ({
+export const OButtonWide: FC<IOButtonWideProps> = ({
     loadingBtnText,
     isLoading,
     text,
@@ -98,6 +99,7 @@ export const OButtonWide: React.FC<IOButtonWideProps> = ({
     style,
     styleLbl,
     size,
+    subTitle,
     disabled = false,
     countdownEnableSeconds = 0,
 }) => {

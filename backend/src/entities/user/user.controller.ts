@@ -3,8 +3,10 @@ import { Public } from "@/auth/auth.guard";
 import { CreateUserRequestDTO } from "@/DTOs/create-user-request.dto";
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserRequestDTO } from "@/DTOs/update-user-request.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
+import { UserPrivateDTO } from "@/DTOs/user-private.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
 import { CustomParseFilePipe } from "@/pipes/CustomParseFile.pipe";
 import { ParseJsonPipe } from "@/pipes/ParseJson.pipe";
@@ -33,7 +35,6 @@ import {
     ApiResponse,
     ApiTags,
 } from "@nestjs/swagger";
-import { User } from "./user.entity";
 import { UserService } from "./user.service";
 
 @ApiTags("User")
@@ -71,10 +72,8 @@ export class UserController {
             }),
         )
         images: Express.Multer.File[],
-    ): Promise<UserPublicDTO> {
-        return (
-            await this.userService.createUser(createUserDto, images)
-        ).convertToPublicDTO();
+    ): Promise<SignInResponseDTO> {
+        return await this.userService.createUser(createUserDto, images);
     }
 
     @Put(`:${USER_ID_PARAM}`)
@@ -112,22 +111,22 @@ export class UserController {
 
     @Get(`:${USER_ID_PARAM}`)
     @OnlyOwnUserData()
-    @ApiOperation({ summary: "Get a user by ID" })
-    @ApiParam({ name: USER_ID_PARAM, type: "number", description: "User ID" })
+    @ApiOperation({ summary: "Get private user data by ID" })
+    @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })
     @ApiResponse({
         status: 200,
         description: "The user has been successfully retrieved.",
-        type: User,
+        type: UserPrivateDTO,
     })
     @ApiResponse({ status: 404, description: "User not found." })
-    async getUser(
+    async getOwnUserData(
         @Param(USER_ID_PARAM) userId: string,
-    ): Promise<UserPublicDTO> {
+    ): Promise<UserPrivateDTO> {
         const user = await this.userService.findUserById(userId);
         if (!user) {
             throw new NotFoundException(`User with ID ${userId} not found`);
         }
-        return user.convertToPublicDTO();
+        return user.convertToPrivateDTO();
     }
 
     @Put(`location/:${USER_ID_PARAM}`)

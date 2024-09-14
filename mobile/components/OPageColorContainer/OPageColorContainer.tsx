@@ -4,12 +4,13 @@ import { OSafeAreaContainer } from "@/components/OSafeAreaContainer/OSafeAreaCon
 import OShowcase from "@/components/OShowcase/OShowcase";
 import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import {
     ActivityIndicator,
     Dimensions,
     KeyboardAvoidingView,
     Platform,
+    RefreshControl,
     ScrollView,
     StatusBar,
     StyleSheet,
@@ -29,10 +30,18 @@ const LoadingScreen = () => (
 interface IOPageColorContainerProps {
     isLoading?: boolean;
     children: ReactNode;
+    refreshFunc?: () => Promise<void>;
 }
 
 export const OPageColorContainer = (props: IOPageColorContainerProps) => {
-    const { isLoading, children } = props;
+    const { isLoading, children, refreshFunc } = props;
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await refreshFunc!();
+        setRefreshing(false);
+    };
 
     return (
         <View style={styles.container}>
@@ -46,6 +55,14 @@ export const OPageColorContainer = (props: IOPageColorContainerProps) => {
                     <ScrollView
                         contentContainerStyle={styles.scrollViewContent}
                         keyboardShouldPersistTaps="handled"
+                        refreshControl={
+                            refreshFunc && (
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
+                                />
+                            )
+                        }
                     >
                         <OSafeAreaContainer containerStyle={styles.content}>
                             <OShowcase

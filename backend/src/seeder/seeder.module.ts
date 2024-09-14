@@ -1,3 +1,5 @@
+import { AuthModule } from "@/auth/auth.module";
+import { AuthService } from "@/auth/auth.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
@@ -24,11 +26,13 @@ import { TypeOrmModule } from "@nestjs/typeorm";
         ]),
         RegistrationModule,
         forwardRef(() => MatchingModule),
+        forwardRef(() => AuthModule),
     ],
     providers: [
         DefaultUserSeeder,
         RegistrationService,
         UserService,
+        AuthService,
         RandomUsersSeeder,
         RandomEncounterSeeder,
     ],

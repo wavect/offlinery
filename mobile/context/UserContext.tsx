@@ -12,6 +12,7 @@ import {
     UserVerificationStatusEnum,
 } from "@/api/gen/src";
 import { i18n } from "@/localization/translate.service";
+import { refreshUserData } from "@/services/auth.service";
 import {
     SECURE_VALUE,
     saveValueLocallySecurely,
@@ -262,16 +263,13 @@ export const registerUser = async (
     };
 
     try {
-        const user = await api.userControllerCreateUser(requestParameters);
+        const signInResponseDTO =
+            await api.userControllerCreateUser(requestParameters);
+        const { user, accessToken, refreshToken } = signInResponseDTO;
         console.log("User created successfully:", user);
 
-        // Update the user state with the returned ID
-        if (user.id) {
-            dispatch({
-                type: EACTION_USER.UPDATE_MULTIPLE,
-                payload: { id: user.id },
-            });
-        }
+        // Update the user state
+        refreshUserData(dispatch, user, accessToken, refreshToken);
 
         // Navigate to the next screen or update the UI as needed
         onSuccess();

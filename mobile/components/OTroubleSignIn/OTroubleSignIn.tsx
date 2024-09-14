@@ -1,5 +1,6 @@
 import { Color, FontFamily } from "@/GlobalStyles";
 import { TR, i18n } from "@/localization/translate.service";
+import { SUPPORT_MAIL } from "@/utils/general.constants";
 import * as React from "react";
 import { Linking, StyleSheet, Text } from "react-native";
 import { StyleProp } from "react-native/Libraries/StyleSheet/StyleSheet";
@@ -11,7 +12,7 @@ interface IOTroubleSignIn {
 
 export const OTroubleSignIn = (props: IOTroubleSignIn) => {
     const writeSupportEmail = async () => {
-        await Linking.openURL("mailto:office@wavect.io");
+        await Linking.openURL(`mailto:${SUPPORT_MAIL}`);
     };
 
     return (
