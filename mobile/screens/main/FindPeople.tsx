@@ -156,6 +156,7 @@ const FindPeople = (
                 },
                 await includeJWT(),
             );
+            console.log("Fetched Positions: ", positions.length);
             setLocationsFromOthers(positions);
         } catch (e) {
             console.warn("Unable to get position from other users ", e);
@@ -230,7 +231,9 @@ const FindPeople = (
                     onLongPress={handleMapLongPress}
                     provider={PROVIDER_GOOGLE}
                 >
-                    <OHeatMap locations={locationsFromOthers} />
+                    {locationsFromOthers && (
+                        <OHeatMap locations={locationsFromOthers} />
+                    )}
 
                     {state.blacklistedRegions.map((region, index) => (
                         <React.Fragment key={`region-${index}`}>

@@ -1,4 +1,4 @@
-import { USER_ID_PARAM } from "@/auth/auth-own-data.guard";
+import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
 import { WeightedLatLngDTO } from "@/DTOs/map.dto";
 import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
@@ -17,6 +17,7 @@ export class MapController {
     ) {}
 
     @Get(`:${USER_ID_PARAM}`)
+    @OnlyOwnUserData()
     @ApiOperation({ summary: "Get the locations of other users" })
     @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })
     async getUserLocations(
@@ -27,6 +28,8 @@ export class MapController {
             userToBeApproached,
             false,
         );
+
+        console.log("nearbyMatches: ", nearbyMatches);
 
         return nearbyMatches.map((match) => ({
             latitude: match.location.coordinates[1],

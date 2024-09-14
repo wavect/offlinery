@@ -7,11 +7,6 @@ interface OHeatMapProps {
 }
 
 export const OHeatMap: React.FC<OHeatMapProps> = React.memo(({ locations }) => {
-    if (locations.length === 0) {
-        console.log("Mode: Ghost or error while fetching");
-        return null;
-    }
-
     return (
         <Heatmap
             points={locations}
