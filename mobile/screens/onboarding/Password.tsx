@@ -64,9 +64,6 @@ const Password = ({
 
     return (
         <OPageContainer
-            title={i18n.t(
-                isChangePassword ? TR.changePassword : TR.setPassword,
-            )}
             bottomContainerChildren={
                 <OButtonWide
                     text={
@@ -95,7 +92,7 @@ const Password = ({
                     keyboardType="default"
                     placeholder={i18n.t(TR.enterOldPassword)}
                     containerStyle={styles.inputField}
-                    secureTextEntry={true}
+                    isSensitiveInformation={true}
                     topLabel={i18n.t(TR.currentPassword)}
                 />
             )}
@@ -112,7 +109,7 @@ const Password = ({
                 placeholder={i18n.t(TR.enterPassword)}
                 containerStyle={styles.inputField}
                 isBottomLabelError={!!passwordError}
-                secureTextEntry={true}
+                isSensitiveInformation={true}
                 bottomLabel={passwordError}
                 topLabel={i18n.t(
                     isChangePassword ? TR.newPassword : TR.strongPassword,
@@ -131,7 +128,7 @@ const Password = ({
                 placeholder={i18n.t(TR.repeatPassword)}
                 topLabel={i18n.t(TR.repeatPassword)}
                 isBottomLabelError={!!passwordErrorConfirmation}
-                secureTextEntry={true}
+                isSensitiveInformation={true}
                 bottomLabel={passwordErrorConfirmation}
                 containerStyle={styles.inputField}
             />

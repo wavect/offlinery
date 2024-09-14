@@ -18,10 +18,12 @@ interface IOButtonWideProps {
     variant: StyleVariant;
     onPress?: (event: GestureResponderEvent) => void;
     style?: StyleProp<ViewStyle>;
+    styleLbl?: StyleProp<TextStyle>;
     disabled?: boolean;
     countdownEnableSeconds?: number;
     isLoading?: boolean;
     loadingBtnText?: string;
+    size?: "default" | "smaller";
 }
 
 const getButtonStyle = (
@@ -58,20 +60,32 @@ const getLabelStyle = (
     isDisabled: boolean,
     filled: boolean,
     variant: StyleVariant,
+    size?: "default" | "smaller",
 ): StyleProp<TextStyle> => {
+    let lblStyle;
     if (isDisabled) {
-        return filled
+        lblStyle = filled
             ? oButtonWideStyles.btnDisabledLabelDark
             : oButtonWideStyles.btnDisabledLabelLight;
+    } else {
+        if (filled) {
+            lblStyle =
+                variant === "dark"
+                    ? oButtonWideStyles.btnFilledLabelDark
+                    : oButtonWideStyles.btnFilledLabelLight;
+        } else {
+            lblStyle =
+                variant === "dark"
+                    ? oButtonWideStyles.btnOutlineLabelDark
+                    : oButtonWideStyles.btnOutlineLabelLight;
+        }
     }
-    if (filled) {
-        return variant === "dark"
-            ? oButtonWideStyles.btnFilledLabelDark
-            : oButtonWideStyles.btnFilledLabelLight;
-    }
-    return variant === "dark"
-        ? oButtonWideStyles.btnOutlineLabelDark
-        : oButtonWideStyles.btnOutlineLabelLight;
+
+    const styleOverride =
+        size === "smaller"
+            ? oButtonWideStyles.buttonLabelSmallerOverride
+            : null;
+    return { ...lblStyle, ...styleOverride };
 };
 
 export const OButtonWide: React.FC<IOButtonWideProps> = ({
@@ -82,6 +96,8 @@ export const OButtonWide: React.FC<IOButtonWideProps> = ({
     variant,
     onPress,
     style,
+    styleLbl,
+    size,
     disabled = false,
     countdownEnableSeconds = 0,
 }) => {
@@ -116,7 +132,12 @@ export const OButtonWide: React.FC<IOButtonWideProps> = ({
             disabled={isDisabled}
             style={[getButtonStyle(isDisabled, filled, variant), style]}
         >
-            <Text style={getLabelStyle(isDisabled, filled, variant)}>
+            <Text
+                style={[
+                    getLabelStyle(isDisabled, filled, variant, size),
+                    styleLbl,
+                ]}
+            >
                 {isLoading ? (
                     <>
                         <ActivityIndicator

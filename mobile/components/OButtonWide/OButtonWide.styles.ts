@@ -15,8 +15,14 @@ const baseLabelStyle = {
     fontFamily: FontFamily.montserratLight,
 };
 
+const baseLabelStyleSmallerOverride = {
+    fontSize: FontSize.size_md,
+    lineHeight: 18,
+};
+
 export default {
     button: baseButtonStyle,
+    buttonLabelSmallerOverride: baseLabelStyleSmallerOverride,
     buttonFilled: {
         ...baseButtonStyle,
         ...Platform.select({

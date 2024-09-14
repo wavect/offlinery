@@ -54,11 +54,8 @@ const ApproachChoice = ({
 
     return (
         <OPageContainer
-            title={i18n.t(TR.iWantTo)}
             bottomContainerChildren={
-                <Text style={styles.footnote}>
-                    No worries, you can change this at any time.
-                </Text>
+                <Text style={styles.footnote}>{i18n.t(TR.changePossible)}</Text>
             }
         >
             <View style={styles.optionContainer}>
@@ -66,6 +63,7 @@ const ApproachChoice = ({
                     text={i18n.t(TR.approach)}
                     filled={true}
                     variant="dark"
+                    size="smaller"
                     onPress={() =>
                         setApproachChoice(UserApproachChoiceEnum.approach)
                     }
@@ -79,6 +77,7 @@ const ApproachChoice = ({
                 <OButtonWide
                     text={i18n.t(TR.beApproached)}
                     filled={true}
+                    size="smaller"
                     variant="dark"
                     onPress={() =>
                         setApproachChoice(UserApproachChoiceEnum.be_approached)
@@ -94,6 +93,7 @@ const ApproachChoice = ({
                     text={i18n.t(TR.both)}
                     filled={false}
                     variant="dark"
+                    size="smaller"
                     disabled={true}
                     onPress={() =>
                         setApproachChoice(UserApproachChoiceEnum.both)
@@ -110,7 +110,7 @@ const ApproachChoice = ({
 const styles = StyleSheet.create({
     optionContainer: {
         alignItems: "center",
-        marginTop: 40,
+        marginTop: 30,
         width: "100%",
     },
     subtitle: {

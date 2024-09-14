@@ -115,11 +115,7 @@ const FindPeople = (
                     await includeJWT(),
                 );
             } catch (error) {
-                console.log(error);
-                console.error(
-                    "Error updating blacklisted regions:",
-                    JSON.stringify(error),
-                );
+                console.error("Error updating blacklisted regions:", error);
             }
         }
         const timer = setTimeout(() => {
@@ -156,7 +152,6 @@ const FindPeople = (
                 },
                 await includeJWT(),
             );
-            console.log("Fetched Positions: ", positions.length);
             setLocationsFromOthers(positions);
         } catch (e) {
             console.warn("Unable to get position from other users ", e);
@@ -229,7 +224,11 @@ const FindPeople = (
                     zoomTapEnabled={true}
                     maxZoomLevel={13}
                     onLongPress={handleMapLongPress}
-                    provider={PROVIDER_GOOGLE}
+                    provider={
+                        process.env.EXPO_PUBLIC_ENVIRONMENT === "production"
+                            ? PROVIDER_GOOGLE
+                            : PROVIDER_DEFAULT
+                    }
                 >
                     {locationsFromOthers && (
                         <OHeatMap locations={locationsFromOthers} />

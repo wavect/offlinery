@@ -13,11 +13,12 @@ import {
 } from "react-native";
 import { TextInputProps } from "react-native/Libraries/Components/TextInput/TextInput";
 
-interface IOTextInputProps extends TextInputProps {
+interface IOTextInputProps extends Omit<TextInputProps, "secureTextEntry"> {
     containerStyle?: StyleProp<ViewStyle>;
     topLabel?: string;
     bottomLabel?: string;
     isBottomLabelError?: boolean;
+    isSensitiveInformation?: boolean;
 }
 
 export const OTextInput = (props: IOTextInputProps) => {
@@ -25,11 +26,12 @@ export const OTextInput = (props: IOTextInputProps) => {
         topLabel,
         bottomLabel,
         isBottomLabelError,
-        secureTextEntry,
+        isSensitiveInformation,
         containerStyle,
     } = props;
-    const [isSecureTextVisible, setIsSecureTextVisible] =
-        useState(!secureTextEntry);
+    const [isSecureTextVisible, setIsSecureTextVisible] = useState(
+        !isSensitiveInformation,
+    );
 
     const toggleSecureEntry = () => {
         setIsSecureTextVisible(!isSecureTextVisible);
@@ -41,11 +43,13 @@ export const OTextInput = (props: IOTextInputProps) => {
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
-                    secureTextEntry={secureTextEntry && !isSecureTextVisible}
+                    secureTextEntry={
+                        isSensitiveInformation && !isSecureTextVisible
+                    }
                     placeholderTextColor="#999"
                     {...props}
                 />
-                {secureTextEntry && (
+                {isSensitiveInformation && (
                     <TouchableOpacity
                         onPress={toggleSecureEntry}
                         style={styles.eyeIcon}

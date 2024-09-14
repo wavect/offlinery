@@ -48,7 +48,6 @@ const BookSafetyCall = ({
 
     return (
         <OPageContainer
-            title={i18n.t(TR.bookSafetyCall)}
             subtitle={i18n.t(TR.retainRightToRejectApplicants)}
             bottomContainerChildren={
                 hasBookedCall && (
