@@ -61,6 +61,9 @@ const VerifyEmail = ({
             index > 0 &&
             code[index] === ""
         ) {
+            const newCode = [...code];
+            newCode[index - 1] = "";
+            setCode(newCode);
             inputs.current[index - 1].focus();
         }
     };
@@ -124,6 +127,7 @@ const VerifyEmail = ({
 
     return (
         <OPageContainer
+            fullpageIcon="mark-email-read"
             bottomContainerChildren={
                 <OButtonWide
                     text={i18n.t(TR.verify)}

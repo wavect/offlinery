@@ -28,6 +28,7 @@ const FirstName = ({
 
     return (
         <OPageContainer
+            fullpageIcon="person"
             bottomContainerChildren={
                 <OButtonWide
                     text={i18n.t(TR.continue)}

@@ -59,7 +59,7 @@ export const de: Language = {
     both: "Beides",
     bothDescr: "Sprich an und werde angesprochen (noch nicht verfügbar)",
     changePossible: "Du kannst diese Einstellung jederzeit ändern.",
-    approachMeBetween: "Ich fühl mich wohl zwischen",
+    approachMeBetween: "Sprich mich an..",
     approachMeBetweenDescr:
         "Zu welchen Zeiten fühlst du dich wohl, angesprochen zu werden? Standard ist tagsüber.",
     from: "Von",
