@@ -1,4 +1,4 @@
-import { BorderRadius, Color } from "@/GlobalStyles";
+import { Color } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { BASE_PATH } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
@@ -178,12 +178,12 @@ const styles = StyleSheet.create({
     previewImage: {
         width: "100%",
         height: "100%",
-        borderRadius: BorderRadius.br_5xs,
+        borderRadius: 5,
     },
     photoContainer: {
         marginBottom: 5,
         borderWidth: 1,
-        borderRadius: BorderRadius.br_5xs,
+        borderRadius: 5,
         borderColor: Color.primary,
         borderStyle: "dashed",
         backgroundColor: Color.brightGray,

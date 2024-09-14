@@ -1,4 +1,4 @@
-import { Color, Title } from "@/GlobalStyles";
+import { Color } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { NotificationNavigateUserDTO } from "@/api/gen/src";
 import { OGoLiveToggle } from "@/components/OGoLiveToggle/OGoLiveToggle";
@@ -149,7 +149,12 @@ export const MainScreenTabs = ({
         <MainTabs.Navigator
             screenOptions={() => ({
                 headerTitle: "",
-                headerTitleStyle: Title,
+                headerTitleStyle: {
+                    fontSize: 40,
+                    fontWeight: "600",
+                    color: "#000",
+                    marginBottom: 8,
+                }, // substitute in another round
                 headerStyle: { height: 110 },
                 headerTitleAlign: "left",
                 tabBarActiveTintColor: Color.white,

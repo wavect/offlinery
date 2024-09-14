@@ -1,4 +1,4 @@
-import { BorderRadius, Color, Subtitle } from "@/GlobalStyles";
+import { Color } from "@/GlobalStyles";
 import {
     MapApi,
     UserApi,
@@ -15,6 +15,7 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { ROUTES } from "@/screens/routes";
+import { SSubtitle } from "@/styles/Text.styles";
 import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
@@ -23,7 +24,7 @@ import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import MapView, {
     Circle,
     Heatmap,
@@ -291,19 +292,13 @@ const FindPeople = (
                 )}
 
                 <View style={styles.instructions}>
-                    <Text style={[Subtitle, styles.instructionText]}>
+                    <SSubtitle>
                         {i18n.t(TR.longPressMapSafeZoneInstruction)}
-                    </Text>
+                    </SSubtitle>
                 </View>
                 {activeRegionIndex !== null && (
                     <View style={styles.sliderContainer}>
-                        <Text
-                            style={[
-                                Subtitle,
-                                styles.instructionText,
-                                styles.bold,
-                            ]}
-                        >
+                        <SSubtitle bold>
                             {i18n.t(TR.adjustRegionRadius)} (
                             {Math.round(
                                 uiRadii[activeRegionIndex] ??
@@ -311,7 +306,7 @@ const FindPeople = (
                                         .radius,
                             )}
                             m)
-                        </Text>
+                        </SSubtitle>
                         <Slider
                             style={styles.slider}
                             minimumValue={100}
@@ -335,7 +330,7 @@ const styles = StyleSheet.create({
     map: {
         width: "100%",
         minHeight: 400,
-        borderRadius: BorderRadius.br_5xs,
+        borderRadius: 5,
     },
     removeButtonContainer: {
         position: "absolute",

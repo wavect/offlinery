@@ -1,4 +1,4 @@
-import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: Color.white,
-        borderRadius: BorderRadius.br_81xl,
+        borderRadius: 8,
         paddingVertical: 15,
         paddingHorizontal: 30,
         alignItems: "center",

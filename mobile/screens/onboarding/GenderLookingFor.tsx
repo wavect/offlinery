@@ -1,12 +1,12 @@
-import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { UserGenderEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { SSubtitle } from "@/styles/Text.styles";
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -53,9 +53,7 @@ const GenderLookingFor = ({
                     variant="dark"
                     disabled={true}
                 />
-                <Text style={[Subtitle, styles.subtitle]}>
-                    {i18n.t(TR.genderMoreComingSoon)}
-                </Text>
+                <SSubtitle>{i18n.t(TR.genderMoreComingSoon)}</SSubtitle>
             </View>
         </OPageContainer>
     );

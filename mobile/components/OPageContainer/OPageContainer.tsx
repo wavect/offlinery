@@ -1,4 +1,4 @@
-import { Color, Subtitle, Title } from "@/GlobalStyles";
+import { Color } from "@/GlobalStyles";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { ReactNode } from "react";
@@ -8,11 +8,11 @@ import {
     Platform,
     ScrollView,
     StyleSheet,
-    Text,
     View,
 } from "react-native";
 import styles from "./OPageContainer.styles";
 
+import { SSubtitle, STitle } from "@/styles/Text.styles";
 import { MaterialIcons as MaterialIconsType } from "@expo/vector-icons";
 type IconName = React.ComponentProps<typeof MaterialIconsType>["name"];
 
@@ -44,10 +44,8 @@ export const OPageContainer = (props: IOPageContainerProps) => {
                 style={styles.content}
                 keyboardShouldPersistTaps="handled"
             >
-                {props.title && <Text style={Title}>{props.title}</Text>}
-                {props.subtitle && (
-                    <Text style={Subtitle}>{props.subtitle}</Text>
-                )}
+                {props.title && <STitle>{props.title}</STitle>}
+                {props.subtitle && <SSubtitle>{props.subtitle}</SSubtitle>}
                 {props.children}
             </MainViewContainer>
 

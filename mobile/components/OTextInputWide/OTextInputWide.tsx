@@ -1,4 +1,4 @@
-import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         width: "100%",
         height: 65,
-        borderRadius: BorderRadius.br_5xs,
+        borderRadius: 5,
         overflow: "hidden",
         backgroundColor: Color.stateLayersSurfaceDimOpacity08,
         borderStyle: "solid",

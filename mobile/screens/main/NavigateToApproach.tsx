@@ -1,4 +1,4 @@
-import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { EncounterApi, GetLocationOfEncounterDTO } from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         minHeight: 300,
-        borderRadius: BorderRadius.br_5xs,
+        borderRadius: 5,
     },
     navigateBtn: {
         backgroundColor: Color.primary,

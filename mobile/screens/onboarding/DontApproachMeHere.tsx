@@ -1,7 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import React, { useCallback, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import MapView, {
     Circle,
     Marker,
@@ -11,12 +11,13 @@ import MapView, {
 } from "react-native-maps";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
-import { BorderRadius, Color, FontSize, Subtitle } from "@/GlobalStyles";
+import { Color, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, MapRegion, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { SSubtitle } from "@/styles/Text.styles";
 import { ROUTES } from "../routes";
 
 type DontApproachMeHereProps = NativeStackScreenProps<
@@ -215,14 +216,14 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                 )}
                 {activeRegionIndex !== null && (
                     <View style={styles.sliderContainer}>
-                        <Text style={[Subtitle, styles.sliderText]}>
+                        <SSubtitle>
                             {i18n.t(TR.adjustRegionRadius)}&nbsp;(
                             {Math.round(
                                 state.blacklistedRegions[activeRegionIndex]
                                     .radius,
                             )}
                             m)
-                        </Text>
+                        </SSubtitle>
                         <Slider
                             style={styles.slider}
                             minimumValue={100}
@@ -237,9 +238,9 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                     </View>
                 )}
                 <View style={styles.instructions}>
-                    <Text style={[Subtitle, styles.instructionText]}>
+                    <SSubtitle>
                         {i18n.t(TR.longPressMapSafeZoneInstruction)}
-                    </Text>
+                    </SSubtitle>
                 </View>
             </>
         </OPageContainer>
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
     map: {
         width: "100%",
         minHeight: 300,
-        borderRadius: BorderRadius.br_5xs,
+        borderRadius: 5,
     },
     removeButtonContainer: {
         position: "absolute",

@@ -1,4 +1,3 @@
-import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
@@ -11,9 +10,10 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { SSubtitle } from "@/styles/Text.styles";
 import * as React from "react";
 import { useState } from "react";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -70,9 +70,7 @@ const BioLetThemKnow = ({
                     placeholder={i18n.t(TR.noPickUpLinesBeChill)}
                 />
                 <View style={styles.characterCountContainer}>
-                    <Text style={Subtitle}>
-                        {MAX_LENGTH_BIO - state.bio.length}
-                    </Text>
+                    <SSubtitle>{MAX_LENGTH_BIO - state.bio.length}</SSubtitle>
                 </View>
             </View>
 
@@ -90,10 +88,6 @@ const styles = StyleSheet.create({
     subtitleContainer: {
         alignItems: "flex-end",
         marginBottom: 16,
-    },
-    subtitle: {
-        ...(Subtitle as ViewStyle),
-        textAlign: "right",
     },
     inputContainer: {
         marginBottom: 16,

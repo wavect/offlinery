@@ -1,4 +1,4 @@
-import { Color, Subtitle } from "@/GlobalStyles";
+import { Color } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import {
     UserApproachChoiceEnum,
@@ -8,6 +8,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { SSubtitle } from "@/styles/Text.styles";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -68,9 +69,7 @@ const ApproachChoice = ({
                         setApproachChoice(UserApproachChoiceEnum.approach)
                     }
                 />
-                <Text style={[Subtitle, styles.subtitle]}>
-                    {i18n.t(TR.approachDescr)}
-                </Text>
+                <SSubtitle>{i18n.t(TR.approachDescr)}</SSubtitle>
             </View>
 
             <View style={styles.optionContainer}>
@@ -83,9 +82,7 @@ const ApproachChoice = ({
                         setApproachChoice(UserApproachChoiceEnum.be_approached)
                     }
                 />
-                <Text style={[Subtitle, styles.subtitle]}>
-                    {i18n.t(TR.beApproachedDescr)}
-                </Text>
+                <SSubtitle>{i18n.t(TR.beApproachedDescr)}</SSubtitle>
             </View>
 
             <View style={styles.optionContainer}>
@@ -99,9 +96,7 @@ const ApproachChoice = ({
                         setApproachChoice(UserApproachChoiceEnum.both)
                     }
                 />
-                <Text style={[Subtitle, styles.subtitle]}>
-                    {i18n.t(TR.bothDescr)}
-                </Text>
+                <SSubtitle>{i18n.t(TR.bothDescr)}</SSubtitle>
             </View>
         </OPageContainer>
     );

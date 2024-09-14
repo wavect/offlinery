@@ -1,6 +1,4 @@
 /* fonts */
-import { StyleProp, TextStyle } from "react-native";
-
 export const FontFamily = {
     montserratSemiBold: "Montserrat_600SemiBold",
     montserratMedium: "Montserrat_500Medium",
@@ -33,36 +31,4 @@ export const Color = {
     brightestGray: "rgba(239, 239, 239, 0.5)",
     stateLayersSurfaceDimOpacity08: "rgba(222, 216, 225, 0.08)",
     schemesPrimary: "#65558f",
-};
-
-export const Title: StyleProp<TextStyle> = {
-    fontSize: 40,
-    fontWeight: "600",
-    color: "#000",
-    marginBottom: 8,
-};
-export const Subtitle: StyleProp<TextStyle> = {
-    fontSize: FontSize.size_md,
-    color: Color.gray,
-    marginBottom: 24,
-};
-
-export const Padding = {
-    p_5xl: 24,
-    p_3xs: 10,
-    p_base: 16,
-    p_xs: 12,
-    p_5xs: 8,
-    p_2xs: 11,
-    p_7xs: 6,
-    p_xl: 20,
-    p_9xs: 4,
-};
-
-export const BorderRadius = {
-    br_81xl: 100,
-    br_base: 16,
-    br_5xs: 8,
-    br_7xs: 6,
-    br_9xs: 4,
 };
