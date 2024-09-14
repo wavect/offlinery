@@ -1,13 +1,17 @@
-import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
 import { StyledText } from "@/styles/Text.styles";
-import { MaterialIcons } from "@expo/vector-icons";
+import {
+    ButtonContainer,
+    RuleItemContainer,
+    RuleTextContainer,
+    ViolatingRulesTextView,
+} from "@/styles/View.styles";
 import * as React from "react";
-import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 const HouseRules = ({
@@ -39,7 +43,7 @@ const HouseRules = ({
                 description={i18n.t(TR.houseRules.descrDontRush)}
             />
 
-            <View style={styles.buttonContainer}>
+            <ButtonContainer>
                 <OButtonWide
                     text={i18n.t(TR.iUnderstand)}
                     filled={true}
@@ -53,14 +57,16 @@ const HouseRules = ({
                     }
                 />
 
-                <StyledText.Small>
-                    {i18n.t(TR.violatingRules.p1)}
-                    <StyledText.Small bold>
-                        {i18n.t(TR.violatingRules.duration)}
+                <ViolatingRulesTextView>
+                    <StyledText.Small>
+                        {i18n.t(TR.violatingRules.p1)}
+                        <StyledText.Small bold>
+                            {i18n.t(TR.violatingRules.duration)}
+                        </StyledText.Small>
+                        {i18n.t(TR.violatingRules.p2)}
                     </StyledText.Small>
-                    {i18n.t(TR.violatingRules.p2)}
-                </StyledText.Small>
-            </View>
+                </ViolatingRulesTextView>
+            </ButtonContainer>
         </OPageColorContainer>
     );
 };
@@ -71,71 +77,13 @@ interface IRuleItemProps {
 }
 
 const RuleItem: React.FC<IRuleItemProps> = ({ title, description }) => (
-    <View style={styles.ruleItem}>
-        <MaterialIcons
-            name="check"
-            size={24}
-            color={Color.white}
-            style={styles.checkIcon}
-        />
-        <View style={styles.ruleTextContainer}>
-            <StyledText.Large>{title}</StyledText.Large>
+    <RuleItemContainer>
+        <StyledMaterialIcon name="check" size={24} color="white" />
+        <RuleTextContainer>
+            <StyledText.Large white>{title}</StyledText.Large>
             <StyledText.Small>{description}</StyledText.Small>
-        </View>
-    </View>
+        </RuleTextContainer>
+    </RuleItemContainer>
 );
-
-const styles = StyleSheet.create({
-    container: {
-        flexGrow: 1,
-        padding: 20,
-        marginTop: 100,
-    },
-    ruleItem: {
-        flexDirection: "row",
-        marginBottom: 25,
-    },
-    checkIcon: {
-        marginRight: 13,
-    },
-    ruleTextContainer: {
-        flex: 1,
-    },
-    ruleTitle: {
-        fontFamily: FontFamily.montserratRegular,
-        fontWeight: "600",
-        marginBottom: 5,
-    },
-    ruleDescription: {
-        fontFamily: FontFamily.montserratLight,
-    },
-    violatingRules: {
-        fontFamily: FontFamily.montserratLight,
-        textAlign: "center",
-        marginVertical: 20,
-    },
-    boldText: {
-        fontFamily: FontFamily.montserratRegular,
-        fontWeight: "600",
-    },
-    buttonContainer: {
-        alignItems: "center",
-        marginTop: 20,
-    },
-    button: {
-        backgroundColor: Color.white,
-        borderRadius: 8,
-        paddingVertical: 15,
-        paddingHorizontal: 30,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    buttonText: {
-        color: "#36797d",
-        fontSize: FontSize.size_xl,
-        fontFamily: FontFamily.montserratRegular,
-        fontWeight: "500",
-    },
-});
 
 export default HouseRules;

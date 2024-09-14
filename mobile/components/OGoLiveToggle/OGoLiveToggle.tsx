@@ -165,7 +165,7 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
 
     const getSuccessMessage = () => {
         switch (state.approachChoice) {
-            case UserApproachChoiceEnum.both: // fall through
+            case UserApproachChoiceEnum.both:
             case UserApproachChoiceEnum.approach:
                 return i18n.t(TR.youAreLiveApproachDescr);
                 break;

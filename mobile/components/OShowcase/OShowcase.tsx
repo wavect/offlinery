@@ -1,6 +1,5 @@
-import { Color } from "@/GlobalStyles";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
 import { StyledText } from "@/styles/Text.styles";
-import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
@@ -11,18 +10,17 @@ interface IOShowcaseProps {
 }
 
 export const OShowcase = (props: IOShowcaseProps) => {
-    const { onlyUseSystemFont, subtitle, containerStyle } = props;
-    const systemFontStyle = onlyUseSystemFont
-        ? { fontFamily: undefined }
-        : null;
+    const { subtitle, containerStyle } = props;
 
     return (
         <View style={[styles.container, containerStyle]}>
             <View style={styles.headlineContainer}>
-                <MaterialIcons name="wifi-off" size={45} color={Color.white} />
-                <StyledText.Title>offlinery</StyledText.Title>
+                <StyledMaterialIcon name="wifi-off" />
+                <StyledText.Title white>offlinery</StyledText.Title>
             </View>
-            <StyledText.Subtitle>{subtitle}</StyledText.Subtitle>
+            <StyledText.Subtitle white bold>
+                {subtitle}
+            </StyledText.Subtitle>
         </View>
     );
 };

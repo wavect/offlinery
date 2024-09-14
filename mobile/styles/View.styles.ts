@@ -1,5 +1,5 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { Platform } from "react-native";
+import { Dimensions, Platform } from "react-native";
 import styled from "styled-components/native";
 
 export const TermsContainerOuter = styled.View`
@@ -43,18 +43,11 @@ export const PageContainer = styled.View`
     width: 100%;
 `;
 
-export const Content = styled.View`
-    flex: 1;
-`;
-
 export const ButtonContainer = styled.View`
     align-items: center;
     width: 100%;
     margin-top: auto;
-    ${Platform.OS === "ios" &&
-    `
-    margin-bottom: 10px;
-  `}
+    ${Platform.OS === "ios" && `margin-bottom: 10px;`}
 `;
 
 export const IconContainer = styled.View`
@@ -66,4 +59,53 @@ export const IconContainer = styled.View`
     justify-content: center;
     align-items: center;
     z-index: -1;
+`;
+
+export const SplashContainerView = styled.View`
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    margin-top: 334px;
+`;
+
+const { width, height } = Dimensions.get("window");
+const aspectRatio = height / width;
+
+export const AuthContainer = styled.View`
+    width: 100%;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: ${Platform.OS === "ios" ? "8%" : "5%"};
+`;
+
+export const WelcomeButtonContainer = styled.View`
+    width: 100%;
+    padding-horizontal: 5%;
+    margin-top: ${aspectRatio > 1.6 ? "5%" : "2%"};
+`;
+
+export const Content = styled.View`
+    align-items: center;
+    width: 100%;
+`;
+
+export const ErrorMessage = styled.Text`
+    color: ${Color.lightOrange};
+    font-size: ${FontSize.size_sm}px;
+    font-family: ${FontFamily.montserratSemiBold};
+    text-align: center;
+    margin-bottom: ${height * 0.01}px;
+`;
+
+export const RuleItemContainer = styled.View`
+    flex-direction: row;
+    margin-bottom: 25px;
+`;
+
+export const RuleTextContainer = styled.View`
+    flex: 1;
+`;
+
+export const ViolatingRulesTextView = styled.View`
+    margin-top: 16px;
 `;

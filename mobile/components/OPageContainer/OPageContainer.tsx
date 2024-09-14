@@ -1,4 +1,5 @@
 import { Color } from "@/GlobalStyles";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
 import { StyledText } from "@/styles/Text.styles";
 import {
     ButtonContainer,
@@ -6,10 +7,7 @@ import {
     IconContainer,
     PageContainer,
 } from "@/styles/View.styles";
-import {
-    MaterialIcons,
-    MaterialIcons as MaterialIconsType,
-} from "@expo/vector-icons";
+import { MaterialIcons as MaterialIconsType } from "@expo/vector-icons";
 import React, { ReactNode } from "react";
 import {
     Dimensions,
@@ -38,7 +36,7 @@ export const OPageContainer = (props: IOPageContainerProps) => {
         <PageContainer>
             {props.fullpageIcon && (
                 <IconContainer>
-                    <MaterialIcons
+                    <StyledMaterialIcon
                         name={props.fullpageIcon}
                         size={Math.min(width, height) * 0.8}
                         color={Color.brightestGray}

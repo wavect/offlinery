@@ -108,9 +108,9 @@ export const de: Language = {
     man: "Mann",
     men: "Männer",
     more: "Mehr",
-    iAmA: "Ich bin ein",
+    iAmA: "Ich bin ein(e)",
     genderMoreComingSoon: "Diese Option kommt so schnell wie möglich!",
-    iLookFor: "Ich suche",
+    iLookFor: "Ich suche eine(n)",
     pwdErrSecurityGuideline:
         "Das Passwort muss mindestens 1 Zahl, 1 Groß- und 1 Kleinbuchstaben enthalten und zwischen 6-40 Zeichen lang sein.",
     pwdErrNotMatching: "Passwörter stimmen nicht überein.",

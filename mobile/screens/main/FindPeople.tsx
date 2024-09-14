@@ -15,9 +15,9 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { ROUTES } from "@/screens/routes";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
 import { StyledText } from "@/styles/Text.styles";
 import { includeJWT } from "@/utils/misc.utils";
-import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as Location from "expo-location";
@@ -283,7 +283,7 @@ const FindPeople = (
                         style={styles.removeButtonContainer}
                         onPress={() => handleRemoveRegion(activeRegionIndex)}
                     >
-                        <MaterialIcons
+                        <StyledMaterialIcon
                             name="delete-outline"
                             size={40}
                             color="red"

@@ -1,4 +1,3 @@
-import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import React, { useCallback, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -17,6 +16,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, MapRegion, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
 import { StyledText } from "@/styles/Text.styles";
 import { ROUTES } from "../routes";
 
@@ -207,7 +207,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                         style={styles.removeButtonContainer}
                         onPress={() => handleRemoveRegion(activeRegionIndex)}
                     >
-                        <MaterialIcons
+                        <StyledMaterialIcon
                             name="delete-outline"
                             size={40}
                             color="red"

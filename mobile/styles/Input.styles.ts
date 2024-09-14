@@ -1,10 +1,6 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import styled from "styled-components/native";
 
-export const StyledTextInput = styled.TextInput`
-    flex: 1;
-`;
-
 export const TopLabel = styled.Text`
     font-size: ${FontSize.size_sm}px;
     font-family: ${FontFamily.montserratSemiBold};
@@ -22,14 +18,16 @@ export const EyeIconButton = styled.TouchableOpacity`
 `;
 
 // OTextInput specific styles
-export const OTextInputContainer = styled(InputContainer)`
+export const OTextInputContainer = styled.View`
+    width: 100%;
     border-width: 1px;
     border-color: #ccc;
     border-radius: 8px;
     padding-horizontal: 12px;
 `;
 
-export const OTextInputStyled = styled(StyledTextInput)`
+export const OTextInputStyled = styled.TextInput`
+    width: 100%;
     font-size: 16px;
     padding-vertical: 12px;
 `;
@@ -48,7 +46,7 @@ export const OTextInputBottomLabel = styled(BottomLabel)`
 `;
 
 // OTextInputWide specific styles
-export const OTextInputWideContainer = styled(InputContainer)`
+export const OTextInputWideContainer = styled.View`
     height: 65px;
     border-radius: 5px;
     overflow: hidden;
@@ -56,7 +54,7 @@ export const OTextInputWideContainer = styled(InputContainer)`
     border: 1px solid ${Color.white};
 `;
 
-export const OTextInputWideStyled = styled(StyledTextInput)`
+export const OTextInputWideStyled = styled.TextInput`
     line-height: 28px;
     font-size: ${FontSize.size_xl}px;
     font-family: ${FontFamily.montserratLight};

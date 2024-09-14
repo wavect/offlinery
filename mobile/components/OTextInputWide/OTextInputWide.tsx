@@ -1,13 +1,13 @@
 import { Color } from "@/GlobalStyles";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
 import {
-    Container,
     EyeIconButton,
     OTextInputWideBottomLabel,
     OTextInputWideContainer,
     OTextInputWideStyled,
     OTextInputWideTopLabel,
 } from "@/styles/Input.styles";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Container } from "@/styles/View.styles";
 import React, { useState } from "react";
 import { TextInputProps } from "react-native";
 
@@ -44,14 +44,12 @@ export const OTextInputWide: React.FC<IOTextInputWideProps> = ({
                 />
                 {secureTextEntry && (
                     <EyeIconButton onPress={toggleSecureEntry}>
-                        <MaterialIcons
+                        <StyledMaterialIcon
                             name={
                                 isSecureTextVisible
                                     ? "visibility"
                                     : "visibility-off"
                             }
-                            size={24}
-                            color={Color.white}
                         />
                     </EyeIconButton>
                 )}

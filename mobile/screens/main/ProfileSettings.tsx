@@ -17,9 +17,9 @@ import {
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
 import { StyledText } from "@/styles/Text.styles";
 import { includeJWT } from "@/utils/misc.utils";
-import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as React from "react";
@@ -131,8 +131,8 @@ const ProfileSettings = ({
                 onPress={onPress}
             >
                 <View style={styles.settingsButtonContent}>
-                    <MaterialIcons name={icon} size={30} color="#000" />
-                    <StyledText.Small>{text}</StyledText.Small>
+                    <StyledMaterialIcon name={icon} size={30} color="#000" />
+                    <StyledText.XSmall center>{text}</StyledText.XSmall>
                 </View>
             </TouchableOpacity>
         );
@@ -142,7 +142,9 @@ const ProfileSettings = ({
         <OPageContainer subtitle={i18n.t(TR.changePreferencesDescr)}>
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <StyledText.Medium bold>First Name</StyledText.Medium>
+                    <StyledText.Medium>
+                        {i18n.t(TR.myFirstNameIs)}
+                    </StyledText.Medium>
                     <OTextInput
                         value={state.firstName}
                         onChangeText={setFirstName}

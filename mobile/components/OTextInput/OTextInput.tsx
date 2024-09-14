@@ -1,12 +1,12 @@
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
 import {
-    Container,
     EyeIconButton,
     OTextInputBottomLabel,
     OTextInputContainer,
     OTextInputStyled,
     OTextInputTopLabel,
 } from "@/styles/Input.styles";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Container } from "@/styles/View.styles";
 import React, { useState } from "react";
 import { TextInputProps } from "react-native";
 
@@ -45,13 +45,12 @@ export const OTextInput: React.FC<IOTextInputProps> = ({
                 />
                 {isSensitiveInformation && (
                     <EyeIconButton onPress={toggleSecureEntry}>
-                        <MaterialIcons
+                        <StyledMaterialIcon
                             name={
                                 isSecureTextVisible
                                     ? "visibility"
                                     : "visibility-off"
                             }
-                            size={24}
                             color="#999"
                         />
                     </EyeIconButton>

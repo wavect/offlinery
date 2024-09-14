@@ -1,4 +1,3 @@
-import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { AuthApi, AuthControllerSignInRequest } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
@@ -10,15 +9,14 @@ import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
-import { StyledText } from "@/styles/Text.styles";
+import { ErrorMessage } from "@/styles/View.styles";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
-import { Dimensions, StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
-const { width, height } = Dimensions.get("window");
 const authApi = new AuthApi();
+
 const Login = ({
     navigation,
 }: NativeStackScreenProps<MainStackParamList, typeof ROUTES.Login>) => {
@@ -73,6 +71,7 @@ const Login = ({
     };
 
     const showInvalidEmailError = state.email && !isValidEmail(state.email);
+
     return (
         <OPageColorContainer>
             <OTextInputWide
@@ -115,55 +114,13 @@ const Login = ({
                 onPress={login}
                 variant="light"
             />
-            {errorMessage ? (
-                <StyledText.Medium style={styles.errorMessage}>
-                    {errorMessage}
-                </StyledText.Medium>
-            ) : null}
+            {errorMessage ? <ErrorMessage>{errorMessage}</ErrorMessage> : null}
 
-            <OTermsDisclaimer style={styles.termsDisclaimer} />
+            <OTermsDisclaimer />
 
             <OTroubleSignIn />
         </OPageColorContainer>
     );
 };
-
-const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-    },
-    container: {
-        flex: 1,
-    },
-    scrollViewContent: {
-        flexGrow: 1,
-        justifyContent: "center",
-        paddingHorizontal: width * 0.05,
-        paddingVertical: height * 0.03,
-    },
-    content: {
-        alignItems: "center",
-        width: "100%",
-    },
-    textInputContainer: {
-        marginBottom: height * 0.02,
-        width: "100%",
-    },
-    loginButton: {
-        marginBottom: height * 0.015,
-        width: "100%",
-    },
-    termsDisclaimer: {
-        marginTop: height * 0.02,
-        color: Color.white,
-    },
-    errorMessage: {
-        color: Color.lightOrange,
-        fontSize: FontSize.size_sm,
-        fontFamily: FontFamily.montserratSemiBold,
-        textAlign: "center",
-        marginBottom: height * 0.01,
-    },
-});
 
 export default Login;

@@ -12,7 +12,7 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { MaterialIcons } from "@expo/vector-icons";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import {
@@ -88,7 +88,7 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
             onPress={openMediaLibrary}
         >
             {!img ? (
-                <MaterialIcons
+                <StyledMaterialIcon
                     name="add-circle-outline"
                     size={size * 0.2}
                     color={Color.primary}
