@@ -1,13 +1,13 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { UserPublicDTO } from "@/api/gen/src";
 import { ROUTES } from "@/screens/routes";
+import { StyledText } from "@/styles/Text.styles";
 import * as React from "react";
 import {
     Image,
     Pressable,
     StyleProp,
     StyleSheet,
-    Text,
     View,
     ViewStyle,
 } from "react-native";
@@ -44,12 +44,8 @@ const OTeaserProfilePreview = (props: IOTeaserProfileProps) => {
                     source={{ uri: publicProfile.imageURIs[0] }}
                 />
                 <View style={styles.profileDetails}>
-                    <Text
-                        style={styles.nameAge}
-                    >{`${prefixText ?? ""}${publicProfile.firstName}, ${publicProfile.age}`}</Text>
-                    <Text style={styles.encounterInfo}>
-                        {publicProfile.bio}
-                    </Text>
+                    <StyledText.Medium>{`${prefixText ?? ""}${publicProfile.firstName}, ${publicProfile.age}`}</StyledText.Medium>
+                    <StyledText.Medium>{publicProfile.bio}</StyledText.Medium>
 
                     {showOpenProfileButton && (
                         <View style={styles.buttonContainer}>
@@ -64,16 +60,16 @@ const OTeaserProfilePreview = (props: IOTeaserProfileProps) => {
                                     )
                                 }
                             >
-                                <Text style={styles.buttonText}>Profile</Text>
+                                <StyledText.Medium>Profile</StyledText.Medium>
                             </Pressable>
                             {secondButton && (
                                 <Pressable
                                     style={[styles.button, secondButton.style]}
                                     onPress={secondButton.onPress}
                                 >
-                                    <Text style={styles.buttonText}>
+                                    <StyledText.Medium>
                                         {secondButton.text}
-                                    </Text>
+                                    </StyledText.Medium>
                                 </Pressable>
                             )}
                         </View>

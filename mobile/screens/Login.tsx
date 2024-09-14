@@ -10,10 +10,11 @@ import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
+import { StyledText } from "@/styles/Text.styles";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
-import { Dimensions, StyleSheet, Text } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 const { width, height } = Dimensions.get("window");
@@ -90,10 +91,6 @@ const Login = ({
                 onChangeText={setEmail}
                 placeholder={i18n.t(TR.yourEmail)}
                 topLabel={i18n.t(TR.email)}
-                containerStyle={[
-                    styles.textInputContainer,
-                    showInvalidEmailError ? { marginBottom: 0 } : undefined,
-                ]}
             />
             <OTextInputWide
                 value={state.clearPassword}
@@ -107,7 +104,6 @@ const Login = ({
                 placeholder={i18n.t(TR.yourPassword)}
                 secureTextEntry={true}
                 topLabel={i18n.t(TR.password)}
-                containerStyle={styles.textInputContainer}
             />
 
             <OButtonWide
@@ -120,7 +116,9 @@ const Login = ({
                 variant="light"
             />
             {errorMessage ? (
-                <Text style={styles.errorMessage}>{errorMessage}</Text>
+                <StyledText.Medium style={styles.errorMessage}>
+                    {errorMessage}
+                </StyledText.Medium>
             ) : null}
 
             <OTermsDisclaimer style={styles.termsDisclaimer} />

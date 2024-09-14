@@ -1,7 +1,8 @@
-import { Color, FontFamily } from "@/GlobalStyles";
+import { Color } from "@/GlobalStyles";
+import { StyledText } from "@/styles/Text.styles";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
 interface IOShowcaseProps {
     subtitle: string;
@@ -19,11 +20,9 @@ export const OShowcase = (props: IOShowcaseProps) => {
         <View style={[styles.container, containerStyle]}>
             <View style={styles.headlineContainer}>
                 <MaterialIcons name="wifi-off" size={45} color={Color.white} />
-                <Text style={[styles.headlineText, systemFontStyle]}>
-                    offlinery
-                </Text>
+                <StyledText.Title>offlinery</StyledText.Title>
             </View>
-            <Text style={[styles.subtitle, systemFontStyle]}>{subtitle}</Text>
+            <StyledText.Subtitle>{subtitle}</StyledText.Subtitle>
         </View>
     );
 };
@@ -37,26 +36,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginBottom: 10,
-    },
-    headlineText: {
-        fontSize: 48,
-        lineHeight: 52,
-        fontWeight: "600",
-        fontFamily: FontFamily.montserratRegular,
-        width: 216,
-        textAlign: "center",
-        color: Color.white,
-        marginLeft: 10,
-    },
-    subtitle: {
-        fontSize: 22,
-        lineHeight: 44,
-        fontWeight: "500",
-        fontFamily: FontFamily.montserratLight,
-        width: "100%",
-        maxWidth: 390,
-        textAlign: "center",
-        color: Color.white,
     },
 });
 

@@ -54,7 +54,6 @@ const baseLabelStyle = `
   font-family: ${FontFamily.montserratLight};
 `;
 
-// OButtonWide Styles
 export const OButtonWideBase = styled.Pressable<{
     filled: boolean;
     variant: StyleVariant;
@@ -110,7 +109,6 @@ export const OButtonWideText = styled.Text<{
                 : Color.white};
 `;
 
-// OButtonSmall Styles
 export const ButtonBase = styled.Pressable<{
     variant: IOButtonSmallVariant;
     isDisabled: boolean;

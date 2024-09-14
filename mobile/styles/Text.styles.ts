@@ -7,13 +7,14 @@ interface TextProps {
 
 const createStyledText = (
     size: keyof typeof FontSize,
-    defaultColor = Color.white,
+    defaultColor = Color.black,
 ) => styled.Text<TextProps>`
     font-size: ${FontSize[size]}px;
     font-family: ${(props) =>
         props.bold ? FontFamily.montserratRegular : FontFamily.montserratLight};
-    font-weight: ${(props) => (props.bold ? "600" : "400")};
+    font-weight: ${(props) => (props.bold ? "900" : "200")};
     color: ${defaultColor};
+    margin-top: 10px;
 `;
 
 export const StyledText = {

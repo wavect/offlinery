@@ -6,10 +6,11 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { StyledText } from "@/styles/Text.styles";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useEffect } from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -75,13 +76,9 @@ const Email = ({
                 autoFocus={true}
                 inputMode="email"
                 placeholder={i18n.t(TR.yourEmail)}
-                containerStyle={[
-                    styles.inputField,
-                    errorMessage ? { marginBottom: 6 } : undefined,
-                ]}
             />
             {errorMessage && (
-                <Text style={styles.errorMessage}>{errorMessage}</Text>
+                <StyledText.Medium>{errorMessage}</StyledText.Medium>
             )}
             <OCheckbox
                 onValueChange={setCheckboxChecked}

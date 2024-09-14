@@ -129,7 +129,7 @@ const Welcome = ({
                     onPress={() => navigation.navigate(ROUTES.Login)}
                 />
             </View>
-            <OTroubleSignIn style={styles.troubleSigningIn} />
+            <OTroubleSignIn />
         </View>
     );
 
@@ -154,14 +154,6 @@ const styles = StyleSheet.create({
         width: "100%",
         paddingHorizontal: "5%",
         marginTop: aspectRatio > 1.6 ? "5%" : "2%",
-    },
-    button: {
-        marginBottom: 14,
-        width: "100%",
-    },
-    troubleSigningIn: {
-        width: "90%",
-        marginTop: aspectRatio > 1.6 ? 22 : 10,
     },
 });
 

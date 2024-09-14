@@ -7,13 +7,14 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
+import { StyledText } from "@/styles/Text.styles";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { calculateDistance, getRegionForCoordinates } from "@/utils/map.utils";
 import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Linking, Platform, StyleSheet, Text, View } from "react-native";
+import { Linking, Platform, StyleSheet, View } from "react-native";
 import MapView, {
     Marker,
     PROVIDER_DEFAULT,
@@ -170,11 +171,11 @@ const NavigateToApproach = ({
                             anchor={{ x: 0.5, y: 0.5 }}
                         >
                             <View style={styles.distanceMarker}>
-                                <Text style={styles.distanceText}>
+                                <StyledText.Medium>
                                     {distance
                                         ? `${distance.toFixed(2)} km`
                                         : i18n.t(TR.calculating)}
-                                </Text>
+                                </StyledText.Medium>
                             </View>
                         </Marker>
                     </>

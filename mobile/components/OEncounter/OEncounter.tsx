@@ -5,10 +5,7 @@ import {
     UpdateEncounterStatusDTO,
     UserApproachChoiceEnum,
 } from "@/api/gen/src";
-import {
-    IOButtonSmallVariant,
-    OButtonSmall,
-} from "@/components/OButtonSmall/OButtonSmall";
+import { OButtonSmall } from "@/components/OButtonSmall/OButtonSmall";
 import OMessageModal from "@/components/OMessageModal/OMessageModal";
 import {
     EACTION_ENCOUNTERS,
@@ -17,11 +14,12 @@ import {
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
+import { IOButtonSmallVariant } from "@/styles/Button.styles";
 import { StyledText } from "@/styles/Text.styles";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import * as React from "react";
 import { useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 interface ISingleEncounterProps {
@@ -89,9 +87,9 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     <StyledText.Small
                         style={styles.nameAge}
                     >{`${encounterProfile.firstName}, ${encounterProfile.age}`}</StyledText.Small>
-                    <Text
-                        style={styles.encounterInfo}
-                    >{`${encounterProfile.lastTimePassedBy} near ${encounterProfile.lastLocationPassedBy}`}</Text>
+                    <StyledText.Medium>
+                        {`${encounterProfile.lastTimePassedBy} near ${encounterProfile.lastLocationPassedBy}`}
+                    </StyledText.Medium>
 
                     {showActions && (
                         <View style={styles.encounterDropdownContainer}>
@@ -123,12 +121,11 @@ const OEncounter = (props: ISingleEncounterProps) => {
                 {showActions && (
                     <View style={styles.rightColumn}>
                         {encounterProfile.rating && (
-                            <Text
-                                style={styles.trustScore}
+                            <StyledText.Small
                                 onPress={() => alert(i18n.t(TR.ratingDescr))}
                             >
                                 {i18n.t(TR.trust)}({encounterProfile.rating})
-                            </Text>
+                            </StyledText.Small>
                         )}
                         {dateStatus ===
                             EncounterPublicDTOStatusEnum.met_interested && (
@@ -186,12 +183,12 @@ const OEncounter = (props: ISingleEncounterProps) => {
             {dateStatus === EncounterPublicDTOStatusEnum.met_interested &&
                 encounterProfile.lastReceivedMessage && (
                     <View style={styles.receivedMessageContainer}>
-                        <Text style={styles.receivedMessageTitle}>
+                        <StyledText.Medium>
                             {i18n.t(TR.receivedMessage)}:
-                        </Text>
-                        <Text style={styles.receivedMessageText}>
+                        </StyledText.Medium>
+                        <StyledText.Medium>
                             {encounterProfile.lastReceivedMessage.content}
-                        </Text>
+                        </StyledText.Medium>
                     </View>
                 )}
 

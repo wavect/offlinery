@@ -3,6 +3,7 @@ import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackgro
 import { OSafeAreaContainer } from "@/components/OSafeAreaContainer/OSafeAreaContainer";
 import OShowcase from "@/components/OShowcase/OShowcase";
 import { TR, i18n } from "@/localization/translate.service";
+import { StyledText } from "@/styles/Text.styles";
 import * as React from "react";
 import { ReactNode } from "react";
 import {
@@ -13,16 +14,15 @@ import {
     ScrollView,
     StatusBar,
     StyleSheet,
-    Text,
     View,
 } from "react-native";
 
 const LoadingScreen = () => (
     <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={Color.white} />
-        <Text style={[styles.loadingText, { color: Color.white }]}>
+        <StyledText.Medium>
             {i18n.t(TR.gettingReadyToAmazeYou)}
-        </Text>
+        </StyledText.Medium>
     </View>
 );
 

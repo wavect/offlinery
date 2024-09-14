@@ -1,4 +1,4 @@
-import { Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { Color } from "@/GlobalStyles";
 import { EncounterApi, PushMessageDTO } from "@/api/gen/src";
 import {
     IOButtonSmallVariant,
@@ -6,16 +6,10 @@ import {
 } from "@/components/OButtonSmall/OButtonSmall";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { StyledText } from "@/styles/Text.styles";
 import { getJwtHeader } from "@/utils/misc.utils";
 import React, { useState } from "react";
-import {
-    Modal,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-} from "react-native";
+import { Modal, Pressable, StyleSheet, TextInput, View } from "react-native";
 
 interface IOMessageModalProps {
     userId: string;
@@ -55,16 +49,15 @@ const OMessageModal = (props: IOMessageModalProps) => {
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                     <Pressable style={styles.closeButton} onPress={onClose}>
-                        <Text style={styles.closeButtonText}>×</Text>
+                        <StyledText.Medium>×</StyledText.Medium>
                     </Pressable>
-                    <Text style={styles.modalTitle}>
+                    <StyledText.Medium>
                         {i18n.t(TR.leaveMessage)}
-                    </Text>
-                    <Text style={styles.modalText}>
+                    </StyledText.Medium>
+                    <StyledText.Medium>
                         {i18n.t(TR.messageInstructions)}
-                    </Text>
+                    </StyledText.Medium>
                     <TextInput
-                        style={styles.modalTextInput}
                         onChangeText={setMessage}
                         value={message}
                         placeholder={i18n.t(TR.enterMessage)}
@@ -77,9 +70,9 @@ const OMessageModal = (props: IOMessageModalProps) => {
                         fullWidth={true}
                         onPress={handleSend}
                     />
-                    <Text style={styles.modalFooter}>
+                    <StyledText.Small>
                         {i18n.t(TR.messageWarning)}
-                    </Text>
+                    </StyledText.Small>
                 </View>
             </View>
         </Modal>
@@ -120,42 +113,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: Color.lightGray,
-    },
-    closeButtonText: {
-        fontSize: FontSize.size_xl,
-        color: Color.white,
-        lineHeight: 30,
-    },
-    modalTitle: {
-        fontSize: FontSize.size_xl,
-        fontFamily: FontFamily.montserratSemiBold,
-        marginBottom: 15,
-        textAlign: "center",
-        marginTop: 10,
-    },
-    modalText: {
-        fontSize: FontSize.size_md,
-        fontFamily: FontFamily.montserratRegular,
-        marginBottom: 15,
-        textAlign: "center",
-    },
-    modalTextInput: {
-        height: 100,
-        width: "100%",
-        marginBottom: 15,
-        borderWidth: 1,
-        borderColor: Color.lightGray,
-        borderRadius: 8,
-        padding: 10,
-        fontFamily: FontFamily.montserratRegular,
-        fontSize: FontSize.size_md,
-    },
-    modalFooter: {
-        marginTop: 15,
-        fontSize: FontSize.size_sm,
-        fontFamily: FontFamily.montserratRegular,
-        textAlign: "center",
-        color: Color.gray,
     },
 });
 
