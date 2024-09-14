@@ -1,4 +1,5 @@
 import { WeightedLatLngDTO } from "@/api/gen/src";
+import { isExpoGoEnvironment } from "@/utils/map-provider";
 import React from "react";
 import { Heatmap } from "react-native-maps";
 
@@ -7,6 +8,7 @@ interface OHeatMapProps {
 }
 
 export const OHeatMap: React.FC<OHeatMapProps> = React.memo(({ locations }) => {
+    if (isExpoGoEnvironment) return null;
     return (
         <Heatmap
             points={locations}

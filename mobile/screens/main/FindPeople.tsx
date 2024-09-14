@@ -16,6 +16,7 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { ROUTES } from "@/screens/routes";
+import { getMapProvider } from "@/utils/map-provider";
 import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
@@ -30,7 +31,6 @@ import MapView, {
     LongPressEvent,
     Marker,
     MarkerDragEvent,
-    PROVIDER_GOOGLE,
 } from "react-native-maps";
 
 const userApi = new UserApi();
@@ -224,11 +224,7 @@ const FindPeople = (
                     zoomTapEnabled={true}
                     maxZoomLevel={13}
                     onLongPress={handleMapLongPress}
-                    provider={
-                        process.env.EXPO_PUBLIC_ENVIRONMENT === "development"
-                            ? PROVIDER_GOOGLE
-                            : PROVIDER_DEFAULT
-                    }
+                    provider={getMapProvider()}
                 >
                     {locationsFromOthers && (
                         <OHeatMap locations={locationsFromOthers} />

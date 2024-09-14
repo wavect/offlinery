@@ -29,8 +29,6 @@ export class MapController {
             false,
         );
 
-        console.log("nearbyMatches: ", nearbyMatches);
-
         return nearbyMatches.map((match) => ({
             latitude: match.location.coordinates[1],
             longitude: match.location.coordinates[0],
