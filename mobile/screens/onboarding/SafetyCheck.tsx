@@ -16,8 +16,8 @@ const SafetyCheck = ({
 >) => {
     return (
         <OPageContainer
-            title={i18n.t(TR.safetyCheck)}
             subtitle={i18n.t(TR.safetyCheckDescr)}
+            fullpageIcon="safety-check"
         >
             <View style={styles.centerContainer}>
                 <OButtonWide
@@ -34,7 +34,7 @@ const SafetyCheck = ({
 
                 <OButtonWide
                     text={i18n.t(TR.iPreferKYC)}
-                    filled={true}
+                    filled={false}
                     variant="dark"
                     disabled={true}
                     style={{ marginTop: 30 }}

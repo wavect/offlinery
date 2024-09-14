@@ -54,7 +54,6 @@ const ApproachChoice = ({
 
     return (
         <OPageContainer
-            title={i18n.t(TR.iWantTo)}
             bottomContainerChildren={
                 <Text style={styles.footnote}>{i18n.t(TR.changePossible)}</Text>
             }
@@ -111,7 +110,7 @@ const ApproachChoice = ({
 const styles = StyleSheet.create({
     optionContainer: {
         alignItems: "center",
-        marginTop: 20,
+        marginTop: 30,
         width: "100%",
     },
     subtitle: {

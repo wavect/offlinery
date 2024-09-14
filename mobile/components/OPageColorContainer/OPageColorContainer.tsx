@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         justifyContent: "center",
         paddingHorizontal: width * 0.05,
-        paddingVertical: height * 0.03,
     },
     showCaseStyle: {
         marginTop: height * 0.07,

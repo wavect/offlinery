@@ -67,17 +67,18 @@ const getLabelStyle = (
         lblStyle = filled
             ? oButtonWideStyles.btnDisabledLabelDark
             : oButtonWideStyles.btnDisabledLabelLight;
-    }
-    if (filled) {
-        lblStyle =
-            variant === "dark"
-                ? oButtonWideStyles.btnFilledLabelDark
-                : oButtonWideStyles.btnFilledLabelLight;
     } else {
-        lblStyle =
-            variant === "dark"
-                ? oButtonWideStyles.btnOutlineLabelDark
-                : oButtonWideStyles.btnOutlineLabelLight;
+        if (filled) {
+            lblStyle =
+                variant === "dark"
+                    ? oButtonWideStyles.btnFilledLabelDark
+                    : oButtonWideStyles.btnFilledLabelLight;
+        } else {
+            lblStyle =
+                variant === "dark"
+                    ? oButtonWideStyles.btnOutlineLabelDark
+                    : oButtonWideStyles.btnOutlineLabelLight;
+        }
     }
 
     const styleOverride =

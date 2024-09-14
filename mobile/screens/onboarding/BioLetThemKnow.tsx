@@ -50,7 +50,6 @@ const BioLetThemKnow = ({
 
     return (
         <OPageContainer
-            title={i18n.t(TR.letThemKnow)}
             subtitle={i18n.t(TR.messageShownToPersonApproaching)}
             bottomContainerChildren={
                 <OButtonWide

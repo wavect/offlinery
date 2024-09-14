@@ -122,7 +122,6 @@ const AddPhotos = ({
 
     return (
         <OPageContainer
-            title={i18n.t(TR.addPhotos)}
             bottomContainerChildren={
                 <OButtonWide
                     text={

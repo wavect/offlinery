@@ -39,8 +39,8 @@ const ApproachMeBetween = ({
 
     return (
         <OPageContainer
-            title={i18n.t(TR.approachMeBetween)}
             subtitle={i18n.t(TR.approachMeBetweenDescr)}
+            fullpageIcon="emoji-people"
             bottomContainerChildren={
                 <OButtonWide
                     text={i18n.t(TR.continue)}

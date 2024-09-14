@@ -64,9 +64,6 @@ const Password = ({
 
     return (
         <OPageContainer
-            title={i18n.t(
-                isChangePassword ? TR.changePassword : TR.setPassword,
-            )}
             bottomContainerChildren={
                 <OButtonWide
                     text={
