@@ -16,7 +16,6 @@ import { useEffect, useState } from "react";
 import { Linking, Platform, StyleSheet, Text, View } from "react-native";
 import MapView, {
     Marker,
-    PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
     Polyline,
     Region,
@@ -126,11 +125,7 @@ const NavigateToApproach = ({
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 }}
-                provider={
-                    process.env.EXPO_PUBLIC_ENVIRONMENT === "production"
-                        ? PROVIDER_GOOGLE
-                        : PROVIDER_DEFAULT
-                }
+                provider={PROVIDER_GOOGLE}
             >
                 {location && (
                     <Marker

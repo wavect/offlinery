@@ -5,6 +5,7 @@ import {
     UserPrivateDTODateModeEnum,
     WeightedLatLngDTO,
 } from "@/api/gen/src";
+import { OHeatMap } from "@/components/OHeatMap/OHeatMap";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
     EACTION_USER,
@@ -26,11 +27,9 @@ import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import MapView, {
     Circle,
-    Heatmap,
     LongPressEvent,
     Marker,
     MarkerDragEvent,
-    PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
 } from "react-native-maps";
 
@@ -55,8 +54,9 @@ const FindPeople = (
      * It gets updates as the user adjusts the radius.
      */
     const [uiRadii, setUiRadii] = useState<number[]>([]);
-    const [locationsFromOthers, setLocationsFromOthers] =
-        useState<WeightedLatLngDTO[]>();
+    const [locationsFromOthers, setLocationsFromOthers] = useState<
+        WeightedLatLngDTO[]
+    >([]);
     const mapRef = React.useRef(null);
     const [mapRegion, setMapRegion] = useState({
         // Uni Ibk
@@ -115,7 +115,11 @@ const FindPeople = (
                     await includeJWT(),
                 );
             } catch (error) {
-                console.error("Error updating blacklisted regions:", error);
+                console.log(error);
+                console.error(
+                    "Error updating blacklisted regions:",
+                    JSON.stringify(error),
+                );
             }
         }
         const timer = setTimeout(() => {
@@ -224,22 +228,10 @@ const FindPeople = (
                     zoomTapEnabled={true}
                     maxZoomLevel={13}
                     onLongPress={handleMapLongPress}
-                    provider={
-                        process.env.EXPO_PUBLIC_ENVIRONMENT === "production"
-                            ? PROVIDER_GOOGLE
-                            : PROVIDER_DEFAULT
-                    }
+                    provider={PROVIDER_GOOGLE}
                 >
-                    <Heatmap
-                        points={locationsFromOthers}
-                        opacity={0.5}
-                        radius={100}
-                        gradient={{
-                            colors: ["blue", "green", "yellow", "red"],
-                            startPoints: [0.01, 0.25, 0.5, 0.75],
-                            colorMapSize: 256,
-                        }}
-                    />
+                    <OHeatMap locations={locationsFromOthers} />
+
                     {state.blacklistedRegions.map((region, index) => (
                         <React.Fragment key={`region-${index}`}>
                             <Circle
