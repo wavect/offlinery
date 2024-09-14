@@ -108,7 +108,7 @@ export default function App() {
             <NavigationContainer>
                 <UserProvider>
                     <MainStack.Navigator
-                        initialRouteName={ROUTES.Onboarding.GenderChoice}
+                        initialRouteName={ROUTES.Welcome}
                         screenOptions={NO_HEADER}
                     >
                         <MainStack.Screen
