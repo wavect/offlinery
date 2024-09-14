@@ -133,7 +133,6 @@ const OEncounter = (props: ISingleEncounterProps) => {
                             EncounterPublicDTOStatusEnum.met_interested && (
                             <OButtonSmall
                                 label={i18n.t(TR.leaveMessageBtnLbl)}
-                                containerStyle={styles.button}
                                 onPress={() => setModalVisible(true)}
                                 variant={IOButtonSmallVariant.Black}
                             />
@@ -143,7 +142,6 @@ const OEncounter = (props: ISingleEncounterProps) => {
                             <OButtonSmall
                                 isDisabled={encounterProfile.reported}
                                 variant={IOButtonSmallVariant.Danger}
-                                containerStyle={styles.button}
                                 onPress={() =>
                                     navigation.navigate(
                                         ROUTES.Main.ReportEncounter,
@@ -168,7 +166,6 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                 <OButtonSmall
                                     label={i18n.t(TR.navigate)}
                                     variant={IOButtonSmallVariant.Black}
-                                    containerStyle={styles.button}
                                     onPress={() =>
                                         navigation.navigate(ROUTES.HouseRules, {
                                             nextPage:

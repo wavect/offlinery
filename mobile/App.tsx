@@ -5,6 +5,7 @@ import { ROUTES } from "./screens/routes";
 import Splash from "./screens/Splash";
 import Welcome from "./screens/Welcome";
 
+import { UserProvider } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import {
     Montserrat_300Light,
@@ -18,7 +19,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { Color, FontSize } from "./GlobalStyles";
 import { MainStack } from "./MainStack.navigator";
-import { UserProvider } from "./context/UserContext";
 import HouseRules from "./screens/HouseRules";
 import Login from "./screens/Login";
 import { MainScreenTabs } from "./screens/main/MainScreenTabs";

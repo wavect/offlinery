@@ -73,8 +73,8 @@ const OMessageModal = (props: IOMessageModalProps) => {
                     <OButtonSmall
                         label={i18n.t(TR.sendMessage)}
                         variant={IOButtonSmallVariant.Black}
-                        containerStyle={{ width: "100%" }}
                         isDisabled={!message.trim()}
+                        fullWidth={true}
                         onPress={handleSend}
                     />
                     <Text style={styles.modalFooter}>
