@@ -131,6 +131,7 @@ export const de: Language = {
     iPreferKYC: "KYC starten",
     iPreferKYCDescr: "Reguliertes 3rd-Party-KYC (noch nicht verfügbar).",
     verificationInProgress: "Verifizierung läuft..",
+    verificationSuccessful: "Verifiziert!",
     bookNewCall: "Neuen Anruf buchen",
     pleaseDoNotMakeDoubleBookings: "Bitte keine Doppelbuchungen vornehmen.",
     somethingWrongQ: "Irgendwas schief gelaufen?",

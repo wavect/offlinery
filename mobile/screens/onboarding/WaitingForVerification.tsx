@@ -38,7 +38,12 @@ const WaitingForVerification = ({
             <View style={styles.btnContainer}>
                 <OButtonWide
                     filled={true}
-                    text={i18n.t(TR.verificationInProgress)}
+                    text={i18n.t(
+                        state.verificationStatus ===
+                            UserVerificationStatusEnum.verified
+                            ? TR.verificationInProgress
+                            : TR.verificationSuccessful,
+                    )}
                     disabled={
                         state.verificationStatus !==
                         UserVerificationStatusEnum.verified
