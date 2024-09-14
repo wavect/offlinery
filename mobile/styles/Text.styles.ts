@@ -31,11 +31,10 @@ const createStyledText = (
     defaultMargin: number = 4,
 ) => {
     return styled.Text<TextProps>`
-        ${baseTextStyles}
+        ${baseTextStyles};
         font-size: ${FontSize[size]}px;
         ${(props) =>
             !props.noMargin &&
-            !props.margin &&
             css`
                 margin-bottom: ${defaultMargin}px;
                 margin-top: ${defaultMargin}px;
@@ -48,11 +47,22 @@ const Small = createStyledText("size_sm", 3);
 const Medium = createStyledText("size_md", 4);
 const Large = createStyledText("size_xl", 5);
 
+const InputLabel = styled(createStyledText("size_md", 24))<TextProps>`
+    color: ${(props) => (props.white ? Color.white : Color.gray)};
+    text-align: left;
+    font-weight: bold;
+    ${(props) =>
+        !props.noMargin &&
+        css`
+            margin-top: 22px;
+            margin-bottom: 4px;
+        `}
+`;
+
 const Subtitle = styled(createStyledText("size_md", 24))<TextProps>`
     color: ${(props) => (props.white ? Color.white : Color.gray)};
     ${(props) =>
         !props.noMargin &&
-        !props.margin &&
         css`
             margin-top: 8px;
         `}
@@ -64,6 +74,7 @@ const Title = styled(createStyledText("size_xl", 8))<TextProps>`
 `;
 
 export const StyledText = {
+    InputLabel,
     XSmall,
     Small,
     Medium,

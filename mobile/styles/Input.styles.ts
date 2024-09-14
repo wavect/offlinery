@@ -34,10 +34,6 @@ export const OTextInputStyled = styled.TextInput`
     padding-vertical: 12px;
 `;
 
-export const OTextInputTopLabel = styled(TopLabel)`
-    color: ${Color.gray};
-`;
-
 export const OTextInputBottomLabel = styled(BottomLabel)`
     color: ${(props) => (props.isError ? Color.red : Color.gray)};
     font-family: ${(props) =>

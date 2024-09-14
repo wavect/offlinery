@@ -4,8 +4,8 @@ import {
     OTextInputBottomLabel,
     OTextInputContainer,
     OTextInputStyled,
-    OTextInputTopLabel,
 } from "@/styles/Input.styles";
+import { StyledText } from "@/styles/Text.styles";
 import { Container } from "@/styles/View.styles";
 import React, { useState } from "react";
 import { TextInputProps } from "react-native";
@@ -34,7 +34,9 @@ export const OTextInput: React.FC<IOTextInputProps> = ({
 
     return (
         <Container>
-            {topLabel && <OTextInputTopLabel>{topLabel}</OTextInputTopLabel>}
+            {topLabel && (
+                <StyledText.InputLabel>{topLabel}</StyledText.InputLabel>
+            )}
             <OTextInputContainer>
                 <OTextInputStyled
                     secureTextEntry={

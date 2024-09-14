@@ -80,7 +80,9 @@ const RuleItem: React.FC<IRuleItemProps> = ({ title, description }) => (
     <RuleItemContainer>
         <StyledMaterialIcon name="check" size={24} color="white" />
         <RuleTextContainer>
-            <StyledText.Large white>{title}</StyledText.Large>
+            <StyledText.Large white noMargin>
+                {title}
+            </StyledText.Large>
             <StyledText.Small>{description}</StyledText.Small>
         </RuleTextContainer>
     </RuleItemContainer>

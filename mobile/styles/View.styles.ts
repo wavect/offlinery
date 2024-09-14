@@ -33,7 +33,6 @@ export const TermsLink = styled.Text`
 
 export const Container = styled.View`
     width: 100%;
-    align-items: center;
 `;
 
 export const PageContainer = styled.View`
