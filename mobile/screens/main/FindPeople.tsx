@@ -225,7 +225,7 @@ const FindPeople = (
                     maxZoomLevel={13}
                     onLongPress={handleMapLongPress}
                     provider={
-                        process.env.EXPO_PUBLIC_ENVIRONMENT === "production"
+                        process.env.EXPO_PUBLIC_ENVIRONMENT === "development"
                             ? PROVIDER_GOOGLE
                             : PROVIDER_DEFAULT
                     }

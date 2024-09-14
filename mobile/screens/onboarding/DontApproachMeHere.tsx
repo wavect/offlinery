@@ -158,7 +158,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                     initialRegion={mapRegion}
                     onLongPress={handleMapLongPress}
                     provider={
-                        process.env.EXPO_PUBLIC_ENVIRONMENT === "production"
+                        process.env.EXPO_PUBLIC_ENVIRONMENT === "development"
                             ? PROVIDER_GOOGLE
                             : PROVIDER_DEFAULT
                     }
