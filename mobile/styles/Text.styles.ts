@@ -38,6 +38,7 @@ const createStyledText = (
             !props.margin &&
             css`
                 margin-bottom: ${defaultMargin}px;
+                margin-top: ${defaultMargin}px;
             `}
     `;
 };

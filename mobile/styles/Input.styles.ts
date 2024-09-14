@@ -24,10 +24,12 @@ export const OTextInputContainer = styled.View`
     border-color: #ccc;
     border-radius: 8px;
     padding-horizontal: 12px;
+    flex-direction: row;
+    align-items: center;
 `;
 
 export const OTextInputStyled = styled.TextInput`
-    width: 100%;
+    width: 90%;
     font-size: 16px;
     padding-vertical: 12px;
 `;

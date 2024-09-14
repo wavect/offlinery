@@ -132,7 +132,7 @@ const ProfileSettings = ({
             >
                 <View style={styles.settingsButtonContent}>
                     <StyledMaterialIcon name={icon} size={30} color="#000" />
-                    <StyledText.XSmall center>{text}</StyledText.XSmall>
+                    <StyledText.XSmall>{text}</StyledText.XSmall>
                 </View>
             </TouchableOpacity>
         );

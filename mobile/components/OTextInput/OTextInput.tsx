@@ -51,6 +51,7 @@ export const OTextInput: React.FC<IOTextInputProps> = ({
                                     ? "visibility"
                                     : "visibility-off"
                             }
+                            size={24}
                             color="#999"
                         />
                     </EyeIconButton>
