@@ -12,5 +12,6 @@ export const SSubtitle = styled.Text<{ bold?: boolean }>`
     font-size: ${FontSize.size_md}px;
     color: ${Color.gray};
     margin-bottom: 24px;
+    margin-top: 8px;
     font-weight: ${(props) => (props.bold ? "bold" : "normal")};
 `;

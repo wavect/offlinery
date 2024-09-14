@@ -113,7 +113,6 @@ const Login = ({
             <OButtonWide
                 filled={true}
                 text={i18n.t(TR.signIn)}
-                style={styles.loginButton}
                 isLoading={isLoading}
                 loadingBtnText={i18n.t(TR.signingIn)}
                 disabled={!hasFilledOutLoginForm()}

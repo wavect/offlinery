@@ -62,7 +62,7 @@ export const OButtonWideBase = styled.Pressable<{
 }>`
     ${({ filled }) =>
         filled ? baseButtonFilledStyle : baseButtonOutlinedStyle}
-    width: 90%;
+    width: 100%;
     background-color: ${({ filled, variant, disabled }) =>
         disabled
             ? Color.lightGray
@@ -82,12 +82,8 @@ export const OButtonWideBase = styled.Pressable<{
                 ? Color.primary
                 : Color.white};
     ${({ disabled, filled }) =>
-        disabled &&
-        filled &&
-        `
-    elevation: 0;
-    shadow-color: transparent;
-  `}
+        disabled && filled && `elevation: 0; shadow-color: transparent;`}
+    marginTop: 5px
 `;
 
 export const OButtonWideText = styled.Text<{

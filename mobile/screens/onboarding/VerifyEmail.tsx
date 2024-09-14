@@ -171,7 +171,7 @@ const VerifyEmail = ({
                     }
                     isLoading={isLoading}
                     loadingBtnText={i18n.t(TR.verificationCodeLoadingBtnLbl)}
-                    disabled={isResendDisabled}
+                    // disabled={isResendDisabled}
                     filled={false}
                     variant="dark"
                     onPress={sendVerificationCode}

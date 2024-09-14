@@ -121,14 +121,12 @@ const Welcome = ({
                     text={i18n.t(TR.createAccount)}
                     onPress={() => navigation.navigate(ROUTES.Onboarding.Email)}
                     variant="light"
-                    style={styles.button}
                 />
                 <OButtonWide
                     filled={false}
                     text={i18n.t(TR.signIn)}
                     variant="light"
                     onPress={() => navigation.navigate(ROUTES.Login)}
-                    style={styles.button}
                 />
             </View>
             <OTroubleSignIn style={styles.troubleSigningIn} />

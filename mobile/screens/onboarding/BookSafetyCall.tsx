@@ -28,9 +28,11 @@ const BookSafetyCall = ({
 
     const startUserRegistration = async () => {
         setLoading(true);
-        const onSuccess = () =>
-            navigation.navigate(ROUTES.Onboarding.WaitingVerification);
+        const onSuccess = () => navigation.navigate(ROUTES.MainTabView);
         const onFailure = (err: any) => console.error(err); // TODO
+
+        onSuccess();
+
         try {
             await registerUser(state, dispatch, onSuccess, onFailure);
         } finally {

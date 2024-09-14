@@ -6,9 +6,10 @@ import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackgro
 import { OShowcase } from "@/components/OShowcase/OShowcase";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { SSubtitle } from "@/styles/Text.styles";
 import { A } from "@expo/html-elements";
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -27,7 +28,6 @@ const WaitingForVerification = ({
                 <OButtonWide
                     filled={true}
                     text={i18n.t(TR.verificationInProgress)}
-                    style={{ marginBottom: 14 }}
                     disabled={
                         state.verificationStatus !==
                         UserVerificationStatusEnum.verified
@@ -40,14 +40,13 @@ const WaitingForVerification = ({
                     filled={false}
                     text={i18n.t(TR.bookNewCall)}
                     variant="light"
-                    style={{ marginBottom: 15 }}
                     onPress={() =>
                         navigation.navigate(ROUTES.Onboarding.BookSafetyCall)
                     }
                 />
-                <Text style={styles.subtitleBookCall}>
+                <SSubtitle>
                     {i18n.t(TR.pleaseDoNotMakeDoubleBookings)}
-                </Text>
+                </SSubtitle>
 
                 <A
                     href="mailto:office@wavect.io"
