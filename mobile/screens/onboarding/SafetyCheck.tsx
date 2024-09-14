@@ -15,7 +15,10 @@ const SafetyCheck = ({
     typeof ROUTES.Onboarding.SafetyCheck
 >) => {
     return (
-        <OPageContainer subtitle={i18n.t(TR.safetyCheckDescr)}>
+        <OPageContainer
+            subtitle={i18n.t(TR.safetyCheckDescr)}
+            fullpageIcon="safety-check"
+        >
             <View style={styles.centerContainer}>
                 <OButtonWide
                     text={i18n.t(TR.book15MinCall)}
@@ -31,7 +34,7 @@ const SafetyCheck = ({
 
                 <OButtonWide
                     text={i18n.t(TR.iPreferKYC)}
-                    filled={true}
+                    filled={false}
                     variant="dark"
                     disabled={true}
                     style={{ marginTop: 30 }}

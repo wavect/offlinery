@@ -16,7 +16,7 @@ import * as Sentry from "@sentry/react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { Color } from "./GlobalStyles";
+import { Color, FontSize } from "./GlobalStyles";
 import { MainStack } from "./MainStack.navigator";
 import { UserProvider } from "./context/UserContext";
 import HouseRules from "./screens/HouseRules";
@@ -50,8 +50,12 @@ const DEFAULT_SCREEN_PROPS = {
     headerShown: true,
     headerShadowVisible: false,
     headerTitle: "",
-    headerBackTitle: "Back",
+    headerBackTitle: " ", // @dev Needs whitespace otherwise default title used
     headerTintColor: Color.primary,
+    headerTitleStyle: {
+        fontSize: FontSize.size_xl,
+        textAlign: "left",
+    },
 };
 const DEFAULT_LIGHT_SCREEN_PROPS = {
     ...DEFAULT_SCREEN_PROPS,
@@ -104,7 +108,7 @@ export default function App() {
             <NavigationContainer>
                 <UserProvider>
                     <MainStack.Navigator
-                        initialRouteName={ROUTES.Welcome}
+                        initialRouteName={ROUTES.Onboarding.GenderChoice}
                         screenOptions={NO_HEADER}
                     >
                         <MainStack.Screen

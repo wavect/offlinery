@@ -45,6 +45,7 @@ const Birthday = ({
     return (
         <OPageContainer
             subtitle={i18n.t(TR.yourAgeWillBePublic)}
+            fullpageIcon={Platform.OS === "android" ? "date-range" : undefined}
             bottomContainerChildren={
                 <OButtonWide
                     text={i18n.t(TR.continue)}

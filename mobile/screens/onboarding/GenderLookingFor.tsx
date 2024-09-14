@@ -27,7 +27,7 @@ const GenderLookingFor = ({
     };
 
     return (
-        <OPageContainer>
+        <OPageContainer fullpageIcon="transgender">
             <View style={styles.optionContainer}>
                 <OButtonWide
                     text={i18n.t(TR.women)}

@@ -30,6 +30,7 @@ export const Color = {
     gray: "#757575",
     lightGray: "#a9a9a9",
     brightGray: "#efefef",
+    brightestGray: "rgba(239, 239, 239, 0.5)",
     stateLayersSurfaceDimOpacity08: "rgba(222, 216, 225, 0.08)",
     schemesPrimary: "#65558f",
 };
@@ -41,8 +42,8 @@ export const Title: StyleProp<TextStyle> = {
     marginBottom: 8,
 };
 export const Subtitle: StyleProp<TextStyle> = {
-    fontSize: 16,
-    color: "#aaa",
+    fontSize: FontSize.size_md,
+    color: Color.gray,
     marginBottom: 24,
 };
 

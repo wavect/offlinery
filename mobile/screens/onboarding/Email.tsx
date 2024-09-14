@@ -52,6 +52,7 @@ const Email = ({
 
     return (
         <OPageContainer
+            fullpageIcon="alternate-email"
             bottomContainerChildren={
                 <OButtonWide
                     text={i18n.t(TR.continue)}
