@@ -24,7 +24,6 @@ interface IOButtonWideProps {
     isLoading?: boolean;
     loadingBtnText?: string;
     size?: "default" | "smaller";
-    subTitle?: string;
 }
 
 const getButtonStyle = (
@@ -99,7 +98,6 @@ export const OButtonWide: FC<IOButtonWideProps> = ({
     style,
     styleLbl,
     size,
-    subTitle,
     disabled = false,
     countdownEnableSeconds = 0,
 }) => {
