@@ -149,7 +149,9 @@ const ProfileSettings = ({
         <OPageContainer subtitle={i18n.t(TR.changePreferencesDescr)}>
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <SText.Small bold>{i18n.t(TR.myFirstNameIs)}</SText.Small>
+                    <SText.Small bold marginBottom={4}>
+                        {i18n.t(TR.myFirstNameIs)}
+                    </SText.Small>
                     <OTextInput
                         value={state.firstName}
                         onChangeText={setFirstName}
@@ -159,12 +161,12 @@ const ProfileSettings = ({
 
                 {state.approachChoice !== UserApproachChoiceEnum.approach && (
                     <View style={styles.timePickerContainer}>
-                        <SText.Small bold>
+                        <SText.Small bold marginBottom={4}>
                             {i18n.t(TR.approachMeBetween)}
                         </SText.Small>
                         <View style={styles.timePickerRow}>
                             <View style={styles.timePicker}>
-                                <SText.Small bold>
+                                <SText.Small bold marginBottom={4}>
                                     {i18n.t(TR.from)}
                                 </SText.Small>
                                 <DateTimePicker
@@ -196,7 +198,9 @@ const ProfileSettings = ({
                 )}
 
                 <View style={styles.inputContainer}>
-                    <SText.Small bold>{i18n.t(TR.bio)}</SText.Small>
+                    <SText.Small bold marginBottom={4}>
+                        {i18n.t(TR.bio)}
+                    </SText.Small>
                     <OTextInput
                         value={state.bio}
                         onChangeText={setBio}
@@ -218,7 +222,9 @@ const ProfileSettings = ({
                 </View>
 
                 <View style={styles.dropdownContainer}>
-                    <SText.Small bold>{i18n.t(TR.iAmA)}</SText.Small>
+                    <SText.Small bold marginBottom={4}>
+                        {i18n.t(TR.iAmA)}
+                    </SText.Small>
                     <Dropdown
                         data={genderItems}
                         labelField="label"
@@ -234,7 +240,9 @@ const ProfileSettings = ({
                 </View>
 
                 <View style={styles.dropdownContainer}>
-                    <SText.Small>{i18n.t(TR.iLookFor)}</SText.Small>
+                    <SText.Small bold marginBottom={4}>
+                        {i18n.t(TR.iLookFor)}
+                    </SText.Small>
                     <Dropdown
                         data={genderItems}
                         labelField="label"
@@ -345,6 +353,7 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     inputContainer: {
+        marginTop: 10,
         marginBottom: 16,
     },
     input: {
