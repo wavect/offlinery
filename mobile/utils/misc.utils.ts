@@ -4,6 +4,7 @@ import {
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
+import { jwtDecode } from "jwt-decode";
 
 export const REFRESH_REMAINING_MINUTE = 1;
 
@@ -77,23 +78,23 @@ export function isComplete<T>(obj: Partial<T>): obj is T {
 
 export const jwtExpiresSoon = (token: string) => {
     const decodedJWT = decodeJWT(token);
-    const expirationDate = new Date(decodedJWT.exp * 1000);
-    const currentDate = new Date();
-    const timeDifference = expirationDate.getTime() - currentDate.getTime();
-    const minutesDifference = timeDifference / (1000 * 60);
-    return minutesDifference <= REFRESH_REMAINING_MINUTE; // Refresh prior to invalidation
+
+    if (decodedJWT && decodedJWT.exp) {
+        const expirationDate = new Date(decodedJWT.exp * 1000);
+        const currentDate = new Date();
+        const timeDifference = expirationDate.getTime() - currentDate.getTime();
+        const minutesDifference = timeDifference / (1000 * 60);
+        return minutesDifference <= REFRESH_REMAINING_MINUTE; // Refresh prior to invalidation
+    } else {
+        console.log("Unable to check if expired. Invalid Token received.");
+    }
 };
 
 function decodeJWT(token: string) {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const jsonPayload = decodeURIComponent(
-        atob(base64)
-            .split("")
-            .map(function (c) {
-                return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-            })
-            .join(""),
-    );
-    return JSON.parse(jsonPayload);
+    try {
+        return jwtDecode(token);
+    } catch (error) {
+        console.error("Error decoding JWT:", error);
+        throw error;
+    }
 }

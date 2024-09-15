@@ -10,10 +10,11 @@ import {
     StyledKeyboardAvoidingView,
 } from "@/styles/View.styles";
 import * as React from "react";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import {
     ActivityIndicator,
     Platform,
+    RefreshControl,
     StatusBar,
     StyleSheet,
     View,
@@ -29,10 +30,18 @@ const LoadingScreen = () => (
 interface IOPageColorContainerProps {
     isLoading?: boolean;
     children: ReactNode;
+    refreshFunc?: () => Promise<void>;
 }
 
 export const OPageColorContainer = (props: IOPageColorContainerProps) => {
-    const { isLoading, children } = props;
+    const { isLoading, children, refreshFunc } = props;
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await refreshFunc!();
+        setRefreshing(false);
+    };
 
     return (
         <FlexContainer>
@@ -42,7 +51,17 @@ export const OPageColorContainer = (props: IOPageColorContainerProps) => {
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     keyboardVerticalOffset={0}
                 >
-                    <ScrollViewContainer keyboardShouldPersistTaps="handled">
+                    <ScrollViewContainer
+                        keyboardShouldPersistTaps="handled"
+                        refreshControl={
+                            refreshFunc && (
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
+                                />
+                            )
+                        }
+                    >
                         <OSafeAreaContainer>
                             <OShowcase
                                 subtitle={i18n.t(TR.stopSwipingMeetIrl)}

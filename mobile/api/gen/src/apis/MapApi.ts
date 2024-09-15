@@ -32,7 +32,7 @@ export interface MapControllerGetUserLocationsRequest {
 export interface MapApiInterface {
     /**
      *
-     * @summary Get the locations of other users
+     * @summary Get the clustered locations of other users
      * @param {string} userId User ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -44,7 +44,7 @@ export interface MapApiInterface {
     ): Promise<runtime.ApiResponse<Array<WeightedLatLngDTO>>>;
 
     /**
-     * Get the locations of other users
+     * Get the clustered locations of other users
      */
     mapControllerGetUserLocations(
         requestParameters: MapControllerGetUserLocationsRequest,
@@ -57,7 +57,7 @@ export interface MapApiInterface {
  */
 export class MapApi extends runtime.BaseAPI implements MapApiInterface {
     /**
-     * Get the locations of other users
+     * Get the clustered locations of other users
      */
     async mapControllerGetUserLocationsRaw(
         requestParameters: MapControllerGetUserLocationsRequest,
@@ -93,7 +93,7 @@ export class MapApi extends runtime.BaseAPI implements MapApiInterface {
     }
 
     /**
-     * Get the locations of other users
+     * Get the clustered locations of other users
      */
     async mapControllerGetUserLocations(
         requestParameters: MapControllerGetUserLocationsRequest,

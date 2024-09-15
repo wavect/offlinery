@@ -130,6 +130,7 @@ export const en = {
     iPreferKYC: "Start KYC",
     iPreferKYCDescr: "Regulated 3rd party KYC (coming soon).",
     verificationInProgress: "Verification in progress..",
+    verificationSuccessful: "You got approved!",
     bookNewCall: "Book new call",
     pleaseDoNotMakeDoubleBookings: "Please do not make double bookings.",
     somethingWrongQ: "Something wrong?",

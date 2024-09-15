@@ -15,7 +15,7 @@ import { includeJWT } from "@/utils/misc.utils";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as React from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
     Platform,
     RefreshControl,
@@ -114,7 +114,7 @@ const Encounters = ({
         }
     }, [userState.id, userState.jwtAccessToken, dispatch]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         fetchEncounters();
     }, [fetchEncounters]);
 

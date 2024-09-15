@@ -7,21 +7,15 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
-import { SText } from "@/styles/Text.styles";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
+import { getMapProvider } from "@/utils/map-provider";
 import { calculateDistance, getRegionForCoordinates } from "@/utils/map.utils";
 import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Linking, Platform, StyleSheet, View } from "react-native";
-import MapView, {
-    Marker,
-    PROVIDER_DEFAULT,
-    PROVIDER_GOOGLE,
-    Polyline,
-    Region,
-} from "react-native-maps";
+import MapView, { Marker, Polyline, Region } from "react-native-maps";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 const encounterAPI = new EncounterApi();
@@ -127,11 +121,7 @@ const NavigateToApproach = ({
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 }}
-                provider={
-                    process.env.EXPO_PUBLIC_ENVIRONMENT === "production"
-                        ? PROVIDER_GOOGLE
-                        : PROVIDER_DEFAULT
-                }
+                provider={getMapProvider()}
             >
                 {location && (
                     <Marker

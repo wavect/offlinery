@@ -9,14 +9,15 @@ import {
 import { ROUTES } from "@/screens/routes";
 import { Dispatch } from "react";
 
-export const userAuthenticatedUpdate = (
+export const refreshUserData = (
     dispatch: Dispatch<IUserAction>,
-    navigation: any,
     user: UserPrivateDTO,
-    jwtAccessToken: string,
-    jwtRefreshToken: string,
+    jwtAccessToken?: string,
+    jwtRefreshToken?: string,
 ) => {
-    const userData: IUserData = {
+    // also fill userData when logged in
+    // Note: We still save the accessToken into the user context to avoid reading from secure storage all the time when making api requests (performance, security, ..)
+    const payload: Partial<IUserData> = {
         ...user,
         approachFromTime: new Date(user.approachFromTime),
         approachToTime: new Date(user.approachToTime),
@@ -29,21 +30,29 @@ export const userAuthenticatedUpdate = (
         imageURIs: Object.fromEntries(
             user.imageURIs.map((value, index) => [index, value]),
         ),
-        jwtAccessToken,
-        refreshToken: jwtRefreshToken,
     };
-    // also fill userData when logged in
-    // Note: We still save the accessToken into the user context to avoid reading from secure storage all the time when making api requests (performance, security, ..)
-    const payload: Partial<IUserData> = {
-        ...userData,
-        jwtAccessToken,
-        refreshToken: jwtRefreshToken,
-    };
+
+    if (jwtAccessToken) {
+        payload.jwtAccessToken = jwtAccessToken;
+    }
+    if (jwtRefreshToken) {
+        payload.refreshToken = jwtRefreshToken;
+    }
 
     dispatch({
         type: EACTION_USER.UPDATE_MULTIPLE,
         payload,
     });
+};
+
+export const userAuthenticatedUpdate = (
+    dispatch: Dispatch<IUserAction>,
+    navigation: any,
+    user: UserPrivateDTO,
+    jwtAccessToken: string,
+    jwtRefreshToken: string,
+) => {
+    refreshUserData(dispatch, user, jwtAccessToken, jwtRefreshToken);
 
     if (user.verificationStatus === "pending") {
         navigation.navigate(ROUTES.MainTabView);

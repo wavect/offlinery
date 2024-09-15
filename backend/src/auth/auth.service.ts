@@ -2,7 +2,13 @@ import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { TYPED_ENV } from "@/utils/env.utils";
-import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import {
+    forwardRef,
+    Inject,
+    Injectable,
+    Logger,
+    UnauthorizedException,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
@@ -12,6 +18,7 @@ export class AuthService {
     private readonly logger = new Logger(AuthService.name);
 
     constructor(
+        @Inject(forwardRef(() => UserService))
         private usersService: UserService,
         private jwtService: JwtService,
     ) {}
