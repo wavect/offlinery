@@ -29,7 +29,7 @@ const VerifyEmail = ({
     const isInvalidCode = () => code.some((digit) => digit === "");
 
     useEffect(() => {
-        // sendVerificationCode();
+        sendVerificationCode();
     }, []);
 
     useEffect(() => {
@@ -70,10 +70,6 @@ const VerifyEmail = ({
     };
 
     const handleSubmit = async () => {
-        navigation.navigate(ROUTES.Onboarding.Password);
-        return;
-        /** @DEV REMOVE */
-
         const verificationCode = code.join("");
 
         const regApi = new RegistrationApi();
@@ -91,7 +87,6 @@ const VerifyEmail = ({
     };
 
     const sendVerificationCode = async () => {
-        return null; /** @DEV REMOVE */
         try {
             setLoading(true);
             const regApi = new RegistrationApi();
