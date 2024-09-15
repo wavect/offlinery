@@ -2,13 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import React, { useCallback, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import MapView, {
-    Circle,
-    Marker,
-    PROVIDER_DEFAULT,
-    PROVIDER_GOOGLE,
-    Region,
-} from "react-native-maps";
+import MapView, { Circle, Marker, Region } from "react-native-maps";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 import { BorderRadius, Color, FontSize, Subtitle } from "@/GlobalStyles";
@@ -17,6 +11,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, MapRegion, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { getMapProvider } from "@/utils/map-provider";
 import { ROUTES } from "../routes";
 
 type DontApproachMeHereProps = NativeStackScreenProps<
@@ -157,11 +152,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                     showsUserLocation={true}
                     initialRegion={mapRegion}
                     onLongPress={handleMapLongPress}
-                    provider={
-                        process.env.EXPO_PUBLIC_ENVIRONMENT === "production"
-                            ? PROVIDER_GOOGLE
-                            : PROVIDER_DEFAULT
-                    }
+                    provider={getMapProvider()}
                 >
                     {state.blacklistedRegions.map((region, index) => (
                         <React.Fragment key={`region-${index}`}>
