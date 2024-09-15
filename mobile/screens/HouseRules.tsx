@@ -58,9 +58,9 @@ const HouseRules = ({
                 />
 
                 <ViolatingRulesTextView>
-                    <SText.Small>
+                    <SText.Small white>
                         {i18n.t(TR.violatingRules.p1)}
-                        <SText.Small bold>
+                        <SText.Small white bold>
                             {i18n.t(TR.violatingRules.duration)}
                         </SText.Small>
                         {i18n.t(TR.violatingRules.p2)}
@@ -80,7 +80,7 @@ const RuleItem: React.FC<IRuleItemProps> = ({ title, description }) => (
     <RuleItemContainer>
         <StyledMaterialIcon name="check" size={24} color="white" />
         <RuleTextContainer>
-            <SText.Large white noMargin>
+            <SText.Large white noMargin bold>
                 {title}
             </SText.Large>
             <SText.Small white noMargin>
