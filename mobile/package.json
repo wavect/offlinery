@@ -8,7 +8,7 @@
         "start:prod": "expo start --no-dev",
         "start:tunnel": "expo start --tunnel",
         "android": "expo run:android",
-        "ios": "EXPO_PUBLIC_ENVIRONMENT=production expo run:ios",
+        "ios": "EXPO_PUBLIC_ENVIRONMENT=development expo run:ios",
         "ios:dev": "EXPO_PUBLIC_ENVIRONMENT=development expo run:ios",
         "ios:clean": "rm -rf ios/Pods && rm -rf ios/build",
         "web": "expo start --web",
@@ -35,6 +35,7 @@
         "expo": "~51.0.31",
         "expo-build-properties": "~0.12.5",
         "expo-checkbox": "~3.0.0",
+        "expo-constants": "^16.0.2",
         "expo-font": "~12.0.10",
         "expo-image-picker": "~15.0.7",
         "expo-linear-gradient": "~13.0.2",
@@ -46,6 +47,7 @@
         "expo-status-bar": "~1.12.1",
         "expo-task-manager": "~11.8.2",
         "i18n-js": "^4.4.3",
+        "jwt-decode": "^4.0.0",
         "prettier-plugin-organize-imports": "^4.0.0",
         "react": "18.2.0",
         "react-dom": "18.2.0",
@@ -61,8 +63,7 @@
         "react-native-safe-area-context": "4.10.5",
         "react-native-screens": "3.31.1",
         "react-native-web": "~0.19.10",
-        "react-native-webview": "13.8.6",
-        "expo-constants": "^16.0.2"
+        "react-native-webview": "13.8.6"
     },
     "devDependencies": {
         "@types/react": "~18.2.45",

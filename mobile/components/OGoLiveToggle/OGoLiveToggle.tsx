@@ -114,7 +114,6 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
             }
             const { status: bStatus } =
                 await Location.requestBackgroundPermissionsAsync();
-
             if (bStatus !== "granted") {
                 alert(i18n.t(TR.permissionToBackgroundLocationDenied));
                 return;
@@ -125,9 +124,7 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                     ? UserDateModeEnum.live
                     : UserDateModeEnum.ghost;
             const userApi = new UserApi();
-            const updateUserDTO: UpdateUserDTO = {
-                dateMode: newDateMode,
-            };
+            const updateUserDTO: UpdateUserDTO = { dateMode: newDateMode };
 
             await userApi.userControllerUpdateUser(
                 {
@@ -139,23 +136,22 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
 
             dispatch({
                 type: EACTION_USER.UPDATE_MULTIPLE,
-                payload: {
-                    dateMode: newDateMode,
-                },
+                payload: { dateMode: newDateMode },
             });
 
             await configureLocationTracking(newDateMode);
 
-            // Load location and inform user about state
             if (newDateMode === UserDateModeEnum.live) {
                 alert(`${i18n.t(TR.youAreLive)} ${getSuccessMessage()}`);
             } else {
                 alert(i18n.t(TR.ghostModeDescr));
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error(
-                "Error requesting permissions or saving to backend:",
-                error,
+                "Error in toggleSwitch:",
+                error.message,
+                "\nStack trace:",
+                error.stack,
             );
             alert(i18n.t(TR.errRequestingPermissions));
         }
