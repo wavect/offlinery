@@ -1,3 +1,4 @@
+import { A } from "@expo/html-elements";
 import { LinearGradient } from "expo-linear-gradient";
 import styled from "styled-components/native";
 
@@ -12,4 +13,10 @@ export const StyledLinearGradient = styled(LinearGradient)`
     height: 926px;
     overflow: hidden;
     background-color: transparent;
+`;
+
+export const StyledLink = styled(A)`
+    color: white;
+    text-decoration: underline;
+    text-decoration-color: white;
 `;

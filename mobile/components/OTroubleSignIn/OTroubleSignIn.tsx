@@ -1,5 +1,5 @@
 import { TR, i18n } from "@/localization/translate.service";
-import { SText } from "@/styles/Text.styles";
+import { StyledLink } from "@/styles/Miscellaneous.styles";
 import { SUPPORT_MAIL } from "@/utils/general.constants";
 import * as React from "react";
 import { Linking } from "react-native";
@@ -16,8 +16,8 @@ export const OTroubleSignIn = (props: IOTroubleSignIn) => {
     };
 
     return (
-        <SText.Small white onPress={writeSupportEmail}>
+        <StyledLink onPress={writeSupportEmail}>
             {i18n.t(TR.troubleSignIn)}
-        </SText.Small>
+        </StyledLink>
     );
 };
