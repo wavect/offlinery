@@ -1,6 +1,6 @@
 import { UserModule } from "@/entities/user/user.module";
 import { TYPED_ENV } from "@/utils/env.utils";
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { UserSpecificAuthGuard } from "./auth-own-data.guard";
@@ -14,13 +14,13 @@ import { AuthService } from "./auth.service";
         ConfigModule.forRoot({
             isGlobal: true,
         }),
-        UserModule,
+        forwardRef(() => UserModule),
         JwtModule.register({
             global: true,
             secret: TYPED_ENV.JWT_SECRET,
             signOptions: { expiresIn: "60m" },
         }),
     ],
-    exports: [UserSpecificAuthGuard],
+    exports: [UserSpecificAuthGuard, AuthService],
 })
 export class AuthModule {}

@@ -15,15 +15,17 @@
 import type {
     CreateUserDTO,
     LocationUpdateDTO,
+    SignInResponseDTO,
     UpdateUserDTO,
-    User,
+    UserPrivateDTO,
     UserPublicDTO,
 } from "../models/index";
 import {
     CreateUserDTOToJSON,
     LocationUpdateDTOToJSON,
+    SignInResponseDTOFromJSON,
     UpdateUserDTOToJSON,
-    UserFromJSON,
+    UserPrivateDTOFromJSON,
     UserPublicDTOFromJSON,
 } from "../models/index";
 import * as runtime from "../runtime";
@@ -37,8 +39,8 @@ export interface UserControllerCreateUserRequest {
     images: ImagePickerAsset[];
 }
 
-export interface UserControllerGetUserRequest {
-    userId: number;
+export interface UserControllerGetOwnUserDataRequest {
+    userId: string;
 }
 
 export interface UserControllerUpdateLocationRequest {
@@ -71,7 +73,7 @@ export interface UserApiInterface {
     userControllerCreateUserRaw(
         requestParameters: UserControllerCreateUserRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<UserPublicDTO>>;
+    ): Promise<runtime.ApiResponse<SignInResponseDTO>>;
 
     /**
      * Create a new user with images
@@ -79,28 +81,28 @@ export interface UserApiInterface {
     userControllerCreateUser(
         requestParameters: UserControllerCreateUserRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<UserPublicDTO>;
+    ): Promise<SignInResponseDTO>;
 
     /**
      *
-     * @summary Get a user by ID
-     * @param {number} userId User ID
+     * @summary Get private user data by ID
+     * @param {string} userId User ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApiInterface
      */
-    userControllerGetUserRaw(
-        requestParameters: UserControllerGetUserRequest,
+    userControllerGetOwnUserDataRaw(
+        requestParameters: UserControllerGetOwnUserDataRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<User>>;
+    ): Promise<runtime.ApiResponse<UserPrivateDTO>>;
 
     /**
-     * Get a user by ID
+     * Get private user data by ID
      */
-    userControllerGetUser(
-        requestParameters: UserControllerGetUserRequest,
+    userControllerGetOwnUserData(
+        requestParameters: UserControllerGetOwnUserDataRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<User>;
+    ): Promise<UserPrivateDTO>;
 
     /**
      *
@@ -158,7 +160,7 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
     async userControllerCreateUserRaw(
         requestParameters: UserControllerCreateUserRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<UserPublicDTO>> {
+    ): Promise<runtime.ApiResponse<SignInResponseDTO>> {
         if (requestParameters["user"] == null) {
             throw new runtime.RequiredError(
                 "user",
@@ -225,7 +227,7 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         );
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
-            UserPublicDTOFromJSON(jsonValue),
+            SignInResponseDTOFromJSON(jsonValue),
         );
     }
 
@@ -235,7 +237,7 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
     async userControllerCreateUser(
         requestParameters: UserControllerCreateUserRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<UserPublicDTO> {
+    ): Promise<SignInResponseDTO> {
         const response = await this.userControllerCreateUserRaw(
             requestParameters,
             initOverrides,
@@ -244,16 +246,16 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
     }
 
     /**
-     * Get a user by ID
+     * Get private user data by ID
      */
-    async userControllerGetUserRaw(
-        requestParameters: UserControllerGetUserRequest,
+    async userControllerGetOwnUserDataRaw(
+        requestParameters: UserControllerGetOwnUserDataRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<User>> {
+    ): Promise<runtime.ApiResponse<UserPrivateDTO>> {
         if (requestParameters["userId"] == null) {
             throw new runtime.RequiredError(
                 "userId",
-                'Required parameter "userId" was null or undefined when calling userControllerGetUser().',
+                'Required parameter "userId" was null or undefined when calling userControllerGetOwnUserData().',
             );
         }
 
@@ -275,18 +277,18 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         );
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
-            UserFromJSON(jsonValue),
+            UserPrivateDTOFromJSON(jsonValue),
         );
     }
 
     /**
-     * Get a user by ID
+     * Get private user data by ID
      */
-    async userControllerGetUser(
-        requestParameters: UserControllerGetUserRequest,
+    async userControllerGetOwnUserData(
+        requestParameters: UserControllerGetOwnUserDataRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<User> {
-        const response = await this.userControllerGetUserRaw(
+    ): Promise<UserPrivateDTO> {
+        const response = await this.userControllerGetOwnUserDataRaw(
             requestParameters,
             initOverrides,
         );

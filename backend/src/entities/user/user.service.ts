@@ -1,6 +1,8 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
+import { AuthService } from "@/auth/auth.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { MatchingService } from "@/transient-services/matching/matching.service";
@@ -34,6 +36,8 @@ export class UserService {
         private pendingUserRepo: Repository<PendingUser>,
         @Inject(forwardRef(() => MatchingService))
         private matchingService: MatchingService,
+        @Inject(forwardRef(() => AuthService))
+        private authService: AuthService,
     ) {}
 
     private async saveFiles(
@@ -69,7 +73,7 @@ export class UserService {
     async createUser(
         createUserDto: CreateUserDTO,
         images: Express.Multer.File[],
-    ): Promise<User> {
+    ): Promise<SignInResponseDTO> {
         const user = new User();
         Object.assign(user, createUserDto);
 
@@ -104,7 +108,11 @@ export class UserService {
                 }),
             );
         }
-        return await this.userRepository.save(user);
+        await this.userRepository.save(user);
+        return this.authService.signIn(
+            createUserDto.email,
+            createUserDto.clearPassword,
+        );
     }
 
     async updateUser(

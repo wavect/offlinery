@@ -119,7 +119,7 @@ describe("UserController", () => {
 
             jest.spyOn(userService, "findUserById").mockResolvedValue(mockUser);
 
-            const result = await controller.getUser(userId);
+            const result = await controller.getOwnUserData(userId);
 
             expect(result).toEqual(mockUser.convertToPublicDTO());
             expect(userService.findUserById).toHaveBeenCalledWith(userId);
@@ -130,7 +130,7 @@ describe("UserController", () => {
 
             jest.spyOn(userService, "findUserById").mockResolvedValue(null);
 
-            await expect(controller.getUser(userId)).rejects.toThrow(
+            await expect(controller.getOwnUserData(userId)).rejects.toThrow(
                 NotFoundException,
             );
         });
