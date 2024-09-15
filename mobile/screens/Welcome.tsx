@@ -28,9 +28,6 @@ const Welcome = ({
     const [isLoading, setIsLoading] = useState(true);
 
     const checkAuthStatus = async () => {
-        saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
-        saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
-
         try {
             const [storedRefreshToken, storedAccessToken] = await Promise.all([
                 getSecurelyStoredValue(SECURE_VALUE.JWT_REFRESH_TOKEN),
