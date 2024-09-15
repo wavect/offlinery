@@ -3,15 +3,13 @@ import { MainStackParamList } from "@/MainStack.navigator";
 import { UserApi, UserVerificationStatusEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
-import { OShowcase } from "@/components/OShowcase/OShowcase";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { refreshUserData } from "@/services/auth.service";
-import { SText } from "@/styles/Text.styles";
 import { SUPPORT_MAIL } from "@/utils/general.constants";
 import { A } from "@expo/html-elements";
 import * as React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -37,9 +35,7 @@ const WaitingForVerification = ({
 
     return (
         <OPageColorContainer refreshFunc={reloadUserState}>
-            <View style={styles.layoutContainer}>
-                <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)} />
-
+            <View style={styles.btnContainer}>
                 <OButtonWide
                     filled={true}
                     text={i18n.t(
@@ -64,41 +60,36 @@ const WaitingForVerification = ({
                         navigation.navigate(ROUTES.Onboarding.BookSafetyCall)
                     }
                 />
-                <SText.Subtitle>
+                <Text style={styles.subtitleBookCall}>
                     {i18n.t(TR.pleaseDoNotMakeDoubleBookings)}
-                </SText.Subtitle>
-
-                <A href={`mailto:${SUPPORT_MAIL}`} style={styles.bottomText}>
-                    {i18n.t(TR.somethingWrongQ)}
-                </A>
+                </Text>
             </View>
+
+            <A href={`mailto:${SUPPORT_MAIL}`} style={styles.bottomText}>
+                {i18n.t(TR.somethingWrongQ)}
+            </A>
         </OPageColorContainer>
     );
 };
 
 const styles = StyleSheet.create({
-    subtitleBookCall: {
-        fontSize: FontSize.size_md,
-        color: Color.white,
-        marginBottom: 80,
-    },
-    bottomTextContainer: {
-        display: "flex",
-        letterSpacing: 0,
-        color: Color.white,
+    btnContainer: {
+        width: "100%",
         textAlign: "center",
         alignItems: "center",
+        justifyContent: "center",
+    },
+    btn: {
+        marginBottom: 12,
+    },
+    subtitleBookCall: {
+        fontSize: FontSize.size_md,
+        color: Color.brightGray,
     },
     bottomText: {
         display: "flex",
-        fontWeight: "500",
-        justifyContent: "center",
-    },
-    termsText: {
-        fontFamily: FontFamily.montserratLight,
-        fontWeight: "500",
-    },
-    termsLink: {
+        color: Color.brightGray,
+        fontSize: FontSize.size_md,
         textDecorationLine: "underline",
         fontFamily: FontFamily.montserratRegular,
     },

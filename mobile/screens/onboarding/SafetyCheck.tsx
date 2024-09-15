@@ -28,7 +28,9 @@ const SafetyCheck = ({
                         navigation.navigate(ROUTES.Onboarding.BookSafetyCall)
                     }
                 />
-                <SText.Subtitle>{i18n.t(TR.book15MinCallDescr)}</SText.Subtitle>
+                <SText.Medium center marginTop={10} marginBottom={30}>
+                    {i18n.t(TR.book15MinCallDescr)}
+                </SText.Medium>
 
                 <OButtonWide
                     text={i18n.t(TR.iPreferKYC)}
@@ -36,7 +38,9 @@ const SafetyCheck = ({
                     variant="dark"
                     disabled={true}
                 />
-                <SText.Subtitle>{i18n.t(TR.iPreferKYCDescr)}</SText.Subtitle>
+                <SText.Medium center marginTop={10}>
+                    {i18n.t(TR.iPreferKYCDescr)}
+                </SText.Medium>
             </View>
         </OPageContainer>
     );

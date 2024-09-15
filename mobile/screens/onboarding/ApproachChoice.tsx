@@ -55,7 +55,9 @@ const ApproachChoice = ({
     return (
         <OPageContainer
             bottomContainerChildren={
-                <SText.Small>{i18n.t(TR.changePossible)}</SText.Small>
+                <SText.Medium center marginTop={10} marginBottom={10}>
+                    {i18n.t(TR.changePossible)}
+                </SText.Medium>
             }
         >
             <View style={styles.optionContainer}>
@@ -68,7 +70,9 @@ const ApproachChoice = ({
                         setApproachChoice(UserApproachChoiceEnum.approach)
                     }
                 />
-                <SText.Subtitle>{i18n.t(TR.approachDescr)}</SText.Subtitle>
+                <SText.Medium center marginTop={10}>
+                    {i18n.t(TR.approachDescr)}
+                </SText.Medium>
             </View>
 
             <View style={styles.optionContainer}>
@@ -81,7 +85,9 @@ const ApproachChoice = ({
                         setApproachChoice(UserApproachChoiceEnum.be_approached)
                     }
                 />
-                <SText.Subtitle>{i18n.t(TR.beApproachedDescr)}</SText.Subtitle>
+                <SText.Medium center marginTop={10}>
+                    {i18n.t(TR.beApproachedDescr)}
+                </SText.Medium>
             </View>
 
             <View style={styles.optionContainer}>
@@ -95,7 +101,9 @@ const ApproachChoice = ({
                         setApproachChoice(UserApproachChoiceEnum.both)
                     }
                 />
-                <SText.Subtitle>{i18n.t(TR.bothDescr)}</SText.Subtitle>
+                <SText.Medium center marginTop={10}>
+                    {i18n.t(TR.bothDescr)}
+                </SText.Medium>
             </View>
         </OPageContainer>
     );

@@ -78,7 +78,12 @@ interface IRuleItemProps {
 
 const RuleItem: React.FC<IRuleItemProps> = ({ title, description }) => (
     <RuleItemContainer>
-        <StyledMaterialIcon name="check" size={24} color="white" />
+        <StyledMaterialIcon
+            name="check"
+            size={24}
+            color="white"
+            marginRight={14}
+        />
         <RuleTextContainer>
             <SText.Large white noMargin bold>
                 {title}
