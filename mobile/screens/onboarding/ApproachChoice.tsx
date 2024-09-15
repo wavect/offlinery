@@ -7,7 +7,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import * as React from "react";
 import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -55,7 +55,7 @@ const ApproachChoice = ({
     return (
         <OPageContainer
             bottomContainerChildren={
-                <StyledText.Small>{i18n.t(TR.changePossible)}</StyledText.Small>
+                <SText.Small>{i18n.t(TR.changePossible)}</SText.Small>
             }
         >
             <View style={styles.optionContainer}>
@@ -68,9 +68,7 @@ const ApproachChoice = ({
                         setApproachChoice(UserApproachChoiceEnum.approach)
                     }
                 />
-                <StyledText.Subtitle>
-                    {i18n.t(TR.approachDescr)}
-                </StyledText.Subtitle>
+                <SText.Subtitle>{i18n.t(TR.approachDescr)}</SText.Subtitle>
             </View>
 
             <View style={styles.optionContainer}>
@@ -83,9 +81,7 @@ const ApproachChoice = ({
                         setApproachChoice(UserApproachChoiceEnum.be_approached)
                     }
                 />
-                <StyledText.Subtitle>
-                    {i18n.t(TR.beApproachedDescr)}
-                </StyledText.Subtitle>
+                <SText.Subtitle>{i18n.t(TR.beApproachedDescr)}</SText.Subtitle>
             </View>
 
             <View style={styles.optionContainer}>
@@ -99,9 +95,7 @@ const ApproachChoice = ({
                         setApproachChoice(UserApproachChoiceEnum.both)
                     }
                 />
-                <StyledText.Subtitle>
-                    {i18n.t(TR.bothDescr)}
-                </StyledText.Subtitle>
+                <SText.Subtitle>{i18n.t(TR.bothDescr)}</SText.Subtitle>
             </View>
         </OPageContainer>
     );

@@ -1,17 +1,19 @@
-import { Color, FontFamily } from "@/GlobalStyles";
+import { Color } from "@/GlobalStyles";
 import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
 import { OSafeAreaContainer } from "@/components/OSafeAreaContainer/OSafeAreaContainer";
 import OShowcase from "@/components/OShowcase/OShowcase";
 import { TR, i18n } from "@/localization/translate.service";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
+import {
+    FlexContainer,
+    ScrollViewContainer,
+    StyledKeyboardAvoidingView,
+} from "@/styles/View.styles";
 import * as React from "react";
 import { ReactNode } from "react";
 import {
     ActivityIndicator,
-    Dimensions,
-    KeyboardAvoidingView,
     Platform,
-    ScrollView,
     StatusBar,
     StyleSheet,
     View,
@@ -20,9 +22,7 @@ import {
 const LoadingScreen = () => (
     <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={Color.white} />
-        <StyledText.Medium>
-            {i18n.t(TR.gettingReadyToAmazeYou)}
-        </StyledText.Medium>
+        <SText.Medium>{i18n.t(TR.gettingReadyToAmazeYou)}</SText.Medium>
     </View>
 );
 
@@ -35,60 +35,31 @@ export const OPageColorContainer = (props: IOPageColorContainerProps) => {
     const { isLoading, children } = props;
 
     return (
-        <View style={styles.container}>
+        <FlexContainer>
             <StatusBar hidden />
             <OLinearBackground>
-                <KeyboardAvoidingView
-                    style={styles.container}
+                <StyledKeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     keyboardVerticalOffset={0}
                 >
-                    <ScrollView
-                        contentContainerStyle={styles.scrollViewContent}
-                        keyboardShouldPersistTaps="handled"
-                    >
-                        <OSafeAreaContainer containerStyle={styles.content}>
+                    <ScrollViewContainer keyboardShouldPersistTaps="handled">
+                        <OSafeAreaContainer>
                             <OShowcase
                                 subtitle={i18n.t(TR.stopSwipingMeetIrl)}
-                                containerStyle={styles.showCaseStyle}
                             />
                             {isLoading ? <LoadingScreen /> : children}
                         </OSafeAreaContainer>
-                    </ScrollView>
-                </KeyboardAvoidingView>
+                    </ScrollViewContainer>
+                </StyledKeyboardAvoidingView>
             </OLinearBackground>
-        </View>
+        </FlexContainer>
     );
 };
 
-const { height, width } = Dimensions.get("window");
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    scrollViewContent: {
-        flexGrow: 1,
-        justifyContent: "center",
-        paddingHorizontal: width * 0.05,
-    },
-    showCaseStyle: {
-        marginTop: height * 0.07,
-        marginBottom: 20,
-    },
-    content: {
-        flex: 1,
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
     loadingContainer: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-    },
-    loadingText: {
-        marginTop: 12,
-        fontSize: 16,
-        textAlign: "center",
-        fontFamily: FontFamily.montserratLight,
     },
 });

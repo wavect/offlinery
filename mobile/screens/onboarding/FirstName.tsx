@@ -1,10 +1,11 @@
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -42,21 +43,18 @@ const FirstName = ({
             }
             subtitle={i18n.t(TR.myFirstNameDescr)}
         >
-            <View style={styles.inputField}>
-                <TextInput
-                    style={styles.input}
-                    value={state.firstName}
-                    onChangeText={setFirstName}
-                    maxLength={100}
-                    autoCapitalize="words"
-                    autoComplete="given-name"
-                    inputMode="text"
-                    autoCorrect={false}
-                    keyboardType="default"
-                    placeholder={i18n.t(TR.enterFirstName)}
-                    placeholderTextColor="#999"
-                />
-            </View>
+            <OTextInput
+                value={state.firstName}
+                onChangeText={setFirstName}
+                maxLength={100}
+                autoCapitalize="words"
+                autoComplete="given-name"
+                inputMode="text"
+                autoCorrect={false}
+                keyboardType="default"
+                placeholder={i18n.t(TR.enterFirstName)}
+                placeholderTextColor="#999"
+            />
         </OPageContainer>
     );
 };

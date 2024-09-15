@@ -8,7 +8,7 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import RNDateTimePicker, {
     DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
@@ -54,7 +54,7 @@ const ApproachMeBetween = ({
             }
         >
             <View style={styles.timePickerContainer}>
-                <StyledText.Medium>{i18n.t(TR.from)}</StyledText.Medium>
+                <SText.Medium>{i18n.t(TR.from)}</SText.Medium>
                 <RNDateTimePicker
                     display="default"
                     mode="time"
@@ -66,7 +66,7 @@ const ApproachMeBetween = ({
             </View>
 
             <View style={styles.timePickerContainer}>
-                <StyledText.Medium>{i18n.t(TR.until)}</StyledText.Medium>
+                <SText.Medium>{i18n.t(TR.until)}</SText.Medium>
                 <RNDateTimePicker
                     display="default"
                     mode="time"

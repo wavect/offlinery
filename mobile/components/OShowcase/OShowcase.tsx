@@ -1,7 +1,11 @@
 import { StyledMaterialIcon } from "@/styles/Icon.styles";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
+import {
+    CenteredContainer,
+    ShowCaseHeadlineContainer,
+} from "@/styles/View.styles";
 import React from "react";
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { StyleProp, ViewStyle } from "react-native";
 
 interface IOShowcaseProps {
     subtitle: string;
@@ -10,31 +14,19 @@ interface IOShowcaseProps {
 }
 
 export const OShowcase = (props: IOShowcaseProps) => {
-    const { subtitle, containerStyle } = props;
+    const { subtitle } = props;
 
     return (
-        <View style={[styles.container, containerStyle]}>
-            <View style={styles.headlineContainer}>
+        <CenteredContainer>
+            <ShowCaseHeadlineContainer>
                 <StyledMaterialIcon name="wifi-off" />
-                <StyledText.Title white>offlinery</StyledText.Title>
-            </View>
-            <StyledText.Subtitle white bold>
+                <SText.Title white>offlinery</SText.Title>
+            </ShowCaseHeadlineContainer>
+            <SText.Subtitle white bold>
                 {subtitle}
-            </StyledText.Subtitle>
-        </View>
+            </SText.Subtitle>
+        </CenteredContainer>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        alignItems: "center",
-    },
-    headlineContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: 10,
-    },
-});
 
 export default OShowcase;

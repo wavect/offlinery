@@ -1,12 +1,12 @@
+import { Color } from "@/GlobalStyles";
 import { StyledMaterialIcon } from "@/styles/Icon.styles";
 import {
     EyeIconButton,
-    OTextInputBottomLabel,
     OTextInputContainer,
     OTextInputStyled,
 } from "@/styles/Input.styles";
-import { StyledText } from "@/styles/Text.styles";
-import { Container } from "@/styles/View.styles";
+import { SText } from "@/styles/Text.styles";
+import { FullWidthContainer } from "@/styles/View.styles";
 import React, { useState } from "react";
 import { TextInputProps } from "react-native";
 
@@ -14,38 +14,42 @@ interface IOTextInputProps extends Omit<TextInputProps, "secureTextEntry"> {
     topLabel?: string;
     bottomLabel?: string;
     isBottomLabelError?: boolean;
-    isSensitiveInformation?: boolean;
+    isPassword?: boolean;
+    variant?: "primary" | "white";
 }
 
 export const OTextInput: React.FC<IOTextInputProps> = ({
     topLabel,
     bottomLabel,
     isBottomLabelError,
-    isSensitiveInformation,
+    isPassword,
+    variant = "primary",
+    style,
     ...props
 }) => {
-    const [isSecureTextVisible, setIsSecureTextVisible] = useState(
-        !isSensitiveInformation,
-    );
+    const [isSecureTextVisible, setIsSecureTextVisible] = useState(!isPassword);
 
     const toggleSecureEntry = () => {
         setIsSecureTextVisible(!isSecureTextVisible);
     };
+    const getLabelProps = () =>
+        variant === "white" ? { white: true } : { primary: true };
 
     return (
-        <Container>
+        <FullWidthContainer>
             {topLabel && (
-                <StyledText.InputLabel>{topLabel}</StyledText.InputLabel>
+                <SText.InputLabel {...getLabelProps()}>
+                    {topLabel}
+                </SText.InputLabel>
             )}
-            <OTextInputContainer>
+            <OTextInputContainer variant={variant}>
                 <OTextInputStyled
-                    secureTextEntry={
-                        isSensitiveInformation && !isSecureTextVisible
-                    }
+                    variant={variant}
+                    secureTextEntry={isPassword && !isSecureTextVisible}
                     placeholderTextColor="#999"
                     {...props}
                 />
-                {isSensitiveInformation && (
+                {isPassword && (
                     <EyeIconButton onPress={toggleSecureEntry}>
                         <StyledMaterialIcon
                             name={
@@ -54,16 +58,16 @@ export const OTextInput: React.FC<IOTextInputProps> = ({
                                     : "visibility-off"
                             }
                             size={24}
-                            color="#999"
+                            color={
+                                variant === "primary" ? Color.gray : Color.white
+                            }
                         />
                     </EyeIconButton>
                 )}
             </OTextInputContainer>
-            {bottomLabel && (
-                <OTextInputBottomLabel isError={isBottomLabelError}>
-                    {bottomLabel}
-                </OTextInputBottomLabel>
-            )}
-        </Container>
+
+            {/* @BUG Fix error msg! */}
+            {/*{bottomLabel && <SText.Error>{bottomLabel}</SText.Error>}*/}
+        </FullWidthContainer>
     );
 };

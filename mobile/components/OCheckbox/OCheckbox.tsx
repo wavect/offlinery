@@ -1,5 +1,6 @@
 import { Color } from "@/GlobalStyles";
-import { CheckboxContainer, CheckboxLabel } from "@/styles/Checkbox.styles";
+import { CheckboxContainer } from "@/styles/Checkbox.styles";
+import { SText } from "@/styles/Text.styles";
 import Checkbox from "expo-checkbox";
 import React from "react";
 
@@ -21,7 +22,7 @@ export const OCheckbox: React.FC<IOCheckboxProps> = ({
                 onValueChange={onValueChange}
                 color={Color.primary}
             />
-            <CheckboxLabel>{label}</CheckboxLabel>
+            <SText.CheckboxLabel>{label}</SText.CheckboxLabel>
         </CheckboxContainer>
     );
 };

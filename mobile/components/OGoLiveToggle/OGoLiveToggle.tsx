@@ -13,7 +13,7 @@ import {
     getSecurelyStoredValue,
 } from "@/services/secure-storage.service";
 import { getLocallyStoredUserData } from "@/services/storage.service";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import { includeJWT } from "@/utils/misc.utils";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
@@ -188,11 +188,11 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 onValueChange={toggleSwitch}
                 value={state.dateMode === UserDateModeEnum.live}
             />
-            <StyledText.XSmall>
+            <SText.XSmall>
                 {state.dateMode === UserDateModeEnum.live
                     ? i18n.t(TR.live)
                     : i18n.t(TR.ghostMode)}
-            </StyledText.XSmall>
+            </SText.XSmall>
         </View>
     );
 };

@@ -1,4 +1,4 @@
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import { Ionicons } from "@expo/vector-icons";
 import React, { ReactNode, useEffect, useState } from "react";
 import { Animated, StyleSheet, TouchableOpacity, View } from "react-native";
@@ -38,9 +38,9 @@ const ErrorNotification: React.FC<ErrorNotificationProps> = ({
                     color="white"
                     style={styles.icon}
                 />
-                <StyledText.Medium>
+                <SText.Medium>
                     {error.message || "An error occurred"}
-                </StyledText.Medium>
+                </SText.Medium>
                 <TouchableOpacity
                     onPress={onDismiss}
                     style={styles.closeButton}

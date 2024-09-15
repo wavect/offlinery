@@ -1,7 +1,7 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { UserPublicDTO } from "@/api/gen/src";
 import { ROUTES } from "@/screens/routes";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import * as React from "react";
 import {
     Image,
@@ -44,8 +44,8 @@ const OTeaserProfilePreview = (props: IOTeaserProfileProps) => {
                     source={{ uri: publicProfile.imageURIs[0] }}
                 />
                 <View style={styles.profileDetails}>
-                    <StyledText.Medium>{`${prefixText ?? ""}${publicProfile.firstName}, ${publicProfile.age}`}</StyledText.Medium>
-                    <StyledText.Medium>{publicProfile.bio}</StyledText.Medium>
+                    <SText.Medium>{`${prefixText ?? ""}${publicProfile.firstName}, ${publicProfile.age}`}</SText.Medium>
+                    <SText.Medium>{publicProfile.bio}</SText.Medium>
 
                     {showOpenProfileButton && (
                         <View style={styles.buttonContainer}>
@@ -60,16 +60,16 @@ const OTeaserProfilePreview = (props: IOTeaserProfileProps) => {
                                     )
                                 }
                             >
-                                <StyledText.Medium>Profile</StyledText.Medium>
+                                <SText.Medium>Profile</SText.Medium>
                             </Pressable>
                             {secondButton && (
                                 <Pressable
                                     style={[styles.button, secondButton.style]}
                                     onPress={secondButton.onPress}
                                 >
-                                    <StyledText.Medium>
+                                    <SText.Medium>
                                         {secondButton.text}
-                                    </StyledText.Medium>
+                                    </SText.Medium>
                                 </Pressable>
                             )}
                         </View>

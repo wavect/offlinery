@@ -16,7 +16,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { ROUTES } from "@/screens/routes";
 import { StyledMaterialIcon } from "@/styles/Icon.styles";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import { includeJWT } from "@/utils/misc.utils";
 import Slider from "@react-native-community/slider";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
@@ -292,13 +292,13 @@ const FindPeople = (
                 )}
 
                 <View style={styles.instructions}>
-                    <StyledText.Subtitle>
+                    <SText.Subtitle>
                         {i18n.t(TR.longPressMapSafeZoneInstruction)}
-                    </StyledText.Subtitle>
+                    </SText.Subtitle>
                 </View>
                 {activeRegionIndex !== null && (
                     <View style={styles.sliderContainer}>
-                        <StyledText.Subtitle bold>
+                        <SText.Subtitle bold>
                             {i18n.t(TR.adjustRegionRadius)} (
                             {Math.round(
                                 uiRadii[activeRegionIndex] ??
@@ -306,7 +306,7 @@ const FindPeople = (
                                         .radius,
                             )}
                             m)
-                        </StyledText.Subtitle>
+                        </SText.Subtitle>
                         <Slider
                             style={styles.slider}
                             minimumValue={100}

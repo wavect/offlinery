@@ -2,7 +2,7 @@ import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { TR, i18n } from "@/localization/translate.service";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import * as React from "react";
 import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -28,9 +28,7 @@ const SafetyCheck = ({
                         navigation.navigate(ROUTES.Onboarding.BookSafetyCall)
                     }
                 />
-                <StyledTextSubtitle>
-                    {i18n.t(TR.book15MinCallDescr)}
-                </StyledTextSubtitle>
+                <SText.Subtitle>{i18n.t(TR.book15MinCallDescr)}</SText.Subtitle>
 
                 <OButtonWide
                     text={i18n.t(TR.iPreferKYC)}
@@ -38,9 +36,7 @@ const SafetyCheck = ({
                     variant="dark"
                     disabled={true}
                 />
-                <StyledText.Subtitle>
-                    {i18n.t(TR.iPreferKYCDescr)}
-                </StyledText.Subtitle>
+                <SText.Subtitle>{i18n.t(TR.iPreferKYCDescr)}</SText.Subtitle>
             </View>
         </OPageContainer>
     );

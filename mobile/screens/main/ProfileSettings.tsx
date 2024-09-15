@@ -18,7 +18,7 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { StyledMaterialIcon } from "@/styles/Icon.styles";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import { includeJWT } from "@/utils/misc.utils";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
@@ -132,7 +132,7 @@ const ProfileSettings = ({
             >
                 <View style={styles.settingsButtonContent}>
                     <StyledMaterialIcon name={icon} size={30} color="#000" />
-                    <StyledText.XSmall>{text}</StyledText.XSmall>
+                    <SText.XSmall>{text}</SText.XSmall>
                 </View>
             </TouchableOpacity>
         );
@@ -142,9 +142,7 @@ const ProfileSettings = ({
         <OPageContainer subtitle={i18n.t(TR.changePreferencesDescr)}>
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <StyledText.Medium>
-                        {i18n.t(TR.myFirstNameIs)}
-                    </StyledText.Medium>
+                    <SText.Small>{i18n.t(TR.myFirstNameIs)}</SText.Small>
                     <OTextInput
                         value={state.firstName}
                         onChangeText={setFirstName}
@@ -154,14 +152,12 @@ const ProfileSettings = ({
 
                 {state.approachChoice !== UserApproachChoiceEnum.approach && (
                     <View style={styles.timePickerContainer}>
-                        <StyledText.Medium>
+                        <SText.Small>
                             {i18n.t(TR.approachMeBetween)}
-                        </StyledText.Medium>
+                        </SText.Small>
                         <View style={styles.timePickerRow}>
                             <View style={styles.timePicker}>
-                                <StyledText.Small>
-                                    {i18n.t(TR.from)}
-                                </StyledText.Small>
+                                <SText.Small>{i18n.t(TR.from)}</SText.Small>
                                 <DateTimePicker
                                     value={new Date(state.approachFromTime)}
                                     mode="time"
@@ -173,9 +169,7 @@ const ProfileSettings = ({
                                 />
                             </View>
                             <View style={styles.timePicker}>
-                                <StyledText.Medium>
-                                    {i18n.t(TR.until)}
-                                </StyledText.Medium>
+                                <SText.Small>{i18n.t(TR.until)}</SText.Small>
                                 <DateTimePicker
                                     value={new Date(state.approachToTime)}
                                     mode="time"
@@ -191,7 +185,7 @@ const ProfileSettings = ({
                 )}
 
                 <View style={styles.inputContainer}>
-                    <StyledText.Medium>{i18n.t(TR.bio)}</StyledText.Medium>
+                    <SText.Small>{i18n.t(TR.bio)}</SText.Small>
                     <OTextInput
                         value={state.bio}
                         onChangeText={setBio}
@@ -201,9 +195,7 @@ const ProfileSettings = ({
                 </View>
 
                 <View style={styles.datePickerContainer}>
-                    <StyledText.Medium>
-                        {i18n.t(TR.myBirthDayIs)}
-                    </StyledText.Medium>
+                    <SText.Small>{i18n.t(TR.myBirthDayIs)}</SText.Small>
                     <DateTimePicker
                         value={state.birthDay}
                         mode="date"
@@ -215,7 +207,7 @@ const ProfileSettings = ({
                 </View>
 
                 <View style={styles.dropdownContainer}>
-                    <StyledText.Medium>{i18n.t(TR.iAmA)}</StyledText.Medium>
+                    <SText.Small>{i18n.t(TR.iAmA)}</SText.Small>
                     <Dropdown
                         data={genderItems}
                         labelField="label"
@@ -231,7 +223,7 @@ const ProfileSettings = ({
                 </View>
 
                 <View style={styles.dropdownContainer}>
-                    <StyledText.Medium>{i18n.t(TR.iLookFor)}</StyledText.Medium>
+                    <SText.Medium>{i18n.t(TR.iLookFor)}</SText.Medium>
                     <Dropdown
                         data={genderItems}
                         labelField="label"

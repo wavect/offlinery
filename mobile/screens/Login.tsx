@@ -3,13 +3,14 @@ import { AuthApi, AuthControllerSignInRequest } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
-import { OTextInputWide } from "@/components/OTextInputWide/OTextInputWide";
+import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { OTroubleSignIn } from "@/components/OTroubleSignIn/OTroubleSignIn";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
-import { ErrorMessage } from "@/styles/View.styles";
+import { SText } from "@/styles/Text.styles";
+import { StyledLoginContainer } from "@/styles/View.styles";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
@@ -74,36 +75,44 @@ const Login = ({
 
     return (
         <OPageColorContainer>
-            <OTextInputWide
-                value={state.email}
-                maxLength={125}
-                autoCapitalize="none"
-                autoComplete="email"
-                keyboardType="email-address"
-                autoCorrect={false}
-                autoFocus={true}
-                inputMode="email"
-                isBottomLabelError={true}
-                bottomLabel={
-                    showInvalidEmailError ? i18n.t(TR.invalidEmail) : undefined
-                }
-                onChangeText={setEmail}
-                placeholder={i18n.t(TR.yourEmail)}
-                topLabel={i18n.t(TR.email)}
-            />
-            <OTextInputWide
-                value={state.clearPassword}
-                maxLength={100}
-                autoCapitalize="none"
-                autoComplete="current-password"
-                inputMode="text"
-                autoCorrect={false}
-                keyboardType="default"
-                onChangeText={setClearPassword}
-                placeholder={i18n.t(TR.yourPassword)}
-                secureTextEntry={true}
-                topLabel={i18n.t(TR.password)}
-            />
+            <StyledLoginContainer>
+                <OTextInput
+                    variant="white"
+                    value={state.email}
+                    maxLength={100}
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    keyboardType="email-address"
+                    autoCorrect={false}
+                    autoFocus={true}
+                    inputMode="email"
+                    isBottomLabelError={true}
+                    bottomLabel={
+                        showInvalidEmailError
+                            ? i18n.t(TR.invalidEmail)
+                            : undefined
+                    }
+                    onChangeText={setEmail}
+                    placeholder={i18n.t(TR.yourEmail)}
+                    topLabel={i18n.t(TR.email)}
+                />
+                <OTextInput
+                    variant="white"
+                    value={state.clearPassword}
+                    maxLength={100}
+                    autoCapitalize="none"
+                    autoComplete="current-password"
+                    inputMode="text"
+                    autoCorrect={false}
+                    keyboardType="default"
+                    onChangeText={setClearPassword}
+                    placeholder={i18n.t(TR.yourPassword)}
+                    isPassword={true}
+                    topLabel={i18n.t(TR.password)}
+                />
+            </StyledLoginContainer>
+
+            {errorMessage ? <SText.Error>{errorMessage}</SText.Error> : null}
 
             <OButtonWide
                 filled={true}
@@ -114,10 +123,7 @@ const Login = ({
                 onPress={login}
                 variant="light"
             />
-            {errorMessage ? <ErrorMessage>{errorMessage}</ErrorMessage> : null}
-
             <OTermsDisclaimer />
-
             <OTroubleSignIn />
         </OPageColorContainer>
     );

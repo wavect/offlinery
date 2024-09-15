@@ -15,7 +15,7 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import * as React from "react";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet } from "react-native";
@@ -104,7 +104,7 @@ const ReportEncounter = ({
                 navigation={navigation}
             />
 
-            <StyledText.Medium>{i18n.t(TR.typeOfIncident)}</StyledText.Medium>
+            <SText.Medium>{i18n.t(TR.typeOfIncident)}</SText.Medium>
             <Dropdown
                 style={styles.dropdown}
                 placeholderStyle={styles.placeholderStyle}
@@ -124,7 +124,7 @@ const ReportEncounter = ({
                 }}
             />
 
-            <StyledText.Medium>What happened?</StyledText.Medium>
+            <SText.Medium>What happened?</SText.Medium>
             <OTextInput
                 value={incidentDescription ?? ""}
                 onChangeText={setIncidentDescription}
@@ -149,7 +149,7 @@ const ReportEncounter = ({
                 onPressOut={() => setIsButtonPressed(false)}
                 onPress={submitReport}
             >
-                <StyledText.Medium>
+                <SText.Medium>
                     {isLoading && (
                         <ActivityIndicator
                             size="small"
@@ -157,7 +157,7 @@ const ReportEncounter = ({
                         />
                     )}
                     {i18n.t(TR.reportNow)}
-                </StyledText.Medium>
+                </SText.Medium>
             </Pressable>
         </OPageContainer>
     );

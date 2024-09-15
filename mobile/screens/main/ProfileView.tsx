@@ -4,7 +4,7 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import React, { useRef, useState } from "react";
 import {
     Dimensions,
@@ -51,11 +51,7 @@ const ProfileView = ({
     );
     const user: UserPublicDTO | undefined = route?.params?.user;
     if (!user)
-        return (
-            <StyledText.Medium>
-                {i18n.t(TR.errNoUserProvided)}
-            </StyledText.Medium>
-        );
+        return <SText.Medium>{i18n.t(TR.errNoUserProvided)}</SText.Medium>;
     const bottomContainerChildren: React.ReactNode =
         route?.params?.bottomContainerChildren;
 
@@ -133,7 +129,7 @@ const ProfileView = ({
                         onPress={() => setFullScreenVisible(false)}
                     >
                         <View style={styles.closeButtonInner}>
-                            <StyledText.Medium>×</StyledText.Medium>
+                            <SText.Medium>×</SText.Medium>
                         </View>
                     </TouchableOpacity>
                     <Image

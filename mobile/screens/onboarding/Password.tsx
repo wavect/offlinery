@@ -90,7 +90,7 @@ const Password = ({
                     autoCorrect={false}
                     keyboardType="default"
                     placeholder={i18n.t(TR.enterOldPassword)}
-                    isSensitiveInformation={true}
+                    isPassword={true}
                     topLabel={i18n.t(TR.currentPassword)}
                 />
             )}
@@ -106,7 +106,7 @@ const Password = ({
                 keyboardType="default"
                 placeholder={i18n.t(TR.enterPassword)}
                 isBottomLabelError={!!passwordError}
-                isSensitiveInformation={true}
+                isPassword={true}
                 bottomLabel={passwordError}
                 topLabel={i18n.t(
                     isChangePassword ? TR.newPassword : TR.strongPassword,
@@ -125,7 +125,7 @@ const Password = ({
                 placeholder={i18n.t(TR.repeatPassword)}
                 topLabel={i18n.t(TR.repeatPassword)}
                 isBottomLabelError={!!passwordErrorConfirmation}
-                isSensitiveInformation={true}
+                isPassword={true}
                 bottomLabel={passwordErrorConfirmation}
             />
         </OPageContainer>

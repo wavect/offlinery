@@ -2,6 +2,9 @@ import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { Dimensions, Platform } from "react-native";
 import styled from "styled-components/native";
 
+const { width, height } = Dimensions.get("window");
+const aspectRatio = height / width;
+
 export const TermsContainerOuter = styled.View`
     margin-bottom: 25px;
     min-height: 81px;
@@ -31,8 +34,31 @@ export const TermsLink = styled.Text`
     text-decoration-line: underline;
 `;
 
-export const Container = styled.View`
+export const FlexContainer = styled.View`
+    flex: 1;
+`;
+
+export const FullWidthContainer = styled.View`
     width: 100%;
+`;
+
+export const SpaceBetweenContainer = styled.View`
+    flex: 1;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+export const StyledLoginContainer = styled.View`
+    width: 95%;
+    margin-top: 22px;
+    margin-bottom: 40px;
+`;
+
+export const CenteredContainer = styled.View`
+    flex-grow: 1;
+    justify-content: center;
+    padding-horizontal: width * 0.05;
+    align-items: center;
 `;
 
 export const PageContainer = styled.View`
@@ -67,8 +93,27 @@ export const SplashContainerView = styled.View`
     margin-top: 334px;
 `;
 
-const { width, height } = Dimensions.get("window");
-const aspectRatio = height / width;
+export const ScrollViewContainer = styled.ScrollView.attrs({
+    contentContainerStyle: {
+        flexGrow: 1,
+        justifyContent: "center",
+        paddingHorizontal: width * 0.05,
+    },
+    keyboardShouldPersistTaps: "handled",
+})`
+    flex: 1;
+`;
+
+export const StyledKeyboardAvoidingView = styled.KeyboardAvoidingView`
+    flex: 1;
+`;
+
+export const ShowCaseHeadlineContainer = styled.View`
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+`;
 
 export const AuthContainer = styled.View`
     width: 100%;
@@ -86,14 +131,6 @@ export const WelcomeButtonContainer = styled.View`
 export const Content = styled.View`
     align-items: center;
     width: 100%;
-`;
-
-export const ErrorMessage = styled.Text`
-    color: ${Color.lightOrange};
-    font-size: ${FontSize.size_sm}px;
-    font-family: ${FontFamily.montserratSemiBold};
-    text-align: center;
-    margin-bottom: ${height * 0.01}px;
 `;
 
 export const RuleItemContainer = styled.View`

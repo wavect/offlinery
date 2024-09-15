@@ -15,7 +15,7 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { IOButtonSmallVariant } from "@/styles/Button.styles";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import * as React from "react";
 import { useState } from "react";
@@ -84,12 +84,12 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     source={{ uri: encounterProfile.imageURIs[0] }}
                 />
                 <View style={styles.encounterDetails}>
-                    <StyledText.Small
+                    <SText.Small
                         style={styles.nameAge}
-                    >{`${encounterProfile.firstName}, ${encounterProfile.age}`}</StyledText.Small>
-                    <StyledText.Medium>
+                    >{`${encounterProfile.firstName}, ${encounterProfile.age}`}</SText.Small>
+                    <SText.Medium>
                         {`${encounterProfile.lastTimePassedBy} near ${encounterProfile.lastLocationPassedBy}`}
-                    </StyledText.Medium>
+                    </SText.Medium>
 
                     {showActions && (
                         <View style={styles.encounterDropdownContainer}>
@@ -121,11 +121,11 @@ const OEncounter = (props: ISingleEncounterProps) => {
                 {showActions && (
                     <View style={styles.rightColumn}>
                         {encounterProfile.rating && (
-                            <StyledText.Small
+                            <SText.Small
                                 onPress={() => alert(i18n.t(TR.ratingDescr))}
                             >
                                 {i18n.t(TR.trust)}({encounterProfile.rating})
-                            </StyledText.Small>
+                            </SText.Small>
                         )}
                         {dateStatus ===
                             EncounterPublicDTOStatusEnum.met_interested && (
@@ -183,12 +183,12 @@ const OEncounter = (props: ISingleEncounterProps) => {
             {dateStatus === EncounterPublicDTOStatusEnum.met_interested &&
                 encounterProfile.lastReceivedMessage && (
                     <View style={styles.receivedMessageContainer}>
-                        <StyledText.Medium>
+                        <SText.Medium>
                             {i18n.t(TR.receivedMessage)}:
-                        </StyledText.Medium>
-                        <StyledText.Medium>
+                        </SText.Medium>
+                        <SText.Medium>
                             {encounterProfile.lastReceivedMessage.content}
-                        </StyledText.Medium>
+                        </SText.Medium>
                     </View>
                 )}
 

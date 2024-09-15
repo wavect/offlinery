@@ -17,7 +17,7 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, MapRegion, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { StyledMaterialIcon } from "@/styles/Icon.styles";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import { ROUTES } from "../routes";
 
 type DontApproachMeHereProps = NativeStackScreenProps<
@@ -216,14 +216,14 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                 )}
                 {activeRegionIndex !== null && (
                     <View style={styles.sliderContainer}>
-                        <StyledText.Subtitle>
+                        <SText.Subtitle>
                             {i18n.t(TR.adjustRegionRadius)}&nbsp;(
                             {Math.round(
                                 state.blacklistedRegions[activeRegionIndex]
                                     .radius,
                             )}
                             m)
-                        </StyledText.Subtitle>
+                        </SText.Subtitle>
                         <Slider
                             style={styles.slider}
                             minimumValue={100}
@@ -238,9 +238,9 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                     </View>
                 )}
                 <View style={styles.instructions}>
-                    <StyledText.Subtitle>
+                    <SText.Subtitle>
                         {i18n.t(TR.longPressMapSafeZoneInstruction)}
-                    </StyledText.Subtitle>
+                    </SText.Subtitle>
                 </View>
             </>
         </OPageContainer>

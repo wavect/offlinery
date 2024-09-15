@@ -10,7 +10,7 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -69,9 +69,9 @@ const BioLetThemKnow = ({
                     placeholder={i18n.t(TR.noPickUpLinesBeChill)}
                 />
                 <View style={styles.characterCountContainer}>
-                    <StyledText.Small>
+                    <SText.Small>
                         {MAX_LENGTH_BIO - state.bio.length}
-                    </StyledText.Small>
+                    </SText.Small>
                 </View>
             </View>
 

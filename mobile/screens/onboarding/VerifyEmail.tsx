@@ -5,7 +5,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -29,7 +29,7 @@ const VerifyEmail = ({
     const isInvalidCode = () => code.some((digit) => digit === "");
 
     useEffect(() => {
-        sendVerificationCode();
+        // sendVerificationCode();
     }, []);
 
     useEffect(() => {
@@ -70,6 +70,10 @@ const VerifyEmail = ({
     };
 
     const handleSubmit = async () => {
+        navigation.navigate(ROUTES.Onboarding.Password);
+        return;
+        /** @DEV REMOVE */
+
         const verificationCode = code.join("");
 
         const regApi = new RegistrationApi();
@@ -87,6 +91,7 @@ const VerifyEmail = ({
     };
 
     const sendVerificationCode = async () => {
+        return null; /** @DEV REMOVE */
         try {
             setLoading(true);
             const regApi = new RegistrationApi();
@@ -160,9 +165,7 @@ const VerifyEmail = ({
                     />
                 ))}
             </View>
-            {errorMessage && (
-                <StyledText.Medium>{errorMessage}</StyledText.Medium>
-            )}
+            {errorMessage && <SText.Medium>{errorMessage}</SText.Medium>}
             <View style={styles.resendContainer}>
                 <OButtonWide
                     text={
@@ -172,7 +175,7 @@ const VerifyEmail = ({
                     }
                     isLoading={isLoading}
                     loadingBtnText={i18n.t(TR.verificationCodeLoadingBtnLbl)}
-                    // disabled={isResendDisabled}
+                    disabled={isResendDisabled}
                     filled={false}
                     variant="dark"
                     onPress={sendVerificationCode}
@@ -196,6 +199,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         textAlign: "center",
         fontSize: 20,
+        marginRight: 10,
     },
     resendContainer: {
         marginTop: 16,

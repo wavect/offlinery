@@ -7,7 +7,7 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { calculateDistance, getRegionForCoordinates } from "@/utils/map.utils";
 import * as Location from "expo-location";
@@ -171,11 +171,11 @@ const NavigateToApproach = ({
                             anchor={{ x: 0.5, y: 0.5 }}
                         >
                             <View style={styles.distanceMarker}>
-                                <StyledText.Medium>
+                                <SText.Medium>
                                     {distance
                                         ? `${distance.toFixed(2)} km`
                                         : i18n.t(TR.calculating)}
-                                </StyledText.Medium>
+                                </SText.Medium>
                             </View>
                         </Marker>
                     </>

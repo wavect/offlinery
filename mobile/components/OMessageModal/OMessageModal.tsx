@@ -6,7 +6,7 @@ import {
 } from "@/components/OButtonSmall/OButtonSmall";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import { getJwtHeader } from "@/utils/misc.utils";
 import React, { useState } from "react";
 import { Modal, Pressable, StyleSheet, TextInput, View } from "react-native";
@@ -49,14 +49,12 @@ const OMessageModal = (props: IOMessageModalProps) => {
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                     <Pressable style={styles.closeButton} onPress={onClose}>
-                        <StyledText.Medium>×</StyledText.Medium>
+                        <SText.Medium>×</SText.Medium>
                     </Pressable>
-                    <StyledText.Medium>
-                        {i18n.t(TR.leaveMessage)}
-                    </StyledText.Medium>
-                    <StyledText.Medium>
+                    <SText.Medium>{i18n.t(TR.leaveMessage)}</SText.Medium>
+                    <SText.Medium>
                         {i18n.t(TR.messageInstructions)}
-                    </StyledText.Medium>
+                    </SText.Medium>
                     <TextInput
                         onChangeText={setMessage}
                         value={message}
@@ -70,9 +68,7 @@ const OMessageModal = (props: IOMessageModalProps) => {
                         fullWidth={true}
                         onPress={handleSend}
                     />
-                    <StyledText.Small>
-                        {i18n.t(TR.messageWarning)}
-                    </StyledText.Small>
+                    <SText.Small>{i18n.t(TR.messageWarning)}</SText.Small>
                 </View>
             </View>
         </Modal>

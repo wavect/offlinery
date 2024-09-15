@@ -1,5 +1,6 @@
-import { ReactNode } from "react";
-import { StyleProp, View, ViewStyle } from "react-native";
+import { SpaceBetweenContainer } from "@/styles/View.styles";
+import React, { ReactNode } from "react";
+import { StyleProp, ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface IOSafeAreaContainerProps {
@@ -14,7 +15,7 @@ export const OSafeAreaContainer = (props: IOSafeAreaContainerProps) => {
     const insets = useSafeAreaInsets();
 
     return (
-        <View
+        <SpaceBetweenContainer
             style={[
                 {
                     paddingTop: insets.top,
@@ -22,10 +23,9 @@ export const OSafeAreaContainer = (props: IOSafeAreaContainerProps) => {
                     paddingLeft: insets.left,
                     paddingRight: insets.right,
                 },
-                containerStyle,
             ]}
         >
             {children}
-        </View>
+        </SpaceBetweenContainer>
     );
 };

@@ -9,7 +9,7 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { ROUTES } from "@/screens/routes";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { includeJWT } from "@/utils/misc.utils";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
@@ -160,10 +160,8 @@ const Encounters = ({
                 ))
             ) : (
                 <View style={styles.noEncountersContainer}>
-                    <StyledText.Large>Nobody was nearby..</StyledText.Large>
-                    <StyledText.Medium>
-                        (hint: mingle with the crowd)
-                    </StyledText.Medium>
+                    <SText.Large>Nobody was nearby..</SText.Large>
+                    <SText.Medium>(hint: mingle with the crowd)</SText.Medium>
                 </View>
             )}
         </ScrollView>
@@ -177,7 +175,7 @@ const Encounters = ({
             <View style={styles.container}>
                 <View style={styles.dateRangeContainer}>
                     <View style={styles.dateContainer}>
-                        <StyledText.Medium>From</StyledText.Medium>
+                        <SText.Medium>From</SText.Medium>
                         {Platform.OS === "ios" ? (
                             <RNDateTimePicker
                                 display="default"
@@ -192,9 +190,9 @@ const Encounters = ({
                                 <TouchableOpacity
                                     onPress={() => setShowStartDatePicker(true)}
                                 >
-                                    <StyledText.Medium>
+                                    <SText.Medium>
                                         {metStartDateFilter.toDateString()}
-                                    </StyledText.Medium>
+                                    </SText.Medium>
                                 </TouchableOpacity>
                                 {showStartDatePicker && (
                                     <RNDateTimePicker
@@ -208,7 +206,7 @@ const Encounters = ({
                         )}
                     </View>
                     <View style={styles.dateContainer}>
-                        <StyledText.Medium>To</StyledText.Medium>
+                        <SText.Medium>To</SText.Medium>
                         {Platform.OS === "ios" ? (
                             <RNDateTimePicker
                                 display="default"
@@ -223,11 +221,11 @@ const Encounters = ({
                                 <TouchableOpacity
                                     onPress={() => setShowEndDatePicker(true)}
                                 >
-                                    <StyledText.Medium
+                                    <SText.Medium
                                         style={styles.androidDateButton}
                                     >
                                         {metEndDateFilter.toDateString()}
-                                    </StyledText.Medium>
+                                    </SText.Medium>
                                 </TouchableOpacity>
                                 {showEndDatePicker && (
                                     <RNDateTimePicker

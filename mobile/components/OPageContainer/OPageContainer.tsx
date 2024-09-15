@@ -1,6 +1,6 @@
 import { Color } from "@/GlobalStyles";
 import { StyledMaterialIcon } from "@/styles/Icon.styles";
-import { StyledText } from "@/styles/Text.styles";
+import { SText } from "@/styles/Text.styles";
 import {
     ButtonContainer,
     Content,
@@ -48,13 +48,9 @@ export const OPageContainer = (props: IOPageContainerProps) => {
                 keyboardShouldPersistTaps="handled"
             >
                 <Content>
-                    {props.title && (
-                        <StyledText.Title>{props.title}</StyledText.Title>
-                    )}
+                    {props.title && <SText.Title>{props.title}</SText.Title>}
                     {props.subtitle && (
-                        <StyledText.Subtitle>
-                            {props.subtitle}
-                        </StyledText.Subtitle>
+                        <SText.Subtitle>{props.subtitle}</SText.Subtitle>
                     )}
                     {props.children}
                 </Content>

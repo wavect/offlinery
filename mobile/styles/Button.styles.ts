@@ -82,7 +82,7 @@ export const OButtonWideBase = styled.Pressable<{
                 : Color.white};
     ${({ disabled, filled }) =>
         disabled && filled && `elevation: 0; shadow-color: transparent;`}
-    marginTop: 5px
+    marginTop: 8px
 `;
 
 export const OButtonWideText = styled.Text<{
@@ -114,7 +114,7 @@ export const ButtonBase = styled.Pressable<{
     isDisabled: boolean;
     fullWidth: boolean;
 }>`
-    ${baseButtonStyle}
+    ${baseButtonStyle};
     width: ${({ fullWidth }) => (fullWidth ? "100%" : "auto")};
     border-width: 1px;
     border-radius: 8px;
@@ -134,7 +134,7 @@ export const ButtonBase = styled.Pressable<{
 `;
 
 export const ButtonText = styled.Text`
-    ${baseLabelStyle}
+    ${baseLabelStyle};
     color: ${Color.white};
     font-size: ${FontSize.size_md}px;
 `;
