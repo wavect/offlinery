@@ -100,7 +100,7 @@ export const de: Language = {
     verify: "Bestätigen",
     verificationCodeSent:
         "Der 6-stellige Code, den wir dir per E-Mail gesendet haben",
-    myFirstNameIs: "Mein Vorname ist",
+    myFirstNameIs: "Vorname",
     myFirstNameDescr: "So wirst du in Offlinery angezeigt.",
     enterFirstName: "Vornamen eingeben",
     woman: "Frau",

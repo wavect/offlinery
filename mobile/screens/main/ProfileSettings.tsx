@@ -131,8 +131,15 @@ const ProfileSettings = ({
                 onPress={onPress}
             >
                 <View style={styles.settingsButtonContent}>
-                    <StyledMaterialIcon name={icon} size={30} color="#000" />
-                    <SText.XSmall>{text}</SText.XSmall>
+                    <StyledMaterialIcon
+                        name={icon}
+                        size={30}
+                        color="#000"
+                        noMargin
+                    />
+                    <SText.XSmall center bold>
+                        {text}
+                    </SText.XSmall>
                 </View>
             </TouchableOpacity>
         );
