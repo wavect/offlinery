@@ -16,7 +16,7 @@ export const OTroubleSignIn = (props: IOTroubleSignIn) => {
     };
 
     return (
-        <StyledLink onPress={writeSupportEmail}>
+        <StyledLink marginTop={16} onPress={writeSupportEmail}>
             {i18n.t(TR.troubleSignIn)}
         </StyledLink>
     );

@@ -7,14 +7,33 @@ interface StyledIconProps {
     size?: number;
     color?: string;
     noMargin?: boolean;
+    margin?: number | string;
+    marginTop?: number | string;
+    marginRight?: number | string;
+    marginBottom?: number | string;
+    marginLeft?: number | string;
 }
 
 const iconStyles = css<StyledIconProps>`
-    ${(props) =>
-        !props.noMargin &&
-        css`
-            margin-right: 14px;
-        `}
+    ${({
+        noMargin,
+        margin,
+        marginTop,
+        marginRight,
+        marginBottom,
+        marginLeft,
+    }) => {
+        if (noMargin) return "";
+        if (margin || marginTop || marginRight || marginBottom || marginLeft) {
+            return css`
+                ${margin !== undefined ? `margin: ${margin}px;` : ""}
+                ${marginTop !== undefined ? `margin-top: ${marginTop}px;` : ""}
+        ${marginRight !== undefined ? `margin-right: ${marginRight}px;` : ""}
+        ${marginBottom !== undefined ? `margin-bottom: ${marginBottom}px;` : ""}
+        ${marginLeft !== undefined ? `margin-left: ${marginLeft}px;` : ""}
+            `;
+        }
+    }}
 `;
 
 export const StyledMaterialIcon = styled(MaterialIcons).attrs<StyledIconProps>(

@@ -50,9 +50,9 @@ const GenderChoice = ({
                     variant="dark"
                     disabled={true}
                 />
-                <SText.Subtitle>
+                <SText.Small marginTop={18}>
                     {i18n.t(TR.genderMoreComingSoon)}
-                </SText.Subtitle>
+                </SText.Small>
             </View>
         </OPageContainer>
     );

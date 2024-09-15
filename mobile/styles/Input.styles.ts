@@ -12,7 +12,7 @@ export const OTextInputContainer = styled.View<{
     padding-horizontal: 12px;
     flex-direction: row;
     align-items: center;
-    height: 64px;
+    height: 56px;
     border: 2px solid
         ${(props) => (props.variant === "primary" ? Color.primary : "white")};
     border-radius: 8px;

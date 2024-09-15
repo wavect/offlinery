@@ -15,8 +15,23 @@ export const StyledLinearGradient = styled(LinearGradient)`
     background-color: transparent;
 `;
 
-export const StyledLink = styled(A)`
+interface StyledLinkProps {
+    margin?: number | string;
+    marginTop?: number | string;
+    marginRight?: number | string;
+    marginBottom?: number | string;
+    marginLeft?: number | string;
+}
+
+export const StyledLink = styled(A)<StyledLinkProps>`
     color: white;
     text-decoration: underline;
     text-decoration-color: white;
+    ${({ margin, marginTop, marginRight, marginBottom, marginLeft }) => `
+    ${margin !== undefined ? `margin: ${margin}px;` : ""}
+    ${marginTop !== undefined ? `margin-top: ${marginTop}px;` : ""}
+    ${marginRight !== undefined ? `margin-right: ${marginRight}px;` : ""}
+    ${marginBottom !== undefined ? `margin-bottom: ${marginBottom}px;` : ""}
+    ${marginLeft !== undefined ? `margin-left: ${marginLeft}px;` : ""}
+  `}
 `;

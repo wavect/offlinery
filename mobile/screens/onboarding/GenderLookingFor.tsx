@@ -53,9 +53,14 @@ const GenderLookingFor = ({
                     variant="dark"
                     disabled={true}
                 />
-                <SText.Subtitle>
+                <SText.Small
+                    marginTop={16}
+                    marginRight={10}
+                    marginLeft={10}
+                    center
+                >
                     {i18n.t(TR.genderMoreComingSoon)}
-                </SText.Subtitle>
+                </SText.Small>
             </View>
         </OPageContainer>
     );

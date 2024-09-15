@@ -64,7 +64,7 @@ export const OButtonWideBase = styled.Pressable<{
     width: 100%;
     background-color: ${({ filled, variant, disabled }) =>
         disabled
-            ? Color.lightGray
+            ? Color.white
             : filled
               ? variant === "dark"
                   ? Color.primary
@@ -91,7 +91,7 @@ export const OButtonWideText = styled.Text<{
     disabled: boolean;
     size: ButtonSize;
 }>`
-    ${baseLabelStyle}
+    ${baseLabelStyle};
     line-height: ${({ size }) => (size === "smaller" ? "18px" : "28px")};
     font-size: ${({ size }) =>
         size === "smaller" ? FontSize.size_md : FontSize.size_xl}px;

@@ -50,7 +50,9 @@ export const OPageContainer = (props: IOPageContainerProps) => {
                 <Content>
                     {props.title && <SText.Title>{props.title}</SText.Title>}
                     {props.subtitle && (
-                        <SText.Subtitle>{props.subtitle}</SText.Subtitle>
+                        <SText.Small marginBottom={18}>
+                            {props.subtitle}
+                        </SText.Small>
                     )}
                     {props.children}
                 </Content>

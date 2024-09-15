@@ -277,26 +277,27 @@ const FindPeople = (
                             name="delete-outline"
                             size={40}
                             color="red"
+                            noMargin
                         />
                     </Pressable>
                 )}
 
                 <View style={styles.instructions}>
-                    <SText.Subtitle>
+                    <SText.Small>
                         {i18n.t(TR.longPressMapSafeZoneInstruction)}
-                    </SText.Subtitle>
+                    </SText.Small>
                 </View>
                 {activeRegionIndex !== null && (
                     <View style={styles.sliderContainer}>
-                        <SText.Subtitle bold>
+                        <SText.Medium bold>
                             {i18n.t(TR.adjustRegionRadius)} (
                             {Math.round(
                                 uiRadii[activeRegionIndex] ??
                                     state.blacklistedRegions[activeRegionIndex]
                                         .radius,
                             )}
-                            m)
-                        </SText.Subtitle>
+                            )
+                        </SText.Medium>
                         <Slider
                             style={styles.slider}
                             minimumValue={100}

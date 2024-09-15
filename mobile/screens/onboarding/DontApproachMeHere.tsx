@@ -11,6 +11,7 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, MapRegion, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { StyledMaterialIcon } from "@/styles/Icon.styles";
+import { SText } from "@/styles/Text.styles";
 import { getMapProvider } from "@/utils/map-provider";
 import { ROUTES } from "../routes";
 
@@ -27,7 +28,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
         null,
     );
     const mapRef = useRef<MapView | null>(null);
-    const [mapRegion, setMapRegion] = useState<Region>({
+    const [mapRegion] = useState<Region>({
         latitude: 47.257832302,
         longitude: 11.383665132,
         latitudeDelta: 0.0922,
@@ -228,9 +229,9 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                     </View>
                 )}
                 <View style={styles.instructions}>
-                    <SText.Subtitle>
+                    <SText.Small>
                         {i18n.t(TR.longPressMapSafeZoneInstruction)}
-                    </SText.Subtitle>
+                    </SText.Small>
                 </View>
             </>
         </OPageContainer>

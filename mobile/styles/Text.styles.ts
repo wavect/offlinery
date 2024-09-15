@@ -8,6 +8,10 @@ interface TextProps {
     error?: boolean;
     center?: boolean;
     margin?: number | string;
+    marginTop?: number | string;
+    marginRight?: number | string;
+    marginBottom?: number | string;
+    marginLeft?: number | string;
 }
 
 const baseTextStyles = css<TextProps>`
@@ -23,6 +27,13 @@ const baseTextStyles = css<TextProps>`
         css`
             text-align: center;
         `}
+    ${({ margin, marginTop, marginRight, marginBottom, marginLeft }) => css`
+        ${margin !== undefined ? `margin: ${margin}px;` : ""}
+        ${marginTop !== undefined ? `margin-top: ${marginTop}px;` : ""}
+    ${marginRight !== undefined ? `margin-right: ${marginRight}px;` : ""}
+    ${marginBottom !== undefined ? `margin-bottom: ${marginBottom}px;` : ""}
+    ${marginLeft !== undefined ? `margin-left: ${marginLeft}px;` : ""}
+    `}
 `;
 
 const createStyledText = (
@@ -34,6 +45,9 @@ const createStyledText = (
         font-size: ${FontSize[size]}px;
         ${(props) =>
             !props.noMargin &&
+            !props.margin &&
+            !props.marginTop &&
+            !props.marginBottom &&
             css`
                 margin-bottom: ${defaultMargin}px;
                 margin-top: ${defaultMargin}px;
@@ -42,23 +56,51 @@ const createStyledText = (
 };
 
 const XSmall = styled(createStyledText("size_xs"))<TextProps>`
-    margin-bottom: ${(props) => (props.noMargin ? 0 : "2px")};
-    margin-top: ${(props) => (props.noMargin ? 0 : "2px")};
+    ${(props) =>
+        !props.noMargin &&
+        !props.margin &&
+        !props.marginTop &&
+        !props.marginBottom &&
+        css`
+            margin-bottom: ${props.noMargin ? 0 : "2px"};
+            margin-top: ${props.noMargin ? 0 : "2px"};
+        `}
 `;
 
 const Small = styled(createStyledText("size_sm"))<TextProps>`
-    margin-bottom: ${(props) => (props.noMargin ? 0 : "8px")};
-    margin-top: ${(props) => (props.noMargin ? 0 : "12px")};
+    ${(props) =>
+        !props.noMargin &&
+        !props.margin &&
+        !props.marginTop &&
+        !props.marginBottom &&
+        css`
+            margin-bottom: ${props.noMargin ? 0 : "12px"};
+            margin-top: ${props.noMargin ? 0 : "12px"};
+        `}
 `;
 
 const Medium = styled(createStyledText("size_md"))<TextProps>`
-    margin-bottom: ${(props) => (props.noMargin ? 0 : "4px")};
-    margin-top: ${(props) => (props.noMargin ? 0 : "4px")};
+    ${(props) =>
+        !props.noMargin &&
+        !props.margin &&
+        !props.marginTop &&
+        !props.marginBottom &&
+        css`
+            margin-bottom: ${props.noMargin ? 0 : "4px"};
+            margin-top: ${props.noMargin ? 0 : "4px"};
+        `}
 `;
 
 const Large = styled(createStyledText("size_xl"))<TextProps>`
-    margin-bottom: ${(props) => (props.noMargin ? 0 : "5px")};
-    margin-top: ${(props) => (props.noMargin ? 0 : "5px")};
+    ${(props) =>
+        !props.noMargin &&
+        !props.margin &&
+        !props.marginTop &&
+        !props.marginBottom &&
+        css`
+            margin-bottom: ${props.noMargin ? 0 : "5px"};
+            margin-top: ${props.noMargin ? 0 : "5px"};
+        `}
 `;
 
 const InputLabel = styled(createStyledText("size_md", 24))<TextProps>`
@@ -72,13 +114,16 @@ const InputLabel = styled(createStyledText("size_md", 24))<TextProps>`
     font-size: 16px;
     ${(props) =>
         !props.noMargin &&
+        !props.margin &&
+        !props.marginTop &&
+        !props.marginBottom &&
         css`
             margin-top: 14px;
             margin-bottom: 8px;
         `}
 `;
 
-const Subtitle = styled(createStyledText("size_md", 24))<TextProps>`
+const Subtitle = styled(createStyledText("size_xl", 24))<TextProps>`
     color: ${(props) => {
         if (props.error) return Color.red;
         if (props.white) return Color.white;
@@ -86,6 +131,8 @@ const Subtitle = styled(createStyledText("size_md", 24))<TextProps>`
     }};
     ${(props) =>
         !props.noMargin &&
+        !props.margin &&
+        !props.marginTop &&
         css`
             margin-top: 8px;
         `}
@@ -99,17 +146,32 @@ const Title = styled(createStyledText("size_xl"))<TextProps>`
 const Error = styled(createStyledText("size_xl"))<TextProps>`
     font-size: ${FontSize.size_sm}px;
     color: red;
-    margin-top: 16px;
     font-weight: 900;
-    margin-bottom: 8px;
+    ${(props) =>
+        !props.noMargin &&
+        !props.margin &&
+        !props.marginTop &&
+        !props.marginBottom &&
+        css`
+            margin-top: 16px;
+            margin-bottom: 8px;
+        `}
 `;
 
-export const CheckboxLabel = styled.Text`
+export const CheckboxLabel = styled.Text<TextProps>`
     flex: 1;
     font-size: ${FontSize.size_sm}px;
     color: ${Color.gray};
-    margin-left: 10px;
-    margin-top: 10px;
+    ${(props) =>
+        !props.noMargin &&
+        !props.margin &&
+        !props.marginTop &&
+        !props.marginLeft &&
+        css`
+            margin-left: 10px;
+            margin-top: 10px;
+        `}
+    ${baseTextStyles}
 `;
 
 export const SText = {
