@@ -2,7 +2,7 @@ import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { UserApi, UserVerificationStatusEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
-import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
+import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OShowcase } from "@/components/OShowcase/OShowcase";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
@@ -36,7 +36,7 @@ const WaitingForVerification = ({
     };
 
     return (
-        <OLinearBackground refreshFunc={reloadUserState}>
+        <OPageColorContainer refreshFunc={reloadUserState}>
             <View style={styles.layoutContainer}>
                 <OShowcase subtitle={i18n.t(TR.stopSwipingMeetIrl)} />
 
@@ -72,7 +72,7 @@ const WaitingForVerification = ({
                     {i18n.t(TR.somethingWrongQ)}
                 </A>
             </View>
-        </OLinearBackground>
+        </OPageColorContainer>
     );
 };
 

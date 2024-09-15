@@ -83,7 +83,9 @@ const RuleItem: React.FC<IRuleItemProps> = ({ title, description }) => (
             <SText.Large white noMargin>
                 {title}
             </SText.Large>
-            <SText.Small>{description}</SText.Small>
+            <SText.Small white noMargin>
+                {description}
+            </SText.Small>
         </RuleTextContainer>
     </RuleItemContainer>
 );
