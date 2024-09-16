@@ -73,13 +73,10 @@ export class UserRepository extends Repository<User> {
     }
 
     async getPotentialMatches(userToBeApproached: User): Promise<User[]> {
-        return (
-            this.createUserMatchBaseQuery(userToBeApproached)
-                /** @BUG (4326)*/
-                .withinDistance(userToBeApproached.location, 1500)
-                .withUserWantingToBeApproached()
-                .getMany()
-        );
+        return this.createUserMatchBaseQuery(userToBeApproached)
+            .withinDistance(userToBeApproached.location, 1500)
+            .withUserWantingToBeApproached()
+            .getMany();
     }
 
     private addEncounterJoins(): this {

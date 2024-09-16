@@ -19,6 +19,7 @@ import { UserService } from "./user.service";
             UserReport,
             Encounter,
             PendingUser,
+            AuthModule,
         ]),
         forwardRef(() => MatchingModule),
         forwardRef(() => AuthModule),

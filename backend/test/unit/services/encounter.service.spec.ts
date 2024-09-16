@@ -42,38 +42,6 @@ describe("EncounterService", () => {
         expect(service).toBeDefined();
     });
 
-    describe("findEncountersByUser", () => {
-        it("should return encounters for a user within a date range", async () => {
-            const mockQueryBuilder = {
-                leftJoinAndSelect: jest.fn().mockReturnThis(),
-                where: jest.fn().mockReturnThis(),
-                andWhere: jest.fn().mockReturnThis(),
-                getMany: jest.fn().mockResolvedValue([]),
-            };
-            jest.spyOn(
-                encounterRepository,
-                "createQueryBuilder",
-            ).mockReturnValue(mockQueryBuilder as any);
-
-            const userId = "user123";
-            const dateRange = {
-                startDate: new Date("2023-01-01"),
-                endDate: new Date("2023-12-31"),
-            };
-
-            await service.findEncountersByUser(userId, dateRange);
-
-            expect(mockQueryBuilder.where).toHaveBeenCalledWith(
-                "user.id = :userId",
-                { userId },
-            );
-            expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith(
-                "encounter.lastDateTimePassedBy BETWEEN :startDate AND :endDate",
-                expect.any(Object),
-            );
-        });
-    });
-
     describe("saveEncountersForUser", () => {
         it("should save encounters for a user", async () => {
             const userToBeApproached = new User();

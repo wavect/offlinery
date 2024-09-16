@@ -37,7 +37,10 @@ describe("User Entity", () => {
                 id: "1",
                 firstName: "John",
                 age: getAge(user.birthDay),
-                imageURIs: ["image1.jpg", "image2.jpg"],
+                imageURIs: [
+                    "https://offlinery.onrender.com/img/image1.jpg",
+                    "https://offlinery.onrender.com/img/image2.jpg",
+                ],
                 bio: "Hello, I am John",
                 trustScore: 85,
             });
@@ -56,7 +59,10 @@ describe("User Entity", () => {
                 id: "1",
                 firstName: "John",
                 age: getAge(user.birthDay),
-                imageURIs: ["image1.jpg", "image2.jpg"],
+                imageURIs: [
+                    "https://offlinery.onrender.com/img/image1.jpg",
+                    "https://offlinery.onrender.com/img/image2.jpg",
+                ],
                 bio: "Hello, I am John",
                 trustScore: 85,
                 isActive: true,
