@@ -18,6 +18,7 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
+import { formatDate } from "@/utils/date.utils";
 import * as React from "react";
 import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
@@ -90,7 +91,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     >{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>
                     <Text
                         style={styles.encounterInfo}
-                    >{`${encounterProfile.lastTimePassedBy} near ${encounterProfile.lastLocationPassedBy}`}</Text>
+                    >{`${formatDate(encounterProfile.lastTimePassedBy)} near ${encounterProfile.lastLocationPassedBy}`}</Text>
 
                     {showActions && (
                         <View style={styles.encounterDropdownContainer}>
