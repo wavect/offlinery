@@ -11,6 +11,9 @@ import {
 } from "@/types/user.types";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import * as fs from "fs";
+import * as path from "path";
+import { Readable } from "stream";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -22,6 +25,41 @@ export class RandomUsersSeeder {
     ) {}
 
     private AMOUNT_OF_USERS = 300;
+
+    createFileFromImage(index: number = 0): Express.Multer.File {
+        const actualFilename = "img.png";
+
+        const imagePath = path.join(
+            __dirname,
+            "..",
+            "..",
+            "uploads",
+            "placeholder",
+            actualFilename,
+        );
+
+        const buffer = fs.readFileSync(imagePath);
+        const stats = fs.statSync(imagePath);
+
+        const fileStream = new Readable();
+        fileStream.push(buffer);
+        fileStream.push(null);
+
+        const file: Express.Multer.File = {
+            fieldname: "file",
+            originalname: index.toString(), // Set this to a string number
+            encoding: "7bit",
+            mimetype: "image/png",
+            buffer,
+            size: stats.size,
+            destination: "uploads/",
+            filename: actualFilename,
+            path: path.join("uploads", actualFilename),
+            stream: fileStream,
+        };
+
+        return file;
+    }
 
     async seedRandomUsers(): Promise<void> {
         try {
@@ -53,9 +91,11 @@ export class RandomUsersSeeder {
             }
 
             try {
-                await this.userService.createUser(user, []);
+                await this.userService.createUser(user, [
+                    this.createFileFromImage(),
+                ]);
             } catch (e) {
-                // any duplicates, fail silently
+                console.log("SEED Error", e);
             }
         }
 

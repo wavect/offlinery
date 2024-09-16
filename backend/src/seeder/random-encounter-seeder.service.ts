@@ -9,13 +9,13 @@ import { Repository } from "typeorm";
 @Injectable()
 export class RandomEncounterSeeder {
     constructor(
-        @InjectRepository(User)
-        private userRepository: Repository<User>,
+        @InjectRepository(User) private userRepository: Repository<User>,
         @InjectRepository(Encounter)
         private encounterRepository: Repository<Encounter>,
     ) {}
 
-    private ENCOUNTERS_PER_USER = 5;
+    private ENCOUNTERS = 10;
+    private RANDOM_USERS_COUNT = 15;
 
     async seedRandomEncounters(): Promise<void> {
         const encounters = await this.encounterRepository.find();
@@ -23,27 +23,39 @@ export class RandomEncounterSeeder {
             console.log("✓ Encounters exist");
             return;
         }
-        const users = await this.userRepository.find();
 
-        console.log(`Seeding encounters for ${users.length} users...`);
-
-        for (const [index, user] of users.entries()) {
-            if (index > 15) return;
-            await this.createEncountersForUser(user, users);
+        const wavectUser = await this.userRepository.findOne({
+            where: { email: "office@wavect.io" },
+        });
+        if (!wavectUser) {
+            console.log("Test user not found");
+            return;
         }
+
+        const allUsers = await this.userRepository.find();
+        const otherUsers = allUsers.filter((u) => u.id !== wavectUser.id);
+        const randomUsers = this.getRandomUsers(
+            otherUsers,
+            this.RANDOM_USERS_COUNT,
+        );
+
+        await this.createEncountersForUser(wavectUser, randomUsers);
 
         console.log("✓ Encounters seeded successfully");
     }
 
-    private async createEncountersForUser(
-        user: User,
-        allUsers: User[],
-    ): Promise<void> {
-        const otherUsers = allUsers.filter((u) => u.id !== user.id);
+    private getRandomUsers(users: User[], count: number): User[] {
+        const shuffled = users.sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    }
 
-        for (let i = 0; i < this.ENCOUNTERS_PER_USER; i++) {
+    private async createEncountersForUser(
+        wavectUser: User,
+        otherUsers: User[],
+    ): Promise<void> {
+        for (let i = 0; i < this.ENCOUNTERS; i++) {
             const otherUser = this.getRandomUser(otherUsers);
-            await this.createEncounter(user, otherUser);
+            await this.createEncounter(wavectUser, otherUser);
         }
     }
 
@@ -52,18 +64,34 @@ export class RandomEncounterSeeder {
         return users[randomIndex];
     }
 
-    private async createEncounter(user1: User, user2: User): Promise<void> {
+    private async createEncounter(
+        wavectUser: User,
+        user2: User,
+    ): Promise<void> {
         const encounter = new Encounter();
-        encounter.users = [user1, user2];
+        encounter.users = [wavectUser, user2];
         encounter.isNearbyRightNow = Math.random() < 0.2; // 20% chance of being nearby
         encounter.lastDateTimePassedBy = this.getRandomPastDate();
         encounter.lastLocationPassedBy = this.getRandomPoint();
         encounter.userStatuses = {
-            [user1.id]: this.getRandomStatus(),
+            [wavectUser.id]: this.getRandomStatus(),
             [user2.id]: this.getRandomStatus(),
         };
-        // The status will be automatically calculated by the getter
         await this.encounterRepository.save(encounter);
+
+        if (!user2.encounters?.length) {
+            user2.encounters = [];
+        }
+
+        if (!wavectUser.encounters?.length) {
+            wavectUser.encounters = [];
+        }
+
+        wavectUser.encounters.push(encounter);
+        await this.userRepository.save(wavectUser);
+
+        user2.encounters.push(encounter);
+        await this.userRepository.save(user2);
     }
 
     private getRandomPastDate(): Date {

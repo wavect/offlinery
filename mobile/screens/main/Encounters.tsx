@@ -1,5 +1,5 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { DateRangeDTO, EncounterApi, MessagePublicDTO } from "@/api/gen/src";
+import { EncounterApi, MessagePublicDTO } from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
     EACTION_ENCOUNTERS,
@@ -69,14 +69,11 @@ const Encounters = ({
 
     const fetchEncounters = useCallback(async () => {
         try {
-            const dateRangeDTO: DateRangeDTO = {
-                startDate: metStartDateFilter,
-                endDate: metEndDateFilter,
-            };
             const encounters = await api.encounterControllerGetEncountersByUser(
                 {
                     userId: userState.id!,
-                    dateRangeDTO,
+                    startDate: metStartDateFilter,
+                    endDate: metEndDateFilter,
                 },
                 await includeJWT(),
             );
