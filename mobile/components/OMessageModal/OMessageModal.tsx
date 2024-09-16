@@ -1,13 +1,10 @@
 import { Color } from "@/GlobalStyles";
 import { EncounterApi, PushMessageDTO } from "@/api/gen/src";
-import {
-    IOButtonSmallVariant,
-    OButtonSmall,
-} from "@/components/OButtonSmall/OButtonSmall";
-import { useUserContext } from "@/context/UserContext";
+import { OButtonSmall } from "@/components/OButtonSmall/OButtonSmall";
 import { TR, i18n } from "@/localization/translate.service";
+import { IOButtonSmallVariant } from "@/styles/Button.styles";
 import { SText } from "@/styles/Text.styles";
-import { getJwtHeader } from "@/utils/misc.utils";
+import { includeJWT } from "@/utils/misc.utils";
 import React, { useState } from "react";
 import { Modal, Pressable, StyleSheet, TextInput, View } from "react-native";
 
@@ -20,7 +17,6 @@ interface IOMessageModalProps {
 
 const encounterApi = new EncounterApi();
 const OMessageModal = (props: IOMessageModalProps) => {
-    const { dispatch, state } = useUserContext();
     const { visible, onClose, encounterId, userId } = props;
     const [message, setMessage] = useState("");
 
@@ -34,7 +30,7 @@ const OMessageModal = (props: IOMessageModalProps) => {
                 userId,
                 pushMessageDTO,
             },
-            getJwtHeader(state.jwtAccessToken),
+            await includeJWT(),
         );
         setMessage("");
     };

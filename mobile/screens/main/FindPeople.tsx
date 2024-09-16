@@ -289,7 +289,7 @@ const FindPeople = (
                 </View>
                 {activeRegionIndex !== null && (
                     <View style={styles.sliderContainer}>
-                        <SText.Medium bold>
+                        <SText.Small bold>
                             {i18n.t(TR.adjustRegionRadius)} (
                             {Math.round(
                                 uiRadii[activeRegionIndex] ??
@@ -297,7 +297,7 @@ const FindPeople = (
                                         .radius,
                             )}
                             )
-                        </SText.Medium>
+                        </SText.Small>
                         <Slider
                             style={styles.slider}
                             minimumValue={100}
