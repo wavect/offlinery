@@ -1,74 +1,65 @@
+import { AuthService } from "@/auth/auth.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
-import { EncounterService } from "@/entities/encounter/encounter.service";
 import { Message } from "@/entities/messages/message.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
-import { UserRepository } from "@/entities/user/user.repository";
 import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
-import { NotificationService } from "@/transient-services/notification/notification.service";
-import { Test } from "@nestjs/testing";
+import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { I18nService } from "nestjs-i18n";
-import { DataSource, Repository } from "typeorm";
 
-/**
- * Use for bigger services that rely on many (if not all) services
- */
-export const getUnitTestingModule = () => {
+export const getUnitTestingModule = async (): Promise<TestingModule> => {
+    const mockRepository = jest.fn(() => ({
+        find: jest.fn(),
+        findOne: jest.fn(),
+        findOneBy: jest.fn(),
+        findOneByOrFail: jest.fn(),
+        save: jest.fn(),
+        update: jest.fn(),
+        delete: jest.fn(),
+        createQueryBuilder: jest.fn(() => ({
+            where: jest.fn().mockReturnThis(),
+            andWhere: jest.fn().mockReturnThis(),
+            getOne: jest.fn(),
+            getMany: jest.fn(),
+        })),
+    }));
+
     return Test.createTestingModule({
         providers: [
             UserService,
-            MatchingService,
             {
-                provide: I18nService,
+                provide: MatchingService,
                 useValue: {
-                    t: jest.fn().mockReturnValue("Translated text"),
+                    checkAndNotifyMatches: jest.fn(),
                 },
             },
             {
-                provide: UserRepository,
+                provide: AuthService,
                 useValue: {
-                    getPotentialMatchesForNotifications: jest.fn(),
-                    getPotentialMatchesForHeatMap: jest.fn(),
-                },
-            },
-            {
-                provide: EncounterService,
-                useValue: {
-                    saveEncountersForUser: jest.fn(),
-                },
-            },
-            {
-                provide: NotificationService,
-                useValue: {
-                    sendPushNotification: jest.fn(),
+                    signIn: jest.fn(),
                 },
             },
             {
                 provide: getRepositoryToken(User),
-                useClass: Repository,
+                useFactory: mockRepository,
             },
             {
                 provide: getRepositoryToken(PendingUser),
-                useClass: Repository,
+                useFactory: mockRepository,
             },
             {
                 provide: getRepositoryToken(BlacklistedRegion),
-                useClass: Repository,
-            },
-            {
-                provide: DataSource,
-                useValue: {},
+                useFactory: mockRepository,
             },
             {
                 provide: getRepositoryToken(Encounter),
-                useClass: Repository,
+                useFactory: mockRepository,
             },
             {
                 provide: getRepositoryToken(Message),
-                useClass: Repository,
+                useFactory: mockRepository,
             },
         ],
     }).compile();

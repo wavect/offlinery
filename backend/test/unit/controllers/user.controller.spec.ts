@@ -13,6 +13,7 @@ import {
     ELanguage,
     EVerificationStatus,
 } from "../../../src/types/user.types";
+import { UserEntityBuilder } from "../../_src/builders/user-entity.builder";
 
 describe("UserController", () => {
     let controller: UserController;
@@ -66,14 +67,22 @@ describe("UserController", () => {
             mockUser.id = "1";
             mockUser.firstName = "John";
 
-            jest.spyOn(userService, "createUser").mockResolvedValue(mockUser);
+            jest.spyOn(userService, "createUser").mockResolvedValue({
+                accessToken: "AT",
+                user: {
+                    ...new UserEntityBuilder().build(),
+                    age: 26,
+                },
+                refreshToken: "RT",
+            });
 
             const result = await controller.createUser(
                 createUserDto,
                 mockImages,
             );
 
-            expect(result).toEqual(mockUser.convertToPublicDTO());
+            expect(result.accessToken).toEqual("AT");
+            expect(result.refreshToken).toEqual("RT");
             expect(userService.createUser).toHaveBeenCalledWith(
                 createUserDto,
                 mockImages,

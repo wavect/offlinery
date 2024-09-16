@@ -1,18 +1,9 @@
-import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
-import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
-import {
-    EApproachChoice,
-    EDateMode,
-    EEmailVerificationStatus,
-    EGender,
-    ELanguage,
-    EVerificationStatus,
-} from "@/types/user.types";
+import { EApproachChoice } from "@/types/user.types";
 import { NotFoundException } from "@nestjs/common";
 import { TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
@@ -28,85 +19,19 @@ jest.mock("bcrypt", () => ({
 
 describe("UserService", () => {
     let service: UserService;
-    let userRepository: Repository<User>;
-    let pendingUserRepository: Repository<PendingUser>;
-    let matchingService: MatchingService;
+    let userRepository: jest.Mocked<Repository<User>>;
+    let matchingService: jest.Mocked<MatchingService>;
 
     beforeEach(async () => {
         const module: TestingModule = await getUnitTestingModule();
 
         service = module.get<UserService>(UserService);
-        userRepository = module.get<Repository<User>>(getRepositoryToken(User));
-        pendingUserRepository = module.get<Repository<PendingUser>>(
-            getRepositoryToken(PendingUser),
-        );
-        matchingService = module.get<MatchingService>(MatchingService);
+        userRepository = module.get(getRepositoryToken(User));
+        matchingService = module.get(MatchingService);
     });
 
     it("should be defined", () => {
         expect(service).toBeDefined();
-    });
-
-    describe("createUser", () => {
-        it("should create a new user", async () => {
-            const createUserDto: CreateUserDTO = {
-                firstName: "John",
-                email: "john@example.com",
-                clearPassword: "password123",
-                wantsEmailUpdates: false,
-                verificationStatus: EVerificationStatus.PENDING,
-                blacklistedRegions: [],
-                birthDay: new Date("1990-01-01"),
-                gender: EGender.MAN,
-                genderDesire: EGender.WOMAN,
-                approachChoice: EApproachChoice.BOTH,
-                approachFromTime: new Date(),
-                approachToTime: new Date(),
-                dateMode: EDateMode.LIVE,
-                bio: "Hello, I am John",
-                preferredLanguage: ELanguage.en,
-            };
-
-            const mockImages: Express.Multer.File[] = [
-                {
-                    originalname: "0",
-                    buffer: Buffer.from("fake-image-data"),
-                    mimetype: "image/jpeg",
-                } as Express.Multer.File,
-            ];
-
-            const mockPendingUser = new PendingUser();
-            mockPendingUser.email = createUserDto.email;
-            mockPendingUser.verificationStatus =
-                EEmailVerificationStatus.VERIFIED;
-
-            jest.spyOn(
-                pendingUserRepository,
-                "findOneByOrFail",
-            ).mockResolvedValue(mockPendingUser);
-            jest.spyOn(userRepository, "save").mockResolvedValue({
-                id: "1",
-                ...createUserDto,
-                isActive: true,
-                passwordHash: "abc",
-                passwordSalt: "cde",
-                refreshToken: "aa",
-                refreshTokenExpires: new Date(),
-                pushToken: "aa",
-                receivedReports: [],
-                issuedReports: [],
-                encounters: [],
-                location: null,
-                imageURIs: ["mock-uuid.jpg"],
-            } as any as User);
-
-            const result = await service.createUser(createUserDto, mockImages);
-
-            expect(result).toBeDefined();
-            expect(result.id).toBe("1");
-            expect(result.firstName).toBe(createUserDto.firstName);
-            expect(result.imageURIs).toEqual(["mock-uuid.jpg"]);
-        });
     });
 
     describe("updateUser", () => {

@@ -32,7 +32,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
             id: this.id,
             firstName: this.firstName,
             age: getAge(this.birthDay),
-            imageURIs: this.imageURIs.map(
+            imageURIs: this.imageURIs?.map(
                 (uri) => `${getBaseUrl()}/img/${uri}`,
             ),
             bio: this.bio,
