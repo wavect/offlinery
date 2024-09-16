@@ -1,28 +1,38 @@
-import { Color } from "@/GlobalStyles";
-import { CheckboxContainer } from "@/styles/Checkbox.styles";
-import { SText } from "@/styles/Text.styles";
+import { Color, FontSize } from "@/GlobalStyles";
 import Checkbox from "expo-checkbox";
-import React from "react";
+import * as React from "react";
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 interface IOCheckboxProps {
     label: string;
     checkboxState: boolean;
     onValueChange: (value: boolean) => void;
+    style?: StyleProp<ViewStyle>;
 }
 
-export const OCheckbox: React.FC<IOCheckboxProps> = ({
-    label,
-    onValueChange,
-    checkboxState,
-}) => {
+export const OCheckbox = (props: IOCheckboxProps) => {
+    const { label, onValueChange, checkboxState } = props;
     return (
-        <CheckboxContainer>
+        <View style={[styles.checkboxField, props.style]}>
             <Checkbox
                 value={checkboxState}
                 onValueChange={onValueChange}
                 color={Color.primary}
             />
-            <SText.CheckboxLabel>{label}</SText.CheckboxLabel>
-        </CheckboxContainer>
+            <Text style={styles.checkboxLabel}>{label}</Text>
+        </View>
     );
 };
+
+const styles = StyleSheet.create({
+    checkboxField: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    checkboxLabel: {
+        flex: 1,
+        fontSize: FontSize.size_sm,
+        color: Color.gray,
+        marginLeft: 10,
+    },
+});

@@ -1,4 +1,4 @@
-import { Color } from "@/GlobalStyles";
+import { BorderRadius, Color, Subtitle } from "@/GlobalStyles";
 import {
     MapApi,
     UserApi,
@@ -16,17 +16,16 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { ROUTES } from "@/screens/routes";
-import { StyledMaterialIcon } from "@/styles/Icon.styles";
-import { SText } from "@/styles/Text.styles";
 import { getMapProvider } from "@/utils/map-provider";
 import { includeJWT } from "@/utils/misc.utils";
+import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import MapView, {
     Circle,
     LongPressEvent,
@@ -273,31 +272,36 @@ const FindPeople = (
                         style={styles.removeButtonContainer}
                         onPress={() => handleRemoveRegion(activeRegionIndex)}
                     >
-                        <StyledMaterialIcon
+                        <MaterialIcons
                             name="delete-outline"
                             size={40}
                             color="red"
-                            noMargin
                         />
                     </Pressable>
                 )}
 
                 <View style={styles.instructions}>
-                    <SText.Small>
+                    <Text style={[Subtitle, styles.instructionText]}>
                         {i18n.t(TR.longPressMapSafeZoneInstruction)}
-                    </SText.Small>
+                    </Text>
                 </View>
                 {activeRegionIndex !== null && (
                     <View style={styles.sliderContainer}>
-                        <SText.Small bold>
+                        <Text
+                            style={[
+                                Subtitle,
+                                styles.instructionText,
+                                styles.bold,
+                            ]}
+                        >
                             {i18n.t(TR.adjustRegionRadius)} (
                             {Math.round(
                                 uiRadii[activeRegionIndex] ??
                                     state.blacklistedRegions[activeRegionIndex]
                                         .radius,
                             )}
-                            )
-                        </SText.Small>
+                            m)
+                        </Text>
                         <Slider
                             style={styles.slider}
                             minimumValue={100}
@@ -321,7 +325,7 @@ const styles = StyleSheet.create({
     map: {
         width: "100%",
         minHeight: 400,
-        borderRadius: 5,
+        borderRadius: BorderRadius.br_5xs,
     },
     removeButtonContainer: {
         position: "absolute",

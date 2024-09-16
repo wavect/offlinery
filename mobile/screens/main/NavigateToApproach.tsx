@@ -1,4 +1,4 @@
-import { Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { EncounterApi, GetLocationOfEncounterDTO } from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
@@ -14,7 +14,7 @@ import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Linking, Platform, StyleSheet, View } from "react-native";
+import { Linking, Platform, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker, Polyline, Region } from "react-native-maps";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
@@ -161,11 +161,11 @@ const NavigateToApproach = ({
                             anchor={{ x: 0.5, y: 0.5 }}
                         >
                             <View style={styles.distanceMarker}>
-                                <SText.Medium>
+                                <Text style={styles.distanceText}>
                                     {distance
                                         ? `${distance.toFixed(2)} km`
                                         : i18n.t(TR.calculating)}
-                                </SText.Medium>
+                                </Text>
                             </View>
                         </Marker>
                     </>
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         minHeight: 300,
-        borderRadius: 5,
+        borderRadius: BorderRadius.br_5xs,
     },
     navigateBtn: {
         backgroundColor: Color.primary,

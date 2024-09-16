@@ -13,13 +13,11 @@ import {
     Param,
     Post,
     Put,
-    Query,
 } from "@nestjs/common";
 import {
     ApiBody,
     ApiOperation,
     ApiParam,
-    ApiQuery,
     ApiResponse,
     ApiTags,
 } from "@nestjs/swagger";
@@ -33,30 +31,19 @@ import { EncounterService } from "./encounter.service";
 export class EncounterController {
     constructor(private readonly encounterService: EncounterService) {}
 
-    @Get(`:${USER_ID_PARAM}`)
+    @Get(`user/:${USER_ID_PARAM}`)
     @OnlyOwnUserData()
     @ApiOperation({ summary: "Get encounters of a user within a date range" })
     @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })
-    @ApiQuery({
-        name: "startDate",
-        required: true,
-        type: Date,
-        description: "Start date for filtering",
+    @ApiBody({
+        type: DateRangeDTO,
+        description: "date range DTO for filtering",
     })
-    @ApiQuery({
-        name: "endDate",
-        required: true,
-        type: Date,
-        description: "End date for filtering",
-    })
-    @ApiResponse({ status: 404, description: "User not found" })
+    @ApiResponse({ status: 404, description: "Encounter not found." })
     async getEncountersByUser(
         @Param(USER_ID_PARAM) userId: string,
-        @Query("startDate") startDate: Date,
-        @Query("endDate") endDate: Date,
+        @Body() dateRange: DateRangeDTO,
     ): Promise<EncounterPublicDTO[]> {
-        const dateRange: DateRangeDTO = { startDate, endDate };
-
         const encounters = await this.encounterService.findEncountersByUser(
             userId,
             dateRange,
@@ -128,7 +115,6 @@ export class EncounterController {
         @Param(USER_ID_PARAM) userId: string,
         @Body() getLocationOfEncounterDTO: GetLocationOfEncounterDTO,
     ): Promise<GetLocationOfEncounterResponseDTO> {
-        console.log("encounters...?");
         return this.encounterService.getLocationOfEncounter(
             userId,
             getLocationOfEncounterDTO,

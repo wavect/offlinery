@@ -7,6 +7,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { isValidPassword } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
+import { StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -90,7 +91,8 @@ const Password = ({
                     autoCorrect={false}
                     keyboardType="default"
                     placeholder={i18n.t(TR.enterOldPassword)}
-                    isPassword={true}
+                    containerStyle={styles.inputField}
+                    isSensitiveInformation={true}
                     topLabel={i18n.t(TR.currentPassword)}
                 />
             )}
@@ -105,8 +107,9 @@ const Password = ({
                 autoCorrect={false}
                 keyboardType="default"
                 placeholder={i18n.t(TR.enterPassword)}
+                containerStyle={styles.inputField}
                 isBottomLabelError={!!passwordError}
-                isPassword={true}
+                isSensitiveInformation={true}
                 bottomLabel={passwordError}
                 topLabel={i18n.t(
                     isChangePassword ? TR.newPassword : TR.strongPassword,
@@ -125,11 +128,28 @@ const Password = ({
                 placeholder={i18n.t(TR.repeatPassword)}
                 topLabel={i18n.t(TR.repeatPassword)}
                 isBottomLabelError={!!passwordErrorConfirmation}
-                isPassword={true}
+                isSensitiveInformation={true}
                 bottomLabel={passwordErrorConfirmation}
+                containerStyle={styles.inputField}
             />
         </OPageContainer>
     );
 };
+
+const styles = StyleSheet.create({
+    inputField: {
+        marginBottom: 24,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 8,
+        padding: 12,
+        fontSize: 16,
+    },
+    buttonContainer: {
+        alignItems: "center",
+    },
+});
 
 export default Password;

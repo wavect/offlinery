@@ -13,6 +13,7 @@
  */
 
 import type {
+    DateRangeDTO,
     EncounterPublicDTO,
     GetLocationOfEncounterDTO,
     GetLocationOfEncounterResponseDTO,
@@ -20,6 +21,7 @@ import type {
     UpdateEncounterStatusDTO,
 } from "../models/index";
 import {
+    DateRangeDTOToJSON,
     EncounterPublicDTOFromJSON,
     GetLocationOfEncounterDTOToJSON,
     GetLocationOfEncounterResponseDTOFromJSON,
@@ -33,8 +35,7 @@ import * as runtime from "../runtime";
 // are larger than the benefits, we can try another approach.
 export interface EncounterControllerGetEncountersByUserRequest {
     userId: string;
-    startDate: Date;
-    endDate: Date;
+    dateRangeDTO: DateRangeDTO;
 }
 
 export interface EncounterControllerGetLocationOfEncounterRequest {
@@ -63,8 +64,7 @@ export interface EncounterApiInterface {
      *
      * @summary Get encounters of a user within a date range
      * @param {string} userId User ID
-     * @param {Date} startDate Start date for filtering
-     * @param {Date} endDate End date for filtering
+     * @param {DateRangeDTO} dateRangeDTO date range DTO for filtering
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EncounterApiInterface
@@ -170,45 +170,29 @@ export class EncounterApi
             );
         }
 
-        if (requestParameters["startDate"] == null) {
+        if (requestParameters["dateRangeDTO"] == null) {
             throw new runtime.RequiredError(
-                "startDate",
-                'Required parameter "startDate" was null or undefined when calling encounterControllerGetEncountersByUser().',
-            );
-        }
-
-        if (requestParameters["endDate"] == null) {
-            throw new runtime.RequiredError(
-                "endDate",
-                'Required parameter "endDate" was null or undefined when calling encounterControllerGetEncountersByUser().',
+                "dateRangeDTO",
+                'Required parameter "dateRangeDTO" was null or undefined when calling encounterControllerGetEncountersByUser().',
             );
         }
 
         const queryParameters: any = {};
 
-        if (requestParameters["startDate"] != null) {
-            queryParameters["startDate"] = (
-                requestParameters["startDate"] as any
-            ).toISOString();
-        }
-
-        if (requestParameters["endDate"] != null) {
-            queryParameters["endDate"] = (
-                requestParameters["endDate"] as any
-            ).toISOString();
-        }
-
         const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
 
         const response = await this.request(
             {
-                path: `/encounter/{userId}`.replace(
+                path: `/encounter/user/{userId}`.replace(
                     `{${"userId"}}`,
                     encodeURIComponent(String(requestParameters["userId"])),
                 ),
                 method: "GET",
                 headers: headerParameters,
                 query: queryParameters,
+                body: DateRangeDTOToJSON(requestParameters["dateRangeDTO"]),
             },
             initOverrides,
         );

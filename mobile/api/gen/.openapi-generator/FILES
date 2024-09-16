@@ -17,6 +17,7 @@ src/models/BlacklistedRegionDTO.ts
 src/models/BlacklistedRegionDTOLocation.ts
 src/models/CreateUserDTO.ts
 src/models/CreateUserReportDTO.ts
+src/models/DateRangeDTO.ts
 src/models/Encounter.ts
 src/models/EncounterPublicDTO.ts
 src/models/GetLocationOfEncounterDTO.ts

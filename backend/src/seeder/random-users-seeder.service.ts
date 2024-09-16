@@ -11,9 +11,6 @@ import {
 } from "@/types/user.types";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { randomBytes } from "crypto";
-import * as path from "path";
-import { Readable } from "stream";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -25,31 +22,6 @@ export class RandomUsersSeeder {
     ) {}
 
     private AMOUNT_OF_USERS = 300;
-
-    createRandomFile() {
-        // Generate a random filename
-        const filename = `1`;
-        const buffer = randomBytes(1024 * 1024);
-        const fileStream = new Readable();
-        fileStream.push(buffer);
-        fileStream.push(null);
-
-        // Create the file object
-        const file: Express.Multer.File = {
-            fieldname: "file",
-            originalname: filename,
-            encoding: "7bit",
-            mimetype: "image/jpeg",
-            buffer, // 1 MB of random data
-            size: 1024 * 1024, // 1 MB
-            destination: "uploads/",
-            filename: filename,
-            path: path.join("uploads", filename),
-            stream: fileStream,
-        };
-
-        return file;
-    }
 
     async seedRandomUsers(): Promise<void> {
         try {
@@ -81,9 +53,7 @@ export class RandomUsersSeeder {
             }
 
             try {
-                await this.userService.createUser(user, [
-                    this.createRandomFile(),
-                ]);
+                await this.userService.createUser(user, []);
             } catch (e) {
                 // any duplicates, fail silently
             }
