@@ -1,4 +1,3 @@
-import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
@@ -11,9 +10,10 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { SText } from "@/styles/Text.styles";
 import * as React from "react";
 import { useState } from "react";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -66,13 +66,12 @@ const BioLetThemKnow = ({
                 <OTextInput
                     value={state.bio}
                     onChangeText={setBio}
-                    containerStyle={styles.input}
                     placeholder={i18n.t(TR.noPickUpLinesBeChill)}
                 />
                 <View style={styles.characterCountContainer}>
-                    <Text style={Subtitle}>
+                    <SText.Small>
                         {MAX_LENGTH_BIO - state.bio.length}
-                    </Text>
+                    </SText.Small>
                 </View>
             </View>
 
@@ -91,15 +90,8 @@ const styles = StyleSheet.create({
         alignItems: "flex-end",
         marginBottom: 16,
     },
-    subtitle: {
-        ...(Subtitle as ViewStyle),
-        textAlign: "right",
-    },
     inputContainer: {
         marginBottom: 16,
-    },
-    input: {
-        width: "100%",
     },
     characterCountContainer: {
         flexDirection: "row",

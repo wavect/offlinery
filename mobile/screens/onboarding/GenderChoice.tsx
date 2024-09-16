@@ -1,12 +1,12 @@
-import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { UserGenderEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { SText } from "@/styles/Text.styles";
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -50,9 +50,9 @@ const GenderChoice = ({
                     variant="dark"
                     disabled={true}
                 />
-                <Text style={[Subtitle, styles.subtitle]}>
+                <SText.Small marginTop={18}>
                     {i18n.t(TR.genderMoreComingSoon)}
-                </Text>
+                </SText.Small>
             </View>
         </OPageContainer>
     );

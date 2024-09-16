@@ -1,7 +1,11 @@
-import { Color, FontFamily } from "@/GlobalStyles";
-import { MaterialIcons } from "@expo/vector-icons";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
+import { SText } from "@/styles/Text.styles";
+import {
+    CenteredContainer,
+    ShowCaseHeadlineContainer,
+} from "@/styles/View.styles";
 import React from "react";
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleProp, ViewStyle } from "react-native";
 
 interface IOShowcaseProps {
     subtitle: string;
@@ -10,54 +14,19 @@ interface IOShowcaseProps {
 }
 
 export const OShowcase = (props: IOShowcaseProps) => {
-    const { onlyUseSystemFont, subtitle, containerStyle } = props;
-    const systemFontStyle = onlyUseSystemFont
-        ? { fontFamily: undefined }
-        : null;
+    const { subtitle } = props;
 
     return (
-        <View style={[styles.container, containerStyle]}>
-            <View style={styles.headlineContainer}>
-                <MaterialIcons name="wifi-off" size={45} color={Color.white} />
-                <Text style={[styles.headlineText, systemFontStyle]}>
-                    offlinery
-                </Text>
-            </View>
-            <Text style={[styles.subtitle, systemFontStyle]}>{subtitle}</Text>
-        </View>
+        <CenteredContainer>
+            <ShowCaseHeadlineContainer>
+                <StyledMaterialIcon name="wifi-off" />
+                <SText.Title white>offlinery</SText.Title>
+            </ShowCaseHeadlineContainer>
+            <SText.Subtitle white bold>
+                {subtitle}
+            </SText.Subtitle>
+        </CenteredContainer>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        alignItems: "center",
-    },
-    headlineContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: 10,
-    },
-    headlineText: {
-        fontSize: 48,
-        lineHeight: 52,
-        fontWeight: "600",
-        fontFamily: FontFamily.montserratRegular,
-        width: 216,
-        textAlign: "center",
-        color: Color.white,
-        marginLeft: 10,
-    },
-    subtitle: {
-        fontSize: 22,
-        lineHeight: 44,
-        fontWeight: "500",
-        fontFamily: FontFamily.montserratLight,
-        width: "100%",
-        maxWidth: 390,
-        textAlign: "center",
-        color: Color.white,
-    },
-});
 
 export default OShowcase;

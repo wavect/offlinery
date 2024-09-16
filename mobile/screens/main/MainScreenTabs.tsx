@@ -1,4 +1,4 @@
-import { Color, Title } from "@/GlobalStyles";
+import { Color } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { NotificationNavigateUserDTO } from "@/api/gen/src";
 import { OGoLiveToggle } from "@/components/OGoLiveToggle/OGoLiveToggle";
@@ -10,8 +10,8 @@ import {
     MainTabs,
 } from "@/screens/main/MainScreenTabs.navigator";
 import { registerForPushNotificationsAsync } from "@/services/notification.service";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
-import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
@@ -149,7 +149,12 @@ export const MainScreenTabs = ({
         <MainTabs.Navigator
             screenOptions={() => ({
                 headerTitle: "",
-                headerTitleStyle: Title,
+                headerTitleStyle: {
+                    fontSize: 40,
+                    fontWeight: "600",
+                    color: "#000",
+                    marginBottom: 8,
+                }, // substitute in another round
                 headerStyle: { height: 110 },
                 headerTitleAlign: "left",
                 tabBarActiveTintColor: Color.white,
@@ -168,10 +173,11 @@ export const MainScreenTabs = ({
                     tabBarLabel: i18n.t(TR.findPeople),
                     headerTitle: i18n.t(TR.findPeople),
                     tabBarIcon: ({ color, size }) => (
-                        <MaterialIcons
+                        <StyledMaterialIcon
                             name="location-history"
                             size={size}
                             color={color}
+                            noMargin
                         />
                     ),
                     tabBarTestID: "tab-find-people",
@@ -188,10 +194,11 @@ export const MainScreenTabs = ({
                             ? undefined
                             : unreadNotifications.length,
                     tabBarIcon: ({ color, size }) => (
-                        <MaterialIcons
+                        <StyledMaterialIcon
                             name="emoji-people"
                             size={size}
                             color={color}
+                            noMargin
                         />
                     ),
                     tabBarTestID: "tab-encounters",
@@ -204,10 +211,11 @@ export const MainScreenTabs = ({
                     tabBarLabel: i18n.t(TR.settings),
                     headerTitle: i18n.t(TR.settings),
                     tabBarIcon: ({ color, size }) => (
-                        <MaterialIcons
+                        <StyledMaterialIcon
                             name="settings"
                             size={size}
                             color={color}
+                            noMargin
                         />
                     ),
                     tabBarTestID: "tab-settings",

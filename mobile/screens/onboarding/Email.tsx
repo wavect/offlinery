@@ -1,4 +1,3 @@
-import { Color, FontFamily } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OCheckbox } from "@/components/OCheckbox/OCheckbox";
@@ -6,10 +5,10 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { SText } from "@/styles/Text.styles";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useEffect } from "react";
-import { StyleSheet, Text } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -75,14 +74,8 @@ const Email = ({
                 autoFocus={true}
                 inputMode="email"
                 placeholder={i18n.t(TR.yourEmail)}
-                containerStyle={[
-                    styles.inputField,
-                    errorMessage ? { marginBottom: 6 } : undefined,
-                ]}
             />
-            {errorMessage && (
-                <Text style={styles.errorMessage}>{errorMessage}</Text>
-            )}
+            {errorMessage && <SText.Error>{errorMessage}</SText.Error>}
             <OCheckbox
                 onValueChange={setCheckboxChecked}
                 checkboxState={state.wantsEmailUpdates}
@@ -91,36 +84,5 @@ const Email = ({
         </OPageContainer>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        padding: 18,
-    },
-    content: {
-        flex: 1,
-    },
-    inputField: {
-        marginBottom: 24,
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        padding: 12,
-        fontSize: 16,
-    },
-    buttonContainer: {
-        alignItems: "center",
-    },
-    errorMessage: {
-        color: Color.redLight,
-        fontSize: 16,
-        fontFamily: FontFamily.montserratSemiBold,
-        textAlign: "left",
-        marginBottom: 16,
-    },
-});
 
 export default Email;

@@ -1,21 +1,12 @@
-import { Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { Color } from "@/GlobalStyles";
 import { EncounterApi, PushMessageDTO } from "@/api/gen/src";
-import {
-    IOButtonSmallVariant,
-    OButtonSmall,
-} from "@/components/OButtonSmall/OButtonSmall";
-import { useUserContext } from "@/context/UserContext";
+import { OButtonSmall } from "@/components/OButtonSmall/OButtonSmall";
 import { TR, i18n } from "@/localization/translate.service";
-import { getJwtHeader } from "@/utils/misc.utils";
+import { IOButtonSmallVariant } from "@/styles/Button.styles";
+import { SText } from "@/styles/Text.styles";
+import { includeJWT } from "@/utils/misc.utils";
 import React, { useState } from "react";
-import {
-    Modal,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-} from "react-native";
+import { Modal, Pressable, StyleSheet, TextInput, View } from "react-native";
 
 interface IOMessageModalProps {
     userId: string;
@@ -26,7 +17,6 @@ interface IOMessageModalProps {
 
 const encounterApi = new EncounterApi();
 const OMessageModal = (props: IOMessageModalProps) => {
-    const { dispatch, state } = useUserContext();
     const { visible, onClose, encounterId, userId } = props;
     const [message, setMessage] = useState("");
 
@@ -40,7 +30,7 @@ const OMessageModal = (props: IOMessageModalProps) => {
                 userId,
                 pushMessageDTO,
             },
-            getJwtHeader(state.jwtAccessToken),
+            await includeJWT(),
         );
         setMessage("");
     };
@@ -55,16 +45,13 @@ const OMessageModal = (props: IOMessageModalProps) => {
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                     <Pressable style={styles.closeButton} onPress={onClose}>
-                        <Text style={styles.closeButtonText}>×</Text>
+                        <SText.Medium>×</SText.Medium>
                     </Pressable>
-                    <Text style={styles.modalTitle}>
-                        {i18n.t(TR.leaveMessage)}
-                    </Text>
-                    <Text style={styles.modalText}>
+                    <SText.Medium>{i18n.t(TR.leaveMessage)}</SText.Medium>
+                    <SText.Medium>
                         {i18n.t(TR.messageInstructions)}
-                    </Text>
+                    </SText.Medium>
                     <TextInput
-                        style={styles.modalTextInput}
                         onChangeText={setMessage}
                         value={message}
                         placeholder={i18n.t(TR.enterMessage)}
@@ -73,13 +60,11 @@ const OMessageModal = (props: IOMessageModalProps) => {
                     <OButtonSmall
                         label={i18n.t(TR.sendMessage)}
                         variant={IOButtonSmallVariant.Black}
-                        containerStyle={{ width: "100%" }}
                         isDisabled={!message.trim()}
+                        fullWidth={true}
                         onPress={handleSend}
                     />
-                    <Text style={styles.modalFooter}>
-                        {i18n.t(TR.messageWarning)}
-                    </Text>
+                    <SText.Small>{i18n.t(TR.messageWarning)}</SText.Small>
                 </View>
             </View>
         </Modal>
@@ -120,42 +105,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: Color.lightGray,
-    },
-    closeButtonText: {
-        fontSize: FontSize.size_xl,
-        color: Color.white,
-        lineHeight: 30,
-    },
-    modalTitle: {
-        fontSize: FontSize.size_xl,
-        fontFamily: FontFamily.montserratSemiBold,
-        marginBottom: 15,
-        textAlign: "center",
-        marginTop: 10,
-    },
-    modalText: {
-        fontSize: FontSize.size_md,
-        fontFamily: FontFamily.montserratRegular,
-        marginBottom: 15,
-        textAlign: "center",
-    },
-    modalTextInput: {
-        height: 100,
-        width: "100%",
-        marginBottom: 15,
-        borderWidth: 1,
-        borderColor: Color.lightGray,
-        borderRadius: 8,
-        padding: 10,
-        fontFamily: FontFamily.montserratRegular,
-        fontSize: FontSize.size_md,
-    },
-    modalFooter: {
-        marginTop: 15,
-        fontSize: FontSize.size_sm,
-        fontFamily: FontFamily.montserratRegular,
-        textAlign: "center",
-        color: Color.gray,
     },
 });
 

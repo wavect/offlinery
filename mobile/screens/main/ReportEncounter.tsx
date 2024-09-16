@@ -15,9 +15,10 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
+import { SText } from "@/styles/Text.styles";
 import * as React from "react";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import OEncounter from "../../components/OEncounter/OEncounter";
@@ -103,7 +104,7 @@ const ReportEncounter = ({
                 navigation={navigation}
             />
 
-            <Text style={styles.label}>{i18n.t(TR.typeOfIncident)}</Text>
+            <SText.Medium>{i18n.t(TR.typeOfIncident)}</SText.Medium>
             <Dropdown
                 style={styles.dropdown}
                 placeholderStyle={styles.placeholderStyle}
@@ -123,7 +124,7 @@ const ReportEncounter = ({
                 }}
             />
 
-            <Text style={styles.label}>What happened?</Text>
+            <SText.Medium>What happened?</SText.Medium>
             <OTextInput
                 value={incidentDescription ?? ""}
                 onChangeText={setIncidentDescription}
@@ -135,7 +136,6 @@ const ReportEncounter = ({
                 checkboxState={keepMeInTheLoop}
                 onValueChange={setKeepMeInTheLoop}
                 label={i18n.t(TR.keepMeInTheLoopEmail)}
-                style={{ marginTop: 20 }}
             />
 
             <Pressable
@@ -149,7 +149,7 @@ const ReportEncounter = ({
                 onPressOut={() => setIsButtonPressed(false)}
                 onPress={submitReport}
             >
-                <Text style={styles.buttonText}>
+                <SText.Medium>
                     {isLoading && (
                         <ActivityIndicator
                             size="small"
@@ -157,7 +157,7 @@ const ReportEncounter = ({
                         />
                     )}
                     {i18n.t(TR.reportNow)}
-                </Text>
+                </SText.Medium>
             </Pressable>
         </OPageContainer>
     );

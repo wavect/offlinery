@@ -12,11 +12,10 @@ import {
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
+import { AuthContainer, WelcomeButtonContainer } from "@/styles/View.styles";
 import { jwtExpiresSoon } from "@/utils/misc.utils";
 import { useFocusEffect } from "@react-navigation/native";
-import * as React from "react";
-import { useCallback, useState } from "react";
-import { Dimensions, Platform, StyleSheet, View } from "react-native";
+import React, { useCallback, useState } from "react";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "./routes";
 
@@ -92,6 +91,7 @@ const Welcome = ({
 
         return isAuthenticated(state);
     };
+
     useFocusEffect(
         useCallback(() => {
             const checkAuthentication = async () => {
@@ -113,26 +113,24 @@ const Welcome = ({
     );
 
     const AuthScreen = () => (
-        <View style={styles.authContainer}>
+        <AuthContainer>
             <OTermsDisclaimer />
-            <View style={styles.buttonContainer}>
+            <WelcomeButtonContainer>
                 <OButtonWide
                     filled={true}
                     text={i18n.t(TR.createAccount)}
                     onPress={() => navigation.navigate(ROUTES.Onboarding.Email)}
                     variant="light"
-                    style={styles.button}
                 />
                 <OButtonWide
                     filled={false}
                     text={i18n.t(TR.signIn)}
                     variant="light"
                     onPress={() => navigation.navigate(ROUTES.Login)}
-                    style={styles.button}
                 />
-            </View>
-            <OTroubleSignIn style={styles.troubleSigningIn} />
-        </View>
+            </WelcomeButtonContainer>
+            <OTroubleSignIn />
+        </AuthContainer>
     );
 
     return (
@@ -141,30 +139,5 @@ const Welcome = ({
         </OPageColorContainer>
     );
 };
-
-const { width, height } = Dimensions.get("window");
-const aspectRatio = height / width;
-
-const styles = StyleSheet.create({
-    authContainer: {
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        paddingBottom: Platform.OS === "ios" ? "8%" : "5%",
-    },
-    buttonContainer: {
-        width: "100%",
-        paddingHorizontal: "5%",
-        marginTop: aspectRatio > 1.6 ? "5%" : "2%",
-    },
-    button: {
-        marginBottom: 14,
-        width: "100%",
-    },
-    troubleSigningIn: {
-        width: "90%",
-        marginTop: aspectRatio > 1.6 ? 22 : 10,
-    },
-});
 
 export default Welcome;

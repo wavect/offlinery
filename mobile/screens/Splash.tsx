@@ -1,29 +1,20 @@
 import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
 import { OShowcase } from "@/components/OShowcase/OShowcase";
 import { TR, i18n } from "@/localization/translate.service";
-import * as React from "react";
-import { StyleSheet, View } from "react-native";
+import { SplashContainerView } from "@/styles/View.styles";
+import React from "react";
 
 const Splash = () => {
     return (
         <OLinearBackground>
-            <View style={styles.layoutContainer}>
+            <SplashContainerView>
                 <OShowcase
                     subtitle={i18n.t(TR.datingAppsAreBroken)}
                     onlyUseSystemFont={true}
                 />
-            </View>
+            </SplashContainerView>
         </OLinearBackground>
     );
 };
-
-const styles = StyleSheet.create({
-    layoutContainer: {
-        flexDirection: "column",
-        alignItems: "center",
-        flex: 1,
-        marginTop: 334,
-    },
-});
 
 export default Splash;

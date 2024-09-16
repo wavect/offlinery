@@ -48,7 +48,6 @@ const WaitingForVerification = ({
                         state.verificationStatus !==
                         UserVerificationStatusEnum.verified
                     }
-                    style={styles.btn}
                     onPress={() => navigation.navigate(ROUTES.MainTabView)}
                     variant="light"
                 />
@@ -57,7 +56,6 @@ const WaitingForVerification = ({
                     filled={false}
                     text={i18n.t(TR.bookNewCall)}
                     variant="light"
-                    style={[styles.btn, { marginTop: 30 }]}
                     onPress={() =>
                         navigation.navigate(ROUTES.Onboarding.BookSafetyCall)
                     }

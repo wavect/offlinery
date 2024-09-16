@@ -17,13 +17,14 @@ import {
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
+import { SText } from "@/styles/Text.styles";
 import { includeJWT } from "@/utils/misc.utils";
-import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
@@ -130,8 +131,15 @@ const ProfileSettings = ({
                 onPress={onPress}
             >
                 <View style={styles.settingsButtonContent}>
-                    <MaterialIcons name={icon} size={30} color="#000" />
-                    <Text style={styles.settingsButtonText}>{text}</Text>
+                    <StyledMaterialIcon
+                        name={icon}
+                        size={30}
+                        color="#000"
+                        noMargin
+                    />
+                    <SText.XSmall center bold>
+                        {text}
+                    </SText.XSmall>
                 </View>
             </TouchableOpacity>
         );
@@ -141,23 +149,26 @@ const ProfileSettings = ({
         <OPageContainer subtitle={i18n.t(TR.changePreferencesDescr)}>
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <Text style={styles.label}>First Name</Text>
+                    <SText.Small bold marginBottom={4}>
+                        {i18n.t(TR.myFirstNameIs)}
+                    </SText.Small>
                     <OTextInput
                         value={state.firstName}
                         onChangeText={setFirstName}
                         placeholder={i18n.t(TR.enterFirstName)}
-                        containerStyle={styles.input}
                     />
                 </View>
 
                 {state.approachChoice !== UserApproachChoiceEnum.approach && (
                     <View style={styles.timePickerContainer}>
-                        <Text style={[styles.label, { marginBottom: 8 }]}>
+                        <SText.Small bold marginBottom={4}>
                             {i18n.t(TR.approachMeBetween)}
-                        </Text>
+                        </SText.Small>
                         <View style={styles.timePickerRow}>
                             <View style={styles.timePicker}>
-                                <Text>{i18n.t(TR.from)}</Text>
+                                <SText.Small bold marginBottom={4}>
+                                    {i18n.t(TR.from)}
+                                </SText.Small>
                                 <DateTimePicker
                                     value={new Date(state.approachFromTime)}
                                     mode="time"
@@ -169,7 +180,9 @@ const ProfileSettings = ({
                                 />
                             </View>
                             <View style={styles.timePicker}>
-                                <Text>{i18n.t(TR.until)}</Text>
+                                <SText.Small bold>
+                                    {i18n.t(TR.until)}
+                                </SText.Small>
                                 <DateTimePicker
                                     value={new Date(state.approachToTime)}
                                     mode="time"
@@ -185,18 +198,19 @@ const ProfileSettings = ({
                 )}
 
                 <View style={styles.inputContainer}>
-                    <Text style={styles.label}>{i18n.t(TR.bio)}</Text>
+                    <SText.Small bold marginBottom={4}>
+                        {i18n.t(TR.bio)}
+                    </SText.Small>
                     <OTextInput
                         value={state.bio}
                         onChangeText={setBio}
                         placeholder={i18n.t(TR.noPickUpLinesBeChill)}
                         multiline={true}
-                        containerStyle={[styles.input, styles.multiline_input]}
                     />
                 </View>
 
                 <View style={styles.datePickerContainer}>
-                    <Text style={styles.label}>{i18n.t(TR.myBirthDayIs)}</Text>
+                    <SText.Small bold>{i18n.t(TR.myBirthDayIs)}</SText.Small>
                     <DateTimePicker
                         value={state.birthDay}
                         mode="date"
@@ -208,7 +222,9 @@ const ProfileSettings = ({
                 </View>
 
                 <View style={styles.dropdownContainer}>
-                    <Text style={styles.label}>{i18n.t(TR.iAmA)}</Text>
+                    <SText.Small bold marginBottom={4}>
+                        {i18n.t(TR.iAmA)}
+                    </SText.Small>
                     <Dropdown
                         data={genderItems}
                         labelField="label"
@@ -224,7 +240,9 @@ const ProfileSettings = ({
                 </View>
 
                 <View style={styles.dropdownContainer}>
-                    <Text style={styles.label}>{i18n.t(TR.iLookFor)}</Text>
+                    <SText.Small bold marginBottom={4}>
+                        {i18n.t(TR.iLookFor)}
+                    </SText.Small>
                     <Dropdown
                         data={genderItems}
                         labelField="label"
@@ -288,7 +306,6 @@ const ProfileSettings = ({
                 </View>
                 <View style={styles.buttonContainer}>
                     <OButtonWide
-                        style={{ marginTop: 10, width: "100%" }}
                         text={i18n.t(TR.save)}
                         filled={true}
                         variant="dark"
@@ -336,6 +353,7 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     inputContainer: {
+        marginTop: 10,
         marginBottom: 16,
     },
     input: {

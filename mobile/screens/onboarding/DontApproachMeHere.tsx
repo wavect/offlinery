@@ -1,16 +1,17 @@
-import { MaterialIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import React, { useCallback, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import MapView, { Circle, Marker, Region } from "react-native-maps";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
-import { BorderRadius, Color, FontSize, Subtitle } from "@/GlobalStyles";
+import { Color, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, MapRegion, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
+import { SText } from "@/styles/Text.styles";
 import { getMapProvider } from "@/utils/map-provider";
 import { ROUTES } from "../routes";
 
@@ -27,7 +28,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
         null,
     );
     const mapRef = useRef<MapView | null>(null);
-    const [mapRegion, setMapRegion] = useState<Region>({
+    const [mapRegion] = useState<Region>({
         latitude: 47.257832302,
         longitude: 11.383665132,
         latitudeDelta: 0.0922,
@@ -197,7 +198,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                         style={styles.removeButtonContainer}
                         onPress={() => handleRemoveRegion(activeRegionIndex)}
                     >
-                        <MaterialIcons
+                        <StyledMaterialIcon
                             name="delete-outline"
                             size={40}
                             color="red"
@@ -206,14 +207,14 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                 )}
                 {activeRegionIndex !== null && (
                     <View style={styles.sliderContainer}>
-                        <Text style={[Subtitle, styles.sliderText]}>
+                        <SText.Subtitle>
                             {i18n.t(TR.adjustRegionRadius)}&nbsp;(
                             {Math.round(
                                 state.blacklistedRegions[activeRegionIndex]
                                     .radius,
                             )}
                             m)
-                        </Text>
+                        </SText.Subtitle>
                         <Slider
                             style={styles.slider}
                             minimumValue={100}
@@ -228,9 +229,9 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                     </View>
                 )}
                 <View style={styles.instructions}>
-                    <Text style={[Subtitle, styles.instructionText]}>
+                    <SText.Small>
                         {i18n.t(TR.longPressMapSafeZoneInstruction)}
-                    </Text>
+                    </SText.Small>
                 </View>
             </>
         </OPageContainer>
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
     map: {
         width: "100%",
         minHeight: 300,
-        borderRadius: BorderRadius.br_5xs,
+        borderRadius: 5,
     },
     removeButtonContainer: {
         position: "absolute",

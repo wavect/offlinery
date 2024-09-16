@@ -1,12 +1,17 @@
-import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
-import { MaterialIcons } from "@expo/vector-icons";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
+import { SText } from "@/styles/Text.styles";
+import {
+    ButtonContainer,
+    RuleItemContainer,
+    RuleTextContainer,
+    ViolatingRulesTextView,
+} from "@/styles/View.styles";
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 const HouseRules = ({
@@ -38,7 +43,7 @@ const HouseRules = ({
                 description={i18n.t(TR.houseRules.descrDontRush)}
             />
 
-            <View style={styles.buttonContainer}>
+            <ButtonContainer>
                 <OButtonWide
                     text={i18n.t(TR.iUnderstand)}
                     filled={true}
@@ -52,14 +57,16 @@ const HouseRules = ({
                     }
                 />
 
-                <Text style={styles.violatingRules}>
-                    {i18n.t(TR.violatingRules.p1)}
-                    <Text style={styles.boldText}>
-                        {i18n.t(TR.violatingRules.duration)}
-                    </Text>
-                    {i18n.t(TR.violatingRules.p2)}
-                </Text>
-            </View>
+                <ViolatingRulesTextView>
+                    <SText.Small white>
+                        {i18n.t(TR.violatingRules.p1)}
+                        <SText.Small white bold>
+                            {i18n.t(TR.violatingRules.duration)}
+                        </SText.Small>
+                        {i18n.t(TR.violatingRules.p2)}
+                    </SText.Small>
+                </ViolatingRulesTextView>
+            </ButtonContainer>
         </OPageColorContainer>
     );
 };
@@ -70,77 +77,22 @@ interface IRuleItemProps {
 }
 
 const RuleItem: React.FC<IRuleItemProps> = ({ title, description }) => (
-    <View style={styles.ruleItem}>
-        <MaterialIcons
+    <RuleItemContainer>
+        <StyledMaterialIcon
             name="check"
             size={24}
-            color={Color.white}
-            style={styles.checkIcon}
+            color="white"
+            marginRight={14}
         />
-        <View style={styles.ruleTextContainer}>
-            <Text style={styles.ruleTitle}>{title}</Text>
-            <Text style={styles.ruleDescription}>{description}</Text>
-        </View>
-    </View>
+        <RuleTextContainer>
+            <SText.Large white noMargin bold>
+                {title}
+            </SText.Large>
+            <SText.Small white noMargin>
+                {description}
+            </SText.Small>
+        </RuleTextContainer>
+    </RuleItemContainer>
 );
-
-const styles = StyleSheet.create({
-    container: {
-        flexGrow: 1,
-        padding: 20,
-        marginTop: 100,
-    },
-    ruleItem: {
-        flexDirection: "row",
-        marginBottom: 25,
-    },
-    checkIcon: {
-        marginRight: 13,
-    },
-    ruleTextContainer: {
-        flex: 1,
-    },
-    ruleTitle: {
-        fontFamily: FontFamily.montserratRegular,
-        fontWeight: "600",
-        fontSize: FontSize.size_xl,
-        color: Color.white,
-        marginBottom: 5,
-    },
-    ruleDescription: {
-        fontFamily: FontFamily.montserratLight,
-        fontSize: FontSize.size_sm,
-        color: Color.white,
-    },
-    violatingRules: {
-        fontFamily: FontFamily.montserratLight,
-        fontSize: FontSize.size_sm,
-        color: Color.white,
-        textAlign: "center",
-        marginVertical: 20,
-    },
-    boldText: {
-        fontFamily: FontFamily.montserratRegular,
-        fontWeight: "600",
-    },
-    buttonContainer: {
-        alignItems: "center",
-        marginTop: 20,
-    },
-    button: {
-        backgroundColor: Color.white,
-        borderRadius: BorderRadius.br_81xl,
-        paddingVertical: 15,
-        paddingHorizontal: 30,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    buttonText: {
-        color: "#36797d",
-        fontSize: FontSize.size_xl,
-        fontFamily: FontFamily.montserratRegular,
-        fontWeight: "500",
-    },
-});
 
 export default HouseRules;

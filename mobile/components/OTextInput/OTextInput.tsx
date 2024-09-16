@@ -1,123 +1,73 @@
-import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { MaterialIcons } from "@expo/vector-icons";
-import * as React from "react";
-import { useState } from "react";
+import { Color } from "@/GlobalStyles";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
 import {
-    StyleProp,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-    ViewStyle,
-} from "react-native";
-import { TextInputProps } from "react-native/Libraries/Components/TextInput/TextInput";
+    EyeIconButton,
+    OTextInputContainer,
+    OTextInputStyled,
+} from "@/styles/Input.styles";
+import { SText } from "@/styles/Text.styles";
+import { FullWidthContainer } from "@/styles/View.styles";
+import React, { useState } from "react";
+import { TextInputProps } from "react-native";
 
 interface IOTextInputProps extends Omit<TextInputProps, "secureTextEntry"> {
-    containerStyle?: StyleProp<ViewStyle>;
     topLabel?: string;
     bottomLabel?: string;
     isBottomLabelError?: boolean;
-    isSensitiveInformation?: boolean;
+    isPassword?: boolean;
+    variant?: "primary" | "white";
 }
 
-export const OTextInput = (props: IOTextInputProps) => {
-    const {
-        topLabel,
-        bottomLabel,
-        isBottomLabelError,
-        isSensitiveInformation,
-        containerStyle,
-    } = props;
-    const [isSecureTextVisible, setIsSecureTextVisible] = useState(
-        !isSensitiveInformation,
-    );
+export const OTextInput: React.FC<IOTextInputProps> = ({
+    topLabel,
+    bottomLabel,
+    isBottomLabelError,
+    isPassword,
+    variant = "primary",
+    style,
+    ...props
+}) => {
+    const [isSecureTextVisible, setIsSecureTextVisible] = useState(!isPassword);
 
     const toggleSecureEntry = () => {
         setIsSecureTextVisible(!isSecureTextVisible);
     };
+    const getLabelProps = () =>
+        variant === "white" ? { white: true } : { primary: true };
 
     return (
-        <View style={[styles.container, containerStyle]}>
-            {topLabel && <Text style={styles.topLabel}>{topLabel}</Text>}
-            <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    secureTextEntry={
-                        isSensitiveInformation && !isSecureTextVisible
-                    }
+        <FullWidthContainer>
+            {topLabel && (
+                <SText.InputLabel {...getLabelProps()}>
+                    {topLabel}
+                </SText.InputLabel>
+            )}
+            <OTextInputContainer variant={variant}>
+                <OTextInputStyled
+                    variant={variant}
+                    secureTextEntry={isPassword && !isSecureTextVisible}
                     placeholderTextColor="#999"
                     {...props}
                 />
-                {isSensitiveInformation && (
-                    <TouchableOpacity
-                        onPress={toggleSecureEntry}
-                        style={styles.eyeIcon}
-                    >
-                        <MaterialIcons
+                {isPassword && (
+                    <EyeIconButton onPress={toggleSecureEntry}>
+                        <StyledMaterialIcon
                             name={
                                 isSecureTextVisible
                                     ? "visibility"
                                     : "visibility-off"
                             }
                             size={24}
-                            color="#999"
+                            color={
+                                variant === "primary" ? Color.gray : Color.white
+                            }
                         />
-                    </TouchableOpacity>
+                    </EyeIconButton>
                 )}
-            </View>
-            {bottomLabel && (
-                <Text
-                    style={[
-                        styles.bottomLabel,
-                        isBottomLabelError ? styles.bottomLabelError : null,
-                    ]}
-                >
-                    {bottomLabel}
-                </Text>
-            )}
-        </View>
+            </OTextInputContainer>
+
+            {/* @BUG Fix error msg! */}
+            {/*{bottomLabel && <SText.Error>{bottomLabel}</SText.Error>}*/}
+        </FullWidthContainer>
     );
 };
-
-const styles = StyleSheet.create({
-    input: {
-        flex: 1,
-        fontSize: 16,
-        paddingVertical: 12,
-    },
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        width: "100%",
-    },
-    eyeIcon: {
-        padding: 4,
-    },
-    container: {
-        width: "90%",
-        alignItems: "center",
-    },
-    topLabel: {
-        color: Color.gray,
-        fontSize: FontSize.size_sm,
-        fontFamily: FontFamily.montserratSemiBold,
-        marginBottom: 5,
-        alignSelf: "flex-start",
-    },
-    bottomLabel: {
-        color: Color.gray,
-        fontSize: FontSize.size_sm,
-        fontFamily: FontFamily.montserratRegular,
-        marginTop: 5,
-        alignSelf: "flex-start",
-    },
-    bottomLabelError: {
-        color: Color.red,
-        fontFamily: FontFamily.montserratSemiBold,
-    },
-});

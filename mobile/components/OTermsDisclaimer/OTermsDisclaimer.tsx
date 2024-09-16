@@ -1,58 +1,27 @@
-import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { TR, i18n } from "@/localization/translate.service";
+import {
+    TermsContainerOuter,
+    TermsLink,
+    TermsText,
+} from "@/styles/View.styles";
 import { A } from "@expo/html-elements";
-import * as React from "react";
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
+import React from "react";
 
-interface IOTermsDisclaimerProps {
-    style?: StyleProp<ViewStyle>;
-}
-
-export const OTermsDisclaimer = (props: IOTermsDisclaimerProps) => {
+export const OTermsDisclaimer: React.FC = () => {
     return (
-        <View style={[styles.termsContainerOuter, props.style]}>
-            <Text style={styles.termsText}>
+        <TermsContainerOuter>
+            <TermsText>
                 {i18n.t(TR.termsDisclaimer.p1)}
-                <A href="https://wavect.io/imprint" style={styles.termsLink}>
-                    {i18n.t(TR.termsDisclaimer.terms)}
+                <A href="https://wavect.io/imprint">
+                    <TermsLink>{i18n.t(TR.termsDisclaimer.terms)}</TermsLink>
                 </A>
                 {i18n.t(TR.termsDisclaimer.p2)}
-                <A href="https://wavect.io/imprint" style={styles.termsLink}>
-                    {i18n.t(TR.termsDisclaimer.privacyCookie)}
+                <A href="https://wavect.io/imprint">
+                    <TermsLink>
+                        {i18n.t(TR.termsDisclaimer.privacyCookie)}
+                    </TermsLink>
                 </A>
-            </Text>
-        </View>
+            </TermsText>
+        </TermsContainerOuter>
     );
 };
-
-const styles = StyleSheet.create({
-    termsText: {
-        fontFamily: FontFamily.montserratLight,
-        fontWeight: "500",
-        fontSize: FontSize.size_sm,
-        textShadowColor: "rgba(0, 0, 0, 0.25)",
-        textShadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        color: Color.white,
-        lineHeight: 20,
-        textShadowRadius: 4,
-        textAlign: "center",
-    },
-    termsLink: {
-        textDecorationLine: "underline",
-    },
-    termsContainerOuter: {
-        marginBottom: 25,
-        minHeight: 81,
-        letterSpacing: 0,
-        color: Color.white,
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: 16,
-        lineHeight: 24,
-        width: "88%",
-        height: 45,
-    },
-});

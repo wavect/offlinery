@@ -1,19 +1,22 @@
-import { Color, Subtitle, Title } from "@/GlobalStyles";
-import { MaterialIcons } from "@expo/vector-icons";
-import * as React from "react";
-import { ReactNode } from "react";
+import { Color } from "@/GlobalStyles";
+import { StyledMaterialIcon } from "@/styles/Icon.styles";
+import { SText } from "@/styles/Text.styles";
+import {
+    ButtonContainer,
+    Content,
+    IconContainer,
+    PageContainer,
+} from "@/styles/View.styles";
+import { MaterialIcons as MaterialIconsType } from "@expo/vector-icons";
+import React, { ReactNode } from "react";
 import {
     Dimensions,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
-    StyleSheet,
-    Text,
     View,
 } from "react-native";
-import styles from "./OPageContainer.styles";
 
-import { MaterialIcons as MaterialIconsType } from "@expo/vector-icons";
 type IconName = React.ComponentProps<typeof MaterialIconsType>["name"];
 
 interface IOPageContainerProps {
@@ -30,43 +33,38 @@ export const OPageContainer = (props: IOPageContainerProps) => {
     const { width, height } = Dimensions.get("window");
 
     return (
-        <View style={styles.container}>
+        <PageContainer>
             {props.fullpageIcon && (
-                <View style={fullpageIconStyles.iconContainer}>
-                    <MaterialIcons
+                <IconContainer>
+                    <StyledMaterialIcon
                         name={props.fullpageIcon}
                         size={Math.min(width, height) * 0.8}
                         color={Color.brightestGray}
                     />
-                </View>
+                </IconContainer>
             )}
             <MainViewContainer
-                style={styles.content}
+                style={{ flex: 1 }}
                 keyboardShouldPersistTaps="handled"
             >
-                {props.title && <Text style={Title}>{props.title}</Text>}
-                {props.subtitle && (
-                    <Text style={Subtitle}>{props.subtitle}</Text>
-                )}
-                {props.children}
+                <Content>
+                    {props.title && <SText.Title>{props.title}</SText.Title>}
+                    {props.subtitle && (
+                        <SText.Small marginBottom={18}>
+                            {props.subtitle}
+                        </SText.Small>
+                    )}
+                    {props.children}
+                </Content>
             </MainViewContainer>
-
             <KeyboardAvoidingView
-                style={styles.buttonContainer}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
                 keyboardVerticalOffset={Platform.OS === "ios" ? 110 : 0}
             >
-                {props.bottomContainerChildren}
+                <ButtonContainer>
+                    {props.bottomContainerChildren}
+                </ButtonContainer>
             </KeyboardAvoidingView>
-        </View>
+        </PageContainer>
     );
 };
-
-const fullpageIconStyles = StyleSheet.create({
-    iconContainer: {
-        ...StyleSheet.absoluteFillObject,
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: -1, // Place the icon behind other content
-    },
-});

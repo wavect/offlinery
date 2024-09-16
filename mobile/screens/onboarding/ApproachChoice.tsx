@@ -1,4 +1,3 @@
-import { Color, Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import {
     UserApproachChoiceEnum,
@@ -8,8 +7,9 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { SText } from "@/styles/Text.styles";
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -55,7 +55,9 @@ const ApproachChoice = ({
     return (
         <OPageContainer
             bottomContainerChildren={
-                <Text style={styles.footnote}>{i18n.t(TR.changePossible)}</Text>
+                <SText.Medium center marginTop={10} marginBottom={10}>
+                    {i18n.t(TR.changePossible)}
+                </SText.Medium>
             }
         >
             <View style={styles.optionContainer}>
@@ -68,9 +70,9 @@ const ApproachChoice = ({
                         setApproachChoice(UserApproachChoiceEnum.approach)
                     }
                 />
-                <Text style={[Subtitle, styles.subtitle]}>
+                <SText.Medium center marginTop={10}>
                     {i18n.t(TR.approachDescr)}
-                </Text>
+                </SText.Medium>
             </View>
 
             <View style={styles.optionContainer}>
@@ -83,9 +85,9 @@ const ApproachChoice = ({
                         setApproachChoice(UserApproachChoiceEnum.be_approached)
                     }
                 />
-                <Text style={[Subtitle, styles.subtitle]}>
+                <SText.Medium center marginTop={10}>
                     {i18n.t(TR.beApproachedDescr)}
-                </Text>
+                </SText.Medium>
             </View>
 
             <View style={styles.optionContainer}>
@@ -99,9 +101,9 @@ const ApproachChoice = ({
                         setApproachChoice(UserApproachChoiceEnum.both)
                     }
                 />
-                <Text style={[Subtitle, styles.subtitle]}>
+                <SText.Medium center marginTop={10}>
                     {i18n.t(TR.bothDescr)}
-                </Text>
+                </SText.Medium>
             </View>
         </OPageContainer>
     );
@@ -112,17 +114,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 30,
         width: "100%",
-    },
-    subtitle: {
-        textAlign: "center",
-        marginTop: 10,
-        paddingHorizontal: 20,
-    },
-    footnote: {
-        textAlign: "center",
-        color: Color.lightGray,
-        fontSize: 14,
-        marginTop: 20,
     },
 });
 

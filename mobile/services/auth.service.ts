@@ -55,6 +55,7 @@ export const userAuthenticatedUpdate = (
     refreshUserData(dispatch, user, jwtAccessToken, jwtRefreshToken);
 
     if (user.verificationStatus === "pending") {
+        navigation.navigate(ROUTES.MainTabView);
         navigation.navigate(ROUTES.Onboarding.WaitingVerification);
     } else {
         navigation.navigate(ROUTES.MainTabView);

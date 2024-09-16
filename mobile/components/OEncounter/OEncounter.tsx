@@ -5,10 +5,7 @@ import {
     UpdateEncounterStatusDTO,
     UserApproachChoiceEnum,
 } from "@/api/gen/src";
-import {
-    IOButtonSmallVariant,
-    OButtonSmall,
-} from "@/components/OButtonSmall/OButtonSmall";
+import { OButtonSmall } from "@/components/OButtonSmall/OButtonSmall";
 import OMessageModal from "@/components/OMessageModal/OMessageModal";
 import {
     EACTION_ENCOUNTERS,
@@ -17,10 +14,12 @@ import {
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
+import { IOButtonSmallVariant } from "@/styles/Button.styles";
+import { SText } from "@/styles/Text.styles";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import * as React from "react";
 import { useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 interface ISingleEncounterProps {
@@ -85,12 +84,12 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     source={{ uri: encounterProfile.imageURIs[0] }}
                 />
                 <View style={styles.encounterDetails}>
-                    <Text
+                    <SText.Small
                         style={styles.nameAge}
-                    >{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>
-                    <Text
-                        style={styles.encounterInfo}
-                    >{`${encounterProfile.lastTimePassedBy} near ${encounterProfile.lastLocationPassedBy}`}</Text>
+                    >{`${encounterProfile.firstName}, ${encounterProfile.age}`}</SText.Small>
+                    <SText.Medium>
+                        {`${encounterProfile.lastTimePassedBy} near ${encounterProfile.lastLocationPassedBy}`}
+                    </SText.Medium>
 
                     {showActions && (
                         <View style={styles.encounterDropdownContainer}>
@@ -122,18 +121,16 @@ const OEncounter = (props: ISingleEncounterProps) => {
                 {showActions && (
                     <View style={styles.rightColumn}>
                         {encounterProfile.rating && (
-                            <Text
-                                style={styles.trustScore}
+                            <SText.Small
                                 onPress={() => alert(i18n.t(TR.ratingDescr))}
                             >
                                 {i18n.t(TR.trust)}({encounterProfile.rating})
-                            </Text>
+                            </SText.Small>
                         )}
                         {dateStatus ===
                             EncounterPublicDTOStatusEnum.met_interested && (
                             <OButtonSmall
                                 label={i18n.t(TR.leaveMessageBtnLbl)}
-                                containerStyle={styles.button}
                                 onPress={() => setModalVisible(true)}
                                 variant={IOButtonSmallVariant.Black}
                             />
@@ -143,7 +140,6 @@ const OEncounter = (props: ISingleEncounterProps) => {
                             <OButtonSmall
                                 isDisabled={encounterProfile.reported}
                                 variant={IOButtonSmallVariant.Danger}
-                                containerStyle={styles.button}
                                 onPress={() =>
                                     navigation.navigate(
                                         ROUTES.Main.ReportEncounter,
@@ -168,7 +164,6 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                 <OButtonSmall
                                     label={i18n.t(TR.navigate)}
                                     variant={IOButtonSmallVariant.Black}
-                                    containerStyle={styles.button}
                                     onPress={() =>
                                         navigation.navigate(ROUTES.HouseRules, {
                                             nextPage:
@@ -188,12 +183,12 @@ const OEncounter = (props: ISingleEncounterProps) => {
             {dateStatus === EncounterPublicDTOStatusEnum.met_interested &&
                 encounterProfile.lastReceivedMessage && (
                     <View style={styles.receivedMessageContainer}>
-                        <Text style={styles.receivedMessageTitle}>
+                        <SText.Medium>
                             {i18n.t(TR.receivedMessage)}:
-                        </Text>
-                        <Text style={styles.receivedMessageText}>
+                        </SText.Medium>
+                        <SText.Medium>
                             {encounterProfile.lastReceivedMessage.content}
-                        </Text>
+                        </SText.Medium>
                     </View>
                 )}
 

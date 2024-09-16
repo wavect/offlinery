@@ -13,10 +13,12 @@ import {
     getSecurelyStoredValue,
 } from "@/services/secure-storage.service";
 import { getLocallyStoredUserData } from "@/services/storage.service";
+import { SText } from "@/styles/Text.styles";
 import { includeJWT } from "@/utils/misc.utils";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
-import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
+import React from "react";
+import { StyleProp, Switch, View, ViewStyle } from "react-native";
 
 interface IOGoLiveToggleProps {
     style?: StyleProp<ViewStyle>;
@@ -159,7 +161,7 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
 
     const getSuccessMessage = () => {
         switch (state.approachChoice) {
-            case UserApproachChoiceEnum.both: // fall through
+            case UserApproachChoiceEnum.both:
             case UserApproachChoiceEnum.approach:
                 return i18n.t(TR.youAreLiveApproachDescr);
                 break;
@@ -182,11 +184,11 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 onValueChange={toggleSwitch}
                 value={state.dateMode === UserDateModeEnum.live}
             />
-            <Text style={{ marginTop: 5, fontSize: 12, color: Color.gray }}>
+            <SText.XSmall>
                 {state.dateMode === UserDateModeEnum.live
                     ? i18n.t(TR.live)
                     : i18n.t(TR.ghostMode)}
-            </Text>
+            </SText.XSmall>
         </View>
     );
 };
