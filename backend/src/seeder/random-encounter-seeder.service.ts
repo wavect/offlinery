@@ -74,8 +74,8 @@ export class RandomEncounterSeeder {
         encounter.lastDateTimePassedBy = this.getRandomPastDate();
         encounter.lastLocationPassedBy = this.getRandomPoint();
         encounter.userStatuses = {
-            [wavectUser.id]: this.getRandomStatus(),
-            [user2.id]: this.getRandomStatus(),
+            [wavectUser.id]: EEncounterStatus.MET_INTERESTED,
+            [user2.id]: EEncounterStatus.MET_INTERESTED,
         };
         await this.encounterRepository.save(encounter);
 
@@ -96,10 +96,10 @@ export class RandomEncounterSeeder {
 
     private getRandomPastDate(): Date {
         const now = new Date();
-        const pastDate = new Date(
+        // Random date within the last 30 days
+        return new Date(
             now.getTime() - Math.random() * 30 * 24 * 60 * 60 * 1000,
-        ); // Random date within the last 30 days
-        return pastDate;
+        );
     }
 
     private getRandomPoint(): Point {
@@ -110,14 +110,5 @@ export class RandomEncounterSeeder {
                 48.210033 + (Math.random() - 0.5) * 0.1, // Latitude (Vienna-centric)
             ],
         };
-    }
-
-    private getRandomStatus(): EEncounterStatus {
-        const statuses = [
-            EEncounterStatus.NOT_MET,
-            EEncounterStatus.MET_INTERESTED,
-            EEncounterStatus.MET_NOT_INTERESTED,
-        ];
-        return statuses[Math.floor(Math.random() * statuses.length)];
     }
 }
