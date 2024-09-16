@@ -4,7 +4,6 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
-import { SText } from "@/styles/Text.styles";
 import React, { useRef, useState } from "react";
 import {
     Dimensions,
@@ -12,6 +11,7 @@ import {
     Image,
     Modal,
     StyleSheet,
+    Text,
     TouchableOpacity,
     View,
 } from "react-native";
@@ -50,8 +50,7 @@ const ProfileView = ({
         </TouchableOpacity>
     );
     const user: UserPublicDTO | undefined = route?.params?.user;
-    if (!user)
-        return <SText.Medium>{i18n.t(TR.errNoUserProvided)}</SText.Medium>;
+    if (!user) return <Text>{i18n.t(TR.errNoUserProvided)}</Text>;
     const bottomContainerChildren: React.ReactNode =
         route?.params?.bottomContainerChildren;
 
@@ -129,7 +128,7 @@ const ProfileView = ({
                         onPress={() => setFullScreenVisible(false)}
                     >
                         <View style={styles.closeButtonInner}>
-                            <SText.Medium>×</SText.Medium>
+                            <Text style={styles.closeButtonText}>×</Text>
                         </View>
                     </TouchableOpacity>
                     <Image

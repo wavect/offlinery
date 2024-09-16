@@ -1,13 +1,13 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { UserPublicDTO } from "@/api/gen/src";
 import { ROUTES } from "@/screens/routes";
-import { SText } from "@/styles/Text.styles";
 import * as React from "react";
 import {
     Image,
     Pressable,
     StyleProp,
     StyleSheet,
+    Text,
     View,
     ViewStyle,
 } from "react-native";
@@ -44,8 +44,12 @@ const OTeaserProfilePreview = (props: IOTeaserProfileProps) => {
                     source={{ uri: publicProfile.imageURIs[0] }}
                 />
                 <View style={styles.profileDetails}>
-                    <SText.Medium>{`${prefixText ?? ""}${publicProfile.firstName}, ${publicProfile.age}`}</SText.Medium>
-                    <SText.Medium>{publicProfile.bio}</SText.Medium>
+                    <Text
+                        style={styles.nameAge}
+                    >{`${prefixText ?? ""}${publicProfile.firstName}, ${publicProfile.age}`}</Text>
+                    <Text style={styles.encounterInfo}>
+                        {publicProfile.bio}
+                    </Text>
 
                     {showOpenProfileButton && (
                         <View style={styles.buttonContainer}>
@@ -60,16 +64,16 @@ const OTeaserProfilePreview = (props: IOTeaserProfileProps) => {
                                     )
                                 }
                             >
-                                <SText.Medium>Profile</SText.Medium>
+                                <Text style={styles.buttonText}>Profile</Text>
                             </Pressable>
                             {secondButton && (
                                 <Pressable
                                     style={[styles.button, secondButton.style]}
                                     onPress={secondButton.onPress}
                                 >
-                                    <SText.Medium>
+                                    <Text style={styles.buttonText}>
                                         {secondButton.text}
-                                    </SText.Medium>
+                                    </Text>
                                 </Pressable>
                             )}
                         </View>

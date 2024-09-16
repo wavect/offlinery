@@ -1,7 +1,12 @@
-import { SText } from "@/styles/Text.styles";
 import { Ionicons } from "@expo/vector-icons";
 import React, { ReactNode, useEffect, useState } from "react";
-import { Animated, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+    Animated,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import ErrorBoundary, { ErrorBoundaryProps } from "react-native-error-boundary";
 
 interface ErrorNotificationProps {
@@ -38,9 +43,9 @@ const ErrorNotification: React.FC<ErrorNotificationProps> = ({
                     color="white"
                     style={styles.icon}
                 />
-                <SText.Medium>
+                <Text style={styles.errorText}>
                     {error.message || "An error occurred"}
-                </SText.Medium>
+                </Text>
                 <TouchableOpacity
                     onPress={onDismiss}
                     style={styles.closeButton}

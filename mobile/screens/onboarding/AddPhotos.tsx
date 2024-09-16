@@ -1,4 +1,4 @@
-import { Color } from "@/GlobalStyles";
+import { BorderRadius, Color } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { BASE_PATH } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
@@ -12,7 +12,7 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { StyledMaterialIcon } from "@/styles/Icon.styles";
+import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import {
@@ -88,7 +88,7 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
             onPress={openMediaLibrary}
         >
             {!img ? (
-                <StyledMaterialIcon
+                <MaterialIcons
                     name="add-circle-outline"
                     size={size * 0.2}
                     color={Color.primary}
@@ -178,12 +178,12 @@ const styles = StyleSheet.create({
     previewImage: {
         width: "100%",
         height: "100%",
-        borderRadius: 5,
+        borderRadius: BorderRadius.br_5xs,
     },
     photoContainer: {
         marginBottom: 5,
         borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: BorderRadius.br_5xs,
         borderColor: Color.primary,
         borderStyle: "dashed",
         backgroundColor: Color.brightGray,

@@ -1,29 +1,29 @@
-import { Color } from "@/GlobalStyles";
+import { Color, FontFamily } from "@/GlobalStyles";
 import { OLinearBackground } from "@/components/OLinearBackground/OLinearBackground";
 import { OSafeAreaContainer } from "@/components/OSafeAreaContainer/OSafeAreaContainer";
 import OShowcase from "@/components/OShowcase/OShowcase";
 import { TR, i18n } from "@/localization/translate.service";
-import { SText } from "@/styles/Text.styles";
-import {
-    FlexContainer,
-    ScrollViewContainer,
-    StyledKeyboardAvoidingView,
-} from "@/styles/View.styles";
 import * as React from "react";
 import { ReactNode, useState } from "react";
 import {
     ActivityIndicator,
+    Dimensions,
+    KeyboardAvoidingView,
     Platform,
     RefreshControl,
+    ScrollView,
     StatusBar,
     StyleSheet,
+    Text,
     View,
 } from "react-native";
 
 const LoadingScreen = () => (
     <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={Color.white} />
-        <SText.Medium>{i18n.t(TR.gettingReadyToAmazeYou)}</SText.Medium>
+        <Text style={[styles.loadingText, { color: Color.white }]}>
+            {i18n.t(TR.gettingReadyToAmazeYou)}
+        </Text>
     </View>
 );
 
@@ -44,14 +44,16 @@ export const OPageColorContainer = (props: IOPageColorContainerProps) => {
     };
 
     return (
-        <FlexContainer>
+        <View style={styles.container}>
             <StatusBar hidden />
             <OLinearBackground>
-                <StyledKeyboardAvoidingView
+                <KeyboardAvoidingView
+                    style={styles.container}
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     keyboardVerticalOffset={0}
                 >
-                    <ScrollViewContainer
+                    <ScrollView
+                        contentContainerStyle={styles.scrollViewContent}
                         keyboardShouldPersistTaps="handled"
                         refreshControl={
                             refreshFunc && (
@@ -62,23 +64,48 @@ export const OPageColorContainer = (props: IOPageColorContainerProps) => {
                             )
                         }
                     >
-                        <OSafeAreaContainer>
+                        <OSafeAreaContainer containerStyle={styles.content}>
                             <OShowcase
                                 subtitle={i18n.t(TR.stopSwipingMeetIrl)}
+                                containerStyle={styles.showCaseStyle}
                             />
                             {isLoading ? <LoadingScreen /> : children}
                         </OSafeAreaContainer>
-                    </ScrollViewContainer>
-                </StyledKeyboardAvoidingView>
+                    </ScrollView>
+                </KeyboardAvoidingView>
             </OLinearBackground>
-        </FlexContainer>
+        </View>
     );
 };
 
+const { height, width } = Dimensions.get("window");
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    scrollViewContent: {
+        flexGrow: 1,
+        justifyContent: "center",
+        paddingHorizontal: width * 0.05,
+    },
+    showCaseStyle: {
+        marginTop: height * 0.07,
+        marginBottom: 20,
+    },
+    content: {
+        flex: 1,
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
     loadingContainer: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+    },
+    loadingText: {
+        marginTop: 12,
+        fontSize: 16,
+        textAlign: "center",
+        fontFamily: FontFamily.montserratLight,
     },
 });

@@ -5,9 +5,8 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { SText } from "@/styles/Text.styles";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -160,7 +159,9 @@ const VerifyEmail = ({
                     />
                 ))}
             </View>
-            {errorMessage && <SText.Medium>{errorMessage}</SText.Medium>}
+            {errorMessage && (
+                <Text style={styles.errorMessage}>{errorMessage}</Text>
+            )}
             <View style={styles.resendContainer}>
                 <OButtonWide
                     text={
@@ -194,7 +195,6 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         textAlign: "center",
         fontSize: 20,
-        marginRight: 10,
     },
     resendContainer: {
         marginTop: 16,

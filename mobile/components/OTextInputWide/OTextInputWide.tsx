@@ -1,7 +1,6 @@
-import { Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MaterialIcons } from "@expo/vector-icons";
-import * as React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
     StyleProp,
     StyleSheet,
@@ -13,43 +12,40 @@ import {
 } from "react-native";
 import { TextInputProps } from "react-native/Libraries/Components/TextInput/TextInput";
 
-interface IOTextInputProps extends Omit<TextInputProps, "secureTextEntry"> {
+interface IOTextInputWideProps extends TextInputProps {
     containerStyle?: StyleProp<ViewStyle>;
     topLabel?: string;
     bottomLabel?: string;
     isBottomLabelError?: boolean;
-    isSensitiveInformation?: boolean;
 }
 
-export const OTextInput = (props: IOTextInputProps) => {
+export const OTextInputWide = (props: IOTextInputWideProps) => {
     const {
+        secureTextEntry,
+        isBottomLabelError,
+        containerStyle,
         topLabel,
         bottomLabel,
-        isBottomLabelError,
-        isSensitiveInformation,
-        containerStyle,
     } = props;
-    const [isSecureTextVisible, setIsSecureTextVisible] = useState(
-        !isSensitiveInformation,
-    );
+
+    const [isSecureTextVisible, setIsSecureTextVisible] =
+        useState(!secureTextEntry);
 
     const toggleSecureEntry = () => {
         setIsSecureTextVisible(!isSecureTextVisible);
     };
 
     return (
-        <View style={[styles.container, containerStyle]}>
+        <View style={styles.container}>
             {topLabel && <Text style={styles.topLabel}>{topLabel}</Text>}
-            <View style={styles.inputContainer}>
+            <View style={[styles.inputContainer, containerStyle]}>
                 <TextInput
                     style={styles.input}
-                    secureTextEntry={
-                        isSensitiveInformation && !isSecureTextVisible
-                    }
-                    placeholderTextColor="#999"
+                    secureTextEntry={secureTextEntry && !isSecureTextVisible}
+                    placeholderTextColor={Color.white}
                     {...props}
                 />
-                {isSensitiveInformation && (
+                {secureTextEntry && (
                     <TouchableOpacity
                         onPress={toggleSecureEntry}
                         style={styles.eyeIcon}
@@ -61,7 +57,7 @@ export const OTextInput = (props: IOTextInputProps) => {
                                     : "visibility-off"
                             }
                             size={24}
-                            color="#999"
+                            color={Color.white}
                         />
                     </TouchableOpacity>
                 )}
@@ -81,43 +77,52 @@ export const OTextInput = (props: IOTextInputProps) => {
 };
 
 const styles = StyleSheet.create({
-    input: {
-        flex: 1,
-        fontSize: 16,
-        paddingVertical: 12,
-    },
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        width: "100%",
-    },
-    eyeIcon: {
-        padding: 4,
-    },
     container: {
         width: "90%",
         alignItems: "center",
     },
     topLabel: {
-        color: Color.gray,
+        color: Color.white,
         fontSize: FontSize.size_sm,
         fontFamily: FontFamily.montserratSemiBold,
         marginBottom: 5,
         alignSelf: "flex-start",
     },
     bottomLabel: {
-        color: Color.gray,
+        color: Color.white,
         fontSize: FontSize.size_sm,
         fontFamily: FontFamily.montserratRegular,
-        marginTop: 5,
         alignSelf: "flex-start",
+        marginBottom: 12,
+        marginTop: 6,
     },
     bottomLabelError: {
-        color: Color.red,
+        color: Color.lightOrange,
         fontFamily: FontFamily.montserratSemiBold,
+    },
+    input: {
+        flex: 1,
+        lineHeight: 28,
+        fontSize: FontSize.size_xl,
+        fontFamily: FontFamily.montserratLight,
+        fontWeight: "500",
+        padding: 6,
+        color: Color.white,
+    },
+    eyeIcon: {
+        padding: 10,
+    },
+    inputContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: 65,
+        borderRadius: BorderRadius.br_5xs,
+        overflow: "hidden",
+        backgroundColor: Color.stateLayersSurfaceDimOpacity08,
+        borderStyle: "solid",
+        borderWidth: 1,
+        borderColor: Color.white,
     },
 });

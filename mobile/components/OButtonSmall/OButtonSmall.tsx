@@ -1,21 +1,30 @@
-import { Color } from "@/GlobalStyles";
-import { IOButtonSmallProps } from "@/interfaces/button.interface";
+import { styles } from "@/components/OButtonSmall/OButtonSmall.styles";
+import * as React from "react";
+import { useState } from "react";
 import {
-    ButtonBase,
-    ButtonText,
-    ContentContainer,
-    IOButtonSmallVariant,
-    StyledActivityIndicator,
-} from "@/styles/Button.styles";
-import React, { useState } from "react";
+    ActivityIndicator,
+    Pressable,
+    StyleProp,
+    Text,
+    View,
+    ViewStyle,
+} from "react-native";
 
-export const OButtonSmall: React.FC<IOButtonSmallProps> = ({
-    onPress,
-    label,
-    isDisabled = false,
-    variant = IOButtonSmallVariant.Black,
-    fullWidth = false,
-}) => {
+interface IOButtonSmallProps {
+    onPress: () => Promise<void> | void;
+    label: string;
+    isDisabled?: boolean;
+    variant?: IOButtonSmallVariant;
+    containerStyle?: StyleProp<ViewStyle>;
+}
+
+export enum IOButtonSmallVariant {
+    Danger = "buttonDanger",
+    Black = "buttonBlack",
+}
+
+export const OButtonSmall = (props: IOButtonSmallProps) => {
+    const { onPress, label, isDisabled, variant, containerStyle } = props;
     const [isLoading, setLoading] = useState(false);
 
     const wrappedOnPress = async () => {
@@ -29,20 +38,25 @@ export const OButtonSmall: React.FC<IOButtonSmallProps> = ({
         }
     };
 
+    const buttonStyle = isDisabled
+        ? styles.buttonDisabled
+        : styles[variant ?? "buttonBlack"];
     return (
-        <ButtonBase
-            variant={variant}
-            isDisabled={isDisabled}
-            fullWidth={fullWidth}
+        <Pressable
+            style={[styles.buttonBase, buttonStyle, containerStyle]}
             onPress={wrappedOnPress}
             disabled={isDisabled || isLoading}
         >
-            <ContentContainer>
+            <View style={styles.contentContainer}>
                 {isLoading && (
-                    <StyledActivityIndicator size="small" color={Color.white} />
+                    <ActivityIndicator
+                        size="small"
+                        color={styles.buttonText.color}
+                        style={styles.activityIndicator}
+                    />
                 )}
-                <ButtonText>{label}</ButtonText>
-            </ContentContainer>
-        </ButtonBase>
+                <Text style={styles.buttonText}>{label}</Text>
+            </View>
+        </Pressable>
     );
 };

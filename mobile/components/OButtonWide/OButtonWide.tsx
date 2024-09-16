@@ -1,19 +1,103 @@
+import React, { FC, useEffect, useState } from "react";
 import {
-    IOButtonWideProps,
-    OButtonWideBase,
-    OButtonWideText,
-    StyledActivityIndicator,
-} from "@/styles/Button.styles";
-import React, { useEffect, useState } from "react";
+    ActivityIndicator,
+    GestureResponderEvent,
+    Pressable,
+    StyleProp,
+    Text,
+    TextStyle,
+    ViewStyle,
+} from "react-native";
+import oButtonWideStyles from "./OButtonWide.styles";
 
-export const OButtonWide: React.FC<IOButtonWideProps> = ({
+type StyleVariant = "dark" | "light";
+
+interface IOButtonWideProps {
+    text: string;
+    filled: boolean;
+    variant: StyleVariant;
+    onPress?: (event: GestureResponderEvent) => void;
+    style?: StyleProp<ViewStyle>;
+    styleLbl?: StyleProp<TextStyle>;
+    disabled?: boolean;
+    countdownEnableSeconds?: number;
+    isLoading?: boolean;
+    loadingBtnText?: string;
+    size?: "default" | "smaller";
+}
+
+const getButtonStyle = (
+    isDisabled: boolean,
+    filled: boolean,
+    variant: StyleVariant,
+): ViewStyle => {
+    let style: ViewStyle = { ...oButtonWideStyles.button } as ViewStyle;
+
+    if (filled) {
+        style = { ...style, ...(oButtonWideStyles.buttonFilled as ViewStyle) };
+        if (isDisabled)
+            return { ...style, ...oButtonWideStyles.buttonFilledDisabled };
+        return {
+            ...style,
+            ...(variant === "dark"
+                ? oButtonWideStyles.buttonFilledDark
+                : oButtonWideStyles.buttonFilledLight),
+        };
+    } else {
+        style = { ...style, ...oButtonWideStyles.buttonOutlined } as ViewStyle;
+        if (isDisabled)
+            return { ...style, ...oButtonWideStyles.buttonOutlinedDisabled };
+        return {
+            ...style,
+            ...(variant === "dark"
+                ? oButtonWideStyles.buttonOutlinedDark
+                : oButtonWideStyles.buttonOutlinedLight),
+        };
+    }
+};
+
+const getLabelStyle = (
+    isDisabled: boolean,
+    filled: boolean,
+    variant: StyleVariant,
+    size?: "default" | "smaller",
+): StyleProp<TextStyle> => {
+    let lblStyle;
+    if (isDisabled) {
+        lblStyle = filled
+            ? oButtonWideStyles.btnDisabledLabelDark
+            : oButtonWideStyles.btnDisabledLabelLight;
+    } else {
+        if (filled) {
+            lblStyle =
+                variant === "dark"
+                    ? oButtonWideStyles.btnFilledLabelDark
+                    : oButtonWideStyles.btnFilledLabelLight;
+        } else {
+            lblStyle =
+                variant === "dark"
+                    ? oButtonWideStyles.btnOutlineLabelDark
+                    : oButtonWideStyles.btnOutlineLabelLight;
+        }
+    }
+
+    const styleOverride =
+        size === "smaller"
+            ? oButtonWideStyles.buttonLabelSmallerOverride
+            : null;
+    return { ...lblStyle, ...styleOverride };
+};
+
+export const OButtonWide: FC<IOButtonWideProps> = ({
     loadingBtnText,
     isLoading,
     text,
     filled,
     variant,
     onPress,
-    size = "default",
+    style,
+    styleLbl,
+    size,
     disabled = false,
     countdownEnableSeconds = 0,
 }) => {
@@ -43,27 +127,29 @@ export const OButtonWide: React.FC<IOButtonWideProps> = ({
     const isDisabled = disabled || isBtnCountdownActive;
 
     return (
-        <OButtonWideBase
+        <Pressable
             onPress={onPress}
             disabled={isDisabled}
-            filled={filled}
-            variant={variant}
+            style={[getButtonStyle(isDisabled, filled, variant), style]}
         >
-            <OButtonWideText
-                filled={filled}
-                variant={variant}
-                disabled={isDisabled}
-                size={size}
+            <Text
+                style={[
+                    getLabelStyle(isDisabled, filled, variant, size),
+                    styleLbl,
+                ]}
             >
                 {isLoading ? (
                     <>
-                        <StyledActivityIndicator size="small" />
+                        <ActivityIndicator
+                            size="small"
+                            style={{ marginRight: 6 }}
+                        />
                         {(loadingBtnText || buttonText).toUpperCase()}
                     </>
                 ) : (
                     buttonText.toUpperCase()
                 )}
-            </OButtonWideText>
-        </OButtonWideBase>
+            </Text>
+        </Pressable>
     );
 };

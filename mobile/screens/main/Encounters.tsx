@@ -1,5 +1,5 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { EncounterApi, MessagePublicDTO } from "@/api/gen/src";
+import { DateRangeDTO, EncounterApi, MessagePublicDTO } from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
     EACTION_ENCOUNTERS,
@@ -9,8 +9,6 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { ROUTES } from "@/screens/routes";
-import { SText } from "@/styles/Text.styles";
-import { FullWidthContainer } from "@/styles/View.styles";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { includeJWT } from "@/utils/misc.utils";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
@@ -22,6 +20,7 @@ import {
     RefreshControl,
     ScrollView,
     StyleSheet,
+    Text,
     TouchableOpacity,
     View,
 } from "react-native";
@@ -70,24 +69,23 @@ const Encounters = ({
 
     const fetchEncounters = useCallback(async () => {
         try {
+            const dateRangeDTO: DateRangeDTO = {
+                startDate: metStartDateFilter,
+                endDate: metEndDateFilter,
+            };
             const encounters = await api.encounterControllerGetEncountersByUser(
                 {
                     userId: userState.id!,
-                    startDate: metStartDateFilter,
-                    endDate: metEndDateFilter,
+                    dateRangeDTO,
                 },
                 await includeJWT(),
             );
-
             const mappedEncounters: IEncounterProfile[] = [];
 
             encounters.forEach((encounter) => {
                 const otherUser = encounter.users.filter(
                     (u) => u.id !== userState.id,
                 )[0];
-
-                console.log("other users: ", otherUser);
-
                 mappedEncounters.push({
                     encounterId: encounter.id,
                     firstName: otherUser.firstName,
@@ -112,7 +110,6 @@ const Encounters = ({
                 payload: mappedEncounters,
             });
         } catch (error) {
-            console.log(JSON.stringify(error));
             console.error(error);
         }
     }, [userState.id, userState.jwtAccessToken, dispatch]);
@@ -163,8 +160,12 @@ const Encounters = ({
                 ))
             ) : (
                 <View style={styles.noEncountersContainer}>
-                    <SText.Large>Nobody was nearby..</SText.Large>
-                    <SText.Medium>(hint: mingle with the crowd)</SText.Medium>
+                    <Text style={styles.noEncountersTextLg}>
+                        Nobody was nearby..
+                    </Text>
+                    <Text style={styles.noEncountersTextSm}>
+                        (hint: mingle with the crowd)
+                    </Text>
                 </View>
             )}
         </ScrollView>
@@ -175,10 +176,10 @@ const Encounters = ({
             subtitle={i18n.t(TR.peopleYouMightHaveMet)}
             doNotUseScrollView={true}
         >
-            <FullWidthContainer>
+            <View style={styles.container}>
                 <View style={styles.dateRangeContainer}>
                     <View style={styles.dateContainer}>
-                        <SText.Medium>From</SText.Medium>
+                        <Text style={styles.dateLabel}>From</Text>
                         {Platform.OS === "ios" ? (
                             <RNDateTimePicker
                                 display="default"
@@ -193,9 +194,9 @@ const Encounters = ({
                                 <TouchableOpacity
                                     onPress={() => setShowStartDatePicker(true)}
                                 >
-                                    <SText.Medium>
+                                    <Text style={styles.androidDateButton}>
                                         {metStartDateFilter.toDateString()}
-                                    </SText.Medium>
+                                    </Text>
                                 </TouchableOpacity>
                                 {showStartDatePicker && (
                                     <RNDateTimePicker
@@ -209,7 +210,7 @@ const Encounters = ({
                         )}
                     </View>
                     <View style={styles.dateContainer}>
-                        <SText.Medium>To</SText.Medium>
+                        <Text style={styles.dateLabel}>To</Text>
                         {Platform.OS === "ios" ? (
                             <RNDateTimePicker
                                 display="default"
@@ -224,11 +225,9 @@ const Encounters = ({
                                 <TouchableOpacity
                                     onPress={() => setShowEndDatePicker(true)}
                                 >
-                                    <SText.Medium
-                                        style={styles.androidDateButton}
-                                    >
+                                    <Text style={styles.androidDateButton}>
                                         {metEndDateFilter.toDateString()}
-                                    </SText.Medium>
+                                    </Text>
                                 </TouchableOpacity>
                                 {showEndDatePicker && (
                                     <RNDateTimePicker
@@ -244,7 +243,7 @@ const Encounters = ({
                 </View>
 
                 {renderContent()}
-            </FullWidthContainer>
+            </View>
         </OPageContainer>
     );
 };
@@ -282,7 +281,6 @@ const styles = StyleSheet.create({
         color: Color.gray,
     },
     container: {
-        width: "100%",
         flex: 1,
     },
     encounterDropdownPicker: {
@@ -309,7 +307,6 @@ const styles = StyleSheet.create({
     encountersList: {
         flex: 1,
         height: "100%",
-        width: "100%",
         minHeight: 400,
     },
 });

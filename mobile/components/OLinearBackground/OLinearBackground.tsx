@@ -1,25 +1,21 @@
-import { StyledLinearGradient } from "@/styles/Miscellaneous.styles";
-import React, { ReactNode } from "react";
+import { LinearGradient } from "expo-linear-gradient";
+import { ReactNode } from "react";
+import oLinearBgStyles from "./OLinearBackground.styles";
 
 interface IOLinearBackground {
     children: ReactNode;
-    useAngle?: boolean;
-    angle?: number;
 }
 
-export const OLinearBackground = ({
-    children,
-    useAngle,
-    angle,
-}: IOLinearBackground) => {
+export const OLinearBackground = (props: IOLinearBackground) => {
     return (
-        <StyledLinearGradient
+        <LinearGradient
+            style={oLinearBgStyles.bgGradient}
             locations={[0.09, 0.68, 1]}
             colors={["#36797d", "#459da1", "#81c5c9"]}
-            useAngle={useAngle}
-            angle={angle}
+            useAngle={true}
+            angle={180}
         >
-            {children}
-        </StyledLinearGradient>
+            {props.children}
+        </LinearGradient>
     );
 };
