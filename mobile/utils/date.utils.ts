@@ -11,11 +11,11 @@ export const getAge = (birthday: Date | string): number => {
 
 export const formatDate = (dateString?: string) => {
     if (!dateString) {
-        return "";
+        return "N/V";
     }
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
-        return "Invalid Date";
+        return "N/V";
     }
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
