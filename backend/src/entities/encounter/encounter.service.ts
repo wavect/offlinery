@@ -32,8 +32,13 @@ export class EncounterService {
     ): Promise<Encounter[]> {
         let query = this.encounterRepository
             .createQueryBuilder("encounter")
-            .leftJoinAndSelect("encounter.users", "user")
-            .where("user.id = :userId", { userId });
+            .innerJoinAndSelect("encounter.users", "user")
+            /** @DEV CHANGE! */
+            .where(
+                ':userId IN (SELECT "userId" FROM user_encounters_encounter WHERE "encounterId" = encounter.id)',
+                { userId },
+            )
+            .leftJoinAndSelect("encounter.users", "allUsers");
 
         if (dateRange.startDate && dateRange.endDate) {
             query = query.andWhere(

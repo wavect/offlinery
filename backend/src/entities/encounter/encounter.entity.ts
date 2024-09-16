@@ -24,8 +24,9 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
             lastDateTimePassedBy: this.lastDateTimePassedBy,
             lastLocationPassedBy: undefined, // TODO, derive a rough human readable string (translation??) that can be shown locally, or just give random radius point or so and let users open map or so?
             reported: this.userReports?.length > 0, // TODO: Here we might want to make this boolean specific to the user querying? Otherwise technically only one user can report.
-            users: this.users.map((u) => u.convertToPublicDTO()),
-            messages: this.messages.map((m) => m.convertToPublicDTO()),
+            users: this.users?.map((u) => u.convertToPublicDTO()),
+            /** @DEV MAKE DEFAULT [] not check here*/
+            messages: this.messages?.map((m) => m.convertToPublicDTO()),
             isNearbyRightNow: this.isNearbyRightNow,
         };
     }
@@ -58,7 +59,7 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
      * const encounters = await encounterRepository.find({
      *   relations: ['users'],
      *   where: {
-     *     users: { id: In([user1Id, user2Id]) }
+     *     users: { id: In([user1Id]) }
      *   }
      * });
      */

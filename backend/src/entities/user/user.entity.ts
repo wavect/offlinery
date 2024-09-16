@@ -12,6 +12,7 @@ import {
     EVerificationStatus,
 } from "@/types/user.types";
 import { getAge } from "@/utils/date.utils";
+import { getBaseUrl } from "@/utils/utils";
 import { Point } from "geojson";
 import {
     Column,
@@ -31,7 +32,9 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
             id: this.id,
             firstName: this.firstName,
             age: getAge(this.birthDay),
-            imageURIs: this.imageURIs,
+            imageURIs: this.imageURIs.map(
+                (uri) => `${getBaseUrl()}/img/${uri}`,
+            ),
             bio: this.bio,
             trustScore: this.trustScore,
         };

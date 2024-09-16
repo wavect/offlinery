@@ -5,7 +5,6 @@ export * from "./BlacklistedRegionDTO";
 export * from "./BlacklistedRegionDTOLocation";
 export * from "./CreateUserDTO";
 export * from "./CreateUserReportDTO";
-export * from "./DateRangeDTO";
 export * from "./Encounter";
 export * from "./EncounterPublicDTO";
 export * from "./GetLocationOfEncounterDTO";

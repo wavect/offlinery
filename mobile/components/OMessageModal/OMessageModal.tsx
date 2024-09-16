@@ -6,7 +6,7 @@ import {
 } from "@/components/OButtonSmall/OButtonSmall";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { getJwtHeader } from "@/utils/misc.utils";
+import { includeJWT } from "@/utils/misc.utils";
 import React, { useState } from "react";
 import {
     Modal,
@@ -26,7 +26,7 @@ interface IOMessageModalProps {
 
 const encounterApi = new EncounterApi();
 const OMessageModal = (props: IOMessageModalProps) => {
-    const { dispatch, state } = useUserContext();
+    const { state } = useUserContext();
     const { visible, onClose, encounterId, userId } = props;
     const [message, setMessage] = useState("");
 
@@ -40,7 +40,7 @@ const OMessageModal = (props: IOMessageModalProps) => {
                 userId,
                 pushMessageDTO,
             },
-            getJwtHeader(state.jwtAccessToken),
+            await includeJWT(),
         );
         setMessage("");
     };
