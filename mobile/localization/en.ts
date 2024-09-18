@@ -116,6 +116,7 @@ export const en = {
     setStrongPassword: "Set a strong password",
     changePassword: "Change password",
     save: "Save",
+    updating: "Updating..",
     enterOldPassword: "Enter old password",
     currentPassword: "Current password",
     enterPassword: "Enter password",

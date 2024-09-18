@@ -1,5 +1,5 @@
 import { WeightedLatLngDTO } from "@/api/gen/src";
-import { isExpoGoEnvironment } from "@/utils/map-provider";
+import { isExpoGoEnvironment } from "@/utils/misc.utils";
 import React from "react";
 import { Heatmap } from "react-native-maps";
 

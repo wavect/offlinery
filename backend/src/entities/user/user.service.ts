@@ -1,6 +1,7 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
+import { UpdateUserPasswordDTO } from "@/DTOs/update-user-password";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { AuthService } from "@/auth/auth.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
@@ -13,6 +14,7 @@ import {
     Injectable,
     Logger,
     NotFoundException,
+    UnauthorizedException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
@@ -70,6 +72,13 @@ export class UserService {
         return savedFilePaths.sort((a, b) => a.index - b.index);
     }
 
+    async hashNewPassword(user: User, clearPwd: string): Promise<User> {
+        // @dev https://docs.nestjs.com/security/encryption-and-hashing
+        user.passwordSalt = await bcrypt.genSalt();
+        user.passwordHash = await bcrypt.hash(clearPwd, user.passwordSalt);
+        return user;
+    }
+
     async createUser(
         createUserDto: CreateUserDTO,
         images: Express.Multer.File[],
@@ -83,12 +92,7 @@ export class UserService {
             verificationStatus: EEmailVerificationStatus.VERIFIED,
         });
 
-        // @dev https://docs.nestjs.com/security/encryption-and-hashing
-        user.passwordSalt = await bcrypt.genSalt();
-        user.passwordHash = await bcrypt.hash(
-            createUserDto.clearPassword,
-            user.passwordSalt,
-        );
+        await this.hashNewPassword(user, createUserDto.clearPassword);
 
         // Save images
         user.imageURIs = (await this.saveFiles(images)).map(
@@ -113,6 +117,33 @@ export class UserService {
             createUserDto.email,
             createUserDto.clearPassword,
         );
+    }
+
+    async updateUserPassword(
+        id: string,
+        updateUserPwd: UpdateUserPasswordDTO,
+    ): Promise<User> {
+        const user = await this.userRepository.findOneBy({ id });
+        if (!user) {
+            throw new NotFoundException("User not found");
+        }
+
+        // @dev make sure old pwd is correct
+        const isPasswordValid = await bcrypt.compare(
+            updateUserPwd.oldPassword,
+            user.passwordHash,
+        );
+        if (!isPasswordValid) {
+            this.logger.debug(
+                `Cannot change password with invalid old password: ${user.id}`,
+            );
+            throw new UnauthorizedException("Old password invalid.");
+        }
+
+        await this.hashNewPassword(user, updateUserPwd.newPassword);
+
+        await this.userRepository.save(user);
+        return user;
     }
 
     async updateUser(

@@ -9,7 +9,7 @@ import {
     Body,
     Controller,
     Get,
-    NotFoundException,
+    Logger,
     Param,
     Post,
     Put,
@@ -31,6 +31,8 @@ import { EncounterService } from "./encounter.service";
     path: "encounter",
 })
 export class EncounterController {
+    private readonly logger = new Logger(EncounterController.name);
+
     constructor(private readonly encounterService: EncounterService) {}
 
     @Get(`:${USER_ID_PARAM}`)
@@ -55,16 +57,20 @@ export class EncounterController {
         @Query("startDate") startDate: Date,
         @Query("endDate") endDate: Date,
     ): Promise<EncounterPublicDTO[]> {
+        this.logger.debug(
+            `User ${userId} fetches encounters from ${startDate} to ${endDate}`,
+        );
         const dateRange: DateRangeDTO = { startDate, endDate };
 
         const encounters = await this.encounterService.findEncountersByUser(
             userId,
             dateRange,
         );
+        this.logger.debug(
+            `Found ${encounters?.length} encounters for user ${userId}.`,
+        );
         if (!encounters || encounters.length === 0) {
-            throw new NotFoundException(
-                `Encounters from user ID ${userId} not found in the specified date range`,
-            );
+            return [];
         }
         return encounters.map((e) => e.convertToPublicDTO());
     }

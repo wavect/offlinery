@@ -1,12 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Transform } from "class-transformer";
 import {
     EApproachChoice,
     EDateMode,
     EGender,
     ELanguage,
-    EVerificationStatus,
-} from "../types/user.types";
+} from "@/types/user.types";
+import { ApiProperty } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
 import { BlacklistedRegionDTO } from "./blacklisted-region.dto";
 
 export class UpdateUserDTO {
@@ -28,9 +27,6 @@ export class UpdateUserDTO {
 
     @ApiProperty({ enum: EGender, required: false })
     genderDesire?: EGender;
-
-    @ApiProperty({ enum: EVerificationStatus, required: false })
-    verificationStatus?: EVerificationStatus;
 
     @ApiProperty({ enum: EApproachChoice, required: false })
     approachChoice?: EApproachChoice;
@@ -60,9 +56,6 @@ export class UpdateUserDTO {
 
     @ApiProperty({ enum: EDateMode, required: false })
     dateMode?: EDateMode;
-
-    @ApiProperty({ type: "string", required: false })
-    clearPassword?: string;
 
     @ApiProperty({ enum: ELanguage, required: false })
     preferredLanguage?: ELanguage;

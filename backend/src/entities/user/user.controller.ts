@@ -4,6 +4,7 @@ import { CreateUserRequestDTO } from "@/DTOs/create-user-request.dto";
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
+import { UpdateUserPasswordDTO } from "@/DTOs/update-user-password";
 import { UpdateUserRequestDTO } from "@/DTOs/update-user-request.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserPrivateDTO } from "@/DTOs/user-private.dto";
@@ -106,6 +107,23 @@ export class UserController {
     ): Promise<UserPublicDTO> {
         return (
             await this.userService.updateUser(userId, updateUserDto, images)
+        ).convertToPublicDTO();
+    }
+
+    @Put(`:${USER_ID_PARAM}`)
+    @OnlyOwnUserData()
+    @ApiBody({
+        type: UpdateUserPasswordDTO,
+    })
+    @ApiOperation({ summary: "Update user password" })
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async updateUserPassword(
+        @Param(USER_ID_PARAM) userId: string,
+        @Body("changePwd", new ParseJsonPipe(UpdateUserDTO))
+        changePwdDTO: UpdateUserPasswordDTO,
+    ): Promise<UserPublicDTO> {
+        return (
+            await this.userService.updateUserPassword(userId, changePwdDTO)
         ).convertToPublicDTO();
     }
 

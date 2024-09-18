@@ -17,7 +17,6 @@ export class ParseJsonPipe<T extends object>
     constructor(private readonly classType: ClassConstructor<T>) {}
 
     async transform(value: any): Promise<T> {
-        this.logger.debug("user obj, ", value);
         if (typeof value === "string") {
             try {
                 const parsedValue = JSON.parse(value);

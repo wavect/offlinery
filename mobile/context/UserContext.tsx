@@ -121,12 +121,12 @@ export const initialUserState: IUserData = {
     id: undefined,
     wantsEmailUpdates: false,
     email:
-        process.env.EXPO_PUBLIC_ENVIRONMENT === "development"
+        process.env.EXPO_PUBLIC_ENVIRONMENT?.trim() === "development"
             ? "office@wavect.io"
             : "",
     firstName: "",
     clearPassword:
-        process.env.EXPO_PUBLIC_ENVIRONMENT === "development"
+        process.env.EXPO_PUBLIC_ENVIRONMENT?.trim() === "development"
             ? "TeSTmE93!pQ"
             : "",
     birthDay: new Date(2000, 1, 1),

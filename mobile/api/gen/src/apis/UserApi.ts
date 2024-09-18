@@ -16,7 +16,7 @@ import type {
     CreateUserDTO,
     LocationUpdateDTO,
     SignInResponseDTO,
-    UpdateUserDTO,
+    UpdateUserPasswordDTO,
     UserPrivateDTO,
     UserPublicDTO,
 } from "../models/index";
@@ -24,7 +24,7 @@ import {
     CreateUserDTOToJSON,
     LocationUpdateDTOToJSON,
     SignInResponseDTOFromJSON,
-    UpdateUserDTOToJSON,
+    UpdateUserPasswordDTOToJSON,
     UserPrivateDTOFromJSON,
     UserPublicDTOFromJSON,
 } from "../models/index";
@@ -48,10 +48,9 @@ export interface UserControllerUpdateLocationRequest {
     locationUpdateDTO: LocationUpdateDTO;
 }
 
-export interface UserControllerUpdateUserRequest {
+export interface UserControllerUpdateUserPasswordRequest {
     userId: string;
-    user?: UpdateUserDTO;
-    images?: ImagePickerAsset[];
+    updateUserPasswordDTO: UpdateUserPasswordDTO;
 }
 
 /**
@@ -128,24 +127,23 @@ export interface UserApiInterface {
 
     /**
      *
-     * @summary Update an existing user
+     * @summary Update user password
      * @param {string} userId
-     * @param {UpdateUserDTO} [user]
-     * @param {Array<Blob>} [images] An array of image files
+     * @param {UpdateUserPasswordDTO} updateUserPasswordDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApiInterface
      */
-    userControllerUpdateUserRaw(
-        requestParameters: UserControllerUpdateUserRequest,
+    userControllerUpdateUserPasswordRaw(
+        requestParameters: UserControllerUpdateUserPasswordRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<UserPublicDTO>>;
 
     /**
-     * Update an existing user
+     * Update user password
      */
-    userControllerUpdateUser(
-        requestParameters: UserControllerUpdateUserRequest,
+    userControllerUpdateUserPassword(
+        requestParameters: UserControllerUpdateUserPasswordRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<UserPublicDTO>;
 }
@@ -358,16 +356,23 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
     }
 
     /**
-     * Update an existing user
+     * Update user password
      */
-    async userControllerUpdateUserRaw(
-        requestParameters: UserControllerUpdateUserRequest,
+    async userControllerUpdateUserPasswordRaw(
+        requestParameters: UserControllerUpdateUserPasswordRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<UserPublicDTO>> {
         if (requestParameters["userId"] == null) {
             throw new runtime.RequiredError(
                 "userId",
-                'Required parameter "userId" was null or undefined when calling userControllerUpdateUser().',
+                'Required parameter "userId" was null or undefined when calling userControllerUpdateUserPassword().',
+            );
+        }
+
+        if (requestParameters["updateUserPasswordDTO"] == null) {
+            throw new runtime.RequiredError(
+                "updateUserPasswordDTO",
+                'Required parameter "updateUserPasswordDTO" was null or undefined when calling userControllerUpdateUserPassword().',
             );
         }
 
@@ -375,42 +380,8 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        const consumes: runtime.Consume[] = [
-            { contentType: "multipart/form-data" },
-        ];
-        // @ts-ignore: canConsumeForm may be unused
-        const canConsumeForm = runtime.canConsumeForm(consumes);
+        headerParameters["Content-Type"] = "application/json";
 
-        let formParams: { append(param: string, value: any): any };
-        let useForm = false;
-        // use FormData to transmit files using content-type "multipart/form-data"
-        useForm = canConsumeForm;
-        if (useForm) {
-            formParams = new FormData();
-        } else {
-            formParams = new URLSearchParams();
-        }
-
-        if (requestParameters["user"] != null) {
-            formParams.append("user", [
-                JSON.stringify(UpdateUserDTOToJSON(requestParameters["user"])),
-            ]);
-        }
-
-        const files = requestParameters["images"];
-        if (files) {
-            const filteredFiles = Object.keys(files)
-                .filter((key) => files[key] !== undefined)
-                .map((key) => files[key]);
-
-            for (const file of filteredFiles) {
-                formParams.append("images", {
-                    uri: file.uri,
-                    name: file.fileName,
-                    type: file.mimeType,
-                });
-            }
-        }
         const response = await this.request(
             {
                 path: `/user/{userId}`.replace(
@@ -420,7 +391,9 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
                 method: "PUT",
                 headers: headerParameters,
                 query: queryParameters,
-                body: formParams,
+                body: UpdateUserPasswordDTOToJSON(
+                    requestParameters["updateUserPasswordDTO"],
+                ),
             },
             initOverrides,
         );
@@ -431,13 +404,13 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
     }
 
     /**
-     * Update an existing user
+     * Update user password
      */
-    async userControllerUpdateUser(
-        requestParameters: UserControllerUpdateUserRequest,
+    async userControllerUpdateUserPassword(
+        requestParameters: UserControllerUpdateUserPasswordRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<UserPublicDTO> {
-        const response = await this.userControllerUpdateUserRaw(
+        const response = await this.userControllerUpdateUserPasswordRaw(
             requestParameters,
             initOverrides,
         );
