@@ -7,7 +7,6 @@ import {
     EEmailVerificationStatus,
     EGender,
     ELanguage,
-    EVerificationStatus,
 } from "@/types/user.types";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -65,7 +64,6 @@ export class DefaultUserSeeder {
                 birthDay: new Date("1990-01-01"),
                 gender: EGender.MAN,
                 genderDesire: EGender.WOMAN,
-                verificationStatus: EVerificationStatus.VERIFIED,
                 approachChoice: EApproachChoice.APPROACH,
                 approachFromTime: new Date("2023-01-01 08:00:00"),
                 approachToTime: new Date("2023-01-01 20:00:00"),

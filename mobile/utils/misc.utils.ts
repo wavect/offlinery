@@ -1,4 +1,9 @@
-import { AuthApi, SignInResponseDTO } from "@/api/gen/src";
+import {
+    AuthApi,
+    SignInResponseDTO,
+    UserPreferredLanguageEnum,
+} from "@/api/gen/src";
+import { i18n } from "@/localization/translate.service";
 import {
     SECURE_VALUE,
     getSecurelyStoredValue,
@@ -97,3 +102,10 @@ function decodeJWT(token: string) {
         throw error;
     }
 }
+
+export const getLocalLanguageID = (): UserPreferredLanguageEnum => {
+    return (
+        (i18n.locale as UserPreferredLanguageEnum) ??
+        UserPreferredLanguageEnum.en
+    );
+};

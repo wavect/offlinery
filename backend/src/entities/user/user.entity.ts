@@ -14,6 +14,7 @@ import {
 import { getAge } from "@/utils/date.utils";
 import { Point } from "geojson";
 import {
+    BeforeInsert,
     Column,
     Entity,
     Index,
@@ -149,4 +150,12 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
 
     @Column({ nullable: true })
     preferredLanguage: ELanguage;
+
+    @BeforeInsert()
+    beforeInsert() {
+        this.verificationStatus =
+            this.approachChoice === EApproachChoice.APPROACH
+                ? EVerificationStatus.PENDING
+                : EVerificationStatus.NOT_NEEDED;
+    }
 }

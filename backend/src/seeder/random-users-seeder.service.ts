@@ -7,7 +7,6 @@ import {
     EEmailVerificationStatus,
     EGender,
     ELanguage,
-    EVerificationStatus,
 } from "@/types/user.types";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -146,7 +145,6 @@ export class RandomUsersSeeder {
             birthDay: new Date("1990-01-01"),
             gender,
             genderDesire,
-            verificationStatus: EVerificationStatus.VERIFIED,
             approachChoice: EApproachChoice.APPROACH,
             blacklistedRegions: [],
             approachFromTime,
