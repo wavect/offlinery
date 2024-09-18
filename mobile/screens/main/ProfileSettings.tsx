@@ -17,6 +17,7 @@ import {
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
+import { refreshUserData } from "@/services/auth.service";
 import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -137,11 +138,24 @@ const ProfileSettings = ({
         );
     };
 
+    const refresh = async () => {
+        const updatedUser = await userApi.userControllerGetOwnUserData(
+            {
+                userId: state.id!,
+            },
+            await includeJWT(),
+        );
+        refreshUserData(dispatch, updatedUser);
+    };
+
     return (
-        <OPageContainer subtitle={i18n.t(TR.changePreferencesDescr)}>
+        <OPageContainer
+            subtitle={i18n.t(TR.changePreferencesDescr)}
+            refreshFunc={refresh}
+        >
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <Text style={styles.label}>First Name</Text>
+                    <Text style={styles.label}>{i18n.t(TR.myFirstNameIs)}</Text>
                     <OTextInput
                         value={state.firstName}
                         onChangeText={setFirstName}
