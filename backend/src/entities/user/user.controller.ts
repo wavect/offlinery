@@ -110,7 +110,7 @@ export class UserController {
         ).convertToPublicDTO();
     }
 
-    @Put(`:${USER_ID_PARAM}`)
+    @Put(`changePwd/:${USER_ID_PARAM}`)
     @OnlyOwnUserData()
     @ApiBody({
         type: UpdateUserPasswordDTO,

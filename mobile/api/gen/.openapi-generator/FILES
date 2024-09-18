@@ -36,7 +36,6 @@ src/models/StorePushTokenDTO.ts
 src/models/UpdateEncounterStatusDTO.ts
 src/models/UpdateUserDTO.ts
 src/models/UpdateUserPasswordDTO.ts
-src/models/UpdateUserRequestDTO.ts
 src/models/UpdateUserVerificationstatusDTO.ts
 src/models/User.ts
 src/models/UserPrivateDTO.ts

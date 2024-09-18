@@ -33,6 +33,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
             firstName: this.firstName,
             age: getAge(this.birthDay),
             imageURIs: this.imageURIs?.map(
+                // @dev Backend should be in control of where the images are being hosted, and saving into DB would be too inflexible rn (assuming all imgs are hosted on the same server)
                 (uri) => `${getBaseUrl()}/img/${uri}`,
             ),
             bio: this.bio,
