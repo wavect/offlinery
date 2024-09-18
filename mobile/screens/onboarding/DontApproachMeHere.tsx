@@ -210,7 +210,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                             {i18n.t(TR.adjustRegionRadius)}&nbsp;(
                             {Math.round(
                                 state.blacklistedRegions[activeRegionIndex]
-                                    .radius,
+                                    ?.radius,
                             )}
                             m)
                         </Text>
@@ -221,7 +221,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                             step={10}
                             value={
                                 state.blacklistedRegions[activeRegionIndex]
-                                    .radius
+                                    ?.radius
                             }
                             onValueChange={handleRadiusChange}
                         />

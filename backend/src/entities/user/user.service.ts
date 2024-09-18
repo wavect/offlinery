@@ -83,7 +83,7 @@ export class UserService {
         createUserDto: CreateUserDTO,
         images: Express.Multer.File[],
     ): Promise<SignInResponseDTO> {
-        const user = new User();
+        let user = new User();
         Object.assign(user, createUserDto);
 
         // Double check if user's email actually is verified.
@@ -112,6 +112,7 @@ export class UserService {
                 }),
             );
         }
+        user = this.userRepository.create(user); // more reliably calls beforeInsert hook on entity
         await this.userRepository.save(user);
         return this.authService.signIn(
             createUserDto.email,

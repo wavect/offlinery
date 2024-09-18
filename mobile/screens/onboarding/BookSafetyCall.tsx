@@ -9,6 +9,7 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { getLocalLanguageID } from "@/utils/misc.utils";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -33,6 +34,8 @@ const BookSafetyCall = ({
         const onFailure = (err: any) => console.error(err); // TODO
         try {
             await registerUser(state, dispatch, onSuccess, onFailure);
+        } catch (err) {
+            throw err;
         } finally {
             setLoading(false);
             /** @dev Delete clear password once logged in */
@@ -64,7 +67,7 @@ const BookSafetyCall = ({
             }
         >
             <OCalendlyInline
-                url="https://calendly.com/wavect/safety-call"
+                url={`https://calendly.com/wavect/safety-call-${getLocalLanguageID()}`}
                 pageSettings={{
                     hideLandingPageDetails: true,
                     hideEventTypeDetails: true,

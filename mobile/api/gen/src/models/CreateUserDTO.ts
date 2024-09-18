@@ -71,37 +71,31 @@ export interface CreateUserDTO {
      * @type {string}
      * @memberof CreateUserDTO
      */
-    verificationStatus: CreateUserDTOVerificationStatusEnum;
-    /**
-     *
-     * @type {string}
-     * @memberof CreateUserDTO
-     */
     approachChoice: CreateUserDTOApproachChoiceEnum;
     /**
      * Array of blacklisted regions
      * @type {Array<BlacklistedRegionDTO>}
      * @memberof CreateUserDTO
      */
-    blacklistedRegions?: Array<BlacklistedRegionDTO>;
+    blacklistedRegions?: Array<BlacklistedRegionDTO> | null;
     /**
      *
      * @type {Date}
      * @memberof CreateUserDTO
      */
-    approachFromTime: Date;
+    approachFromTime?: Date | null;
     /**
      *
      * @type {Date}
      * @memberof CreateUserDTO
      */
-    approachToTime: Date;
+    approachToTime?: Date | null;
     /**
      *
      * @type {string}
      * @memberof CreateUserDTO
      */
-    bio: string;
+    bio?: string | null;
     /**
      *
      * @type {string}
@@ -135,17 +129,6 @@ export const CreateUserDTOGenderDesireEnum = {
 } as const;
 export type CreateUserDTOGenderDesireEnum =
     (typeof CreateUserDTOGenderDesireEnum)[keyof typeof CreateUserDTOGenderDesireEnum];
-
-/**
- * @export
- */
-export const CreateUserDTOVerificationStatusEnum = {
-    verified: "verified",
-    pending: "pending",
-    not_needed: "not_needed",
-} as const;
-export type CreateUserDTOVerificationStatusEnum =
-    (typeof CreateUserDTOVerificationStatusEnum)[keyof typeof CreateUserDTOVerificationStatusEnum];
 
 /**
  * @export
@@ -196,21 +179,8 @@ export function instanceOfCreateUserDTO(value: object): value is CreateUserDTO {
     if (!("gender" in value) || value["gender"] === undefined) return false;
     if (!("genderDesire" in value) || value["genderDesire"] === undefined)
         return false;
-    if (
-        !("verificationStatus" in value) ||
-        value["verificationStatus"] === undefined
-    )
-        return false;
     if (!("approachChoice" in value) || value["approachChoice"] === undefined)
         return false;
-    if (
-        !("approachFromTime" in value) ||
-        value["approachFromTime"] === undefined
-    )
-        return false;
-    if (!("approachToTime" in value) || value["approachToTime"] === undefined)
-        return false;
-    if (!("bio" in value) || value["bio"] === undefined) return false;
     if (!("dateMode" in value) || value["dateMode"] === undefined) return false;
     if (
         !("preferredLanguage" in value) ||
@@ -239,7 +209,6 @@ export function CreateUserDTOFromJSONTyped(
         birthDay: new Date(json["birthDay"]),
         gender: json["gender"],
         genderDesire: json["genderDesire"],
-        verificationStatus: json["verificationStatus"],
         approachChoice: json["approachChoice"],
         blacklistedRegions:
             json["blacklistedRegions"] == null
@@ -247,9 +216,15 @@ export function CreateUserDTOFromJSONTyped(
                 : (json["blacklistedRegions"] as Array<any>).map(
                       BlacklistedRegionDTOFromJSON,
                   ),
-        approachFromTime: new Date(json["approachFromTime"]),
-        approachToTime: new Date(json["approachToTime"]),
-        bio: json["bio"],
+        approachFromTime:
+            json["approachFromTime"] == null
+                ? undefined
+                : new Date(json["approachFromTime"]),
+        approachToTime:
+            json["approachToTime"] == null
+                ? undefined
+                : new Date(json["approachToTime"]),
+        bio: json["bio"] == null ? undefined : json["bio"],
         dateMode: json["dateMode"],
         preferredLanguage: json["preferredLanguage"],
     };
@@ -267,7 +242,6 @@ export function CreateUserDTOToJSON(value?: CreateUserDTO | null): any {
         birthDay: value["birthDay"].toISOString().substring(0, 10),
         gender: value["gender"],
         genderDesire: value["genderDesire"],
-        verificationStatus: value["verificationStatus"],
         approachChoice: value["approachChoice"],
         blacklistedRegions:
             value["blacklistedRegions"] == null
@@ -275,8 +249,14 @@ export function CreateUserDTOToJSON(value?: CreateUserDTO | null): any {
                 : (value["blacklistedRegions"] as Array<any>).map(
                       BlacklistedRegionDTOToJSON,
                   ),
-        approachFromTime: value["approachFromTime"].toISOString(),
-        approachToTime: value["approachToTime"].toISOString(),
+        approachFromTime:
+            value["approachFromTime"] == null
+                ? undefined
+                : (value["approachFromTime"] as any).toISOString(),
+        approachToTime:
+            value["approachToTime"] == null
+                ? undefined
+                : (value["approachToTime"] as any).toISOString(),
         bio: value["bio"],
         dateMode: value["dateMode"],
         preferredLanguage: value["preferredLanguage"],

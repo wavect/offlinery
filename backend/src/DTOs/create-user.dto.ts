@@ -1,12 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Transform } from "class-transformer";
 import {
     EApproachChoice,
     EDateMode,
     EGender,
     ELanguage,
-    EVerificationStatus,
-} from "../types/user.types";
+} from "@/types/user.types";
+import { ApiProperty } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
 import { BlacklistedRegionDTO } from "./blacklisted-region.dto";
 
 export class CreateUserDTO {
@@ -33,9 +32,6 @@ export class CreateUserDTO {
     @ApiProperty({ enum: EGender })
     genderDesire: EGender;
 
-    @ApiProperty({ enum: EVerificationStatus })
-    verificationStatus: EVerificationStatus;
-
     @ApiProperty({ enum: EApproachChoice })
     approachChoice: EApproachChoice;
 
@@ -49,17 +45,28 @@ export class CreateUserDTO {
                 radius: 1000,
             },
         ],
+        nullable: true,
         required: false, // optional, since approachers don't have this to fill out on registration
     })
     blacklistedRegions: BlacklistedRegionDTO[];
 
-    @ApiProperty({ type: "string", format: "date-time" })
+    @ApiProperty({
+        type: "string",
+        format: "date-time",
+        nullable: true,
+        required: false,
+    })
     approachFromTime: Date;
 
-    @ApiProperty({ type: "string", format: "date-time" })
+    @ApiProperty({
+        type: "string",
+        format: "date-time",
+        nullable: true,
+        required: false,
+    })
     approachToTime: Date;
 
-    @ApiProperty({ type: "string" })
+    @ApiProperty({ type: "string", nullable: true, required: false })
     bio: string;
 
     @ApiProperty({ enum: EDateMode })

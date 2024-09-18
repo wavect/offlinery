@@ -7,11 +7,9 @@ import {
     UserControllerCreateUserRequest,
     UserDateModeEnum,
     UserGenderEnum,
-    UserPreferredLanguageEnum,
     UserPublicDTO,
     UserVerificationStatusEnum,
 } from "@/api/gen/src";
-import { i18n } from "@/localization/translate.service";
 import { refreshUserData } from "@/services/auth.service";
 import {
     SECURE_VALUE,
@@ -19,6 +17,7 @@ import {
 } from "@/services/secure-storage.service";
 import { updateUserDataLocally } from "@/services/storage.service";
 import { getAge } from "@/utils/date.utils";
+import { getLocalLanguageID } from "@/utils/misc.utils";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
 import React, { Dispatch, createContext, useContext, useReducer } from "react";
@@ -243,7 +242,6 @@ export const registerUser = async (
         birthDay: state.birthDay,
         gender: state.gender!,
         genderDesire: state.genderDesire!,
-        verificationStatus: state.verificationStatus,
         approachChoice: state.approachChoice,
         blacklistedRegions: state.blacklistedRegions.map((r) =>
             mapRegionToBlacklistedRegionDTO(r),
@@ -252,9 +250,7 @@ export const registerUser = async (
         approachToTime: state.approachToTime,
         bio: state.bio,
         dateMode: state.dateMode,
-        preferredLanguage:
-            (i18n.locale as UserPreferredLanguageEnum) ??
-            UserPreferredLanguageEnum.en,
+        preferredLanguage: getLocalLanguageID(),
     };
 
     const requestParameters: UserControllerCreateUserRequest = {
