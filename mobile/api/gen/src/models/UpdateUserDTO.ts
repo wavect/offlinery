@@ -65,12 +65,6 @@ export interface UpdateUserDTO {
      * @type {string}
      * @memberof UpdateUserDTO
      */
-    verificationStatus?: UpdateUserDTOVerificationStatusEnum;
-    /**
-     *
-     * @type {string}
-     * @memberof UpdateUserDTO
-     */
     approachChoice?: UpdateUserDTOApproachChoiceEnum;
     /**
      * Array of blacklisted regions
@@ -107,12 +101,6 @@ export interface UpdateUserDTO {
      * @type {string}
      * @memberof UpdateUserDTO
      */
-    clearPassword?: string;
-    /**
-     *
-     * @type {string}
-     * @memberof UpdateUserDTO
-     */
     preferredLanguage?: UpdateUserDTOPreferredLanguageEnum;
 }
 
@@ -135,17 +123,6 @@ export const UpdateUserDTOGenderDesireEnum = {
 } as const;
 export type UpdateUserDTOGenderDesireEnum =
     (typeof UpdateUserDTOGenderDesireEnum)[keyof typeof UpdateUserDTOGenderDesireEnum];
-
-/**
- * @export
- */
-export const UpdateUserDTOVerificationStatusEnum = {
-    verified: "verified",
-    pending: "pending",
-    not_needed: "not_needed",
-} as const;
-export type UpdateUserDTOVerificationStatusEnum =
-    (typeof UpdateUserDTOVerificationStatusEnum)[keyof typeof UpdateUserDTOVerificationStatusEnum];
 
 /**
  * @export
@@ -207,10 +184,6 @@ export function UpdateUserDTOFromJSONTyped(
         gender: json["gender"] == null ? undefined : json["gender"],
         genderDesire:
             json["genderDesire"] == null ? undefined : json["genderDesire"],
-        verificationStatus:
-            json["verificationStatus"] == null
-                ? undefined
-                : json["verificationStatus"],
         approachChoice:
             json["approachChoice"] == null ? undefined : json["approachChoice"],
         blacklistedRegions:
@@ -227,8 +200,6 @@ export function UpdateUserDTOFromJSONTyped(
             json["approachToTime"] == null ? undefined : json["approachToTime"],
         bio: json["bio"] == null ? undefined : json["bio"],
         dateMode: json["dateMode"] == null ? undefined : json["dateMode"],
-        clearPassword:
-            json["clearPassword"] == null ? undefined : json["clearPassword"],
         preferredLanguage:
             json["preferredLanguage"] == null
                 ? undefined
@@ -247,7 +218,6 @@ export function UpdateUserDTOToJSON(value?: UpdateUserDTO | null): any {
         birthDay: value["birthDay"],
         gender: value["gender"],
         genderDesire: value["genderDesire"],
-        verificationStatus: value["verificationStatus"],
         approachChoice: value["approachChoice"],
         blacklistedRegions:
             value["blacklistedRegions"] == null
@@ -259,7 +229,6 @@ export function UpdateUserDTOToJSON(value?: UpdateUserDTO | null): any {
         approachToTime: value["approachToTime"],
         bio: value["bio"],
         dateMode: value["dateMode"],
-        clearPassword: value["clearPassword"],
         preferredLanguage: value["preferredLanguage"],
     };
 }

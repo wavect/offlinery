@@ -117,6 +117,7 @@ export const de: Language = {
     setStrongPassword: "Starkes Passwort festlegen",
     changePassword: "Passwort ändern",
     save: "Speichern",
+    updating: "Speichere..",
     enterOldPassword: "Altes Passwort eingeben",
     currentPassword: "Aktuelles Passwort",
     enterPassword: "Passwort eingeben",

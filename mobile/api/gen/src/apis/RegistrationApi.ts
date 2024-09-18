@@ -15,11 +15,13 @@
 import type {
     RegistrationForVerificationRequestDTO,
     RegistrationForVerificationResponseDTO,
+    UpdateUserVerificationstatusDTO,
     VerifyEmailDTO,
 } from "../models/index";
 import {
     RegistrationForVerificationRequestDTOToJSON,
     RegistrationForVerificationResponseDTOFromJSON,
+    UpdateUserVerificationstatusDTOToJSON,
     VerifyEmailDTOToJSON,
 } from "../models/index";
 import * as runtime from "../runtime";
@@ -27,6 +29,10 @@ import * as runtime from "../runtime";
 // We import this type even if it's unused to avoid additional
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
+export interface RegistrationControllerChangeVerificationStatusRequest {
+    updateUserVerificationstatusDTO: UpdateUserVerificationstatusDTO;
+}
+
 export interface RegistrationControllerRegisterUserForEmailVerificationRequest {
     registrationForVerificationRequestDTO: RegistrationForVerificationRequestDTO;
 }
@@ -42,6 +48,27 @@ export interface RegistrationControllerVerifyEmailRequest {
  * @interface RegistrationApiInterface
  */
 export interface RegistrationApiInterface {
+    /**
+     *
+     * @summary Update verification status of user.
+     * @param {UpdateUserVerificationstatusDTO} updateUserVerificationstatusDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RegistrationApiInterface
+     */
+    registrationControllerChangeVerificationStatusRaw(
+        requestParameters: RegistrationControllerChangeVerificationStatusRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     * Update verification status of user.
+     */
+    registrationControllerChangeVerificationStatus(
+        requestParameters: RegistrationControllerChangeVerificationStatusRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
+
     /**
      *
      * @summary Creates a user with only an email to verify.
@@ -92,6 +119,55 @@ export class RegistrationApi
     extends runtime.BaseAPI
     implements RegistrationApiInterface
 {
+    /**
+     * Update verification status of user.
+     */
+    async registrationControllerChangeVerificationStatusRaw(
+        requestParameters: RegistrationControllerChangeVerificationStatusRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["updateUserVerificationstatusDTO"] == null) {
+            throw new runtime.RequiredError(
+                "updateUserVerificationstatusDTO",
+                'Required parameter "updateUserVerificationstatusDTO" was null or undefined when calling registrationControllerChangeVerificationStatus().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        const response = await this.request(
+            {
+                path: `/registration/admin/verification-status`,
+                method: "PUT",
+                headers: headerParameters,
+                query: queryParameters,
+                body: UpdateUserVerificationstatusDTOToJSON(
+                    requestParameters["updateUserVerificationstatusDTO"],
+                ),
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Update verification status of user.
+     */
+    async registrationControllerChangeVerificationStatus(
+        requestParameters: RegistrationControllerChangeVerificationStatusRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.registrationControllerChangeVerificationStatusRaw(
+            requestParameters,
+            initOverrides,
+        );
+    }
+
     /**
      * Creates a user with only an email to verify.
      */

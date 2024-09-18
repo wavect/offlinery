@@ -1,9 +1,11 @@
 import { MainStackParamList } from "@/MainStack.navigator";
+import { UpdateUserPasswordDTO, UserApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { includeJWT } from "@/utils/misc.utils";
 import { isValidPassword } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
@@ -11,6 +13,7 @@ import { StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
+const userApi = new UserApi();
 const Password = ({
     route,
     navigation,
@@ -19,6 +22,7 @@ const Password = ({
     typeof ROUTES.Onboarding.Password
 >) => {
     const { state, dispatch } = useUserContext();
+    const [isLoading, setLoading] = useState(false);
     const [oldClearPassword, setOldClearPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
     const [passwordError, setPasswordError] = useState("");
@@ -37,6 +41,8 @@ const Password = ({
 
         if (isValidPassword(state.clearPassword)) {
             setPasswordError("");
+        } else if (doPasswordsMatch(passwordConfirmation)) {
+            setPasswordErrorConfirmation("");
         } else {
             setPasswordError(i18n.t(TR.pwdErrSecurityGuideline));
         }
@@ -52,10 +58,28 @@ const Password = ({
     };
     const isChangePassword = !!route?.params?.isChangePassword;
 
-    const onSave = () => {
+    const onSave = async () => {
         if (isChangePassword) {
-            // TODO: Update User request to backend
-            navigation.navigate(route.params.nextPage);
+            setLoading(true);
+            const updateUserPasswordDTO: UpdateUserPasswordDTO = {
+                oldPassword: oldClearPassword,
+                newPassword: state.clearPassword,
+            };
+            try {
+                await userApi.userControllerUpdateUserPassword(
+                    {
+                        userId: state.id!,
+                        updateUserPasswordDTO,
+                    },
+                    await includeJWT(),
+                );
+
+                navigation.navigate(route.params.nextPage);
+            } catch (err) {
+                throw err;
+            } finally {
+                setLoading(false);
+            }
         } else {
             // Save later with the rest of the data
             navigation.navigate(ROUTES.Onboarding.FirstName);
@@ -70,6 +94,8 @@ const Password = ({
                     text={
                         isChangePassword ? i18n.t(TR.save) : i18n.t(TR.continue)
                     }
+                    isLoading={isLoading}
+                    loadingBtnText={i18n.t(TR.updating)}
                     filled={true}
                     disabled={
                         !isValidPassword(state.clearPassword) ||
