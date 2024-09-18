@@ -7,6 +7,7 @@ import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { writeFileSync } from "fs";
 import helmet from "helmet";
+import os from "os";
 import * as path from "path";
 import * as process from "process";
 import { AppModule } from "./app.module";
@@ -91,6 +92,32 @@ const setupTypedEnvs = () => {
     }
 };
 
+const loadLocalIp = (): void => {
+    const networkInterfaces = os.networkInterfaces();
+    let localIpAddress = "localhost";
+
+    // Look for an IPv4 address in the network interfaces
+    Object.keys(networkInterfaces).forEach((interfaceName) => {
+        const interfaces = networkInterfaces[interfaceName];
+        if (interfaces) {
+            for (const iface of interfaces) {
+                // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+                if (iface.family === "IPv4" && !iface.internal) {
+                    localIpAddress = iface.address;
+                    break;
+                }
+            }
+        }
+        if (localIpAddress !== "localhost") return;
+    });
+
+    LOCAL_NETWORK_IP = localIpAddress;
+};
+export let LOCAL_NETWORK_IP: string | undefined;
+loadLocalIp();
+
 bootstrap()
-    .then(() => console.log("Backend started.."))
+    .then(() =>
+        console.log(`Backend started on network IP ${LOCAL_NETWORK_IP}..`),
+    )
     .catch(console.error);

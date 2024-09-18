@@ -24,7 +24,6 @@ export * from "./StorePushTokenDTO";
 export * from "./UpdateEncounterStatusDTO";
 export * from "./UpdateUserDTO";
 export * from "./UpdateUserPasswordDTO";
-export * from "./UpdateUserRequestDTO";
 export * from "./UpdateUserVerificationstatusDTO";
 export * from "./User";
 export * from "./UserPrivateDTO";

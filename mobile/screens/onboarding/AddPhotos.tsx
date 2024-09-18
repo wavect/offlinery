@@ -1,6 +1,5 @@
 import { BorderRadius, Color } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
-import { BASE_PATH } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
@@ -78,9 +77,7 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
 
     // If the image is an `ImagePicker` we can directly access image on the user's device
     // otherwise we need to fetch it from the server.
-    const uri = isImagePicker(img)
-        ? img.uri
-        : `${BASE_PATH.replace("/v1", "")}/img/${img}`;
+    const uri = isImagePicker(img) ? img.uri : img;
 
     return (
         <Pressable
@@ -133,6 +130,7 @@ const AddPhotos = ({
                     onPress={
                         route.params?.overrideOnBtnPress ||
                         (() =>
+                            // TODO: Update images missing
                             navigation.navigate(ROUTES.HouseRules, {
                                 nextPage: ROUTES.Onboarding.ApproachChoice,
                             }))
