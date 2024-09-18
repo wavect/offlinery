@@ -42,8 +42,13 @@ export const OPageContainer = (props: IOPageContainerProps) => {
 
     const onRefresh = async () => {
         setRefreshing(true);
-        await refreshFunc!();
-        setRefreshing(false);
+        try {
+            await refreshFunc!();
+        } catch (err) {
+            throw err;
+        } finally {
+            setRefreshing(false);
+        }
     };
 
     return (

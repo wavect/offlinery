@@ -7,7 +7,6 @@ import { ImageIdx, isImagePicker, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { includeJWT } from "@/utils/misc.utils";
 import * as ImagePicker from "expo-image-picker";
-import { ImagePickerAsset } from "expo-image-picker";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, View, useWindowDimensions } from "react-native";
@@ -43,18 +42,16 @@ const AddPhotos = ({
                 await userApi.userControllerUpdateUser(
                     {
                         userId: state.id!,
-                        images: (["0", "1", "2", "3", "4", "5"] as ImageIdx[])
-                            .map((idx) => {
-                                const img = state.imageURIs[idx];
-                                if (isImagePicker(img)) {
-                                    return img;
-                                }
-                                // otherwise do not upload (only blobs)
-                                return;
-                            })
-                            .filter(
-                                (i): i is ImagePickerAsset => i !== undefined,
-                            ),
+                        images: (
+                            ["0", "1", "2", "3", "4", "5"] as ImageIdx[]
+                        ).map((idx) => {
+                            const img = state.imageURIs[idx];
+                            if (isImagePicker(img)) {
+                                return img;
+                            }
+                            // otherwise do not upload (only blobs)
+                            return;
+                        }), // do not filter for undefined values, as we need to retain indices
                     },
                     await includeJWT(),
                 );

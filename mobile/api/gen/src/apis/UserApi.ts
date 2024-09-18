@@ -38,7 +38,7 @@ import * as runtime from "../runtime";
 import { ImagePickerAsset } from "expo-image-picker";
 export interface UserControllerCreateUserRequest {
     user: CreateUserDTO;
-    images: ImagePickerAsset[];
+    images: (ImagePickerAsset | undefined)[];
 }
 
 export interface UserControllerGetOwnUserDataRequest {
@@ -53,7 +53,7 @@ export interface UserControllerUpdateLocationRequest {
 export interface UserControllerUpdateUserRequest {
     userId: string;
     user?: UpdateUserDTO;
-    images?: ImagePickerAsset[];
+    images?: (ImagePickerAsset | undefined)[];
 }
 
 export interface UserControllerUpdateUserPasswordRequest {

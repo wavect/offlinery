@@ -29,7 +29,7 @@ import { ImagePickerAsset } from "expo-image-picker";
 export interface {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request {
 {{#allParams}}
 {{#isFile}}
-    {{paramName}}{{^required}}?{{/required}}: ImagePickerAsset{{#isArray}}[]{{/isArray}};
+    {{paramName}}{{^required}}?{{/required}}: (ImagePickerAsset|undefined){{#isArray}}[]{{/isArray}};
 {{/isFile}}
 {{^isFile}}
     {{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{#hasReadOnly}}Omit<{{{dataType}}}, {{#readOnlyVars}}'{{baseName}}'{{^-last}}|{{/-last}}{{/readOnlyVars}}>{{/hasReadOnly}}{{^hasReadOnly}}{{{dataType}}}{{/hasReadOnly}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}};
