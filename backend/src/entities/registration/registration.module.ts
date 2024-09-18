@@ -23,7 +23,7 @@ import { RegistrationService } from "./registration.service";
                 },
             },
             defaults: {
-                from: '"No Reply" <noreply@offlinery.com>',
+                from: '"No Reply" <noreply@offlinery.io>',
             },
             template: {
                 dir: join(__dirname, "../../mail/templates"),
