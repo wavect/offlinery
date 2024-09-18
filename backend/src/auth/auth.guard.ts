@@ -18,7 +18,8 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
 const REQUIRE_ONLY_ADMIN = "onlyAdmin";
 export const OnlyAdmin = () => SetMetadata(REQUIRE_ONLY_ADMIN, true);
-export const API_KEY_HEADER_ID = "o-api-key";
+const API_KEY_HEADER_ID = "o-api-key";
+const API_KEY_SECRET_TOKEN_HEADER_ID = "o-api-secret-token";
 
 /** @dev All routes are private by default */
 @Injectable()
@@ -51,14 +52,16 @@ export class AuthGuard implements CanActivate {
 
     /** @dev Some routes, e.g. admin routes, should be callable via admin api keys instead of JWT. */
     private async isAdminApiUser(request: Request): Promise<boolean> {
-        const apiKey = request.headers[API_KEY_HEADER_ID]; // give the name you want
-        if (!apiKey) {
+        const apiKey = request.headers[API_KEY_HEADER_ID];
+        const clearSecretToken =
+            request.headers[API_KEY_SECRET_TOKEN_HEADER_ID];
+        if (!apiKey || !clearSecretToken) {
             return false;
         }
-        const apiUser = await this.apiUserService.findApiUserByApiKey(
+        return await this.apiUserService.isValidAdminApiKey(
             apiKey.toString(),
+            clearSecretToken.toString(),
         );
-        return apiUser && apiUser.isActive && apiUser.isAdmin;
     }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
