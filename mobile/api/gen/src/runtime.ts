@@ -12,10 +12,16 @@
  * Do not edit the class manually.
  */
 
-export const BASE_PATH = "https://offlinery.onrender.com/v1".replace(
-    /\/+$/,
-    "",
-);
+import Constants from "expo-constants";
+import { isExpoGoEnvironment } from "../../../utils/misc.utils";
+
+/*export const BASE_PATH = "https://offlinery.onrender.com/v1".replace(/\/+$/, "");*/
+
+export const BASE_PATH = (
+    (isExpoGoEnvironment
+        ? `http://${Constants.expoConfig?.hostUri?.split(":").shift()?.concat(":3000")}`
+        : "https://offlinery.onrender.com") + "/v1"
+).replace(/\/+$/, "");
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path
@@ -267,7 +273,8 @@ export class BaseAPI {
                 if (e instanceof Error) {
                     throw new FetchError(
                         e,
-                        "The request failed and the interceptors did not return an alternative response",
+                        "The request failed and the interceptors did not return an alternative response: " +
+                            e?.message,
                     );
                 } else {
                     throw e;
