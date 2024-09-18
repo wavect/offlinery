@@ -44,7 +44,11 @@ export class RegistrationService {
 
             let pendingUser = await this.pendingUserRepo.findOneBy({ email });
 
-            if (pendingUser) {
+            if (
+                pendingUser &&
+                pendingUser.verificationStatus ===
+                    EEmailVerificationStatus.VERIFIED
+            ) {
                 this.logger.debug(
                     `User ${pendingUser.email} already verified, but didn't register yet.`,
                 );
