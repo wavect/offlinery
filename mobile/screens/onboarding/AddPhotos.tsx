@@ -1,5 +1,6 @@
 import { BorderRadius, Color } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
+import { UserApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
@@ -11,9 +12,12 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { ImagePickerAsset } from "expo-image-picker";
 import * as React from "react";
+import { useState } from "react";
 import {
     Image,
     Pressable,
@@ -97,6 +101,7 @@ const PhotoContainer = (props: IPhotoContainerProps) => {
     );
 };
 
+const userApi = new UserApi();
 const AddPhotos = ({
     route,
     navigation,
@@ -106,6 +111,7 @@ const AddPhotos = ({
 >) => {
     const [mediaLibStatus, requestMediaLibPermission] =
         ImagePicker.useMediaLibraryPermissions();
+    const [isLoading, setLoading] = useState(false);
     const { state, dispatch } = useUserContext();
     const hasAnyImage = Object.values(state.imageURIs).some(Boolean);
 
@@ -117,6 +123,42 @@ const AddPhotos = ({
     const photoContainerSize =
         (width - 2 * containerPadding - gapBetweenContainers) / 2;
 
+    const onSave = async () => {
+        if (route.params?.overrideOnBtnPress) {
+            setLoading(true);
+            try {
+                await userApi.userControllerUpdateUser(
+                    {
+                        userId: state.id!,
+                        images: (["0", "1", "2", "3", "4", "5"] as ImageIdx[])
+                            .map((idx) => {
+                                const img = state.imageURIs[idx];
+                                if (isImagePicker(img)) {
+                                    return img;
+                                }
+                                // otherwise do not upload (only blobs)
+                                return;
+                            })
+                            .filter(
+                                (i): i is ImagePickerAsset => i !== undefined,
+                            ),
+                    },
+                    await includeJWT(),
+                );
+                route.params.overrideOnBtnPress();
+            } catch (err) {
+                throw err;
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            // @dev Saved on account creation
+            navigation.navigate(ROUTES.HouseRules, {
+                nextPage: ROUTES.Onboarding.ApproachChoice,
+            });
+        }
+    };
+
     return (
         <OPageContainer
             bottomContainerChildren={
@@ -124,17 +166,12 @@ const AddPhotos = ({
                     text={
                         route.params?.overrideSaveBtnLbl || i18n.t(TR.continue)
                     }
+                    isLoading={isLoading}
+                    loadingBtnText={i18n.t(TR.updating)}
                     filled={true}
                     variant="dark"
                     disabled={!hasAnyImage}
-                    onPress={
-                        route.params?.overrideOnBtnPress ||
-                        (() =>
-                            // TODO: Update images missing
-                            navigation.navigate(ROUTES.HouseRules, {
-                                nextPage: ROUTES.Onboarding.ApproachChoice,
-                            }))
-                    }
+                    onPress={onSave}
                 />
             }
             subtitle={i18n.t(TR.clickToUploadImages)}

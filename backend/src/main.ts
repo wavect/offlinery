@@ -118,6 +118,8 @@ loadLocalIp();
 
 bootstrap()
     .then(() =>
-        console.log(`Backend started on network IP ${LOCAL_NETWORK_IP}..`),
+        console.log(
+            `Backend started on network IP ${LOCAL_NETWORK_IP} ${process.env.NODE_ENV ? `in ${process.env.NODE_ENV?.trim()} mode` : null}..`,
+        ),
     )
     .catch(console.error);
