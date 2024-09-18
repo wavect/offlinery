@@ -205,4 +205,7 @@ export const en = {
     messageInstructions:
         "You might want to add your contact details, if you didn't share them in person already.",
     messageWarning: "Only the last message will be saved.",
+    dangerZone: "Danger Zone",
+    logout: "Logout",
+    deleteAccount: "Delete account",
 };
