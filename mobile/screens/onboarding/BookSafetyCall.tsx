@@ -77,7 +77,7 @@ const BookSafetyCall = ({
                 prefill={{
                     email: state.email,
                     firstName: state.firstName,
-                    name: state.id,
+                    name: state.firstName,
                 }}
                 onEventScheduled={handleEventScheduled}
             />

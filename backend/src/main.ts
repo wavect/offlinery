@@ -1,3 +1,4 @@
+import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomEncounterSeeder } from "@/seeder/random-encounter-seeder.service";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
@@ -34,7 +35,10 @@ async function bootstrap() {
 
     // Seed the default use
     const userSeederService = app.get(DefaultUserSeeder);
-    await userSeederService.seedRandomUsers();
+    await userSeederService.seedDefaultUsers();
+
+    const apiUserSeederService = app.get(DefaultApiUserSeeder);
+    await apiUserSeederService.seedApiUsers();
 
     // Seed Test users if development mode
     if (process.env.NODE_ENV === "development") {

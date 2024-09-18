@@ -122,6 +122,7 @@ export class UserController {
     async getOwnUserData(
         @Param(USER_ID_PARAM) userId: string,
     ): Promise<UserPrivateDTO> {
+        this.logger.debug(`Get own user data for UserId: ${userId}`);
         const user = await this.userService.findUserById(userId);
         if (!user) {
             throw new NotFoundException(`User with ID ${userId} not found`);

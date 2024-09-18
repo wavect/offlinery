@@ -1,9 +1,18 @@
 import { RegistrationForVerificationResponseDTO } from "@/DTOs/registration-for-verification.dto";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
-import { EEmailVerificationStatus } from "@/types/user.types";
+import {
+    EEmailVerificationStatus,
+    EVerificationStatus,
+} from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
-import { ConflictException, Injectable, Logger } from "@nestjs/common";
+import {
+    BadRequestException,
+    ConflictException,
+    Injectable,
+    Logger,
+    NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -78,7 +87,10 @@ export class RegistrationService {
             }
 
             // Send email before saving as pending user
-            await this.sendMail(pendingUser.email, verificationNumber);
+            await this.sendVerificationCodeMail(
+                pendingUser.email,
+                verificationNumber,
+            );
 
             pendingUser.verificationCode = verificationNumber;
             await this.pendingUserRepo.save(pendingUser);
@@ -120,7 +132,50 @@ export class RegistrationService {
         }
     }
 
-    private async sendMail(to: string, verificationCode: string) {
+    public async changeVerificationStatus(
+        email: string,
+        newStatus: EVerificationStatus,
+    ) {
+        const user = await this.userRepo.findOneBy({ email });
+        if (!user) {
+            throw new NotFoundException(
+                `User with email ${email} does not exist!`,
+            );
+        }
+        if (!user.isActive) {
+            throw new BadRequestException("Account is inactive!");
+        }
+        if (user.verificationStatus === newStatus) {
+            throw new BadRequestException("No change in verificationStatus!");
+        }
+        user.verificationStatus = newStatus;
+        if (newStatus === EVerificationStatus.VERIFIED) {
+            await this.sendAccountVerificationSuccessfulMail(email);
+        }
+        await this.userRepo.save(user);
+        this.logger.debug(
+            `Account ${email} verification status has been changed to ${newStatus}.`,
+        );
+    }
+
+    private async sendAccountVerificationSuccessfulMail(to: string) {
+        this.logger.debug(
+            `Sending new email to ${to} as account verification successful`,
+        );
+        await this.mailService.sendMail({
+            to,
+            subject: "Offlinery: Your account has been verified",
+            template: "../../mail/templates/verification-successful.hbs",
+            context: {
+                name: to,
+            },
+        });
+    }
+
+    private async sendVerificationCodeMail(
+        to: string,
+        verificationCode: string,
+    ) {
         this.logger.debug(
             `Sending new email to ${to} with verificationCode ${verificationCode}`,
         );
