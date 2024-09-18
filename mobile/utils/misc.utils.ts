@@ -4,9 +4,12 @@ import {
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
+import Constants from "expo-constants";
 import { jwtDecode } from "jwt-decode";
 
 export const REFRESH_REMAINING_MINUTE = 1;
+
+export const isExpoGoEnvironment = Constants.appOwnership === "expo";
 
 export const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -16,12 +19,8 @@ export const sleep = (ms: number) => {
  * @DEV JWT Intercept & Refresh
  */
 export const includeJWT = async (): Promise<RequestInit> => {
-    const jwtToken = await getSecurelyStoredValue(
-        SECURE_VALUE.JWT_ACCESS_TOKEN,
-    );
-    const refreshToken = await getSecurelyStoredValue(
-        SECURE_VALUE.JWT_REFRESH_TOKEN,
-    );
+    const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
+    const refreshToken = getSecurelyStoredValue(SECURE_VALUE.JWT_REFRESH_TOKEN);
 
     if (!refreshToken) {
         throw new Error("User does not have an refresh token!");
@@ -38,11 +37,11 @@ export const includeJWT = async (): Promise<RequestInit> => {
                     },
                 })) as SignInResponseDTO;
 
-            await saveValueLocallySecurely(
+            saveValueLocallySecurely(
                 SECURE_VALUE.JWT_REFRESH_TOKEN,
                 refreshResponse.refreshToken,
             );
-            await saveValueLocallySecurely(
+            saveValueLocallySecurely(
                 SECURE_VALUE.JWT_ACCESS_TOKEN,
                 refreshResponse.accessToken,
             );

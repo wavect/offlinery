@@ -10,6 +10,7 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
+const regApi = new RegistrationApi();
 const VerifyEmail = ({
     navigation,
 }: NativeStackScreenProps<
@@ -88,7 +89,6 @@ const VerifyEmail = ({
     const sendVerificationCode = async () => {
         try {
             setLoading(true);
-            const regApi = new RegistrationApi();
             const result =
                 await regApi.registrationControllerRegisterUserForEmailVerification(
                     {
