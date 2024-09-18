@@ -44,6 +44,7 @@ export interface IUserData {
     approachToTime: Date;
     bio: string;
     dateMode: UserDateModeEnum;
+    markedForDeletion: boolean;
     /** @dev Set once logged in */
     jwtAccessToken?: string;
     refreshToken?: string;
@@ -146,6 +147,7 @@ export const initialUserState: IUserData = {
     approachToTime: DEFAULT_TO_TIME,
     bio: "No pick-up lines please. Just be chill.",
     dateMode: UserDateModeEnum.ghost,
+    markedForDeletion: false,
     jwtAccessToken: undefined,
 };
 

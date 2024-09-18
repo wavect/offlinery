@@ -3,12 +3,16 @@ import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserPasswordDTO } from "@/DTOs/update-user-password";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
+import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
 import { AuthService } from "@/auth/auth.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { MatchingService } from "@/transient-services/matching/matching.service";
 import { EApproachChoice, EEmailVerificationStatus } from "@/types/user.types";
+import { API_VERSION, BE_ENDPOINT } from "@/utils/misc.utils";
+import { MailerService } from "@nestjs-modules/mailer";
 import {
+    ForbiddenException,
     forwardRef,
     Inject,
     Injectable,
@@ -18,6 +22,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
+import { randomBytes } from "crypto";
 import { Expo } from "expo-server-sdk";
 import * as fs from "fs";
 import * as path from "path";
@@ -40,6 +45,7 @@ export class UserService {
         private matchingService: MatchingService,
         @Inject(forwardRef(() => AuthService))
         private authService: AuthService,
+        private mailService: MailerService,
     ) {}
 
     private async saveFiles(
@@ -205,8 +211,66 @@ export class UserService {
         return this.userRepository.find();
     }
 
-    async remove(id: number): Promise<void> {
-        await this.userRepository.delete(id);
+    async deleteUserByDeletionToken(
+        deletionToken: string,
+    ): Promise<UserDeletionSuccessDTO> {
+        const userToDelete = await this.userRepository.findOneBy({
+            deletionToken,
+        });
+        if (!userToDelete) {
+            throw new NotFoundException(
+                `Unknown deletion token, no user found: ${deletionToken}`,
+            );
+        }
+        if (new Date() > userToDelete.deletionTokenExpires) {
+            throw new ForbiddenException(
+                `Deletion token has expired on ${userToDelete.deletionTokenExpires}`,
+            );
+        }
+
+        await this.userRepository.delete({ deletionToken });
+        await this.pendingUserRepo.delete({ email: userToDelete.email });
+        return {
+            id: userToDelete.id,
+            dataDeleted: true,
+        };
+    }
+
+    async requestAccountDeletion(id: string) {
+        const user = await this.userRepository.findOneBy({ id });
+        if (!user) {
+            throw new NotFoundException(`User with ID ${id} does not exist!`);
+        }
+        if (
+            user.deletionTokenExpires &&
+            user.deletionTokenExpires > new Date()
+        ) {
+            this.logger.debug(
+                `Not resending deletion request email as token as not yet expired.`,
+            );
+            return;
+        }
+
+        user.deletionTokenExpires = new Date(
+            new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
+        ); // 7 day expiration window
+        user.deletionToken = randomBytes(48).toString("hex");
+
+        const deletionLink = `${BE_ENDPOINT}/v${API_VERSION}/user/delete/${user.deletionToken}`;
+
+        this.logger.debug(
+            `Sending new email to ${user.email} with deletionLink ${deletionLink}`,
+        );
+        await this.mailService.sendMail({
+            to: user.email,
+            subject: "Offlinery: Account Deletion requested",
+            template: "../../mail/templates/request-account-deletion.hbs",
+            context: {
+                name: user.email,
+                deletionLink,
+            },
+        });
+        await this.userRepository.save(user);
     }
 
     async findUserById(id: string): Promise<User> {

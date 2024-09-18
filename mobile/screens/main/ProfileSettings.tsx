@@ -152,10 +152,22 @@ const ProfileSettings = ({
         refreshUserData(dispatch, updatedUser);
     };
 
-    const handleDeleteAccount = () => {
-        alert(
-            "This feature is coming asap! In the meantime please email us at office@offlinery.io",
-        );
+    const handleDeleteAccount = async () => {
+        try {
+            await userApi.userControllerRequestAccountDeletion(
+                {
+                    userId: state.id!,
+                },
+                await includeJWT(),
+            );
+            dispatch({
+                type: EACTION_USER.UPDATE_MULTIPLE,
+                payload: { markedForDeletion: true },
+            });
+            alert(i18n.t(TR.accountDeletionRequestedAlert));
+        } catch (err) {
+            throw err;
+        }
     };
 
     const handleLogout = async () => {
@@ -350,6 +362,7 @@ const ProfileSettings = ({
                         <TouchableOpacity
                             style={styles.dangerButton}
                             onPress={handleDeleteAccount}
+                            disabled={state.markedForDeletion}
                         >
                             <MaterialIcons
                                 name="delete-forever"

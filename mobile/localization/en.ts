@@ -208,4 +208,6 @@ export const en = {
     dangerZone: "Danger Zone",
     logout: "Logout",
     deleteAccount: "Delete account",
+    accountDeletionRequestedAlert:
+        "We've sent you a link to your email. Click on the link to irrevocably delete your account.",
 };

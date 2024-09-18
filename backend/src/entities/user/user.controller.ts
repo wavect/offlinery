@@ -7,6 +7,7 @@ import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserPasswordDTO } from "@/DTOs/update-user-password";
 import { UpdateUserRequestDTO } from "@/DTOs/update-user-request.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
+import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
 import { UserPrivateDTO } from "@/DTOs/user-private.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
 import { CustomParseFilePipe } from "@/pipes/CustomParseFile.pipe";
@@ -27,6 +28,7 @@ import {
     UsePipes,
     ValidationPipe,
 } from "@nestjs/common";
+import { CacheTTL } from "@nestjs/common/cache";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import {
     ApiBody,
@@ -168,5 +170,44 @@ export class UserController {
             locationUpdateDTO,
         );
         return updatedUser.convertToPublicDTO();
+    }
+
+    @Put(`request-deletion/:${USER_ID_PARAM}`)
+    @OnlyOwnUserData()
+    @ApiOperation({ summary: "Request deletion of user account" })
+    @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })
+    @ApiResponse({
+        status: 200,
+        description: "Account deletion has been requested successfully.",
+    })
+    @ApiResponse({ status: 404, description: "User not found." })
+    async requestAccountDeletion(
+        @Param(USER_ID_PARAM) userId: string,
+    ): Promise<void> {
+        await this.userService.requestAccountDeletion(userId);
+    }
+
+    @Get(`delete/:deletionToken`)
+    @Public()
+    @CacheTTL(0) // @dev disable cache as no return value and one-time action
+    @ApiOperation({ summary: "Deletion of user account" })
+    @ApiParam({
+        name: "deletionToken",
+        type: "string",
+        description: "Unique, one time and expiring deletion token",
+    })
+    @ApiResponse({
+        status: 200,
+        description: "Account has been deleted successfully.",
+    })
+    @ApiResponse({
+        status: 404,
+        description: "User not found, deletion token invalid.",
+    })
+    @ApiResponse({ status: 403, description: "Deletion token expired" })
+    async deleteUser(
+        @Param("deletionToken") deletionToken: string,
+    ): Promise<UserDeletionSuccessDTO> {
+        return await this.userService.deleteUserByDeletionToken(deletionToken);
     }
 }

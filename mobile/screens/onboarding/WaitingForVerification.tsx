@@ -57,18 +57,25 @@ const WaitingForVerification = ({
                     variant="light"
                 />
 
-                <OButtonWide
-                    filled={false}
-                    text={i18n.t(TR.bookNewCall)}
-                    variant="light"
-                    style={[styles.btn, { marginTop: 30 }]}
-                    onPress={() =>
-                        navigation.navigate(ROUTES.Onboarding.BookSafetyCall)
-                    }
-                />
-                <Text style={styles.subtitleBookCall}>
-                    {i18n.t(TR.pleaseDoNotMakeDoubleBookings)}
-                </Text>
+                {state.verificationStatus !==
+                    UserVerificationStatusEnum.verified && (
+                    <>
+                        <OButtonWide
+                            filled={false}
+                            text={i18n.t(TR.bookNewCall)}
+                            variant="light"
+                            style={[styles.btn, { marginTop: 30 }]}
+                            onPress={() =>
+                                navigation.navigate(
+                                    ROUTES.Onboarding.BookSafetyCall,
+                                )
+                            }
+                        />
+                        <Text style={styles.subtitleBookCall}>
+                            {i18n.t(TR.pleaseDoNotMakeDoubleBookings)}
+                        </Text>
+                    </>
+                )}
             </View>
 
             <A href={`mailto:${SUPPORT_MAIL}`} style={styles.bottomText}>
