@@ -30,6 +30,12 @@ interface IOPageContainerProps {
 export const OPageContainer = (props: IOPageContainerProps) => {
     const { doNotUseScrollView, refreshFunc } = props;
 
+    if (doNotUseScrollView && refreshFunc) {
+        throw new Error(
+            "OPageContainer: You cannot use View and refresh at the same time!",
+        );
+    }
+
     const MainViewContainer = doNotUseScrollView ? View : ScrollView;
     const { width, height } = Dimensions.get("window");
     const [refreshing, setRefreshing] = useState(false);
