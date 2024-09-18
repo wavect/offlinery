@@ -65,3 +65,17 @@ export const userAuthenticatedUpdate = (
         navigation.navigate(ROUTES.MainTabView);
     }
 };
+
+export const clearSessionDataFromUserContext = (
+    dispatch: Dispatch<IUserAction>,
+) => {
+    const payload: Partial<IUserData> = {
+        jwtAccessToken: undefined,
+        refreshToken: undefined,
+    };
+
+    dispatch({
+        type: EACTION_USER.UPDATE_MULTIPLE,
+        payload,
+    });
+};

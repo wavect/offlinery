@@ -15,3 +15,11 @@ export const getSecurelyStoredValue = (key: string) => {
 export const saveValueLocallySecurely = (key: string, value: string) => {
     SecureStore.setItem(key, value);
 };
+
+export const deleteSessionDataFromStorage = async () => {
+    const deleteOps: Promise<void>[] = [
+        SecureStore.deleteItemAsync(SECURE_VALUE.JWT_ACCESS_TOKEN),
+        SecureStore.deleteItemAsync(SECURE_VALUE.JWT_REFRESH_TOKEN),
+    ];
+    await Promise.all(deleteOps);
+};

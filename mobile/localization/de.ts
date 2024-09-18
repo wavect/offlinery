@@ -210,4 +210,7 @@ export const de: Language = {
     messageInstructions:
         "Falls nicht bereits in Person geschehen, dann füge deine Kontaktdetails hinzu.",
     messageWarning: "Es wird nur die letzte Nachricht gespeichert.",
+    dangerZone: "Gefahren-Zone",
+    logout: "Logout",
+    deleteAccount: "Account löschen",
 };

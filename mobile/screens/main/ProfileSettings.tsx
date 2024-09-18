@@ -1,4 +1,4 @@
-import { FontFamily, FontSize } from "@/GlobalStyles";
+import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import {
     UserApi,
@@ -17,7 +17,11 @@ import {
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
-import { refreshUserData } from "@/services/auth.service";
+import {
+    clearSessionDataFromUserContext,
+    refreshUserData,
+} from "@/services/auth.service";
+import { deleteSessionDataFromStorage } from "@/services/secure-storage.service";
 import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -146,6 +150,18 @@ const ProfileSettings = ({
             await includeJWT(),
         );
         refreshUserData(dispatch, updatedUser);
+    };
+
+    const handleDeleteAccount = () => {
+        alert(
+            "This feature is coming asap! In the meantime please email us at office@offlinery.io",
+        );
+    };
+
+    const handleLogout = async () => {
+        clearSessionDataFromUserContext(dispatch);
+        await deleteSessionDataFromStorage();
+        navigation.navigate(ROUTES.Welcome);
     };
 
     return (
@@ -300,6 +316,41 @@ const ProfileSettings = ({
                         text={i18n.t(TR.houseRules.mainTitle)}
                     />
                 </View>
+
+                <View style={styles.dangerZone}>
+                    <Text style={styles.dangerZoneTitle}>
+                        {i18n.t(TR.dangerZone)}
+                    </Text>
+                    <View style={styles.dangerButtonsContainer}>
+                        <TouchableOpacity
+                            style={styles.dangerButton}
+                            onPress={handleLogout}
+                        >
+                            <MaterialIcons
+                                name="logout"
+                                size={24}
+                                color={Color.redDark}
+                            />
+                            <Text style={styles.dangerButtonText}>
+                                {i18n.t(TR.logout)}
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.dangerButton}
+                            onPress={handleDeleteAccount}
+                        >
+                            <MaterialIcons
+                                name="delete-forever"
+                                size={24}
+                                color={Color.redDark}
+                            />
+                            <Text style={styles.dangerButtonText}>
+                                {i18n.t(TR.deleteAccount)}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
                 <View style={styles.buttonContainer}>
                     <OButtonWide
                         style={{ marginTop: 10, width: "100%" }}
@@ -404,6 +455,34 @@ const styles = StyleSheet.create({
         marginTop: 8,
         fontSize: FontSize.size_sm,
         textAlign: "center",
+        fontFamily: FontFamily.montserratMedium,
+    },
+    dangerZone: {
+        marginTop: 20,
+        marginBottom: 20,
+        padding: 16,
+        borderWidth: 2,
+        borderColor: Color.redDark,
+        borderRadius: 8,
+    },
+    dangerZoneTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: Color.redDark,
+        marginBottom: 16,
+        fontFamily: FontFamily.montserratSemiBold,
+    },
+    dangerButtonsContainer: {
+        flexDirection: "column",
+    },
+    dangerButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: 10,
+    },
+    dangerButtonText: {
+        marginLeft: 10,
+        fontSize: 16,
         fontFamily: FontFamily.montserratMedium,
     },
 });

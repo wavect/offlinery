@@ -24,6 +24,7 @@ export const Color = {
     lightOrange: "#FFD580",
     /** @dev general error color */
     redLight: "#fb3310",
+    redDark: "#ea2200",
     primaryBright: "#81c5c9",
     primaryLight: "#459da1",
     primary: "#36797d",
