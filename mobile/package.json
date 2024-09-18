@@ -5,7 +5,7 @@
     "scripts": {
         "start": "expo start",
         "start:dev": "EXPO_PUBLIC_ENVIRONMENT=development pnpm start",
-        "start:prod": "expo start --no-dev",
+        "start:prod": "expo start --no-dev --minify",
         "start:tunnel": "expo start --tunnel",
         "android": "expo run:android",
         "ios": "EXPO_PUBLIC_ENVIRONMENT=development expo run:ios",

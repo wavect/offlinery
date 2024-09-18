@@ -36,6 +36,12 @@ export interface RegistrationForVerificationResponseDTO {
      * @memberof RegistrationForVerificationResponseDTO
      */
     verificationCodeIssuedAt: Date;
+    /**
+     *
+     * @type {boolean}
+     * @memberof RegistrationForVerificationResponseDTO
+     */
+    alreadyVerifiedButNotRegistered: boolean;
 }
 
 /**
@@ -49,6 +55,11 @@ export function instanceOfRegistrationForVerificationResponseDTO(
     if (
         !("verificationCodeIssuedAt" in value) ||
         value["verificationCodeIssuedAt"] === undefined
+    )
+        return false;
+    if (
+        !("alreadyVerifiedButNotRegistered" in value) ||
+        value["alreadyVerifiedButNotRegistered"] === undefined
     )
         return false;
     return true;
@@ -71,6 +82,8 @@ export function RegistrationForVerificationResponseDTOFromJSONTyped(
         email: json["email"],
         timeout: json["timeout"],
         verificationCodeIssuedAt: new Date(json["verificationCodeIssuedAt"]),
+        alreadyVerifiedButNotRegistered:
+            json["alreadyVerifiedButNotRegistered"],
     };
 }
 
@@ -85,5 +98,7 @@ export function RegistrationForVerificationResponseDTOToJSON(
         timeout: value["timeout"],
         verificationCodeIssuedAt:
             value["verificationCodeIssuedAt"].toISOString(),
+        alreadyVerifiedButNotRegistered:
+            value["alreadyVerifiedButNotRegistered"],
     };
 }

@@ -3,7 +3,7 @@ import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
 import { EEmailVerificationStatus } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
-import { Injectable, Logger } from "@nestjs/common";
+import { ConflictException, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -30,12 +30,23 @@ export class RegistrationService {
             });
 
             if (existingVerifiedUser) {
-                throw new Error("Email already exists.");
+                throw new ConflictException("Email already exists.");
             }
 
             let pendingUser = await this.pendingUserRepo.findOneBy({ email });
 
-            if (!pendingUser) {
+            if (pendingUser) {
+                this.logger.debug(
+                    `User ${pendingUser.email} already verified, but didn't register yet.`,
+                );
+                return {
+                    email: pendingUser.email,
+                    timeout: this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
+                    verificationCodeIssuedAt:
+                        pendingUser.verificationCodeIssuedAt,
+                    alreadyVerifiedButNotRegistered: true,
+                };
+            } else {
                 pendingUser = new PendingUser();
                 pendingUser.email = email;
                 pendingUser.verificationStatus =
@@ -53,6 +64,7 @@ export class RegistrationService {
                     timeout: this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
                     verificationCodeIssuedAt:
                         pendingUser.verificationCodeIssuedAt,
+                    alreadyVerifiedButNotRegistered: false,
                 };
             }
 
@@ -75,6 +87,7 @@ export class RegistrationService {
                 email: pendingUser.email,
                 verificationCodeIssuedAt: pendingUser.verificationCodeIssuedAt,
                 timeout: this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
+                alreadyVerifiedButNotRegistered: false,
             };
         } catch (error) {
             this.logger.error(error);
