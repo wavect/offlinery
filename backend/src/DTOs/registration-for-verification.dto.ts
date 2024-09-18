@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsEmail } from "class-validator";
+import { IsBoolean, IsEmail } from "class-validator";
 
 export class RegistrationForVerificationRequestDTO {
     @ApiProperty({ example: "user@example.com" })
@@ -25,4 +25,9 @@ export class RegistrationForVerificationResponseDTO {
         description: "Timestamp when the verification code was issued.",
     })
     verificationCodeIssuedAt: Date;
+
+    /** @dev This allows us to jump past another email verification is email already verified, but user not yet created. */
+    @ApiProperty()
+    @IsBoolean()
+    alreadyVerifiedButNotRegistered: boolean;
 }

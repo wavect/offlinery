@@ -100,6 +100,8 @@ const VerifyEmail = ({
 
             if (!result.email) {
                 throw new Error("Error registering email");
+            } else if (result.alreadyVerifiedButNotRegistered) {
+                navigation.navigate(ROUTES.Onboarding.Password);
             }
 
             const issuedAt = result.verificationCodeIssuedAt.getTime();
