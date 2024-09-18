@@ -66,17 +66,15 @@ const FindPeople = (
         longitudeDelta: 0.0421,
     });
 
-    // TODO: Add heatmap when google maps works on both ios and android, https://github.com/react-native-maps/react-native-maps/tree/master
-    // TODO: Provider Google should also work for IOS, but ONLY WITHOUT EXPO GO!
-    // TODO: Request background permission when setting user live in separate component
     // TODO: Maybe make map to a separate component
     useEffect(() => {
         (async () => {
+            const promises = [];
             if (state.dateMode === UserPrivateDTODateModeEnum.ghost) {
                 // if users are in ghost mode, should not see others as incentive to stay live
                 setLocationsFromOthers([]);
             } else {
-                await getOtherUsersPositions();
+                promises.push(getOtherUsersPositions());
             }
 
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -85,7 +83,8 @@ const FindPeople = (
                 return;
             }
 
-            await getUserPosition();
+            promises.push(getUserPosition());
+            await Promise.all(promises);
         })();
     }, [state.dateMode]);
 
@@ -207,7 +206,10 @@ const FindPeople = (
     };
 
     return (
-        <OPageContainer subtitle={i18n.t(TR.beNearTheseHotspotsToMeet)}>
+        <OPageContainer
+            subtitle={i18n.t(TR.beNearTheseHotspotsToMeet)}
+            refreshFunc={getOtherUsersPositions}
+        >
             <>
                 <MapView
                     ref={mapRef}
