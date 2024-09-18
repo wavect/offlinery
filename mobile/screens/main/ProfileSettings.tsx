@@ -367,9 +367,20 @@ const ProfileSettings = ({
                             <MaterialIcons
                                 name="delete-forever"
                                 size={24}
-                                color={Color.redDark}
+                                color={
+                                    state.markedForDeletion
+                                        ? Color.gray
+                                        : Color.redDark
+                                }
                             />
-                            <Text style={styles.dangerButtonText}>
+                            <Text
+                                style={[
+                                    styles.dangerButtonText,
+                                    state.markedForDeletion
+                                        ? styles.disabledDangerButtonText
+                                        : null,
+                                ]}
+                            >
                                 {i18n.t(TR.deleteAccount)}
                             </Text>
                         </TouchableOpacity>
@@ -491,6 +502,9 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         paddingVertical: 10,
+    },
+    disabledDangerButtonText: {
+        color: Color.gray,
     },
     dangerButtonText: {
         marginLeft: 10,
