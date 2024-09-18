@@ -42,11 +42,15 @@ export const MainScreenTabs = ({
     >([]);
     const notificationListener = useRef<Subscription>();
     const responseListener = useRef<Subscription>();
+    const setupPerformed = useRef(false);
 
     // @dev useFocusEffect ensures that the services are only started once the user has been logged in, instead of prompting the user for permissions on the welcome screen due to the App.tsx route import
     useFocusEffect(
         useCallback(() => {
             const setupNotifications = async () => {
+                // @dev should only be executed once during app usage
+                if (setupPerformed.current) return;
+
                 // 0 might be a valid ID too
                 if (!state.id) {
                     console.error(
@@ -125,6 +129,8 @@ export const MainScreenTabs = ({
                                 });
                             },
                         );
+
+                    setupPerformed.current = true;
                 }
             };
 
