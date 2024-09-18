@@ -1,11 +1,12 @@
 import { Color, Subtitle, Title } from "@/GlobalStyles";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import {
     Dimensions,
     KeyboardAvoidingView,
     Platform,
+    RefreshControl,
     ScrollView,
     StyleSheet,
     Text,
@@ -23,11 +24,27 @@ interface IOPageContainerProps {
     bottomContainerChildren?: ReactNode;
     doNotUseScrollView?: boolean;
     fullpageIcon?: IconName;
+    refreshFunc?: () => Promise<void>;
 }
 
 export const OPageContainer = (props: IOPageContainerProps) => {
-    const MainViewContainer = props.doNotUseScrollView ? View : ScrollView;
+    const { doNotUseScrollView, refreshFunc } = props;
+
+    if (doNotUseScrollView && refreshFunc) {
+        throw new Error(
+            "OPageContainer: You cannot use View and refresh at the same time!",
+        );
+    }
+
+    const MainViewContainer = doNotUseScrollView ? View : ScrollView;
     const { width, height } = Dimensions.get("window");
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await refreshFunc!();
+        setRefreshing(false);
+    };
 
     return (
         <View style={styles.container}>
@@ -43,6 +60,14 @@ export const OPageContainer = (props: IOPageContainerProps) => {
             <MainViewContainer
                 style={styles.content}
                 keyboardShouldPersistTaps="handled"
+                refreshControl={
+                    refreshFunc && (
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    )
+                }
             >
                 {props.title && <Text style={Title}>{props.title}</Text>}
                 {props.subtitle && (
