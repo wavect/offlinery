@@ -39,8 +39,13 @@ export const OPageColorContainer = (props: IOPageColorContainerProps) => {
 
     const onRefresh = async () => {
         setRefreshing(true);
-        await refreshFunc!();
-        setRefreshing(false);
+        try {
+            await refreshFunc!();
+        } catch (err) {
+            throw err;
+        } finally {
+            setRefreshing(false);
+        }
     };
 
     return (

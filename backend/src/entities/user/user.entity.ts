@@ -12,7 +12,6 @@ import {
     EVerificationStatus,
 } from "@/types/user.types";
 import { getAge } from "@/utils/date.utils";
-import { getBaseUrl } from "@/utils/utils";
 import { Point } from "geojson";
 import {
     Column,
@@ -32,10 +31,8 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
             id: this.id,
             firstName: this.firstName,
             age: getAge(this.birthDay),
-            imageURIs: this.imageURIs?.map(
-                // @dev Backend should be in control of where the images are being hosted, and saving into DB would be too inflexible rn (assuming all imgs are hosted on the same server)
-                (uri) => `${getBaseUrl()}/img/${uri}`,
-            ),
+            /** @dev Don't contain any baseUri, assuming images are hosted on same backend for now. */
+            imageURIs: this.imageURIs,
             bio: this.bio,
             trustScore: this.trustScore,
         };

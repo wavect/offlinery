@@ -29,7 +29,7 @@ export const LOCAL_VALUE = {
 
 export const getLocallyStoredUserData = (): Omit<
     IUserData,
-    "jwtAccessToken"
+    "jwtAccessToken" | "refreshToken"
 > | null => {
     let userDataString: string | null;
     if (!storage) {

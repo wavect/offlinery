@@ -1,3 +1,4 @@
+import { BASE_PATH } from "@/api/gen/src";
 import {
     EACTION_USER,
     ImageIdx,
@@ -65,7 +66,9 @@ export const PhotoContainer = (props: IPhotoContainerProps) => {
 
     // If the image is an `ImagePicker` we can directly access image on the user's device
     // otherwise we need to fetch it from the server.
-    const uri = isImagePicker(img) ? img.uri : img;
+    const uri = isImagePicker(img)
+        ? img.uri
+        : `${BASE_PATH.replace("/v1", "")}/img/${img}`;
 
     return (
         <Pressable

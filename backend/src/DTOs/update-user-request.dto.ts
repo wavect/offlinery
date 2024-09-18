@@ -5,6 +5,7 @@ export class UpdateUserRequestDTO {
     @ApiProperty({ type: UpdateUserDTO, format: "json", required: false })
     user: UpdateUserDTO;
 
+    // @dev Some indices may be undefined as we don't necessarily want to override images (retain indices)
     @ApiProperty({
         type: "array",
         items: {
@@ -15,5 +16,5 @@ export class UpdateUserRequestDTO {
         maxItems: 6,
         required: false,
     })
-    images: Blob[];
+    images: (Blob | undefined)[];
 }

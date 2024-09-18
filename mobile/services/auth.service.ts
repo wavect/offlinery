@@ -1,10 +1,13 @@
-import { UserPrivateDTO } from "@/api/gen/src";
+import {
+    UserPrivateDTO,
+    UserPrivateDTOVerificationStatusEnum,
+} from "@/api/gen/src";
 import {
     EACTION_USER,
     IUserAction,
     IUserData,
-    mapBlacklistedRegionDTOToMapRegion,
     MapRegion,
+    mapBlacklistedRegionDTOToMapRegion,
 } from "@/context/UserContext";
 import { ROUTES } from "@/screens/routes";
 import { Dispatch } from "react";
@@ -54,7 +57,9 @@ export const userAuthenticatedUpdate = (
 ) => {
     refreshUserData(dispatch, user, jwtAccessToken, jwtRefreshToken);
 
-    if (user.verificationStatus === "pending") {
+    if (
+        user.verificationStatus === UserPrivateDTOVerificationStatusEnum.pending
+    ) {
         navigation.navigate(ROUTES.Onboarding.WaitingVerification);
     } else {
         navigation.navigate(ROUTES.MainTabView);
