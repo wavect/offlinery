@@ -73,8 +73,8 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
             await includeJWT(),
         );
     } catch (err) {
-        // TODO
         console.error("Failed to send push token to backend:", err);
+        throw err;
     }
 
     return token;
