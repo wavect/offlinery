@@ -1,3 +1,4 @@
+import { ApiUserModule } from "@/entities/api-user/api-user.module";
 import { BlacklistedRegionModule } from "@/entities/blacklisted-region/blacklisted-region.module";
 import { EncounterModule } from "@/entities/encounter/encounter.module";
 import { MapModule } from "@/entities/map/map.module";
@@ -78,6 +79,7 @@ import { TYPED_ENV } from "./utils/env.utils";
         RegistrationModule,
         SeederModule,
         MapModule,
+        ApiUserModule,
     ],
     controllers: [AppController],
     providers: [

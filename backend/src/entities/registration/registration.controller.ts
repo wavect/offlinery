@@ -1,3 +1,4 @@
+import { UpdateUserVerificationstatusDTO } from "@/DTOs/update-user-verificationstatus.dto";
 import {
     Body,
     Controller,
@@ -9,7 +10,7 @@ import {
     ValidationPipe,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Public } from "src/auth/auth.guard";
+import { OnlyAdmin, Public } from "src/auth/auth.guard";
 import {
     RegistrationForVerificationRequestDTO,
     RegistrationForVerificationResponseDTO,
@@ -66,6 +67,22 @@ export class RegistrationController {
         return await this.registrationService.verifyEmail(
             verifyEmailDto.email,
             verifyEmailDto.verificationCode,
+        );
+    }
+
+    @Put("admin/verification-status")
+    @OnlyAdmin()
+    @ApiOperation({ summary: "Update verification status of user." })
+    @ApiBody({
+        type: UpdateUserVerificationstatusDTO,
+    })
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async changeVerificationStatus(
+        @Body() updateStatus: UpdateUserVerificationstatusDTO,
+    ): Promise<void> {
+        return await this.registrationService.changeVerificationStatus(
+            updateStatus.email,
+            updateStatus.newVerificationStatus,
         );
     }
 }

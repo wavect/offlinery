@@ -1,5 +1,7 @@
 import { AuthModule } from "@/auth/auth.module";
 import { AuthService } from "@/auth/auth.service";
+import { ApiUser } from "@/entities/api-user/api-user.entity";
+import { ApiUserService } from "@/entities/api-user/api-user.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
@@ -8,6 +10,7 @@ import { RegistrationService } from "@/entities/registration/registration.servic
 import { UserReport } from "@/entities/user-report/user-report.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
+import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomEncounterSeeder } from "@/seeder/random-encounter-seeder.service";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
@@ -19,6 +22,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
     imports: [
         TypeOrmModule.forFeature([
             User,
+            ApiUser,
             BlacklistedRegion,
             UserReport,
             Encounter,
@@ -30,12 +34,14 @@ import { TypeOrmModule } from "@nestjs/typeorm";
     ],
     providers: [
         DefaultUserSeeder,
+        DefaultApiUserSeeder,
         RegistrationService,
         UserService,
         AuthService,
+        ApiUserService,
         RandomUsersSeeder,
         RandomEncounterSeeder,
     ],
-    exports: [DefaultUserSeeder, RandomUsersSeeder],
+    exports: [DefaultUserSeeder, DefaultApiUserSeeder, RandomUsersSeeder],
 })
 export class SeederModule {}

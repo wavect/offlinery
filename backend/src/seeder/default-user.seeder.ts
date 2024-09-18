@@ -51,7 +51,7 @@ export class DefaultUserSeeder {
         return file;
     }
 
-    async seedRandomUsers(): Promise<void> {
+    async seedDefaultUsers(): Promise<void> {
         const email = "office@wavect.io";
         try {
             await this.userService.findUserByEmail(email); // fails if user does not exist

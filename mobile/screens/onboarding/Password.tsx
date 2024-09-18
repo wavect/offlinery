@@ -64,6 +64,7 @@ const Password = ({
 
     return (
         <OPageContainer
+            fullpageIcon="lock"
             bottomContainerChildren={
                 <OButtonWide
                     text={

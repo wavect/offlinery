@@ -7,6 +7,7 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { refreshUserData } from "@/services/auth.service";
 import { SUPPORT_MAIL } from "@/utils/general.constants";
+import { includeJWT } from "@/utils/misc.utils";
 import { A } from "@expo/html-elements";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -27,9 +28,12 @@ const WaitingForVerification = ({
             // @dev This should only happen if user did not login or register and for some reason is on this screen (semantically impossible, except during debug sessions)
             throw new Error("No user ID found!");
         }
-        const updatedUser = await userApi.userControllerGetOwnUserData({
-            userId: state.id!,
-        });
+        const updatedUser = await userApi.userControllerGetOwnUserData(
+            {
+                userId: state.id!,
+            },
+            await includeJWT(),
+        );
         refreshUserData(dispatch, updatedUser);
     };
 
@@ -39,7 +43,7 @@ const WaitingForVerification = ({
                 <OButtonWide
                     filled={true}
                     text={i18n.t(
-                        state.verificationStatus ===
+                        state.verificationStatus !==
                             UserVerificationStatusEnum.verified
                             ? TR.verificationInProgress
                             : TR.verificationSuccessful,
