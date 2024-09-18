@@ -317,6 +317,18 @@ const ProfileSettings = ({
                     />
                 </View>
 
+                <View style={styles.buttonContainer}>
+                    <OButtonWide
+                        style={{ marginTop: 10, width: "100%" }}
+                        text={i18n.t(TR.save)}
+                        filled={true}
+                        variant="dark"
+                        isLoading={isLoading}
+                        loadingBtnText={i18n.t(TR.saving)}
+                        onPress={handleSave}
+                    />
+                </View>
+
                 <View style={styles.dangerZone}>
                     <Text style={styles.dangerZoneTitle}>
                         {i18n.t(TR.dangerZone)}
@@ -349,18 +361,6 @@ const ProfileSettings = ({
                             </Text>
                         </TouchableOpacity>
                     </View>
-                </View>
-
-                <View style={styles.buttonContainer}>
-                    <OButtonWide
-                        style={{ marginTop: 10, width: "100%" }}
-                        text={i18n.t(TR.save)}
-                        filled={true}
-                        variant="dark"
-                        isLoading={isLoading}
-                        loadingBtnText={i18n.t(TR.saving)}
-                        onPress={handleSave}
-                    />
                 </View>
             </View>
         </OPageContainer>
@@ -458,8 +458,7 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.montserratMedium,
     },
     dangerZone: {
-        marginTop: 20,
-        marginBottom: 20,
+        marginTop: 30,
         padding: 16,
         borderWidth: 2,
         borderColor: Color.redDark,
