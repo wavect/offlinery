@@ -29,12 +29,18 @@ export class UserReport {
     @CreateDateColumn()
     reportedOn: Date;
 
-    @ManyToOne(() => User, (user) => user.receivedReports)
+    @ManyToOne(() => User, (user) => user.receivedReports, {
+        onDelete: "CASCADE",
+    })
     reportedUser: User;
 
-    @ManyToOne(() => User, (user) => user.issuedReports)
+    @ManyToOne(() => User, (user) => user.issuedReports, {
+        onDelete: "CASCADE",
+    })
     reportingUser: User;
 
-    @ManyToOne(() => Encounter, (encounter) => encounter.userReports)
+    @ManyToOne(() => Encounter, (encounter) => encounter.userReports, {
+        onDelete: "CASCADE",
+    })
     reportedEncounter: Encounter;
 }

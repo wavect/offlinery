@@ -102,6 +102,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
     @OneToMany(
         () => BlacklistedRegion,
         (blacklistedRegion) => blacklistedRegion.user,
+        { cascade: true, onDelete: "CASCADE" },
     )
     blacklistedRegions: BlacklistedRegion[];
 
@@ -128,13 +129,22 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
     @Column({ nullable: true })
     pushToken: string;
 
-    @OneToMany(() => UserReport, (report) => report.reportedUser)
+    @OneToMany(() => UserReport, (report) => report.reportedUser, {
+        cascade: true,
+        onDelete: "CASCADE",
+    })
     receivedReports: UserReport[];
 
-    @OneToMany(() => UserReport, (report) => report.reportingUser)
+    @OneToMany(() => UserReport, (report) => report.reportingUser, {
+        cascade: true,
+        onDelete: "CASCADE",
+    })
     issuedReports: UserReport[];
 
-    @ManyToMany(() => Encounter, (encounter) => encounter.users)
+    @ManyToMany(() => Encounter, (encounter) => encounter.users, {
+        cascade: true,
+        onDelete: "CASCADE",
+    })
     @JoinTable()
     encounters: Encounter[];
 

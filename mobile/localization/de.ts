@@ -213,6 +213,7 @@ export const de: Language = {
     dangerZone: "Gefahren-Zone",
     logout: "Logout",
     deleteAccount: "Account löschen",
+    deletionRequested: "Löschung beantragt",
     accountDeletionRequestedAlert:
         "Wir haben dir eine E-Mail geschickt. Klick auf den Link, um deinen Account unwiderruflich zu löschen.",
 };
