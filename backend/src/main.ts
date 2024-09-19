@@ -2,6 +2,7 @@ import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomEncounterSeeder } from "@/seeder/random-encounter-seeder.service";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
+import { API_VERSION, BE_ENDPOINT } from "@/utils/misc.utils";
 import { INestApplication, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
@@ -56,18 +57,12 @@ async function bootstrap() {
     await app.listen(TYPED_ENV.BE_PORT);
 }
 
-const VERSION = "1";
-const BE_ENDPOINT =
-    process.env.NODE_ENV === "development"
-        ? `http://localhost:${TYPED_ENV.BE_PORT}`
-        : "https://offlinery.onrender.com";
-
 const setupSwagger = (app: INestApplication) => {
     const config = new DocumentBuilder()
         .setTitle("Offlinery")
         .setDescription("API of Offlinery")
-        .setVersion(VERSION)
-        .addServer(`${BE_ENDPOINT}/v${VERSION}`) // will also be used in Frontend when generated
+        .setVersion(API_VERSION)
+        .addServer(`${BE_ENDPOINT}/v${API_VERSION}`) // will also be used in Frontend when generated
         .addTag("app")
         .build();
     const document = SwaggerModule.createDocument(app, config, {

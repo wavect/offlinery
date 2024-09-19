@@ -67,4 +67,9 @@ export class UserPrivateDTO extends UserPublicDTO {
         description: "The gender the user is interested in",
     })
     genderDesire: EGender;
+
+    @ApiProperty({
+        description: "Has user recently requested account deletion?",
+    })
+    markedForDeletion: boolean;
 }

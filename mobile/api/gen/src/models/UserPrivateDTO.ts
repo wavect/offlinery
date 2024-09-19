@@ -132,6 +132,12 @@ export interface UserPrivateDTO {
      * @memberof UserPrivateDTO
      */
     genderDesire: UserPrivateDTOGenderDesireEnum;
+    /**
+     * Has user recently requested account deletion?
+     * @type {boolean}
+     * @memberof UserPrivateDTO
+     */
+    markedForDeletion: boolean;
 }
 
 /**
@@ -230,6 +236,11 @@ export function instanceOfUserPrivateDTO(
     if (!("gender" in value) || value["gender"] === undefined) return false;
     if (!("genderDesire" in value) || value["genderDesire"] === undefined)
         return false;
+    if (
+        !("markedForDeletion" in value) ||
+        value["markedForDeletion"] === undefined
+    )
+        return false;
     return true;
 }
 
@@ -265,6 +276,7 @@ export function UserPrivateDTOFromJSONTyped(
         approachChoice: json["approachChoice"],
         gender: json["gender"],
         genderDesire: json["genderDesire"],
+        markedForDeletion: json["markedForDeletion"],
     };
 }
 
@@ -293,5 +305,6 @@ export function UserPrivateDTOToJSON(value?: UserPrivateDTO | null): any {
         approachChoice: value["approachChoice"],
         gender: value["gender"],
         genderDesire: value["genderDesire"],
+        markedForDeletion: value["markedForDeletion"],
     };
 }

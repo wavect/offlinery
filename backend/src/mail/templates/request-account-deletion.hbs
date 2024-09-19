@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Deletion Warning</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            background-color: #ff3b30;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .warning-icon {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .deletion-link {
+            display: block;
+            background-color: #ff3b30;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            margin: 20px 0;
+            transition: background-color 0.3s ease;
+        }
+        .deletion-link:hover {
+            background-color: #d63026;
+        }
+        .danger-text {
+            color: #ff3b30;
+            font-weight: bold;
+        }
+        .footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+        }
+        a {
+            color: #ff3b30;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .expiration-note {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            font-style: italic;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        Account Deletion Warning
+    </div>
+    <div class="content">
+        <div class="warning-icon">🚫</div>
+        <p>Hey {{ name }},</p>
+        <p>We've received a request to <span class="danger-text">permanently delete your account</span>. This action is irreversible and will erase all your data from our systems.</p>
+        <p>If you wish to proceed, click the link below:</p>
+        <a href="{{ deletionLink }}" class="deletion-link">DELETE MY ACCOUNT</a>
+        <p class="expiration-note">Note: This link will expire in 7 days for security reasons.</p>
+        <p class="danger-text">⚠️ WARNING: This action cannot be undone! ⚠️</p>
+        <p>Before you go, we'd appreciate knowing why you're leaving. Please share your thoughts by emailing <a href="mailto:office@offlinery.io" title="Why are you deleting your account">office@offlinery.io</a>.</p>
+        <p>If you didn't request this deletion, please contact our support team immediately to secure your account.</p>
+    </div>
+    <div class="footer">
+        This is an automated message. Do not reply to this email.
+    </div>
+</div>
+</body>
+</html>

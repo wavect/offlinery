@@ -41,7 +41,15 @@ export interface UserControllerCreateUserRequest {
     images: (ImagePickerAsset | undefined)[];
 }
 
+export interface UserControllerDeleteUserRequest {
+    deletionToken: string;
+}
+
 export interface UserControllerGetOwnUserDataRequest {
+    userId: string;
+}
+
+export interface UserControllerRequestAccountDeletionRequest {
     userId: string;
 }
 
@@ -92,6 +100,27 @@ export interface UserApiInterface {
 
     /**
      *
+     * @summary Deletion of user account
+     * @param {string} deletionToken Unique, one time and expiring deletion token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApiInterface
+     */
+    userControllerDeleteUserRaw(
+        requestParameters: UserControllerDeleteUserRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     * Deletion of user account
+     */
+    userControllerDeleteUser(
+        requestParameters: UserControllerDeleteUserRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
+
+    /**
+     *
      * @summary Get private user data by ID
      * @param {string} userId User ID
      * @param {*} [options] Override http request option.
@@ -110,6 +139,27 @@ export interface UserApiInterface {
         requestParameters: UserControllerGetOwnUserDataRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<UserPrivateDTO>;
+
+    /**
+     *
+     * @summary Request deletion of user account
+     * @param {string} userId User ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApiInterface
+     */
+    userControllerRequestAccountDeletionRaw(
+        requestParameters: UserControllerRequestAccountDeletionRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     * Request deletion of user account
+     */
+    userControllerRequestAccountDeletion(
+        requestParameters: UserControllerRequestAccountDeletionRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
 
     /**
      *
@@ -275,6 +325,55 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
     }
 
     /**
+     * Deletion of user account
+     */
+    async userControllerDeleteUserRaw(
+        requestParameters: UserControllerDeleteUserRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["deletionToken"] == null) {
+            throw new runtime.RequiredError(
+                "deletionToken",
+                'Required parameter "deletionToken" was null or undefined when calling userControllerDeleteUser().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request(
+            {
+                path: `/user/delete/{deletionToken}`.replace(
+                    `{${"deletionToken"}}`,
+                    encodeURIComponent(
+                        String(requestParameters["deletionToken"]),
+                    ),
+                ),
+                method: "GET",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Deletion of user account
+     */
+    async userControllerDeleteUser(
+        requestParameters: UserControllerDeleteUserRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.userControllerDeleteUserRaw(
+            requestParameters,
+            initOverrides,
+        );
+    }
+
+    /**
      * Get private user data by ID
      */
     async userControllerGetOwnUserDataRaw(
@@ -322,6 +421,53 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
             initOverrides,
         );
         return await response.value();
+    }
+
+    /**
+     * Request deletion of user account
+     */
+    async userControllerRequestAccountDeletionRaw(
+        requestParameters: UserControllerRequestAccountDeletionRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["userId"] == null) {
+            throw new runtime.RequiredError(
+                "userId",
+                'Required parameter "userId" was null or undefined when calling userControllerRequestAccountDeletion().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request(
+            {
+                path: `/user/request-deletion/{userId}`.replace(
+                    `{${"userId"}}`,
+                    encodeURIComponent(String(requestParameters["userId"])),
+                ),
+                method: "PUT",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Request deletion of user account
+     */
+    async userControllerRequestAccountDeletion(
+        requestParameters: UserControllerRequestAccountDeletionRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.userControllerRequestAccountDeletionRaw(
+            requestParameters,
+            initOverrides,
+        );
     }
 
     /**

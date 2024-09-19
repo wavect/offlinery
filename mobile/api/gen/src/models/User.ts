@@ -190,6 +190,18 @@ export interface User {
      * @memberof User
      */
     preferredLanguage: UserPreferredLanguageEnum;
+    /**
+     *
+     * @type {Date}
+     * @memberof User
+     */
+    deletionTokenExpires: Date;
+    /**
+     *
+     * @type {string}
+     * @memberof User
+     */
+    deletionToken: string;
 }
 
 /**
@@ -320,6 +332,13 @@ export function instanceOfUser(value: object): value is User {
         value["preferredLanguage"] === undefined
     )
         return false;
+    if (
+        !("deletionTokenExpires" in value) ||
+        value["deletionTokenExpires"] === undefined
+    )
+        return false;
+    if (!("deletionToken" in value) || value["deletionToken"] === undefined)
+        return false;
     return true;
 }
 
@@ -368,6 +387,8 @@ export function UserFromJSONTyped(
         trustScore: json["trustScore"] == null ? undefined : json["trustScore"],
         location: json["location"],
         preferredLanguage: json["preferredLanguage"],
+        deletionTokenExpires: new Date(json["deletionTokenExpires"]),
+        deletionToken: json["deletionToken"],
     };
 }
 
@@ -409,5 +430,7 @@ export function UserToJSON(value?: User | null): any {
         trustScore: value["trustScore"],
         location: value["location"],
         preferredLanguage: value["preferredLanguage"],
+        deletionTokenExpires: value["deletionTokenExpires"].toISOString(),
+        deletionToken: value["deletionToken"],
     };
 }
