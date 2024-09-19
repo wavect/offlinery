@@ -24,6 +24,8 @@ export class BlacklistedRegion {
     @Column("float")
     radius: number;
 
-    @ManyToOne(() => User, (user) => user.blacklistedRegions)
+    @ManyToOne(() => User, (user) => user.blacklistedRegions, {
+        onDelete: "CASCADE",
+    })
     user: User;
 }

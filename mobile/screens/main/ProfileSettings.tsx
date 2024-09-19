@@ -381,7 +381,11 @@ const ProfileSettings = ({
                                         : null,
                                 ]}
                             >
-                                {i18n.t(TR.deleteAccount)}
+                                {i18n.t(
+                                    state.markedForDeletion
+                                        ? TR.deletionRequested
+                                        : TR.deleteAccount,
+                                )}
                             </Text>
                         </TouchableOpacity>
                     </View>

@@ -63,16 +63,19 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
      *   }
      * });
      */
-    @ManyToMany(() => User, (user) => user.encounters)
+    @ManyToMany(() => User, (user) => user.encounters, { onDelete: "CASCADE" })
     users: User[]; // NOTE: Make sure the combination of users is UNIQUE (can't be enforced on DB level)
 
     /** @dev Both users could theoretically report each other */
-    @OneToMany(() => UserReport, (report) => report.reportedEncounter)
+    @OneToMany(() => UserReport, (report) => report.reportedEncounter, {
+        onDelete: "CASCADE",
+    })
     userReports: UserReport[];
 
     /** @dev Simple chat conversation between users, to e.g. exchange contact details. Not suitable for a real chat. */
     @OneToMany(() => Message, (message) => message.encounter, {
         nullable: true,
+        onDelete: "CASCADE",
     })
     messages: Message[];
 

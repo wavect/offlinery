@@ -230,6 +230,7 @@ export class UserService {
 
         await this.userRepository.delete({ deletionToken });
         await this.pendingUserRepo.delete({ email: userToDelete.email });
+        this.logger.debug(`User ${userToDelete.id} successfully deleted!`);
         return {
             id: userToDelete.id,
             dataDeleted: true,
