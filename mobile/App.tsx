@@ -55,7 +55,7 @@ const DEFAULT_SCREEN_PROPS = {
     headerTitleStyle: {
         fontSize: FontSize.size_xl,
         textAlign: "left",
-    },
+    } as const,
 };
 const DEFAULT_LIGHT_SCREEN_PROPS = {
     ...DEFAULT_SCREEN_PROPS,
