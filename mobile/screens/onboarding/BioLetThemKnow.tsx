@@ -1,5 +1,6 @@
 import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
+import { UserApproachChoiceEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
@@ -48,17 +49,31 @@ const BioLetThemKnow = ({
         }
     };
 
+    const needsToCompleteOtherFlowToo =
+        state.approachChoice === UserApproachChoiceEnum.both;
+
+    // @dev ApproachChoice.BOTH, also other approaching flow needs to be done
+    const continueToOtherFlow = () => {
+        navigation.navigate(ROUTES.Onboarding.SafetyCheck);
+    };
+
     return (
         <OPageContainer
             subtitle={i18n.t(TR.messageShownToPersonApproaching)}
             bottomContainerChildren={
                 <OButtonWide
-                    text={i18n.t(TR.done)}
+                    text={i18n.t(
+                        needsToCompleteOtherFlowToo ? TR.continue : TR.done,
+                    )}
                     isLoading={isLoading}
                     loadingBtnText={i18n.t(TR.registering)}
                     filled={true}
                     variant="dark"
-                    onPress={startUserRegistration}
+                    onPress={
+                        needsToCompleteOtherFlowToo
+                            ? continueToOtherFlow
+                            : startUserRegistration
+                    }
                 />
             }
         >
