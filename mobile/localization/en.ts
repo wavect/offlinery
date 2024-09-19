@@ -51,9 +51,8 @@ export const en = {
     beApproachedDescr:
         "Be approached by people you are interested in. Safely and Respectfully.",
     both: "Both",
-    bothDescr:
-        "Want to approach and be approached by people you like? (not yet supported)",
-    changePossible: "No worries, you can change this at any time.",
+    bothDescr: "Want to approach and be approached by people you like?",
+    changePossible: "You can't change this later.",
     approachMeBetween: "Approach me between",
     approachMeBetweenDescr:
         "What are times you feel comfortable being approached at? Default is during the day.",

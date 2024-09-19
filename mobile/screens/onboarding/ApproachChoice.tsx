@@ -48,7 +48,14 @@ const ApproachChoice = ({
                 navigation.navigate(ROUTES.Onboarding.DontApproachMeHere); // not doing IliveHere for now, to avoid geoFencing their address
                 break;
             case UserApproachChoiceEnum.both:
-            // TODO: Not yet supported, since both flows need to be completed
+                // @dev both flows need to be completed, checked on last screen
+                dispatch({
+                    type: EACTION_USER.UPDATE_MULTIPLE,
+                    payload: {
+                        verificationStatus: UserVerificationStatusEnum.pending,
+                    },
+                });
+                navigation.navigate(ROUTES.Onboarding.DontApproachMeHere);
         }
     };
 
@@ -94,7 +101,6 @@ const ApproachChoice = ({
                     filled={false}
                     variant="dark"
                     size="smaller"
-                    disabled={true}
                     onPress={() =>
                         setApproachChoice(UserApproachChoiceEnum.both)
                     }
