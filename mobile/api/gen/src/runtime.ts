@@ -14,8 +14,6 @@ import { isExpoGoEnvironment } from "../../../utils/misc.utils";
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import Constants from "expo-constants";
-import { isExpoGoEnvironment } from "../../../utils/misc.utils";
 
 // export const BASE_PATH = "http://localhost:3000/v1".replace(/\/+$/, "");
 
