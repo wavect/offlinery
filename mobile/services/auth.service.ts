@@ -46,7 +46,6 @@ export const refreshUserData = (
         type: EACTION_USER.UPDATE_MULTIPLE,
         payload,
     });
-    console.warn("PAYLOAD: ", payload.blacklistedRegions);
 };
 
 export const userAuthenticatedUpdate = (
