@@ -32,11 +32,10 @@ export class UserRepository extends Repository<User> {
             .withDesiredGender(userToBeApproached.genderDesire)
             .withGenderDesire(userToBeApproached.gender)
             .withVerificationStatusVerified()
-            .withDateModeLiveMode()
-            /** @dev Are users within x meters - TODO: Make this configurable by users. */
             .withinAgeRange(this.getAge(new Date(userToBeApproached.birthDay)))
             .filterRecentEncounters()
-            .relatedToUser(userToBeApproached.id);
+            .relatedToUser(userToBeApproached.id)
+            .withDateModeLiveMode();
 
         return this;
     }
@@ -73,10 +72,13 @@ export class UserRepository extends Repository<User> {
     }
 
     async getPotentialMatches(userToBeApproached: User): Promise<User[]> {
-        return this.createUserMatchBaseQuery(userToBeApproached)
-            .withinDistance(userToBeApproached.location, 1500)
-            .withUserWantingToBeApproached()
-            .getMany();
+        return (
+            this.createUserMatchBaseQuery(userToBeApproached)
+                /** @dev Are users within x meters - TODO: Make this configurable by users. */
+                .withinDistance(userToBeApproached.location, 1500)
+                .withUserWantingToBeApproached()
+                .getMany()
+        );
     }
 
     private addEncounterJoins(): this {
