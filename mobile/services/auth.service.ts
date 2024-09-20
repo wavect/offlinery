@@ -28,7 +28,7 @@ export const refreshUserData = (
             .map((br) => {
                 return mapBlacklistedRegionDTOToMapRegion(br);
             })
-            .filter((br) => !br) as MapRegion[],
+            .filter((br) => br) as MapRegion[],
         clearPassword: "",
         imageURIs: Object.fromEntries(
             user.imageURIs.map((value, index) => [index, value]),
@@ -46,6 +46,7 @@ export const refreshUserData = (
         type: EACTION_USER.UPDATE_MULTIPLE,
         payload,
     });
+    console.warn("PAYLOAD: ", payload.blacklistedRegions);
 };
 
 export const userAuthenticatedUpdate = (
