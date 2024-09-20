@@ -118,6 +118,7 @@ export const de: Language = {
     changePassword: "Passwort ändern",
     save: "Speichern",
     updating: "Speichere..",
+    oldPasswordInvalid: "Altes Passwort ungültig",
     enterOldPassword: "Altes Passwort eingeben",
     currentPassword: "Aktuelles Passwort",
     enterPassword: "Passwort eingeben",

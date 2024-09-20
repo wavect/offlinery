@@ -25,12 +25,20 @@ const Password = ({
     const [isLoading, setLoading] = useState(false);
     const [oldClearPassword, setOldClearPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
+    const [oldPasswordError, setOldPasswordError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [passwordErrorConfirmation, setPasswordErrorConfirmation] =
         useState("");
 
     const doPasswordsMatch = (pwd: string) => {
         return state.clearPassword === pwd;
+    };
+
+    const setValidateOldPassword = (pwd: string) => {
+        if (oldPasswordError) {
+            setOldPasswordError("");
+        }
+        setOldClearPassword(pwd);
     };
 
     const setValidatePassword = (pwd: string) => {
@@ -58,7 +66,14 @@ const Password = ({
     };
     const isChangePassword = !!route?.params?.isChangePassword;
 
+    const resetErrors = () => {
+        setPasswordConfirmation("");
+        setPasswordError("");
+        setOldPasswordError("");
+    };
+
     const onSave = async () => {
+        resetErrors();
         if (isChangePassword) {
             setLoading(true);
             const updateUserPasswordDTO: UpdateUserPasswordDTO = {
@@ -76,6 +91,7 @@ const Password = ({
 
                 navigation.navigate(route.params.nextPage);
             } catch (err) {
+                setOldPasswordError(i18n.t(TR.oldPasswordInvalid));
                 throw err;
             } finally {
                 setLoading(false);
@@ -110,7 +126,7 @@ const Password = ({
             {isChangePassword && (
                 <OTextInput
                     value={oldClearPassword}
-                    onChangeText={setOldClearPassword}
+                    onChangeText={setValidateOldPassword}
                     maxLength={100}
                     autoCapitalize="none"
                     autoComplete="current-password"
@@ -120,6 +136,8 @@ const Password = ({
                     placeholder={i18n.t(TR.enterOldPassword)}
                     containerStyle={styles.inputField}
                     isSensitiveInformation={true}
+                    bottomLabel={oldPasswordError}
+                    isBottomLabelError={!!oldPasswordError}
                     topLabel={i18n.t(TR.currentPassword)}
                 />
             )}
