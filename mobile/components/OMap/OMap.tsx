@@ -45,16 +45,12 @@ const mapApi = new MapApi();
 
 interface OMapProps {
     saveChangesToBackend: boolean;
-    enableHeatmapIfAvailable: boolean;
+    showHeatmap: boolean;
     showBlacklistedRegions: boolean;
 }
 
 export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
-    const {
-        saveChangesToBackend,
-        enableHeatmapIfAvailable,
-        showBlacklistedRegions,
-    } = props;
+    const { saveChangesToBackend, showHeatmap, showBlacklistedRegions } = props;
     const { state, dispatch } = useUserContext();
     const [activeRegionIndex, setActiveRegionIndex] = useState<number | null>(
         null,
@@ -81,7 +77,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                 setLocationsFromOthers([]);
             } else {
                 const promises = [];
-                if (enableHeatmapIfAvailable) {
+                if (showHeatmap) {
                     promises.push(getOtherUsersPositions());
                 }
 
@@ -280,7 +276,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                 }
                 provider={getMapProvider()}
             >
-                {enableHeatmapIfAvailable && locationsFromOthers && (
+                {showHeatmap && locationsFromOthers && (
                     <OHeatMap locations={locationsFromOthers} />
                 )}
 

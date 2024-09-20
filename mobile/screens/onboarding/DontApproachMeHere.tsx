@@ -32,7 +32,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
         >
             <OMap
                 saveChangesToBackend={false}
-                enableHeatmapIfAvailable={false}
+                showHeatmap={false}
                 showBlacklistedRegions={true}
             />
         </OPageContainer>
