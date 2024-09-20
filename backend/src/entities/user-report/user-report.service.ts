@@ -28,7 +28,7 @@ export class UserReportService {
         const encounter = await this.encounterRepository.findOne({
             relations: ["users"],
             where: {
-                id: createUserReportDto.reportedUserId,
+                id: createUserReportDto.encounterId,
             },
         });
 
