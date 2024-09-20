@@ -263,13 +263,6 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         [activeRegionIndex],
     );
 
-    // Effect to handle component unmount or screen change
-    useEffect(() => {
-        return () => {
-            setActiveRegionIndex(null);
-        };
-    }, []);
-
     return (
         <TouchableWithoutFeedback onPress={handleMapPress}>
             <View style={styles.container}>
