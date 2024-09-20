@@ -33,6 +33,8 @@ export class UserRepository extends Repository<User> {
             .withGenderDesire(userToBeApproached.gender)
             .withVerificationStatusVerified()
             .withinAgeRange(this.getAge(new Date(userToBeApproached.birthDay)))
+            .filterRecentEncounters()
+            .relatedToUser(userToBeApproached.id)
             .withDateModeLiveMode();
 
         return this;
@@ -75,8 +77,6 @@ export class UserRepository extends Repository<User> {
                 /** @dev Are users within x meters - TODO: Make this configurable by users. */
                 .withinDistance(userToBeApproached.location, 1500)
                 .withUserWantingToBeApproached()
-                .filterRecentEncounters()
-                .relatedToUser(userToBeApproached.id)
                 .getMany()
         );
     }
