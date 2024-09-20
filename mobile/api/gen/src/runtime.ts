@@ -1,5 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
+import Constants from "expo-constants";
+import { isExpoGoEnvironment } from "../../../utils/misc.utils";
+
 /**
  * Offlinery
  * API of Offlinery

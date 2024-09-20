@@ -47,7 +47,7 @@ describe("UserReportService", () => {
         it("should create a new user report", async () => {
             const reportingUserId = "1";
             const createUserReportDto: CreateUserReportDTO = {
-                reportedUserId: "2",
+                reportedEncounter: "2",
                 incidentDescription: "Test incident",
                 keepReporterInTheLoop: true,
                 incidentType: EIncidentType.SexualHarassment,
@@ -55,7 +55,7 @@ describe("UserReportService", () => {
 
             const reportingUser = { id: reportingUserId } as User;
             const reportedUser = {
-                id: createUserReportDto.reportedUserId,
+                id: createUserReportDto.reportedEncounter,
             } as User;
 
             (userRepository.findOneBy as jest.Mock)
@@ -85,7 +85,7 @@ describe("UserReportService", () => {
                 id: reportingUserId,
             });
             expect(userRepository.findOneBy).toHaveBeenCalledWith({
-                id: createUserReportDto.reportedUserId,
+                id: createUserReportDto.reportedEncounter,
             });
 
             expect(userReportRepository.create).toHaveBeenCalledWith({
@@ -104,7 +104,7 @@ describe("UserReportService", () => {
         it("should throw an error if reporting user is not found", async () => {
             const reportingUserId = "1";
             const createUserReportDto: CreateUserReportDTO = {
-                reportedUserId: "2",
+                reportedEncounter: "2",
                 incidentDescription: "Test incident",
                 keepReporterInTheLoop: true,
                 incidentType: EIncidentType.SexualHarassment,
@@ -120,7 +120,7 @@ describe("UserReportService", () => {
         it("should throw an error if reported user is not found", async () => {
             const reportingUserId = "1";
             const createUserReportDto: CreateUserReportDTO = {
-                reportedUserId: "2",
+                reportedEncounter: "2",
                 incidentDescription: "Test incident",
                 keepReporterInTheLoop: true,
                 incidentType: EIncidentType.SexualHarassment,
