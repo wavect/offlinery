@@ -1,5 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
+import Constants from "expo-constants";
+import { isExpoGoEnvironment } from "../../../utils/misc.utils";
+
 /**
  * Offlinery
  * API of Offlinery
@@ -12,13 +15,13 @@
  * Do not edit the class manually.
  */
 
-export const BASE_PATH = "http://localhost:3000/v1".replace(/\/+$/, "");
-//
-// export const BASE_PATH = (
-//     (isExpoGoEnvironment
-//         ? `http://${Constants.expoConfig?.hostUri?.split(":").shift()?.concat(":3000")}`
-//         : "https://offlinery.onrender.com") + "/v1"
-// ).replace(/\/+$/, "");
+// export const BASE_PATH = "http://localhost:3000/v1".replace(/\/+$/, "");
+
+export const BASE_PATH = (
+    (isExpoGoEnvironment
+        ? `http://${Constants.expoConfig?.hostUri?.split(":").shift()?.concat(":3000")}`
+        : "https://offlinery.onrender.com") + "/v1"
+).replace(/\/+$/, "");
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path
