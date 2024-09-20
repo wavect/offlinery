@@ -116,6 +116,7 @@ export const en = {
     changePassword: "Change password",
     save: "Save",
     updating: "Updating..",
+    oldPasswordInvalid: "Old password invalid",
     enterOldPassword: "Enter old password",
     currentPassword: "Current password",
     enterPassword: "Enter password",

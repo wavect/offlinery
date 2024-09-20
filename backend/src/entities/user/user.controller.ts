@@ -121,9 +121,9 @@ export class UserController {
     @UsePipes(new ValidationPipe({ transform: true }))
     async updateUserPassword(
         @Param(USER_ID_PARAM) userId: string,
-        @Body("changePwd", new ParseJsonPipe(UpdateUserDTO))
-        changePwdDTO: UpdateUserPasswordDTO,
+        @Body() changePwdDTO: UpdateUserPasswordDTO,
     ): Promise<UserPublicDTO> {
+        this.logger.debug(`User ${userId} tries to change password.`);
         return (
             await this.userService.updateUserPassword(userId, changePwdDTO)
         ).convertToPublicDTO();
