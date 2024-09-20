@@ -13,6 +13,10 @@
         },
         "ios": {
             "supportsTablet": true,
+            "config": {
+                "googleMapsApiKey": "AIzaSyCvQCDDpKQW-DlxC44t8edMgC52HvTl4LM",
+                "usesNonExemptEncryption": false
+            },
             "infoPlist": {
                 "UIBackgroundModes": ["location"],
                 "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open to show you interesting people nearby.",
@@ -22,7 +26,12 @@
             "bundleIdentifier": "io.wavect.offlinery"
         },
         "android": {
-            "versionCode": 2,
+            "versionCode": 3,
+            "config": {
+                "googleMaps": {
+                    "apiKey": "AIzaSyCvQCDDpKQW-DlxC44t8edMgC52HvTl4LM"
+                }
+            },
             "permissions": [
                 "android.permission.CAMERA",
                 "android.permission.READ_MEDIA_IMAGES",
