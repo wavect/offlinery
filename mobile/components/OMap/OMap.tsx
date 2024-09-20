@@ -27,7 +27,7 @@ import React, {
     useRef,
     useState,
 } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 import MapView, {
     Circle,
     LongPressEvent,
@@ -61,7 +61,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
     const [locationsFromOthers, setLocationsFromOthers] = useState<
         WeightedLatLngDTO[]
     >([]);
-    const [draggedRegion, setDraggedRegion] = useState<MapRegion | null>(null);
+    const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
     const mapRef = useRef<MapView | null>(null);
     const prevBlacklistedRegionsRef = useRef<MapRegion[]>([]);
     const [mapRegion, setMapRegion] = useState<Region>({
@@ -148,9 +148,8 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
             const { latitude, longitude } = coordinate;
             setBlacklistedRegions([
                 ...state.blacklistedRegions,
-                { latitude, longitude, radius: 100 },
+                { latitude, longitude, radius: 1000 },
             ]);
-            setActiveRegionIndex(state.blacklistedRegions.length);
         },
         [state.blacklistedRegions, setBlacklistedRegions],
     );
@@ -170,37 +169,29 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         [state.blacklistedRegions, setBlacklistedRegions],
     );
 
-    const handleRegionDragStart = useCallback(
-        (index: number) => {
-            setDraggedRegion(state.blacklistedRegions[index]);
-        },
-        [state.blacklistedRegions],
-    );
+    const handleRegionDragStart = useCallback((index: number) => {
+        setDraggingIndex(index);
+    }, []);
 
     const handleRegionDrag = useCallback(
         (event: MarkerDragEvent) => {
-            if (draggedRegion) {
+            if (draggingIndex !== null) {
                 const { latitude, longitude } = event.nativeEvent.coordinate;
-                setDraggedRegion({ ...draggedRegion, latitude, longitude });
+                const newRegions = state.blacklistedRegions.map(
+                    (region, index) =>
+                        index === draggingIndex
+                            ? { ...region, latitude, longitude }
+                            : region,
+                );
+                setBlacklistedRegions(newRegions);
             }
         },
-        [draggedRegion],
+        [draggingIndex, state.blacklistedRegions, setBlacklistedRegions],
     );
 
     const handleRegionDragEnd = useCallback(() => {
-        if (draggedRegion && activeRegionIndex !== null) {
-            const newRegions = state.blacklistedRegions.map((region, i) =>
-                i === activeRegionIndex ? draggedRegion : region,
-            );
-            setBlacklistedRegions(newRegions);
-            setDraggedRegion(null);
-        }
-    }, [
-        draggedRegion,
-        activeRegionIndex,
-        state.blacklistedRegions,
-        setBlacklistedRegions,
-    ]);
+        setDraggingIndex(null);
+    }, []);
 
     const handleRadiusChange = useCallback(
         (value: number) => {
@@ -246,6 +237,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                         // Update the ref after successful update
                         prevBlacklistedRegionsRef.current = currentRegions;
                     } catch (error) {
+                        // TODO We might want to show an error somehow, maybe we just throw the error for the global error handler for now
                         console.error(
                             "Error updating blacklisted regions:",
                             error,
@@ -258,115 +250,122 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         }
     }, [state.blacklistedRegions, state.id]);
 
-    return (
-        <View style={styles.container}>
-            <MapView
-                ref={mapRef}
-                style={styles.map}
-                region={mapRegion}
-                initialRegion={mapRegion}
-                showsMyLocationButton={true}
-                showsUserLocation={true}
-                zoomControlEnabled={true}
-                zoomEnabled={true}
-                zoomTapEnabled={true}
-                maxZoomLevel={13}
-                onLongPress={
-                    showBlacklistedRegions ? handleMapLongPress : undefined
-                }
-                provider={getMapProvider()}
-            >
-                {showHeatmap && locationsFromOthers && (
-                    <OHeatMap locations={locationsFromOthers} />
-                )}
+    const handleMapPress = useCallback(
+        (event: any) => {
+            if (activeRegionIndex !== null) {
+                setActiveRegionIndex(null);
+            }
+        },
+        [activeRegionIndex],
+    );
 
-                {showBlacklistedRegions &&
-                    state.blacklistedRegions.map((region, index) => (
-                        <React.Fragment key={`region-${index}`}>
-                            <Circle
-                                center={
-                                    draggedRegion && index === activeRegionIndex
-                                        ? draggedRegion
-                                        : region
-                                }
-                                radius={region.radius}
-                                fillColor={
-                                    index === activeRegionIndex
-                                        ? "rgba(255, 0, 0, 0.4)"
-                                        : "rgba(255, 0, 0, 0.2)"
-                                }
-                                strokeColor={
-                                    index === activeRegionIndex
-                                        ? "rgba(255, 0, 0, 0.8)"
-                                        : "rgba(255, 0, 0, 0.5)"
-                                }
-                            />
-                            <Marker
-                                coordinate={
-                                    draggedRegion && index === activeRegionIndex
-                                        ? draggedRegion
-                                        : region
-                                }
-                                title={i18n.t(TR.youAreUndercover)}
-                                description={i18n.t(TR.nobodyWillSeeYou)}
-                                draggable={true}
-                                onDragStart={() => handleRegionDragStart(index)}
-                                onDrag={handleRegionDrag}
-                                onDragEnd={handleRegionDragEnd}
-                                onPress={() => handleRegionPress(index)}
-                                tracksViewChanges={false}
-                            />
-                        </React.Fragment>
-                    ))}
-                {location && (
-                    <Marker
-                        title={i18n.t(TR.myLocation)}
-                        description={i18n.t(TR.youAreHere)}
-                        pinColor="blue"
-                        coordinate={location.coords}
-                        tracksViewChanges={false}
+    return (
+        <TouchableWithoutFeedback onPress={handleMapPress}>
+            <View style={styles.container}>
+                <MapView
+                    ref={mapRef}
+                    style={styles.map}
+                    region={mapRegion}
+                    initialRegion={mapRegion}
+                    showsMyLocationButton={true}
+                    showsUserLocation={true}
+                    zoomControlEnabled={true}
+                    zoomEnabled={true}
+                    zoomTapEnabled={true}
+                    maxZoomLevel={13}
+                    onPress={handleMapPress}
+                    onLongPress={
+                        showBlacklistedRegions ? handleMapLongPress : undefined
+                    }
+                    provider={getMapProvider()}
+                >
+                    {showHeatmap && locationsFromOthers && (
+                        <OHeatMap locations={locationsFromOthers} />
+                    )}
+
+                    {showBlacklistedRegions &&
+                        state.blacklistedRegions.map((region, index) => (
+                            <React.Fragment key={`region-${index}`}>
+                                <Circle
+                                    center={region}
+                                    radius={region.radius}
+                                    fillColor={
+                                        index === activeRegionIndex
+                                            ? "rgba(255, 0, 0, 0.4)"
+                                            : "rgba(255, 0, 0, 0.2)"
+                                    }
+                                    strokeColor={
+                                        index === activeRegionIndex
+                                            ? "rgba(255, 0, 0, 0.8)"
+                                            : "rgba(255, 0, 0, 0.5)"
+                                    }
+                                />
+                                <Marker
+                                    coordinate={region}
+                                    title={i18n.t(TR.youAreUndercover)}
+                                    description={i18n.t(TR.nobodyWillSeeYou)}
+                                    draggable={true}
+                                    onDragStart={() =>
+                                        handleRegionDragStart(index)
+                                    }
+                                    onDrag={handleRegionDrag}
+                                    onDragEnd={handleRegionDragEnd}
+                                    onPress={() => handleRegionPress(index)}
+                                    tracksViewChanges={false}
+                                />
+                            </React.Fragment>
+                        ))}
+                    {location && (
+                        <Marker
+                            title={i18n.t(TR.myLocation)}
+                            description={i18n.t(TR.youAreHere)}
+                            pinColor="blue"
+                            coordinate={location.coords}
+                            tracksViewChanges={false}
+                        />
+                    )}
+                </MapView>
+                {showBlacklistedRegions && activeRegionIndex !== null && (
+                    <OFloatingActionButton
+                        size="xs"
+                        style={styles.fab}
+                        icon="delete-outline"
+                        action={() => handleRemoveRegion(activeRegionIndex)}
+                        color={Color.red}
                     />
                 )}
-            </MapView>
-            {showBlacklistedRegions && activeRegionIndex !== null && (
-                <OFloatingActionButton
-                    size="xs"
-                    style={styles.fab}
-                    icon="delete-outline"
-                    action={() => handleRemoveRegion(activeRegionIndex)}
-                    color={Color.red}
-                    position="relative"
-                />
-            )}
-            {showBlacklistedRegions && (
-                <View style={styles.instructions}>
-                    <Text style={[Subtitle, styles.instructionText]}>
-                        {i18n.t(TR.longPressMapSafeZoneInstruction)}
-                    </Text>
-                </View>
-            )}
-            {showBlacklistedRegions && activeRegionIndex !== null && (
-                <View style={styles.sliderContainer}>
-                    <Text style={[Subtitle, styles.sliderText]}>
-                        {i18n.t(TR.adjustRegionRadius)} (
-                        {Math.round(
-                            state.blacklistedRegions[activeRegionIndex]?.radius,
-                        )}
-                        m)
-                    </Text>
-                    <Slider
-                        style={styles.slider}
-                        minimumValue={100}
-                        maximumValue={2000}
-                        step={10}
-                        value={
-                            state.blacklistedRegions[activeRegionIndex]?.radius
-                        }
-                        onValueChange={handleRadiusChange}
-                    />
-                </View>
-            )}
-        </View>
+                {showBlacklistedRegions && (
+                    <View style={styles.instructions}>
+                        <Text style={[Subtitle, styles.instructionText]}>
+                            {i18n.t(TR.longPressMapSafeZoneInstruction)}
+                        </Text>
+                    </View>
+                )}
+                {showBlacklistedRegions && activeRegionIndex !== null && (
+                    <View style={styles.sliderContainer}>
+                        <Text style={[Subtitle, styles.sliderText]}>
+                            {i18n.t(TR.adjustRegionRadius)} (
+                            {Math.round(
+                                state.blacklistedRegions[activeRegionIndex]
+                                    ?.radius,
+                            )}
+                            m)
+                        </Text>
+                        <Slider
+                            style={styles.slider}
+                            minimumValue={100}
+                            maximumValue={2000}
+                            step={10}
+                            value={
+                                state.blacklistedRegions[activeRegionIndex]
+                                    ?.radius
+                            }
+                            onValueChange={handleRadiusChange}
+                        />
+                    </View>
+                )}
+            </View>
+        </TouchableWithoutFeedback>
     );
 });
 
