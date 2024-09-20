@@ -30,5 +30,5 @@ export class CreateUserReportDTO {
         description: "The ID of the user being reported",
     })
     @IsString()
-    reportedUserId: string;
+    encounterId: string;
 }

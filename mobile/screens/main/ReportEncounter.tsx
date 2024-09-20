@@ -15,6 +15,7 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
+import { includeJWT } from "@/utils/misc.utils";
 import * as React from "react";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
@@ -68,10 +69,13 @@ const ReportEncounter = ({
                 reportedUserId: personToReport.encounterId,
             };
 
-            await reportApi.userReportControllerCreate({
-                userId: state.id!,
-                createUserReportDTO,
-            });
+            await reportApi.userReportControllerCreate(
+                {
+                    userId: state.id!,
+                    createUserReportDTO,
+                },
+                await includeJWT(),
+            );
 
             dispatch({
                 type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,
