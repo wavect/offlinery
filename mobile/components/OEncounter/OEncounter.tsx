@@ -19,6 +19,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { formatDate } from "@/utils/date.utils";
+import { includeJWT } from "@/utils/misc.utils";
 import * as React from "react";
 import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
@@ -60,10 +61,13 @@ const OEncounter = (props: ISingleEncounterProps) => {
             status: item.value,
         };
 
-        await encounterApi.encounterControllerUpdateStatus({
-            updateEncounterStatusDTO,
-            userId: state.id!,
-        });
+        await encounterApi.encounterControllerUpdateStatus(
+            {
+                updateEncounterStatusDTO,
+                userId: state.id!,
+            },
+            await includeJWT(),
+        );
 
         dispatch({
             type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,

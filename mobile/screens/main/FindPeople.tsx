@@ -23,7 +23,7 @@ const FindPeople = (
             <OMap
                 ref={oMapRef}
                 saveChangesToBackend={true}
-                enableHeatmapIfAvailable={true}
+                showHeatmap={true}
                 showBlacklistedRegions={true}
             />
         </OPageContainer>
