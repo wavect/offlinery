@@ -21,7 +21,7 @@ interface IOMessageModalProps {
     userId: string;
     encounterId: string;
     visible: boolean;
-    onClose: (e: any) => void;
+    onClose: (e?: any) => void;
 }
 
 const encounterApi = new EncounterApi();
@@ -29,20 +29,29 @@ const OMessageModal = (props: IOMessageModalProps) => {
     const { state } = useUserContext();
     const { visible, onClose, encounterId, userId } = props;
     const [message, setMessage] = useState("");
+    const [messageError, setMessageError] = useState<boolean>(false);
 
     const handleSend = async () => {
         const pushMessageDTO: PushMessageDTO = {
             content: message,
             encounterId: encounterId,
         };
-        await encounterApi.encounterControllerPushMessage(
-            {
-                userId,
-                pushMessageDTO,
-            },
-            await includeJWT(),
-        );
-        setMessage("");
+        try {
+            await encounterApi.encounterControllerPushMessage(
+                {
+                    userId,
+                    pushMessageDTO,
+                },
+                await includeJWT(),
+            );
+            // only close, if message was successful, otherwise let user re-send or close it
+            onClose();
+            setMessageError(false);
+        } catch (e) {
+            console.log("Unable to send dm: ", e);
+            setMessageError(true);
+            setMessage("");
+        }
     };
 
     return (
@@ -70,6 +79,11 @@ const OMessageModal = (props: IOMessageModalProps) => {
                         placeholder={i18n.t(TR.enterMessage)}
                         multiline
                     />
+                    {messageError && (
+                        <Text style={styles.modalError}>
+                            {i18n.t(TR.messageUnableToSend)}
+                        </Text>
+                    )}
                     <OButtonSmall
                         label={i18n.t(TR.sendMessage)}
                         variant={IOButtonSmallVariant.Black}
@@ -156,6 +170,14 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.montserratRegular,
         textAlign: "center",
         color: Color.gray,
+    },
+    modalError: {
+        marginTop: 15,
+        fontSize: FontSize.size_sm,
+        fontFamily: FontFamily.montserratRegular,
+        textAlign: "center",
+        color: Color.redDark,
+        marginBottom: 10,
     },
 });
 
