@@ -1,8 +1,7 @@
 import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
 import { CreateUserReportDTO } from "@/DTOs/create-user-report.dto";
 import { Body, Controller, Param, Post } from "@nestjs/common";
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { UserReport } from "./user-report.entity";
+import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { UserReportService } from "./user-report.service";
 
 @ApiTags("user-reports")
@@ -21,15 +20,10 @@ export class UserReportController {
         description: "Reporting User ID",
     })
     @ApiOperation({ summary: "Create a new user report" })
-    @ApiResponse({
-        status: 201,
-        description: "The report has been successfully created.",
-        type: UserReport,
-    })
     async create(
         @Param(USER_ID_PARAM) reportingUserId: string,
         @Body() createUserReportDTO: CreateUserReportDTO,
-    ): Promise<UserReport> {
+    ): Promise<boolean> {
         return this.userReportService.create(
             reportingUserId,
             createUserReportDTO,
