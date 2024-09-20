@@ -21,7 +21,7 @@ interface IOMessageModalProps {
     userId: string;
     encounterId: string;
     visible: boolean;
-    onClose: (e: any) => void;
+    onClose: (e?: any) => void;
 }
 
 const encounterApi = new EncounterApi();
@@ -35,14 +35,20 @@ const OMessageModal = (props: IOMessageModalProps) => {
             content: message,
             encounterId: encounterId,
         };
-        await encounterApi.encounterControllerPushMessage(
-            {
-                userId,
-                pushMessageDTO,
-            },
-            await includeJWT(),
-        );
-        setMessage("");
+        try {
+            await encounterApi.encounterControllerPushMessage(
+                {
+                    userId,
+                    pushMessageDTO,
+                },
+                await includeJWT(),
+            );
+        } catch (e) {
+            console.log("Unable to send dm: ", e);
+        } finally {
+            onClose();
+            setMessage("");
+        }
     };
 
     return (
