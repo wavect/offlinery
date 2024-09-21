@@ -32,7 +32,7 @@ import MapView, {
     Circle,
     LongPressEvent,
     Marker,
-    MarkerDragEvent,
+    MarkerDragStartEndEvent,
     Region,
 } from "react-native-maps";
 
@@ -173,8 +173,8 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         setDraggingIndex(index);
     }, []);
 
-    const handleRegionDrag = useCallback(
-        (event: MarkerDragEvent) => {
+    const handleRegionDragEnd = useCallback(
+        (event: MarkerDragStartEndEvent) => {
             if (draggingIndex !== null) {
                 const { latitude, longitude } = event.nativeEvent.coordinate;
                 const newRegions = state.blacklistedRegions.map(
@@ -185,13 +185,10 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                 );
                 setBlacklistedRegions(newRegions);
             }
+            setDraggingIndex(null);
         },
         [draggingIndex, state.blacklistedRegions, setBlacklistedRegions],
     );
-
-    const handleRegionDragEnd = useCallback(() => {
-        setDraggingIndex(null);
-    }, []);
 
     const handleRadiusChange = useCallback(
         (value: number) => {
@@ -242,6 +239,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                             "Error updating blacklisted regions:",
                             error,
                         );
+                        throw error;
                     }
                 }, 1000);
 
@@ -308,7 +306,6 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                                     onDragStart={() =>
                                         handleRegionDragStart(index)
                                     }
-                                    onDrag={handleRegionDrag}
                                     onDragEnd={handleRegionDragEnd}
                                     onPress={() => handleRegionPress(index)}
                                     tracksViewChanges={false}
