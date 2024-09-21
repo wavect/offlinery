@@ -1,6 +1,7 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
-import { UserApi, UserVerificationStatusEnum } from "@/api/gen/src";
+import { UserApi } from "@/api/gen/src";
+import { UserVerificationStatusEnum } from "@/api/gen/src/models/User";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { useUserContext } from "@/context/UserContext";

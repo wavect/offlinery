@@ -1,11 +1,9 @@
 import { Color } from "@/GlobalStyles";
+import { LocationUpdateDTO, UpdateUserDTO, UserApi } from "@/api/gen/src";
 import {
-    LocationUpdateDTO,
-    UpdateUserDTO,
-    UserApi,
     UserApproachChoiceEnum,
     UserDateModeEnum,
-} from "@/api/gen/src";
+} from "@/api/gen/src/models/User";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import {

@@ -1,11 +1,10 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
+import { UserApi, UserControllerUpdateUserRequest } from "@/api/gen/src";
 import {
-    UserApi,
     UserApproachChoiceEnum,
-    UserControllerUpdateUserRequest,
     UserGenderEnum,
-} from "@/api/gen/src";
+} from "@/api/gen/src/models/User";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import {
     EDateTimeFormatters,

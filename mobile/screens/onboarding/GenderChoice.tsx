@@ -1,6 +1,6 @@
 import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
-import { UserGenderEnum } from "@/api/gen/src";
+import { UserGenderEnum } from "@/api/gen/src/models/User";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";

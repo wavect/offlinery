@@ -61,7 +61,7 @@ export class UserController {
     @ApiOperation({ summary: "Create a new user with images" })
     @UsePipes(new ValidationPipe({ transform: true }))
     async createUser(
-        @Body("user", new ParseJsonPipe(CreateUserDTO))
+        @Body("createUserDto", new ParseJsonPipe(CreateUserDTO))
         createUserDto: CreateUserDTO,
         @UploadedFiles(
             new CustomParseFilePipe({
@@ -91,7 +91,7 @@ export class UserController {
     @UsePipes(new ValidationPipe({ transform: true }))
     async updateUser(
         @Param(USER_ID_PARAM) userId: string,
-        @Body("user", new ParseJsonPipe(UpdateUserDTO))
+        @Body("updateUserDto", new ParseJsonPipe(UpdateUserDTO))
         updateUserDto: UpdateUserDTO,
         @UploadedFiles(
             new CustomParseFilePipe({
@@ -107,6 +107,7 @@ export class UserController {
         )
         images?: Express.Multer.File[],
     ): Promise<UserPublicDTO> {
+        this.logger.debug(`User ${userId} tries to update his own data.`);
         return (
             await this.userService.updateUser(userId, updateUserDto, images)
         ).convertToPublicDTO();

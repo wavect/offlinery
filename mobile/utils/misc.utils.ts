@@ -1,8 +1,5 @@
-import {
-    AuthApi,
-    SignInResponseDTO,
-    UserPreferredLanguageEnum,
-} from "@/api/gen/src";
+import { AuthApi, SignInResponseDTO } from "@/api/gen/src";
+import { UserPreferredLanguageEnum } from "@/api/gen/src/models/User";
 import { i18n } from "@/localization/translate.service";
 import {
     SECURE_VALUE,

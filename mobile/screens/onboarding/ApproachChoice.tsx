@@ -3,7 +3,7 @@ import { MainStackParamList } from "@/MainStack.navigator";
 import {
     UserApproachChoiceEnum,
     UserVerificationStatusEnum,
-} from "@/api/gen/src";
+} from "@/api/gen/src/models/User";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";

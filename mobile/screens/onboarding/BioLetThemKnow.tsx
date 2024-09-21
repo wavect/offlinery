@@ -1,6 +1,6 @@
 import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
-import { UserApproachChoiceEnum } from "@/api/gen/src";
+import { UserApproachChoiceEnum } from "@/api/gen/src/models/User";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";

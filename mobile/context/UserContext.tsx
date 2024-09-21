@@ -3,13 +3,15 @@ import {
     BlacklistedRegionDTOLocationTypeEnum,
     CreateUserDTO,
     UserApi,
-    UserApproachChoiceEnum,
     UserControllerCreateUserRequest,
+    UserPublicDTO,
+} from "@/api/gen/src";
+import {
+    UserApproachChoiceEnum,
     UserDateModeEnum,
     UserGenderEnum,
-    UserPublicDTO,
     UserVerificationStatusEnum,
-} from "@/api/gen/src";
+} from "@/api/gen/src/models/User";
 import { refreshUserData } from "@/services/auth.service";
 import {
     SECURE_VALUE,

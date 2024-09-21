@@ -1,4 +1,4 @@
-import { UserPreferredLanguageEnum } from "@/api/gen/src";
+import { UserPreferredLanguageEnum } from "@/api/gen/src/models/User";
 import { getLocales } from "expo-localization";
 import { I18n } from "i18n-js";
 import { de } from "./de";
