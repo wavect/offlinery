@@ -39,6 +39,7 @@ const Welcome = ({
                 console.log("No JWT or JWT_RT found, force re-login");
                 return false;
             }
+            let signInRes: SignInResponseDTO;
 
             if (jwtExpiresSoon(storedAccessToken!)) {
                 console.log(
@@ -46,43 +47,31 @@ const Welcome = ({
                 );
 
                 /**@DEV fix generator type bug */
-                const refreshResponse: SignInResponseDTO =
-                    (await authApi.authControllerRefreshJwtToken({
-                        refreshJwtDTO: {
-                            refreshToken: storedRefreshToken!,
-                        },
-                    })) as SignInResponseDTO;
+                signInRes = (await authApi.authControllerRefreshJwtToken({
+                    refreshJwtDTO: {
+                        refreshToken: storedRefreshToken!,
+                    },
+                })) as SignInResponseDTO;
 
-                console.log("refresh token received: ", refreshResponse);
-
-                saveValueLocallySecurely(
-                    SECURE_VALUE.JWT_ACCESS_TOKEN,
-                    refreshResponse.accessToken,
-                );
-                saveValueLocallySecurely(
-                    SECURE_VALUE.JWT_REFRESH_TOKEN,
-                    refreshResponse.refreshToken,
-                );
                 console.log("Tokens refreshed.");
             } else {
                 // user has a valid access token
                 console.log("JWT found, authenticating via JWT.");
-                const signInRes = await authApi.authControllerSignInByJWT({
+                signInRes = await authApi.authControllerSignInByJWT({
                     signInJwtDTO: {
                         jwtAccessToken: storedAccessToken!,
                     },
                 });
-
-                if (signInRes.accessToken) {
-                    console.log("JWT authentication succeeded.");
-                    userAuthenticatedUpdate(
-                        dispatch,
-                        navigation,
-                        signInRes.user,
-                        signInRes.accessToken,
-                        signInRes.refreshToken,
-                    );
-                }
+            }
+            if (signInRes.accessToken) {
+                console.log("JWT authentication succeeded.");
+                userAuthenticatedUpdate(
+                    dispatch,
+                    navigation,
+                    signInRes.user,
+                    signInRes.accessToken,
+                    signInRes.refreshToken,
+                );
             }
         } catch (e) {
             saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
@@ -96,14 +85,11 @@ const Welcome = ({
         useCallback(() => {
             const checkAuthentication = async () => {
                 try {
-                    const isAuthenticatedUser = await checkAuthStatus();
-                    if (isAuthenticatedUser) {
-                        navigation.replace(ROUTES.MainTabView);
-                    } else {
-                        setIsLoading(false);
-                    }
+                    await checkAuthStatus();
                 } catch (error) {
                     console.error("Error checking authentication:", error);
+                    throw error;
+                } finally {
                     setIsLoading(false);
                 }
             };

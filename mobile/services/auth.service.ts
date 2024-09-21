@@ -60,9 +60,9 @@ export const userAuthenticatedUpdate = (
     if (
         user.verificationStatus === UserPrivateDTOVerificationStatusEnum.pending
     ) {
-        navigation.navigate(ROUTES.Onboarding.WaitingVerification);
+        navigation.replace(ROUTES.Onboarding.WaitingVerification);
     } else {
-        navigation.navigate(ROUTES.MainTabView);
+        navigation.replace(ROUTES.MainTabView);
     }
 };
 
