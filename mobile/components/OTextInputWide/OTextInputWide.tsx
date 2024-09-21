@@ -12,24 +12,26 @@ import {
 } from "react-native";
 import { TextInputProps } from "react-native/Libraries/Components/TextInput/TextInput";
 
-interface IOTextInputWideProps extends TextInputProps {
+interface IOTextInputWideProps extends Omit<TextInputProps, "secureTextEntry"> {
     containerStyle?: StyleProp<ViewStyle>;
     topLabel?: string;
     bottomLabel?: string;
     isBottomLabelError?: boolean;
+    isSensitiveInformation?: boolean;
 }
 
 export const OTextInputWide = (props: IOTextInputWideProps) => {
     const {
-        secureTextEntry,
+        isSensitiveInformation,
         isBottomLabelError,
         containerStyle,
         topLabel,
         bottomLabel,
     } = props;
 
-    const [isSecureTextVisible, setIsSecureTextVisible] =
-        useState(!secureTextEntry);
+    const [isSecureTextVisible, setIsSecureTextVisible] = useState(
+        !isSensitiveInformation,
+    );
 
     const toggleSecureEntry = () => {
         setIsSecureTextVisible(!isSecureTextVisible);
@@ -41,11 +43,13 @@ export const OTextInputWide = (props: IOTextInputWideProps) => {
             <View style={[styles.inputContainer, containerStyle]}>
                 <TextInput
                     style={styles.input}
-                    secureTextEntry={secureTextEntry && !isSecureTextVisible}
+                    secureTextEntry={
+                        isSensitiveInformation && !isSecureTextVisible
+                    }
                     placeholderTextColor={Color.white}
                     {...props}
                 />
-                {secureTextEntry && (
+                {isSensitiveInformation && (
                     <TouchableOpacity
                         onPress={toggleSecureEntry}
                         style={styles.eyeIcon}

@@ -81,7 +81,6 @@ const Login = ({
                 autoComplete="email"
                 keyboardType="email-address"
                 autoCorrect={false}
-                autoFocus={true}
                 inputMode="email"
                 isBottomLabelError={true}
                 bottomLabel={
@@ -105,7 +104,7 @@ const Login = ({
                 keyboardType="default"
                 onChangeText={setClearPassword}
                 placeholder={i18n.t(TR.yourPassword)}
-                secureTextEntry={true}
+                isSensitiveInformation={true}
                 topLabel={i18n.t(TR.password)}
                 containerStyle={styles.textInputContainer}
             />
