@@ -1,6 +1,6 @@
+import { CustomParseFilePipe } from "@/pipes/custom-parse-file.pipe";
 import { BadRequestException, HttpStatus } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
-import { CustomParseFilePipe } from "../../../src/pipes/CustomParseFile.pipe";
 
 describe("CustomParseFilePipe", () => {
     let pipe: CustomParseFilePipe;

@@ -222,7 +222,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                         await userApi.userControllerUpdateUser(
                             {
                                 userId: state.id!,
-                                user: {
+                                updateUserDTO: {
                                     blacklistedRegions: currentRegions.map(
                                         (r) =>
                                             mapRegionToBlacklistedRegionDTO(r),

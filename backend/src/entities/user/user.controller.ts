@@ -10,8 +10,8 @@ import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
 import { UserPrivateDTO } from "@/DTOs/user-private.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
-import { CustomParseFilePipe } from "@/pipes/CustomParseFile.pipe";
-import { ParseJsonPipe } from "@/pipes/ParseJson.pipe";
+import { CustomParseFilePipe } from "@/pipes/custom-parse-file.pipe";
+import { ParseValidateJsonPipe } from "@/pipes/parse-validate-json.pipe";
 import {
     Body,
     Controller,
@@ -61,8 +61,9 @@ export class UserController {
     @ApiOperation({ summary: "Create a new user with images" })
     @UsePipes(new ValidationPipe({ transform: true }))
     async createUser(
-        @Body("createUserDto", new ParseJsonPipe(CreateUserDTO))
-        createUserDto: CreateUserDTO,
+        /** @dev In Multipart requests, the Body needs to be separately parsed based on the property name in the RequestDTO! */
+        @Body("createUserDTO", new ParseValidateJsonPipe(CreateUserDTO))
+        createUserDTO: CreateUserDTO,
         @UploadedFiles(
             new CustomParseFilePipe({
                 validators: [
@@ -76,7 +77,7 @@ export class UserController {
         )
         images: Express.Multer.File[],
     ): Promise<SignInResponseDTO> {
-        return await this.userService.createUser(createUserDto, images);
+        return await this.userService.createUser(createUserDTO, images);
     }
 
     @Put(`:${USER_ID_PARAM}`)
@@ -91,8 +92,9 @@ export class UserController {
     @UsePipes(new ValidationPipe({ transform: true }))
     async updateUser(
         @Param(USER_ID_PARAM) userId: string,
-        @Body("updateUserDto", new ParseJsonPipe(UpdateUserDTO))
-        updateUserDto: UpdateUserDTO,
+        /** @dev In Multipart requests, the Body needs to be separately parsed based on the property name in the RequestDTO! */
+        @Body("updateUserDTO", new ParseValidateJsonPipe(UpdateUserDTO))
+        updateUserDTO: UpdateUserDTO,
         @UploadedFiles(
             new CustomParseFilePipe({
                 validators: [
@@ -107,9 +109,12 @@ export class UserController {
         )
         images?: Express.Multer.File[],
     ): Promise<UserPublicDTO> {
-        this.logger.debug(`User ${userId} tries to update his own data.`);
+        this.logger.debug(
+            `User ${userId} tries to update his own data.`,
+            JSON.stringify(updateUserDTO),
+        );
         return (
-            await this.userService.updateUser(userId, updateUserDto, images)
+            await this.userService.updateUser(userId, updateUserDTO, images)
         ).convertToPublicDTO();
     }
 
@@ -162,6 +167,7 @@ export class UserController {
         type: UserPublicDTO,
     })
     @ApiResponse({ status: 404, description: "User not found." })
+    @UsePipes(new ValidationPipe({ transform: true }))
     async updateLocation(
         @Param(USER_ID_PARAM) userId: string,
         @Body() locationUpdateDTO: LocationUpdateDTO,

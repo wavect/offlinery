@@ -1,6 +1,6 @@
 import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
-import { UserApproachChoiceEnum } from "@/api/gen/src/models/User";
+import { UserPrivateDTOApproachChoiceEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
@@ -50,7 +50,7 @@ const BioLetThemKnow = ({
     };
 
     const needsToCompleteOtherFlowToo =
-        state.approachChoice === UserApproachChoiceEnum.both;
+        state.approachChoice === UserPrivateDTOApproachChoiceEnum.both;
 
     // @dev ApproachChoice.BOTH, also other approaching flow needs to be done
     const continueToOtherFlow = () => {

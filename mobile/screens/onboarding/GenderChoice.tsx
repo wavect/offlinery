@@ -1,6 +1,6 @@
 import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
-import { UserGenderEnum } from "@/api/gen/src/models/User";
+import { UserPrivateDTOGenderEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
@@ -18,7 +18,7 @@ const GenderChoice = ({
 >) => {
     const { dispatch } = useUserContext();
 
-    const setGender = (gender: UserGenderEnum) => {
+    const setGender = (gender: UserPrivateDTOGenderEnum) => {
         dispatch({ type: EACTION_USER.UPDATE_MULTIPLE, payload: { gender } });
         navigation.navigate(ROUTES.Onboarding.GenderLookingFor);
     };

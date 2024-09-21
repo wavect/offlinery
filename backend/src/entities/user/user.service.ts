@@ -179,7 +179,9 @@ export class UserService {
         if (updateUserDto.blacklistedRegions) {
             // Remove old blacklisted regions
             if (user.blacklistedRegions) {
-                console.log("blacklisted: ", user.blacklistedRegions);
+                this.logger.debug(
+                    `Updating ${user.blacklistedRegions.length} blacklisted regions for user ${user.id}`,
+                );
                 const blacklistedRegions =
                     await this.blacklistedRegionRepository.findBy(
                         user.blacklistedRegions.map((region) => ({

@@ -1,20 +1,21 @@
-import { UserPreferredLanguageEnum } from "@/api/gen/src/models/User";
+import { CreateUserDTOPreferredLanguageEnum } from "@/api/gen/src";
 import { getLocales } from "expo-localization";
 import { I18n } from "i18n-js";
 import { de } from "./de";
 import { en } from "./en";
 
 /** @dev Use via i18n.t(ILanguage.KEY) */
-const languages: Record<UserPreferredLanguageEnum, Language> = {
+const languages: Record<CreateUserDTOPreferredLanguageEnum, Language> = {
     en,
     de,
 };
 export const i18n = new I18n(languages);
 
 // Set the locale once at the beginning of your app.
-i18n.locale = getLocales()[0].languageCode ?? UserPreferredLanguageEnum.en;
+i18n.locale =
+    getLocales()[0].languageCode ?? CreateUserDTOPreferredLanguageEnum.en;
 i18n.enableFallback = true;
-i18n.defaultLocale = UserPreferredLanguageEnum.en;
+i18n.defaultLocale = CreateUserDTOPreferredLanguageEnum.en;
 
 /** @dev Base typing for languages, to ensure all keys have been defined */
 export type Language = typeof en;

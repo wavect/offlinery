@@ -9,10 +9,10 @@ import { ClassConstructor } from "class-transformer/types/interfaces";
 import { validate } from "class-validator";
 
 @Injectable()
-export class ParseJsonPipe<T extends object>
+export class ParseValidateJsonPipe<T extends object>
     implements PipeTransform<any, Promise<T>>
 {
-    private readonly logger = new Logger(ParseJsonPipe.name);
+    private readonly logger = new Logger(ParseValidateJsonPipe.name);
 
     constructor(private readonly classType: ClassConstructor<T>) {}
 
