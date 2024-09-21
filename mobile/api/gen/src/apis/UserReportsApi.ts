@@ -12,8 +12,8 @@
  * Do not edit the class manually.
  */
 
-import type { CreateUserReportDTO, UserReport } from "../models/index";
-import { CreateUserReportDTOToJSON, UserReportFromJSON } from "../models/index";
+import type { CreateUserReportDTO } from "../models/index";
+import { CreateUserReportDTOToJSON } from "../models/index";
 import * as runtime from "../runtime";
 
 // We import this type even if it's unused to avoid additional
@@ -43,7 +43,7 @@ export interface UserReportsApiInterface {
     userReportControllerCreateRaw(
         requestParameters: UserReportControllerCreateRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<UserReport>>;
+    ): Promise<runtime.ApiResponse<boolean>>;
 
     /**
      * Create a new user report
@@ -51,7 +51,7 @@ export interface UserReportsApiInterface {
     userReportControllerCreate(
         requestParameters: UserReportControllerCreateRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<UserReport>;
+    ): Promise<boolean>;
 }
 
 /**
@@ -67,7 +67,7 @@ export class UserReportsApi
     async userReportControllerCreateRaw(
         requestParameters: UserReportControllerCreateRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<UserReport>> {
+    ): Promise<runtime.ApiResponse<boolean>> {
         if (requestParameters["userId"] == null) {
             throw new runtime.RequiredError(
                 "userId",
@@ -104,9 +104,11 @@ export class UserReportsApi
             initOverrides,
         );
 
-        return new runtime.JSONApiResponse(response, (jsonValue) =>
-            UserReportFromJSON(jsonValue),
-        );
+        if (this.isJsonMime(response.headers.get("content-type"))) {
+            return new runtime.JSONApiResponse<boolean>(response);
+        } else {
+            return new runtime.TextApiResponse(response) as any;
+        }
     }
 
     /**
@@ -115,7 +117,7 @@ export class UserReportsApi
     async userReportControllerCreate(
         requestParameters: UserReportControllerCreateRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<UserReport> {
+    ): Promise<boolean> {
         const response = await this.userReportControllerCreateRaw(
             requestParameters,
             initOverrides,

@@ -235,10 +235,6 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                         prevBlacklistedRegionsRef.current = currentRegions;
                     } catch (error) {
                         // TODO We might want to show an error somehow, maybe we just throw the error for the global error handler for now
-                        console.error(
-                            "Error updating blacklisted regions:",
-                            error,
-                        );
                         throw error;
                     }
                 }, 1000);
