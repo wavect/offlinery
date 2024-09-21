@@ -7,6 +7,10 @@ import {
     UserGenderEnum,
 } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import {
+    EDateTimeFormatters,
+    ODateTimePicker,
+} from "@/components/ODateTimePicker/ODateTimePicker";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import {
@@ -24,7 +28,6 @@ import {
 import { deleteSessionDataFromStorage } from "@/services/secure-storage.service";
 import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import { useState } from "react";
@@ -200,7 +203,7 @@ const ProfileSettings = ({
                         <View style={styles.timePickerRow}>
                             <View style={styles.timePicker}>
                                 <Text>{i18n.t(TR.from)}</Text>
-                                <DateTimePicker
+                                <ODateTimePicker
                                     value={new Date(state.approachFromTime)}
                                     mode="time"
                                     is24Hour={true}
@@ -208,17 +211,25 @@ const ProfileSettings = ({
                                     onChange={(event, selectedTime) =>
                                         setApproachFromTime(selectedTime)
                                     }
+                                    dateTimeFormatter={EDateTimeFormatters.TIME}
+                                    androidTextStyle={
+                                        styles.androidDateTimeValue
+                                    }
                                 />
                             </View>
                             <View style={styles.timePicker}>
                                 <Text>{i18n.t(TR.until)}</Text>
-                                <DateTimePicker
+                                <ODateTimePicker
                                     value={new Date(state.approachToTime)}
                                     mode="time"
                                     is24Hour={true}
                                     display="default"
                                     onChange={(event, selectedTime) =>
                                         setApproachToTime(selectedTime)
+                                    }
+                                    dateTimeFormatter={EDateTimeFormatters.TIME}
+                                    androidTextStyle={
+                                        styles.androidDateTimeValue
                                     }
                                 />
                             </View>
@@ -239,13 +250,15 @@ const ProfileSettings = ({
 
                 <View style={styles.datePickerContainer}>
                     <Text style={styles.label}>{i18n.t(TR.myBirthDayIs)}</Text>
-                    <DateTimePicker
+                    <ODateTimePicker
                         value={state.birthDay}
                         mode="date"
                         display="default"
                         onChange={(event, selectedDate) =>
                             setBirthday(selectedDate)
                         }
+                        dateTimeFormatter={EDateTimeFormatters.DATE}
+                        androidTextStyle={styles.androidDateTimeValue}
                     />
                 </View>
 
@@ -514,6 +527,14 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         fontSize: 16,
         fontFamily: FontFamily.montserratMedium,
+    },
+    androidDateTimeValue: {
+        fontSize: FontSize.size_md,
+        backgroundColor: Color.brightGray,
+        padding: 5,
+        paddingHorizontal: 10,
+        borderRadius: 6,
+        marginLeft: 10,
     },
 });
 

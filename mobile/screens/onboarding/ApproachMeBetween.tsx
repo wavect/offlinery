@@ -1,5 +1,10 @@
+import { Color, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import {
+    EDateTimeFormatters,
+    ODateTimePicker,
+} from "@/components/ODateTimePicker/ODateTimePicker";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
     DEFAULT_FROM_TIME,
@@ -8,9 +13,7 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import RNDateTimePicker, {
-    DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
+import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -54,25 +57,29 @@ const ApproachMeBetween = ({
         >
             <View style={styles.timePickerContainer}>
                 <Text style={styles.timePickerLabel}>{i18n.t(TR.from)}</Text>
-                <RNDateTimePicker
+                <ODateTimePicker
                     display="default"
                     mode="time"
                     onChange={onFromTimeChange}
                     accessibilityLabel={i18n.t(TR.fromDescr)}
                     value={state.approachFromTime}
                     style={styles.timePicker}
+                    dateTimeFormatter={EDateTimeFormatters.TIME}
+                    androidTextStyle={styles.timePickerAndroidText}
                 />
             </View>
 
             <View style={styles.timePickerContainer}>
                 <Text style={styles.timePickerLabel}>{i18n.t(TR.until)}</Text>
-                <RNDateTimePicker
+                <ODateTimePicker
                     display="default"
                     mode="time"
                     onChange={onToTimeChange}
                     accessibilityLabel={i18n.t(TR.untilDescr)}
                     value={state.approachToTime}
                     style={styles.timePicker}
+                    dateTimeFormatter={EDateTimeFormatters.TIME}
+                    androidTextStyle={styles.timePickerAndroidText}
                 />
             </View>
         </OPageContainer>
@@ -97,6 +104,14 @@ const styles = StyleSheet.create({
     },
     timePicker: {
         flex: 1,
+    },
+    timePickerAndroidText: {
+        fontSize: FontSize.size_md,
+        backgroundColor: Color.lighterGray,
+        padding: 5,
+        paddingHorizontal: 10,
+        borderRadius: 6,
+        marginLeft: "auto",
     },
 });
 

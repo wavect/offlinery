@@ -28,7 +28,7 @@ export class AuthService {
             secret: TYPED_ENV.JWT_SECRET,
         });
         const decoded = this.jwtService.decode(accessToken);
-        const user: User = await this.usersService.findUserByEmail(
+        const user: User = await this.usersService.findUserByEmailOrFail(
             decoded.email,
         );
         if (!user) {
@@ -56,7 +56,7 @@ export class AuthService {
         email: string,
         clearPassword: string,
     ): Promise<SignInResponseDTO> {
-        const user = await this.usersService.findUserByEmail(email);
+        const user = await this.usersService.findUserByEmailOrFail(email);
         if (!user) {
             this.logger.debug(
                 `Sign in via email failed as email does not exist in DB: ${email}`,

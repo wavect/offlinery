@@ -30,6 +30,7 @@ export const Color = {
     primary: "#36797d",
     gray: "#757575",
     lightGray: "#a9a9a9",
+    lighterGray: "#dedede",
     brightGray: "#efefef",
     brightestGray: "rgba(239, 239, 239, 0.5)",
     stateLayersSurfaceDimOpacity08: "rgba(222, 216, 225, 0.08)",

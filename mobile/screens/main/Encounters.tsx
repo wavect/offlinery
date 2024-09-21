@@ -1,5 +1,9 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { EncounterApi, MessagePublicDTO } from "@/api/gen/src";
+import {
+    EDateTimeFormatters,
+    ODateTimePicker,
+} from "@/components/ODateTimePicker/ODateTimePicker";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
     EACTION_ENCOUNTERS,
@@ -11,7 +15,6 @@ import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator
 import { ROUTES } from "@/screens/routes";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { includeJWT } from "@/utils/misc.utils";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
@@ -21,7 +24,6 @@ import {
     ScrollView,
     StyleSheet,
     Text,
-    TouchableOpacity,
     View,
 } from "react-native";
 import OEncounter from "../../components/OEncounter/OEncounter";
@@ -177,65 +179,29 @@ const Encounters = ({
                 <View style={styles.dateRangeContainer}>
                     <View style={styles.dateContainer}>
                         <Text style={styles.dateLabel}>From</Text>
-                        {Platform.OS === "ios" ? (
-                            <RNDateTimePicker
-                                display="default"
-                                mode="date"
-                                style={styles.iosDatePicker}
-                                onChange={onMetStartDateFilterChange}
-                                accessibilityLabel={i18n.t(TR.weMetFrom)}
-                                value={metStartDateFilter}
-                            />
-                        ) : (
-                            <>
-                                <TouchableOpacity
-                                    onPress={() => setShowStartDatePicker(true)}
-                                >
-                                    <Text style={styles.androidDateButton}>
-                                        {metStartDateFilter.toDateString()}
-                                    </Text>
-                                </TouchableOpacity>
-                                {showStartDatePicker && (
-                                    <RNDateTimePicker
-                                        value={metStartDateFilter}
-                                        mode="date"
-                                        display="default"
-                                        onChange={onMetStartDateFilterChange}
-                                    />
-                                )}
-                            </>
-                        )}
+                        <ODateTimePicker
+                            display="default"
+                            mode="date"
+                            style={styles.iosDatePicker}
+                            onChange={onMetStartDateFilterChange}
+                            accessibilityLabel={i18n.t(TR.weMetFrom)}
+                            value={metStartDateFilter}
+                            dateTimeFormatter={EDateTimeFormatters.DATE}
+                            androidTextStyle={styles.androidDateButton}
+                        />
                     </View>
                     <View style={styles.dateContainer}>
                         <Text style={styles.dateLabel}>To</Text>
-                        {Platform.OS === "ios" ? (
-                            <RNDateTimePicker
-                                display="default"
-                                mode="date"
-                                style={styles.iosDatePicker}
-                                onChange={onMetEndDateFilterChange}
-                                accessibilityLabel={i18n.t(TR.toThisDate)}
-                                value={metEndDateFilter}
-                            />
-                        ) : (
-                            <>
-                                <TouchableOpacity
-                                    onPress={() => setShowEndDatePicker(true)}
-                                >
-                                    <Text style={styles.androidDateButton}>
-                                        {metEndDateFilter.toDateString()}
-                                    </Text>
-                                </TouchableOpacity>
-                                {showEndDatePicker && (
-                                    <RNDateTimePicker
-                                        value={metEndDateFilter}
-                                        mode="date"
-                                        display="default"
-                                        onChange={onMetEndDateFilterChange}
-                                    />
-                                )}
-                            </>
-                        )}
+                        <ODateTimePicker
+                            display="default"
+                            mode="date"
+                            style={styles.iosDatePicker}
+                            onChange={onMetEndDateFilterChange}
+                            accessibilityLabel={i18n.t(TR.toThisDate)}
+                            value={metEndDateFilter}
+                            dateTimeFormatter={EDateTimeFormatters.DATE}
+                            androidTextStyle={styles.androidDateButton}
+                        />
                     </View>
                 </View>
 
@@ -254,13 +220,10 @@ const styles = StyleSheet.create({
     iosDatePicker: { marginLeft: -10 },
     androidDateButton: {
         fontSize: FontSize.size_md,
-        fontFamily: FontFamily.montserratRegular,
-        color: Color.black,
-        paddingVertical: 5,
+        backgroundColor: Color.brightGray,
+        padding: 5,
         paddingHorizontal: 10,
-        borderWidth: 1,
-        borderColor: Color.lightGray,
-        borderRadius: 5,
+        borderRadius: 6,
     },
     noEncountersContainer: {
         flex: 1,
