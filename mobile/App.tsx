@@ -12,6 +12,7 @@ import {
     Montserrat_500Medium,
     Montserrat_600SemiBold,
 } from "@expo-google-fonts/montserrat";
+import { MaterialIcons } from "@expo/vector-icons";
 import * as Sentry from "@sentry/react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -46,10 +47,20 @@ Sentry.init({
     // enableSpotlight: __DEV__,
 });
 
+const BackIcon = ({ color }: { color: string }) => (
+    <MaterialIcons
+        name="arrow-back-ios-new"
+        size={25}
+        style={{ marginLeft: 10 }}
+        color={color}
+    />
+);
+
 const DEFAULT_SCREEN_PROPS = {
     headerShown: true,
     headerShadowVisible: false,
     headerTitle: "",
+    headerBackImage: () => <BackIcon color={Color.primary} />,
     headerBackTitle: " ", // @dev Needs whitespace otherwise default title used
     headerTintColor: Color.primary,
     headerTitleStyle: {
@@ -59,6 +70,7 @@ const DEFAULT_SCREEN_PROPS = {
 };
 const DEFAULT_LIGHT_SCREEN_PROPS = {
     ...DEFAULT_SCREEN_PROPS,
+    headerBackImage: () => <BackIcon color={Color.white} />,
     headerTransparent: true,
     headerTintColor: Color.white,
 };
