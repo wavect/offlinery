@@ -22,7 +22,6 @@ const BookSafetyCall = ({
     MainStackParamList,
     typeof ROUTES.Onboarding.BookSafetyCall
 >) => {
-    // const [hasBookedCall, setCallBooked] = useState(false)
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
     const [hasBookedCall, setHasBookedCall] = useState(false);
