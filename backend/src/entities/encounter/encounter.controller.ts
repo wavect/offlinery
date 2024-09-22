@@ -134,7 +134,6 @@ export class EncounterController {
         @Param(USER_ID_PARAM) userId: string,
         @Body() getLocationOfEncounterDTO: GetLocationOfEncounterDTO,
     ): Promise<GetLocationOfEncounterResponseDTO> {
-        console.log("encounters...?");
         return this.encounterService.getLocationOfEncounter(
             userId,
             getLocationOfEncounterDTO,
