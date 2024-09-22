@@ -61,6 +61,7 @@ const NavigateToApproach = ({
                     userId: state.id!,
                     getLocationOfEncounterDTO,
                 });
+            setDestination(encounterLoc);
         })();
     }, []);
 
