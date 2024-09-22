@@ -1,6 +1,7 @@
-import { EncounterStatusEnum, MessagePublicDTO } from "@/api/gen/src";
-
 // TODO: Can we get rid of this type?
+import { MessagePublicDTO } from "@/api/gen/src";
+import { EncounterStatusEnum } from "@/api/gen/src/models/Encounter";
+
 export interface IEncounterProfile {
     encounterId: string;
     firstName: string;

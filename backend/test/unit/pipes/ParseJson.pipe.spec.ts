@@ -1,7 +1,7 @@
+import { ParseValidateJsonPipe } from "@/pipes/parse-validate-json.pipe";
 import { BadRequestException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { IsString } from "class-validator";
-import { ParseJsonPipe } from "../../../src/pipes/ParseJson.pipe";
 
 class TestDto {
     @IsString()
@@ -9,19 +9,21 @@ class TestDto {
 }
 
 describe("ParseJsonPipe", () => {
-    let pipe: ParseJsonPipe<TestDto>;
+    let pipe: ParseValidateJsonPipe<TestDto>;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 {
-                    provide: ParseJsonPipe,
-                    useValue: new ParseJsonPipe(TestDto),
+                    provide: ParseValidateJsonPipe,
+                    useValue: new ParseValidateJsonPipe(TestDto),
                 },
             ],
         }).compile();
 
-        pipe = module.get<ParseJsonPipe<TestDto>>(ParseJsonPipe);
+        pipe = module.get<ParseValidateJsonPipe<TestDto>>(
+            ParseValidateJsonPipe,
+        );
     });
 
     it("should be defined", () => {

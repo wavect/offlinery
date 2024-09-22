@@ -37,7 +37,7 @@ import * as runtime from "../runtime";
 // are larger than the benefits, we can try another approach.
 import { ImagePickerAsset } from "expo-image-picker";
 export interface UserControllerCreateUserRequest {
-    user: CreateUserDTO;
+    createUserDTO: CreateUserDTO;
     images: (ImagePickerAsset | undefined)[];
 }
 
@@ -60,7 +60,7 @@ export interface UserControllerUpdateLocationRequest {
 
 export interface UserControllerUpdateUserRequest {
     userId: string;
-    user?: UpdateUserDTO;
+    updateUserDTO?: UpdateUserDTO;
     images?: (ImagePickerAsset | undefined)[];
 }
 
@@ -79,7 +79,7 @@ export interface UserApiInterface {
     /**
      *
      * @summary Create a new user with images
-     * @param {CreateUserDTO} user
+     * @param {CreateUserDTO} createUserDTO
      * @param {Array<Blob>} images An array of image files
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -187,7 +187,7 @@ export interface UserApiInterface {
      *
      * @summary Update an existing user
      * @param {string} userId
-     * @param {UpdateUserDTO} [user]
+     * @param {UpdateUserDTO} [updateUserDTO]
      * @param {Array<Blob>} [images] An array of image files
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -240,10 +240,10 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         requestParameters: UserControllerCreateUserRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<SignInResponseDTO>> {
-        if (requestParameters["user"] == null) {
+        if (requestParameters["createUserDTO"] == null) {
             throw new runtime.RequiredError(
-                "user",
-                'Required parameter "user" was null or undefined when calling userControllerCreateUser().',
+                "createUserDTO",
+                'Required parameter "createUserDTO" was null or undefined when calling userControllerCreateUser().',
             );
         }
 
@@ -274,9 +274,11 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
             formParams = new URLSearchParams();
         }
 
-        if (requestParameters["user"] != null) {
-            formParams.append("user", [
-                JSON.stringify(CreateUserDTOToJSON(requestParameters["user"])),
+        if (requestParameters["createUserDTO"] != null) {
+            formParams.append("createUserDTO", [
+                JSON.stringify(
+                    CreateUserDTOToJSON(requestParameters["createUserDTO"]),
+                ),
             ]);
         }
 
@@ -566,9 +568,11 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
             formParams = new URLSearchParams();
         }
 
-        if (requestParameters["user"] != null) {
-            formParams.append("user", [
-                JSON.stringify(UpdateUserDTOToJSON(requestParameters["user"])),
+        if (requestParameters["updateUserDTO"] != null) {
+            formParams.append("updateUserDTO", [
+                JSON.stringify(
+                    UpdateUserDTOToJSON(requestParameters["updateUserDTO"]),
+                ),
             ]);
         }
 

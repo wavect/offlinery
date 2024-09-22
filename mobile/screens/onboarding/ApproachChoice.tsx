@@ -1,8 +1,8 @@
 import { Color, Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import {
-    UserApproachChoiceEnum,
-    UserVerificationStatusEnum,
+    UserPrivateDTOApproachChoiceEnum,
+    UserPrivateDTOVerificationStatusEnum,
 } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
@@ -21,38 +21,42 @@ const ApproachChoice = ({
 >) => {
     const { dispatch } = useUserContext();
 
-    const setApproachChoice = (approachChoice: UserApproachChoiceEnum) => {
+    const setApproachChoice = (
+        approachChoice: UserPrivateDTOApproachChoiceEnum,
+    ) => {
         dispatch({
             type: EACTION_USER.UPDATE_MULTIPLE,
             payload: { approachChoice },
         });
 
         switch (approachChoice) {
-            case UserApproachChoiceEnum.approach: // fall through
-                dispatch({
-                    type: EACTION_USER.UPDATE_MULTIPLE,
-                    payload: {
-                        verificationStatus: UserVerificationStatusEnum.pending,
-                    },
-                });
-                navigation.navigate(ROUTES.Onboarding.SafetyCheck);
-                break;
-            case UserApproachChoiceEnum.be_approached:
+            case UserPrivateDTOApproachChoiceEnum.approach: // fall through
                 dispatch({
                     type: EACTION_USER.UPDATE_MULTIPLE,
                     payload: {
                         verificationStatus:
-                            UserVerificationStatusEnum.not_needed,
+                            UserPrivateDTOVerificationStatusEnum.pending,
+                    },
+                });
+                navigation.navigate(ROUTES.Onboarding.SafetyCheck);
+                break;
+            case UserPrivateDTOApproachChoiceEnum.be_approached:
+                dispatch({
+                    type: EACTION_USER.UPDATE_MULTIPLE,
+                    payload: {
+                        verificationStatus:
+                            UserPrivateDTOVerificationStatusEnum.not_needed,
                     },
                 });
                 navigation.navigate(ROUTES.Onboarding.DontApproachMeHere); // not doing IliveHere for now, to avoid geoFencing their address
                 break;
-            case UserApproachChoiceEnum.both:
+            case UserPrivateDTOApproachChoiceEnum.both:
                 // @dev both flows need to be completed, checked on last screen
                 dispatch({
                     type: EACTION_USER.UPDATE_MULTIPLE,
                     payload: {
-                        verificationStatus: UserVerificationStatusEnum.pending,
+                        verificationStatus:
+                            UserPrivateDTOVerificationStatusEnum.pending,
                     },
                 });
                 navigation.navigate(ROUTES.Onboarding.DontApproachMeHere);
@@ -72,7 +76,9 @@ const ApproachChoice = ({
                     variant="dark"
                     size="smaller"
                     onPress={() =>
-                        setApproachChoice(UserApproachChoiceEnum.approach)
+                        setApproachChoice(
+                            UserPrivateDTOApproachChoiceEnum.approach,
+                        )
                     }
                 />
                 <Text style={[Subtitle, styles.subtitle]}>
@@ -87,7 +93,9 @@ const ApproachChoice = ({
                     size="smaller"
                     variant="dark"
                     onPress={() =>
-                        setApproachChoice(UserApproachChoiceEnum.be_approached)
+                        setApproachChoice(
+                            UserPrivateDTOApproachChoiceEnum.be_approached,
+                        )
                     }
                 />
                 <Text style={[Subtitle, styles.subtitle]}>
@@ -102,7 +110,7 @@ const ApproachChoice = ({
                     variant="dark"
                     size="smaller"
                     onPress={() =>
-                        setApproachChoice(UserApproachChoiceEnum.both)
+                        setApproachChoice(UserPrivateDTOApproachChoiceEnum.both)
                     }
                 />
                 <Text style={[Subtitle, styles.subtitle]}>

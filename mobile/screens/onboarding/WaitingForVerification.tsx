@@ -1,6 +1,6 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
-import { UserApi, UserVerificationStatusEnum } from "@/api/gen/src";
+import { UserApi, UserPrivateDTOVerificationStatusEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { useUserContext } from "@/context/UserContext";
@@ -44,13 +44,13 @@ const WaitingForVerification = ({
                     filled={true}
                     text={i18n.t(
                         state.verificationStatus !==
-                            UserVerificationStatusEnum.verified
+                            UserPrivateDTOVerificationStatusEnum.verified
                             ? TR.verificationInProgress
                             : TR.verificationSuccessful,
                     )}
                     disabled={
                         state.verificationStatus !==
-                        UserVerificationStatusEnum.verified
+                        UserPrivateDTOVerificationStatusEnum.verified
                     }
                     style={styles.btn}
                     onPress={() => navigation.navigate(ROUTES.MainTabView)}
@@ -58,7 +58,7 @@ const WaitingForVerification = ({
                 />
 
                 {state.verificationStatus !==
-                    UserVerificationStatusEnum.verified && (
+                    UserPrivateDTOVerificationStatusEnum.verified && (
                     <>
                         <OButtonWide
                             filled={false}

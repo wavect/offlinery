@@ -3,7 +3,7 @@ import { CreateUserDTO } from "./create-user.dto";
 
 export class CreateUserRequestDTO {
     @ApiProperty({ type: CreateUserDTO, format: "json" })
-    user: CreateUserDTO;
+    createUserDTO: CreateUserDTO;
 
     @ApiProperty({
         type: "array",
