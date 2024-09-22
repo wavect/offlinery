@@ -61,6 +61,8 @@ const BookSafetyCall = ({
                             disabled={!hasBookedCall}
                             variant="dark"
                             onPress={startUserRegistration}
+                            isLoading={isLoading}
+                            loadingBtnText={i18n.t(TR.registering)}
                         />
                     </View>
                 )
