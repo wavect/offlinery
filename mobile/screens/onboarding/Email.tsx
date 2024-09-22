@@ -72,7 +72,6 @@ const Email = ({
                 autoComplete="email"
                 keyboardType="email-address"
                 autoCorrect={false}
-                autoFocus={true}
                 inputMode="email"
                 placeholder={i18n.t(TR.yourEmail)}
                 containerStyle={[
