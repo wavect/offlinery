@@ -149,7 +149,8 @@ const styles = StyleSheet.create({
     },
     troubleSigningIn: {
         width: "90%",
-        marginBottom: aspectRatio > 1.6 ? 22 : 10,
+        marginTop: aspectRatio > 1.6 ? 22 : 10,
+        marginBottom: 6,
     },
 });
 
