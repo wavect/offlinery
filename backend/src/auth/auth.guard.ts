@@ -12,6 +12,7 @@ import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 
+export const USER_OBJ_ID = "user";
 export const IS_PUBLIC_KEY = "isPublic";
 /** @dev Use this above controller methods to declare routes as public since all routes are private by default! */
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -85,7 +86,7 @@ export class AuthGuard implements CanActivate {
         try {
             // 💡 We're assigning the payload to the request object here
             // so that we can access it in our route handlers
-            request["user"] = await this.jwtService.verifyAsync(token, {
+            request[USER_OBJ_ID] = await this.jwtService.verifyAsync(token, {
                 secret: TYPED_ENV.JWT_SECRET,
             });
         } catch {

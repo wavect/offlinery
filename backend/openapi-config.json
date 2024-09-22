@@ -5,6 +5,8 @@
   "typescriptThreePlus": true,
   "useSingleRequestParameter": true,
   "useObjectParameters": true,
-  "removeEnumValuePrefix": false,
-  "enumPropertyNaming": "original"
+  "enumPropertyNaming": "original",
+  "modelPropertyNaming": "original",
+  "useSingleEnumType": true,
+  "stringEnums": false
 }

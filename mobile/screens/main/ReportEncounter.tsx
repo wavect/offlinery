@@ -66,7 +66,7 @@ const ReportEncounter = ({
                 incidentDescription: incidentDescription!,
                 keepReporterInTheLoop: keepMeInTheLoop,
                 incidentType: incidentType!,
-                reportedUserId: personToReport.encounterId,
+                encounterId: personToReport.encounterId,
             };
 
             await reportApi.userReportControllerCreate(

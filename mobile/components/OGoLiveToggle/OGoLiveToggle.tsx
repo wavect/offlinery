@@ -3,8 +3,8 @@ import {
     LocationUpdateDTO,
     UpdateUserDTO,
     UserApi,
-    UserApproachChoiceEnum,
-    UserDateModeEnum,
+    UserPrivateDTOApproachChoiceEnum,
+    UserPrivateDTODateModeEnum,
 } from "@/api/gen/src";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
@@ -75,8 +75,10 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
 export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
     const { dispatch, state } = useUserContext();
 
-    const configureLocationTracking = async (newDateMode: UserDateModeEnum) => {
-        if (newDateMode === UserDateModeEnum.live) {
+    const configureLocationTracking = async (
+        newDateMode: UserPrivateDTODateModeEnum,
+    ) => {
+        if (newDateMode === UserPrivateDTODateModeEnum.live) {
             const { status } =
                 await Location.requestBackgroundPermissionsAsync();
             if (status === "granted" && state.id) {
@@ -119,17 +121,17 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 return;
             }
 
-            const newDateMode: UserDateModeEnum =
-                state.dateMode === UserDateModeEnum.ghost
-                    ? UserDateModeEnum.live
-                    : UserDateModeEnum.ghost;
+            const newDateMode: UserPrivateDTODateModeEnum =
+                state.dateMode === UserPrivateDTODateModeEnum.ghost
+                    ? UserPrivateDTODateModeEnum.live
+                    : UserPrivateDTODateModeEnum.ghost;
             const userApi = new UserApi();
             const updateUserDTO: UpdateUserDTO = { dateMode: newDateMode };
 
             await userApi.userControllerUpdateUser(
                 {
                     userId: state.id!,
-                    user: updateUserDTO,
+                    updateUserDTO,
                 },
                 await includeJWT(),
             );
@@ -141,7 +143,7 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
 
             await configureLocationTracking(newDateMode);
 
-            if (newDateMode === UserDateModeEnum.live) {
+            if (newDateMode === UserPrivateDTODateModeEnum.live) {
                 alert(`${i18n.t(TR.youAreLive)} ${getSuccessMessage()}`);
             } else {
                 alert(i18n.t(TR.ghostModeDescr));
@@ -159,11 +161,11 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
 
     const getSuccessMessage = () => {
         switch (state.approachChoice) {
-            case UserApproachChoiceEnum.both: // fall through
-            case UserApproachChoiceEnum.approach:
+            case UserPrivateDTOApproachChoiceEnum.both: // fall through
+            case UserPrivateDTOApproachChoiceEnum.approach:
                 return i18n.t(TR.youAreLiveApproachDescr);
                 break;
-            case UserApproachChoiceEnum.be_approached:
+            case UserPrivateDTOApproachChoiceEnum.be_approached:
                 return i18n.t(TR.youAreLiveBeApproachedDescr);
                 break;
         }
@@ -174,16 +176,16 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
             <Switch
                 trackColor={{ false: Color.lightGray, true: Color.primary }}
                 thumbColor={
-                    state.dateMode === UserDateModeEnum.live
+                    state.dateMode === UserPrivateDTODateModeEnum.live
                         ? Color.white
                         : Color.lightGray
                 }
                 ios_backgroundColor="#3e3e3e"
                 onValueChange={toggleSwitch}
-                value={state.dateMode === UserDateModeEnum.live}
+                value={state.dateMode === UserPrivateDTODateModeEnum.live}
             />
             <Text style={{ marginTop: 5, fontSize: 12, color: Color.gray }}>
-                {state.dateMode === UserDateModeEnum.live
+                {state.dateMode === UserPrivateDTODateModeEnum.live
                     ? i18n.t(TR.live)
                     : i18n.t(TR.ghostMode)}
             </Text>

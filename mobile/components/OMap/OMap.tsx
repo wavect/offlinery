@@ -32,7 +32,7 @@ import MapView, {
     Circle,
     LongPressEvent,
     Marker,
-    MarkerDragEvent,
+    MarkerDragStartEndEvent,
     Region,
 } from "react-native-maps";
 
@@ -173,8 +173,8 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         setDraggingIndex(index);
     }, []);
 
-    const handleRegionDrag = useCallback(
-        (event: MarkerDragEvent) => {
+    const handleRegionDragEnd = useCallback(
+        (event: MarkerDragStartEndEvent) => {
             if (draggingIndex !== null) {
                 const { latitude, longitude } = event.nativeEvent.coordinate;
                 const newRegions = state.blacklistedRegions.map(
@@ -185,13 +185,10 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                 );
                 setBlacklistedRegions(newRegions);
             }
+            setDraggingIndex(null);
         },
         [draggingIndex, state.blacklistedRegions, setBlacklistedRegions],
     );
-
-    const handleRegionDragEnd = useCallback(() => {
-        setDraggingIndex(null);
-    }, []);
 
     const handleRadiusChange = useCallback(
         (value: number) => {
@@ -225,7 +222,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                         await userApi.userControllerUpdateUser(
                             {
                                 userId: state.id!,
-                                user: {
+                                updateUserDTO: {
                                     blacklistedRegions: currentRegions.map(
                                         (r) =>
                                             mapRegionToBlacklistedRegionDTO(r),
@@ -238,10 +235,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                         prevBlacklistedRegionsRef.current = currentRegions;
                     } catch (error) {
                         // TODO We might want to show an error somehow, maybe we just throw the error for the global error handler for now
-                        console.error(
-                            "Error updating blacklisted regions:",
-                            error,
-                        );
+                        throw error;
                     }
                 }, 1000);
 
@@ -308,7 +302,6 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                                     onDragStart={() =>
                                         handleRegionDragStart(index)
                                     }
-                                    onDrag={handleRegionDrag}
                                     onDragEnd={handleRegionDragEnd}
                                     onPress={() => handleRegionPress(index)}
                                     tracksViewChanges={false}

@@ -2,9 +2,10 @@ import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import {
     UserApi,
-    UserApproachChoiceEnum,
     UserControllerUpdateUserRequest,
-    UserGenderEnum,
+    UserPrivateDTOApproachChoiceEnum,
+    UserPrivateDTOGenderDesireEnum,
+    UserPrivateDTOGenderEnum,
 } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import {
@@ -71,7 +72,10 @@ const ProfileSettings = ({
             payload: { birthDay: birthday || state.birthDay },
         });
     };
-    const setGender = (item: { label: string; value: UserGenderEnum }) => {
+    const setGender = (item: {
+        label: string;
+        value: UserPrivateDTOGenderEnum;
+    }) => {
         dispatch({
             type: EACTION_USER.UPDATE_MULTIPLE,
             payload: { gender: item.value },
@@ -79,7 +83,7 @@ const ProfileSettings = ({
     };
     const setGenderDesire = (item: {
         label: string;
-        value: UserGenderEnum;
+        value: UserPrivateDTOGenderDesireEnum;
     }) => {
         dispatch({
             type: EACTION_USER.UPDATE_MULTIPLE,
@@ -92,7 +96,7 @@ const ProfileSettings = ({
             setLoading(true);
             const request: UserControllerUpdateUserRequest = {
                 userId: state.id!,
-                user: {
+                updateUserDTO: {
                     firstName: state.firstName,
                     approachFromTime: state.approachFromTime.toISOString(),
                     approachToTime: state.approachToTime.toISOString(),
@@ -120,7 +124,7 @@ const ProfileSettings = ({
         }
     };
 
-    const genderItems: { label: string; value: UserGenderEnum }[] = [
+    const genderItems: { label: string; value: UserPrivateDTOGenderEnum }[] = [
         { label: i18n.t(TR.woman), value: "woman" },
         { label: i18n.t(TR.man), value: "man" },
     ];
@@ -195,7 +199,8 @@ const ProfileSettings = ({
                     />
                 </View>
 
-                {state.approachChoice !== UserApproachChoiceEnum.approach && (
+                {state.approachChoice !==
+                    UserPrivateDTOApproachChoiceEnum.approach && (
                     <View style={styles.timePickerContainer}>
                         <Text style={[styles.label, { marginBottom: 8 }]}>
                             {i18n.t(TR.approachMeBetween)}

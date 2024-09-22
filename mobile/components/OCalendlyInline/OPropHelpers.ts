@@ -1,5 +1,3 @@
-import { PageSettings } from "../calendly";
-
 function sanitizeColorString(str: string): string {
     if (str.charAt(0) === "#") {
         return str.slice(1);
@@ -7,7 +5,7 @@ function sanitizeColorString(str: string): string {
     return str;
 }
 
-export function sanitizePageSettingsProps(props: PageSettings) {
+export function sanitizePageSettingsProps(props: any) {
     if (props?.primaryColor) {
         props.primaryColor = sanitizeColorString(props.primaryColor);
     }

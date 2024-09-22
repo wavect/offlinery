@@ -1,3 +1,4 @@
+import { USER_OBJ_ID } from "@/auth/auth.guard";
 import {
     CanActivate,
     ExecutionContext,
@@ -29,7 +30,7 @@ export class UserSpecificAuthGuard implements CanActivate {
         }
 
         const request = context.switchToHttp().getRequest();
-        const user = request.user; // Assuming the user object is attached by the AuthGuard
+        const user = request[USER_OBJ_ID]; // Assuming the user object is attached by the AuthGuard
 
         if (!user) {
             this.logger.debug(

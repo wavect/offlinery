@@ -3,12 +3,13 @@ import {
     BlacklistedRegionDTOLocationTypeEnum,
     CreateUserDTO,
     UserApi,
-    UserApproachChoiceEnum,
     UserControllerCreateUserRequest,
-    UserDateModeEnum,
-    UserGenderEnum,
+    UserPrivateDTOApproachChoiceEnum,
+    UserPrivateDTODateModeEnum,
+    UserPrivateDTOGenderDesireEnum,
+    UserPrivateDTOGenderEnum,
+    UserPrivateDTOVerificationStatusEnum,
     UserPublicDTO,
-    UserVerificationStatusEnum,
 } from "@/api/gen/src";
 import { refreshUserData } from "@/services/auth.service";
 import {
@@ -31,19 +32,19 @@ export interface IUserData {
     firstName: string;
     clearPassword: string;
     birthDay: Date;
-    gender?: UserGenderEnum;
-    genderDesire?: UserGenderEnum;
+    gender?: UserPrivateDTOGenderEnum;
+    genderDesire?: UserPrivateDTOGenderDesireEnum;
     imageURIs: {
         [key in ImageIdx]?: ImagePicker.ImagePickerAsset | string;
     };
-    verificationStatus: UserVerificationStatusEnum;
-    approachChoice: UserApproachChoiceEnum;
+    verificationStatus: UserPrivateDTOVerificationStatusEnum;
+    approachChoice: UserPrivateDTOApproachChoiceEnum;
     /** @dev Regions the user that wants to be approached marked as blacklisted */
     blacklistedRegions: MapRegion[];
     approachFromTime: Date;
     approachToTime: Date;
     bio: string;
-    dateMode: UserDateModeEnum;
+    dateMode: UserPrivateDTODateModeEnum;
     markedForDeletion: boolean;
     /** @dev Set once logged in */
     jwtAccessToken?: string;
@@ -140,13 +141,13 @@ export const initialUserState: IUserData = {
         "4": undefined,
         "5": undefined,
     },
-    verificationStatus: UserVerificationStatusEnum.not_needed,
-    approachChoice: UserApproachChoiceEnum.both,
+    verificationStatus: UserPrivateDTOVerificationStatusEnum.not_needed,
+    approachChoice: UserPrivateDTOApproachChoiceEnum.both,
     blacklistedRegions: [],
     approachFromTime: DEFAULT_FROM_TIME,
     approachToTime: DEFAULT_TO_TIME,
     bio: "No pick-up lines please. Just be chill.",
-    dateMode: UserDateModeEnum.ghost,
+    dateMode: UserPrivateDTODateModeEnum.ghost,
     markedForDeletion: false,
     jwtAccessToken: undefined,
 };
@@ -256,7 +257,7 @@ export const registerUser = async (
     };
 
     const requestParameters: UserControllerCreateUserRequest = {
-        user: userData,
+        createUserDTO: userData,
         images: getUserImagesForUpload(state),
     };
 

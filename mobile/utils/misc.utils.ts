@@ -1,7 +1,7 @@
 import {
     AuthApi,
+    CreateUserDTOPreferredLanguageEnum,
     SignInResponseDTO,
-    UserPreferredLanguageEnum,
 } from "@/api/gen/src";
 import { i18n } from "@/localization/translate.service";
 import {
@@ -103,9 +103,9 @@ function decodeJWT(token: string) {
     }
 }
 
-export const getLocalLanguageID = (): UserPreferredLanguageEnum => {
+export const getLocalLanguageID = (): CreateUserDTOPreferredLanguageEnum => {
     return (
-        (i18n.locale as UserPreferredLanguageEnum) ??
-        UserPreferredLanguageEnum.en
+        (i18n.locale as CreateUserDTOPreferredLanguageEnum) ??
+        CreateUserDTOPreferredLanguageEnum.en
     );
 };

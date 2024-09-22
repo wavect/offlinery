@@ -3,7 +3,7 @@ import {
     EncounterApi,
     EncounterPublicDTOStatusEnum,
     UpdateEncounterStatusDTO,
-    UserApproachChoiceEnum,
+    UserPrivateDTOApproachChoiceEnum,
 } from "@/api/gen/src";
 import {
     IOButtonSmallVariant,
@@ -166,7 +166,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                         )}
 
                         {state.approachChoice !==
-                            UserApproachChoiceEnum.be_approached &&
+                            UserPrivateDTOApproachChoiceEnum.be_approached &&
                             dateStatus ===
                                 EncounterPublicDTOStatusEnum.not_met &&
                             encounterProfile.isNearbyRightNow && (

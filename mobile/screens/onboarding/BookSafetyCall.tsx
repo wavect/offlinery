@@ -22,7 +22,6 @@ const BookSafetyCall = ({
     MainStackParamList,
     typeof ROUTES.Onboarding.BookSafetyCall
 >) => {
-    // const [hasBookedCall, setCallBooked] = useState(false)
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
     const [hasBookedCall, setHasBookedCall] = useState(false);
@@ -61,6 +60,8 @@ const BookSafetyCall = ({
                             disabled={!hasBookedCall}
                             variant="dark"
                             onPress={startUserRegistration}
+                            isLoading={isLoading}
+                            loadingBtnText={i18n.t(TR.registering)}
                         />
                     </View>
                 )

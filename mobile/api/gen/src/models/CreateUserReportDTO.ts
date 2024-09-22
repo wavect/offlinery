@@ -41,7 +41,7 @@ export interface CreateUserReportDTO {
      * @type {string}
      * @memberof CreateUserReportDTO
      */
-    reportedUserId: string;
+    encounterId: string;
 }
 
 /**
@@ -74,7 +74,7 @@ export function instanceOfCreateUserReportDTO(
         return false;
     if (!("incidentType" in value) || value["incidentType"] === undefined)
         return false;
-    if (!("reportedUserId" in value) || value["reportedUserId"] === undefined)
+    if (!("encounterId" in value) || value["encounterId"] === undefined)
         return false;
     return true;
 }
@@ -94,7 +94,7 @@ export function CreateUserReportDTOFromJSONTyped(
         incidentDescription: json["incidentDescription"],
         keepReporterInTheLoop: json["keepReporterInTheLoop"],
         incidentType: json["incidentType"],
-        reportedUserId: json["reportedUserId"],
+        encounterId: json["encounterId"],
     };
 }
 
@@ -108,6 +108,6 @@ export function CreateUserReportDTOToJSON(
         incidentDescription: value["incidentDescription"],
         keepReporterInTheLoop: value["keepReporterInTheLoop"],
         incidentType: value["incidentType"],
-        reportedUserId: value["reportedUserId"],
+        encounterId: value["encounterId"],
     };
 }
