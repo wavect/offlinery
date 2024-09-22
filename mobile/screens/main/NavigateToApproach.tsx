@@ -28,8 +28,6 @@ const NavigateToApproach = ({
 >) => {
     const navigateToPerson: IEncounterProfile = route.params.navigateToPerson;
 
-    // TODO: Load from backend, add to encounter profile!
-    const destination = { latitude: 47.27062, longitude: 11.49267 }; // Example: San Francisco
     const { state } = useUserContext();
     const [mapRegion, setMapRegion] = useState<Region | null>(null);
     const [location, setLocation] = useState<Location.LocationObject | null>(
@@ -37,6 +35,10 @@ const NavigateToApproach = ({
     );
     const mapRef = React.useRef(null);
     const [distance, setDistance] = useState<number | null>(null);
+    const [destination, setDestination] = useState<{
+        longitude: number;
+        latitude: number;
+    } | null>(null);
 
     useEffect(() => {
         (async () => {
@@ -54,15 +56,17 @@ const NavigateToApproach = ({
             const getLocationOfEncounterDTO: GetLocationOfEncounterDTO = {
                 encounterId: navigateToPerson.encounterId,
             };
-            await encounterAPI.encounterControllerGetLocationOfEncounter({
-                userId: state.id!,
-                getLocationOfEncounterDTO,
-            });
+            const encounterLoc =
+                await encounterAPI.encounterControllerGetLocationOfEncounter({
+                    userId: state.id!,
+                    getLocationOfEncounterDTO,
+                });
+            setDestination(encounterLoc);
         })();
     }, []);
 
     useEffect(() => {
-        if (location) {
+        if (location && destination) {
             const calculatedDistance = calculateDistance(
                 location.coords.latitude,
                 location.coords.longitude,
@@ -81,14 +85,14 @@ const NavigateToApproach = ({
             ]);
             setMapRegion(newRegion);
         }
-    }, [location]);
+    }, [location, destination]);
 
     const openMapsApp = () => {
         const scheme = Platform.select({
             ios: "maps:0,0?q=",
             android: "geo:0,0?q=",
         });
-        const latLng = `${destination.latitude},${destination.longitude}`;
+        const latLng = `${destination!.latitude},${destination!.longitude}`;
         const label = i18n.t(TR.destination);
         const url = Platform.select({
             ios: `${scheme}${label}@${latLng}`,
@@ -107,6 +111,7 @@ const NavigateToApproach = ({
                 showOpenProfileButton={true}
                 secondButton={{
                     onPress: openMapsApp,
+                    disabled: !destination,
                     text: `${i18n.t(TR.navigateTo)} ${navigateToPerson.firstName}`,
                     style: styles.navigateBtn,
                 }}
@@ -115,12 +120,6 @@ const NavigateToApproach = ({
                 ref={mapRef}
                 style={styles.map}
                 region={mapRegion || undefined}
-                initialRegion={{
-                    latitude: destination.latitude,
-                    longitude: destination.longitude,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                }}
                 provider={getMapProvider()}
             >
                 {location && (
@@ -130,11 +129,13 @@ const NavigateToApproach = ({
                         pinColor={Color.black}
                     />
                 )}
-                <Marker
-                    coordinate={destination}
-                    title={navigateToPerson.firstName}
-                />
-                {location && (
+                {destination && (
+                    <Marker
+                        coordinate={destination}
+                        title={navigateToPerson.firstName}
+                    />
+                )}
+                {location && destination && (
                     <>
                         <Polyline
                             coordinates={[

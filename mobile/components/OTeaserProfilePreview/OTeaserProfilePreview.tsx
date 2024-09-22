@@ -19,6 +19,7 @@ interface IOTeaserProfileProps {
     showOpenProfileButton: boolean;
     secondButton?: {
         onPress: (event: GestureResponderEvent) => void;
+        disabled?: boolean;
         text: string;
         style?: StyleProp<ViewStyle>;
     };
@@ -70,6 +71,7 @@ const OTeaserProfilePreview = (props: IOTeaserProfileProps) => {
                                 <Pressable
                                     style={[styles.button, secondButton.style]}
                                     onPress={secondButton.onPress}
+                                    disabled={secondButton.disabled}
                                 >
                                     <Text style={styles.buttonText}>
                                         {secondButton.text}

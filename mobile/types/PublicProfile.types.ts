@@ -1,6 +1,5 @@
 // TODO: Can we get rid of this type?
-import { MessagePublicDTO } from "@/api/gen/src";
-import { EncounterStatusEnum } from "@/api/gen/src/models/Encounter";
+import { EncounterPublicDTOStatusEnum, MessagePublicDTO } from "@/api/gen/src";
 
 export interface IEncounterProfile {
     encounterId: string;
@@ -11,7 +10,7 @@ export interface IEncounterProfile {
     rating?: number;
 
     isNearbyRightNow?: boolean;
-    status?: EncounterStatusEnum;
+    status?: EncounterPublicDTOStatusEnum;
     /** @dev Last time both have been nearby regardless whether they actually met, might just be calculated by backend "4 days ago"|"2 hours ago" */
     lastTimePassedBy?: string;
     /** Before we go for LatLng here, we might just return a readable string from the backend */
