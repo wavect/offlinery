@@ -14,6 +14,7 @@ export type PartialEncounterProfile = {
 
 export enum EACTION_ENCOUNTERS {
     UPDATE_MULTIPLE = "UPDATE_MULTIPLE",
+    PUSH_MULTIPLE = "PUSH_MULTIPLE",
 }
 
 interface IEncountersContextType {
@@ -46,6 +47,14 @@ const userReducer = (
     action: IEncountersAction,
 ): IEncounters => {
     switch (action.type) {
+        case EACTION_ENCOUNTERS.PUSH_MULTIPLE:
+            const fetchedEncounters = action.payload as IEncounterProfile[];
+            saveEncountersLocally(fetchedEncounters);
+            return {
+                ...state,
+                encounters: fetchedEncounters,
+            };
+
         case EACTION_ENCOUNTERS.UPDATE_MULTIPLE:
             const payload: PartialEncounterProfile[] =
                 action.payload satisfies PartialEncounterProfile[];
