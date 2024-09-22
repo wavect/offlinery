@@ -52,9 +52,6 @@ const OCalendlyInline: FC<Props> = ({
       window.addEventListener('message', function(e) {
         window.ReactNativeWebView.postMessage(JSON.stringify(e.data));
       });
-      window.addEventListener('submit', event => {
-                window.ReactNativeWebView.postMessage(JSON.stringify({event: event.type,payload:event}));
-            });
       true;
     })();
   `;
@@ -64,8 +61,7 @@ const OCalendlyInline: FC<Props> = ({
             const data = JSON.parse(event.nativeEvent.data);
 
             switch (data.event) {
-                /** @dev Calendly is not correctly emitting the events except of PageHeight, for that reason we also just listen to "submit" */
-                case "submit" || CalendlyEvent.EVENT_SCHEDULED:
+                case CalendlyEvent.EVENT_SCHEDULED:
                     onEventScheduled?.(data.payload);
                     break;
                 case CalendlyEvent.DATE_AND_TIME_SELECTED:
@@ -97,13 +93,41 @@ const OCalendlyInline: FC<Props> = ({
         embedType: "Inline",
     });
 
+    /** @dev We need to use the html prop in order to correctly emit the CalendlyScheduled event. The URI prop doesn't work
+     * @ref https://github.com/tcampb/react-calendly/issues/190#issuecomment-2364364463
+     */
     return (
         <>
             {isLoading && <LoadingSpinner />}
             <WebView
                 ref={webViewRef}
                 style={[styles.webView, { height: webViewHeight }]}
-                source={{ uri: src }}
+                source={{
+                    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+          <style>
+            body, html {
+              margin: 0;
+              padding: 0;
+              height: 100%;
+              overflow: hidden;
+            }
+            iframe {
+              border: none;
+              width: 100%;
+              height: 100%;
+            }
+          </style>
+        </head>
+        <body>
+          <iframe src="${src}" width="100%" height="100%"></iframe>
+        </body>
+      </html>
+    `,
+                }}
                 originWhitelist={["*"]}
                 onLoadEnd={() => setIsLoading(false)}
                 injectedJavaScript={injectedJavaScript}
