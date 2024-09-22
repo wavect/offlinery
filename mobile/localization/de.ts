@@ -160,6 +160,7 @@ export const de: Language = {
     changePreferencesDescr:
         "Ändere deine Einstellungen oder aktualisiere dein Profil.",
     bio: "Bio",
+    defaultBio: "Bitte keine Pick-Up Lines. Ein nettes Hallo :) reicht völlig.",
     updateImages: "Bilder updaten",
     updateSafeZones: "Safe Zones updaten",
     errNoUserProvided: "Fehler: Kein Nutzer angegeben",
