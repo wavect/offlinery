@@ -19,6 +19,8 @@ export const OTroubleSignIn = (props: IOTroubleSignIn) => {
         <Text
             style={[styles.troubleSigningIn, props.style]}
             onPress={writeSupportEmail}
+            numberOfLines={1}
+            adjustsFontSizeToFit={true}
         >
             {i18n.t(TR.troubleSignIn)}
         </Text>
