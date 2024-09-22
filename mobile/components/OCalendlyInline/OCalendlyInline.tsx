@@ -93,7 +93,8 @@ const OCalendlyInline: FC<Props> = ({
         embedType: "Inline",
     });
 
-    /** @dev We need to use the html prop in order to correctly emit the CalendlyScheduled event. The URI prop doesn't work
+    /** @dev We need to use the html prop in order to correctly emit the CalendlyScheduled event. The URI prop doesn't work.
+     * The full blown html including head, etc. is necessary to have a responsive view otherwise desktop is loaded.
      * @ref https://github.com/tcampb/react-calendly/issues/190#issuecomment-2364364463
      */
     return (
