@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     troubleSigningIn: {
         width: "90%",
         marginTop: aspectRatio > 1.6 ? 22 : 10,
-        marginBottom: 6,
+        marginBottom: 10,
     },
 });
 
