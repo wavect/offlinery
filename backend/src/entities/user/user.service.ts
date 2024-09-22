@@ -287,7 +287,7 @@ export class UserService {
         return user;
     }
 
-    async findUserByEmail(email: string): Promise<User> {
+    async findUserByEmailOrFail(email: string): Promise<User> {
         const user = await this.userRepository.findOne({
             where: { email },
             relations: ["blacklistedRegions"], // Include related entities if needed

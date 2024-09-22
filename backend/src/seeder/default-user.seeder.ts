@@ -53,7 +53,7 @@ export class DefaultUserSeeder {
     async seedDefaultUsers(): Promise<void> {
         const email = "office@wavect.io";
         try {
-            await this.userService.findUserByEmail(email); // fails if user does not exist
+            await this.userService.findUserByEmailOrFail(email); // fails if user does not exist
         } catch (err) {
             const defaultUser: CreateUserDTO = {
                 firstName: "TestUser",
@@ -64,7 +64,7 @@ export class DefaultUserSeeder {
                 birthDay: new Date("1990-01-01"),
                 gender: EGender.MAN,
                 genderDesire: EGender.WOMAN,
-                approachChoice: EApproachChoice.APPROACH,
+                approachChoice: EApproachChoice.BE_APPROACHED,
                 approachFromTime: new Date("2023-01-01 08:00:00"),
                 approachToTime: new Date("2023-01-01 20:00:00"),
                 dateMode: EDateMode.GHOST,

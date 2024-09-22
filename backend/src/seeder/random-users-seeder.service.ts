@@ -62,7 +62,7 @@ export class RandomUsersSeeder {
 
     async seedRandomUsers(): Promise<void> {
         try {
-            await this.userService.findUserByEmail("test@test.test");
+            await this.userService.findUserByEmailOrFail("test@test.test");
             console.log("✓ Test Users exist");
             return;
         } catch (e) {
