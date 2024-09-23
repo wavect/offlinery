@@ -4,5 +4,40 @@
       "title": "{firstName} ist in der Nähe! 🔥",
       "body": "Finden. Ansprechen. IRL."
     }
+  },
+  "email": {
+    "request-account-deletion": {
+      "subject": "Offlinery: Kontolöschung beantragt",
+      "hello": "Hallo {{name}}",
+      "warning": "Warnung: Kontolöschung",
+      "receivedRequest": "Wir haben eine Anfrage erhalten, Ihr Konto dauerhaft zu löschen. Diese Aktion ist unwiderruflich und löscht alle Ihre Daten aus unseren Systemen.",
+      "proceedInstructions": "Wenn Sie fortfahren möchten, klicken Sie auf den Link unten:",
+      "deleteButton": "MEIN KONTO LÖSCHEN",
+      "expirationNote": "Hinweis: Dieser Link läuft aus Sicherheitsgründen in 7 Tagen ab.",
+      "warningMessage": "⚠️ WARNUNG: Diese Aktion kann nicht rückgängig gemacht werden! ⚠️",
+      "feedbackRequest": "Bevor Sie gehen, würden wir gerne wissen, warum Sie uns verlassen. Bitte teilen Sie uns Ihre Gedanken per E-Mail an office@offlinery.io mit.",
+      "securityWarning": "Wenn Sie diese Löschung nicht beantragt haben, kontaktieren Sie bitte umgehend unser Support-Team, um Ihr Konto zu sichern.",
+      "footer": "Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese E-Mail."
+    },
+    "verification-successful": {
+      "subject": "Offlinery: Ihr Konto wurde verifiziert",
+      "title": "Offlinery: Konto verifiziert",
+      "header": "Alles ist bereit!",
+      "greeting": "Hallo {{name}}",
+      "verificationSuccess": "Großartige Neuigkeiten! Ihr Offlinery-Konto ist jetzt verifiziert und einsatzbereit.",
+      "nextSteps": "Was kommt als Nächstes? Beginnen Sie, sich mit Menschen in Ihrer Umgebung zu verbinden, oder warten Sie, bis jemand auf Sie zukommt. Die Offline-Welt liegt nun in Ihren Händen!",
+      "disclaimer": "Wenn Sie sich nicht bei Offlinery angemeldet haben, keine Sorge. Sie können diese E-Mail einfach ignorieren.",
+      "footer": "Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese E-Mail."
+    },
+    "email-verification": {
+      "subject": "Willkommen bei Offlinery! Bestätigen Sie Ihre E-Mail",
+      "title": "E-Mail-Verifizierung",
+      "header": "E-Mail-Verifizierung",
+      "greeting": "Hallo {{name}}",
+      "thankYou": "Vielen Dank für Ihre Anmeldung! Bitte verwenden Sie den unten stehenden Verifizierungscode, um Ihre E-Mail-Adresse zu bestätigen:",
+      "instructions": "Geben Sie diesen Code in der Offlinery-App ein, um Ihre E-Mail-Verifizierung abzuschließen.",
+      "disclaimer": "Wenn Sie diese E-Mail nicht angefordert haben, können Sie sie einfach ignorieren.",
+      "footer": "Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese E-Mail."
+    }
   }
 }

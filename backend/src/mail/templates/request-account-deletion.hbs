@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Deletion Warning</title>
+    <title>{{t 'warning'}}</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -84,23 +84,23 @@
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        Account Deletion Warning
-    </div>
-    <div class="content">
-        <div class="warning-icon">🚫</div>
-        <p>Hey {{ name }},</p>
-        <p>We've received a request to <span class="danger-text">permanently delete your account</span>. This action is irreversible and will erase all your data from our systems.</p>
-        <p>If you wish to proceed, click the link below:</p>
-        <a href="{{ deletionLink }}" class="deletion-link">DELETE MY ACCOUNT</a>
-        <p class="expiration-note">Note: This link will expire in 7 days for security reasons.</p>
-        <p class="danger-text">⚠️ WARNING: This action cannot be undone! ⚠️</p>
-        <p>Before you go, we'd appreciate knowing why you're leaving. Please share your thoughts by emailing <a href="mailto:office@offlinery.io" title="Why are you deleting your account">office@offlinery.io</a>.</p>
-        <p>If you didn't request this deletion, please contact our support team immediately to secure your account.</p>
-    </div>
-    <div class="footer">
-        This is an automated message. Do not reply to this email.
-    </div>
+      <div class="header">
+            {{t 'warning'}}
+        </div>
+        <div class="content">
+            <div class="warning-icon">🚫</div>
+            <p>{{t 'hello' name=name}},</p>
+            <p>{{t 'receivedRequest'}}</p>
+            <p>{{t 'proceedInstructions'}}</p>
+            <a href="{{ deletionLink }}" class="deletion-link">{{t 'deleteButton'}}</a>
+            <p class="expiration-note">{{t 'expirationNote'}}</p>
+            <p class="danger-text">{{t 'warningMessage'}}</p>
+            <p>{{t 'feedbackRequest'}}</p>
+            <p>{{t 'securityWarning'}}</p>
+        </div>
+        <div class="footer">
+            {{t 'footer'}}
+        </div>
 </div>
 </body>
 </html>

@@ -12,6 +12,41 @@ export type I18nTranslations = {
                 "body": string;
             };
         };
+        "email": {
+            "request-account-deletion": {
+                "subject": string;
+                "hello": string;
+                "warning": string;
+                "receivedRequest": string;
+                "proceedInstructions": string;
+                "deleteButton": string;
+                "expirationNote": string;
+                "warningMessage": string;
+                "feedbackRequest": string;
+                "securityWarning": string;
+                "footer": string;
+            };
+            "verification-successful": {
+                "subject": string;
+                "title": string;
+                "header": string;
+                "greeting": string;
+                "verificationSuccess": string;
+                "nextSteps": string;
+                "disclaimer": string;
+                "footer": string;
+            };
+            "email-verification": {
+                "subject": string;
+                "title": string;
+                "header": string;
+                "greeting": string;
+                "thankYou": string;
+                "instructions": string;
+                "disclaimer": string;
+                "footer": string;
+            };
+        };
     };
 };
 /* prettier-ignore */

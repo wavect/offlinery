@@ -24,7 +24,23 @@ export interface RegistrationForVerificationRequestDTO {
      * @memberof RegistrationForVerificationRequestDTO
      */
     email: string;
+    /**
+     *
+     * @type {string}
+     * @memberof RegistrationForVerificationRequestDTO
+     */
+    language: RegistrationForVerificationRequestDTOLanguageEnum;
 }
+
+/**
+ * @export
+ */
+export const RegistrationForVerificationRequestDTOLanguageEnum = {
+    en: "en",
+    de: "de",
+} as const;
+export type RegistrationForVerificationRequestDTOLanguageEnum =
+    (typeof RegistrationForVerificationRequestDTOLanguageEnum)[keyof typeof RegistrationForVerificationRequestDTOLanguageEnum];
 
 /**
  * Check if a given object implements the RegistrationForVerificationRequestDTO interface.
@@ -33,6 +49,7 @@ export function instanceOfRegistrationForVerificationRequestDTO(
     value: object,
 ): value is RegistrationForVerificationRequestDTO {
     if (!("email" in value) || value["email"] === undefined) return false;
+    if (!("language" in value) || value["language"] === undefined) return false;
     return true;
 }
 
@@ -51,6 +68,7 @@ export function RegistrationForVerificationRequestDTOFromJSONTyped(
     }
     return {
         email: json["email"],
+        language: json["language"],
     };
 }
 
@@ -62,5 +80,6 @@ export function RegistrationForVerificationRequestDTOToJSON(
     }
     return {
         email: value["email"],
+        language: value["language"],
     };
 }

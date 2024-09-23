@@ -50,9 +50,7 @@ export class RegistrationController {
         @Body() emailDto: RegistrationForVerificationRequestDTO,
     ): Promise<RegistrationForVerificationResponseDTO> {
         this.logger.debug(`User registers his email: ${emailDto.email}`);
-        return await this.registrationService.registerPendingUser(
-            emailDto.email,
-        );
+        return await this.registrationService.registerPendingUser(emailDto);
     }
 
     @Put("verify-email")
