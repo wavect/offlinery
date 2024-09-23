@@ -11,7 +11,7 @@ import { DataSource } from "typeorm";
 import {
     createMainAppUser,
     MAN_WANTS_WOMAN_TESTUSER,
-} from "../builders/db-test-manager";
+} from "../factories/user.factory";
 
 interface TestModuleSetup {
     module: TestingModule;
@@ -32,8 +32,8 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
                 database: "test_offlinery",
                 entities: [
                     User,
-                    UserReport,
                     BlacklistedRegion,
+                    UserReport,
                     Encounter,
                     Message,
                 ],

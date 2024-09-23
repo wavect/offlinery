@@ -70,8 +70,8 @@ const DEFAULT_SCREEN_PROPS = {
 };
 const DEFAULT_LIGHT_SCREEN_PROPS = {
     ...DEFAULT_SCREEN_PROPS,
-    headerBackImage: () => <BackIcon color={Color.white} />,
     headerTransparent: true,
+    headerBackImage: () => <BackIcon color={Color.white} />,
     headerTintColor: Color.white,
 };
 const NO_HEADER = { headerShown: false };

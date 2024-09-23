@@ -11,6 +11,7 @@ import {
     UserPrivateDTOVerificationStatusEnum,
     UserPublicDTO,
 } from "@/api/gen/src";
+import { TR, i18n } from "@/localization/translate.service";
 import { refreshUserData } from "@/services/auth.service";
 import {
     SECURE_VALUE,
@@ -146,7 +147,7 @@ export const initialUserState: IUserData = {
     blacklistedRegions: [],
     approachFromTime: DEFAULT_FROM_TIME,
     approachToTime: DEFAULT_TO_TIME,
-    bio: "No pick-up lines please. Just be chill.",
+    bio: i18n.t(TR.defaultBio),
     dateMode: UserPrivateDTODateModeEnum.ghost,
     markedForDeletion: false,
     jwtAccessToken: undefined,

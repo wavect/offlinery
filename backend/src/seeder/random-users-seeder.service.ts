@@ -1,5 +1,6 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
+import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import {
     EApproachChoice,
@@ -7,6 +8,7 @@ import {
     EEmailVerificationStatus,
     EGender,
     ELanguage,
+    EVerificationStatus,
 } from "@/types/user.types";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -21,6 +23,8 @@ export class RandomUsersSeeder {
         private userService: UserService,
         @InjectRepository(PendingUser)
         private pendingUserRepo: Repository<PendingUser>,
+        @InjectRepository(User)
+        private userRepo: Repository<User>,
     ) {}
 
     private AMOUNT_OF_USERS = 300;
@@ -93,6 +97,10 @@ export class RandomUsersSeeder {
                 await this.userService.createUser(user, [
                     this.createFileFromImage(),
                 ]);
+                await this.userRepo.update(
+                    { email },
+                    { verificationStatus: EVerificationStatus.VERIFIED },
+                );
             } catch (e) {
                 console.log("SEED Error", e);
             }

@@ -50,8 +50,8 @@ export const OPageColorContainer = (props: IOPageColorContainerProps) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar hidden />
             <OLinearBackground>
+                <StatusBar hidden backgroundColor="transparent" />
                 <KeyboardAvoidingView
                     style={styles.container}
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -87,6 +87,7 @@ const { height, width } = Dimensions.get("window");
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: "transparent",
     },
     scrollViewContent: {
         flexGrow: 1,

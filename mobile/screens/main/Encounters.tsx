@@ -105,17 +105,23 @@ const Encounters = ({
             });
 
             dispatch({
-                type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,
+                type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
                 payload: mappedEncounters,
             });
         } catch (error) {
             console.error(error);
         }
-    }, [userState.id, userState.jwtAccessToken, dispatch]);
+    }, [
+        userState.id,
+        userState.jwtAccessToken,
+        dispatch,
+        metStartDateFilter,
+        metEndDateFilter,
+    ]);
 
     useEffect(() => {
         fetchEncounters();
-    }, [fetchEncounters]);
+    }, [fetchEncounters, metStartDateFilter, metEndDateFilter]);
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);

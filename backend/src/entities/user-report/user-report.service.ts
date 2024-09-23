@@ -45,6 +45,7 @@ export class UserReportService {
             ...createUserReportDto,
             reportingUser,
             reportedUser: userToBeReported,
+            reportedEncounter: encounter,
         });
 
         return !!(await this.userReportRepository.save(userReport));

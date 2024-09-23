@@ -124,7 +124,7 @@ export const OButtonWide: FC<IOButtonWideProps> = ({
     }, [countdown]);
 
     const buttonText = isBtnCountdownActive ? `${text} (${countdown})` : text;
-    const isDisabled = disabled || isBtnCountdownActive;
+    const isDisabled = disabled || isLoading || isBtnCountdownActive;
 
     return (
         <Pressable

@@ -125,7 +125,7 @@ const Login = ({
 
             <OTermsDisclaimer style={styles.termsDisclaimer} />
 
-            <OTroubleSignIn />
+            <OTroubleSignIn style={styles.troubleSignIn} />
         </OPageColorContainer>
     );
 };
@@ -136,6 +136,9 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+    },
+    troubleSignIn: {
+        marginBottom: 10,
     },
     scrollViewContent: {
         flexGrow: 1,

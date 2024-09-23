@@ -68,7 +68,7 @@ export const de: Language = {
     untilDescr: "bis",
     letThemKnow: "Lass sie wissen",
     messageShownToPersonApproaching:
-        "Die Nachricht wird der Person angezeigt, die dich ansprichen möchte.",
+        "Die Nachricht wird der Person angezeigt, die dich ansprechen möchte.",
     done: "Fertig",
     registering: "Erstelle Account..",
     noPickUpLinesBeChill: "Keine Anmachsprüche bitte. Sei einfach lustig.",
@@ -160,6 +160,7 @@ export const de: Language = {
     changePreferencesDescr:
         "Ändere deine Einstellungen oder aktualisiere dein Profil.",
     bio: "Bio",
+    defaultBio: "Bitte keine Pick-Up Lines. Ein nettes Hallo :) reicht völlig.",
     updateImages: "Bilder updaten",
     updateSafeZones: "Safe Zones updaten",
     errNoUserProvided: "Fehler: Kein Nutzer angegeben",
