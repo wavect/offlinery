@@ -44,21 +44,46 @@ export class RegistrationService {
 
             let pendingUser = await this.pendingUserRepo.findOneBy({ email });
 
-            if (
-                pendingUser &&
-                pendingUser.verificationStatus ===
+            if (pendingUser) {
+                if (
+                    pendingUser.verificationStatus ===
                     EEmailVerificationStatus.VERIFIED
-            ) {
-                this.logger.debug(
-                    `User ${pendingUser.email} already verified, but didn't register yet.`,
-                );
-                return {
-                    email: pendingUser.email,
-                    timeout: this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
-                    verificationCodeIssuedAt:
-                        pendingUser.verificationCodeIssuedAt,
-                    alreadyVerifiedButNotRegistered: true,
-                };
+                ) {
+                    this.logger.debug(
+                        `User ${pendingUser.email} already verified, but didn't register yet.`,
+                    );
+                    return {
+                        email: pendingUser.email,
+                        timeout: this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
+                        verificationCodeIssuedAt:
+                            pendingUser.verificationCodeIssuedAt,
+                        alreadyVerifiedButNotRegistered: true,
+                    };
+                } else {
+                    this.logger.debug(
+                        `User ${pendingUser.email} not verified, but already has a pending request.`,
+                    );
+                    // We already issued a verification code in the last xxx seconds.
+                    if (
+                        Date.now() <
+                        new Date(
+                            pendingUser.verificationCodeIssuedAt,
+                        ).getTime() +
+                            this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS
+                    ) {
+                        this.logger.debug(
+                            `Already issued verification that has not yet expired, returning old data.`,
+                        );
+                        return {
+                            email: pendingUser.email,
+                            timeout:
+                                this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
+                            verificationCodeIssuedAt:
+                                pendingUser.verificationCodeIssuedAt,
+                            alreadyVerifiedButNotRegistered: false,
+                        };
+                    }
+                }
             } else {
                 pendingUser = new PendingUser();
                 pendingUser.email = email;
@@ -66,21 +91,7 @@ export class RegistrationService {
                     EEmailVerificationStatus.PENDING;
             }
 
-            // We already issued a verification code in the last xxx seconds.
-            if (
-                Date.now() <
-                new Date(pendingUser.verificationCodeIssuedAt).getTime() +
-                    this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS
-            ) {
-                return {
-                    email: pendingUser.email,
-                    timeout: this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
-                    verificationCodeIssuedAt:
-                        pendingUser.verificationCodeIssuedAt,
-                    alreadyVerifiedButNotRegistered: false,
-                };
-            }
-
+            this.logger.debug(`Issuing new verification code for user.`);
             pendingUser.verificationCodeIssuedAt = new Date();
 
             let verificationNumber: string = "";
