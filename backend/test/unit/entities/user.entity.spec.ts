@@ -45,10 +45,6 @@ describe("User Entity", () => {
     });
 
     describe("convertToPrivateDTO", () => {
-        /** @BRITTLE
-         * - This test is brittle and should be refactored.
-         * - Any time, we change the DTO this test breaks.
-         */
         it("should return a UserPrivateDTO with correct properties", () => {
             user.isActive = true;
             user.wantsEmailUpdates = false;
@@ -56,9 +52,6 @@ describe("User Entity", () => {
 
             const privateDTO = user.convertToPrivateDTO();
 
-            /** @TODO
-             * - add more properties, that should be tested
-             * - never test against the whole object*/
             expect(privateDTO.dateMode).toEqual(EDateMode.LIVE);
         });
     });
