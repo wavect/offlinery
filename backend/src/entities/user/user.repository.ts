@@ -75,8 +75,8 @@ export class UserRepository extends Repository<User> {
         return (
             this.createUserMatchBaseQuery(userToBeApproached)
                 /** @dev Are users within x meters - TODO: Make this configurable by users. */
-                // .withinDistance(userToBeApproached.location, 1500)
-                // .withUserWantingToBeApproached()
+                .withinDistance(userToBeApproached.location, 1500)
+                .withUserWantingToBeApproached()
                 .getMany()
         );
     }
