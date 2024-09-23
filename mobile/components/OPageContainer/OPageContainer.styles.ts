@@ -1,4 +1,4 @@
-import { Platform } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 export default {
     container: {
@@ -9,8 +9,10 @@ export default {
     },
     content: {
         flex: 1,
+        backgroundColor: "transparent",
     },
     buttonContainer: {
+        backgroundColor: "transparent",
         alignItems: "center",
         width: "100%",
         marginTop: "auto",
@@ -19,5 +21,12 @@ export default {
                 marginBottom: 10,
             },
         }),
+    },
+    iconContainer: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: -1, // Place the icon behind other content
     },
 };

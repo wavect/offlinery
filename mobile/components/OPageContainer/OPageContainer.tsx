@@ -8,7 +8,7 @@ import {
     Platform,
     RefreshControl,
     ScrollView,
-    StyleSheet,
+    StatusBar,
     Text,
     View,
 } from "react-native";
@@ -53,8 +53,9 @@ export const OPageContainer = (props: IOPageContainerProps) => {
 
     return (
         <View style={styles.container}>
+            <StatusBar hidden backgroundColor="transparent" />
             {props.fullpageIcon && (
-                <View style={fullpageIconStyles.iconContainer}>
+                <View style={styles.iconContainer}>
                     <MaterialIcons
                         name={props.fullpageIcon}
                         size={Math.min(width, height) * 0.8}
@@ -91,12 +92,3 @@ export const OPageContainer = (props: IOPageContainerProps) => {
         </View>
     );
 };
-
-const fullpageIconStyles = StyleSheet.create({
-    iconContainer: {
-        ...StyleSheet.absoluteFillObject,
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: -1, // Place the icon behind other content
-    },
-});
