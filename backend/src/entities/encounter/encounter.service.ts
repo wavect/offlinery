@@ -33,6 +33,7 @@ export class EncounterService {
         let query = this.encounterRepository
             .createQueryBuilder("encounter")
             .innerJoinAndSelect("encounter.users", "user")
+            .leftJoinAndSelect("encounter.userReports", "userReports")
             /** @DEV CHANGE! */
             .where(
                 ':userId IN (SELECT "userId" FROM user_encounters_encounter WHERE "encounterId" = encounter.id)',
