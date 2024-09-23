@@ -20,15 +20,15 @@ describe("UserReportService", () => {
                 UserReportService,
                 {
                     provide: getRepositoryToken(UserReport),
-                    useFactory: mockRepository,
+                    useValue: mockRepository,
                 },
                 {
                     provide: getRepositoryToken(User),
-                    useFactory: mockRepository,
+                    useValue: mockRepository,
                 },
                 {
                     provide: getRepositoryToken(Encounter),
-                    useFactory: mockRepository,
+                    useValue: mockRepository,
                 },
             ],
         }).compile();

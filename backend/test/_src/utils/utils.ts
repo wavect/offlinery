@@ -16,7 +16,7 @@ export const generateRandomString = (length: number = 15): string => {
     ).join("");
 };
 
-export const mockRepository = jest.fn(() => ({
+export const mockRepository = {
     find: jest.fn(),
     findOne: jest.fn(),
     findOneBy: jest.fn(),
@@ -30,4 +30,4 @@ export const mockRepository = jest.fn(() => ({
         getOne: jest.fn(),
         getMany: jest.fn(),
     })),
-}));
+};
