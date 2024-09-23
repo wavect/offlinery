@@ -1,8 +1,9 @@
+import { AuthGuard } from "@/auth/auth.guard";
+import { ApiUserService } from "@/entities/api-user/api-user.service";
 import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
-import { AuthGuard } from "../../../src/auth/auth.guard";
 
 describe("AuthGuard", () => {
     let authGuard: AuthGuard;
@@ -23,6 +24,12 @@ describe("AuthGuard", () => {
                     provide: Reflector,
                     useValue: {
                         getAllAndOverride: jest.fn(),
+                    },
+                },
+                {
+                    provide: ApiUserService,
+                    useValue: {
+                        findApiUserByApiKey: jest.fn(),
                     },
                 },
             ],

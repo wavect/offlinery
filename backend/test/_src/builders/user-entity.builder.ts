@@ -6,66 +6,30 @@ import {
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
-import { Point } from "geojson";
+import { AbstractEntityBuilder } from "./_abstract-entity-builder";
 
-export class UserEntityBuilder {
-    private user: User;
-
-    constructor() {
-        this.user = new User();
-        this.user.id = "00000000-0000-0000-0000-000000000000";
-        this.user.isActive = true;
-        this.user.firstName = "John";
-        this.user.email = "john@example.com";
-        this.user.passwordHash = "hashedpassword";
-        this.user.passwordSalt = "salt";
-        this.user.birthDay = new Date("1990-01-01");
-        this.user.gender = EGender.MAN;
-        this.user.genderDesire = EGender.WOMAN;
-        this.user.imageURIs = ["https://example.com/image.jpg"];
-        this.user.verificationStatus = EVerificationStatus.VERIFIED;
-        this.user.approachChoice = EApproachChoice.APPROACH;
-        this.user.approachFromTime = new Date("2023-01-01T09:00:00Z");
-        this.user.approachToTime = new Date("2023-01-01T17:00:00Z");
-        this.user.bio = "Hello, I am John";
-        this.user.dateMode = EDateMode.LIVE;
-        this.user.trustScore = 100;
-        this.user.location = { type: "Point", coordinates: [0, 0] } as Point;
-        this.user.preferredLanguage = ELanguage.en;
-    }
-
-    public withId(id: string): UserEntityBuilder {
-        this.user.id = id;
-        return this;
-    }
-
-    public withFirstName(firstName: string): UserEntityBuilder {
-        this.user.firstName = firstName;
-        return this;
-    }
-
-    public withEmail(email: string): UserEntityBuilder {
-        this.user.email = email;
-        return this;
-    }
-
-    public withDateMode(dateMode: EDateMode): UserEntityBuilder {
-        this.user.dateMode = dateMode;
-        return this;
-    }
-
-    public withLocation(
-        longitude: number,
-        latitude: number,
-    ): UserEntityBuilder {
-        this.user.location = {
-            type: "Point",
-            coordinates: [longitude, latitude],
-        } as Point;
-        return this;
-    }
-
-    public build(): User {
-        return this.user;
+export class UserEntityBuilder extends AbstractEntityBuilder<User> {
+    protected createEntity(): User {
+        const user = new User();
+        user.id = "00000000-0000-0000-0000-000000000000";
+        user.isActive = true;
+        user.firstName = "John";
+        user.email = "john@example.com";
+        user.passwordHash = "hashedpassword";
+        user.passwordSalt = "salt";
+        user.birthDay = new Date("1990-01-01");
+        user.gender = EGender.MAN;
+        user.genderDesire = EGender.WOMAN;
+        user.imageURIs = ["https://example.com/image.jpg"];
+        user.verificationStatus = EVerificationStatus.VERIFIED;
+        user.approachChoice = EApproachChoice.APPROACH;
+        user.approachFromTime = new Date("2023-01-01T09:00:00Z");
+        user.approachToTime = new Date("2023-01-01T17:00:00Z");
+        user.bio = "Hello, I am John";
+        user.dateMode = EDateMode.LIVE;
+        user.trustScore = 100;
+        user.location = { type: "Point", coordinates: [0, 0] };
+        user.preferredLanguage = ELanguage.en;
+        return user;
     }
 }

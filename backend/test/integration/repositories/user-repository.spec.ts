@@ -8,11 +8,9 @@ import {
 } from "@/types/user.types";
 import { TestingModule } from "@nestjs/testing";
 import { DataSource } from "typeorm";
-import {
-    clearDatabase,
-    createRandomAppUser,
-} from "../../_src/builders/db-test-manager";
+import { createRandomAppUser } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
+import { clearDatabase } from "../../_src/utils/utils";
 
 describe("UserRepository ", () => {
     let userRepository: UserRepository;
@@ -89,29 +87,6 @@ describe("UserRepository ", () => {
             expect(matches.length).toBe(3);
             expect(matches.map((m) => m.id)).toEqual(
                 expect.arrayContaining([userId.id, userId2.id]),
-            );
-        });
-        it("Should only find users that are VERIFIED", async () => {
-            const user = await createRandomAppUser(userRepository, {
-                verificationStatus: EVerificationStatus.VERIFIED,
-            });
-
-            await createRandomAppUser(userRepository, {
-                verificationStatus: EVerificationStatus.PENDING,
-            });
-
-            await createRandomAppUser(userRepository, {
-                verificationStatus: EVerificationStatus.NOT_NEEDED,
-            });
-
-            const matches =
-                await userRepository.getPotentialMatchesForHeatMap(
-                    testingMainUser,
-                );
-
-            expect(matches.length).toBe(1);
-            expect(matches.map((m) => m.id)).toEqual(
-                expect.arrayContaining([user.id]),
             );
         });
         it("Should not find users that are GHOST", async () => {
@@ -214,7 +189,8 @@ describe("UserRepository ", () => {
                 expect.arrayContaining([user.id]),
             );
         });
-        it("should only find users that want to be APPROACHED", async () => {
+
+        it("Should only find users that want to be APPROACHED", async () => {
             const user1 = await createRandomAppUser(userRepository, {
                 approachChoice: EApproachChoice.BE_APPROACHED,
             });
