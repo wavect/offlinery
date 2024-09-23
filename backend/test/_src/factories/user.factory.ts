@@ -6,7 +6,6 @@ import {
     EGender,
     EVerificationStatus,
 } from "@/types/user.types";
-import { DataSource } from "typeorm";
 import { generateRandomString } from "../utils/utils";
 
 export const MAN_WANTS_MAN_TESTUSER = "MAN_WANTS_MAN_TESTUSER";
@@ -37,7 +36,12 @@ export const createRandomAppUser = async (
         ...userData,
     });
 
-    return await userRepository.save(user);
+    const savedUser = await userRepository.save(user);
+    savedUser.verificationStatus = userData.verificationStatus
+        ? userData.verificationStatus
+        : EVerificationStatus.VERIFIED;
+
+    return await userRepository.save(savedUser);
 };
 
 export const createMainAppUser = async (userRepository: UserRepository) => {
@@ -48,7 +52,7 @@ export const createMainAppUser = async (userRepository: UserRepository) => {
         location: { type: "Point", coordinates: [0, 0] },
         dateMode: EDateMode.LIVE,
         verificationStatus: EVerificationStatus.VERIFIED,
-        approachChoice: EApproachChoice.BE_APPROACHED,
+        approachChoice: EApproachChoice.APPROACH,
     });
     await createRandomAppUser(userRepository, {
         firstName: MAN_WANTS_WOMAN_TESTUSER,
@@ -57,7 +61,7 @@ export const createMainAppUser = async (userRepository: UserRepository) => {
         location: { type: "Point", coordinates: [0, 0] },
         dateMode: EDateMode.LIVE,
         verificationStatus: EVerificationStatus.VERIFIED,
-        approachChoice: EApproachChoice.BE_APPROACHED,
+        approachChoice: EApproachChoice.APPROACH,
     });
     await createRandomAppUser(userRepository, {
         firstName: WOMAN_WANTS_WOMAN_TESTUSER,
@@ -66,7 +70,7 @@ export const createMainAppUser = async (userRepository: UserRepository) => {
         location: { type: "Point", coordinates: [0, 0] },
         dateMode: EDateMode.LIVE,
         verificationStatus: EVerificationStatus.VERIFIED,
-        approachChoice: EApproachChoice.BE_APPROACHED,
+        approachChoice: EApproachChoice.APPROACH,
     });
     await createRandomAppUser(userRepository, {
         firstName: WOMAN_WANTS_MAN_TESTUSER,
@@ -75,12 +79,6 @@ export const createMainAppUser = async (userRepository: UserRepository) => {
         location: { type: "Point", coordinates: [0, 0] },
         dateMode: EDateMode.LIVE,
         verificationStatus: EVerificationStatus.VERIFIED,
-        approachChoice: EApproachChoice.BE_APPROACHED,
+        approachChoice: EApproachChoice.APPROACH,
     });
-};
-
-export const clearDatabase = async (dataSource: DataSource) => {
-    await dataSource.query(`
-            TRUNCATE TABLE "user", encounter, user_report RESTART IDENTITY CASCADE;
-        `);
 };

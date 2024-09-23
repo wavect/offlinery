@@ -19,7 +19,7 @@
         "test:cov": "jest --coverage --detectOpenHandles",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "test:unit": "jest --testRegex=\"/test/unit/.*\\.spec\\.ts$\"",
+        "test:unit": "jest --testRegex=\"/test/unit/.*\\.spec\\.ts$\" --silent",
         "test:integration": "jest --testRegex=\"/test/integration/.*\\.spec\\.ts$\"",
         "test:coverage": "pnpm test -- --coverage",
         "test:badges": "pnpm run test:coverage  && jest-coverage-badges",
