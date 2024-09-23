@@ -30,14 +30,14 @@
       "footer": "Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese E-Mail."
     },
     "email-verification": {
-      "subject": "Willkommen bei Offlinery! Bestätigen Sie Ihre E-Mail",
+      "subject": "Willkommen bei Offlinery! Bestätige deine E-Mail",
       "title": "E-Mail-Verifizierung",
       "header": "E-Mail-Verifizierung",
       "greeting": "Hallo {{name}}",
-      "thankYou": "Vielen Dank für Ihre Anmeldung! Bitte verwenden Sie den unten stehenden Verifizierungscode, um Ihre E-Mail-Adresse zu bestätigen:",
-      "instructions": "Geben Sie diesen Code in der Offlinery-App ein, um Ihre E-Mail-Verifizierung abzuschließen.",
-      "disclaimer": "Wenn Sie diese E-Mail nicht angefordert haben, können Sie sie einfach ignorieren.",
-      "footer": "Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese E-Mail."
+      "thankYou": "Vielen Dank für deine Anmeldung! Bitte verwende den unten stehenden Verifizierungscode, um deine E-Mail-Adresse zu bestätigen:",
+      "instructions": "Gib diesen Code in der Offlinery-App ein, um deine E-Mail-Verifizierung abzuschließen.",
+      "disclaimer": "Wenn du diese E-Mail nicht angefordert hast, dann kannst du sie einfach ignorieren.",
+      "footer": "Dies ist eine automatisierte Nachricht. Bitte antworte nicht auf diese E-Mail."
     }
   }
 }

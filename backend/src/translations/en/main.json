@@ -8,7 +8,7 @@
   "email": {
     "request-account-deletion": {
       "subject": "Offlinery: Account Deletion Requested",
-      "hello": "Hi",
+      "hello": "Hi {{name}}",
       "warning": "Account Deletion Warning",
       "receivedRequest": "We've received a request to permanently delete your account. This action is irreversible and will erase all your data from our systems.",
       "proceedInstructions": "If you wish to proceed, click the link below:",
