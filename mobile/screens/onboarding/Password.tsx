@@ -47,7 +47,7 @@ const Password = ({
             payload: { clearPassword: pwd },
         });
 
-        if (isValidPassword(state.clearPassword)) {
+        if (isValidPassword(pwd)) {
             setPasswordError("");
         } else if (doPasswordsMatch(passwordConfirmation)) {
             setPasswordErrorConfirmation("");
