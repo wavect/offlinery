@@ -1,10 +1,10 @@
-import { ExecutionContext, ForbiddenException } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
-import { Test, TestingModule } from "@nestjs/testing";
 import {
     USER_ID_PARAM,
     UserSpecificAuthGuard,
-} from "../../../src/auth/auth-own-data.guard";
+} from "@/auth/auth-own-data.guard";
+import { ExecutionContext, ForbiddenException } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
+import { Test, TestingModule } from "@nestjs/testing";
 
 describe("UserSpecificAuthGuard", () => {
     let guard: UserSpecificAuthGuard;

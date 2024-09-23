@@ -184,7 +184,11 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 onValueChange={toggleSwitch}
                 value={state.dateMode === UserPrivateDTODateModeEnum.live}
             />
-            <Text style={{ marginTop: 5, fontSize: 12, color: Color.gray }}>
+            <Text
+                style={{ marginTop: 5, fontSize: 12, color: Color.gray }}
+                adjustsFontSizeToFit={true}
+                numberOfLines={1}
+            >
                 {state.dateMode === UserPrivateDTODateModeEnum.live
                     ? i18n.t(TR.live)
                     : i18n.t(TR.ghostMode)}

@@ -92,7 +92,11 @@ const OEncounter = (props: ISingleEncounterProps) => {
                 <View style={styles.encounterDetails}>
                     <Text
                         style={styles.nameAge}
-                    >{`${encounterProfile.firstName}, ${encounterProfile.age}`}</Text>
+                        numberOfLines={1}
+                        adjustsFontSizeToFit={true}
+                    >
+                        {`${encounterProfile.firstName}, ${encounterProfile.age}`}
+                    </Text>
                     <Text
                         style={styles.encounterInfo}
                     >{`${formatDate(encounterProfile.lastTimePassedBy)} near ${encounterProfile.lastLocationPassedBy}`}</Text>

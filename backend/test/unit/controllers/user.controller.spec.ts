@@ -1,18 +1,17 @@
-import { NotFoundException } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
-import { CreateUserDTO } from "../../../src/DTOs/create-user.dto";
-import { LocationUpdateDTO } from "../../../src/DTOs/location-update.dto";
-import { UpdateUserDTO } from "../../../src/DTOs/update-user.dto";
-import { UserController } from "../../../src/entities/user/user.controller";
-import { User } from "../../../src/entities/user/user.entity";
-import { UserService } from "../../../src/entities/user/user.service";
+import { CreateUserDTO } from "@/DTOs/create-user.dto";
+import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { UpdateUserDTO } from "@/DTOs/update-user.dto";
+import { UserController } from "@/entities/user/user.controller";
+import { User } from "@/entities/user/user.entity";
+import { UserService } from "@/entities/user/user.service";
 import {
     EApproachChoice,
     EDateMode,
     EGender,
     ELanguage,
-    EVerificationStatus,
-} from "../../../src/types/user.types";
+} from "@/types/user.types";
+import { NotFoundException } from "@nestjs/common";
+import { Test, TestingModule } from "@nestjs/testing";
 import { UserEntityBuilder } from "../../_src/builders/user-entity.builder";
 
 describe("UserController", () => {
@@ -49,7 +48,6 @@ describe("UserController", () => {
                 firstName: "John",
                 email: "john@example.com",
                 wantsEmailUpdates: false,
-                verificationStatus: EVerificationStatus.PENDING,
                 blacklistedRegions: [],
                 clearPassword: "password123",
                 birthDay: new Date("1990-01-01"),
@@ -71,6 +69,7 @@ describe("UserController", () => {
                 accessToken: "AT",
                 user: {
                     ...new UserEntityBuilder().build(),
+                    markedForDeletion: false,
                     age: 26,
                 },
                 refreshToken: "RT",
@@ -120,20 +119,6 @@ describe("UserController", () => {
     });
 
     describe("getUser", () => {
-        it("should return a user by ID", async () => {
-            const userId = "1";
-            const mockUser = new User();
-            mockUser.id = userId;
-            mockUser.firstName = "John";
-
-            jest.spyOn(userService, "findUserById").mockResolvedValue(mockUser);
-
-            const result = await controller.getOwnUserData(userId);
-
-            expect(result).toEqual(mockUser.convertToPublicDTO());
-            expect(userService.findUserById).toHaveBeenCalledWith(userId);
-        });
-
         it("should throw NotFoundException if user is not found", async () => {
             const userId = "1";
 

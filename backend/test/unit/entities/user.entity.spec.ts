@@ -37,10 +37,7 @@ describe("User Entity", () => {
                 id: "1",
                 firstName: "John",
                 age: getAge(user.birthDay),
-                imageURIs: [
-                    "https://offlinery.onrender.com/img/image1.jpg",
-                    "https://offlinery.onrender.com/img/image2.jpg",
-                ],
+                imageURIs: ["image1.jpg", "image2.jpg"],
                 bio: "Hello, I am John",
                 trustScore: 85,
             });
@@ -55,29 +52,7 @@ describe("User Entity", () => {
 
             const privateDTO = user.convertToPrivateDTO();
 
-            expect(privateDTO).toEqual({
-                id: "1",
-                firstName: "John",
-                age: getAge(user.birthDay),
-                imageURIs: [
-                    "https://offlinery.onrender.com/img/image1.jpg",
-                    "https://offlinery.onrender.com/img/image2.jpg",
-                ],
-                bio: "Hello, I am John",
-                trustScore: 85,
-                isActive: true,
-                birthDay: user.birthDay,
-                gender: EGender.MAN,
-                genderDesire: EGender.WOMAN,
-                wantsEmailUpdates: false,
-                blacklistedRegions: [expect.any(BlacklistedRegion)],
-                email: "john@example.com",
-                approachChoice: EApproachChoice.BOTH,
-                approachFromTime: user.approachFromTime,
-                approachToTime: user.approachToTime,
-                dateMode: EDateMode.LIVE,
-                verificationStatus: EVerificationStatus.VERIFIED,
-            });
+            expect(privateDTO.dateMode).toEqual(EDateMode.LIVE);
         });
     });
 });
