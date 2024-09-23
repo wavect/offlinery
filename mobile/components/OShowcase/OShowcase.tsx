@@ -19,11 +19,21 @@ export const OShowcase = (props: IOShowcaseProps) => {
         <View style={[styles.container, containerStyle]}>
             <View style={styles.headlineContainer}>
                 <MaterialIcons name="wifi-off" size={45} color={Color.white} />
-                <Text style={[styles.headlineText, systemFontStyle]}>
+                <Text
+                    style={[styles.headlineText, systemFontStyle]}
+                    adjustsFontSizeToFit={true}
+                    numberOfLines={1}
+                >
                     offlinery
                 </Text>
             </View>
-            <Text style={[styles.subtitle, systemFontStyle]}>{subtitle}</Text>
+            <Text
+                style={[styles.subtitle, systemFontStyle]}
+                adjustsFontSizeToFit={true}
+                numberOfLines={1}
+            >
+                {subtitle}
+            </Text>
         </View>
     );
 };

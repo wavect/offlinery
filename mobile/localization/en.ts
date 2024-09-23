@@ -156,6 +156,7 @@ export const en = {
     calculating: "Calculating..",
     changePreferencesDescr: "Change your preferences or update your profile.",
     bio: "Bio",
+    defaultBio: "No pick-up lines please. Just be chill.",
     updateImages: "Update images",
     updateSafeZones: "Update Safe Zones",
     errNoUserProvided: "Error: No user provided",
