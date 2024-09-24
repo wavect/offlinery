@@ -201,13 +201,17 @@ export class EncounterService {
 
         const encounter = await this.encounterRepository.findOne({
             where: { id: encounterId },
-            relations: { messages: true },
+            relations: { messages: { sender: true } },
         });
         if (!encounter) {
             throw new NotFoundException(
                 `Encounter with ID ${encounterId} not found`,
             );
         }
+
+        encounter.messages = encounter.messages.filter(
+            (m) => m.sender.id !== userId,
+        );
 
         const newMessage = this.messageRepository.create({
             content,

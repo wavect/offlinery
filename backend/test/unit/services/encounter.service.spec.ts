@@ -8,6 +8,7 @@ import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { mockRepository } from "../../_src/utils/utils";
 
 describe("EncounterService", () => {
     let service: EncounterService;
@@ -20,11 +21,11 @@ describe("EncounterService", () => {
                 EncounterService,
                 {
                     provide: getRepositoryToken(Encounter),
-                    useClass: Repository,
+                    useValue: mockRepository,
                 },
                 {
                     provide: getRepositoryToken(Message),
-                    useClass: Repository,
+                    useValue: mockRepository,
                 },
             ],
         }).compile();
@@ -108,42 +109,57 @@ describe("EncounterService", () => {
     });
 
     describe("pushMessage", () => {
-        it("should add a new message to an encounter", async () => {
+        it("should add a new message to an encounter and filter out previous messages from the same user", async () => {
             const userId = "user123";
             const pushMessageDTO = {
                 encounterId: "encounter123",
                 content: "Hello!",
             };
             const mockEncounter = new Encounter();
-            mockEncounter.messages = [];
+            mockEncounter.id = "encounter123";
+            mockEncounter.messages = [
+                {
+                    id: "msg1",
+                    content: "Previous message",
+                    sender: { id: userId },
+                },
+                {
+                    id: "msg2",
+                    content: "Other user message",
+                    sender: { id: "otherUser" },
+                },
+            ] as Message[];
+
+            const newMessage = {
+                id: "newMsg",
+                content: "Hello!",
+                sentAt: new Date(),
+                sender: { id: userId },
+                encounter: mockEncounter,
+            } as Message;
 
             jest.spyOn(encounterRepository, "findOne").mockResolvedValue(
                 mockEncounter,
             );
-            jest.spyOn(messageRepository, "create").mockReturnValue(
-                {} as Message,
-            );
-            jest.spyOn(messageRepository, "save").mockResolvedValue(
-                {} as Message,
-            );
-            jest.spyOn(encounterRepository, "save").mockResolvedValue(
-                mockEncounter,
-            );
+            jest.spyOn(messageRepository, "create").mockReturnValue(newMessage);
+            jest.spyOn(messageRepository, "save").mockResolvedValue(newMessage);
+            jest.spyOn(encounterRepository, "save").mockResolvedValue({
+                ...mockEncounter,
+                messages: [mockEncounter.messages[1], newMessage],
+            } as Encounter);
 
             const result = await service.pushMessage(userId, pushMessageDTO);
 
-            expect(messageRepository.create).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    content: "Hello!",
-                    sender: { id: userId },
-                    encounter: mockEncounter,
-                }),
+            expect(result.messages.length).toBe(2);
+            expect(result.messages).not.toContainEqual(
+                expect.objectContaining({ id: "msg1" }),
             );
-            expect(messageRepository.save).toHaveBeenCalled();
-            expect(encounterRepository.save).toHaveBeenCalledWith(
-                mockEncounter,
+            expect(result.messages).toContainEqual(
+                expect.objectContaining({ id: "msg2" }),
             );
-            expect(result.messages.length).toBe(1);
+            expect(result.messages).toContainEqual(
+                expect.objectContaining({ id: "newMsg" }),
+            );
         });
 
         it("should throw NotFoundException if encounter is not found", async () => {
