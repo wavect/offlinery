@@ -8,7 +8,11 @@ import { AuthService } from "@/auth/auth.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { MatchingService } from "@/transient-services/matching/matching.service";
-import { EApproachChoice, EEmailVerificationStatus } from "@/types/user.types";
+import {
+    EApproachChoice,
+    EEmailVerificationStatus,
+    ELanguage,
+} from "@/types/user.types";
 import { API_VERSION, BE_ENDPOINT } from "@/utils/misc.utils";
 import { MailerService } from "@nestjs-modules/mailer";
 import {
@@ -25,6 +29,7 @@ import * as bcrypt from "bcrypt";
 import { randomBytes } from "crypto";
 import { Expo } from "expo-server-sdk";
 import * as fs from "fs";
+import { I18nService } from "nestjs-i18n";
 import * as path from "path";
 import { Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
@@ -46,6 +51,7 @@ export class UserService {
         @Inject(forwardRef(() => AuthService))
         private authService: AuthService,
         private mailService: MailerService,
+        private readonly i18n: I18nService,
     ) {}
 
     private async saveFiles(
@@ -261,16 +267,25 @@ export class UserService {
 
         const deletionLink = `${BE_ENDPOINT}/v${API_VERSION}/user/delete/${user.deletionToken}`;
 
+        const lang = user.preferredLanguage || ELanguage.en;
         this.logger.debug(
-            `Sending new email to ${user.email} with deletionLink ${deletionLink}`,
+            `Sending new email to ${user.email} with deletionLink ${deletionLink} in ${lang}.`,
         );
         await this.mailService.sendMail({
             to: user.email,
-            subject: "Offlinery: Account Deletion requested",
-            template: "../../mail/templates/request-account-deletion.hbs",
+            subject: await this.i18n.translate(
+                "main.email.request-account-deletion.subject",
+                { lang },
+            ),
+            template: "../../mail/templates/request-account-deletion",
             context: {
                 name: user.email,
                 deletionLink,
+                t: (key: string) =>
+                    this.i18n.translate(
+                        `main.email.request-account-deletion.${key}`,
+                        { lang },
+                    ),
             },
         });
         await this.userRepository.save(user);

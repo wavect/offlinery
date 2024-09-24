@@ -5,6 +5,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { getLocalLanguageID } from "@/utils/misc.utils";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -94,6 +95,7 @@ const VerifyEmail = ({
                     {
                         registrationForVerificationRequestDTO: {
                             email: state.email,
+                            language: getLocalLanguageID(),
                         },
                     },
                 );

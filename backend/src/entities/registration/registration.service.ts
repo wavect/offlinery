@@ -1,8 +1,12 @@
-import { RegistrationForVerificationResponseDTO } from "@/DTOs/registration-for-verification.dto";
+import {
+    RegistrationForVerificationRequestDTO,
+    RegistrationForVerificationResponseDTO,
+} from "@/DTOs/registration-for-verification.dto";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
 import {
     EEmailVerificationStatus,
+    ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
@@ -14,6 +18,7 @@ import {
     NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -28,21 +33,24 @@ export class RegistrationService {
         @InjectRepository(User)
         private userRepo: Repository<User>,
         private readonly mailService: MailerService,
+        private readonly i18n: I18nService,
     ) {}
 
     public async registerPendingUser(
-        email: string,
+        dto: RegistrationForVerificationRequestDTO,
     ): Promise<RegistrationForVerificationResponseDTO> {
         try {
             const existingVerifiedUser = await this.userRepo.findOneBy({
-                email,
+                email: dto.email,
             });
 
             if (existingVerifiedUser) {
                 throw new ConflictException("Email already exists.");
             }
 
-            let pendingUser = await this.pendingUserRepo.findOneBy({ email });
+            let pendingUser = await this.pendingUserRepo.findOneBy({
+                email: dto.email,
+            });
 
             if (pendingUser) {
                 if (
@@ -86,7 +94,7 @@ export class RegistrationService {
                 }
             } else {
                 pendingUser = new PendingUser();
-                pendingUser.email = email;
+                pendingUser.email = dto.email;
                 pendingUser.verificationStatus =
                     EEmailVerificationStatus.PENDING;
             }
@@ -105,6 +113,7 @@ export class RegistrationService {
             await this.sendVerificationCodeMail(
                 pendingUser.email,
                 verificationNumber,
+                dto.language,
             );
 
             pendingUser.verificationCode = verificationNumber;
@@ -165,7 +174,7 @@ export class RegistrationService {
         }
         user.verificationStatus = newStatus;
         if (newStatus === EVerificationStatus.VERIFIED) {
-            await this.sendAccountVerificationSuccessfulMail(email);
+            await this.sendAccountVerificationSuccessfulMail(user);
         }
         await this.userRepo.save(user);
         this.logger.debug(
@@ -173,16 +182,26 @@ export class RegistrationService {
         );
     }
 
-    private async sendAccountVerificationSuccessfulMail(to: string) {
+    private async sendAccountVerificationSuccessfulMail(user: User) {
+        const lang = user.preferredLanguage || ELanguage.en;
+
         this.logger.debug(
-            `Sending new email to ${to} as account verification successful`,
+            `Sending new email to ${user.email} as account verification successful in ${lang}.`,
         );
         await this.mailService.sendMail({
-            to,
-            subject: "Offlinery: Your account has been verified",
-            template: "../../mail/templates/verification-successful.hbs",
+            to: user.email,
+            subject: await this.i18n.translate(
+                "main.email.verification-successful.subject",
+                { lang },
+            ),
+            template: "../../mail/templates/verification-successful",
             context: {
-                name: to,
+                name: user.email,
+                t: (key: string, args?: any) =>
+                    this.i18n.translate(
+                        `main.email.verification-successful.${key}`,
+                        { lang, args },
+                    ),
             },
         });
     }
@@ -190,17 +209,29 @@ export class RegistrationService {
     private async sendVerificationCodeMail(
         to: string,
         verificationCode: string,
+        language: ELanguage,
     ) {
         this.logger.debug(
-            `Sending new email to ${to} with verificationCode ${verificationCode}`,
+            `Sending new email to ${to} with verificationCode ${verificationCode} in ${language}.`,
         );
         await this.mailService.sendMail({
             to,
-            subject: "Welcome to Offlinery! Confirm your Email",
-            template: "../../mail/templates/email-verification.hbs",
+            subject: await this.i18n.translate(
+                "main.email.email-verification.subject",
+                { lang: language },
+            ),
+            template: "../../mail/templates/email-verification",
             context: {
                 name: to,
                 verificationCode,
+                t: (key: string, args?: any) =>
+                    this.i18n.translate(
+                        `main.email.email-verification.${key}`,
+                        {
+                            lang: language,
+                            args,
+                        },
+                    ),
             },
         });
     }
