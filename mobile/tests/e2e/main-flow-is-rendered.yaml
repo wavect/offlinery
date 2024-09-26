@@ -2,4 +2,8 @@ appId: io.wavect.offlinery
 ---
 - launchApp
 - assertVisible:
-      text: "Finden"
+      text: "Anmelden"
+- tapOn:
+      text: "Anmelden"
+- tapOn:
+      text: "Anmelden"
