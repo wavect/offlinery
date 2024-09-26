@@ -217,7 +217,7 @@ export const registerUser = async (
     onSuccess: () => void,
     onError: (err: any) => void,
 ) => {
-    const api = API.user;
+    const api = API.withCustomToken(state.registrationJWToken!).user;
 
     // Prepare the user data
     const userData: CreateUserDTO = {
@@ -246,7 +246,7 @@ export const registerUser = async (
 
     try {
         const signInResponseDTO =
-            await api.userControllerCreateUser(requestParameters); // TODO: Add RegistrationJWT
+            await api.userControllerCreateUser(requestParameters);
         const { user, accessToken, refreshToken } = signInResponseDTO;
         console.log("User created successfully:", user);
 
