@@ -78,7 +78,7 @@ const Welcome = ({
             console.log("Forcing user to re-login.");
         }
 
-        return isAuthenticated(state);
+        return isAuthenticated();
     };
     useFocusEffect(
         useCallback(() => {
@@ -122,7 +122,7 @@ const Welcome = ({
 
     return (
         <OPageColorContainer isLoading={isLoading}>
-            {!isAuthenticated(state) && <AuthScreen />}
+            {!isAuthenticated() && <AuthScreen />}
         </OPageColorContainer>
     );
 };

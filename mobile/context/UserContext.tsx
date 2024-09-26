@@ -14,7 +14,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { refreshUserData } from "@/services/auth.service";
 import {
     SECURE_VALUE,
-    saveValueLocallySecurely,
+    getSecurelyStoredValue,
 } from "@/services/secure-storage.service";
 import { updateUserDataLocally } from "@/services/storage.service";
 import { API } from "@/utils/api-config";
@@ -47,15 +47,12 @@ export interface IUserData {
     bio: string;
     dateMode: UserPrivateDTODateModeEnum;
     markedForDeletion: boolean;
-    /** @dev Set once logged in */
-    jwtAccessToken?: string;
-    refreshToken?: string;
     /** @dev Only used for user registration to prevent other users to hijack an already verified pendingUser before user registration. */
     registrationJWToken?: string;
 }
 
-export const isAuthenticated = (state: IUserData) => {
-    return !!state.jwtAccessToken;
+export const isAuthenticated = () => {
+    return !!getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
 };
 
 export interface MapRegion {
@@ -186,22 +183,6 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             // @dev cache locally
             updateUserDataLocally(payload);
 
-            if (payload.jwtAccessToken) {
-                // jwtAccessToken is not saved in local storage, but in secure local storage for extra security
-                saveValueLocallySecurely(
-                    SECURE_VALUE.JWT_ACCESS_TOKEN,
-                    payload.jwtAccessToken,
-                );
-
-                if (!payload.refreshToken) {
-                    console.warn("No refresh token submitted.");
-                } else {
-                    saveValueLocallySecurely(
-                        SECURE_VALUE.JWT_REFRESH_TOKEN,
-                        payload.refreshToken!,
-                    );
-                }
-            }
             return { ...state, ...payload };
         default:
             return state;
