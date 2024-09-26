@@ -52,6 +52,12 @@ export class AuthService {
         };
     }
 
+    /** @dev Used to protect routes after the email verification and before user registration
+     * to prevent people from hijacking user accounts. */
+    async createRegistrationSession(pendingUserId: string) {
+        return await this.jwtService.signAsync({ pendingUserId });
+    }
+
     async signIn(
         email: string,
         clearPassword: string,

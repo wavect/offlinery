@@ -1,3 +1,4 @@
+import { extractTokenFromHeader } from "@/auth/auth.utils";
 import { ApiUserService } from "@/entities/api-user/api-user.service";
 import { TYPED_ENV } from "@/utils/env.utils";
 import {
@@ -76,7 +77,7 @@ export class AuthGuard implements CanActivate {
             return await this.isAdminApiUser(request);
         }
 
-        const token = this.extractTokenFromHeader(request);
+        const token = extractTokenFromHeader(request);
         if (!token) {
             this.logger.debug(
                 `Unauthorized call attempt to protected route with no jwt and no valid api key`,
@@ -96,10 +97,5 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException();
         }
         return true;
-    }
-
-    private extractTokenFromHeader(request: Request): string | undefined {
-        const [type, token] = request.headers.authorization?.split(" ") ?? [];
-        return type === "Bearer" ? token : undefined;
     }
 }

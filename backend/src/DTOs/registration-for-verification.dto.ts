@@ -35,4 +35,8 @@ export class RegistrationForVerificationResponseDTO {
     @ApiProperty()
     @IsBoolean()
     alreadyVerifiedButNotRegistered: boolean;
+
+    /** @dev This is NOT the regular authentication session token */
+    @ApiProperty()
+    registrationJWToken: string;
 }

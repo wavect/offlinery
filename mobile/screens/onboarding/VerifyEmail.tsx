@@ -2,7 +2,7 @@ import { Color, FontFamily } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
-import { useUserContext } from "@/context/UserContext";
+import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { API } from "@/utils/api-config";
 import { getLocalLanguageID } from "@/utils/misc.utils";
@@ -73,7 +73,7 @@ const VerifyEmail = ({
         const verificationCode = code.join("");
 
         try {
-            await API.registration.registrationControllerVerifyEmail({
+            await API.pendingUser.pendingUserControllerVerifyEmail({
                 verifyEmailDTO: { email: state.email, verificationCode },
             });
             navigation.navigate(ROUTES.Onboarding.Password);
@@ -89,7 +89,7 @@ const VerifyEmail = ({
         try {
             setLoading(true);
             const result =
-                await API.registration.registrationControllerRegisterUserForEmailVerification(
+                await API.pendingUser.pendingUserControllerRegisterUserForEmailVerification(
                     {
                         registrationForVerificationRequestDTO: {
                             email: state.email,
@@ -98,6 +98,10 @@ const VerifyEmail = ({
                     },
                 );
 
+            dispatch({
+                type: EACTION_USER.UPDATE_MULTIPLE,
+                payload: { registrationJWToken: result.registrationJWToken },
+            });
             if (!result.email) {
                 throw new Error("Error registering email");
             } else if (result.alreadyVerifiedButNotRegistered) {
