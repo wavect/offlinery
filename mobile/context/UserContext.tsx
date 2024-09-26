@@ -2,7 +2,6 @@ import {
     BlacklistedRegionDTO,
     BlacklistedRegionDTOLocationTypeEnum,
     CreateUserDTO,
-    UserApi,
     UserControllerCreateUserRequest,
     UserPrivateDTOApproachChoiceEnum,
     UserPrivateDTODateModeEnum,
@@ -18,6 +17,7 @@ import {
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 import { updateUserDataLocally } from "@/services/storage.service";
+import { API } from "@/utils/api-config";
 import { getAge } from "@/utils/date.utils";
 import { getLocalLanguageID } from "@/utils/misc.utils";
 import * as ImagePicker from "expo-image-picker";
@@ -236,7 +236,7 @@ export const registerUser = async (
     onSuccess: () => void,
     onError: (err: any) => void,
 ) => {
-    const api = new UserApi();
+    const api = API.user;
 
     // Prepare the user data
     const userData: CreateUserDTO = {

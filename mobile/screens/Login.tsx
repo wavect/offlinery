@@ -1,6 +1,6 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
-import { AuthApi, AuthControllerSignInRequest } from "@/api/gen/src";
+import { AuthControllerSignInRequest } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
@@ -10,6 +10,7 @@ import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
+import { API } from "@/utils/api-config";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
@@ -17,7 +18,6 @@ import { Dimensions, StyleSheet, Text } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 const { width, height } = Dimensions.get("window");
-const authApi = new AuthApi();
 const Login = ({
     navigation,
 }: NativeStackScreenProps<MainStackParamList, typeof ROUTES.Login>) => {
@@ -37,7 +37,7 @@ const Login = ({
         };
 
         try {
-            const signInRes = await authApi.authControllerSignIn(signInDTO);
+            const signInRes = await API.auth.authControllerSignIn(signInDTO);
 
             if (signInRes.accessToken) {
                 const user = signInRes.user;

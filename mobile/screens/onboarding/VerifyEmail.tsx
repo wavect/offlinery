@@ -1,17 +1,16 @@
 import { Color, FontFamily } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
-import { RegistrationApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { API } from "@/utils/api-config";
 import { getLocalLanguageID } from "@/utils/misc.utils";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const regApi = new RegistrationApi();
 const VerifyEmail = ({
     navigation,
 }: NativeStackScreenProps<
@@ -73,9 +72,8 @@ const VerifyEmail = ({
     const handleSubmit = async () => {
         const verificationCode = code.join("");
 
-        const regApi = new RegistrationApi();
         try {
-            await regApi.pendingUserControllerVerifyEmail({
+            await API.registration.pendingUserControllerVerifyEmail({
                 verifyEmailDTO: { email: state.email, verificationCode },
             });
             navigation.navigate(ROUTES.Onboarding.Password);
@@ -91,7 +89,7 @@ const VerifyEmail = ({
         try {
             setLoading(true);
             const result =
-                await regApi.pendingUserControllerRegisterUserForEmailVerification(
+                await API.registration.pendingUserControllerRegisterUserForEmailVerification(
                     {
                         registrationForVerificationRequestDTO: {
                             email: state.email,
