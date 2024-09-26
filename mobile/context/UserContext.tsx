@@ -50,6 +50,8 @@ export interface IUserData {
     /** @dev Set once logged in */
     jwtAccessToken?: string;
     refreshToken?: string;
+    /** @dev Only used for user registration to prevent other users to hijack an already verified pendingUser before user registration. */
+    registrationJWToken?: string;
 }
 
 export const isAuthenticated = (state: IUserData) => {
@@ -150,7 +152,6 @@ export const initialUserState: IUserData = {
     bio: i18n.t(TR.defaultBio),
     dateMode: UserPrivateDTODateModeEnum.ghost,
     markedForDeletion: false,
-    jwtAccessToken: undefined,
 };
 
 export const getSavedImageURIs = (state: IUserData): string[] => {
@@ -264,7 +265,7 @@ export const registerUser = async (
 
     try {
         const signInResponseDTO =
-            await api.userControllerCreateUser(requestParameters);
+            await api.userControllerCreateUser(requestParameters); // TODO: Add RegistrationJWT
         const { user, accessToken, refreshToken } = signInResponseDTO;
         console.log("User created successfully:", user);
 

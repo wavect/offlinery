@@ -3,7 +3,7 @@ import { MainStackParamList } from "@/MainStack.navigator";
 import { RegistrationApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
-import { useUserContext } from "@/context/UserContext";
+import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { getLocalLanguageID } from "@/utils/misc.utils";
 import React, { useEffect, useState } from "react";
@@ -75,7 +75,7 @@ const VerifyEmail = ({
 
         const regApi = new RegistrationApi();
         try {
-            await regApi.registrationControllerVerifyEmail({
+            await regApi.pendingUserControllerVerifyEmail({
                 verifyEmailDTO: { email: state.email, verificationCode },
             });
             navigation.navigate(ROUTES.Onboarding.Password);
@@ -91,7 +91,7 @@ const VerifyEmail = ({
         try {
             setLoading(true);
             const result =
-                await regApi.registrationControllerRegisterUserForEmailVerification(
+                await regApi.pendingUserControllerRegisterUserForEmailVerification(
                     {
                         registrationForVerificationRequestDTO: {
                             email: state.email,
@@ -100,6 +100,10 @@ const VerifyEmail = ({
                     },
                 );
 
+            dispatch({
+                type: EACTION_USER.UPDATE_MULTIPLE,
+                payload: { registrationJWToken: result.registrationJWToken },
+            });
             if (!result.email) {
                 throw new Error("Error registering email");
             } else if (result.alreadyVerifiedButNotRegistered) {

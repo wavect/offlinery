@@ -45,10 +45,11 @@ const GenderLookingFor = ({
                                 email: state.email,
                                 dateTimeAccepted: new Date(),
                             };
-                        await new RegistrationApi().registrationControllerSetAcceptedSpecialDataGenderLookingForAt(
+                        await new RegistrationApi().pendingUserControllerSetAcceptedSpecialDataGenderLookingForAt(
                             {
                                 setAcceptedSpecialDataGenderLookingForDTO,
                             },
+                            // TODO: Add RegistrationJWT
                         );
 
                         dispatch({
