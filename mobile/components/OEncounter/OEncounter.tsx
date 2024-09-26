@@ -17,6 +17,7 @@ import {
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
+import { TestData } from "@/tests/src/accessors";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { formatDate } from "@/utils/date.utils";
 import { includeJWT } from "@/utils/misc.utils";
@@ -104,6 +105,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     {showActions && (
                         <View style={styles.encounterDropdownContainer}>
                             <Dropdown
+                                testID={TestData.encounters.inputStatus}
                                 data={dateStates}
                                 labelField="label"
                                 valueField="value"

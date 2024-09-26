@@ -27,6 +27,7 @@ import {
     refreshUserData,
 } from "@/services/auth.service";
 import { deleteSessionDataFromStorage } from "@/services/secure-storage.service";
+import { TestData } from "@/tests/src/accessors";
 import { includeJWT } from "@/utils/misc.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
@@ -130,6 +131,7 @@ const ProfileSettings = ({
     ];
 
     const SettingsButton = (props: {
+        testID?: string;
         onPress: any;
         icon: any;
         text: string;
@@ -138,6 +140,7 @@ const ProfileSettings = ({
         const { onPress, icon, text } = props;
         return (
             <TouchableOpacity
+                testID={props.testID}
                 style={[styles.settingsButton, props.style]}
                 onPress={onPress}
             >
@@ -188,10 +191,11 @@ const ProfileSettings = ({
             subtitle={i18n.t(TR.changePreferencesDescr)}
             refreshFunc={refresh}
         >
-            <View style={styles.container}>
+            <View style={styles.container} testID={TestData.settings.page}>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>{i18n.t(TR.myFirstNameIs)}</Text>
                     <OTextInput
+                        testID={TestData.settings.inputFirstName}
                         value={state.firstName}
                         onChangeText={setFirstName}
                         placeholder={i18n.t(TR.enterFirstName)}
@@ -245,6 +249,7 @@ const ProfileSettings = ({
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>{i18n.t(TR.bio)}</Text>
                     <OTextInput
+                        testID={TestData.settings.inputBio}
                         value={state.bio}
                         onChangeText={setBio}
                         placeholder={i18n.t(TR.noPickUpLinesBeChill)}
@@ -253,7 +258,10 @@ const ProfileSettings = ({
                     />
                 </View>
 
-                <View style={styles.datePickerContainer}>
+                <View
+                    style={styles.datePickerContainer}
+                    testID={TestData.settings.labelBirthday}
+                >
                     <Text style={styles.label}>{i18n.t(TR.myBirthDayIs)}</Text>
                     <ODateTimePicker
                         value={state.birthDay}
@@ -270,6 +278,7 @@ const ProfileSettings = ({
                 <View style={styles.dropdownContainer}>
                     <Text style={styles.label}>{i18n.t(TR.iAmA)}</Text>
                     <Dropdown
+                        testID={TestData.settings.inputIAmA}
                         data={genderItems}
                         labelField="label"
                         valueField="value"
@@ -286,6 +295,7 @@ const ProfileSettings = ({
                 <View style={styles.dropdownContainer}>
                     <Text style={styles.label}>{i18n.t(TR.iLookFor)}</Text>
                     <Dropdown
+                        testID={TestData.settings.inputIAmLookingFor}
                         data={genderItems}
                         labelField="label"
                         valueField="value"
@@ -301,6 +311,7 @@ const ProfileSettings = ({
 
                 <View style={styles.settingsButtonsContainer}>
                     <SettingsButton
+                        testID={TestData.settings.buttonUpdateImages}
                         onPress={() =>
                             navigation.navigate(ROUTES.Onboarding.AddPhotos, {
                                 overrideOnBtnPress: () =>
@@ -314,6 +325,7 @@ const ProfileSettings = ({
                         text={i18n.t(TR.updateImages)}
                     />
                     <SettingsButton
+                        testID={TestData.settings.buttonUpdateSafeZones}
                         onPress={() =>
                             navigation.navigate(ROUTES.MainTabView, {
                                 screen: ROUTES.Main.FindPeople,
@@ -323,6 +335,7 @@ const ProfileSettings = ({
                         text={i18n.t(TR.updateSafeZones)}
                     />
                     <SettingsButton
+                        testID={TestData.settings.buttonChangePassword}
                         onPress={() =>
                             navigation.navigate(ROUTES.Onboarding.Password, {
                                 nextPage: ROUTES.MainTabView,
@@ -335,6 +348,7 @@ const ProfileSettings = ({
                 </View>
                 <View style={styles.settingsButtonsContainer}>
                     <SettingsButton
+                        testID={TestData.settings.buttonHouseRules}
                         style={{ width: "100%", height: 75 }}
                         onPress={() =>
                             navigation.navigate(ROUTES.HouseRules, {
@@ -349,6 +363,7 @@ const ProfileSettings = ({
 
                 <View style={styles.buttonContainer}>
                     <OButtonWide
+                        testID={TestData.settings.buttonSafe}
                         style={{ marginTop: 10, width: "100%" }}
                         text={i18n.t(TR.save)}
                         filled={true}
@@ -365,6 +380,7 @@ const ProfileSettings = ({
                     </Text>
                     <View style={styles.dangerButtonsContainer}>
                         <TouchableOpacity
+                            testID={TestData.settings.buttonDangerLogout}
                             style={styles.dangerButton}
                             onPress={handleLogout}
                         >
@@ -378,6 +394,7 @@ const ProfileSettings = ({
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
+                            testID={TestData.settings.buttonDangerDeleteAccount}
                             style={styles.dangerButton}
                             onPress={handleDeleteAccount}
                             disabled={state.markedForDeletion}
