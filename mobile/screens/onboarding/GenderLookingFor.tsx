@@ -1,12 +1,17 @@
 import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
-import { UserPrivateDTOGenderDesireEnum } from "@/api/gen/src";
+import {
+    RegistrationApi,
+    SetAcceptedSpecialDataGenderLookingForDTO,
+    UserPrivateDTOGenderDesireEnum,
+} from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { GDPR_URL } from "@/utils/general.constants";
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, Linking, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -16,14 +21,46 @@ const GenderLookingFor = ({
     MainStackParamList,
     typeof ROUTES.Onboarding.GenderLookingFor
 >) => {
-    const { dispatch } = useUserContext();
+    const { state, dispatch } = useUserContext();
 
     const setGender = (gender: UserPrivateDTOGenderDesireEnum) => {
-        dispatch({
-            type: EACTION_USER.UPDATE_MULTIPLE,
-            payload: { genderDesire: gender },
-        });
-        navigation.navigate(ROUTES.Onboarding.AddPhotos);
+        Alert.alert(
+            i18n.t(TR.genderLookingForAlertTitle),
+            i18n.t(TR.genderLookingForAlertDescr),
+            [
+                {
+                    text: i18n.t(TR.decline),
+                    //onPress: () => onDecline(),
+                    style: "cancel",
+                },
+                {
+                    text: i18n.t(TR.dataPrivacy),
+                    onPress: () => Linking.openURL(GDPR_URL),
+                },
+                {
+                    text: i18n.t(TR.accept),
+                    onPress: async () => {
+                        const setAcceptedSpecialDataGenderLookingForDTO: SetAcceptedSpecialDataGenderLookingForDTO =
+                            {
+                                email: state.email,
+                                dateTimeAccepted: new Date(),
+                            };
+                        await new RegistrationApi().registrationControllerSetAcceptedSpecialDataGenderLookingForAt(
+                            {
+                                setAcceptedSpecialDataGenderLookingForDTO,
+                            },
+                        );
+
+                        dispatch({
+                            type: EACTION_USER.UPDATE_MULTIPLE,
+                            payload: { genderDesire: gender },
+                        });
+                        navigation.navigate(ROUTES.Onboarding.AddPhotos);
+                    },
+                },
+            ],
+            { cancelable: false },
+        );
     };
 
     return (

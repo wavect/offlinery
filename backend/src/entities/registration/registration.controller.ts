@@ -1,3 +1,4 @@
+import { SetAcceptedSpecialDataGenderLookingForDTO } from "@/DTOs/set-accepted-special-data-gender-looking-for.dto";
 import { UpdateUserVerificationstatusDTO } from "@/DTOs/update-user-verificationstatus.dto";
 import {
     Body,
@@ -65,6 +66,24 @@ export class RegistrationController {
         return await this.registrationService.verifyEmail(
             verifyEmailDto.email,
             verifyEmailDto.verificationCode,
+        );
+    }
+
+    @Put("accept-special-data")
+    @Public()
+    @ApiOperation({ summary: "Accept special data privacy" })
+    @ApiBody({
+        type: SetAcceptedSpecialDataGenderLookingForDTO,
+        description: "Accept special data privacy",
+    })
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async setAcceptedSpecialDataGenderLookingForAt(
+        @Body()
+        setAcceptedSpecialDataGenderLookingForAtDTO: SetAcceptedSpecialDataGenderLookingForDTO,
+    ) {
+        return await this.registrationService.setAcceptedSpecialDataGenderLookingForAt(
+            setAcceptedSpecialDataGenderLookingForAtDTO.email,
+            setAcceptedSpecialDataGenderLookingForAtDTO.dateTimeAccepted,
         );
     }
 

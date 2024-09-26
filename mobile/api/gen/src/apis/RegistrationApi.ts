@@ -15,12 +15,14 @@
 import type {
     RegistrationForVerificationRequestDTO,
     RegistrationForVerificationResponseDTO,
+    SetAcceptedSpecialDataGenderLookingForDTO,
     UpdateUserVerificationstatusDTO,
     VerifyEmailDTO,
 } from "../models/index";
 import {
     RegistrationForVerificationRequestDTOToJSON,
     RegistrationForVerificationResponseDTOFromJSON,
+    SetAcceptedSpecialDataGenderLookingForDTOToJSON,
     UpdateUserVerificationstatusDTOToJSON,
     VerifyEmailDTOToJSON,
 } from "../models/index";
@@ -35,6 +37,10 @@ export interface RegistrationControllerChangeVerificationStatusRequest {
 
 export interface RegistrationControllerRegisterUserForEmailVerificationRequest {
     registrationForVerificationRequestDTO: RegistrationForVerificationRequestDTO;
+}
+
+export interface RegistrationControllerSetAcceptedSpecialDataGenderLookingForAtRequest {
+    setAcceptedSpecialDataGenderLookingForDTO: SetAcceptedSpecialDataGenderLookingForDTO;
 }
 
 export interface RegistrationControllerVerifyEmailRequest {
@@ -89,6 +95,27 @@ export interface RegistrationApiInterface {
         requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<RegistrationForVerificationResponseDTO>;
+
+    /**
+     *
+     * @summary Accept special data privacy
+     * @param {SetAcceptedSpecialDataGenderLookingForDTO} setAcceptedSpecialDataGenderLookingForDTO Accept special data privacy
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RegistrationApiInterface
+     */
+    registrationControllerSetAcceptedSpecialDataGenderLookingForAtRaw(
+        requestParameters: RegistrationControllerSetAcceptedSpecialDataGenderLookingForAtRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     * Accept special data privacy
+     */
+    registrationControllerSetAcceptedSpecialDataGenderLookingForAt(
+        requestParameters: RegistrationControllerSetAcceptedSpecialDataGenderLookingForAtRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
 
     /**
      *
@@ -221,6 +248,60 @@ export class RegistrationApi
                 initOverrides,
             );
         return await response.value();
+    }
+
+    /**
+     * Accept special data privacy
+     */
+    async registrationControllerSetAcceptedSpecialDataGenderLookingForAtRaw(
+        requestParameters: RegistrationControllerSetAcceptedSpecialDataGenderLookingForAtRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (
+            requestParameters["setAcceptedSpecialDataGenderLookingForDTO"] ==
+            null
+        ) {
+            throw new runtime.RequiredError(
+                "setAcceptedSpecialDataGenderLookingForDTO",
+                'Required parameter "setAcceptedSpecialDataGenderLookingForDTO" was null or undefined when calling registrationControllerSetAcceptedSpecialDataGenderLookingForAt().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        const response = await this.request(
+            {
+                path: `/registration/accept-special-data`,
+                method: "PUT",
+                headers: headerParameters,
+                query: queryParameters,
+                body: SetAcceptedSpecialDataGenderLookingForDTOToJSON(
+                    requestParameters[
+                        "setAcceptedSpecialDataGenderLookingForDTO"
+                    ],
+                ),
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Accept special data privacy
+     */
+    async registrationControllerSetAcceptedSpecialDataGenderLookingForAt(
+        requestParameters: RegistrationControllerSetAcceptedSpecialDataGenderLookingForAtRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.registrationControllerSetAcceptedSpecialDataGenderLookingForAtRaw(
+            requestParameters,
+            initOverrides,
+        );
     }
 
     /**

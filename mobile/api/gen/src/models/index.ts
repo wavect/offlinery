@@ -14,6 +14,7 @@ export * from "./PushMessageDTO";
 export * from "./RefreshJwtDTO";
 export * from "./RegistrationForVerificationRequestDTO";
 export * from "./RegistrationForVerificationResponseDTO";
+export * from "./SetAcceptedSpecialDataGenderLookingForDTO";
 export * from "./SignInDTO";
 export * from "./SignInJwtDTO";
 export * from "./SignInResponseDTO";
