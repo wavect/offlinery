@@ -1,3 +1,4 @@
+import { AuthService } from "@/auth/auth.service";
 import {
     RegistrationForVerificationRequestDTO,
     RegistrationForVerificationResponseDTO,
@@ -34,6 +35,7 @@ export class PendingUserService {
         private userRepo: Repository<User>,
         private readonly mailService: MailerService,
         private readonly i18n: I18nService,
+        private authService: AuthService,
     ) {}
 
     public async registerPendingUser(
@@ -53,6 +55,10 @@ export class PendingUserService {
             });
 
             if (pendingUser) {
+                const registrationJWToken =
+                    await this.authService.createRegistrationSession(
+                        pendingUser.id,
+                    );
                 if (
                     pendingUser.verificationStatus ===
                     EEmailVerificationStatus.VERIFIED
@@ -66,6 +72,7 @@ export class PendingUserService {
                         verificationCodeIssuedAt:
                             pendingUser.verificationCodeIssuedAt,
                         alreadyVerifiedButNotRegistered: true,
+                        registrationJWToken,
                     };
                 } else {
                     this.logger.debug(
@@ -89,6 +96,7 @@ export class PendingUserService {
                             verificationCodeIssuedAt:
                                 pendingUser.verificationCodeIssuedAt,
                             alreadyVerifiedButNotRegistered: false,
+                            registrationJWToken,
                         };
                     }
                 }
@@ -124,6 +132,10 @@ export class PendingUserService {
                 verificationCodeIssuedAt: pendingUser.verificationCodeIssuedAt,
                 timeout: this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
                 alreadyVerifiedButNotRegistered: false,
+                registrationJWToken:
+                    await this.authService.createRegistrationSession(
+                        pendingUser.id,
+                    ),
             };
         } catch (error) {
             this.logger.error(error);

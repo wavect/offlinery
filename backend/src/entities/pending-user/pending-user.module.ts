@@ -1,3 +1,4 @@
+import { AuthModule } from "@/auth/auth.module";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
 import { MailerModule } from "@nestjs-modules/mailer";
@@ -14,6 +15,7 @@ import { PendingUserService } from "./pending-user.service";
     imports: [
         ConfigModule.forRoot(),
         TypeOrmModule.forFeature([PendingUser, User]),
+        AuthModule,
         MailerModule.forRoot({
             transport: {
                 host: TYPED_ENV.EMAIL_HOST,
