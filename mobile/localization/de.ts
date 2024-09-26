@@ -110,6 +110,12 @@ export const de: Language = {
     more: "Mehr",
     iAmA: "Ich bin ein",
     genderMoreComingSoon: "Diese Option kommt so schnell wie möglich!",
+    genderLookingForAlertTitle: "Datenschutz",
+    genderLookingForAlertDescr:
+        "Diese Information is notwendig, um dir grundlegende Funktionalitäten bereitzustellen. Mit dem Akzeptieren bestätigst du damit einverstanden zu sein.",
+    decline: "Ablehnen",
+    accept: "Akzeptieren",
+    dataPrivacy: "Data Privacy",
     iLookFor: "Ich suche",
     pwdErrSecurityGuideline:
         "Das Passwort muss mindestens 1 Zahl, 1 Groß- und 1 Kleinbuchstaben enthalten und zwischen 6-40 Zeichen lang sein.",

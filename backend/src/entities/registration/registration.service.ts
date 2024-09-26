@@ -156,6 +156,21 @@ export class RegistrationService {
         }
     }
 
+    public async setAcceptedSpecialDataGenderLookingForAt(
+        email: string,
+        date: Date,
+    ) {
+        this.logger.debug(
+            `User ${email} accepted special data privacy requirement for sexual orientation: ${date}`,
+        );
+        const pendingUser = await this.pendingUserRepo.findOneByOrFail({
+            email: email,
+        });
+
+        pendingUser.acceptedSpecialDataGenderLookingForAt = date;
+        await this.pendingUserRepo.save(pendingUser);
+    }
+
     public async changeVerificationStatus(
         email: string,
         newStatus: EVerificationStatus,

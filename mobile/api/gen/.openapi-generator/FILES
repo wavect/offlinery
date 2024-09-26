@@ -26,6 +26,7 @@ src/models/PushMessageDTO.ts
 src/models/RefreshJwtDTO.ts
 src/models/RegistrationForVerificationRequestDTO.ts
 src/models/RegistrationForVerificationResponseDTO.ts
+src/models/SetAcceptedSpecialDataGenderLookingForDTO.ts
 src/models/SignInDTO.ts
 src/models/SignInJwtDTO.ts
 src/models/SignInResponseDTO.ts

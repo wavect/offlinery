@@ -108,6 +108,12 @@ export const en = {
     iAmA: "I am a",
     genderMoreComingSoon:
         "We will be adding this option as soon as possible. You will have the option later on to change this to something you truly identify with.",
+    genderLookingForAlertTitle: "Data Privacy",
+    genderLookingForAlertDescr:
+        "This information is necessary to provide basic functionality within the app. By accepting you agree with our data privacy policy.",
+    decline: "Decline",
+    accept: "Accept",
+    dataPrivacy: "Data Privacy",
     iLookFor: "I look for",
     pwdErrSecurityGuideline:
         "Password must contain at least 1 number, 1 big and small letter and have between 6-40 characters.",

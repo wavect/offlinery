@@ -14,6 +14,7 @@ export class PendingUser
             verificationStatus: this.verificationStatus,
         };
     }
+
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
@@ -28,4 +29,8 @@ export class PendingUser
 
     @Column({ type: "timestamptz" })
     verificationCodeIssuedAt: Date;
+
+    /** @dev Sexual orientation needs dedicated prompt (explicit yes/no). */
+    @Column({ type: "timestamptz", nullable: true })
+    acceptedSpecialDataGenderLookingForAt?: Date;
 }
