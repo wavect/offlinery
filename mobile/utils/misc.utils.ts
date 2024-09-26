@@ -1,5 +1,4 @@
 import {
-    AuthApi,
     CreateUserDTOPreferredLanguageEnum,
     SignInResponseDTO,
 } from "@/api/gen/src";
@@ -9,6 +8,7 @@ import {
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
+import { API } from "@/utils/api-config";
 import Constants from "expo-constants";
 import { jwtDecode } from "jwt-decode";
 
@@ -34,9 +34,8 @@ export const includeJWT = async (): Promise<RequestInit> => {
     if (jwtExpiresSoon(jwtToken!)) {
         try {
             console.log(`Token has expired. Requesting a new token.`);
-            const authApi = new AuthApi();
             const refreshResponse: SignInResponseDTO =
-                (await authApi.authControllerRefreshJwtToken({
+                (await API.auth.authControllerRefreshJwtToken({
                     refreshJwtDTO: {
                         refreshToken: refreshToken,
                     },

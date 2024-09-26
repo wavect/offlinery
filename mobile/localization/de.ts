@@ -7,7 +7,7 @@ export const de: Language = {
     signingIn: "Einen Moment..",
     troubleSignIn: "Probleme beim Anmelden?",
     gettingReadyToAmazeYou: "Bereit, dich zu beeindrucken..",
-    datingAppsAreBroken: "Dating apps are Broken",
+    datingAppsAreBroken: "Dating apps are broken",
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
     verificationCodeResend: "Neuer Code",
     verificationCodeInvalid: "Ungültiger Verifizierungscode",

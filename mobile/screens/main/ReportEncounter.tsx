@@ -2,7 +2,6 @@ import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import {
     CreateUserReportDTO,
     CreateUserReportDTOIncidentTypeEnum,
-    UserReportsApi,
 } from "@/api/gen/src";
 import { OCheckbox } from "@/components/OCheckbox/OCheckbox";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
@@ -15,7 +14,7 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
-import { includeJWT } from "@/utils/misc.utils";
+import { API } from "@/utils/api-config";
 import * as React from "react";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
@@ -23,7 +22,6 @@ import { Dropdown } from "react-native-element-dropdown";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import OEncounter from "../../components/OEncounter/OEncounter";
 
-const reportApi = new UserReportsApi();
 const ReportEncounter = ({
     route,
     navigation,
@@ -69,13 +67,10 @@ const ReportEncounter = ({
                 encounterId: personToReport.encounterId,
             };
 
-            await reportApi.userReportControllerCreate(
-                {
-                    userId: state.id!,
-                    createUserReportDTO,
-                },
-                await includeJWT(),
-            );
+            await API.userReport.userReportControllerCreate({
+                userId: state.id!,
+                createUserReportDTO,
+            });
 
             dispatch({
                 type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,

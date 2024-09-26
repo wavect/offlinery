@@ -1,12 +1,11 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { EncounterApi, PushMessageDTO } from "@/api/gen/src";
+import { PushMessageDTO } from "@/api/gen/src";
 import {
     IOButtonSmallVariant,
     OButtonSmall,
 } from "@/components/OButtonSmall/OButtonSmall";
-import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { includeJWT } from "@/utils/misc.utils";
+import { API } from "@/utils/api-config";
 import React, { useState } from "react";
 import {
     Modal,
@@ -24,9 +23,7 @@ interface IOMessageModalProps {
     onClose: (e?: any) => void;
 }
 
-const encounterApi = new EncounterApi();
 const OMessageModal = (props: IOMessageModalProps) => {
-    const { state } = useUserContext();
     const { visible, onClose, encounterId, userId } = props;
     const [message, setMessage] = useState("");
     const [messageError, setMessageError] = useState<boolean>(false);
@@ -37,13 +34,10 @@ const OMessageModal = (props: IOMessageModalProps) => {
             encounterId: encounterId,
         };
         try {
-            await encounterApi.encounterControllerPushMessage(
-                {
-                    userId,
-                    pushMessageDTO,
-                },
-                await includeJWT(),
-            );
+            await API.encounter.encounterControllerPushMessage({
+                userId,
+                pushMessageDTO,
+            });
             // only close, if message was successful, otherwise let user re-send or close it
             onClose();
             setMessageError(false);

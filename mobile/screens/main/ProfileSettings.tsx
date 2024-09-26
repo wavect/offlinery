@@ -1,7 +1,6 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import {
-    UserApi,
     UserControllerUpdateUserRequest,
     UserPrivateDTOApproachChoiceEnum,
     UserPrivateDTOGenderDesireEnum,
@@ -27,7 +26,7 @@ import {
     refreshUserData,
 } from "@/services/auth.service";
 import { deleteSessionDataFromStorage } from "@/services/secure-storage.service";
-import { includeJWT } from "@/utils/misc.utils";
+import { API } from "@/utils/api-config";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as React from "react";
@@ -37,7 +36,6 @@ import { Dropdown } from "react-native-element-dropdown";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const userApi = new UserApi();
 const ProfileSettings = ({
     navigation,
 }: BottomTabScreenProps<MainScreenTabsParamList, typeof ROUTES.MainTabView> &
@@ -111,7 +109,7 @@ const ProfileSettings = ({
                 images: getUserImagesForUpload(state),
             };
 
-            await userApi.userControllerUpdateUser(request, await includeJWT());
+            await API.user.userControllerUpdateUser(request);
 
             navigation.navigate(ROUTES.MainTabView, {
                 screen: ROUTES.Main.FindPeople,
@@ -150,23 +148,17 @@ const ProfileSettings = ({
     };
 
     const refresh = async () => {
-        const updatedUser = await userApi.userControllerGetOwnUserData(
-            {
-                userId: state.id!,
-            },
-            await includeJWT(),
-        );
+        const updatedUser = await API.user.userControllerGetOwnUserData({
+            userId: state.id!,
+        });
         refreshUserData(dispatch, updatedUser);
     };
 
     const handleDeleteAccount = async () => {
         try {
-            await userApi.userControllerRequestAccountDeletion(
-                {
-                    userId: state.id!,
-                },
-                await includeJWT(),
-            );
+            await API.user.userControllerRequestAccountDeletion({
+                userId: state.id!,
+            });
             dispatch({
                 type: EACTION_USER.UPDATE_MULTIPLE,
                 payload: { markedForDeletion: true },
