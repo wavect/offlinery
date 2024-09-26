@@ -6,7 +6,6 @@ import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { API } from "@/utils/api-config";
-import { includeJWT } from "@/utils/misc.utils";
 import { isValidPassword } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
@@ -81,13 +80,10 @@ const Password = ({
                 newPassword: state.clearPassword,
             };
             try {
-                await API.user.userControllerUpdateUserPassword(
-                    {
-                        userId: state.id!,
-                        updateUserPasswordDTO,
-                    },
-                    await includeJWT(),
-                );
+                await API.user.userControllerUpdateUserPassword({
+                    userId: state.id!,
+                    updateUserPasswordDTO,
+                });
 
                 navigation.navigate(route.params.nextPage);
             } catch (err) {

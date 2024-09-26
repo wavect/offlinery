@@ -69,15 +69,12 @@ const Encounters = ({
 
     const fetchEncounters = useCallback(async () => {
         try {
-            console.log("NEW METHOD/....");
             const encounters =
                 await API.encounter.encounterControllerGetEncountersByUser({
                     userId: userState.id!,
                     startDate: metStartDateFilter,
                     endDate: metEndDateFilter,
                 });
-
-            console.log("FETCHED ENCOUNTERES! ", encounters);
 
             const mappedEncounters: IEncounterProfile[] = [];
 

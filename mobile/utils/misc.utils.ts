@@ -1,14 +1,5 @@
-import {
-    CreateUserDTOPreferredLanguageEnum,
-    SignInResponseDTO,
-} from "@/api/gen/src";
+import { CreateUserDTOPreferredLanguageEnum } from "@/api/gen/src";
 import { i18n } from "@/localization/translate.service";
-import {
-    SECURE_VALUE,
-    getSecurelyStoredValue,
-    saveValueLocallySecurely,
-} from "@/services/secure-storage.service";
-import { API } from "@/utils/api-config";
 import Constants from "expo-constants";
 import { jwtDecode } from "jwt-decode";
 
@@ -18,52 +9,6 @@ export const isExpoGoEnvironment = Constants.appOwnership === "expo";
 
 export const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
-};
-
-/**
- * @DEV JWT Intercept & Refresh
- */
-export const includeJWT = async (): Promise<RequestInit> => {
-    const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
-    const refreshToken = getSecurelyStoredValue(SECURE_VALUE.JWT_REFRESH_TOKEN);
-
-    if (!refreshToken) {
-        throw new Error("User does not have an refresh token!");
-    }
-
-    if (jwtExpiresSoon(jwtToken!)) {
-        try {
-            console.log(`Token has expired. Requesting a new token.`);
-            const refreshResponse: SignInResponseDTO =
-                (await API.auth.authControllerRefreshJwtToken({
-                    refreshJwtDTO: {
-                        refreshToken: refreshToken,
-                    },
-                })) as SignInResponseDTO;
-
-            saveValueLocallySecurely(
-                SECURE_VALUE.JWT_REFRESH_TOKEN,
-                refreshResponse.refreshToken,
-            );
-            saveValueLocallySecurely(
-                SECURE_VALUE.JWT_ACCESS_TOKEN,
-                refreshResponse.accessToken,
-            );
-            console.log("JWT and Refresh update successful.");
-        } catch (e) {
-            console.error("Error during refreshing tokens: ", e);
-        }
-    }
-
-    if (!jwtToken) {
-        throw new Error("No JWT available, authenticate first!");
-    }
-    return {
-        headers: {
-            Authorization: `Bearer ${jwtToken}`,
-            "Content-Type": "application/json",
-        },
-    };
 };
 
 type RequiredKeys<T> = {
