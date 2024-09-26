@@ -45,7 +45,7 @@ const GenderLookingFor = ({
                                 email: state.email,
                                 dateTimeAccepted: new Date(),
                             };
-                        await API.registration.pendingUserControllerSetAcceptedSpecialDataGenderLookingForAt(
+                        await API.pendingUser.pendingUserControllerSetAcceptedSpecialDataGenderLookingForAt(
                             {
                                 setAcceptedSpecialDataGenderLookingForDTO,
                             },

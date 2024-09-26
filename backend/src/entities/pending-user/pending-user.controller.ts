@@ -20,10 +20,10 @@ import {
 import { VerifyEmailDTO } from "src/DTOs/verify-email.dto";
 import { PendingUserService } from "./pending-user.service";
 
-@ApiTags("Registration")
+@ApiTags("PendingUser")
 @Controller({
     version: "1",
-    path: "registration",
+    path: "pending-user",
 })
 export class PendingUserController {
     private readonly logger = new Logger(PendingUserController.name);

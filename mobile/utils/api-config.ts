@@ -8,8 +8,8 @@ import {
     AuthApi,
     EncounterApi,
     MapApi,
+    PendingUserApi,
     PushNotificationsApi,
-    RegistrationApi,
     UserApi,
     UserReportsApi,
 } from "@/api/gen/src";
@@ -19,7 +19,7 @@ type ApiClasses = {
     auth: AuthApi;
     encounter: EncounterApi;
     pushNotifications: PushNotificationsApi;
-    registration: RegistrationApi;
+    pendingUser: PendingUserApi;
     user: UserApi;
     map: MapApi;
     userReport: UserReportsApi;
@@ -41,7 +41,7 @@ class ApiManager {
             auth: new AuthApi(this.config),
             encounter: new EncounterApi(this.config),
             pushNotifications: new PushNotificationsApi(this.config),
-            registration: new RegistrationApi(this.config),
+            pendingUser: new PendingUserApi(this.config),
             user: new UserApi(this.config),
             map: new MapApi(this.config),
             userReport: new UserReportsApi(this.config),

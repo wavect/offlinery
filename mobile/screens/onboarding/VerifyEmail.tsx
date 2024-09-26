@@ -73,7 +73,7 @@ const VerifyEmail = ({
         const verificationCode = code.join("");
 
         try {
-            await API.registration.pendingUserControllerVerifyEmail({
+            await API.pendingUser.pendingUserControllerVerifyEmail({
                 verifyEmailDTO: { email: state.email, verificationCode },
             });
             navigation.navigate(ROUTES.Onboarding.Password);
@@ -89,7 +89,7 @@ const VerifyEmail = ({
         try {
             setLoading(true);
             const result =
-                await API.registration.pendingUserControllerRegisterUserForEmailVerification(
+                await API.pendingUser.pendingUserControllerRegisterUserForEmailVerification(
                     {
                         registrationForVerificationRequestDTO: {
                             email: state.email,

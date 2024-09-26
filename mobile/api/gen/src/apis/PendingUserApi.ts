@@ -48,19 +48,19 @@ export interface PendingUserControllerVerifyEmailRequest {
 }
 
 /**
- * RegistrationApi - interface
+ * PendingUserApi - interface
  *
  * @export
- * @interface RegistrationApiInterface
+ * @interface PendingUserApiInterface
  */
-export interface RegistrationApiInterface {
+export interface PendingUserApiInterface {
     /**
      *
      * @summary Update verification status of user.
      * @param {UpdateUserVerificationstatusDTO} updateUserVerificationstatusDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof RegistrationApiInterface
+     * @memberof PendingUserApiInterface
      */
     pendingUserControllerChangeVerificationStatusRaw(
         requestParameters: PendingUserControllerChangeVerificationStatusRequest,
@@ -81,7 +81,7 @@ export interface RegistrationApiInterface {
      * @param {RegistrationForVerificationRequestDTO} registrationForVerificationRequestDTO User email.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof RegistrationApiInterface
+     * @memberof PendingUserApiInterface
      */
     pendingUserControllerRegisterUserForEmailVerificationRaw(
         requestParameters: PendingUserControllerRegisterUserForEmailVerificationRequest,
@@ -102,7 +102,7 @@ export interface RegistrationApiInterface {
      * @param {SetAcceptedSpecialDataGenderLookingForDTO} setAcceptedSpecialDataGenderLookingForDTO Accept special data privacy
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof RegistrationApiInterface
+     * @memberof PendingUserApiInterface
      */
     pendingUserControllerSetAcceptedSpecialDataGenderLookingForAtRaw(
         requestParameters: PendingUserControllerSetAcceptedSpecialDataGenderLookingForAtRequest,
@@ -123,7 +123,7 @@ export interface RegistrationApiInterface {
      * @param {VerifyEmailDTO} verifyEmailDTO User email and verification code.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof RegistrationApiInterface
+     * @memberof PendingUserApiInterface
      */
     pendingUserControllerVerifyEmailRaw(
         requestParameters: PendingUserControllerVerifyEmailRequest,
@@ -142,9 +142,9 @@ export interface RegistrationApiInterface {
 /**
  *
  */
-export class RegistrationApi
+export class PendingUserApi
     extends runtime.BaseAPI
-    implements RegistrationApiInterface
+    implements PendingUserApiInterface
 {
     /**
      * Update verification status of user.
@@ -168,7 +168,7 @@ export class RegistrationApi
 
         const response = await this.request(
             {
-                path: `/registration/admin/verification-status`,
+                path: `/pending-user/admin/verification-status`,
                 method: "PUT",
                 headers: headerParameters,
                 query: queryParameters,
@@ -219,7 +219,7 @@ export class RegistrationApi
 
         const response = await this.request(
             {
-                path: `/registration`,
+                path: `/pending-user`,
                 method: "POST",
                 headers: headerParameters,
                 query: queryParameters,
@@ -275,7 +275,7 @@ export class RegistrationApi
 
         const response = await this.request(
             {
-                path: `/registration/accept-special-data`,
+                path: `/pending-user/accept-special-data`,
                 method: "PUT",
                 headers: headerParameters,
                 query: queryParameters,
@@ -326,7 +326,7 @@ export class RegistrationApi
 
         const response = await this.request(
             {
-                path: `/registration/verify-email`,
+                path: `/pending-user/verify-email`,
                 method: "PUT",
                 headers: headerParameters,
                 query: queryParameters,
