@@ -6,7 +6,7 @@ export const en = {
     signingIn: "Signing in..",
     troubleSignIn: "Trouble signing in?",
     gettingReadyToAmazeYou: "Getting ready to amaze you..",
-    datingAppsAreBroken: "Dating apps are Broken",
+    datingAppsAreBroken: "Dating apps are broken",
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
     termsDisclaimer: {
         p1: "By tapping 'Create account' or 'Sign in', you agree to our ",

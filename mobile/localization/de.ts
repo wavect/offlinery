@@ -6,8 +6,8 @@ export const de: Language = {
     invalidCredentials: "E-Mail oder Passwort falsch.",
     signingIn: "Einen Moment..",
     troubleSignIn: "Probleme beim Anmelden?",
-    gettingReadyToAmazeYou: "Bereit, dich zu beeindrucken..",
-    datingAppsAreBroken: "Dating apps are Broken",
+    gettingReadyToAmazeYou: "Bereit, dich zu beeindrucken?",
+    datingAppsAreBroken: "Dating apps are broken",
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
     verificationCodeResend: "Neuer Code",
     verificationCodeInvalid: "Ungültiger Verifizierungscode",
@@ -31,7 +31,7 @@ export const de: Language = {
         titleAcceptNo: "Akzeptiere ein Nein.",
         descrAcceptNo:
             "Sei nicht aufdringlich. Wenn es nicht passt, akzeptiere es.",
-        titleAuthentic: "Bleib Authentisch.",
+        titleAuthentic: "Bleib authentisch.",
         descrAuthentic: "Sei du selbst. Vertrau uns, es funktioniert.",
         titleWaitWeird: "Nicht warten. Mach's nicht komisch.",
         descrWaitWeird:
@@ -82,7 +82,7 @@ export const de: Language = {
     permissionToLocationDenied: "Zugriff auf den Standort wurde verweigert.",
     dontApproachHere: "Hier nicht ansprechen",
     whatAreSpotsToNotApproachYou:
-        "An welchen Orten möchtest du nicht angesprochen werden? Dein Fitnessstudio, Arbeitsplatz?",
+        "An welchen Orten möchtest du nicht angesprochen werden? Im Fitnessstudio, am Arbeitsplatz?",
     youAreUndercover: "Du bist undercover",
     nobodyWillSeeYou: "Niemand wird dich hier sehen.",
     myLocation: "Mein Standort",
