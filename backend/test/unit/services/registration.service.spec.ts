@@ -1,5 +1,5 @@
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
-import { RegistrationService } from "@/entities/registration/registration.service";
+import { PendingUserService } from "@/entities/pending-user/pending-user.service";
 import { User } from "@/entities/user/user.entity";
 import { EEmailVerificationStatus } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
@@ -8,7 +8,7 @@ import { getRepositoryToken } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 describe("RegistrationService", () => {
-    let registrationService: RegistrationService;
+    let registrationService: PendingUserService;
     let pendingUserRepo: Repository<PendingUser>;
     let userRepo: Repository<User>;
     let mailerService: MailerService;
@@ -16,7 +16,7 @@ describe("RegistrationService", () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                RegistrationService,
+                PendingUserService,
                 {
                     provide: getRepositoryToken(PendingUser),
                     useClass: Repository,
@@ -35,7 +35,7 @@ describe("RegistrationService", () => {
         }).compile();
 
         registrationService =
-            module.get<RegistrationService>(RegistrationService);
+            module.get<PendingUserService>(PendingUserService);
         pendingUserRepo = module.get<Repository<PendingUser>>(
             getRepositoryToken(PendingUser),
         );

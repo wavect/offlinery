@@ -7,8 +7,8 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { join } from "path";
 import { TYPED_ENV } from "src/utils/env.utils";
-import { RegistrationController } from "./registration.controller";
-import { RegistrationService } from "./registration.service";
+import { PendingUserController } from "./pending-user.controller";
+import { PendingUserService } from "./pending-user.service";
 
 @Module({
     imports: [
@@ -31,8 +31,8 @@ import { RegistrationService } from "./registration.service";
             },
         }),
     ],
-    providers: [RegistrationService],
-    controllers: [RegistrationController],
-    exports: [RegistrationService],
+    providers: [PendingUserService],
+    controllers: [PendingUserController],
+    exports: [PendingUserService],
 })
-export class RegistrationModule {}
+export class PendingUserModule {}

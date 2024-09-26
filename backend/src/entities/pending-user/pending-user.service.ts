@@ -22,8 +22,8 @@ import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
 
 @Injectable()
-export class RegistrationService {
-    private readonly logger = new Logger(RegistrationService.name);
+export class PendingUserService {
+    private readonly logger = new Logger(PendingUserService.name);
     readonly VERIFICATION_CODE_EXPIRATION_IN_MIN = 15;
     readonly RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS = 120 * 1000;
 

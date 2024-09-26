@@ -5,8 +5,8 @@ import { ApiUserService } from "@/entities/api-user/api-user.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
-import { RegistrationModule } from "@/entities/registration/registration.module";
-import { RegistrationService } from "@/entities/registration/registration.service";
+import { PendingUserModule } from "@/entities/pending-user/pending-user.module";
+import { PendingUserService } from "@/entities/pending-user/pending-user.service";
 import { UserReport } from "@/entities/user-report/user-report.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
@@ -28,14 +28,14 @@ import { TypeOrmModule } from "@nestjs/typeorm";
             Encounter,
             PendingUser,
         ]),
-        RegistrationModule,
+        PendingUserModule,
         forwardRef(() => MatchingModule),
         forwardRef(() => AuthModule),
     ],
     providers: [
         DefaultUserSeeder,
         DefaultApiUserSeeder,
-        RegistrationService,
+        PendingUserService,
         UserService,
         AuthService,
         ApiUserService,
