@@ -12,6 +12,7 @@ import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { Point } from "geojson";
+import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
 import { mockRepository } from "../../_src/utils/utils";
 
@@ -71,6 +72,12 @@ describe("UserService", () => {
                     provide: MailerService,
                     useValue: {
                         sendMail: jest.fn(),
+                    },
+                },
+                {
+                    provide: I18nService,
+                    useValue: {
+                        t: jest.fn(),
                     },
                 },
             ],
