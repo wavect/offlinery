@@ -1,9 +1,6 @@
 appId: io.wavect.offlinery
-
 ---
-
 - runFlow: main.e2e.yaml
-
 - tapOn:
     id: "tab-encounters"
 - assertVisible: "Begegnungen"
@@ -16,4 +13,4 @@ appId: io.wavect.offlinery
 - tapOn:
     id: "input-update-status"
 - tapOn:
-    point: "50%,50%" # Fix, as Dropdown is not clickable
+    point: "50%,50%"
