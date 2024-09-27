@@ -24,6 +24,7 @@ interface IOButtonWideProps {
     isLoading?: boolean;
     loadingBtnText?: string;
     size?: "default" | "smaller";
+    testID?: string;
 }
 
 const getButtonStyle = (
@@ -100,6 +101,7 @@ export const OButtonWide: FC<IOButtonWideProps> = ({
     size,
     disabled = false,
     countdownEnableSeconds = 0,
+    testID,
 }) => {
     const [countdown, setCountdown] = useState(countdownEnableSeconds);
     const [isBtnCountdownActive, setIsBtnCountdownActive] = useState(
@@ -128,6 +130,7 @@ export const OButtonWide: FC<IOButtonWideProps> = ({
 
     return (
         <Pressable
+            testID={testID}
             onPress={onPress}
             disabled={isDisabled}
             style={[getButtonStyle(isDisabled, filled, variant), style]}

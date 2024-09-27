@@ -1,4 +1,5 @@
 import { WeightedLatLngDTO } from "@/api/gen/src";
+import { TestData } from "@/tests/src/accessors";
 import { isExpoGoEnvironment } from "@/utils/misc.utils";
 import React from "react";
 import { Heatmap } from "react-native-maps";
@@ -11,6 +12,7 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(({ locations }) => {
     if (isExpoGoEnvironment) return null;
     return (
         <Heatmap
+            testID={TestData.encounters.heatMapComponent}
             points={locations}
             opacity={0.5}
             radius={350}

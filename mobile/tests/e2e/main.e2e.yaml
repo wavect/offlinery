@@ -1,0 +1,20 @@
+appId: io.wavect.offlinery
+---
+- runFlow:
+      when:
+          visible: "Anmelden"
+      commands:
+          - assertVisible: "Anmelden"
+          - tapOn: "Anmelden"
+          - tapOn: "Anmelden"
+          - runFlow:
+                when:
+                    visible: "Erlauben"
+                commands:
+                    - tapOn: "Erlauben"
+          - runFlow:
+                when:
+                    visible: "möchte auf Ihren Standort zugreifen"
+                commands:
+                    - tapOn: "Erlauben"
+          - assertVisible: "Finden"

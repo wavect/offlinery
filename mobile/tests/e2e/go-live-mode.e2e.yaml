@@ -1,0 +1,12 @@
+appId: io.wavect.offlinery
+---
+- launchApp
+- runFlow: main.e2e.yaml
+- tapOn:
+      id: "go-live-button"
+- assertVisible: "OK"
+- tapOn: "OK"
+- tapOn:
+      id: "go-live-button"
+- assertVisible: "OK"
+- tapOn: "OK"
