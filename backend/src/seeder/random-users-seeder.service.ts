@@ -32,16 +32,10 @@ export class RandomUsersSeeder {
     createFileFromImage(index: number = 0): Express.Multer.File {
         const actualFilename = "img.png";
 
-        const imagePath = path.join(
-            __dirname,
-            "..",
-            "..",
-            "uploads",
-            "placeholder",
-            actualFilename,
+        const imagePath = `../../test/_src/images/${actualFilename}`;
+        const buffer = fs.readFileSync(
+            `../../test/_src/images/${actualFilename}`,
         );
-
-        const buffer = fs.readFileSync(imagePath);
         const stats = fs.statSync(imagePath);
 
         const fileStream = new Readable();

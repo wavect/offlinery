@@ -12,8 +12,8 @@ import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
-import { RandomEncounterSeeder } from "@/seeder/random-encounter-seeder.service";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
+import { SpecificUsersEncountersSeeder } from "@/seeder/specific-encounter-seeder.service";
 import { MatchingModule } from "@/transient-services/matching/matching.module";
 import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -40,7 +40,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
         AuthService,
         ApiUserService,
         RandomUsersSeeder,
-        RandomEncounterSeeder,
+        SpecificUsersEncountersSeeder,
     ],
     exports: [DefaultUserSeeder, DefaultApiUserSeeder, RandomUsersSeeder],
 })

@@ -1,7 +1,7 @@
 import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
-import { RandomEncounterSeeder } from "@/seeder/random-encounter-seeder.service";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
+import { SpecificUsersEncountersSeeder } from "@/seeder/specific-encounter-seeder.service";
 import { API_VERSION, BE_ENDPOINT } from "@/utils/misc.utils";
 import { INestApplication, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
@@ -50,8 +50,8 @@ async function bootstrap() {
         await testUserSeederService.seedRandomUsers();
 
         console.log("- Seeding Encounters");
-        const encounterSeederService = app.get(RandomEncounterSeeder);
-        await encounterSeederService.seedRandomEncounters();
+        const encounterSeederService = app.get(SpecificUsersEncountersSeeder);
+        await encounterSeederService.seed();
     }
 
     await app.listen(TYPED_ENV.BE_PORT);
