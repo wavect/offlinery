@@ -1,20 +1,19 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
-import { UserApi, UserPrivateDTOVerificationStatusEnum } from "@/api/gen/src";
+import { UserPrivateDTOVerificationStatusEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { refreshUserData } from "@/services/auth.service";
+import { API } from "@/utils/api-config";
 import { SUPPORT_MAIL } from "@/utils/general.constants";
-import { includeJWT } from "@/utils/misc.utils";
 import { A } from "@expo/html-elements";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const userApi = new UserApi();
 const WaitingForVerification = ({
     navigation,
 }: NativeStackScreenProps<
@@ -28,12 +27,9 @@ const WaitingForVerification = ({
             // @dev This should only happen if user did not login or register and for some reason is on this screen (semantically impossible, except during debug sessions)
             throw new Error("No user ID found!");
         }
-        const updatedUser = await userApi.userControllerGetOwnUserData(
-            {
-                userId: state.id!,
-            },
-            await includeJWT(),
-        );
+        const updatedUser = await API.user.userControllerGetOwnUserData({
+            userId: state.id!,
+        });
         refreshUserData(dispatch, updatedUser);
     };
 

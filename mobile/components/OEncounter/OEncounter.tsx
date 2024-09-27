@@ -1,6 +1,5 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import {
-    EncounterApi,
     EncounterPublicDTOStatusEnum,
     UpdateEncounterStatusDTO,
     UserPrivateDTOApproachChoiceEnum,
@@ -18,8 +17,8 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
+import { API } from "@/utils/api-config";
 import { formatDate } from "@/utils/date.utils";
-import { includeJWT } from "@/utils/misc.utils";
 import * as React from "react";
 import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
@@ -31,7 +30,6 @@ interface ISingleEncounterProps {
     navigation: any;
 }
 
-const encounterApi = new EncounterApi();
 const OEncounter = (props: ISingleEncounterProps) => {
     const { dispatch } = useEncountersContext();
     const { dispatch: userDispatch, state } = useUserContext();
@@ -61,13 +59,10 @@ const OEncounter = (props: ISingleEncounterProps) => {
             status: item.value,
         };
 
-        await encounterApi.encounterControllerUpdateStatus(
-            {
-                updateEncounterStatusDTO,
-                userId: state.id!,
-            },
-            await includeJWT(),
-        );
+        await API.encounter.encounterControllerUpdateStatus({
+            updateEncounterStatusDTO,
+            userId: state.id!,
+        });
 
         dispatch({
             type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,

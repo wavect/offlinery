@@ -1,5 +1,5 @@
 import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { EncounterApi, GetLocationOfEncounterDTO } from "@/api/gen/src";
+import { GetLocationOfEncounterDTO } from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
 import { getPublicProfileFromEncounter } from "@/context/EncountersContext";
@@ -8,6 +8,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
+import { API } from "@/utils/api-config";
 import { getMapProvider } from "@/utils/map-provider";
 import { calculateDistance, getRegionForCoordinates } from "@/utils/map.utils";
 import * as Location from "expo-location";
@@ -18,7 +19,6 @@ import { Linking, Platform, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker, Polyline, Region } from "react-native-maps";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
-const encounterAPI = new EncounterApi();
 const NavigateToApproach = ({
     route,
     navigation,
@@ -57,7 +57,7 @@ const NavigateToApproach = ({
                 encounterId: navigateToPerson.encounterId,
             };
             const encounterLoc =
-                await encounterAPI.encounterControllerGetLocationOfEncounter({
+                await API.encounter.encounterControllerGetLocationOfEncounter({
                     userId: state.id!,
                     getLocationOfEncounterDTO,
                 });

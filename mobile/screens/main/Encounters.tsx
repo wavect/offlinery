@@ -1,5 +1,5 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { EncounterApi, MessagePublicDTO } from "@/api/gen/src";
+import { MessagePublicDTO } from "@/api/gen/src";
 import {
     EDateTimeFormatters,
     ODateTimePicker,
@@ -14,7 +14,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { ROUTES } from "@/screens/routes";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
-import { includeJWT } from "@/utils/misc.utils";
+import { API } from "@/utils/api-config";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
@@ -27,8 +27,6 @@ import {
     View,
 } from "react-native";
 import OEncounter from "../../components/OEncounter/OEncounter";
-
-const api = new EncounterApi();
 
 const Encounters = ({
     navigation,
@@ -71,17 +69,16 @@ const Encounters = ({
 
     const fetchEncounters = useCallback(async () => {
         try {
-            const encounters = await api.encounterControllerGetEncountersByUser(
-                {
+            const encounters =
+                await API.encounter.encounterControllerGetEncountersByUser({
                     userId: userState.id!,
                     startDate: metStartDateFilter,
                     endDate: metEndDateFilter,
-                },
-                await includeJWT(),
-            );
+                });
+
             const mappedEncounters: IEncounterProfile[] = [];
 
-            encounters.forEach((encounter) => {
+            encounters.forEach((encounter: any) => {
                 const otherUser = encounter.users.filter(
                     (u) => u.id !== userState.id,
                 )[0];
