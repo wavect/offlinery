@@ -1,10 +1,5 @@
 import { BorderRadius, Color, FontSize, Subtitle } from "@/GlobalStyles";
-import {
-    MapApi,
-    UserApi,
-    UserPrivateDTODateModeEnum,
-    WeightedLatLngDTO,
-} from "@/api/gen/src";
+import { UserPrivateDTODateModeEnum, WeightedLatLngDTO } from "@/api/gen/src";
 import { OFloatingActionButton } from "@/components/OFloatingActionButton/OFloatingActionButton";
 import { OHeatMap } from "@/components/OHeatMap/OHeatMap";
 import {
@@ -14,8 +9,8 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { API } from "@/utils/api-config";
 import { getMapProvider } from "@/utils/map-provider";
-import { includeJWT } from "@/utils/misc.utils";
 import Slider from "@react-native-community/slider";
 import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
@@ -39,9 +34,6 @@ import MapView, {
 export interface OMapRefType {
     getOtherUsersPositions: () => Promise<void>;
 }
-
-const userApi = new UserApi();
-const mapApi = new MapApi();
 
 interface OMapProps {
     saveChangesToBackend: boolean;
@@ -118,10 +110,9 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
 
     const getOtherUsersPositions = async () => {
         try {
-            const positions = await mapApi.mapControllerGetUserLocations(
-                { userId: state.id! },
-                await includeJWT(),
-            );
+            const positions = await API.map.mapControllerGetUserLocations({
+                userId: state.id!,
+            });
             setLocationsFromOthers(positions);
         } catch (e) {
             console.warn("Unable to get position from other users ", e);
@@ -219,18 +210,14 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                 // @dev timer = debounce
                 const timer = setTimeout(async () => {
                     try {
-                        await userApi.userControllerUpdateUser(
-                            {
-                                userId: state.id!,
-                                updateUserDTO: {
-                                    blacklistedRegions: currentRegions.map(
-                                        (r) =>
-                                            mapRegionToBlacklistedRegionDTO(r),
-                                    ),
-                                },
+                        await API.user.userControllerUpdateUser({
+                            userId: state.id!,
+                            updateUserDTO: {
+                                blacklistedRegions: currentRegions.map((r) =>
+                                    mapRegionToBlacklistedRegionDTO(r),
+                                ),
                             },
-                            await includeJWT(),
-                        );
+                        });
                         // Update the ref after successful update
                         prevBlacklistedRegionsRef.current = currentRegions;
                     } catch (error) {

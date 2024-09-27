@@ -1,5 +1,5 @@
 import { MainStackParamList } from "@/MainStack.navigator";
-import { AuthApi, SignInResponseDTO } from "@/api/gen/src";
+import { SignInResponseDTO } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
@@ -12,6 +12,7 @@ import {
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
+import { API } from "@/utils/api-config";
 import { jwtExpiresSoon } from "@/utils/misc.utils";
 import { useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
@@ -19,8 +20,6 @@ import { useCallback, useState } from "react";
 import { Dimensions, Platform, StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "./routes";
-
-const authApi = new AuthApi();
 
 const Welcome = ({
     navigation,
@@ -47,7 +46,7 @@ const Welcome = ({
                 );
 
                 /**@DEV fix generator type bug */
-                signInRes = (await authApi.authControllerRefreshJwtToken({
+                signInRes = (await API.auth.authControllerRefreshJwtToken({
                     refreshJwtDTO: {
                         refreshToken: storedRefreshToken!,
                     },
@@ -57,7 +56,7 @@ const Welcome = ({
             } else {
                 // user has a valid access token
                 console.log("JWT found, authenticating via JWT.");
-                signInRes = await authApi.authControllerSignInByJWT({
+                signInRes = await API.auth.authControllerSignInByJWT({
                     signInJwtDTO: {
                         jwtAccessToken: storedAccessToken!,
                     },

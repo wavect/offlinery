@@ -1,7 +1,6 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import {
-    UserApi,
     UserControllerUpdateUserRequest,
     UserPrivateDTOApproachChoiceEnum,
     UserPrivateDTOGenderDesireEnum,
@@ -28,7 +27,9 @@ import {
 } from "@/services/auth.service";
 import { deleteSessionDataFromStorage } from "@/services/secure-storage.service";
 import { TestData } from "@/tests/src/accessors";
-import { includeJWT } from "@/utils/misc.utils";
+import { API } from "@/utils/api-config";
+import { GDPR_URL } from "@/utils/general.constants";
+import { A } from "@expo/html-elements";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as React from "react";
@@ -38,7 +39,6 @@ import { Dropdown } from "react-native-element-dropdown";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const userApi = new UserApi();
 const ProfileSettings = ({
     navigation,
 }: BottomTabScreenProps<MainScreenTabsParamList, typeof ROUTES.MainTabView> &
@@ -112,7 +112,7 @@ const ProfileSettings = ({
                 images: getUserImagesForUpload(state),
             };
 
-            await userApi.userControllerUpdateUser(request, await includeJWT());
+            await API.user.userControllerUpdateUser(request);
 
             navigation.navigate(ROUTES.MainTabView, {
                 screen: ROUTES.Main.FindPeople,
@@ -128,6 +128,14 @@ const ProfileSettings = ({
     const genderItems: { label: string; value: UserPrivateDTOGenderEnum }[] = [
         { label: i18n.t(TR.woman), value: "woman" },
         { label: i18n.t(TR.man), value: "man" },
+    ];
+
+    const genderLookingForItems: {
+        label: string;
+        value: UserPrivateDTOGenderEnum;
+    }[] = [
+        { label: i18n.t(TR.women), value: "woman" },
+        { label: i18n.t(TR.men), value: "man" },
     ];
 
     const SettingsButton = (props: {
@@ -153,23 +161,17 @@ const ProfileSettings = ({
     };
 
     const refresh = async () => {
-        const updatedUser = await userApi.userControllerGetOwnUserData(
-            {
-                userId: state.id!,
-            },
-            await includeJWT(),
-        );
+        const updatedUser = await API.user.userControllerGetOwnUserData({
+            userId: state.id!,
+        });
         refreshUserData(dispatch, updatedUser);
     };
 
     const handleDeleteAccount = async () => {
         try {
-            await userApi.userControllerRequestAccountDeletion(
-                {
-                    userId: state.id!,
-                },
-                await includeJWT(),
-            );
+            await API.user.userControllerRequestAccountDeletion({
+                userId: state.id!,
+            });
             dispatch({
                 type: EACTION_USER.UPDATE_MULTIPLE,
                 payload: { markedForDeletion: true },
@@ -296,7 +298,7 @@ const ProfileSettings = ({
                     <Text style={styles.label}>{i18n.t(TR.iLookFor)}</Text>
                     <Dropdown
                         testID={TestData.settings.inputIAmLookingFor}
-                        data={genderItems}
+                        data={genderLookingForItems}
                         labelField="label"
                         valueField="value"
                         value={state.genderDesire}
@@ -425,12 +427,29 @@ const ProfileSettings = ({
                         </TouchableOpacity>
                     </View>
                 </View>
+
+                <View style={styles.gdprContainer}>
+                    <A href={GDPR_URL} style={styles.gdpr}>
+                        {i18n.t(TR.termsDisclaimer.privacyCookie)}
+                    </A>
+                </View>
             </View>
         </OPageContainer>
     );
 };
 
 const styles = StyleSheet.create({
+    gdpr: {
+        textDecorationLine: "underline",
+        color: Color.gray,
+        textAlign: "center",
+    },
+    gdprContainer: {
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 20,
+    },
     buttonContainer: {
         alignItems: "center",
     },

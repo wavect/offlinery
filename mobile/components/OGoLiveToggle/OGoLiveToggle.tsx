@@ -2,7 +2,6 @@ import { Color } from "@/GlobalStyles";
 import {
     LocationUpdateDTO,
     UpdateUserDTO,
-    UserApi,
     UserPrivateDTOApproachChoiceEnum,
     UserPrivateDTODateModeEnum,
 } from "@/api/gen/src";
@@ -14,7 +13,7 @@ import {
 } from "@/services/secure-storage.service";
 import { getLocallyStoredUserData } from "@/services/storage.service";
 import { TestData } from "@/tests/src/accessors";
-import { includeJWT } from "@/utils/misc.utils";
+import { API } from "@/utils/api-config";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
@@ -43,7 +42,6 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
             );
             return;
         }
-        const userApi = new UserApi();
 
         if (locations && locations.length > 0 && userId) {
             const location = locations[locations.length - 1];
@@ -53,13 +51,10 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
             };
 
             try {
-                await userApi.userControllerUpdateLocation(
-                    {
-                        userId,
-                        locationUpdateDTO: locationUpdateDTO,
-                    },
-                    await includeJWT(),
-                );
+                await API.user.userControllerUpdateLocation({
+                    userId,
+                    locationUpdateDTO: locationUpdateDTO,
+                });
                 console.log(
                     `[TASK:LOCATION_UPDATE]: User Location updated successfully`,
                 );
@@ -126,16 +121,12 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 state.dateMode === UserPrivateDTODateModeEnum.ghost
                     ? UserPrivateDTODateModeEnum.live
                     : UserPrivateDTODateModeEnum.ghost;
-            const userApi = new UserApi();
             const updateUserDTO: UpdateUserDTO = { dateMode: newDateMode };
 
-            await userApi.userControllerUpdateUser(
-                {
-                    userId: state.id!,
-                    updateUserDTO,
-                },
-                await includeJWT(),
-            );
+            await API.user.userControllerUpdateUser({
+                userId: state.id!,
+                updateUserDTO,
+            });
 
             dispatch({
                 type: EACTION_USER.UPDATE_MULTIPLE,

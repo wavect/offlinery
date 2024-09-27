@@ -1,12 +1,12 @@
 import { MainStackParamList } from "@/MainStack.navigator";
-import { UpdateUserPasswordDTO, UserApi } from "@/api/gen/src";
+import { UpdateUserPasswordDTO } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { TestData } from "@/tests/src/accessors";
-import { includeJWT } from "@/utils/misc.utils";
+import { API } from "@/utils/api-config";
 import { isValidPassword } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
@@ -14,7 +14,6 @@ import { StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const userApi = new UserApi();
 const Password = ({
     route,
     navigation,
@@ -82,13 +81,10 @@ const Password = ({
                 newPassword: state.clearPassword,
             };
             try {
-                await userApi.userControllerUpdateUserPassword(
-                    {
-                        userId: state.id!,
-                        updateUserPasswordDTO,
-                    },
-                    await includeJWT(),
-                );
+                await API.user.userControllerUpdateUserPassword({
+                    userId: state.id!,
+                    updateUserPasswordDTO,
+                });
 
                 navigation.navigate(route.params.nextPage);
             } catch (err) {

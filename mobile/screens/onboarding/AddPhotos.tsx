@@ -1,11 +1,11 @@
 import { MainStackParamList } from "@/MainStack.navigator";
-import { UserApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { PhotoContainer } from "@/components/OPhotoContainer/OPhotoContainer";
-import { ImageIdx, isImagePicker, useUserContext } from "@/context/UserContext";
+import { ImageIdx, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { includeJWT } from "@/utils/misc.utils";
+import { API } from "@/utils/api-config";
+import { isImagePicker } from "@/utils/media.utils";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import { useState } from "react";
@@ -13,7 +13,6 @@ import { StyleSheet, View, useWindowDimensions } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
-const userApi = new UserApi();
 const AddPhotos = ({
     route,
     navigation,
@@ -39,22 +38,19 @@ const AddPhotos = ({
         if (route.params?.overrideOnBtnPress) {
             setLoading(true);
             try {
-                await userApi.userControllerUpdateUser(
-                    {
-                        userId: state.id!,
-                        images: (
-                            ["0", "1", "2", "3", "4", "5"] as ImageIdx[]
-                        ).map((idx) => {
+                await API.user.userControllerUpdateUser({
+                    userId: state.id!,
+                    images: (["0", "1", "2", "3", "4", "5"] as ImageIdx[]).map(
+                        (idx) => {
                             const img = state.imageURIs[idx];
                             if (isImagePicker(img)) {
                                 return img;
                             }
                             // otherwise do not upload (only blobs)
                             return;
-                        }), // do not filter for undefined values, as we need to retain indices
-                    },
-                    await includeJWT(),
-                );
+                        },
+                    ), // do not filter for undefined values, as we need to retain indices
+                });
                 route.params.overrideOnBtnPress();
             } catch (err) {
                 throw err;

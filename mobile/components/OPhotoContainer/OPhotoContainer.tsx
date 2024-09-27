@@ -1,17 +1,16 @@
-import { BASE_PATH } from "@/api/gen/src";
 import {
     EACTION_USER,
     ImageIdx,
-    isImagePicker,
     IUserAction,
     IUserData,
 } from "@/context/UserContext";
 import { BorderRadius, Color } from "@/GlobalStyles";
 import { i18n, TR } from "@/localization/translate.service";
+import { getValidImgURI } from "@/utils/media.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
-import { Image, Pressable, StyleSheet } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface IPhotoContainerProps {
     imageIdx: ImageIdx;
@@ -62,33 +61,64 @@ export const PhotoContainer = (props: IPhotoContainerProps) => {
         }
     };
 
+    const removeImage = () => {
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: {
+                imageURIs: {
+                    ...state.imageURIs,
+                    [imageIdx]: null,
+                },
+            },
+        });
+    };
+
     const img = state.imageURIs[imageIdx];
 
-    // If the image is an `ImagePicker` we can directly access image on the user's device
-    // otherwise we need to fetch it from the server.
-    const uri = isImagePicker(img)
-        ? img.uri
-        : `${BASE_PATH.replace("/v1", "")}/img/${img}`;
-
     return (
-        <Pressable
-            style={[styles.photoContainer, { width: size, height: size }]}
-            onPress={openMediaLibrary}
-        >
-            {!img ? (
-                <MaterialIcons
-                    name="add-circle-outline"
-                    size={size * 0.2}
-                    color={Color.primary}
-                />
-            ) : (
-                <Image style={styles.previewImage} source={{ uri }} />
+        <View style={[styles.photoContainer, { width: size, height: size }]}>
+            <Pressable style={styles.photoContent} onPress={openMediaLibrary}>
+                {!img ? (
+                    <MaterialIcons
+                        name="add-circle-outline"
+                        size={size * 0.2}
+                        color={Color.primary}
+                    />
+                ) : (
+                    <Image
+                        style={styles.previewImage}
+                        source={{ uri: getValidImgURI(img) }}
+                    />
+                )}
+            </Pressable>
+            {img && (
+                <Pressable style={styles.removeButton} onPress={removeImage}>
+                    <MaterialIcons
+                        name="close"
+                        size={size * 0.15}
+                        color={Color.white}
+                    />
+                </Pressable>
             )}
-        </Pressable>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    photoContent: {
+        width: "100%",
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    removeButton: {
+        position: "absolute",
+        top: 5,
+        right: 5,
+        backgroundColor: Color.redDark,
+        borderRadius: 15,
+        padding: 2,
+    },
     photoContainer: {
         marginBottom: 5,
         borderWidth: 1,

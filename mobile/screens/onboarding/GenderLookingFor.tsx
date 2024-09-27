@@ -1,7 +1,6 @@
 import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import {
-    RegistrationApi,
     SetAcceptedSpecialDataGenderLookingForDTO,
     UserPrivateDTOGenderDesireEnum,
 } from "@/api/gen/src";
@@ -9,6 +8,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { API } from "@/utils/api-config";
 import { GDPR_URL } from "@/utils/general.constants";
 import * as React from "react";
 import { Alert, Linking, StyleSheet, Text, View } from "react-native";
@@ -45,7 +45,7 @@ const GenderLookingFor = ({
                                 email: state.email,
                                 dateTimeAccepted: new Date(),
                             };
-                        await new RegistrationApi().registrationControllerSetAcceptedSpecialDataGenderLookingForAt(
+                        await API.registration.registrationControllerSetAcceptedSpecialDataGenderLookingForAt(
                             {
                                 setAcceptedSpecialDataGenderLookingForDTO,
                             },

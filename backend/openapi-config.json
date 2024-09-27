@@ -8,5 +8,15 @@
   "enumPropertyNaming": "original",
   "modelPropertyNaming": "original",
   "useSingleEnumType": true,
-  "stringEnums": false
+  "stringEnums": false,
+  "apiPackage": "api",
+  "modelPackage": "model",
+  "httpUserAgent": "Offlinery-API-Client",
+  "usePromises": true,
+  "authMethods": [
+    {
+      "type": "bearer",
+      "name": "bearerAuth"
+    }
+  ]
 }
