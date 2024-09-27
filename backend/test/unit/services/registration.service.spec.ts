@@ -1,10 +1,11 @@
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { RegistrationService } from "@/entities/registration/registration.service";
 import { User } from "@/entities/user/user.entity";
-import { EEmailVerificationStatus } from "@/types/user.types";
+import { EEmailVerificationStatus, ELanguage } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
 
 describe("RegistrationService", () => {
@@ -29,6 +30,13 @@ describe("RegistrationService", () => {
                     provide: MailerService,
                     useValue: {
                         sendMail: jest.fn(),
+                    },
+                },
+                {
+                    provide: I18nService,
+                    useValue: {
+                        t: jest.fn(),
+                        translate: jest.fn(),
                     },
                 },
             ],
@@ -56,7 +64,10 @@ describe("RegistrationService", () => {
             } as any as User);
 
             await expect(
-                registrationService.registerPendingUser(email),
+                registrationService.registerPendingUser({
+                    email: "test@example.com",
+                    language: ELanguage.en,
+                }),
             ).rejects.toThrow("Email already exists.");
         });
 
@@ -69,7 +80,10 @@ describe("RegistrationService", () => {
             );
             jest.spyOn(mailerService, "sendMail").mockResolvedValue({} as any);
 
-            const result = await registrationService.registerPendingUser(email);
+            const result = await registrationService.registerPendingUser({
+                email,
+                language: ELanguage.en,
+            });
 
             expect(result).toHaveProperty("email", email);
             expect(result).toHaveProperty("timeout");
@@ -95,7 +109,10 @@ describe("RegistrationService", () => {
             );
             jest.spyOn(mailerService, "sendMail").mockResolvedValue({} as any);
 
-            const result = await registrationService.registerPendingUser(email);
+            const result = await registrationService.registerPendingUser({
+                email,
+                language: ELanguage.en,
+            });
 
             expect(result).toHaveProperty("email", email);
             expect(result).toHaveProperty("timeout");
@@ -117,7 +134,10 @@ describe("RegistrationService", () => {
 
             jest.spyOn(pendingUserRepo, "save").mockResolvedValue({} as any);
 
-            const result = await registrationService.registerPendingUser(email);
+            const result = await registrationService.registerPendingUser({
+                email,
+                language: ELanguage.en,
+            });
 
             expect(result).toHaveProperty("email", email);
             expect(result).toHaveProperty("timeout");
