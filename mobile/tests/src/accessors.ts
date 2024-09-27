@@ -20,6 +20,9 @@ export const TestData = {
             newPwRpt: "new-password-repeat",
             confirm: "pwd-change-confirm",
         },
+        houseRules: {
+            buttonUnderstand: "house-rues-confirm",
+        },
     },
     encounters: {
         inputStatus: "input-update-status",
