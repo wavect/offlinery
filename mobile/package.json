@@ -18,7 +18,7 @@
         "e2e:ios:build": "expo run:ios --configuration Release",
         "e2e:ios:start-simulator": "xcrun simctl boot 'iPhone 14'",
         "e2e:ios:install": "xcrun simctl install booted ios/build/Build/Products/Release-iphonesimulator/Offlinery.app",
-        "e2e:ios:run": "EXPO_PUBLIC_ENVIRONMENT=production maestro test -e APP_PATH=ios/build/Build/Products/Release-iphonesimulator/Offlinery.app -e EXPO_PUBLIC_ENVIRONMENT=${EXPO_PUBLIC_ENVIRONMENT} ./tests/e2e/ios/login-flow.yaml",
+        "e2e:ios:run": "EXPO_PUBLIC_ENVIRONMENT=production maestro test -e APP_PATH=ios/build/Build/Products/Release-iphonesimulator/Offlinery.app -e EXPO_PUBLIC_ENVIRONMENT=${EXPO_PUBLIC_ENVIRONMENT} ./tests/e2e/main-flow-is-rendered.yaml",
         "e2e:ios:test": "npm run e2e:ios:run"
     },
     "dependencies": {

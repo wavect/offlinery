@@ -20,7 +20,7 @@ import { isExpoGoEnvironment } from "../../../utils/misc.utils";
 export const BASE_PATH = (
     (isExpoGoEnvironment
         ? `http://${Constants.expoConfig?.hostUri?.split(":").shift()?.concat(":3000")}`
-        : "https://offlinery.onrender.com") + "/v1"
+        : "https://offlinery-ys39.onrender.com") + "/v1"
 ).replace(/\/+$/, "");
 
 export interface ConfigurationParameters {
