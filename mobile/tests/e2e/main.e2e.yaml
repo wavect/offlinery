@@ -1,0 +1,17 @@
+appId: your.app.id
+---
+- runFlow:
+    when:
+      visible: "Anmelden"
+    commands:
+      - assertVisible: "Anmelden"
+      - tapOn: "Anmelden"
+      - tapOn: "Anmelden"
+      - assertVisible: "Erlauben"
+      - tapOn: "Erlauben"
+      - runFlow:
+          when:
+            visible: "möchte auf Ihren Standort zugreifen"
+          commands:
+            - tapOn: "Erlauben"
+      - assertVisible: "Finden"

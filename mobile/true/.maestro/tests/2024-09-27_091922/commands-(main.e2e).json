@@ -1,0 +1,121 @@
+[ {
+  "command" : {
+    "applyConfigurationCommand" : {
+      "config" : {
+        "appId" : "your.app.id"
+      }
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1727421588259,
+    "duration" : 0
+  }
+}, {
+  "command" : {
+    "defineVariablesCommand" : {
+      "env" : {
+        "APP_PATH" : "ios/build/Build/Products/Debug-iphonesimulator/Offlinery.app",
+        "EXPO_PUBLIC_ENVIRONMENT" : "development"
+      }
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1727421588257,
+    "duration" : 2
+  }
+}, {
+  "command" : {
+    "runFlowCommand" : {
+      "commands" : [ {
+        "assertConditionCommand" : {
+          "condition" : {
+            "visible" : {
+              "textRegex" : "Anmelden",
+              "optional" : false
+            }
+          }
+        }
+      }, {
+        "tapOnElement" : {
+          "selector" : {
+            "textRegex" : "Anmelden",
+            "optional" : false
+          },
+          "retryIfNoChange" : true,
+          "waitUntilVisible" : false,
+          "longPress" : false
+        }
+      }, {
+        "tapOnElement" : {
+          "selector" : {
+            "textRegex" : "Anmelden",
+            "optional" : false
+          },
+          "retryIfNoChange" : true,
+          "waitUntilVisible" : false,
+          "longPress" : false
+        }
+      }, {
+        "assertConditionCommand" : {
+          "condition" : {
+            "visible" : {
+              "textRegex" : "Erlauben",
+              "optional" : false
+            }
+          }
+        }
+      }, {
+        "tapOnElement" : {
+          "selector" : {
+            "textRegex" : "Erlauben",
+            "optional" : false
+          },
+          "retryIfNoChange" : true,
+          "waitUntilVisible" : false,
+          "longPress" : false
+        }
+      }, {
+        "runFlowCommand" : {
+          "commands" : [ {
+            "tapOnElement" : {
+              "selector" : {
+                "textRegex" : "Erlauben",
+                "optional" : false
+              },
+              "retryIfNoChange" : true,
+              "waitUntilVisible" : false,
+              "longPress" : false
+            }
+          } ],
+          "condition" : {
+            "visible" : {
+              "textRegex" : "möchte auf Ihren Standort zugreifen",
+              "optional" : false
+            }
+          }
+        }
+      }, {
+        "assertConditionCommand" : {
+          "condition" : {
+            "visible" : {
+              "textRegex" : "Finden",
+              "optional" : false
+            }
+          }
+        }
+      } ],
+      "condition" : {
+        "visible" : {
+          "textRegex" : "Anmelden",
+          "optional" : false
+        }
+      }
+    }
+  },
+  "metadata" : {
+    "status" : "SKIPPED",
+    "timestamp" : 1727421588259
+  }
+} ]
