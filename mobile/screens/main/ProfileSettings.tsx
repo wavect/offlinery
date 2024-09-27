@@ -129,6 +129,14 @@ const ProfileSettings = ({
         { label: i18n.t(TR.man), value: "man" },
     ];
 
+    const genderLookingForItems: {
+        label: string;
+        value: UserPrivateDTOGenderEnum;
+    }[] = [
+        { label: i18n.t(TR.women), value: "woman" },
+        { label: i18n.t(TR.men), value: "man" },
+    ];
+
     const SettingsButton = (props: {
         onPress: any;
         icon: any;
@@ -280,7 +288,7 @@ const ProfileSettings = ({
                 <View style={styles.dropdownContainer}>
                     <Text style={styles.label}>{i18n.t(TR.iLookFor)}</Text>
                     <Dropdown
-                        data={genderItems}
+                        data={genderLookingForItems}
                         labelField="label"
                         valueField="value"
                         value={state.genderDesire}
