@@ -1,13 +1,12 @@
-import { BASE_PATH } from "@/api/gen/src";
 import {
     EACTION_USER,
     ImageIdx,
-    isImagePicker,
     IUserAction,
     IUserData,
 } from "@/context/UserContext";
 import { BorderRadius, Color } from "@/GlobalStyles";
 import { i18n, TR } from "@/localization/translate.service";
+import { getValidImgURI } from "@/utils/media.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
@@ -64,12 +63,6 @@ export const PhotoContainer = (props: IPhotoContainerProps) => {
 
     const img = state.imageURIs[imageIdx];
 
-    // If the image is an `ImagePicker` we can directly access image on the user's device
-    // otherwise we need to fetch it from the server.
-    const uri = isImagePicker(img)
-        ? img.uri
-        : `${BASE_PATH.replace("/v1", "")}/img/${img}`;
-
     return (
         <Pressable
             style={[styles.photoContainer, { width: size, height: size }]}
@@ -82,7 +75,10 @@ export const PhotoContainer = (props: IPhotoContainerProps) => {
                     color={Color.primary}
                 />
             ) : (
-                <Image style={styles.previewImage} source={{ uri }} />
+                <Image
+                    style={styles.previewImage}
+                    source={{ uri: getValidImgURI(img) }}
+                />
             )}
         </Pressable>
     );

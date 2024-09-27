@@ -19,6 +19,7 @@ import {
 import { updateUserDataLocally } from "@/services/storage.service";
 import { API } from "@/utils/api-config";
 import { getAge } from "@/utils/date.utils";
+import { isImagePicker } from "@/utils/media.utils";
 import { getLocalLanguageID } from "@/utils/misc.utils";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
@@ -274,15 +275,4 @@ export const getUserImagesForUpload = (
                     ? image.uri.replace("file://", "")
                     : image.uri,
         }));
-};
-
-export const isImagePicker = (
-    image: ImagePickerAsset | string | undefined,
-): image is ImagePickerAsset => {
-    return (
-        image !== undefined &&
-        typeof image === "object" &&
-        image !== null &&
-        "uri" in image
-    );
 };
