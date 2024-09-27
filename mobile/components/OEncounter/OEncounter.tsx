@@ -19,6 +19,7 @@ import { ROUTES } from "@/screens/routes";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
 import { formatDate } from "@/utils/date.utils";
+import { getValidImgURI } from "@/utils/media.utils";
 import * as React from "react";
 import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
@@ -82,7 +83,9 @@ const OEncounter = (props: ISingleEncounterProps) => {
                 <Image
                     style={styles.profileImage}
                     contentFit="cover"
-                    source={{ uri: encounterProfile.imageURIs[0] }}
+                    source={{
+                        uri: getValidImgURI(encounterProfile.imageURIs[0]),
+                    }}
                 />
                 <View style={styles.encounterDetails}>
                     <Text
