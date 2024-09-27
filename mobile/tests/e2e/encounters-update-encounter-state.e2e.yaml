@@ -3,15 +3,15 @@ appId: io.wavect.offlinery
 - launchApp
 - runFlow: main.e2e.yaml
 - tapOn:
-    id: "tab-encounters"
+      id: "tab-encounters"
 - assertVisible: "Begegnungen"
 - assertVisible: "From"
 - assertVisible: "To"
 - assertVisible: "Jane, 34"
 - assertVisible: "Kontakt"
 - assertVisible:
-    id: "input-update-status"
+      id: "input-update-status"
 - tapOn:
-    id: "input-update-status"
+      id: "input-update-status"
 - tapOn:
-    point: "50%,50%"
+      point: "50%,50%"

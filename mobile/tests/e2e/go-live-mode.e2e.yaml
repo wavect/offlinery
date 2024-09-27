@@ -7,6 +7,6 @@ appId: io.wavect.offlinery
 - assertVisible: "OK"
 - tapOn: "OK"
 - tapOn:
-    id: "go-live-button"
+      id: "go-live-button"
 - assertVisible: "OK"
 - tapOn: "OK"
