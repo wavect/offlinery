@@ -1,5 +1,6 @@
 appId: io.wavect.offlinery
 ---
+- launchApp
 - runFlow: main.e2e.yaml
 - tapOn:
       id: "go-live-button"
