@@ -24,7 +24,7 @@ import { ROUTES } from "./routes";
 const Welcome = ({
     navigation,
 }: NativeStackScreenProps<MainStackParamList, typeof ROUTES.Welcome>) => {
-    const { state, dispatch } = useUserContext();
+    const { dispatch } = useUserContext();
     const [isLoading, setIsLoading] = useState(true);
 
     const checkAuthStatus = async () => {
@@ -78,7 +78,7 @@ const Welcome = ({
             console.log("Forcing user to re-login.");
         }
 
-        return isAuthenticated(state);
+        return isAuthenticated();
     };
     useFocusEffect(
         useCallback(() => {
@@ -122,7 +122,7 @@ const Welcome = ({
 
     return (
         <OPageColorContainer isLoading={isLoading}>
-            {!isAuthenticated(state) && <AuthScreen />}
+            {!isAuthenticated() && <AuthScreen />}
         </OPageColorContainer>
     );
 };

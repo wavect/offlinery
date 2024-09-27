@@ -1,4 +1,5 @@
 import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
+import { OnlyValidRegistrationSession } from "@/auth/auth-registration-session";
 import { Public } from "@/auth/auth.guard";
 import { CreateUserRequestDTO } from "@/DTOs/create-user-request.dto";
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
@@ -50,7 +51,7 @@ export class UserController {
 
     constructor(private readonly userService: UserService) {}
 
-    @Public()
+    @OnlyValidRegistrationSession()
     @Post("create")
     @UseInterceptors(FilesInterceptor("images", 6))
     @ApiConsumes("multipart/form-data")

@@ -2,7 +2,7 @@ import { ApiUserModule } from "@/entities/api-user/api-user.module";
 import { BlacklistedRegionModule } from "@/entities/blacklisted-region/blacklisted-region.module";
 import { EncounterModule } from "@/entities/encounter/encounter.module";
 import { MapModule } from "@/entities/map/map.module";
-import { RegistrationModule } from "@/entities/registration/registration.module";
+import { PendingUserModule } from "@/entities/pending-user/pending-user.module";
 import { UserReportModule } from "@/entities/user-report/user-report.module";
 import { UserModule } from "@/entities/user/user.module";
 import { SeederModule } from "@/seeder/seeder.module";
@@ -76,7 +76,7 @@ import { TYPED_ENV } from "./utils/env.utils";
         UserReportModule,
         AuthModule,
         EncounterModule,
-        RegistrationModule,
+        PendingUserModule,
         SeederModule,
         MapModule,
         ApiUserModule,
