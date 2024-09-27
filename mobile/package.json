@@ -16,10 +16,6 @@
         "install:all": "pnpm i && npx expo install --fix",
         "pre-commit": "npx prettier . --write",
         "e2e:ios:build": "expo run:ios --configuration Release",
-        "e2e:ios:start-simulator": "xcrun simctl boot 'iPhone 14'",
-        "e2e:ios:install": "xcrun simctl install booted ios/build/Build/Products/Release-iphonesimulator/Offlinery.app",
-        "e2e:ios:run": "EXPO_PUBLIC_ENVIRONMENT=production maestro test -e APP_PATH=ios/build/Build/Products/Release-iphonesimulator/Offlinery.app -e EXPO_PUBLIC_ENVIRONMENT=${EXPO_PUBLIC_ENVIRONMENT} ./tests/e2e/main-flow-is-rendered.yaml",
-        "e2e:ios:test": "npm run e2e:ios:run",
         "e2e:ios": "EXPO_PUBLIC_ENVIRONMENT=development maestro test  --debug-output=true -e APP_PATH=ios/build/Build/Products/Debug-iphonesimulator/Offlinery.app -e EXPO_PUBLIC_ENVIRONMENT=development ./tests/e2e",
         "e2e:ios:single": "EXPO_PUBLIC_ENVIRONMENT=development maestro test -e APP_PATH=ios/build/Build/Products/Debug-iphonesimulator/Offlinery.app -e EXPO_PUBLIC_ENVIRONMENT=development ./tests/e2e/go-live-mode.e2e.yaml"
     },

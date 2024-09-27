@@ -1,4 +1,4 @@
-appId: your.app.id
+appId: io.wavect.offlinery
 ---
 - runFlow:
     when:
