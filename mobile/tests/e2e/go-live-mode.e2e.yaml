@@ -3,17 +3,9 @@ appId: io.wavect.offlinery
 - runFlow: main.e2e.yaml
 - tapOn:
       id: "go-live-button"
-- runFlow:
-      when:
-          visible: "Geistmodus. Niemand wird dich sehen! Drücke den Schalter oben, um live zu gehen"
-      commands:
-          - assertVisible: "Geistmodus. Niemand wird dich sehen! Drücke den Schalter oben, um live zu gehen"
-          - tapOn: "OK"
-- runFlow:
-      when:
-          visible: "Du bist live! Personen, die dich interessant finden könnten, erhalten Benachrichtigungen, wenn du in der Nähe bist"
-      commands:
-          - assertVisible: "Du bist live! Personen, die dich interessant finden könnten, erhalten Benachrichtigungen, wenn du in der Nähe bist"
-          - tapOn: "OK"
+- assertVisible: "OK"
+- tapOn: "OK"
+- tapOn:
+    id: "go-live-button"
 - assertVisible: "OK"
 - tapOn: "OK"
