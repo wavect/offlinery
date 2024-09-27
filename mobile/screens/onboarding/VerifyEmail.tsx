@@ -4,6 +4,10 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import {
+    SECURE_VALUE,
+    saveValueLocallySecurely,
+} from "@/services/secure-storage.service";
 import { API } from "@/utils/api-config";
 import { getLocalLanguageID } from "@/utils/misc.utils";
 import React, { useEffect, useState } from "react";
@@ -73,7 +77,7 @@ const VerifyEmail = ({
         const verificationCode = code.join("");
 
         try {
-            await API.registration.registrationControllerVerifyEmail({
+            await API.pendingUser.pendingUserControllerVerifyEmail({
                 verifyEmailDTO: { email: state.email, verificationCode },
             });
             navigation.navigate(ROUTES.Onboarding.Password);
@@ -89,7 +93,7 @@ const VerifyEmail = ({
         try {
             setLoading(true);
             const result =
-                await API.registration.registrationControllerRegisterUserForEmailVerification(
+                await API.pendingUser.pendingUserControllerRegisterUserForEmailVerification(
                     {
                         registrationForVerificationRequestDTO: {
                             email: state.email,
@@ -97,6 +101,14 @@ const VerifyEmail = ({
                         },
                     },
                 );
+
+            if (result.registrationJWToken) {
+                // @dev Registration specific jwt token, not valid for authenticating a user
+                saveValueLocallySecurely(
+                    SECURE_VALUE.JWT_ACCESS_TOKEN,
+                    result.registrationJWToken,
+                );
+            }
 
             if (!result.email) {
                 throw new Error("Error registering email");
@@ -113,7 +125,7 @@ const VerifyEmail = ({
             setIsResendDisabled(remainingTime > 0);
         } catch (error) {
             console.error(error);
-            navigation.navigate(ROUTES.Onboarding.Email, {
+            navigation.replace(ROUTES.Onboarding.Email, {
                 errorMessage: i18n.t(TR.invalidEmailOrExists),
             });
         } finally {

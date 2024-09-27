@@ -21,10 +21,7 @@ import {
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
-import {
-    clearSessionDataFromUserContext,
-    refreshUserData,
-} from "@/services/auth.service";
+import { refreshUserData } from "@/services/auth.service";
 import { deleteSessionDataFromStorage } from "@/services/secure-storage.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
@@ -32,6 +29,7 @@ import { GDPR_URL } from "@/utils/general.constants";
 import { A } from "@expo/html-elements";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { CommonActions } from "@react-navigation/native";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -183,9 +181,13 @@ const ProfileSettings = ({
     };
 
     const handleLogout = async () => {
-        clearSessionDataFromUserContext(dispatch);
         await deleteSessionDataFromStorage();
-        navigation.navigate(ROUTES.Welcome);
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: ROUTES.Welcome }],
+            }),
+        );
     };
 
     return (

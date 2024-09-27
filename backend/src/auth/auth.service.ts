@@ -52,6 +52,15 @@ export class AuthService {
         };
     }
 
+    /** @dev Used to protect routes after the email verification and before user registration
+     * to prevent people from hijacking user accounts. */
+    async createRegistrationSession(pendingUserId: string) {
+        return await this.jwtService.signAsync(
+            { pendingUserId },
+            { secret: TYPED_ENV.JWT_SECRET_REGISTRATION, expiresIn: "1d" },
+        );
+    }
+
     async signIn(
         email: string,
         clearPassword: string,
@@ -74,7 +83,10 @@ export class AuthService {
             throw new UnauthorizedException();
         }
         const payload = { sub: user.id, email: user.email };
-        const accessToken = await this.jwtService.signAsync(payload);
+        const accessToken = await this.jwtService.signAsync(payload, {
+            secret: TYPED_ENV.JWT_SECRET,
+            expiresIn: "1d",
+        });
         const refreshToken = await this.generateRefreshToken(user);
 
         return {

@@ -14,12 +14,12 @@ import { TR, i18n } from "@/localization/translate.service";
 import { refreshUserData } from "@/services/auth.service";
 import {
     SECURE_VALUE,
-    saveValueLocallySecurely,
+    getSecurelyStoredValue,
 } from "@/services/secure-storage.service";
 import { updateUserDataLocally } from "@/services/storage.service";
 import { API } from "@/utils/api-config";
 import { getAge } from "@/utils/date.utils";
-import { isImagePicker } from "@/utils/media.utils";
+import { getValidImgURI, isImagePicker } from "@/utils/media.utils";
 import { getLocalLanguageID } from "@/utils/misc.utils";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
@@ -48,13 +48,10 @@ export interface IUserData {
     bio: string;
     dateMode: UserPrivateDTODateModeEnum;
     markedForDeletion: boolean;
-    /** @dev Set once logged in */
-    jwtAccessToken?: string;
-    refreshToken?: string;
 }
 
-export const isAuthenticated = (state: IUserData) => {
-    return !!state.jwtAccessToken;
+export const isAuthenticated = () => {
+    return !!getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
 };
 
 export interface MapRegion {
@@ -151,7 +148,6 @@ export const initialUserState: IUserData = {
     bio: i18n.t(TR.defaultBio),
     dateMode: UserPrivateDTODateModeEnum.ghost,
     markedForDeletion: false,
-    jwtAccessToken: undefined,
 };
 
 export const getSavedImageURIs = (state: IUserData): string[] => {
@@ -159,7 +155,7 @@ export const getSavedImageURIs = (state: IUserData): string[] => {
     for (const img of Object.values(state.imageURIs)) {
         // return first image as people can upload image into any slot without filling out all of them as of now
         if (img) {
-            isImagePicker(img) ? imgs.push(img.uri) : imgs.push(img);
+            imgs.push(getValidImgURI(img));
         }
     }
     return imgs;
@@ -186,22 +182,6 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             // @dev cache locally
             updateUserDataLocally(payload);
 
-            if (payload.jwtAccessToken) {
-                // jwtAccessToken is not saved in local storage, but in secure local storage for extra security
-                saveValueLocallySecurely(
-                    SECURE_VALUE.JWT_ACCESS_TOKEN,
-                    payload.jwtAccessToken,
-                );
-
-                if (!payload.refreshToken) {
-                    console.warn("No refresh token submitted.");
-                } else {
-                    saveValueLocallySecurely(
-                        SECURE_VALUE.JWT_REFRESH_TOKEN,
-                        payload.refreshToken!,
-                    );
-                }
-            }
             return { ...state, ...payload };
         default:
             return state;
@@ -236,8 +216,6 @@ export const registerUser = async (
     onSuccess: () => void,
     onError: (err: any) => void,
 ) => {
-    const api = API.user;
-
     // Prepare the user data
     const userData: CreateUserDTO = {
         firstName: state.firstName,
@@ -265,7 +243,7 @@ export const registerUser = async (
 
     try {
         const signInResponseDTO =
-            await api.userControllerCreateUser(requestParameters);
+            await API.user.userControllerCreateUser(requestParameters);
         const { user, accessToken, refreshToken } = signInResponseDTO;
         console.log("User created successfully:", user);
 

@@ -1,3 +1,4 @@
+import { OnlyValidRegistrationSession } from "@/auth/auth-registration-session";
 import { SetAcceptedSpecialDataGenderLookingForDTO } from "@/DTOs/set-accepted-special-data-gender-looking-for.dto";
 import { UpdateUserVerificationstatusDTO } from "@/DTOs/update-user-verificationstatus.dto";
 import {
@@ -17,17 +18,17 @@ import {
     RegistrationForVerificationResponseDTO,
 } from "src/DTOs/registration-for-verification.dto";
 import { VerifyEmailDTO } from "src/DTOs/verify-email.dto";
-import { RegistrationService } from "./registration.service";
+import { PendingUserService } from "./pending-user.service";
 
-@ApiTags("Registration")
+@ApiTags("PendingUser")
 @Controller({
     version: "1",
-    path: "registration",
+    path: "pending-user",
 })
-export class RegistrationController {
-    private readonly logger = new Logger(RegistrationController.name);
+export class PendingUserController {
+    private readonly logger = new Logger(PendingUserController.name);
 
-    constructor(private readonly registrationService: RegistrationService) {}
+    constructor(private readonly registrationService: PendingUserService) {}
 
     @Post()
     @Public()
@@ -70,7 +71,7 @@ export class RegistrationController {
     }
 
     @Put("accept-special-data")
-    @Public()
+    @OnlyValidRegistrationSession()
     @ApiOperation({ summary: "Accept special data privacy" })
     @ApiBody({
         type: SetAcceptedSpecialDataGenderLookingForDTO,

@@ -12,6 +12,7 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { CommonActions } from "@react-navigation/native";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
@@ -35,7 +36,14 @@ const BioLetThemKnow = ({
 
     const startUserRegistration = async () => {
         setLoading(true);
-        const onSuccess = () => navigation.navigate(ROUTES.MainTabView);
+        // @dev Navigate to main tab screen but clear previous stack
+        const onSuccess = () =>
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: ROUTES.MainTabView }],
+                }),
+            );
         const onFailure = (err: any) => console.error(err); // TODO
         try {
             await registerUser(state, dispatch, onSuccess, onFailure);

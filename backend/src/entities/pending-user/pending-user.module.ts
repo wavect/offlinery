@@ -1,3 +1,4 @@
+import { AuthModule } from "@/auth/auth.module";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
 import { MailerModule } from "@nestjs-modules/mailer";
@@ -7,13 +8,14 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { join } from "path";
 import { TYPED_ENV } from "src/utils/env.utils";
-import { RegistrationController } from "./registration.controller";
-import { RegistrationService } from "./registration.service";
+import { PendingUserController } from "./pending-user.controller";
+import { PendingUserService } from "./pending-user.service";
 
 @Module({
     imports: [
         ConfigModule.forRoot(),
         TypeOrmModule.forFeature([PendingUser, User]),
+        AuthModule,
         MailerModule.forRoot({
             transport: {
                 host: TYPED_ENV.EMAIL_HOST,
@@ -31,8 +33,8 @@ import { RegistrationService } from "./registration.service";
             },
         }),
     ],
-    providers: [RegistrationService],
-    controllers: [RegistrationController],
-    exports: [RegistrationService],
+    providers: [PendingUserService],
+    controllers: [PendingUserController],
+    exports: [PendingUserService],
 })
-export class RegistrationModule {}
+export class PendingUserModule {}

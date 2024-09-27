@@ -31,47 +31,47 @@ import * as runtime from "../runtime";
 // We import this type even if it's unused to avoid additional
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
-export interface RegistrationControllerChangeVerificationStatusRequest {
+export interface PendingUserControllerChangeVerificationStatusRequest {
     updateUserVerificationstatusDTO: UpdateUserVerificationstatusDTO;
 }
 
-export interface RegistrationControllerRegisterUserForEmailVerificationRequest {
+export interface PendingUserControllerRegisterUserForEmailVerificationRequest {
     registrationForVerificationRequestDTO: RegistrationForVerificationRequestDTO;
 }
 
-export interface RegistrationControllerSetAcceptedSpecialDataGenderLookingForAtRequest {
+export interface PendingUserControllerSetAcceptedSpecialDataGenderLookingForAtRequest {
     setAcceptedSpecialDataGenderLookingForDTO: SetAcceptedSpecialDataGenderLookingForDTO;
 }
 
-export interface RegistrationControllerVerifyEmailRequest {
+export interface PendingUserControllerVerifyEmailRequest {
     verifyEmailDTO: VerifyEmailDTO;
 }
 
 /**
- * RegistrationApi - interface
+ * PendingUserApi - interface
  *
  * @export
- * @interface RegistrationApiInterface
+ * @interface PendingUserApiInterface
  */
-export interface RegistrationApiInterface {
+export interface PendingUserApiInterface {
     /**
      *
      * @summary Update verification status of user.
      * @param {UpdateUserVerificationstatusDTO} updateUserVerificationstatusDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof RegistrationApiInterface
+     * @memberof PendingUserApiInterface
      */
-    registrationControllerChangeVerificationStatusRaw(
-        requestParameters: RegistrationControllerChangeVerificationStatusRequest,
+    pendingUserControllerChangeVerificationStatusRaw(
+        requestParameters: PendingUserControllerChangeVerificationStatusRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<void>>;
 
     /**
      * Update verification status of user.
      */
-    registrationControllerChangeVerificationStatus(
-        requestParameters: RegistrationControllerChangeVerificationStatusRequest,
+    pendingUserControllerChangeVerificationStatus(
+        requestParameters: PendingUserControllerChangeVerificationStatusRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void>;
 
@@ -81,18 +81,18 @@ export interface RegistrationApiInterface {
      * @param {RegistrationForVerificationRequestDTO} registrationForVerificationRequestDTO User email.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof RegistrationApiInterface
+     * @memberof PendingUserApiInterface
      */
-    registrationControllerRegisterUserForEmailVerificationRaw(
-        requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest,
+    pendingUserControllerRegisterUserForEmailVerificationRaw(
+        requestParameters: PendingUserControllerRegisterUserForEmailVerificationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<RegistrationForVerificationResponseDTO>>;
 
     /**
      * Creates a user with only an email to verify.
      */
-    registrationControllerRegisterUserForEmailVerification(
-        requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest,
+    pendingUserControllerRegisterUserForEmailVerification(
+        requestParameters: PendingUserControllerRegisterUserForEmailVerificationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<RegistrationForVerificationResponseDTO>;
 
@@ -102,18 +102,18 @@ export interface RegistrationApiInterface {
      * @param {SetAcceptedSpecialDataGenderLookingForDTO} setAcceptedSpecialDataGenderLookingForDTO Accept special data privacy
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof RegistrationApiInterface
+     * @memberof PendingUserApiInterface
      */
-    registrationControllerSetAcceptedSpecialDataGenderLookingForAtRaw(
-        requestParameters: RegistrationControllerSetAcceptedSpecialDataGenderLookingForAtRequest,
+    pendingUserControllerSetAcceptedSpecialDataGenderLookingForAtRaw(
+        requestParameters: PendingUserControllerSetAcceptedSpecialDataGenderLookingForAtRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<void>>;
 
     /**
      * Accept special data privacy
      */
-    registrationControllerSetAcceptedSpecialDataGenderLookingForAt(
-        requestParameters: RegistrationControllerSetAcceptedSpecialDataGenderLookingForAtRequest,
+    pendingUserControllerSetAcceptedSpecialDataGenderLookingForAt(
+        requestParameters: PendingUserControllerSetAcceptedSpecialDataGenderLookingForAtRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void>;
 
@@ -123,18 +123,18 @@ export interface RegistrationApiInterface {
      * @param {VerifyEmailDTO} verifyEmailDTO User email and verification code.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof RegistrationApiInterface
+     * @memberof PendingUserApiInterface
      */
-    registrationControllerVerifyEmailRaw(
-        requestParameters: RegistrationControllerVerifyEmailRequest,
+    pendingUserControllerVerifyEmailRaw(
+        requestParameters: PendingUserControllerVerifyEmailRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<void>>;
 
     /**
      * Verify email with verification code.
      */
-    registrationControllerVerifyEmail(
-        requestParameters: RegistrationControllerVerifyEmailRequest,
+    pendingUserControllerVerifyEmail(
+        requestParameters: PendingUserControllerVerifyEmailRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void>;
 }
@@ -142,21 +142,21 @@ export interface RegistrationApiInterface {
 /**
  *
  */
-export class RegistrationApi
+export class PendingUserApi
     extends runtime.BaseAPI
-    implements RegistrationApiInterface
+    implements PendingUserApiInterface
 {
     /**
      * Update verification status of user.
      */
-    async registrationControllerChangeVerificationStatusRaw(
-        requestParameters: RegistrationControllerChangeVerificationStatusRequest,
+    async pendingUserControllerChangeVerificationStatusRaw(
+        requestParameters: PendingUserControllerChangeVerificationStatusRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<void>> {
         if (requestParameters["updateUserVerificationstatusDTO"] == null) {
             throw new runtime.RequiredError(
                 "updateUserVerificationstatusDTO",
-                'Required parameter "updateUserVerificationstatusDTO" was null or undefined when calling registrationControllerChangeVerificationStatus().',
+                'Required parameter "updateUserVerificationstatusDTO" was null or undefined when calling pendingUserControllerChangeVerificationStatus().',
             );
         }
 
@@ -168,7 +168,7 @@ export class RegistrationApi
 
         const response = await this.request(
             {
-                path: `/registration/admin/verification-status`,
+                path: `/pending-user/admin/verification-status`,
                 method: "PUT",
                 headers: headerParameters,
                 query: queryParameters,
@@ -185,11 +185,11 @@ export class RegistrationApi
     /**
      * Update verification status of user.
      */
-    async registrationControllerChangeVerificationStatus(
-        requestParameters: RegistrationControllerChangeVerificationStatusRequest,
+    async pendingUserControllerChangeVerificationStatus(
+        requestParameters: PendingUserControllerChangeVerificationStatusRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void> {
-        await this.registrationControllerChangeVerificationStatusRaw(
+        await this.pendingUserControllerChangeVerificationStatusRaw(
             requestParameters,
             initOverrides,
         );
@@ -198,8 +198,8 @@ export class RegistrationApi
     /**
      * Creates a user with only an email to verify.
      */
-    async registrationControllerRegisterUserForEmailVerificationRaw(
-        requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest,
+    async pendingUserControllerRegisterUserForEmailVerificationRaw(
+        requestParameters: PendingUserControllerRegisterUserForEmailVerificationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<RegistrationForVerificationResponseDTO>> {
         if (
@@ -207,7 +207,7 @@ export class RegistrationApi
         ) {
             throw new runtime.RequiredError(
                 "registrationForVerificationRequestDTO",
-                'Required parameter "registrationForVerificationRequestDTO" was null or undefined when calling registrationControllerRegisterUserForEmailVerification().',
+                'Required parameter "registrationForVerificationRequestDTO" was null or undefined when calling pendingUserControllerRegisterUserForEmailVerification().',
             );
         }
 
@@ -219,7 +219,7 @@ export class RegistrationApi
 
         const response = await this.request(
             {
-                path: `/registration`,
+                path: `/pending-user`,
                 method: "POST",
                 headers: headerParameters,
                 query: queryParameters,
@@ -238,12 +238,12 @@ export class RegistrationApi
     /**
      * Creates a user with only an email to verify.
      */
-    async registrationControllerRegisterUserForEmailVerification(
-        requestParameters: RegistrationControllerRegisterUserForEmailVerificationRequest,
+    async pendingUserControllerRegisterUserForEmailVerification(
+        requestParameters: PendingUserControllerRegisterUserForEmailVerificationRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<RegistrationForVerificationResponseDTO> {
         const response =
-            await this.registrationControllerRegisterUserForEmailVerificationRaw(
+            await this.pendingUserControllerRegisterUserForEmailVerificationRaw(
                 requestParameters,
                 initOverrides,
             );
@@ -253,8 +253,8 @@ export class RegistrationApi
     /**
      * Accept special data privacy
      */
-    async registrationControllerSetAcceptedSpecialDataGenderLookingForAtRaw(
-        requestParameters: RegistrationControllerSetAcceptedSpecialDataGenderLookingForAtRequest,
+    async pendingUserControllerSetAcceptedSpecialDataGenderLookingForAtRaw(
+        requestParameters: PendingUserControllerSetAcceptedSpecialDataGenderLookingForAtRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<void>> {
         if (
@@ -263,7 +263,7 @@ export class RegistrationApi
         ) {
             throw new runtime.RequiredError(
                 "setAcceptedSpecialDataGenderLookingForDTO",
-                'Required parameter "setAcceptedSpecialDataGenderLookingForDTO" was null or undefined when calling registrationControllerSetAcceptedSpecialDataGenderLookingForAt().',
+                'Required parameter "setAcceptedSpecialDataGenderLookingForDTO" was null or undefined when calling pendingUserControllerSetAcceptedSpecialDataGenderLookingForAt().',
             );
         }
 
@@ -275,7 +275,7 @@ export class RegistrationApi
 
         const response = await this.request(
             {
-                path: `/registration/accept-special-data`,
+                path: `/pending-user/accept-special-data`,
                 method: "PUT",
                 headers: headerParameters,
                 query: queryParameters,
@@ -294,11 +294,11 @@ export class RegistrationApi
     /**
      * Accept special data privacy
      */
-    async registrationControllerSetAcceptedSpecialDataGenderLookingForAt(
-        requestParameters: RegistrationControllerSetAcceptedSpecialDataGenderLookingForAtRequest,
+    async pendingUserControllerSetAcceptedSpecialDataGenderLookingForAt(
+        requestParameters: PendingUserControllerSetAcceptedSpecialDataGenderLookingForAtRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void> {
-        await this.registrationControllerSetAcceptedSpecialDataGenderLookingForAtRaw(
+        await this.pendingUserControllerSetAcceptedSpecialDataGenderLookingForAtRaw(
             requestParameters,
             initOverrides,
         );
@@ -307,14 +307,14 @@ export class RegistrationApi
     /**
      * Verify email with verification code.
      */
-    async registrationControllerVerifyEmailRaw(
-        requestParameters: RegistrationControllerVerifyEmailRequest,
+    async pendingUserControllerVerifyEmailRaw(
+        requestParameters: PendingUserControllerVerifyEmailRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<void>> {
         if (requestParameters["verifyEmailDTO"] == null) {
             throw new runtime.RequiredError(
                 "verifyEmailDTO",
-                'Required parameter "verifyEmailDTO" was null or undefined when calling registrationControllerVerifyEmail().',
+                'Required parameter "verifyEmailDTO" was null or undefined when calling pendingUserControllerVerifyEmail().',
             );
         }
 
@@ -326,7 +326,7 @@ export class RegistrationApi
 
         const response = await this.request(
             {
-                path: `/registration/verify-email`,
+                path: `/pending-user/verify-email`,
                 method: "PUT",
                 headers: headerParameters,
                 query: queryParameters,
@@ -341,11 +341,11 @@ export class RegistrationApi
     /**
      * Verify email with verification code.
      */
-    async registrationControllerVerifyEmail(
-        requestParameters: RegistrationControllerVerifyEmailRequest,
+    async pendingUserControllerVerifyEmail(
+        requestParameters: PendingUserControllerVerifyEmailRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void> {
-        await this.registrationControllerVerifyEmailRaw(
+        await this.pendingUserControllerVerifyEmailRaw(
             requestParameters,
             initOverrides,
         );
