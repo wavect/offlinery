@@ -24,7 +24,7 @@ import { ROUTES } from "./routes";
 const Welcome = ({
     navigation,
 }: NativeStackScreenProps<MainStackParamList, typeof ROUTES.Welcome>) => {
-    const { state, dispatch } = useUserContext();
+    const { dispatch } = useUserContext();
     const [isLoading, setIsLoading] = useState(true);
 
     const checkAuthStatus = async () => {

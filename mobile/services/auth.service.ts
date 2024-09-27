@@ -10,6 +10,10 @@ import {
     mapBlacklistedRegionDTOToMapRegion,
 } from "@/context/UserContext";
 import { ROUTES } from "@/screens/routes";
+import {
+    SECURE_VALUE,
+    saveValueLocallySecurely,
+} from "@/services/secure-storage.service";
 import { Dispatch } from "react";
 
 export const refreshUserData = (
@@ -35,17 +39,20 @@ export const refreshUserData = (
         ),
     };
 
-    if (jwtAccessToken) {
-        payload.jwtAccessToken = jwtAccessToken;
-    }
-    if (jwtRefreshToken) {
-        payload.refreshToken = jwtRefreshToken;
-    }
-
     dispatch({
         type: EACTION_USER.UPDATE_MULTIPLE,
         payload,
     });
+
+    if (jwtAccessToken) {
+        saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, jwtAccessToken);
+    }
+    if (jwtRefreshToken) {
+        saveValueLocallySecurely(
+            SECURE_VALUE.JWT_REFRESH_TOKEN,
+            jwtRefreshToken,
+        );
+    }
 };
 
 export const userAuthenticatedUpdate = (
@@ -64,18 +71,4 @@ export const userAuthenticatedUpdate = (
     } else {
         navigation.replace(ROUTES.MainTabView);
     }
-};
-
-export const clearSessionDataFromUserContext = (
-    dispatch: Dispatch<IUserAction>,
-) => {
-    const payload: Partial<IUserData> = {
-        jwtAccessToken: undefined,
-        refreshToken: undefined,
-    };
-
-    dispatch({
-        type: EACTION_USER.UPDATE_MULTIPLE,
-        payload,
-    });
 };

@@ -14,7 +14,7 @@ import {
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 
-const REQUIRE_OWN_PENDING_USER = "requireOwnPendingUser";
+export const REQUIRE_OWN_PENDING_USER = "requireOwnPendingUser";
 export const OnlyValidRegistrationSession = () =>
     SetMetadata(REQUIRE_OWN_PENDING_USER, true);
 
@@ -42,7 +42,7 @@ export class UserSpecificRegistrationGuard implements CanActivate {
         const token = extractTokenFromHeader(request);
         if (!token) {
             this.logger.debug(
-                `Unauthorized call attempt to protected route with no jwt and no valid api key`,
+                `Unauthorized call attempt to protected route with no registration jwt`,
             );
             throw new UnauthorizedException();
         }
@@ -50,11 +50,11 @@ export class UserSpecificRegistrationGuard implements CanActivate {
             // 💡 We're assigning the payload to the request object here
             // so that we can access it in our route handlers
             request[USER_OBJ_ID] = await this.jwtService.verifyAsync(token, {
-                secret: TYPED_ENV.JWT_SECRET,
+                secret: TYPED_ENV.JWT_SECRET_REGISTRATION,
             });
         } catch {
             this.logger.debug(
-                `Unauthorized call attempt to protected route with invalid token: ${token}`,
+                `Unauthorized call attempt to protected registration route with invalid token: ${token}`,
             );
             throw new UnauthorizedException();
         }

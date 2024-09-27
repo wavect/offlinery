@@ -46,9 +46,7 @@ const GenderLookingFor = ({
                                 dateTimeAccepted: new Date(),
                             };
 
-                        await API.withCustomToken(
-                            state.registrationJWToken!,
-                        ).pendingUser.pendingUserControllerSetAcceptedSpecialDataGenderLookingForAt(
+                        await API.pendingUser.pendingUserControllerSetAcceptedSpecialDataGenderLookingForAt(
                             {
                                 setAcceptedSpecialDataGenderLookingForDTO,
                             },

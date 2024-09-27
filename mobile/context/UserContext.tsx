@@ -19,7 +19,7 @@ import {
 import { updateUserDataLocally } from "@/services/storage.service";
 import { API } from "@/utils/api-config";
 import { getAge } from "@/utils/date.utils";
-import { isImagePicker } from "@/utils/media.utils";
+import { getValidImgURI, isImagePicker } from "@/utils/media.utils";
 import { getLocalLanguageID } from "@/utils/misc.utils";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
@@ -48,8 +48,6 @@ export interface IUserData {
     bio: string;
     dateMode: UserPrivateDTODateModeEnum;
     markedForDeletion: boolean;
-    /** @dev Only used for user registration to prevent other users to hijack an already verified pendingUser before user registration. */
-    registrationJWToken?: string;
 }
 
 export const isAuthenticated = () => {
@@ -157,7 +155,7 @@ export const getSavedImageURIs = (state: IUserData): string[] => {
     for (const img of Object.values(state.imageURIs)) {
         // return first image as people can upload image into any slot without filling out all of them as of now
         if (img) {
-            isImagePicker(img) ? imgs.push(img.uri) : imgs.push(img);
+            imgs.push(getValidImgURI(img));
         }
     }
     return imgs;
@@ -218,8 +216,6 @@ export const registerUser = async (
     onSuccess: () => void,
     onError: (err: any) => void,
 ) => {
-    const api = API.withCustomToken(state.registrationJWToken!).user;
-
     // Prepare the user data
     const userData: CreateUserDTO = {
         firstName: state.firstName,
@@ -247,7 +243,7 @@ export const registerUser = async (
 
     try {
         const signInResponseDTO =
-            await api.userControllerCreateUser(requestParameters);
+            await API.user.userControllerCreateUser(requestParameters);
         const { user, accessToken, refreshToken } = signInResponseDTO;
         console.log("User created successfully:", user);
 

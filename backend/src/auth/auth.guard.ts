@@ -1,3 +1,4 @@
+import { REQUIRE_OWN_PENDING_USER } from "@/auth/auth-registration-session";
 import { extractTokenFromHeader } from "@/auth/auth.utils";
 import { ApiUserService } from "@/entities/api-user/api-user.service";
 import { TYPED_ENV } from "@/utils/env.utils";
@@ -43,6 +44,15 @@ export class AuthGuard implements CanActivate {
         ]);
     }
 
+    private isOnlyValidRegistrationSessionRoute(
+        context: ExecutionContext,
+    ): boolean {
+        return this.reflector.getAllAndOverride<boolean>(
+            REQUIRE_OWN_PENDING_USER,
+            [context.getHandler(), context.getClass()],
+        );
+    }
+
     /** @dev All routes are forbidden by default except the ones marked as @OnlyAdmin() */
     private isAdminRoute(context: ExecutionContext): boolean {
         // isAdmin = true, otherwise false
@@ -69,6 +79,10 @@ export class AuthGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         if (this.isPublicRoute(context)) {
             this.logger.debug(`Call to public route, bypassing auth.guard`);
+            return true;
+        }
+        if (this.isOnlyValidRegistrationSessionRoute(context)) {
+            // registration session specific route, do not gate-keep through regular auth
             return true;
         }
 

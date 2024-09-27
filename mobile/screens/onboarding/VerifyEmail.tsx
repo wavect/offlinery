@@ -2,8 +2,12 @@ import { Color, FontFamily } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
-import { EACTION_USER, useUserContext } from "@/context/UserContext";
+import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import {
+    SECURE_VALUE,
+    saveValueLocallySecurely,
+} from "@/services/secure-storage.service";
 import { API } from "@/utils/api-config";
 import { getLocalLanguageID } from "@/utils/misc.utils";
 import React, { useEffect, useState } from "react";
@@ -98,10 +102,14 @@ const VerifyEmail = ({
                     },
                 );
 
-            dispatch({
-                type: EACTION_USER.UPDATE_MULTIPLE,
-                payload: { registrationJWToken: result.registrationJWToken },
-            });
+            if (result.registrationJWToken) {
+                // @dev Registration specific jwt token, not valid for authenticating a user
+                saveValueLocallySecurely(
+                    SECURE_VALUE.JWT_ACCESS_TOKEN,
+                    result.registrationJWToken,
+                );
+            }
+
             if (!result.email) {
                 throw new Error("Error registering email");
             } else if (result.alreadyVerifiedButNotRegistered) {
@@ -117,7 +125,7 @@ const VerifyEmail = ({
             setIsResendDisabled(remainingTime > 0);
         } catch (error) {
             console.error(error);
-            navigation.navigate(ROUTES.Onboarding.Email, {
+            navigation.replace(ROUTES.Onboarding.Email, {
                 errorMessage: i18n.t(TR.invalidEmailOrExists),
             });
         } finally {
