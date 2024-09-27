@@ -13,6 +13,7 @@ import {
     getSecurelyStoredValue,
 } from "@/services/secure-storage.service";
 import { getLocallyStoredUserData } from "@/services/storage.service";
+import { TestData } from "@/tests/src/accessors";
 import { includeJWT } from "@/utils/misc.utils";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
@@ -174,6 +175,7 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
     return (
         <View style={[props.style, { alignItems: "center" }]}>
             <Switch
+                testID={TestData.main.goLiveBtn}
                 trackColor={{ false: Color.lightGray, true: Color.primary }}
                 thumbColor={
                     state.dateMode === UserPrivateDTODateModeEnum.live

@@ -5,6 +5,7 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { TestData } from "@/tests/src/accessors";
 import { includeJWT } from "@/utils/misc.utils";
 import { isValidPassword } from "@/utils/validation-rules.utils";
 import * as React from "react";
@@ -107,6 +108,7 @@ const Password = ({
             fullpageIcon="lock"
             bottomContainerChildren={
                 <OButtonWide
+                    testID={TestData.settings.changePassword.confirm}
                     text={
                         isChangePassword ? i18n.t(TR.save) : i18n.t(TR.continue)
                     }
@@ -125,6 +127,7 @@ const Password = ({
         >
             {isChangePassword && (
                 <OTextInput
+                    testID={TestData.settings.changePassword.oldPw}
                     value={oldClearPassword}
                     onChangeText={setValidateOldPassword}
                     maxLength={100}
@@ -143,6 +146,7 @@ const Password = ({
             )}
 
             <OTextInput
+                testID={TestData.settings.changePassword.newPw}
                 value={state.clearPassword}
                 onChangeText={setValidatePassword}
                 maxLength={100}
@@ -162,6 +166,7 @@ const Password = ({
             />
 
             <OTextInput
+                testID={TestData.settings.changePassword.newPwRpt}
                 value={passwordConfirmation}
                 onChangeText={setValidatePasswordConfirmation}
                 maxLength={100}
