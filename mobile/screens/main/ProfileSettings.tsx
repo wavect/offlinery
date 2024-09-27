@@ -27,6 +27,8 @@ import {
 } from "@/services/auth.service";
 import { deleteSessionDataFromStorage } from "@/services/secure-storage.service";
 import { API } from "@/utils/api-config";
+import { GDPR_URL } from "@/utils/general.constants";
+import { A } from "@expo/html-elements";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as React from "react";
@@ -400,12 +402,29 @@ const ProfileSettings = ({
                         </TouchableOpacity>
                     </View>
                 </View>
+
+                <View style={styles.gdprContainer}>
+                    <A href={GDPR_URL} style={styles.gdpr}>
+                        {i18n.t(TR.termsDisclaimer.privacyCookie)}
+                    </A>
+                </View>
             </View>
         </OPageContainer>
     );
 };
 
 const styles = StyleSheet.create({
+    gdpr: {
+        textDecorationLine: "underline",
+        color: Color.gray,
+        textAlign: "center",
+    },
+    gdprContainer: {
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 20,
+    },
     buttonContainer: {
         alignItems: "center",
     },
