@@ -40,7 +40,7 @@ async function bootstrap() {
     // security base line
     app.use(helmet());
 
-    /** @DEV Either drop the DB or run this truncate service */
+    /** @DEV Complete Fresh DB Setup */
     // const appService = app.get(AppService);
     // await appService.truncateAllTables();
 
