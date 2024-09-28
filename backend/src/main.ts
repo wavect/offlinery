@@ -1,3 +1,4 @@
+import { AppService } from "@/app.service";
 import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
@@ -23,6 +24,12 @@ async function bootstrap() {
             optionsSuccessStatus: 204,
         },
     });
+
+    const userSeederService = app.get(DefaultUserSeeder);
+    const apiUserSeederService = app.get(DefaultApiUserSeeder);
+    const testUserSeederService = app.get(RandomUsersSeeder);
+    const encounterSeederService = app.get(SpecificUsersEncountersSeeder);
+
     setupSwagger(app);
     setupTypedEnvs();
 
@@ -34,23 +41,17 @@ async function bootstrap() {
     // security base line
     app.use(helmet());
 
-    // Seed the default use
-    const userSeederService = app.get(DefaultUserSeeder);
-    await userSeederService.seedDefaultUsers();
+    /** @DEV Either drop the DB or run this truncate service */
+    const appService = app.get(AppService);
+    await appService.truncateAllTables();
 
-    const apiUserSeederService = app.get(DefaultApiUserSeeder);
+    await userSeederService.seedDefaultUsers();
     await apiUserSeederService.seedApiUsers();
 
     // Seed Test users if development mode
     if (process.env.NODE_ENV === "development") {
-        console.log(`✓ Development mode active.`);
-
-        console.log(`- Seeding Random Users`);
-        const testUserSeederService = app.get(RandomUsersSeeder);
+        console.log(`✓ Seeding Users and Encounters`);
         await testUserSeederService.seedRandomUsers();
-
-        console.log("- Seeding Encounters");
-        const encounterSeederService = app.get(SpecificUsersEncountersSeeder);
         await encounterSeederService.seed();
     }
 

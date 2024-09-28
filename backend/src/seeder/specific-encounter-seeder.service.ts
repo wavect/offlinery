@@ -17,8 +17,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import * as fs from "fs";
 import { Point } from "geojson";
 import * as path from "path";
+import process from "process";
 import { Readable } from "stream";
-import { Repository } from "typeorm";
+import { Like, Repository } from "typeorm";
 
 @Injectable()
 export class SpecificUsersEncountersSeeder {
@@ -42,44 +43,43 @@ export class SpecificUsersEncountersSeeder {
         { name: "Marco", image: "marco.jpg", gender: EGender.MAN },
         { name: "Thomas", image: "thomas.jpg", gender: EGender.MAN },
         { name: "Tim", image: "tim.jpg", gender: EGender.MAN },
-        { name: "Tina", image: "tina.png", gender: EGender.WOMAN },
+        { name: "Tina", image: "tina.jpg", gender: EGender.WOMAN },
     ];
 
-    createFileFromImage(imageName: string): Express.Multer.File {
+    createFileFromImage(imageName: string, index: number): Express.Multer.File {
         const imagePath = path.join(
-            __dirname,
-            "..",
-            "..",
-            "..",
-            "test",
-            "_src",
+            process.cwd(),
+            "src",
+            "seeder",
             "images",
             imageName,
         );
+        try {
+            const buffer = fs.readFileSync(imagePath);
+            const stats = fs.statSync(imagePath);
+            const fileStream = new Readable();
+            fileStream.push(buffer);
+            fileStream.push(null);
 
-        const buffer = fs.readFileSync(imagePath);
-        const stats = fs.statSync(imagePath);
+            const file: Express.Multer.File = {
+                fieldname: "file",
+                originalname: index.toString(),
+                encoding: "7bit",
+                mimetype: `image/${path.extname(imageName).slice(1)}`,
+                buffer,
+                size: stats.size,
+                destination: "uploads/",
+                filename: imageName,
+                path: path.join("uploads", imageName),
+                stream: fileStream,
+            };
 
-        const fileStream = new Readable();
-        fileStream.push(buffer);
-        fileStream.push(null);
-
-        const file: Express.Multer.File = {
-            fieldname: "file",
-            originalname: imageName,
-            encoding: "7bit",
-            mimetype: "image/png",
-            buffer,
-            size: stats.size,
-            destination: "uploads/",
-            filename: imageName,
-            path: path.join("uploads", imageName),
-            stream: fileStream,
-        };
-
-        return file;
+            return file;
+        } catch (error) {
+            console.error("Error creating file from image:", error);
+            throw error;
+        }
     }
-
     async seed(): Promise<void> {
         let wavectUser: User;
         try {
@@ -88,37 +88,49 @@ export class SpecificUsersEncountersSeeder {
                     "office@wavect.io",
                 );
             console.log("✓ Wavect user found");
+            console.log("- Seeding Specific Users and Encounters...");
+
+            const createdUsers = await this.createSpecificUsers();
+            await this.createEncountersForUser(wavectUser, createdUsers);
+
+            console.log("✓ Specific Users and Encounters Created");
         } catch (e) {
-            console.error(
-                "Wavect user not found. Please ensure it exists before running this seeder.",
-            );
+            console.error("- Wavect user not found or duplicate err");
             return;
         }
-
-        const existingUsers = await this.userRepo.find();
-        if (existingUsers.length > 1) {
-            console.log("✓ Specific Users and Encounters already exist");
-            return;
-        }
-
-        console.log("Seeding Specific Users and Encounters...");
-
-        const createdUsers = await this.createSpecificUsers();
-        await this.createEncountersForUser(wavectUser, createdUsers);
-
-        console.log("✓ Specific Users and Encounters Created");
     }
 
     private async createSpecificUsers(): Promise<User[]> {
         const createdUsers: User[] = [];
 
-        for (const user of this.specificUsers) {
+        for (let i = 0; i < this.specificUsers.length; i++) {
+            const user = this.specificUsers[i];
+            function generateRandomBirthday(
+                minAge: number,
+                maxAge: number,
+            ): Date {
+                const today = new Date();
+                const minDate = new Date(
+                    today.getFullYear() - maxAge,
+                    today.getMonth(),
+                    today.getDate(),
+                );
+                const maxDate = new Date(
+                    today.getFullYear() - minAge,
+                    today.getMonth(),
+                    today.getDate(),
+                );
+                const randomTimestamp =
+                    minDate.getTime() +
+                    Math.random() * (maxDate.getTime() - minDate.getTime());
+                return new Date(randomTimestamp);
+            }
             const userDto: CreateUserDTO = {
                 firstName: user.name,
-                email: `${user.name.toLowerCase()}@example.com`,
+                email: `${user.name.toLowerCase()}@pre-encounter-item.com`,
                 clearPassword: "securePassword123!",
                 wantsEmailUpdates: true,
-                birthDay: new Date("1990-01-01"),
+                birthDay: generateRandomBirthday(25, 30),
                 gender: user.gender,
                 genderDesire:
                     user.gender === EGender.MAN ? EGender.WOMAN : EGender.MAN,
@@ -132,15 +144,43 @@ export class SpecificUsersEncountersSeeder {
             };
 
             await this.createVerifiedUser(userDto, [
-                this.createFileFromImage(user.image),
+                this.createFileFromImage(user.image, i + 1),
             ]);
+
             const createdUser = await this.userRepo.findOneByOrFail({
                 email: userDto.email,
             });
             createdUsers.push(createdUser);
         }
 
+        // Update approachChoice for all users with @pre-encounter-item.com email
+        await this.updateApproachChoiceForPreEncounterUsers();
+
         return createdUsers;
+    }
+
+    private async updateApproachChoiceForPreEncounterUsers(): Promise<void> {
+        const preEncounterUsers = await this.userRepo.find({
+            where: {
+                email: Like("%@pre-encounter-item.com"),
+            },
+        });
+
+        for (const user of preEncounterUsers) {
+            user.approachChoice = EApproachChoice.BE_APPROACHED;
+            await this.userRepo.save(user);
+            console.log(
+                `Updated approachChoice to BE_APPROACHED for user: ${user.email}`,
+            );
+        }
+
+        const preEncounterUsersAfter = await this.userRepo.find({
+            where: {
+                email: Like("%@pre-encounter-item.com"),
+            },
+        });
+
+        console.log(preEncounterUsersAfter.map((b) => b.approachChoice));
     }
 
     private async createVerifiedUser(

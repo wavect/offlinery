@@ -14,6 +14,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as fs from "fs";
 import * as path from "path";
+import process from "process";
 import { Readable } from "stream";
 import { Repository } from "typeorm";
 
@@ -32,19 +33,23 @@ export class RandomUsersSeeder {
     createFileFromImage(index: number = 0): Express.Multer.File {
         const actualFilename = "img.png";
 
-        const imagePath = `../../test/_src/images/${actualFilename}`;
-        const buffer = fs.readFileSync(
-            `../../test/_src/images/${actualFilename}`,
+        const imagePath = path.join(
+            process.cwd(),
+            "src",
+            "seeder",
+            "images",
+            actualFilename,
         );
+        const buffer = fs.readFileSync(imagePath);
         const stats = fs.statSync(imagePath);
 
         const fileStream = new Readable();
         fileStream.push(buffer);
         fileStream.push(null);
 
-        const file: Express.Multer.File = {
+        return {
             fieldname: "file",
-            originalname: index.toString(), // Set this to a string number
+            originalname: index.toString(),
             encoding: "7bit",
             mimetype: "image/png",
             buffer,
@@ -54,8 +59,6 @@ export class RandomUsersSeeder {
             path: path.join("uploads", actualFilename),
             stream: fileStream,
         };
-
-        return file;
     }
 
     async seedRandomUsers(): Promise<void> {
