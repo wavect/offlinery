@@ -1,6 +1,6 @@
 import { Dimensions, StyleSheet } from "react-native";
 
-const { width, height } = Dimensions.get("window"); // Get the window dimensions
+const { height } = Dimensions.get("window"); // Get the window dimensions
 
 const styles = StyleSheet.create({
     calendlyInlineWidget: {

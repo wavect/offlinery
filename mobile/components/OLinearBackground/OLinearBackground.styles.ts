@@ -1,4 +1,6 @@
-export default {
+import { StyleSheet } from "react-native";
+
+export default StyleSheet.create({
     bgGradient: {
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
@@ -14,4 +16,4 @@ export default {
         overflow: "hidden",
         backgroundColor: "transparent",
     },
-};
+});
