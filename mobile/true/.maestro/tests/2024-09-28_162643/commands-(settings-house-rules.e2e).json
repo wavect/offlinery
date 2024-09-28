@@ -1,0 +1,319 @@
+[ {
+  "command" : {
+    "applyConfigurationCommand" : {
+      "config" : {
+        "appId" : "io.wavect.offlinery"
+      }
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1727533751825,
+    "duration" : 0
+  }
+}, {
+  "command" : {
+    "runFlowCommand" : {
+      "commands" : [ {
+        "assertConditionCommand" : {
+          "condition" : {
+            "visible" : {
+              "textRegex" : "Anmelden",
+              "optional" : false
+            }
+          }
+        }
+      }, {
+        "tapOnElement" : {
+          "selector" : {
+            "textRegex" : "Anmelden",
+            "optional" : false
+          },
+          "retryIfNoChange" : true,
+          "waitUntilVisible" : false,
+          "longPress" : false
+        }
+      }, {
+        "tapOnElement" : {
+          "selector" : {
+            "textRegex" : "Anmelden",
+            "optional" : false
+          },
+          "retryIfNoChange" : true,
+          "waitUntilVisible" : false,
+          "longPress" : false
+        }
+      }, {
+        "runFlowCommand" : {
+          "commands" : [ {
+            "tapOnElement" : {
+              "selector" : {
+                "textRegex" : "Erlauben",
+                "optional" : false
+              },
+              "retryIfNoChange" : true,
+              "waitUntilVisible" : false,
+              "longPress" : false
+            }
+          } ],
+          "condition" : {
+            "visible" : {
+              "textRegex" : "Erlauben",
+              "optional" : false
+            }
+          }
+        }
+      }, {
+        "runFlowCommand" : {
+          "commands" : [ {
+            "tapOnElement" : {
+              "selector" : {
+                "textRegex" : "Erlauben",
+                "optional" : false
+              },
+              "retryIfNoChange" : true,
+              "waitUntilVisible" : false,
+              "longPress" : false
+            }
+          } ],
+          "condition" : {
+            "visible" : {
+              "textRegex" : "möchte auf Ihren Standort zugreifen",
+              "optional" : false
+            }
+          }
+        }
+      }, {
+        "assertConditionCommand" : {
+          "condition" : {
+            "visible" : {
+              "textRegex" : "Finden",
+              "optional" : false
+            }
+          }
+        }
+      } ],
+      "condition" : {
+        "visible" : {
+          "textRegex" : "Anmelden",
+          "optional" : false
+        }
+      }
+    }
+  },
+  "metadata" : {
+    "status" : "SKIPPED",
+    "timestamp" : 1727533751825
+  }
+}, {
+  "command" : {
+    "launchAppCommand" : {
+      "appId" : "io.wavect.offlinery"
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1727533751312,
+    "duration" : 512
+  }
+}, {
+  "command" : {
+    "tapOnElement" : {
+      "selector" : {
+        "idRegex" : "button-house-rules",
+        "optional" : false
+      },
+      "retryIfNoChange" : true,
+      "waitUntilVisible" : false,
+      "longPress" : false
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1727533762286,
+    "duration" : 1588
+  }
+}, {
+  "command" : {
+    "swipeCommand" : {
+      "startRelative" : "50%,80%",
+      "endRelative" : "50%,20%",
+      "duration" : 500
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1727533760395,
+    "duration" : 1891
+  }
+}, {
+  "command" : {
+    "runFlowCommand" : {
+      "commands" : [ {
+        "applyConfigurationCommand" : {
+          "config" : {
+            "appId" : "io.wavect.offlinery"
+          }
+        }
+      }, {
+        "runFlowCommand" : {
+          "commands" : [ {
+            "assertConditionCommand" : {
+              "condition" : {
+                "visible" : {
+                  "textRegex" : "Anmelden",
+                  "optional" : false
+                }
+              }
+            }
+          }, {
+            "tapOnElement" : {
+              "selector" : {
+                "textRegex" : "Anmelden",
+                "optional" : false
+              },
+              "retryIfNoChange" : true,
+              "waitUntilVisible" : false,
+              "longPress" : false
+            }
+          }, {
+            "tapOnElement" : {
+              "selector" : {
+                "textRegex" : "Anmelden",
+                "optional" : false
+              },
+              "retryIfNoChange" : true,
+              "waitUntilVisible" : false,
+              "longPress" : false
+            }
+          }, {
+            "runFlowCommand" : {
+              "commands" : [ {
+                "tapOnElement" : {
+                  "selector" : {
+                    "textRegex" : "Erlauben",
+                    "optional" : false
+                  },
+                  "retryIfNoChange" : true,
+                  "waitUntilVisible" : false,
+                  "longPress" : false
+                }
+              } ],
+              "condition" : {
+                "visible" : {
+                  "textRegex" : "Erlauben",
+                  "optional" : false
+                }
+              }
+            }
+          }, {
+            "runFlowCommand" : {
+              "commands" : [ {
+                "tapOnElement" : {
+                  "selector" : {
+                    "textRegex" : "Erlauben",
+                    "optional" : false
+                  },
+                  "retryIfNoChange" : true,
+                  "waitUntilVisible" : false,
+                  "longPress" : false
+                }
+              } ],
+              "condition" : {
+                "visible" : {
+                  "textRegex" : "möchte auf Ihren Standort zugreifen",
+                  "optional" : false
+                }
+              }
+            }
+          }, {
+            "assertConditionCommand" : {
+              "condition" : {
+                "visible" : {
+                  "textRegex" : "Finden",
+                  "optional" : false
+                }
+              }
+            }
+          } ],
+          "condition" : {
+            "visible" : {
+              "textRegex" : "Anmelden",
+              "optional" : false
+            }
+          }
+        }
+      } ],
+      "sourceDescription" : "main.e2e.yaml",
+      "config" : {
+        "appId" : "io.wavect.offlinery"
+      }
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1727533751824,
+    "duration" : 7422
+  }
+}, {
+  "command" : {
+    "tapOnElement" : {
+      "selector" : {
+        "idRegex" : "tab-settings",
+        "optional" : false
+      },
+      "retryIfNoChange" : true,
+      "waitUntilVisible" : false,
+      "longPress" : false
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1727533759246,
+    "duration" : 1148
+  }
+}, {
+  "command" : {
+    "applyConfigurationCommand" : {
+      "config" : {
+        "appId" : "io.wavect.offlinery"
+      }
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1727533751312,
+    "duration" : 0
+  }
+}, {
+  "command" : {
+    "defineVariablesCommand" : {
+      "env" : {
+        "APP_PATH" : "ios/build/Build/Products/Debug-iphonesimulator/Offlinery.app",
+        "EXPO_PUBLIC_ENVIRONMENT" : "development"
+      }
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1727533751311,
+    "duration" : 1
+  }
+}, {
+  "command" : {
+    "tapOnElement" : {
+      "selector" : {
+        "idRegex" : "house-rues-confirm",
+        "optional" : false
+      },
+      "retryIfNoChange" : true,
+      "waitUntilVisible" : false,
+      "longPress" : false
+    }
+  },
+  "metadata" : {
+    "status" : "COMPLETED",
+    "timestamp" : 1727533763874,
+    "duration" : 1517
+  }
+} ]

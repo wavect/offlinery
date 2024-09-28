@@ -1,0 +1,1541 @@
+[INFO ] MAESTRO - ---- System Info ----
+[INFO ] MAESTRO - Maestro Version: 1.38.1
+[INFO ] MAESTRO - CI: Undefined
+[INFO ] MAESTRO - OS Name: Mac OS X
+[INFO ] MAESTRO - OS Version: 14.4.1
+[INFO ] MAESTRO - Architecture: aarch64
+[INFO ] MAESTRO - Java Version: 17
+[INFO ] MAESTRO - Xcode Version: 15.3
+[INFO ] MAESTRO - Flutter Version: Undefined
+[INFO ] MAESTRO - Flutter Channel: Undefined
+[INFO ] MAESTRO - ---------------------
+[INFO ] xcuitest.XCTestDriverClient - [Start] Uninstalling xctest ui runner app
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Stop XCUITest runner
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Stop XCUITest runner
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Uninstall XCUITest runner
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, uninstall, CF4AE249-5D39-4F41-81C2-1828A64908DC, dev.mobile.maestro-driver-iosUITests.xctrunner]
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Uninstall XCUITest runner
+[INFO ] xcuitest.XCTestDriverClient - [Done] Uninstalling xctest ui runner app
+[INFO ] xcuitest.XCTestDriverClient - [Start] Installing xctest ui runner app
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Stop XCUITest runner
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Stop XCUITest runner
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Uninstall XCUITest runner
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, uninstall, CF4AE249-5D39-4F41-81C2-1828A64908DC, dev.mobile.maestro-driver-iosUITests.xctrunner]
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Uninstall XCUITest runner
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Install XCUITest runner on CF4AE249-5D39-4F41-81C2-1828A64908DC
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Writing xctest run file
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Writing xctest run file
+[INFO ] x.installer.LocalXCTestInstaller - Not able to find ui test runner app running, going to install now
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Writing maestro-driver-iosUITests-Runner app
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Writing maestro-driver-iosUITests-Runner app
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Writing maestro-driver-ios app
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Writing maestro-driver-ios app
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Running XcUITest with xcode build command
+[INFO ] util.CommandLineUtils - Running command line operation: [xcodebuild, test-without-building, -xctestrun, /var/folders/h2/7110sh0n1p73b6j4vc9c4xhr0000gn/T/CF4AE249-5D39-4F41-81C2-1828A64908DC/maestro-driver-ios-config.xctestrun, -destination, id=CF4AE249-5D39-4F41-81C2-1828A64908DC, -derivedDataPath, /var/folders/h2/7110sh0n1p73b6j4vc9c4xhr0000gn/T/maestro_xctestrunner_xcodebuild_output6961791530651462580]
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Running XcUITest with xcode build command
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Install XCUITest runner on CF4AE249-5D39-4F41-81C2-1828A64908DC
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Ensure XCUITest runner is running on CF4AE249-5D39-4F41-81C2-1828A64908DC
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Stop XCUITest runner
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Stop XCUITest runner
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Uninstall XCUITest runner
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, uninstall, CF4AE249-5D39-4F41-81C2-1828A64908DC, dev.mobile.maestro-driver-iosUITests.xctrunner]
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Uninstall XCUITest runner
+[INFO ] x.installer.LocalXCTestInstaller - [Failed] Ensure XCUITest runner is running on CF4AE249-5D39-4F41-81C2-1828A64908DC
+[INFO ] x.installer.LocalXCTestInstaller - [Retry] Retrying setup() 0th time
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Install XCUITest runner on CF4AE249-5D39-4F41-81C2-1828A64908DC
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Writing xctest run file
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Writing xctest run file
+[INFO ] x.installer.LocalXCTestInstaller - Not able to find ui test runner app running, going to install now
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Writing maestro-driver-iosUITests-Runner app
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Writing maestro-driver-iosUITests-Runner app
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Writing maestro-driver-ios app
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Writing maestro-driver-ios app
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Running XcUITest with xcode build command
+[INFO ] util.CommandLineUtils - Running command line operation: [xcodebuild, test-without-building, -xctestrun, /var/folders/h2/7110sh0n1p73b6j4vc9c4xhr0000gn/T/CF4AE249-5D39-4F41-81C2-1828A64908DC/maestro-driver-ios-config.xctestrun, -destination, id=CF4AE249-5D39-4F41-81C2-1828A64908DC, -derivedDataPath, /var/folders/h2/7110sh0n1p73b6j4vc9c4xhr0000gn/T/maestro_xctestrunner_xcodebuild_output6021721490576090967]
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Running XcUITest with xcode build command
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Install XCUITest runner on CF4AE249-5D39-4F41-81C2-1828A64908DC
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Ensure XCUITest runner is running on CF4AE249-5D39-4F41-81C2-1828A64908DC
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Ensure XCUITest runner is running on CF4AE249-5D39-4F41-81C2-1828A64908DC
+[INFO ] xcuitest.XCTestDriverClient - [Done] Installing xctest ui runner app
+[INFO ] maestro.Maestro - Getting device info
+[INFO ] ios.xctest.XCTestIOSDevice - Device info DeviceInfo(widthPixels=1290, heightPixels=2796, widthPoints=430, heightPoints=932)
+[INFO ] m.cli.runner.TestSuiteInteractor - Define variables RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Define variables COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Launch app "io.wavect.offlinery" RUNNING
+[INFO ] util.CommandLineUtils - Running command line operation: [/Users/jocr/.maestro/deps/applesimutils, --byId, CF4AE249-5D39-4F41-81C2-1828A64908DC, --bundle, io.wavect.offlinery, --setPermissions, calendar=YES,camera=YES,contacts=YES,faceid=YES,homekit=YES,medialibrary=YES,microphone=YES,motion=YES,photos=YES,reminders=YES,siri=YES,speech=YES,userTracking=YES]
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, privacy, CF4AE249-5D39-4F41-81C2-1828A64908DC, grant, location-always, io.wavect.offlinery]
+[INFO ] maestro.Maestro - Launching app io.wavect.offlinery
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, spawn, CF4AE249-5D39-4F41-81C2-1828A64908DC, launchctl, setenv, MAESTRO_SESSION_ID, 00c6b3a7-3fbb-44f3-9e18-3970e995074f]
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, launch, CF4AE249-5D39-4F41-81C2-1828A64908DC, io.wavect.offlinery]
+[INFO ] m.cli.runner.TestSuiteInteractor - Launch app "io.wavect.offlinery" COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run main.e2e.yaml RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Anmelden" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 24
+[INFO ] ios.IOSDevice - Depth of the screen is 24
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 32
+[INFO ] ios.IOSDevice - Depth of the screen is 32
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Anmelden" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 32
+[INFO ] ios.IOSDevice - Depth of the screen is 32
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Anmelden" is visible COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on "Anmelden" RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 32
+[INFO ] ios.IOSDevice - Depth of the screen is 32
+[INFO ] maestro.Maestro - Tapping on element:  UiElement(treeNode=TreeNode(attributes={accessibilityText=ANMELDEN, title=, value=, text=, hintText=, resource-id=, bounds=[41,731][389,797], enabled=true, focused=false, selected=false, checked=false}, children=[], clickable=null, enabled=true, focused=false, checked=false, selected=false), bounds=Bounds(x=41, y=731, width=348, height=66))
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Refreshed element
+[INFO ] maestro.Maestro - Tapping at (215, 764) using screenshot based logic for wait
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Something has changed in the UI judging by view hierarchy. Proceed.
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on "Anmelden" COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on "Anmelden" RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] maestro.Maestro - Tapping on element:  UiElement(treeNode=TreeNode(attributes={accessibilityText=ANMELDEN, title=, value=, text=, hintText=, resource-id=, bounds=[21,575][408,639], enabled=true, focused=false, selected=false, checked=false}, children=[], clickable=null, enabled=true, focused=false, checked=false, selected=false), bounds=Bounds(x=21, y=575, width=387, height=64))
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Refreshed element
+[INFO ] maestro.Maestro - Tapping at (214, 607) using screenshot based logic for wait
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] maestro.Maestro - Something has changed in the UI judging by view hierarchy. Proceed.
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on "Anmelden" COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Erlauben" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Erlauben" is visible SKIPPED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "möchte auf Ihren Standort zugreifen" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "möchte auf Ihren Standort zugreifen" is visible SKIPPED
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Finden" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Finden" is visible FAILED
+[INFO ] maestro.Maestro - Taking screenshot to a file: /var/folders/h2/7110sh0n1p73b6j4vc9c4xhr0000gn/T/screenshot-17275336518257196068742101187487.png
+[INFO ] maestro.utils.ScreenshotUtils - Taking screenshot to output sink
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Anmelden" is visible FAILED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run main.e2e.yaml FAILED
+[INFO ] m.cli.runner.TestSuiteInteractor - Define variables RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Define variables COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Launch app "io.wavect.offlinery" RUNNING
+[INFO ] util.CommandLineUtils - Running command line operation: [/Users/jocr/.maestro/deps/applesimutils, --byId, CF4AE249-5D39-4F41-81C2-1828A64908DC, --bundle, io.wavect.offlinery, --setPermissions, calendar=YES,camera=YES,contacts=YES,faceid=YES,homekit=YES,medialibrary=YES,microphone=YES,motion=YES,photos=YES,reminders=YES,siri=YES,speech=YES,userTracking=YES]
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, privacy, CF4AE249-5D39-4F41-81C2-1828A64908DC, grant, location-always, io.wavect.offlinery]
+[INFO ] maestro.Maestro - Launching app io.wavect.offlinery
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, spawn, CF4AE249-5D39-4F41-81C2-1828A64908DC, launchctl, setenv, MAESTRO_SESSION_ID, 00c6b3a7-3fbb-44f3-9e18-3970e995074f]
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, launch, CF4AE249-5D39-4F41-81C2-1828A64908DC, io.wavect.offlinery]
+[INFO ] m.cli.runner.TestSuiteInteractor - Launch app "io.wavect.offlinery" COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run main.e2e.yaml RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Anmelden" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 32
+[INFO ] ios.IOSDevice - Depth of the screen is 32
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Anmelden" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 32
+[INFO ] ios.IOSDevice - Depth of the screen is 32
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Anmelden" is visible COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on "Anmelden" RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 32
+[INFO ] ios.IOSDevice - Depth of the screen is 32
+[INFO ] maestro.Maestro - Tapping on element:  UiElement(treeNode=TreeNode(attributes={accessibilityText=ANMELDEN, title=, value=, text=, hintText=, resource-id=, bounds=[41,731][389,797], enabled=true, focused=false, selected=false, checked=false}, children=[], clickable=null, enabled=true, focused=false, checked=false, selected=false), bounds=Bounds(x=41, y=731, width=348, height=66))
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Refreshed element
+[INFO ] maestro.Maestro - Tapping at (215, 764) using screenshot based logic for wait
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Something has changed in the UI judging by view hierarchy. Proceed.
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on "Anmelden" COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on "Anmelden" RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] maestro.Maestro - Tapping on element:  UiElement(treeNode=TreeNode(attributes={accessibilityText=ANMELDEN, title=, value=, text=, hintText=, resource-id=, bounds=[21,575][408,639], enabled=true, focused=false, selected=false, checked=false}, children=[], clickable=null, enabled=true, focused=false, checked=false, selected=false), bounds=Bounds(x=21, y=575, width=387, height=64))
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Refreshed element
+[INFO ] maestro.Maestro - Tapping at (214, 607) using screenshot based logic for wait
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] maestro.Maestro - Something has changed in the UI judging by view hierarchy. Proceed.
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on "Anmelden" COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Erlauben" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Erlauben" is visible SKIPPED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "möchte auf Ihren Standort zugreifen" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "möchte auf Ihren Standort zugreifen" is visible SKIPPED
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Finden" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Finden" is visible FAILED
+[INFO ] maestro.Maestro - Taking screenshot to a file: /var/folders/h2/7110sh0n1p73b6j4vc9c4xhr0000gn/T/screenshot-17275336788969913699553724121117.png
+[INFO ] maestro.utils.ScreenshotUtils - Taking screenshot to output sink
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Anmelden" is visible FAILED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run main.e2e.yaml FAILED
+[INFO ] m.cli.runner.TestSuiteInteractor - Define variables RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Define variables COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Launch app "io.wavect.offlinery" RUNNING
+[INFO ] util.CommandLineUtils - Running command line operation: [/Users/jocr/.maestro/deps/applesimutils, --byId, CF4AE249-5D39-4F41-81C2-1828A64908DC, --bundle, io.wavect.offlinery, --setPermissions, calendar=YES,camera=YES,contacts=YES,faceid=YES,homekit=YES,medialibrary=YES,microphone=YES,motion=YES,photos=YES,reminders=YES,siri=YES,speech=YES,userTracking=YES]
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, privacy, CF4AE249-5D39-4F41-81C2-1828A64908DC, grant, location-always, io.wavect.offlinery]
+[INFO ] maestro.Maestro - Launching app io.wavect.offlinery
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, spawn, CF4AE249-5D39-4F41-81C2-1828A64908DC, launchctl, setenv, MAESTRO_SESSION_ID, 00c6b3a7-3fbb-44f3-9e18-3970e995074f]
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, launch, CF4AE249-5D39-4F41-81C2-1828A64908DC, io.wavect.offlinery]
+[INFO ] m.cli.runner.TestSuiteInteractor - Launch app "io.wavect.offlinery" COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run main.e2e.yaml RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Anmelden" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 32
+[INFO ] ios.IOSDevice - Depth of the screen is 32
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Anmelden" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 32
+[INFO ] ios.IOSDevice - Depth of the screen is 32
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Anmelden" is visible COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on "Anmelden" RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 32
+[INFO ] ios.IOSDevice - Depth of the screen is 32
+[INFO ] maestro.Maestro - Tapping on element:  UiElement(treeNode=TreeNode(attributes={accessibilityText=ANMELDEN, title=, value=, text=, hintText=, resource-id=, bounds=[41,731][389,797], enabled=true, focused=false, selected=false, checked=false}, children=[], clickable=null, enabled=true, focused=false, checked=false, selected=false), bounds=Bounds(x=41, y=731, width=348, height=66))
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Refreshed element
+[INFO ] maestro.Maestro - Tapping at (215, 764) using screenshot based logic for wait
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Something has changed in the UI judging by view hierarchy. Proceed.
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on "Anmelden" COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on "Anmelden" RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] maestro.Maestro - Tapping on element:  UiElement(treeNode=TreeNode(attributes={accessibilityText=ANMELDEN, title=, value=, text=, hintText=, resource-id=, bounds=[21,575][408,639], enabled=true, focused=false, selected=false, checked=false}, children=[], clickable=null, enabled=true, focused=false, checked=false, selected=false), bounds=Bounds(x=21, y=575, width=387, height=64))
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Refreshed element
+[INFO ] maestro.Maestro - Tapping at (214, 607) using screenshot based logic for wait
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] maestro.Maestro - Something has changed in the UI judging by view hierarchy. Proceed.
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on "Anmelden" COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Erlauben" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 33
+[INFO ] ios.IOSDevice - Depth of the screen is 33
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Erlauben" is visible SKIPPED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "möchte auf Ihren Standort zugreifen" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "möchte auf Ihren Standort zugreifen" is visible SKIPPED
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Finden" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Finden" is visible COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Anmelden" is visible COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run main.e2e.yaml COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on id: tab-settings RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] maestro.Maestro - Tapping on element:  UiElement(treeNode=TreeNode(attributes={accessibilityText=Einstellungen, tab, 3 of 3, title=, value=, text=, hintText=, resource-id=tab-settings, bounds=[286,853][430,902], enabled=true, focused=false, selected=false, checked=false}, children=[], clickable=null, enabled=true, focused=false, checked=false, selected=false), bounds=Bounds(x=286, y=853, width=144, height=49))
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Refreshed element
+[INFO ] maestro.Maestro - Tapping at (358, 877) using screenshot based logic for wait
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Something has changed in the UI judging by view hierarchy. Proceed.
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on id: tab-settings COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Swipe from (50%,80%) to (50%,20%) in 500 ms RUNNING
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] m.cli.runner.TestSuiteInteractor - Swipe from (50%,80%) to (50%,20%) in 500 ms COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on id: button-change-password RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on id: button-change-password FAILED
+[INFO ] maestro.Maestro - Taking screenshot to a file: /var/folders/h2/7110sh0n1p73b6j4vc9c4xhr0000gn/T/screenshot-17275337165399731855055546591195.png
+[INFO ] maestro.utils.ScreenshotUtils - Taking screenshot to output sink
+[INFO ] m.cli.runner.TestSuiteInteractor - Define variables RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Define variables COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Anmelden" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Anmelden" is visible SKIPPED
+[INFO ] m.cli.runner.TestSuiteInteractor - Define variables RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Define variables COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Launch app "io.wavect.offlinery" RUNNING
+[INFO ] util.CommandLineUtils - Running command line operation: [/Users/jocr/.maestro/deps/applesimutils, --byId, CF4AE249-5D39-4F41-81C2-1828A64908DC, --bundle, io.wavect.offlinery, --setPermissions, calendar=YES,camera=YES,contacts=YES,faceid=YES,homekit=YES,medialibrary=YES,microphone=YES,motion=YES,photos=YES,reminders=YES,siri=YES,speech=YES,userTracking=YES]
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, privacy, CF4AE249-5D39-4F41-81C2-1828A64908DC, grant, location-always, io.wavect.offlinery]
+[INFO ] maestro.Maestro - Launching app io.wavect.offlinery
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, spawn, CF4AE249-5D39-4F41-81C2-1828A64908DC, launchctl, setenv, MAESTRO_SESSION_ID, 00c6b3a7-3fbb-44f3-9e18-3970e995074f]
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, launch, CF4AE249-5D39-4F41-81C2-1828A64908DC, io.wavect.offlinery]
+[INFO ] m.cli.runner.TestSuiteInteractor - Launch app "io.wavect.offlinery" COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run main.e2e.yaml RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Anmelden" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 32
+[INFO ] ios.IOSDevice - Depth of the screen is 32
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 32
+[INFO ] ios.IOSDevice - Depth of the screen is 32
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Anmelden" is visible SKIPPED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run main.e2e.yaml COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on id: tab-encounters RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] maestro.Maestro - Tapping on element:  UiElement(treeNode=TreeNode(attributes={accessibilityText=Begegnungen, tab, 2 of 3, title=, value=, text=, hintText=, resource-id=tab-encounters, bounds=[143,853][286,902], enabled=true, focused=false, selected=false, checked=false}, children=[], clickable=null, enabled=true, focused=false, checked=false, selected=false), bounds=Bounds(x=143, y=853, width=143, height=49))
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Refreshed element
+[INFO ] maestro.Maestro - Tapping at (214, 877) using screenshot based logic for wait
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Something has changed in the UI judging by view hierarchy. Proceed.
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on id: tab-encounters COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Begegnungen" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Begegnungen" is visible COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "From" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "From" is visible COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "To" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "To" is visible COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Jane, 34" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 50
+[INFO ] ios.IOSDevice - Depth of the screen is 50
+[INFO ] m.cli.runner.TestSuiteInteractor - Assert that "Jane, 34" is visible FAILED
+[INFO ] maestro.Maestro - Taking screenshot to a file: /var/folders/h2/7110sh0n1p73b6j4vc9c4xhr0000gn/T/screenshot-17275337511216574890940181752184.png
+[INFO ] maestro.utils.ScreenshotUtils - Taking screenshot to output sink
+[INFO ] m.cli.runner.TestSuiteInteractor - Define variables RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Define variables COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Launch app "io.wavect.offlinery" RUNNING
+[INFO ] util.CommandLineUtils - Running command line operation: [/Users/jocr/.maestro/deps/applesimutils, --byId, CF4AE249-5D39-4F41-81C2-1828A64908DC, --bundle, io.wavect.offlinery, --setPermissions, calendar=YES,camera=YES,contacts=YES,faceid=YES,homekit=YES,medialibrary=YES,microphone=YES,motion=YES,photos=YES,reminders=YES,siri=YES,speech=YES,userTracking=YES]
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, privacy, CF4AE249-5D39-4F41-81C2-1828A64908DC, grant, location-always, io.wavect.offlinery]
+[INFO ] maestro.Maestro - Launching app io.wavect.offlinery
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, spawn, CF4AE249-5D39-4F41-81C2-1828A64908DC, launchctl, setenv, MAESTRO_SESSION_ID, 00c6b3a7-3fbb-44f3-9e18-3970e995074f]
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, launch, CF4AE249-5D39-4F41-81C2-1828A64908DC, io.wavect.offlinery]
+[INFO ] m.cli.runner.TestSuiteInteractor - Launch app "io.wavect.offlinery" COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run main.e2e.yaml RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration RUNNING
+[INFO ] m.cli.runner.TestSuiteInteractor - Apply configuration COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Anmelden" is visible RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 32
+[INFO ] ios.IOSDevice - Depth of the screen is 32
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] m.cli.runner.TestSuiteInteractor - Run flow when "Anmelden" is visible SKIPPED
+[INFO ] m.cli.runner.TestSuiteInteractor - Run main.e2e.yaml COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on id: tab-settings RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 35
+[INFO ] ios.IOSDevice - Depth of the screen is 35
+[INFO ] maestro.Maestro - Tapping on element:  UiElement(treeNode=TreeNode(attributes={accessibilityText=Einstellungen, tab, 3 of 3, title=, value=, text=, hintText=, resource-id=tab-settings, bounds=[286,853][430,902], enabled=true, focused=false, selected=false, checked=false}, children=[], clickable=null, enabled=true, focused=false, checked=false, selected=false), bounds=Bounds(x=286, y=853, width=144, height=49))
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Refreshed element
+[INFO ] maestro.Maestro - Tapping at (358, 877) using screenshot based logic for wait
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Something has changed in the UI judging by view hierarchy. Proceed.
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on id: tab-settings COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Swipe from (50%,80%) to (50%,20%) in 500 ms RUNNING
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] m.cli.runner.TestSuiteInteractor - Swipe from (50%,80%) to (50%,20%) in 500 ms COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on id: button-house-rules RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 40
+[INFO ] ios.IOSDevice - Depth of the screen is 40
+[INFO ] maestro.Maestro - Tapping on element:  UiElement(treeNode=TreeNode(attributes={accessibilityText= Hausregeln, title=, value=, text=, hintText=, resource-id=button-house-rules, bounds=[34,411][396,486], enabled=true, focused=false, selected=false, checked=false}, children=[], clickable=null, enabled=true, focused=false, checked=false, selected=false), bounds=Bounds(x=34, y=411, width=362, height=75))
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Refreshed element
+[INFO ] maestro.Maestro - Tapping at (215, 448) using screenshot based logic for wait
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Something has changed in the UI judging by view hierarchy. Proceed.
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on id: button-house-rules COMPLETED
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on id: house-rues-confirm RUNNING
+[INFO ] ios.IOSDevice - Requesting view hierarchy of the screen
+[INFO ] ios.xctest.XCTestIOSDevice - Depth received: 32
+[INFO ] ios.IOSDevice - Depth of the screen is 32
+[INFO ] maestro.Maestro - Tapping on element:  UiElement(treeNode=TreeNode(attributes={accessibilityText=VERSTANDEN, title=, value=, text=, hintText=, resource-id=house-rues-confirm, bounds=[127,759][303,823], enabled=true, focused=false, selected=false, checked=false}, children=[], clickable=null, enabled=true, focused=false, checked=false, selected=false), bounds=Bounds(x=127, y=759, width=176, height=64))
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Refreshed element
+[INFO ] maestro.Maestro - Tapping at (215, 791) using screenshot based logic for wait
+[INFO ] ios.IOSDevice - Waiting for animation to end with timeout 3000
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = false
+[INFO ] ios.IOSDevice - screen static = false
+[INFO ] ios.xctest.XCTestIOSDevice - Screen diff request finished with isScreenStatic = true
+[INFO ] ios.IOSDevice - screen static = true
+[INFO ] maestro.Maestro - Something has changed in the UI judging by view hierarchy. Proceed.
+[INFO ] m.cli.runner.TestSuiteInteractor - Tap on id: house-rues-confirm COMPLETED
+[ERROR] m.cli.session.MaestroSessionManager - Failed to record heartbeat
+java.lang.InterruptedException: sleep interrupted
+	at java.base/java.lang.Thread.sleep(Native Method)
+	at maestro.cli.session.MaestroSessionManager.newSession$lambda$0(MaestroSessionManager.kt:73)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Cleaning up the ui test runner files
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Stop XCUITest runner
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Stop XCUITest runner
+[INFO ] x.installer.LocalXCTestInstaller - [Start] Uninstall XCUITest runner
+[INFO ] util.CommandLineUtils - Running command line operation: [xcrun, simctl, uninstall, CF4AE249-5D39-4F41-81C2-1828A64908DC, dev.mobile.maestro-driver-iosUITests.xctrunner]
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Uninstall XCUITest runner
+[INFO ] x.installer.LocalXCTestInstaller - [Done] Cleaning up the ui test runner files

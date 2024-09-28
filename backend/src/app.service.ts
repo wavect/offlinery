@@ -19,14 +19,11 @@ export class AppService {
 
         try {
             await queryRunner.query("SET session_replication_role = replica;");
-            const tables = await queryRunner.query(
-                "SELECT tablename FROM pg_tables WHERE schemaname = 'public';",
-            );
-            for (const { tablename } of tables) {
-                await queryRunner.query(
-                    `TRUNCATE TABLE "${tablename}" CASCADE;`,
-                );
-            }
+
+            await queryRunner.query(`
+                TRUNCATE TABLE "user", encounter, user_report, pending_user RESTART IDENTITY CASCADE;
+            `);
+
             await queryRunner.query("SET session_replication_role = DEFAULT;");
             await queryRunner.commitTransaction();
         } catch (err) {

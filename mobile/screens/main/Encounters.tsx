@@ -101,6 +101,8 @@ const Encounters = ({
                 });
             });
 
+            console.log(`FETCHED ${mappedEncounters.length}`);
+
             dispatch({
                 type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
                 payload: mappedEncounters,
