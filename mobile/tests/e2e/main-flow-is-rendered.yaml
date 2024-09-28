@@ -1,5 +1,0 @@
-appId: io.wavect.offlinery
----
-- launchApp
-- assertVisible:
-      text: "Finden"

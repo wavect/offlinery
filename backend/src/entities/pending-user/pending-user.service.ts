@@ -1,3 +1,4 @@
+import { AuthService } from "@/auth/auth.service";
 import {
     RegistrationForVerificationRequestDTO,
     RegistrationForVerificationResponseDTO,
@@ -22,8 +23,8 @@ import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
 
 @Injectable()
-export class RegistrationService {
-    private readonly logger = new Logger(RegistrationService.name);
+export class PendingUserService {
+    private readonly logger = new Logger(PendingUserService.name);
     readonly VERIFICATION_CODE_EXPIRATION_IN_MIN = 15;
     readonly RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS = 120 * 1000;
 
@@ -34,6 +35,7 @@ export class RegistrationService {
         private userRepo: Repository<User>,
         private readonly mailService: MailerService,
         private readonly i18n: I18nService,
+        private authService: AuthService,
     ) {}
 
     public async registerPendingUser(
@@ -53,6 +55,10 @@ export class RegistrationService {
             });
 
             if (pendingUser) {
+                const registrationJWToken =
+                    await this.authService.createRegistrationSession(
+                        pendingUser.id,
+                    );
                 if (
                     pendingUser.verificationStatus ===
                     EEmailVerificationStatus.VERIFIED
@@ -66,6 +72,7 @@ export class RegistrationService {
                         verificationCodeIssuedAt:
                             pendingUser.verificationCodeIssuedAt,
                         alreadyVerifiedButNotRegistered: true,
+                        registrationJWToken,
                     };
                 } else {
                     this.logger.debug(
@@ -89,6 +96,7 @@ export class RegistrationService {
                             verificationCodeIssuedAt:
                                 pendingUser.verificationCodeIssuedAt,
                             alreadyVerifiedButNotRegistered: false,
+                            registrationJWToken,
                         };
                     }
                 }
@@ -124,6 +132,10 @@ export class RegistrationService {
                 verificationCodeIssuedAt: pendingUser.verificationCodeIssuedAt,
                 timeout: this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
                 alreadyVerifiedButNotRegistered: false,
+                registrationJWToken:
+                    await this.authService.createRegistrationSession(
+                        pendingUser.id,
+                    ),
             };
         } catch (error) {
             this.logger.error(error);

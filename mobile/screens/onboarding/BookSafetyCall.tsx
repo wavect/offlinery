@@ -10,6 +10,7 @@ import {
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { getLocalLanguageID } from "@/utils/misc.utils";
+import { CommonActions } from "@react-navigation/native";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -29,7 +30,12 @@ const BookSafetyCall = ({
     const startUserRegistration = async () => {
         setLoading(true);
         const onSuccess = () =>
-            navigation.navigate(ROUTES.Onboarding.WaitingVerification);
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: ROUTES.Onboarding.WaitingVerification }],
+                }),
+            );
         const onFailure = (err: any) => console.error(err); // TODO
         try {
             await registerUser(state, dispatch, onSuccess, onFailure);

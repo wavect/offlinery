@@ -4,6 +4,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
+import { TestData } from "@/tests/src/accessors";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -40,6 +41,7 @@ const HouseRules = ({
 
             <View style={styles.buttonContainer}>
                 <OButtonWide
+                    testID={TestData.settings.houseRules.buttonUnderstand}
                     text={i18n.t(TR.iUnderstand)}
                     filled={true}
                     variant="light"

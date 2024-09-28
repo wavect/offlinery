@@ -5,6 +5,7 @@ import {
     OButtonSmall,
 } from "@/components/OButtonSmall/OButtonSmall";
 import { TR, i18n } from "@/localization/translate.service";
+import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
 import React, { useState } from "react";
 import {
@@ -67,6 +68,7 @@ const OMessageModal = (props: IOMessageModalProps) => {
                         {i18n.t(TR.messageInstructions)}
                     </Text>
                     <TextInput
+                        testID={TestData.encounters.inputEncounterSendMessage}
                         style={styles.modalTextInput}
                         onChangeText={setMessage}
                         value={message}
@@ -79,6 +81,7 @@ const OMessageModal = (props: IOMessageModalProps) => {
                         </Text>
                     )}
                     <OButtonSmall
+                        testID={TestData.encounters.buttonEncounterSendMessage}
                         label={i18n.t(TR.sendMessage)}
                         variant={IOButtonSmallVariant.Black}
                         containerStyle={{ width: "100%" }}

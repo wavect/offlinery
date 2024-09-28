@@ -16,6 +16,7 @@ interface IOButtonSmallProps {
     isDisabled?: boolean;
     variant?: IOButtonSmallVariant;
     containerStyle?: StyleProp<ViewStyle>;
+    testID?: string;
 }
 
 export enum IOButtonSmallVariant {
@@ -43,6 +44,7 @@ export const OButtonSmall = (props: IOButtonSmallProps) => {
         : styles[variant ?? "buttonBlack"];
     return (
         <Pressable
+            testID={props.testID}
             style={[styles.buttonBase, buttonStyle, containerStyle]}
             onPress={wrappedOnPress}
             disabled={isDisabled || isLoading}

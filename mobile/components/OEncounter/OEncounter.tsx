@@ -16,6 +16,7 @@ import {
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
+import { TestData } from "@/tests/src/accessors";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
 import { formatDate } from "@/utils/date.utils";
@@ -39,14 +40,17 @@ const OEncounter = (props: ISingleEncounterProps) => {
         {
             label: i18n.t(TR.encounterInterest.notMet),
             value: EncounterPublicDTOStatusEnum.not_met,
+            testID: "dropdown-option-not-met",
         },
         {
             label: i18n.t(TR.encounterInterest.metNotInterested),
             value: EncounterPublicDTOStatusEnum.met_not_interested,
+            testID: "dropdown-option-met-not-interested",
         },
         {
             label: i18n.t(TR.encounterInterest.metInterested),
             value: EncounterPublicDTOStatusEnum.met_interested,
+            testID: "dropdown-option-met-interested",
         },
     ]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -102,6 +106,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     {showActions && (
                         <View style={styles.encounterDropdownContainer}>
                             <Dropdown
+                                testID={TestData.encounters.inputStatus}
                                 data={dateStates}
                                 labelField="label"
                                 valueField="value"

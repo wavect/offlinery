@@ -1,3 +1,5 @@
+import { REQUIRE_OWN_PENDING_USER } from "@/auth/auth-registration-session";
+import { extractTokenFromHeader } from "@/auth/auth.utils";
 import { ApiUserService } from "@/entities/api-user/api-user.service";
 import { TYPED_ENV } from "@/utils/env.utils";
 import {
@@ -42,6 +44,15 @@ export class AuthGuard implements CanActivate {
         ]);
     }
 
+    private isOnlyValidRegistrationSessionRoute(
+        context: ExecutionContext,
+    ): boolean {
+        return this.reflector.getAllAndOverride<boolean>(
+            REQUIRE_OWN_PENDING_USER,
+            [context.getHandler(), context.getClass()],
+        );
+    }
+
     /** @dev All routes are forbidden by default except the ones marked as @OnlyAdmin() */
     private isAdminRoute(context: ExecutionContext): boolean {
         // isAdmin = true, otherwise false
@@ -70,13 +81,17 @@ export class AuthGuard implements CanActivate {
             this.logger.debug(`Call to public route, bypassing auth.guard`);
             return true;
         }
+        if (this.isOnlyValidRegistrationSessionRoute(context)) {
+            // registration session specific route, do not gate-keep through regular auth
+            return true;
+        }
 
         const request = context.switchToHttp().getRequest();
         if (this.isAdminRoute(context)) {
             return await this.isAdminApiUser(request);
         }
 
-        const token = this.extractTokenFromHeader(request);
+        const token = extractTokenFromHeader(request);
         if (!token) {
             this.logger.debug(
                 `Unauthorized call attempt to protected route with no jwt and no valid api key`,
@@ -96,10 +111,5 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException();
         }
         return true;
-    }
-
-    private extractTokenFromHeader(request: Request): string | undefined {
-        const [type, token] = request.headers.authorization?.split(" ") ?? [];
-        return type === "Bearer" ? token : undefined;
     }
 }

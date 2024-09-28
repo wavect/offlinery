@@ -8,6 +8,7 @@ export const mockEnvConfig: TypedEnv = {
     DB_PASSWORD: "testpassword",
     DB_DATABASE: "testdb",
     JWT_SECRET: "test-secret",
+    JWT_SECRET_REGISTRATION: "registration-test-secret",
     EMAIL_HOST: "test-smtp.example.com",
     EMAIL_USERNAME: "test@example.com",
     EMAIL_PASSWORD: "testpassword",

@@ -42,6 +42,12 @@ export interface RegistrationForVerificationResponseDTO {
      * @memberof RegistrationForVerificationResponseDTO
      */
     alreadyVerifiedButNotRegistered: boolean;
+    /**
+     *
+     * @type {string}
+     * @memberof RegistrationForVerificationResponseDTO
+     */
+    registrationJWToken: string;
 }
 
 /**
@@ -60,6 +66,11 @@ export function instanceOfRegistrationForVerificationResponseDTO(
     if (
         !("alreadyVerifiedButNotRegistered" in value) ||
         value["alreadyVerifiedButNotRegistered"] === undefined
+    )
+        return false;
+    if (
+        !("registrationJWToken" in value) ||
+        value["registrationJWToken"] === undefined
     )
         return false;
     return true;
@@ -84,6 +95,7 @@ export function RegistrationForVerificationResponseDTOFromJSONTyped(
         verificationCodeIssuedAt: new Date(json["verificationCodeIssuedAt"]),
         alreadyVerifiedButNotRegistered:
             json["alreadyVerifiedButNotRegistered"],
+        registrationJWToken: json["registrationJWToken"],
     };
 }
 
@@ -100,5 +112,6 @@ export function RegistrationForVerificationResponseDTOToJSON(
             value["verificationCodeIssuedAt"].toISOString(),
         alreadyVerifiedButNotRegistered:
             value["alreadyVerifiedButNotRegistered"],
+        registrationJWToken: value["registrationJWToken"],
     };
 }

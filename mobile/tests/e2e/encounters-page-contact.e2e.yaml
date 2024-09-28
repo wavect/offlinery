@@ -1,0 +1,25 @@
+appId: io.wavect.offlinery
+---
+- launchApp
+- runFlow: main.e2e.yaml
+- tapOn:
+      id: "tab-encounters"
+- assertVisible: "Begegnungen"
+- assertVisible: "From"
+- assertVisible: "To"
+- assertVisible: "Jane, 34"
+- assertVisible: "Kontakt"
+- assertVisible:
+      id: "input-update-status"
+- assertVisible: "Kontakt"
+- tapOn: "Kontakt"
+- tapOn:
+      id: "input-send-encounter-message"
+- eraseText
+- inputText:
+      id: "input-send-encounter-message"
+      text: "Hi, hier ist meine Nummer: +43 123 123 123"
+- tapOn:
+      point: "80%,60%"
+- tapOn:
+      id: "button-encounter-send-message"
