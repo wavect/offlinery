@@ -22,7 +22,7 @@ import { Readable } from "stream";
 import { Like, Repository } from "typeorm";
 
 @Injectable()
-export class SpecificUsersEncountersSeeder {
+export class Create10RealTestPeopleEncounters {
     constructor(
         private userService: UserService,
         @InjectRepository(PendingUser)
@@ -82,14 +82,25 @@ export class SpecificUsersEncountersSeeder {
     }
     async seed(): Promise<void> {
         let wavectUser: User;
+        let testUserAnna: User;
         try {
             wavectUser =
                 await this.userService.findUserByEmailOrFail(
                     "office@wavect.io",
                 );
             console.log("✓ Wavect user found");
-            console.log("- Seeding Specific Users and Encounters...");
 
+            /** @DEV if anna is seeded, the others are too */
+            testUserAnna = await this.userService.findUserByEmailOrFail(
+                "anna@pre-encounter-item.com",
+            );
+
+            if (testUserAnna) {
+                console.log("✓ Already seeded real user encounters");
+                return;
+            }
+
+            console.log("- Encounters missing, seeding...");
             const createdUsers = await this.createSpecificUsers();
             await this.createEncountersForUser(wavectUser, createdUsers);
 

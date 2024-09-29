@@ -13,7 +13,7 @@ import { UserService } from "@/entities/user/user.service";
 import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
-import { SpecificUsersEncountersSeeder } from "@/seeder/specific-encounter-seeder.service";
+import { Create10RealTestPeopleEncounters } from "@/seeder/specific-encounter-seeder.service";
 import { MatchingModule } from "@/transient-services/matching/matching.module";
 import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -40,7 +40,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
         AuthService,
         ApiUserService,
         RandomUsersSeeder,
-        SpecificUsersEncountersSeeder,
+        Create10RealTestPeopleEncounters,
     ],
     exports: [DefaultUserSeeder, DefaultApiUserSeeder, RandomUsersSeeder],
 })

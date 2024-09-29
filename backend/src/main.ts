@@ -1,8 +1,7 @@
-import { AppService } from "@/app.service";
 import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
-import { SpecificUsersEncountersSeeder } from "@/seeder/specific-encounter-seeder.service";
+import { Create10RealTestPeopleEncounters } from "@/seeder/specific-encounter-seeder.service";
 import { API_VERSION, BE_ENDPOINT } from "@/utils/misc.utils";
 import { INestApplication, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
@@ -28,7 +27,7 @@ async function bootstrap() {
     const userSeederService = app.get(DefaultUserSeeder);
     const apiUserSeederService = app.get(DefaultApiUserSeeder);
     const testUserSeederService = app.get(RandomUsersSeeder);
-    const encounterSeederService = app.get(SpecificUsersEncountersSeeder);
+    const realEncounterSeeder = app.get(Create10RealTestPeopleEncounters);
 
     setupSwagger(app);
     setupTypedEnvs();
@@ -41,18 +40,16 @@ async function bootstrap() {
     // security base line
     app.use(helmet());
 
-    /** @DEV Complete Fresh DB Setup */
-    const appService = app.get(AppService);
-    await appService.truncateAllTables();
-
     await userSeederService.seedDefaultUsers();
     await apiUserSeederService.seedApiUsers();
 
-    // Seed Test users if development mode
+    /** @DEV if in development mode, do some adjustments and pre-seeds */
     if (process.env.NODE_ENV === "development") {
         console.log(`✓ Seeding Users and Encounters`);
         await testUserSeederService.seedRandomUsers();
-        await encounterSeederService.seed();
+
+        console.log("Seeding 10 real users");
+        await realEncounterSeeder.seed();
     }
 
     await app.listen(TYPED_ENV.BE_PORT);
