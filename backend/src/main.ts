@@ -50,6 +50,7 @@ async function bootstrap() {
 
         console.log("Seeding 10 real users");
         await realEncounterSeeder.seed();
+        console.log("Seeded 10 real users");
     }
 
     await app.listen(TYPED_ENV.BE_PORT);

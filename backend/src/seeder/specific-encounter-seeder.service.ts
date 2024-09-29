@@ -88,26 +88,34 @@ export class Create10RealTestPeopleEncounters {
                 await this.userService.findUserByEmailOrFail(
                     "office@wavect.io",
                 );
-            console.log("✓ Wavect user found");
+            console.log("✓ 10 Real Users Seeder -> W exists");
+        } catch (e) {
+            console.error("- Wavect user not found or duplicate err");
+            return;
+        }
 
+        try {
             /** @DEV if anna is seeded, the others are too */
             testUserAnna = await this.userService.findUserByEmailOrFail(
                 "anna@pre-encounter-item.com",
             );
+        } catch (e) {
+            console.log("✓ 10 Real Users Seeder -> TestUser Anna exists");
 
             if (testUserAnna) {
                 console.log("✓ Already seeded real user encounters");
                 return;
+            } else {
+                console.log("- Real test users not found, seeding...");
             }
 
             console.log("- Encounters missing, seeding...");
             const createdUsers = await this.createSpecificUsers();
+            console.log("Users created!");
             await this.createEncountersForUser(wavectUser, createdUsers);
+            console.log("Encounters created!");
 
             console.log("✓ Specific Users and Encounters Created");
-        } catch (e) {
-            console.error("- Wavect user not found or duplicate err");
-            return;
         }
     }
 
@@ -177,13 +185,12 @@ export class Create10RealTestPeopleEncounters {
             },
         });
 
+        console.log("Updating approach choice...");
         for (const user of preEncounterUsers) {
             user.approachChoice = EApproachChoice.BE_APPROACHED;
             await this.userRepo.save(user);
-            console.log(
-                `Updated approachChoice to BE_APPROACHED for user: ${user.email}`,
-            );
         }
+        console.log("Updated!");
 
         const preEncounterUsersAfter = await this.userRepo.find({
             where: {
@@ -191,7 +198,7 @@ export class Create10RealTestPeopleEncounters {
             },
         });
 
-        console.log(preEncounterUsersAfter.map((b) => b.approachChoice));
+        console.log(preEncounterUsersAfter.map((b) => b));
     }
 
     private async createVerifiedUser(
@@ -227,7 +234,7 @@ export class Create10RealTestPeopleEncounters {
     ): Promise<void> {
         const encounter = new Encounter();
         encounter.users = [wavectUser, user2];
-        encounter.isNearbyRightNow = Math.random() < 0.2; // 20% chance of being nearby
+        encounter.isNearbyRightNow = Math.random() < 0.8; // 80% chance of being nearby
         encounter.lastDateTimePassedBy = this.getRandomPastDate();
         encounter.lastLocationPassedBy = this.getRandomPoint();
         encounter.userStatuses = {

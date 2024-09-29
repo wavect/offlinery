@@ -64,10 +64,10 @@ export class RandomUsersSeeder {
     async seedRandomUsers(): Promise<void> {
         try {
             await this.userService.findUserByEmailOrFail("test@test.test");
-            console.log("✓ Test Users exist");
+            console.log("✓ 300 random naive test users exist - Skipping");
             return;
         } catch (e) {
-            console.log(`Seeding ${this.AMOUNT_OF_USERS} Test Users...`);
+            console.log(`SEED RUN -> [${this.AMOUNT_OF_USERS} Test Users]...`);
         }
 
         for (let i = 0; i < this.AMOUNT_OF_USERS; i++) {
@@ -103,9 +103,8 @@ export class RandomUsersSeeder {
             }
         }
 
-        console.log(`✓ Test Users Created`);
-        console.log("- Updating Locations...");
-
+        console.log(`✓ SEED RUN DONE`);
+        console.log(`- Updating Locations of seeded users`);
         const users = await this.userService.findAll();
         const userCoordinates = this.generateUserCoordinates(users.length);
 
