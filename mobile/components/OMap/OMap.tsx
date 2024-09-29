@@ -260,7 +260,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                     }
                     provider={getMapProvider()}
                 >
-                    {showHeatmap && locationsFromOthers && (
+                    {showHeatmap && locationsFromOthers?.length && (
                         <OHeatMap locations={locationsFromOthers} />
                     )}
 

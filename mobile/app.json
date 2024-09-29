@@ -114,7 +114,7 @@
                 {
                     "android": {
                         "enableProguardInReleaseBuilds": true,
-                        "extraProguardRules": "-keep public class com.horcrux.svg.** {*;}\n-keep class com.google.android.gms.maps.** { *; }\n-keep interface com.google.android.gms.maps.** { *; }\n-keep class com.google.maps.android.heatmaps.** { *; }\n-keep class com.tencent.mmkv.** { *; }\n-keep class expo.modules.securestore.** { *; }\n-keep class com.facebook.react.** { *; }\n-keep class com.facebook.hermes.** { *; }\n-keep class com.facebook.jni.** { *; }\n-keepclassmembers class * {\n  @com.facebook.react.uimanager.annotations.ReactProp <methods>;\n}\n-keepclassmembers class * {\n  @com.facebook.proguard.annotations.DoNotStrip <methods>;\n  @com.facebook.proguard.annotations.DoNotStrip <fields>;\n}\n-keepclasseswithmembers class * {\n  native <methods>;\n}",
+                        "extraProguardRules": "-keep public class com.horcrux.svg.** {*;}",
                         "allowBackup": false
                     },
                     "ios": {}
