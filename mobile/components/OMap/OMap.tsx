@@ -231,14 +231,11 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         }
     }, [state.blacklistedRegions, state.id]);
 
-    const handleMapPress = useCallback(
-        (event: any) => {
-            if (activeRegionIndex !== null) {
-                setActiveRegionIndex(null);
-            }
-        },
-        [activeRegionIndex],
-    );
+    const handleMapPress = useCallback(() => {
+        if (activeRegionIndex !== null) {
+            setActiveRegionIndex(null);
+        }
+    }, [activeRegionIndex]);
 
     return (
         <TouchableWithoutFeedback onPress={handleMapPress}>

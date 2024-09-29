@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import oLinearBgStyles from "./OLinearBackground.styles";
 
 interface IOLinearBackground {

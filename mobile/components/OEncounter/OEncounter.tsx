@@ -34,7 +34,7 @@ interface ISingleEncounterProps {
 
 const OEncounter = (props: ISingleEncounterProps) => {
     const { dispatch } = useEncountersContext();
-    const { dispatch: userDispatch, state } = useUserContext();
+    const { state } = useUserContext();
     const { encounterProfile, showActions, navigation } = props;
     const [dateStates] = useState([
         {
