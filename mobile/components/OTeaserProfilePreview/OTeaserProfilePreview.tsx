@@ -1,6 +1,7 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { UserPublicDTO } from "@/api/gen/src";
 import { ROUTES } from "@/screens/routes";
+import { getValidImgURI } from "@/utils/media.utils";
 import * as React from "react";
 import {
     Image,
@@ -42,7 +43,7 @@ const OTeaserProfilePreview = (props: IOTeaserProfileProps) => {
                 <Image
                     style={styles.profileImage}
                     contentFit="cover"
-                    source={{ uri: publicProfile.imageURIs[0] }}
+                    source={{ uri: getValidImgURI(publicProfile.imageURIs[0]) }}
                 />
                 <View style={styles.profileDetails}>
                     <Text
