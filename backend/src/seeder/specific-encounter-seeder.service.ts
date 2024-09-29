@@ -3,6 +3,7 @@ import { Encounter } from "@/entities/encounter/encounter.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
+import { generateUserCoordinates } from "@/seeder/seeder.utils";
 import {
     EApproachChoice,
     EDateMode,
@@ -217,6 +218,14 @@ export class Create10RealTestPeopleEncounters {
             { email: user.email },
             { verificationStatus: EVerificationStatus.VERIFIED },
         );
+        const users = await this.userService.findAll();
+        const userCoordinates = generateUserCoordinates(users.length);
+        for (const [index, user] of users.entries()) {
+            await this.userService.updateLocation(
+                user.id,
+                userCoordinates[index],
+            );
+        }
     }
 
     private async createEncountersForUser(
