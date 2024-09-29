@@ -74,6 +74,18 @@ export const saveUserData = (
     }
 };
 
+export const getLocallyStoredEncounters = (): IEncounterProfile[] => {
+    let encounterDataString: string | null;
+    if (!storage) {
+        encounterDataString = getSecurelyStoredValue(LOCAL_VALUE.ENCOUNTERS);
+    } else {
+        encounterDataString = storage.getString(LOCAL_VALUE.ENCOUNTERS);
+    }
+    return encounterDataString
+        ? (JSON.parse(encounterDataString) as IEncounterProfile[])
+        : [];
+};
+
 /** @dev Since encounters is an array, we always update the full storage directly in Encounters.context.ts */
 export const saveEncountersLocally = (encounters: IEncounterProfile[]) => {
     const encounterDataString = JSON.stringify(encounters);
