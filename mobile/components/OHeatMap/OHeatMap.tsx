@@ -11,7 +11,7 @@ interface OHeatMapProps {
 
 export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
     ({ showMap, locations }) => {
-        if (!showMap || isExpoGoEnvironment || locations?.length) {
+        if (!showMap || isExpoGoEnvironment || !locations?.length) {
             return <></>;
         }
 
