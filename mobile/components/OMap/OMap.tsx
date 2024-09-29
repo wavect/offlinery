@@ -104,7 +104,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
             });
             setLocation(location);
         } catch (e) {
-            console.warn("Unable to get user location ", e);
+            console.warn("Unable to get user locations");
         }
     };
 
