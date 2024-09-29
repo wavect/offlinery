@@ -18,7 +18,14 @@ export const OShowcase = (props: IOShowcaseProps) => {
     return (
         <View style={[styles.container, containerStyle]}>
             <View style={styles.headlineContainer}>
-                <MaterialIcons name="wifi-off" size={45} color={Color.white} />
+                {/** @dev MaterialIcons also takes briefly to load, looks weird on the SplashScreen */}
+                {!onlyUseSystemFont && (
+                    <MaterialIcons
+                        name="wifi-off"
+                        size={45}
+                        color={Color.white}
+                    />
+                )}
                 <Text
                     style={[styles.headlineText, systemFontStyle]}
                     adjustsFontSizeToFit={true}
