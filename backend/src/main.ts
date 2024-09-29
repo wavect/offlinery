@@ -1,3 +1,4 @@
+import { AppService } from "@/app.service";
 import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
@@ -41,8 +42,8 @@ async function bootstrap() {
     app.use(helmet());
 
     /** @DEV Complete Fresh DB Setup */
-    // const appService = app.get(AppService);
-    // await appService.truncateAllTables();
+    const appService = app.get(AppService);
+    await appService.truncateAllTables();
 
     await userSeederService.seedDefaultUsers();
     await apiUserSeederService.seedApiUsers();

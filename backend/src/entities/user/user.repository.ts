@@ -29,12 +29,12 @@ export class UserRepository extends Repository<User> {
         this.queryBuilder = this.createQueryBuilder("user");
         this.addEncounterJoins()
             .excludeUser(userToBeApproached.id)
-            // .withDesiredGender(userToBeApproached.genderDesire)
-            // .withGenderDesire(userToBeApproached.gender)
-            // .withVerificationStatusVerified()
-            // .withinAgeRange(this.getAge(new Date(userToBeApproached.birthDay)))
-            // .filterRecentEncounters()
-            // .relatedToUser(userToBeApproached.id)
+            .withDesiredGender(userToBeApproached.genderDesire)
+            .withGenderDesire(userToBeApproached.gender)
+            .withVerificationStatusVerified()
+            .withinAgeRange(this.getAge(new Date(userToBeApproached.birthDay)))
+            .filterRecentEncounters()
+            .relatedToUser(userToBeApproached.id)
             .withDateModeLiveMode();
 
         return this;
