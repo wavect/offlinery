@@ -9,7 +9,7 @@ import {
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 import { API } from "@/utils/api-config";
-import { getLocalLanguageID } from "@/utils/misc.utils";
+import { getLocalLanguageID, isNumericRegex } from "@/utils/misc.utils";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -30,8 +30,8 @@ const VerifyEmail = ({
 
     const inputs = React.useRef<TextInput[]>([]);
 
-    const isInvalidCode = () => code.some((digit) => digit === "");
-
+    const isInvalidCode = () =>
+        code.some((digit) => digit === "" || digit === undefined);
     useEffect(() => {
         sendVerificationCode();
     }, []);
@@ -50,21 +50,38 @@ const VerifyEmail = ({
     }, [timer]);
 
     const handleChange = (text: string, index: number) => {
-        setErrorMessage("");
-        const newCode = [...code];
-        newCode[index] = text;
-        setCode(newCode);
-
-        if (text.length === 1 && index < 5) {
-            inputs.current[index + 1].focus();
+        // "" also needs to be 'allowed', so we can delete a character
+        if (!isNumericRegex.test(text) && text !== "") {
+            console.log("Non-numeric input detected. Ignoring.");
+            return;
         }
+        setErrorMessage("");
+        if (text.length > 5) {
+            const splitted = text.split("").slice(0, 6);
+            setCode(splitted);
+            inputs.current[splitted.length - 1].focus();
+            return;
+        }
+
+        if (text.length === 1) {
+            const newCode = [...code];
+            newCode[index] = text;
+            setCode(newCode);
+            if (index < 5) {
+                inputs.current[index + 1].focus();
+                return;
+            }
+        }
+        const newCode = [...code];
+        newCode[index] = text.split("")[text.length - 1];
+        setCode(newCode);
     };
 
     const handleKeyPress = (event: any, index: number) => {
         if (
             event.nativeEvent.key === "Backspace" &&
             index > 0 &&
-            code[index] === ""
+            (code[index] === "" || code[index] === undefined)
         ) {
             const newCode = [...code];
             newCode[index - 1] = "";
@@ -86,6 +103,7 @@ const VerifyEmail = ({
             console.error(error);
             setErrorMessage(i18n.t(TR.verificationCodeInvalid));
             setCode(new Array(6).fill("")); // reset code
+            inputs.current[0].focus();
         }
     };
 
@@ -165,7 +183,6 @@ const VerifyEmail = ({
                         inputMode="numeric"
                         autoCorrect={false}
                         style={styles.otpInput}
-                        maxLength={1}
                         keyboardType="number-pad"
                         onChangeText={(text) => handleChange(text, index)}
                         onKeyPress={(event) => handleKeyPress(event, index)}

@@ -53,3 +53,5 @@ export const getLocalLanguageID = (): CreateUserDTOPreferredLanguageEnum => {
         CreateUserDTOPreferredLanguageEnum.en
     );
 };
+
+export const isNumericRegex = /^\d+$/;
