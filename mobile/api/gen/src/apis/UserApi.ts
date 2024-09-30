@@ -16,6 +16,7 @@ import type {
     CreateUserDTO,
     LocationUpdateDTO,
     ResetPasswordRequestDTO,
+    ResetPasswordResponseDTO,
     SignInResponseDTO,
     UpdateUserDTO,
     UpdateUserPasswordDTO,
@@ -27,6 +28,7 @@ import {
     CreateUserDTOToJSON,
     LocationUpdateDTOToJSON,
     ResetPasswordRequestDTOToJSON,
+    ResetPasswordResponseDTOFromJSON,
     SignInResponseDTOFromJSON,
     UpdateUserDTOToJSON,
     UpdateUserPasswordDTOToJSON,
@@ -58,7 +60,6 @@ export interface UserControllerRequestAccountDeletionRequest {
 }
 
 export interface UserControllerRequestPasswordChangeAsForgottenRequest {
-    userId: string;
     resetPasswordRequestDTO: ResetPasswordRequestDTO;
 }
 
@@ -177,7 +178,6 @@ export interface UserApiInterface {
     /**
      *
      * @summary Request change password of user account
-     * @param {string} userId User ID
      * @param {ResetPasswordRequestDTO} resetPasswordRequestDTO User email and reset code sent via email.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -186,7 +186,7 @@ export interface UserApiInterface {
     userControllerRequestPasswordChangeAsForgottenRaw(
         requestParameters: UserControllerRequestPasswordChangeAsForgottenRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<void>>;
+    ): Promise<runtime.ApiResponse<ResetPasswordResponseDTO>>;
 
     /**
      * Request change password of user account
@@ -194,7 +194,7 @@ export interface UserApiInterface {
     userControllerRequestPasswordChangeAsForgotten(
         requestParameters: UserControllerRequestPasswordChangeAsForgottenRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<void>;
+    ): Promise<ResetPasswordResponseDTO>;
 
     /**
      *
@@ -534,14 +534,7 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
     async userControllerRequestPasswordChangeAsForgottenRaw(
         requestParameters: UserControllerRequestPasswordChangeAsForgottenRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters["userId"] == null) {
-            throw new runtime.RequiredError(
-                "userId",
-                'Required parameter "userId" was null or undefined when calling userControllerRequestPasswordChangeAsForgotten().',
-            );
-        }
-
+    ): Promise<runtime.ApiResponse<ResetPasswordResponseDTO>> {
         if (requestParameters["resetPasswordRequestDTO"] == null) {
             throw new runtime.RequiredError(
                 "resetPasswordRequestDTO",
@@ -557,10 +550,7 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
 
         const response = await this.request(
             {
-                path: `/user/password-forgotten`.replace(
-                    `{${"userId"}}`,
-                    encodeURIComponent(String(requestParameters["userId"])),
-                ),
+                path: `/user/password-forgotten`,
                 method: "PUT",
                 headers: headerParameters,
                 query: queryParameters,
@@ -571,7 +561,9 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
             initOverrides,
         );
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            ResetPasswordResponseDTOFromJSON(jsonValue),
+        );
     }
 
     /**
@@ -580,11 +572,13 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
     async userControllerRequestPasswordChangeAsForgotten(
         requestParameters: UserControllerRequestPasswordChangeAsForgottenRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<void> {
-        await this.userControllerRequestPasswordChangeAsForgottenRaw(
-            requestParameters,
-            initOverrides,
-        );
+    ): Promise<ResetPasswordResponseDTO> {
+        const response =
+            await this.userControllerRequestPasswordChangeAsForgottenRaw(
+                requestParameters,
+                initOverrides,
+            );
+        return await response.value();
     }
 
     /**

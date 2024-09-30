@@ -5,7 +5,7 @@ export const de: Language = {
     signIn: "Anmelden",
     invalidCredentials: "E-Mail oder Passwort falsch.",
     signingIn: "Einen Moment..",
-    troubleSignIn: "Probleme beim Anmelden?",
+    contactSupport: "Funktioniert etwas nicht?",
     gettingReadyToAmazeYou: "Bereit, dich zu beeindrucken..",
     datingAppsAreBroken: "Dating apps are Broken",
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
@@ -22,6 +22,8 @@ export const de: Language = {
     yourEmail: "Deine E-Mail",
     email: "E-Mail",
     yourPassword: "Dein Passwort",
+    resetPassword: "Password zurücksetzen",
+    passwordForgotten: "Passwort vergessen?",
     password: "Passwort",
     houseRules: {
         mainTitle: "Hausregeln",

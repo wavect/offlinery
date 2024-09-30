@@ -16,6 +16,7 @@ export * from "./RefreshJwtDTO";
 export * from "./RegistrationForVerificationRequestDTO";
 export * from "./RegistrationForVerificationResponseDTO";
 export * from "./ResetPasswordRequestDTO";
+export * from "./ResetPasswordResponseDTO";
 export * from "./SetAcceptedSpecialDataGenderLookingForDTO";
 export * from "./SignInDTO";
 export * from "./SignInJwtDTO";

@@ -8,7 +8,7 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 
 interface OSplitInputProps {
     sendCode: () => Promise<EmailCodeResponseADTO>;
-    onError: () => Promise<void>;
+    onError?: () => Promise<void>;
     onCodeValidChange: (isValid: boolean, code: string) => void;
 }
 
@@ -37,7 +37,9 @@ export const OSplitInput = (props: OSplitInputProps) => {
             setIsResendDisabled(remainingTime > 0);
         } catch (error) {
             console.error(error);
-            await onError();
+            if (onError) {
+                await onError();
+            }
         } finally {
             setLoading(false);
         }
@@ -146,21 +148,25 @@ export const OSplitInput = (props: OSplitInputProps) => {
             {errorMessage && (
                 <Text style={styles.errorMessage}>{errorMessage}</Text>
             )}
-            <View style={styles.resendContainer}>
-                <OButtonWide
-                    text={
-                        isResendDisabled
-                            ? `${i18n.t(TR.verificationCodeResend)} (${formatTime(timer)})`
-                            : i18n.t(TR.verificationCodeResend)
-                    }
-                    isLoading={isLoading}
-                    loadingBtnText={i18n.t(TR.verificationCodeLoadingBtnLbl)}
-                    disabled={isResendDisabled}
-                    filled={false}
-                    variant="dark"
-                    onPress={sendEmailCode}
-                />
-            </View>
+            {isValidCode() ? null : (
+                <View style={styles.resendContainer}>
+                    <OButtonWide
+                        text={
+                            isResendDisabled
+                                ? `${i18n.t(TR.verificationCodeResend)} (${formatTime(timer)})`
+                                : i18n.t(TR.verificationCodeResend)
+                        }
+                        isLoading={isLoading}
+                        loadingBtnText={i18n.t(
+                            TR.verificationCodeLoadingBtnLbl,
+                        )}
+                        disabled={isResendDisabled}
+                        filled={false}
+                        variant="dark"
+                        onPress={sendEmailCode}
+                    />
+                </View>
+            )}
         </>
     );
 };

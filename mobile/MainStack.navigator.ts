@@ -14,6 +14,7 @@ export type MainStackParamList = {
     [ROUTES.Onboarding.Password]:
         | { isChangePassword: boolean; nextPage: any }
         | undefined;
+    [ROUTES.ResetPassword]: undefined;
     [ROUTES.Onboarding.FirstName]: undefined;
     [ROUTES.Onboarding.BirthDay]: undefined;
     [ROUTES.Onboarding.GenderChoice]: undefined;

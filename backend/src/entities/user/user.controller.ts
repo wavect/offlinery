@@ -188,13 +188,13 @@ export class UserController {
     @Put(`password-forgotten`)
     @Public()
     @ApiOperation({ summary: "Request change password of user account" })
-    @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })
     @ApiBody({
         type: ResetPasswordRequestDTO,
         description: "User email and reset code sent via email.",
     })
     @ApiResponse({
         status: 200,
+        type: ResetPasswordResponseDTO,
         description: "Account password change has been requested successfully.",
     })
     @ApiResponse({ status: 404, description: "User not found." })
