@@ -1,23 +1,18 @@
 import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
-import { BlacklistedRegionModule } from "@/entities/blacklisted-region/blacklisted-region.module";
 import { UserReport } from "@/entities/user-report/user-report.entity";
-import { UserReportModule } from "@/entities/user-report/user-report.module";
-import { UserModule } from "@/entities/user/user.module";
-import { NotificationController } from "@/transient-services/notification/notification.controller";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { I18nTranslations } from "@/translations/i18n.generated";
 import { OfflineryNotification } from "@/types/notification-message.types";
-import { ELanguage } from "@/types/user.types";
 import { getAge } from "@/utils/date.utils";
-import { Test, TestingModule } from "@nestjs/testing";
-import { getDataSourceToken, TypeOrmModule } from "@nestjs/typeorm";
-import { I18nModule, I18nService } from "nestjs-i18n";
-import * as path from "node:path";
+import { I18nService } from "nestjs-i18n";
 import { DataSource, DataSourceOptions } from "typeorm";
+import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
 
 // Sends to Kevin's smartphone rn
-const testPushToken = "ExponentPushToken[MbIGoaN3gTd61gYRRCRz8C]";
+const testPushTokenKevin = "ExponentPushToken[MbIGoaN3gTd61gYRRCRz8C]";
+// Send to Chris' smartphone rn
+const testPushTokenChris = "ExponentPushToken[sv2J8DEa84U3iStoXhafI0]";
 
 const mockUser: UserPublicDTO = {
     id: "123456789",
@@ -38,51 +33,42 @@ describe("NotificationService", () => {
             entities: [UserReport],
             synchronize: true,
         };
+        new DataSource(mockDataSourceOptions);
+        const { module } = await getIntegrationTestModule();
 
-        const mockDataSource = new DataSource(mockDataSourceOptions);
-
-        const app: TestingModule = await Test.createTestingModule({
-            controllers: [NotificationController],
-            providers: [NotificationService],
-            imports: [
-                UserModule,
-                UserReportModule,
-                BlacklistedRegionModule,
-                TypeOrmModule.forRoot(mockDataSourceOptions),
-                TypeOrmModule.forFeature([UserReport]),
-                I18nModule.forRoot({
-                    fallbackLanguage: ELanguage.en,
-                    loaderOptions: {
-                        path: path.join(
-                            __dirname,
-                            "..",
-                            "..",
-                            "..",
-                            "src",
-                            "translations",
-                        ),
-                        watch: true,
-                    },
-                }),
-            ],
-        })
-            .overrideProvider(getDataSourceToken())
-            .useValue(mockDataSource)
-            .compile();
-
-        notificationService = app.get<NotificationService>(NotificationService);
-        i18nService = app.get<I18nService<I18nTranslations>>(I18nService);
+        notificationService =
+            module.get<NotificationService>(NotificationService);
+        i18nService = module.get<I18nService<I18nTranslations>>(I18nService);
     });
 
     describe("notification service", () => {
-        it.skip("send push notification", async () => {
+        it.skip("send push notification to Kevins device", async () => {
             const messages: OfflineryNotification[] = [
                 {
-                    to: testPushToken, // could be also multiple users at once! (we will need that)
+                    to: testPushTokenKevin, // could be also multiple users at once! (we will need that)
                     sound: "default",
                     title: i18nService.t("main.notification.newMatch.title", {
                         args: { firstName: mockUser.firstName },
                     }),
+                    body: i18nService.t("main.notification.newMatch.body"),
+                    data: {
+                        screen: EAppScreens.NAVIGATE_TO_APPROACH,
+                        navigateToPerson: mockUser,
+                    },
+                },
+            ];
+            const res =
+                await notificationService.sendPushNotification(messages);
+            expect(res.length).toBe(1);
+            expect(res[0].status).toBe("ok");
+        });
+
+        it.skip("send push notification to Chris' device", async () => {
+            const messages: OfflineryNotification[] = [
+                {
+                    to: testPushTokenChris,
+                    sound: "default",
+                    title: "Lisa is nearby! 🔥",
                     body: i18nService.t("main.notification.newMatch.body"),
                     data: {
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
