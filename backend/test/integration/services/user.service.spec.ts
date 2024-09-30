@@ -5,7 +5,7 @@ import { EGender } from "@/types/user.types";
 import { createRandomAppUser } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
 
-describe("NotificationService", () => {
+describe("UserService", () => {
     let userRepository: UserRepository;
     let userService: UserService;
     let testingMainUser: User;
