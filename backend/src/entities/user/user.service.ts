@@ -106,7 +106,7 @@ export class UserService {
                     await fs.promises.unlink(filePath);
                     deletedPaths.push(imagePaths[index]);
                 } catch (error) {
-                    throw new Error(
+                    this.logger.error(
                         `Failed to delete file: ${filePath}. Message: ${error}`,
                     );
                 }
