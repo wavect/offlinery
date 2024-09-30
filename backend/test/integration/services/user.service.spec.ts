@@ -93,6 +93,52 @@ describe("UserService", () => {
             });
             expect(userLookupbyToken).toBeDefined();
 
+            await createRandomEncounter(
+                user,
+                encounterUser,
+                encounterRepository,
+                userRepository,
+            );
+
+            // act: delete the user
+            await userService.deleteUserByDeletionToken(deleteToken);
+
+            // assert: user does no longer exist
+            const userLookupFailing = await userRepository.findOneBy({
+                email: user.email,
+            });
+            expect(userLookupFailing).toEqual(null);
+        });
+
+        it("should delete a freshly added user by the delete token that sended messages", async () => {
+            const deleteToken = "DELETE_TOKEN";
+            const user = await createRandomAppUser(userRepository, {
+                email: "email1@email.com",
+                approachFromTime: new Date(),
+                gender: EGender.MAN,
+                genderDesire: EGender.MAN,
+                deletionToken: deleteToken,
+                deletionTokenExpires: new Date(
+                    Date.now() + 24 * 60 * 60 * 1000,
+                ),
+            });
+
+            const encounterUser = await createRandomAppUser(userRepository, {
+                email: "encounter@email.com",
+            });
+
+            // user lookup by email works
+            const userLookup = await userRepository.findOneBy({
+                email: user.email,
+            });
+            expect(userLookup).toBeDefined();
+
+            // user lookup by delete_token works
+            const userLookupbyToken = await userRepository.findOneBy({
+                deletionToken: deleteToken,
+            });
+            expect(userLookupbyToken).toBeDefined();
+
             const encounter = await createRandomEncounter(
                 user,
                 encounterUser,
