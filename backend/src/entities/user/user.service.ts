@@ -38,6 +38,7 @@ import { User } from "./user.entity";
 @Injectable()
 export class UserService {
     private readonly logger = new Logger(UserService.name);
+    private readonly uploadDir = "uploads/img";
 
     constructor(
         @InjectRepository(User)
@@ -57,9 +58,8 @@ export class UserService {
     private async saveFiles(
         files: Express.Multer.File[],
     ): Promise<{ index: number; filePath: string }[]> {
-        const uploadDir = "uploads/img";
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
+        if (!fs.existsSync(this.uploadDir)) {
+            fs.mkdirSync(this.uploadDir, { recursive: true });
         }
 
         const savedFilePaths = await Promise.all(
@@ -75,7 +75,7 @@ export class UserService {
                 // mimeType examples: "image/jpeg", "image/png".
                 // Since we only allow image files, we can assume mimeType always follows this scheme.
                 const uniqueFilename = `${uuidv4()}${path.extname(file.originalname)}.${file.mimetype.split("/")[1]}`;
-                const filePath = path.join(uploadDir, uniqueFilename);
+                const filePath = path.join(this.uploadDir, uniqueFilename);
                 await fs.promises.writeFile(filePath, file.buffer);
                 return { index, filePath: uniqueFilename };
             }),
@@ -84,6 +84,41 @@ export class UserService {
         return savedFilePaths.sort((a, b) => a.index - b.index);
     }
 
+    private async deleteImages(
+        userId: string,
+        indexes: number[] | undefined,
+    ): Promise<User | undefined> {
+        if (!indexes || indexes.length === 0) {
+            return;
+        }
+
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        const imagePaths = user.imageURIs;
+        const deletedPaths: string[] = [];
+        for (const index of indexes) {
+            const imagePath = imagePaths[index];
+
+            if (index >= 0 && index < imagePaths.length && imagePath) {
+                const filePath = path.join(this.uploadDir, imagePath);
+                try {
+                    await fs.promises.unlink(filePath);
+                    deletedPaths.push(imagePaths[index]);
+                } catch (error) {
+                    this.logger.error(
+                        `Failed to delete file: ${filePath}. Message: ${error}`,
+                    );
+                }
+            }
+        }
+
+        user.imageURIs = imagePaths.filter(
+            (path) => !deletedPaths.includes(path),
+        );
+
+        return user;
+    }
     async hashNewPassword(user: User, clearPwd: string): Promise<User> {
         // @dev https://docs.nestjs.com/security/encryption-and-hashing
         user.passwordSalt = await bcrypt.genSalt();
@@ -164,13 +199,17 @@ export class UserService {
         updateUserDto: UpdateUserDTO,
         images?: Express.Multer.File[],
     ): Promise<User> {
-        const user = await this.userRepository.findOneBy({ id });
+        let user = await this.userRepository.findOneBy({ id });
         if (!user) {
             throw new NotFoundException("User not found");
         }
 
         // Update user properties
         Object.assign(user, updateUserDto);
+
+        user =
+            (await this.deleteImages(id, updateUserDto.indexImagesToDelete)) ??
+            user;
 
         // Update images if provided
         if (images && images.length > 0) {

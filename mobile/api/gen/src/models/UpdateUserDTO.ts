@@ -102,6 +102,12 @@ export interface UpdateUserDTO {
      * @memberof UpdateUserDTO
      */
     preferredLanguage?: UpdateUserDTOPreferredLanguageEnum;
+    /**
+     *
+     * @type {Array<number>}
+     * @memberof UpdateUserDTO
+     */
+    indexImagesToDelete?: Array<number>;
 }
 
 /**
@@ -204,6 +210,10 @@ export function UpdateUserDTOFromJSONTyped(
             json["preferredLanguage"] == null
                 ? undefined
                 : json["preferredLanguage"],
+        indexImagesToDelete:
+            json["indexImagesToDelete"] == null
+                ? undefined
+                : json["indexImagesToDelete"],
     };
 }
 
@@ -230,5 +240,6 @@ export function UpdateUserDTOToJSON(value?: UpdateUserDTO | null): any {
         bio: value["bio"],
         dateMode: value["dateMode"],
         preferredLanguage: value["preferredLanguage"],
+        indexImagesToDelete: value["indexImagesToDelete"],
     };
 }
