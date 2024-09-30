@@ -104,111 +104,101 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     >{`${formatDate(encounterProfile.lastTimePassedBy)} near ${encounterProfile.lastLocationPassedBy}`}</Text>
 
                     {showActions && (
-                        <View style={styles.encounterDropdownContainer}>
-                            <Dropdown
-                                testID={TestData.encounters.inputStatus}
-                                data={dateStates}
-                                labelField="label"
-                                valueField="value"
-                                value={dateStatus}
-                                onChange={setDateStatus}
-                                disable={encounterProfile.reported}
-                                containerStyle={styles.dropdownContainerStyle}
-                                style={[
-                                    styles.encounterDropdownPicker,
-                                    encounterProfile.reported
-                                        ? styles.encounterDropdownPickerDisabled
-                                        : null,
-                                ]}
-                                placeholderStyle={
-                                    styles.dropdownPlaceholderStyle
-                                }
-                                selectedTextStyle={
-                                    styles.dropdownSelectedTextStyle
-                                }
-                                itemTextStyle={styles.dropdownItemTextStyle}
-                            />
+                        <View style={styles.actionContainer}>
+                            <View style={styles.dropdownContainer}>
+                                <Dropdown
+                                    testID={TestData.encounters.inputStatus}
+                                    data={dateStates}
+                                    labelField="label"
+                                    valueField="value"
+                                    value={dateStatus}
+                                    onChange={setDateStatus}
+                                    disable={encounterProfile.reported}
+                                    containerStyle={
+                                        styles.dropdownContainerStyle
+                                    }
+                                    style={[
+                                        styles.encounterDropdownPicker,
+                                        encounterProfile.reported
+                                            ? styles.encounterDropdownPickerDisabled
+                                            : null,
+                                    ]}
+                                    placeholderStyle={
+                                        styles.dropdownPlaceholderStyle
+                                    }
+                                    selectedTextStyle={
+                                        styles.dropdownSelectedTextStyle
+                                    }
+                                    itemTextStyle={styles.dropdownItemTextStyle}
+                                />
+                            </View>
+                            <View style={styles.buttonContainer}>
+                                {dateStatus ===
+                                    EncounterPublicDTOStatusEnum.met_interested && (
+                                    <OButtonSmall
+                                        label={i18n.t(TR.leaveMessageBtnLbl)}
+                                        onPress={() => setModalVisible(true)}
+                                        variant={IOButtonSmallVariant.Black}
+                                    />
+                                )}
+                                {dateStatus ===
+                                    EncounterPublicDTOStatusEnum.met_not_interested && (
+                                    <OButtonSmall
+                                        isDisabled={encounterProfile.reported}
+                                        variant={IOButtonSmallVariant.Danger}
+                                        onPress={() =>
+                                            navigation.navigate(
+                                                ROUTES.Main.ReportEncounter,
+                                                {
+                                                    personToReport:
+                                                        encounterProfile,
+                                                },
+                                            )
+                                        }
+                                        label={
+                                            encounterProfile.reported
+                                                ? i18n.t(TR.reported)
+                                                : i18n.t(TR.report)
+                                        }
+                                    />
+                                )}
+                                {state.approachChoice !==
+                                    UserPrivateDTOApproachChoiceEnum.be_approached &&
+                                    dateStatus ===
+                                        EncounterPublicDTOStatusEnum.not_met &&
+                                    encounterProfile.isNearbyRightNow && (
+                                        <OButtonSmall
+                                            label={i18n.t(TR.navigate)}
+                                            variant={IOButtonSmallVariant.Black}
+                                            onPress={() =>
+                                                navigation.navigate(
+                                                    ROUTES.HouseRules,
+                                                    {
+                                                        nextPage:
+                                                            ROUTES.Main
+                                                                .NavigateToApproach,
+                                                        propsForNextScreen: {
+                                                            navigateToPerson:
+                                                                encounterProfile,
+                                                        },
+                                                    },
+                                                )
+                                            }
+                                        />
+                                    )}
+                            </View>
                         </View>
                     )}
                 </View>
-                {showActions && (
-                    <View style={styles.rightColumn}>
-                        {encounterProfile.rating && (
-                            <Text
-                                style={styles.trustScore}
-                                onPress={() => alert(i18n.t(TR.ratingDescr))}
-                            >
-                                {i18n.t(TR.trust)}({encounterProfile.rating})
-                            </Text>
-                        )}
-                        {dateStatus ===
-                            EncounterPublicDTOStatusEnum.met_interested && (
-                            <OButtonSmall
-                                label={i18n.t(TR.leaveMessageBtnLbl)}
-                                containerStyle={styles.button}
-                                onPress={() => setModalVisible(true)}
-                                variant={IOButtonSmallVariant.Black}
-                            />
-                        )}
-                        {dateStatus ===
-                            EncounterPublicDTOStatusEnum.met_not_interested && (
-                            <OButtonSmall
-                                isDisabled={encounterProfile.reported}
-                                variant={IOButtonSmallVariant.Danger}
-                                containerStyle={styles.button}
-                                onPress={() =>
-                                    navigation.navigate(
-                                        ROUTES.Main.ReportEncounter,
-                                        {
-                                            personToReport: encounterProfile,
-                                        },
-                                    )
-                                }
-                                label={
-                                    encounterProfile.reported
-                                        ? i18n.t(TR.reported)
-                                        : i18n.t(TR.report)
-                                }
-                            />
-                        )}
-
-                        {state.approachChoice !==
-                            UserPrivateDTOApproachChoiceEnum.be_approached &&
-                            dateStatus ===
-                                EncounterPublicDTOStatusEnum.not_met &&
-                            encounterProfile.isNearbyRightNow && (
-                                <OButtonSmall
-                                    label={i18n.t(TR.navigate)}
-                                    variant={IOButtonSmallVariant.Black}
-                                    containerStyle={styles.button}
-                                    onPress={() =>
-                                        navigation.navigate(ROUTES.HouseRules, {
-                                            nextPage:
-                                                ROUTES.Main.NavigateToApproach,
-                                            propsForNextScreen: {
-                                                navigateToPerson:
-                                                    encounterProfile,
-                                            },
-                                        })
-                                    }
-                                />
-                            )}
-                    </View>
+                {showActions && encounterProfile.rating && (
+                    <Text
+                        style={styles.trustScore}
+                        onPress={() => alert(i18n.t(TR.ratingDescr))}
+                    >
+                        {i18n.t(TR.trust)}({encounterProfile.rating})
+                    </Text>
                 )}
             </View>
-
-            {dateStatus === EncounterPublicDTOStatusEnum.met_interested &&
-                encounterProfile.lastReceivedMessage && (
-                    <View style={styles.receivedMessageContainer}>
-                        <Text style={styles.receivedMessageTitle}>
-                            {i18n.t(TR.receivedMessage)}:
-                        </Text>
-                        <Text style={styles.receivedMessageText}>
-                            {encounterProfile.lastReceivedMessage.content}
-                        </Text>
-                    </View>
-                )}
-
             <OMessageModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
@@ -242,7 +232,6 @@ const styles = StyleSheet.create({
     encounterDetails: {
         flex: 1,
         marginLeft: 15,
-        zIndex: 2,
     },
     nameAge: {
         fontSize: FontSize.size_xl,
@@ -253,19 +242,19 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.montserratRegular,
         marginBottom: 10,
     },
-    rightColumn: {
+    actionContainer: {
+        flexDirection: "row",
+        alignItems: "center",
         justifyContent: "space-between",
-        alignItems: "flex-end",
+        marginTop: 10,
     },
-    trustScore: {
-        fontFamily: FontFamily.montserratSemiBold,
+    dropdownContainer: {
+        flex: 1,
+        marginRight: 10,
     },
-    encounterDropdownContainer: {
-        marginTop: 5,
-    },
-    dropdownContainerStyle: {
-        backgroundColor: "white",
-        borderRadius: 8,
+    buttonContainer: {
+        width: 100,
+        justifyContent: "center",
     },
     encounterDropdownPicker: {
         height: 35,
@@ -274,6 +263,21 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 8,
     },
+    trustScore: {
+        fontFamily: FontFamily.montserratSemiBold,
+        position: "absolute",
+        top: 0,
+        right: 0,
+    },
+
+    encounterDropdownContainer: {
+        marginTop: 5,
+    },
+    dropdownContainerStyle: {
+        backgroundColor: "white",
+        borderRadius: 8,
+    },
+
     encounterDropdownPickerDisabled: {
         backgroundColor: Color.brightGray,
     },
