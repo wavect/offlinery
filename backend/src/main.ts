@@ -1,7 +1,7 @@
 import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
-import { RandomEncounterSeeder } from "@/seeder/random-encounter-seeder.service";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
+import { Create10RealTestPeopleEncounters } from "@/seeder/specific-encounter-seeder.service";
 import { API_VERSION, BE_ENDPOINT } from "@/utils/misc.utils";
 import { INestApplication, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
@@ -23,6 +23,10 @@ async function bootstrap() {
             optionsSuccessStatus: 204,
         },
     });
+
+    const userSeederService = app.get(DefaultUserSeeder);
+    const apiUserSeederService = app.get(DefaultApiUserSeeder);
+
     setupSwagger(app);
     setupTypedEnvs();
 
@@ -34,24 +38,20 @@ async function bootstrap() {
     // security base line
     app.use(helmet());
 
-    // Seed the default use
-    const userSeederService = app.get(DefaultUserSeeder);
     await userSeederService.seedDefaultUsers();
-
-    const apiUserSeederService = app.get(DefaultApiUserSeeder);
     await apiUserSeederService.seedApiUsers();
 
-    // Seed Test users if development mode
+    /** @DEV if in development mode, do some adjustments and pre-seeds */
     if (process.env.NODE_ENV === "development") {
-        console.log(`✓ Development mode active.`);
-
-        console.log(`- Seeding Random Users`);
         const testUserSeederService = app.get(RandomUsersSeeder);
+        const realEncounterSeeder = app.get(Create10RealTestPeopleEncounters);
+
+        console.log(`✓ Seeding Users and Encounters`);
         await testUserSeederService.seedRandomUsers();
 
-        console.log("- Seeding Encounters");
-        const encounterSeederService = app.get(RandomEncounterSeeder);
-        await encounterSeederService.seedRandomEncounters();
+        console.log("Seeding 10 real users");
+        await realEncounterSeeder.seed();
+        console.log("Seeded 10 real users");
     }
 
     await app.listen(TYPED_ENV.BE_PORT);

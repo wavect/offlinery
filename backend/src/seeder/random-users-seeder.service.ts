@@ -2,6 +2,7 @@ import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
+import { generateUserCoordinates } from "@/seeder/seeder.utils";
 import {
     EApproachChoice,
     EDateMode,
@@ -14,6 +15,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as fs from "fs";
 import * as path from "path";
+import process from "process";
 import { Readable } from "stream";
 import { Repository } from "typeorm";
 
@@ -33,14 +35,12 @@ export class RandomUsersSeeder {
         const actualFilename = "img.png";
 
         const imagePath = path.join(
-            __dirname,
-            "..",
-            "..",
-            "uploads",
-            "placeholder",
+            process.cwd(),
+            "src",
+            "seeder",
+            "images",
             actualFilename,
         );
-
         const buffer = fs.readFileSync(imagePath);
         const stats = fs.statSync(imagePath);
 
@@ -48,9 +48,9 @@ export class RandomUsersSeeder {
         fileStream.push(buffer);
         fileStream.push(null);
 
-        const file: Express.Multer.File = {
+        return {
             fieldname: "file",
-            originalname: index.toString(), // Set this to a string number
+            originalname: index.toString(),
             encoding: "7bit",
             mimetype: "image/png",
             buffer,
@@ -60,17 +60,15 @@ export class RandomUsersSeeder {
             path: path.join("uploads", actualFilename),
             stream: fileStream,
         };
-
-        return file;
     }
 
     async seedRandomUsers(): Promise<void> {
         try {
             await this.userService.findUserByEmailOrFail("test@test.test");
-            console.log("✓ Test Users exist");
+            console.log("✓ 300 random naive test users exist - Skipping");
             return;
         } catch (e) {
-            console.log(`Seeding ${this.AMOUNT_OF_USERS} Test Users...`);
+            console.log(`SEED RUN -> [${this.AMOUNT_OF_USERS} Test Users]...`);
         }
 
         for (let i = 0; i < this.AMOUNT_OF_USERS; i++) {
@@ -106,12 +104,11 @@ export class RandomUsersSeeder {
             }
         }
 
-        console.log(`✓ Test Users Created`);
-        console.log("- Updating Locations...");
+        console.log(`✓ SEED RUN DONE`);
+        console.log(`- Updating Locations of seeded users`);
 
         const users = await this.userService.findAll();
-        const userCoordinates = this.generateUserCoordinates(users.length);
-
+        const userCoordinates = generateUserCoordinates(users.length);
         for (const [index, user] of users.entries()) {
             await this.userService.updateLocation(
                 user.id,
@@ -161,57 +158,5 @@ export class RandomUsersSeeder {
             dateMode,
             preferredLanguage: ELanguage.en,
         };
-    }
-
-    getRandomLatLong(centerLat, centerLong, radius, spread) {
-        const radiusDegrees = radius / 111;
-        const angle = Math.random() * 2 * Math.PI;
-        const offsetLat =
-            Math.random() * radiusDegrees * spread * Math.sin(angle);
-        const offsetLong =
-            Math.random() * radiusDegrees * spread * Math.cos(angle);
-        const lat = centerLat + offsetLat;
-        const long = centerLong + offsetLong;
-        return {
-            latitude: Number(lat.toFixed(6)),
-            longitude: Number(long.toFixed(6)),
-        };
-    }
-
-    generateUserCoordinates(count = 100) {
-        const vienna = { lat: 48.210033, long: 16.363449 };
-        const innsbruck = { lat: 47.2675, long: 11.391 };
-        const coordinates = [];
-
-        // Generate coordinates for Vienna (60% of users)
-        for (let i = 0; i < count * 0.6; i++) {
-            if (i < count * 0.4) {
-                // 40% close to Vienna
-                coordinates.push(
-                    this.getRandomLatLong(vienna.lat, vienna.long, 10, 1),
-                );
-            } else {
-                // 20% further from Vienna
-                coordinates.push(
-                    this.getRandomLatLong(vienna.lat, vienna.long, 30, 2),
-                );
-            }
-        }
-        // Generate coordinates for Innsbruck (40% of users)
-        for (let i = 0; i < count * 0.4; i++) {
-            if (i < count * 0.25) {
-                // 25% close to Innsbruck
-                coordinates.push(
-                    this.getRandomLatLong(innsbruck.lat, innsbruck.long, 8, 1),
-                );
-            } else {
-                // 15% further from Innsbruck
-                coordinates.push(
-                    this.getRandomLatLong(innsbruck.lat, innsbruck.long, 25, 2),
-                );
-            }
-        }
-
-        return coordinates;
     }
 }
