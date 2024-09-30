@@ -26,8 +26,6 @@ async function bootstrap() {
 
     const userSeederService = app.get(DefaultUserSeeder);
     const apiUserSeederService = app.get(DefaultApiUserSeeder);
-    const testUserSeederService = app.get(RandomUsersSeeder);
-    const realEncounterSeeder = app.get(Create10RealTestPeopleEncounters);
 
     setupSwagger(app);
     setupTypedEnvs();
@@ -45,6 +43,9 @@ async function bootstrap() {
 
     /** @DEV if in development mode, do some adjustments and pre-seeds */
     if (process.env.NODE_ENV === "development") {
+        const testUserSeederService = app.get(RandomUsersSeeder);
+        const realEncounterSeeder = app.get(Create10RealTestPeopleEncounters);
+
         console.log(`✓ Seeding Users and Encounters`);
         await testUserSeederService.seedRandomUsers();
 
