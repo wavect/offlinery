@@ -50,30 +50,47 @@ const VerifyEmail = ({
     }, [timer]);
 
     const handleChange = (text: string, index: number) => {
-        // "" also needs to be 'allowed', so we can delete a character
-        if (!isNumericRegex.test(text) && text !== "") {
-            console.log("Non-numeric input detected. Ignoring.");
-            return;
-        }
-        setErrorMessage("");
-        if (text.length > 5) {
-            const splitted = text.split("").slice(0, 6);
-            setCode(splitted);
-            inputs.current[splitted.length - 1].focus();
+        const newCode = [...code];
+
+        // Handle empty input (character deletion)
+        if (text === "") {
+            newCode[index] = "";
+            setCode(newCode);
             return;
         }
 
+        // Ignore non-numeric input (except empty string)
+        if (!isNumericRegex.test(text)) {
+            console.log("Non-numeric input detected. Ignoring.");
+            return;
+        }
+
+        setErrorMessage("");
+
+        // Handle pasted code (6 or more digits)
+        if (text.length > 5) {
+            console.log("Code: ", text);
+            const splitted = text.split("").slice(0, 6);
+            setCode(splitted);
+            inputs.current[5].focus(); // Focus last input
+            return;
+        }
+
+        // Handle single digit input
         if (text.length === 1) {
-            const newCode = [...code];
             newCode[index] = text;
             setCode(newCode);
+
+            // Move focus to next input if not last
             if (index < 5) {
                 inputs.current[index + 1].focus();
-                return;
             }
+            return;
         }
-        const newCode = [...code];
-        newCode[index] = text.split("")[text.length - 1];
+
+        // Handle multi-digit input in a single box
+        // Extract the last digit entered
+        newCode[index] = text.charAt(text.length - 1);
         setCode(newCode);
     };
 
