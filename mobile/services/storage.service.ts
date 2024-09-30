@@ -29,7 +29,7 @@ export const LOCAL_VALUE = {
 
 export const getLocallyStoredUserData = (): Omit<
     IUserData,
-    "jwtAccessToken" | "refreshToken"
+    "imageURIs"
 > | null => {
     let userDataString: string | null;
     if (!storage) {
@@ -41,10 +41,7 @@ export const getLocallyStoredUserData = (): Omit<
 };
 
 export const updateUserDataLocally = (
-    partialUserData: Omit<
-        Partial<IUserData>,
-        "jwtAccessToken" | "refreshToken"
-    >,
+    partialUserData: Omit<Partial<IUserData>, "imageURIs">,
 ) => {
     saveUserData({
         ...(getLocallyStoredUserData() ?? initialUserState),
@@ -52,17 +49,12 @@ export const updateUserDataLocally = (
     });
 };
 
-export const saveUserData = (
-    userData: Omit<IUserData, "jwtAccessToken" | "refreshToken">,
-) => {
+export const saveUserData = (userData: Omit<IUserData, "imageURIs">) => {
     // jwtAccessToken should be stored in more secure local storage, see secure-storage.service.ts
     const internalUserDataObj = { ...userData }; // clone object to not remove accessToken for user.context.ts too etc.
     // if the type check didn't work, we manually delete the jwt token from the object to not save it.
-    if ((internalUserDataObj as IUserData).jwtAccessToken) {
-        (internalUserDataObj as IUserData).jwtAccessToken = undefined;
-    }
-    if ((internalUserDataObj as IUserData).refreshToken) {
-        (internalUserDataObj as IUserData).refreshToken = undefined;
+    if ((internalUserDataObj as IUserData).imageURIs) {
+        (internalUserDataObj as IUserData).imageURIs = {};
     }
 
     const userDataString = JSON.stringify(internalUserDataObj);
