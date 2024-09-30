@@ -4,6 +4,7 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
+import { getValidImgURI } from "@/utils/media.utils";
 import React, { useRef, useState } from "react";
 import {
     Dimensions,
@@ -81,7 +82,7 @@ const ProfileView = ({
                             onPress={() => setFullScreenVisible(true)}
                         >
                             <Image
-                                source={{ uri: item }}
+                                source={{ uri: getValidImgURI(item) }}
                                 style={styles.carouselImage}
                             />
                         </TouchableOpacity>
