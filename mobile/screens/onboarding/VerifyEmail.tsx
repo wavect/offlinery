@@ -9,7 +9,7 @@ import {
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 import { API } from "@/utils/api-config";
-import { getLocalLanguageID } from "@/utils/misc.utils";
+import { getLocalLanguageID, isNumericRegex } from "@/utils/misc.utils";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -30,8 +30,8 @@ const VerifyEmail = ({
 
     const inputs = React.useRef<TextInput[]>([]);
 
-    const isInvalidCode = () => code.some((digit) => digit === "");
-
+    const isInvalidCode = () =>
+        code.some((digit) => digit === "" || digit === undefined);
     useEffect(() => {
         sendVerificationCode();
     }, []);
@@ -50,21 +50,55 @@ const VerifyEmail = ({
     }, [timer]);
 
     const handleChange = (text: string, index: number) => {
-        setErrorMessage("");
         const newCode = [...code];
-        newCode[index] = text;
-        setCode(newCode);
 
-        if (text.length === 1 && index < 5) {
-            inputs.current[index + 1].focus();
+        // Handle empty input (character deletion)
+        if (text === "") {
+            newCode[index] = "";
+            setCode(newCode);
+            return;
         }
+
+        // Ignore non-numeric input (except empty string)
+        if (!isNumericRegex.test(text)) {
+            console.log("Non-numeric input detected. Ignoring.");
+            return;
+        }
+
+        setErrorMessage("");
+
+        // Handle pasted code (6 or more digits)
+        if (text.length > 5) {
+            console.log("Code: ", text);
+            const splitted = text.split("").slice(0, 6);
+            setCode(splitted);
+            inputs.current[5].focus(); // Focus last input
+            return;
+        }
+
+        // Handle single digit input
+        if (text.length === 1) {
+            newCode[index] = text;
+            setCode(newCode);
+
+            // Move focus to next input if not last
+            if (index < 5) {
+                inputs.current[index + 1].focus();
+            }
+            return;
+        }
+
+        // Handle multi-digit input in a single box
+        // Extract the last digit entered
+        newCode[index] = text.charAt(text.length - 1);
+        setCode(newCode);
     };
 
     const handleKeyPress = (event: any, index: number) => {
         if (
             event.nativeEvent.key === "Backspace" &&
             index > 0 &&
-            code[index] === ""
+            (code[index] === "" || code[index] === undefined)
         ) {
             const newCode = [...code];
             newCode[index - 1] = "";
@@ -86,6 +120,7 @@ const VerifyEmail = ({
             console.error(error);
             setErrorMessage(i18n.t(TR.verificationCodeInvalid));
             setCode(new Array(6).fill("")); // reset code
+            inputs.current[0].focus();
         }
     };
 
@@ -165,7 +200,6 @@ const VerifyEmail = ({
                         inputMode="numeric"
                         autoCorrect={false}
                         style={styles.otpInput}
-                        maxLength={1}
                         keyboardType="number-pad"
                         onChangeText={(text) => handleChange(text, index)}
                         onKeyPress={(event) => handleKeyPress(event, index)}
