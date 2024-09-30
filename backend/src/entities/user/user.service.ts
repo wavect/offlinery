@@ -1,5 +1,6 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { ResetPasswordResponseDTO } from "@/DTOs/reset-password.dto";
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserPasswordDTO } from "@/DTOs/update-user-password";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
@@ -14,6 +15,11 @@ import {
     ELanguage,
 } from "@/types/user.types";
 import { API_VERSION, BE_ENDPOINT } from "@/utils/misc.utils";
+import {
+    EMAIL_CODE_EXPIRATION_IN_MS,
+    generate6DigitEmailCode,
+    RESEND_EMAIL_CODE_TIMEOUT_IN_MS,
+} from "@/utils/security.utils";
 import { MailerService } from "@nestjs-modules/mailer";
 import {
     ForbiddenException,
@@ -284,6 +290,90 @@ export class UserService {
         };
     }
 
+    async changeUserPasswordByResetPwdLink(
+        email: string,
+        resetPasswordCode: string,
+        newClearPassword: string,
+    ): Promise<void> {
+        const userToUpdate = await this.userRepository.findOneBy({
+            email,
+            resetPasswordCode,
+        });
+        if (!userToUpdate) {
+            throw new NotFoundException(
+                `Unknown email, no user found or verificationCode invalid: ${email}, ${resetPasswordCode}`,
+            );
+        }
+        const currentTime = new Date().getTime();
+        const issuedTime = userToUpdate.resetPasswordCodeIssuedAt.getTime();
+
+        if (currentTime - issuedTime > EMAIL_CODE_EXPIRATION_IN_MS) {
+            throw new ForbiddenException("Reset password code has expired.");
+        }
+        // @dev token can only be used once
+        userToUpdate.resetPasswordCode = undefined;
+        userToUpdate.resetPasswordCodeIssuedAt = undefined;
+        await this.hashNewPassword(userToUpdate, newClearPassword);
+        await this.userRepository.save(userToUpdate);
+
+        this.logger.debug(
+            `User ${userToUpdate.id}'s password successfully reset!`,
+        );
+    }
+
+    async requestPasswordChangeAsForgotten(
+        email: string,
+    ): Promise<ResetPasswordResponseDTO> {
+        const user = await this.userRepository.findOneBy({ email });
+        if (!user) {
+            throw new NotFoundException(
+                `User with email ${email} does not exist!`,
+            );
+        }
+
+        if (
+            Date.now() <
+            new Date(user.resetPasswordCodeIssuedAt).getTime() +
+                RESEND_EMAIL_CODE_TIMEOUT_IN_MS
+        ) {
+            this.logger.debug(
+                `Already issued reset password code that has not yet expired, returning old data.`,
+            );
+            return {
+                email: user.email,
+                timeout: RESEND_EMAIL_CODE_TIMEOUT_IN_MS,
+                codeIssuedAt: user.resetPasswordCodeIssuedAt,
+            };
+        }
+
+        const resetPwdCode = generate6DigitEmailCode();
+        user.resetPasswordCode = resetPwdCode;
+        user.resetPasswordCodeIssuedAt = new Date();
+
+        const lang = user.preferredLanguage || ELanguage.en;
+        this.logger.debug(
+            `Sending new email to ${user.email} with changePwd code ${resetPwdCode} in ${lang}.`,
+        );
+        await this.mailService.sendMail({
+            to: user.email,
+            subject: await this.i18n.translate(
+                "main.email.request-password-reset.subject",
+                { lang },
+            ),
+            template: "../../mail/templates/request-password-reset",
+            context: {
+                name: user.email,
+                resetPwdCode,
+                t: (key: string) =>
+                    this.i18n.translate(
+                        `main.email.request-password-reset.${key}`,
+                        { lang },
+                    ),
+            },
+        });
+        await this.userRepository.save(user);
+    }
+
     async requestAccountDeletion(id: string) {
         const user = await this.userRepository.findOneBy({ id });
         if (!user) {
@@ -300,8 +390,8 @@ export class UserService {
         }
 
         user.deletionTokenExpires = new Date(
-            new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
-        ); // 7 day expiration window
+            new Date().getTime() + 24 * 60 * 60 * 1000,
+        ); // 24h expiration window
         user.deletionToken = randomBytes(48).toString("hex");
 
         const deletionLink = `${BE_ENDPOINT}/v${API_VERSION}/user/delete/${user.deletionToken}`;

@@ -4,6 +4,10 @@ import { Public } from "@/auth/auth.guard";
 import { CreateUserRequestDTO } from "@/DTOs/create-user-request.dto";
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import {
+    ResetPasswordRequestDTO,
+    ResetPasswordResponseDTO,
+} from "@/DTOs/reset-password.dto";
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserPasswordDTO } from "@/DTOs/update-user-password";
 import { UpdateUserRequestDTO } from "@/DTOs/update-user-request.dto";
@@ -11,6 +15,7 @@ import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
 import { UserPrivateDTO } from "@/DTOs/user-private.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
+import { VerifyResetPasswordDTO } from "@/DTOs/verify-password-reset.dto";
 import { CustomParseFilePipe } from "@/pipes/custom-parse-file.pipe";
 import { ParseValidateJsonPipe } from "@/pipes/parse-validate-json.pipe";
 import {
@@ -178,6 +183,56 @@ export class UserController {
             locationUpdateDTO,
         );
         return updatedUser.convertToPublicDTO();
+    }
+
+    @Put(`password-forgotten`)
+    @Public()
+    @ApiOperation({ summary: "Request change password of user account" })
+    @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })
+    @ApiBody({
+        type: ResetPasswordRequestDTO,
+        description: "User email and reset code sent via email.",
+    })
+    @ApiResponse({
+        status: 200,
+        description: "Account password change has been requested successfully.",
+    })
+    @ApiResponse({ status: 404, description: "User not found." })
+    async requestPasswordChangeAsForgotten(
+        @Body() resetPwdRequestDTO: ResetPasswordRequestDTO,
+    ): Promise<ResetPasswordResponseDTO> {
+        const { email } = resetPwdRequestDTO;
+        return this.userService.requestPasswordChangeAsForgotten(email);
+    }
+
+    @Put(`reset-password`)
+    @Public()
+    @ApiOperation({ summary: "Reset password of user account" })
+    @ApiBody({
+        type: VerifyResetPasswordDTO,
+        description:
+            "User email and reset code sent via email including new chosen password.",
+    })
+    @ApiResponse({
+        status: 200,
+        description: "Account password has been reset successfully.",
+    })
+    @ApiResponse({
+        status: 404,
+        description: "User not found, reset password token invalid.",
+    })
+    @ApiResponse({ status: 403, description: "Reset password token expired" })
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async resetPassword(
+        @Body() verifyResetPasswordDTO: VerifyResetPasswordDTO,
+    ): Promise<void> {
+        const { email, verificationCode, newClearPassword } =
+            verifyResetPasswordDTO;
+        return await this.userService.changeUserPasswordByResetPwdLink(
+            email,
+            verificationCode,
+            newClearPassword,
+        );
     }
 
     @Put(`request-deletion/:${USER_ID_PARAM}`)

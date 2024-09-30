@@ -19,12 +19,6 @@
  */
 export interface RegistrationForVerificationResponseDTO {
     /**
-     *
-     * @type {string}
-     * @memberof RegistrationForVerificationResponseDTO
-     */
-    email: string;
-    /**
      * The timeout when the user can resend a verification code in milliseconds.
      * @type {number}
      * @memberof RegistrationForVerificationResponseDTO
@@ -35,7 +29,13 @@ export interface RegistrationForVerificationResponseDTO {
      * @type {Date}
      * @memberof RegistrationForVerificationResponseDTO
      */
-    verificationCodeIssuedAt: Date;
+    codeIssuedAt: Date;
+    /**
+     *
+     * @type {string}
+     * @memberof RegistrationForVerificationResponseDTO
+     */
+    email: string;
     /**
      *
      * @type {boolean}
@@ -56,13 +56,10 @@ export interface RegistrationForVerificationResponseDTO {
 export function instanceOfRegistrationForVerificationResponseDTO(
     value: object,
 ): value is RegistrationForVerificationResponseDTO {
-    if (!("email" in value) || value["email"] === undefined) return false;
     if (!("timeout" in value) || value["timeout"] === undefined) return false;
-    if (
-        !("verificationCodeIssuedAt" in value) ||
-        value["verificationCodeIssuedAt"] === undefined
-    )
+    if (!("codeIssuedAt" in value) || value["codeIssuedAt"] === undefined)
         return false;
+    if (!("email" in value) || value["email"] === undefined) return false;
     if (
         !("alreadyVerifiedButNotRegistered" in value) ||
         value["alreadyVerifiedButNotRegistered"] === undefined
@@ -90,9 +87,9 @@ export function RegistrationForVerificationResponseDTOFromJSONTyped(
         return json;
     }
     return {
-        email: json["email"],
         timeout: json["timeout"],
-        verificationCodeIssuedAt: new Date(json["verificationCodeIssuedAt"]),
+        codeIssuedAt: new Date(json["codeIssuedAt"]),
+        email: json["email"],
         alreadyVerifiedButNotRegistered:
             json["alreadyVerifiedButNotRegistered"],
         registrationJWToken: json["registrationJWToken"],
@@ -106,10 +103,9 @@ export function RegistrationForVerificationResponseDTOToJSON(
         return value;
     }
     return {
-        email: value["email"],
         timeout: value["timeout"],
-        verificationCodeIssuedAt:
-            value["verificationCodeIssuedAt"].toISOString(),
+        codeIssuedAt: value["codeIssuedAt"].toISOString(),
+        email: value["email"],
         alreadyVerifiedButNotRegistered:
             value["alreadyVerifiedButNotRegistered"],
         registrationJWToken: value["registrationJWToken"],

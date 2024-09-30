@@ -16,6 +16,7 @@ src/models/BlacklistedRegionDTO.ts
 src/models/BlacklistedRegionDTOLocation.ts
 src/models/CreateUserDTO.ts
 src/models/CreateUserReportDTO.ts
+src/models/EmailCodeResponseADTO.ts
 src/models/EncounterPublicDTO.ts
 src/models/GetLocationOfEncounterDTO.ts
 src/models/GetLocationOfEncounterResponseDTO.ts
@@ -26,6 +27,7 @@ src/models/PushMessageDTO.ts
 src/models/RefreshJwtDTO.ts
 src/models/RegistrationForVerificationRequestDTO.ts
 src/models/RegistrationForVerificationResponseDTO.ts
+src/models/ResetPasswordRequestDTO.ts
 src/models/SetAcceptedSpecialDataGenderLookingForDTO.ts
 src/models/SignInDTO.ts
 src/models/SignInJwtDTO.ts
@@ -38,6 +40,7 @@ src/models/UpdateUserVerificationstatusDTO.ts
 src/models/UserPrivateDTO.ts
 src/models/UserPublicDTO.ts
 src/models/VerifyEmailDTO.ts
+src/models/VerifyResetPasswordDTO.ts
 src/models/WeightedLatLngDTO.ts
 src/models/index.ts
 src/runtime.ts

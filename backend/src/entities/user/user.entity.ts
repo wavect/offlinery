@@ -164,6 +164,12 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
     preferredLanguage: ELanguage;
 
     @Column({ nullable: true })
+    resetPasswordCode: string;
+
+    @Column({ type: "timestamptz", nullable: true })
+    resetPasswordCodeIssuedAt: Date;
+
+    @Column({ nullable: true })
     deletionTokenExpires: Date;
 
     /** @dev This is a secret as it enables people to delete your account! */

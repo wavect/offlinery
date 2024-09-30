@@ -46,6 +46,18 @@ export type I18nTranslations = {
                 "disclaimer": string;
                 "footer": string;
             };
+            "request-password-reset": {
+                "subject": string;
+                "title": string;
+                "hello": string;
+                "receivedRequest": string;
+                "instructions": string;
+                "expirationNote": string;
+                "warningMessage": string;
+                "securityNote": string;
+                "contactSupport": string;
+                "footer": string;
+            };
         };
     };
 };

@@ -13,7 +13,7 @@
       "receivedRequest": "We've received a request to permanently delete your account. This action is irreversible and will erase all your data from our systems.",
       "proceedInstructions": "If you wish to proceed, click the link below:",
       "deleteButton": "DELETE MY ACCOUNT",
-      "expirationNote": "Note: This link will expire in 7 days for security reasons.",
+      "expirationNote": "Note: This link will expire in 24 hours for security reasons.",
       "warningMessage": "⚠️ WARNING: This action cannot be undone! ⚠️",
       "feedbackRequest": "Before you go, we'd appreciate knowing why you're leaving. Please share your thoughts by emailing office@offlinery.io.",
       "securityWarning": "If you didn't request this deletion, please contact our support team immediately to secure your account.",
@@ -38,6 +38,18 @@
       "instructions": "Enter this code in the Offlinery app to complete your email verification.",
       "disclaimer": "If you didn't request this email, you can safely ignore it.",
       "footer": "This is an automated message, please do not reply to this email."
+    },
+    "request-password-reset": {
+      "subject": "Offlinery: Password Reset Code",
+      "title": "Password Reset Code",
+      "hello": "Hi {{name}}",
+      "receivedRequest": "We've received a request to reset your password for your Offlinery account.",
+      "instructions": "To reset your password, please use the following 6-digit code:",
+      "expirationNote": "Note: This code will expire in 15 minutes for security reasons.",
+      "warningMessage": "⚠️ If you didn't request this password reset, please ignore this email. ⚠️",
+      "securityNote": "For the security of your account, never share this code with anyone.",
+      "contactSupport": "If you have any questions or concerns, please contact our support team at support@offlinery.io.",
+      "footer": "This is an automated message. Please do not reply to this email."
     }
   }
 }

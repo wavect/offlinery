@@ -15,20 +15,24 @@
 import type {
     CreateUserDTO,
     LocationUpdateDTO,
+    ResetPasswordRequestDTO,
     SignInResponseDTO,
     UpdateUserDTO,
     UpdateUserPasswordDTO,
     UserPrivateDTO,
     UserPublicDTO,
+    VerifyResetPasswordDTO,
 } from "../models/index";
 import {
     CreateUserDTOToJSON,
     LocationUpdateDTOToJSON,
+    ResetPasswordRequestDTOToJSON,
     SignInResponseDTOFromJSON,
     UpdateUserDTOToJSON,
     UpdateUserPasswordDTOToJSON,
     UserPrivateDTOFromJSON,
     UserPublicDTOFromJSON,
+    VerifyResetPasswordDTOToJSON,
 } from "../models/index";
 import * as runtime from "../runtime";
 
@@ -51,6 +55,15 @@ export interface UserControllerGetOwnUserDataRequest {
 
 export interface UserControllerRequestAccountDeletionRequest {
     userId: string;
+}
+
+export interface UserControllerRequestPasswordChangeAsForgottenRequest {
+    userId: string;
+    resetPasswordRequestDTO: ResetPasswordRequestDTO;
+}
+
+export interface UserControllerResetPasswordRequest {
+    verifyResetPasswordDTO: VerifyResetPasswordDTO;
 }
 
 export interface UserControllerUpdateLocationRequest {
@@ -158,6 +171,49 @@ export interface UserApiInterface {
      */
     userControllerRequestAccountDeletion(
         requestParameters: UserControllerRequestAccountDeletionRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
+
+    /**
+     *
+     * @summary Request change password of user account
+     * @param {string} userId User ID
+     * @param {ResetPasswordRequestDTO} resetPasswordRequestDTO User email and reset code sent via email.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApiInterface
+     */
+    userControllerRequestPasswordChangeAsForgottenRaw(
+        requestParameters: UserControllerRequestPasswordChangeAsForgottenRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     * Request change password of user account
+     */
+    userControllerRequestPasswordChangeAsForgotten(
+        requestParameters: UserControllerRequestPasswordChangeAsForgottenRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
+
+    /**
+     *
+     * @summary Reset password of user account
+     * @param {VerifyResetPasswordDTO} verifyResetPasswordDTO User email and reset code sent via email including new chosen password.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApiInterface
+     */
+    userControllerResetPasswordRaw(
+        requestParameters: UserControllerResetPasswordRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     * Reset password of user account
+     */
+    userControllerResetPassword(
+        requestParameters: UserControllerResetPasswordRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void>;
 
@@ -467,6 +523,114 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void> {
         await this.userControllerRequestAccountDeletionRaw(
+            requestParameters,
+            initOverrides,
+        );
+    }
+
+    /**
+     * Request change password of user account
+     */
+    async userControllerRequestPasswordChangeAsForgottenRaw(
+        requestParameters: UserControllerRequestPasswordChangeAsForgottenRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["userId"] == null) {
+            throw new runtime.RequiredError(
+                "userId",
+                'Required parameter "userId" was null or undefined when calling userControllerRequestPasswordChangeAsForgotten().',
+            );
+        }
+
+        if (requestParameters["resetPasswordRequestDTO"] == null) {
+            throw new runtime.RequiredError(
+                "resetPasswordRequestDTO",
+                'Required parameter "resetPasswordRequestDTO" was null or undefined when calling userControllerRequestPasswordChangeAsForgotten().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        const response = await this.request(
+            {
+                path: `/user/password-forgotten`.replace(
+                    `{${"userId"}}`,
+                    encodeURIComponent(String(requestParameters["userId"])),
+                ),
+                method: "PUT",
+                headers: headerParameters,
+                query: queryParameters,
+                body: ResetPasswordRequestDTOToJSON(
+                    requestParameters["resetPasswordRequestDTO"],
+                ),
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Request change password of user account
+     */
+    async userControllerRequestPasswordChangeAsForgotten(
+        requestParameters: UserControllerRequestPasswordChangeAsForgottenRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.userControllerRequestPasswordChangeAsForgottenRaw(
+            requestParameters,
+            initOverrides,
+        );
+    }
+
+    /**
+     * Reset password of user account
+     */
+    async userControllerResetPasswordRaw(
+        requestParameters: UserControllerResetPasswordRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["verifyResetPasswordDTO"] == null) {
+            throw new runtime.RequiredError(
+                "verifyResetPasswordDTO",
+                'Required parameter "verifyResetPasswordDTO" was null or undefined when calling userControllerResetPassword().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        const response = await this.request(
+            {
+                path: `/user/reset-password`,
+                method: "PUT",
+                headers: headerParameters,
+                query: queryParameters,
+                body: VerifyResetPasswordDTOToJSON(
+                    requestParameters["verifyResetPasswordDTO"],
+                ),
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Reset password of user account
+     */
+    async userControllerResetPassword(
+        requestParameters: UserControllerResetPasswordRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.userControllerResetPasswordRaw(
             requestParameters,
             initOverrides,
         );
