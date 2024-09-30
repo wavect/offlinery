@@ -50,6 +50,19 @@ const AddPhotos = ({
                             return;
                         },
                     ), // do not filter for undefined values, as we need to retain indices
+                    updateUserDTO: {
+                        indexImagesToDelete: (
+                            ["0", "1", "2", "3", "4", "5"] as ImageIdx[]
+                        )
+                            .map((idx) => {
+                                const img = state.imageURIs[idx];
+                                if (img === null) {
+                                    return Number(idx);
+                                }
+                                return undefined;
+                            })
+                            .filter((idx) => idx !== undefined),
+                    },
                 });
                 route.params.overrideOnBtnPress();
             } catch (err) {

@@ -59,4 +59,6 @@ export class UpdateUserDTO {
 
     @ApiProperty({ enum: ELanguage, required: false })
     preferredLanguage?: ELanguage;
+    @ApiProperty({ type: "array", items: { type: "number" }, required: false })
+    indexImagesToDelete: number[];
 }
