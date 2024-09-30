@@ -40,29 +40,31 @@ const AddPhotos = ({
             try {
                 await API.user.userControllerUpdateUser({
                     userId: state.id!,
-                    images: (["0", "1", "2", "3", "4", "5"] as ImageIdx[]).map(
-                        (idx) => {
-                            const img = state.imageURIs[idx];
-                            if (isImagePicker(img)) {
-                                return img;
-                            }
-                            // otherwise do not upload (only blobs)
-                            return;
-                        },
-                    ), // do not filter for undefined values, as we need to retain indices
-                    updateUserDTO: {
-                        indexImagesToDelete: (
-                            ["0", "1", "2", "3", "4", "5"] as ImageIdx[]
-                        )
-                            .map((idx) => {
+                    ...(() => {
+                        const images: (
+                            | ImagePicker.ImagePickerAsset
+                            | undefined
+                        )[] = [];
+                        const indexImagesToDelete: number[] = [];
+
+                        (["0", "1", "2", "3", "4", "5"] as ImageIdx[]).forEach(
+                            (idx) => {
                                 const img = state.imageURIs[idx];
-                                if (img === null) {
-                                    return Number(idx);
+                                if (isImagePicker(img)) {
+                                    images[Number(idx)] = img;
+                                } else if (img === null) {
+                                    indexImagesToDelete.push(Number(idx));
+                                } else {
+                                    images[Number(idx)] = undefined;
                                 }
-                                return undefined;
-                            })
-                            .filter((idx) => idx !== undefined),
-                    },
+                            },
+                        );
+
+                        return {
+                            images,
+                            updateUserDTO: { indexImagesToDelete },
+                        };
+                    })(),
                 });
                 route.params.overrideOnBtnPress();
             } catch (err) {
