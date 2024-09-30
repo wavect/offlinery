@@ -33,7 +33,7 @@ describe("NotificationService", () => {
                 ),
             });
 
-            // user lookup by email looks
+            // user lookup by email works
             const userLookup = await userRepository.findBy({
                 email: user.email,
             });
