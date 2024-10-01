@@ -24,7 +24,7 @@ export class Message implements IEntityToDTOInterface<MessagePublicDTO> {
     @Column({ type: "timestamptz" })
     sentAt: Date;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, { onDelete: "CASCADE" })
     sender: User;
 
     @ManyToOne(() => Encounter, (encounter) => encounter.messages)

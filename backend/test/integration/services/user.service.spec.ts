@@ -65,7 +65,7 @@ describe("UserService", () => {
         });
 
         it("should delete a freshly added user by the delete token that sended messages, had encounters", async () => {
-            const deleteToken = "DELETE_TOKEN";
+            const deleteToken = "DELETE_TOKEN-FOO";
             const user = await createRandomAppUser(userRepository, {
                 email: "email1@email.com",
                 approachFromTime: new Date(),
@@ -111,9 +111,9 @@ describe("UserService", () => {
         });
 
         it("should delete a freshly added user by the delete token that sended messages", async () => {
-            const deleteToken = "DELETE_TOKEN";
+            const deleteToken = "DELETE_TOKEN-BAR";
             const user = await createRandomAppUser(userRepository, {
-                email: "email1@email.com",
+                email: "email2@email.com",
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
                 genderDesire: EGender.MAN,
@@ -124,7 +124,7 @@ describe("UserService", () => {
             });
 
             const encounterUser = await createRandomAppUser(userRepository, {
-                email: "encounter@email.com",
+                email: "encounter-foo@email.com",
             });
 
             // user lookup by email works
