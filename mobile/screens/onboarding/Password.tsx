@@ -1,6 +1,7 @@
 import { MainStackParamList } from "@/MainStack.navigator";
 import { UpdateUserPasswordDTO } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import { ONewPasswordGroup } from "@/components/ONewPasswordGroup/ONewPasswordGroup";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
@@ -140,43 +141,13 @@ const Password = ({
                     topLabel={i18n.t(TR.currentPassword)}
                 />
             )}
-
-            <OTextInput
-                testID={TestData.settings.changePassword.newPw}
-                value={state.clearPassword}
-                onChangeText={setValidatePassword}
-                maxLength={100}
-                autoCapitalize="none"
-                autoComplete="new-password"
-                inputMode="text"
-                autoCorrect={false}
-                keyboardType="default"
-                placeholder={i18n.t(TR.enterPassword)}
-                containerStyle={styles.inputField}
-                isBottomLabelError={!!passwordError}
-                isSensitiveInformation={true}
-                bottomLabel={passwordError}
-                topLabel={i18n.t(
-                    isChangePassword ? TR.newPassword : TR.strongPassword,
-                )}
-            />
-
-            <OTextInput
-                testID={TestData.settings.changePassword.newPwRpt}
-                value={passwordConfirmation}
-                onChangeText={setValidatePasswordConfirmation}
-                maxLength={100}
-                autoCapitalize="none"
-                autoComplete="new-password"
-                inputMode="text"
-                autoCorrect={false}
-                keyboardType="default"
-                placeholder={i18n.t(TR.repeatPassword)}
-                topLabel={i18n.t(TR.repeatPassword)}
-                isBottomLabelError={!!passwordErrorConfirmation}
-                isSensitiveInformation={true}
-                bottomLabel={passwordErrorConfirmation}
-                containerStyle={styles.inputField}
+            <ONewPasswordGroup
+                isChangePassword={isChangePassword}
+                onPasswordChange={(
+                    passwordError,
+                    passwordErrorConfirmation,
+                    passwordConfirmation,
+                ) => setPasswordConfirmation(passwordConfirmation)}
             />
         </OPageContainer>
     );
