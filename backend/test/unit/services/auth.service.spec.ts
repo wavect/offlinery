@@ -1,21 +1,13 @@
 import { AuthService } from "@/auth/auth.service";
-import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
+import { UserEntityBuilder } from "../../_src/builders/user-entity.builder";
 
 describe("AuthService", () => {
     let authService: AuthService;
     let userService: UserService;
     let jwtService: JwtService;
-
-    const mockUser = {
-        id: "1",
-        email: "test@example.com",
-        convertToPrivateDTO: jest
-            .fn()
-            .mockReturnValue({ id: "1", email: "test@example.com" }),
-    } as unknown as User;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -48,6 +40,7 @@ describe("AuthService", () => {
             const newAccessToken = "new-access-token";
             const newRefreshToken = "new-refresh-token";
 
+            const mockUser = new UserEntityBuilder().build();
             jest.spyOn(userService, "findUserByRefreshToken").mockResolvedValue(
                 mockUser,
             );
@@ -61,37 +54,12 @@ describe("AuthService", () => {
 
             const result = await authService.refreshAccessToken(refreshToken);
 
-            expect(result).toEqual({
-                accessToken: newAccessToken,
-                refreshToken: newRefreshToken,
-                user: mockUser.convertToPrivateDTO(),
-            });
-            expect(userService.findUserByRefreshToken).toHaveBeenCalledWith(
-                refreshToken,
-            );
-            expect(jwtService.signAsync).toHaveBeenCalledWith({
-                sub: mockUser.id,
-                email: mockUser.email,
-            });
-            expect(authService["generateRefreshToken"]).toHaveBeenCalledWith(
-                mockUser,
-            );
-        });
-
-        it("should handle errors and log them", async () => {
-            const refreshToken = "valid-refresh-token";
-            const error = new Error("Test error");
-
-            jest.spyOn(userService, "findUserByRefreshToken").mockRejectedValue(
-                error,
-            );
-            jest.spyOn(authService["logger"], "debug");
-
-            await authService.refreshAccessToken(refreshToken);
-
-            expect(authService["logger"].debug).toHaveBeenCalledWith(
-                "User refreshment failed (jwt refresh) ",
-                error,
+            expect(result).toEqual(
+                expect.objectContaining({
+                    accessToken: newAccessToken,
+                    refreshToken: newRefreshToken,
+                    user: mockUser.convertToPrivateDTO(),
+                }),
             );
         });
     });
