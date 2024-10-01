@@ -4,7 +4,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { ONewPasswordGroup } from "@/components/ONewPasswordGroup/ONewPasswordGroup";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
-import { EACTION_USER, useUserContext } from "@/context/UserContext";
+import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
@@ -22,14 +22,11 @@ const Password = ({
     MainStackParamList,
     typeof ROUTES.Onboarding.Password
 >) => {
-    const { state, dispatch } = useUserContext();
+    const { state } = useUserContext();
     const [isLoading, setLoading] = useState(false);
     const [oldClearPassword, setOldClearPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
     const [oldPasswordError, setOldPasswordError] = useState("");
-    const [passwordError, setPasswordError] = useState("");
-    const [passwordErrorConfirmation, setPasswordErrorConfirmation] =
-        useState("");
 
     const doPasswordsMatch = (pwd: string) => {
         return state.clearPassword === pwd;
@@ -42,34 +39,10 @@ const Password = ({
         setOldClearPassword(pwd);
     };
 
-    const setValidatePassword = (pwd: string) => {
-        dispatch({
-            type: EACTION_USER.UPDATE_MULTIPLE,
-            payload: { clearPassword: pwd },
-        });
-
-        if (isValidPassword(pwd)) {
-            setPasswordError("");
-        } else if (doPasswordsMatch(passwordConfirmation)) {
-            setPasswordErrorConfirmation("");
-        } else {
-            setPasswordError(i18n.t(TR.pwdErrSecurityGuideline));
-        }
-    };
-    const setValidatePasswordConfirmation = (pwd: string) => {
-        setPasswordConfirmation(pwd);
-
-        if (doPasswordsMatch(pwd)) {
-            setPasswordErrorConfirmation("");
-        } else {
-            setPasswordErrorConfirmation(i18n.t(TR.pwdErrNotMatching));
-        }
-    };
     const isChangePassword = !!route?.params?.isChangePassword;
 
     const resetErrors = () => {
         setPasswordConfirmation("");
-        setPasswordError("");
         setOldPasswordError("");
     };
 
@@ -156,6 +129,7 @@ const Password = ({
 const styles = StyleSheet.create({
     inputField: {
         marginBottom: 24,
+        width: "100%",
     },
     input: {
         borderWidth: 1,
