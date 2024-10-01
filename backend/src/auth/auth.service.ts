@@ -115,9 +115,7 @@ export class AuthService {
                 await this.usersService.findUserByRefreshToken(refreshToken);
             this.logger.debug("Refreshing user jwt token", !!user);
             if (!user) {
-                this.logger.debug(
-                    `Invalid Refresh Token sent for user: ${user.id}`,
-                );
+                this.logger.debug(`Cannot refresh token. User not found.`);
                 throw new UnauthorizedException("Invalid refresh token");
             }
             const payload = { sub: user.id, email: user.email };
