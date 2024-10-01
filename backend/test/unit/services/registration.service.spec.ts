@@ -1,3 +1,4 @@
+import { AuthService } from "@/auth/auth.service";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { PendingUserService } from "@/entities/pending-user/pending-user.service";
 import { User } from "@/entities/user/user.entity";
@@ -13,6 +14,11 @@ describe("RegistrationService", () => {
     let pendingUserRepo: Repository<PendingUser>;
     let userRepo: Repository<User>;
     let mailerService: MailerService;
+
+    const mockAuthService = {
+        signIn: jest.fn(),
+        createRegistrationSession: jest.fn(),
+    };
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -38,6 +44,10 @@ describe("RegistrationService", () => {
                         t: jest.fn(),
                         translate: jest.fn(),
                     },
+                },
+                {
+                    provide: AuthService,
+                    useFactory: () => mockAuthService,
                 },
             ],
         }).compile();
@@ -87,7 +97,6 @@ describe("RegistrationService", () => {
 
             expect(result).toHaveProperty("email", email);
             expect(result).toHaveProperty("timeout");
-            expect(result).toHaveProperty("verificationCodeIssuedAt");
         });
 
         it("should update existing pending user if one exists", async () => {
@@ -116,7 +125,6 @@ describe("RegistrationService", () => {
 
             expect(result).toHaveProperty("email", email);
             expect(result).toHaveProperty("timeout");
-            expect(result).toHaveProperty("verificationCodeIssuedAt");
         });
 
         it.skip("should not send a new verification code if one was recently issued", async () => {

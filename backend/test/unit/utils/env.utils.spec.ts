@@ -31,6 +31,7 @@ describe("Environment Validation", () => {
             EMAIL_USERNAME: "user@example.com",
             EMAIL_PASSWORD: "emailpassword",
             BE_PORT: "3000",
+            JWT_SECRET_REGISTRATION: "12345",
         };
 
         const { validateEnv } = require("../../../src/utils/env.utils");
@@ -69,6 +70,7 @@ describe("Environment Validation", () => {
             EMAIL_USERNAME: "user@example.com",
             EMAIL_PASSWORD: "emailpassword",
             BE_PORT: "3000",
+            JWT_SECRET_REGISTRATION: "12345",
         };
 
         const { validateEnv } = require("../../../src/utils/env.utils");
@@ -90,6 +92,7 @@ describe("Environment Validation", () => {
             EMAIL_USERNAME: "user@example.com",
             EMAIL_PASSWORD: "emailpassword",
             BE_PORT: "3000",
+            JWT_SECRET_REGISTRATION: "12345",
         };
 
         const { TYPED_ENV } = require("../../../src/utils/env.utils");
@@ -104,6 +107,7 @@ describe("Environment Validation", () => {
             EMAIL_USERNAME: "user@example.com",
             EMAIL_PASSWORD: "emailpassword",
             BE_PORT: 3000,
+            JWT_SECRET_REGISTRATION: "12345",
         });
     });
 });

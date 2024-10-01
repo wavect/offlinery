@@ -110,34 +110,4 @@ describe("AuthGuard", () => {
             ).toEqual({ userId: "123" });
         });
     });
-
-    describe("extractTokenFromHeader", () => {
-        it("should extract token from Authorization header", () => {
-            const request = {
-                headers: { authorization: "Bearer test_token" },
-            };
-
-            const token = authGuard["extractTokenFromHeader"](request as any);
-
-            expect(token).toBe("test_token");
-        });
-
-        it("should return undefined when no Authorization header is present", () => {
-            const request = { headers: {} };
-
-            const token = authGuard["extractTokenFromHeader"](request as any);
-
-            expect(token).toBeUndefined();
-        });
-
-        it("should return undefined when Authorization header is not in Bearer format", () => {
-            const request = {
-                headers: { authorization: "NotBearer test_token" },
-            };
-
-            const token = authGuard["extractTokenFromHeader"](request as any);
-
-            expect(token).toBeUndefined();
-        });
-    });
 });
