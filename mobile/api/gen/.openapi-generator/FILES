@@ -40,6 +40,7 @@ src/models/UpdateUserPasswordDTO.ts
 src/models/UpdateUserVerificationstatusDTO.ts
 src/models/UserPrivateDTO.ts
 src/models/UserPublicDTO.ts
+src/models/UserResetPwdSuccessDTO.ts
 src/models/VerifyEmailDTO.ts
 src/models/VerifyResetPasswordDTO.ts
 src/models/WeightedLatLngDTO.ts

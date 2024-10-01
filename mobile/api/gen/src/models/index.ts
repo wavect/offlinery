@@ -28,6 +28,7 @@ export * from "./UpdateUserPasswordDTO";
 export * from "./UpdateUserVerificationstatusDTO";
 export * from "./UserPrivateDTO";
 export * from "./UserPublicDTO";
+export * from "./UserResetPwdSuccessDTO";
 export * from "./VerifyEmailDTO";
 export * from "./VerifyResetPasswordDTO";
 export * from "./WeightedLatLngDTO";

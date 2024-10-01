@@ -49,11 +49,11 @@ export type I18nTranslations = {
             "request-password-reset": {
                 "subject": string;
                 "title": string;
-                "hello": string;
+                "greeting": string;
                 "receivedRequest": string;
                 "instructions": string;
                 "expirationNote": string;
-                "warningMessage": string;
+                "ignoreMessage": string;
                 "securityNote": string;
                 "contactSupport": string;
                 "footer": string;

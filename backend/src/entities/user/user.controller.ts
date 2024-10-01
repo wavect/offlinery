@@ -15,6 +15,7 @@ import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
 import { UserPrivateDTO } from "@/DTOs/user-private.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
+import { UserResetPwdSuccessDTO } from "@/DTOs/user-reset-pwd-success.dto";
 import { VerifyResetPasswordDTO } from "@/DTOs/verify-password-reset.dto";
 import { CustomParseFilePipe } from "@/pipes/custom-parse-file.pipe";
 import { ParseValidateJsonPipe } from "@/pipes/parse-validate-json.pipe";
@@ -86,7 +87,7 @@ export class UserController {
         return await this.userService.createUser(createUserDTO, images);
     }
 
-    @Put(`:${USER_ID_PARAM}`)
+    @Put(`data/:${USER_ID_PARAM}`)
     @OnlyOwnUserData()
     @UseInterceptors(FilesInterceptor("images", 6))
     @ApiConsumes("multipart/form-data")
@@ -141,7 +142,7 @@ export class UserController {
         ).convertToPublicDTO();
     }
 
-    @Get(`:${USER_ID_PARAM}`)
+    @Get(`data/:${USER_ID_PARAM}`)
     @OnlyOwnUserData()
     @ApiOperation({ summary: "Get private user data by ID" })
     @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })
@@ -216,6 +217,7 @@ export class UserController {
     @ApiResponse({
         status: 200,
         description: "Account password has been reset successfully.",
+        type: UserResetPwdSuccessDTO,
     })
     @ApiResponse({
         status: 404,
@@ -225,7 +227,7 @@ export class UserController {
     @UsePipes(new ValidationPipe({ transform: true }))
     async resetPassword(
         @Body() verifyResetPasswordDTO: VerifyResetPasswordDTO,
-    ): Promise<void> {
+    ): Promise<UserResetPwdSuccessDTO> {
         const { email, verificationCode, newClearPassword } =
             verifyResetPasswordDTO;
         return await this.userService.changeUserPasswordByResetPwdLink(

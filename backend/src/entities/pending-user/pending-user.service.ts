@@ -215,7 +215,7 @@ export class PendingUserService {
             ),
             template: "../../mail/templates/verification-successful",
             context: {
-                name: user.email,
+                name: user.firstName,
                 t: (key: string, args?: any) =>
                     this.i18n.translate(
                         `main.email.verification-successful.${key}`,
@@ -241,7 +241,6 @@ export class PendingUserService {
             ),
             template: "../../mail/templates/email-verification",
             context: {
-                name: to,
                 verificationCode,
                 t: (key: string, args?: any) =>
                     this.i18n.translate(

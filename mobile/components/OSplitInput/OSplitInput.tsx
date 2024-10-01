@@ -10,10 +10,19 @@ interface OSplitInputProps {
     sendCode: () => Promise<EmailCodeResponseADTO>;
     onError?: () => Promise<void>;
     onCodeValidChange: (isValid: boolean, code: string) => void;
+    sendCodeAutomatically: boolean;
+    /** @dev Overrides internal logic */
+    disableRequestCode?: boolean;
 }
 
 export const OSplitInput = (props: OSplitInputProps) => {
-    const { onError, onCodeValidChange, sendCode } = props;
+    const {
+        onError,
+        onCodeValidChange,
+        sendCode,
+        sendCodeAutomatically,
+        disableRequestCode,
+    } = props;
     const [code, setCode] = useState<string[]>(new Array(6).fill(""));
     const [timer, setTimer] = useState(0);
     const [isResendDisabled, setIsResendDisabled] = useState(true);
@@ -46,8 +55,10 @@ export const OSplitInput = (props: OSplitInputProps) => {
     };
 
     useEffect(() => {
-        sendEmailCode();
-    }, []);
+        if (sendCodeAutomatically) {
+            sendEmailCode();
+        }
+    }, [sendCodeAutomatically]);
 
     useEffect(() => {
         if (timer > 0) {
@@ -160,7 +171,7 @@ export const OSplitInput = (props: OSplitInputProps) => {
                         loadingBtnText={i18n.t(
                             TR.verificationCodeLoadingBtnLbl,
                         )}
-                        disabled={isResendDisabled}
+                        disabled={disableRequestCode || isResendDisabled}
                         filled={false}
                         variant="dark"
                         onPress={sendEmailCode}

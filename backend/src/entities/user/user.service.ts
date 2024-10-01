@@ -5,6 +5,7 @@ import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserPasswordDTO } from "@/DTOs/update-user-password";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
+import { UserResetPwdSuccessDTO } from "@/DTOs/user-reset-pwd-success.dto";
 import { AuthService } from "@/auth/auth.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
@@ -294,7 +295,7 @@ export class UserService {
         email: string,
         resetPasswordCode: string,
         newClearPassword: string,
-    ): Promise<void> {
+    ): Promise<UserResetPwdSuccessDTO> {
         const userToUpdate = await this.userRepository.findOneBy({
             email,
             resetPasswordCode,
@@ -319,6 +320,10 @@ export class UserService {
         this.logger.debug(
             `User ${userToUpdate.id}'s password successfully reset!`,
         );
+        return {
+            id: userToUpdate.id,
+            passwordReset: true,
+        };
     }
 
     async requestPasswordChangeAsForgotten(
@@ -352,7 +357,7 @@ export class UserService {
 
         const lang = user.preferredLanguage || ELanguage.en;
         this.logger.debug(
-            `Sending new email to ${user.email} with changePwd code ${resetPwdCode} in ${lang}.`,
+            `Sending new email to ${user.firstName} with changePwd code ${resetPwdCode} in ${lang}.`,
         );
         await this.mailService.sendMail({
             to: user.email,
@@ -362,16 +367,22 @@ export class UserService {
             ),
             template: "../../mail/templates/request-password-reset",
             context: {
-                name: user.email,
+                name: user.firstName,
                 resetPwdCode,
-                t: (key: string) =>
-                    this.i18n.translate(
+                t: (key: string, params?: Record<string, any>) => {
+                    return this.i18n.translate(
                         `main.email.request-password-reset.${key}`,
-                        { lang },
-                    ),
+                        { lang, ...params },
+                    );
+                },
             },
         });
         await this.userRepository.save(user);
+        return {
+            email: user.email,
+            timeout: RESEND_EMAIL_CODE_TIMEOUT_IN_MS,
+            codeIssuedAt: user.resetPasswordCodeIssuedAt,
+        };
     }
 
     async requestAccountDeletion(id: string) {
@@ -408,12 +419,12 @@ export class UserService {
             ),
             template: "../../mail/templates/request-account-deletion",
             context: {
-                name: user.email,
+                name: user.firstName,
                 deletionLink,
-                t: (key: string) =>
+                t: (key: string, params?: Record<string, any>) =>
                     this.i18n.translate(
                         `main.email.request-account-deletion.${key}`,
-                        { lang },
+                        { lang, ...params },
                     ),
             },
         });

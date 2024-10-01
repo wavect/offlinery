@@ -8,7 +8,7 @@
   "email": {
     "request-account-deletion": {
       "subject": "Offlinery: Kontolöschung beantragt",
-      "hello": "Hi {{name}}",
+      "hello": "Hi",
       "warning": "Warnung: Kontolöschung",
       "receivedRequest": "Wir haben eine Anfrage erhalten, dein Konto dauerhaft zu löschen. Diese Aktion ist unwiderruflich und löscht alle deine Daten aus unseren Systemen.",
       "proceedInstructions": "Wenn du fortfahren möchtest, klicke auf den untenstehenden Link:",
@@ -23,7 +23,7 @@
       "subject": "Offlinery: Dein Konto wurde verifiziert",
       "title": "Offlinery: Konto verifiziert",
       "header": "Alles ist bereit!",
-      "greeting": "Hi {{name}}",
+      "greeting": "Hi",
       "verificationSuccess": "Großartige Neuigkeiten! Dein Offlinery-Konto ist jetzt verifiziert und einsatzbereit.",
       "nextSteps": "Was kommt als Nächstes? Ab jetzt kannst du andere User in der echten Welt ansprechen beziehungsweise wird von ihnen angesprochen.",
       "disclaimer": "Wenn Sie sich nicht bei Offlinery angemeldet haben, keine Sorge. Sie können diese E-Mail einfach ignorieren.",
@@ -33,7 +33,7 @@
       "subject": "Willkommen bei Offlinery! Bestätige deine E-Mail",
       "title": "E-Mail-Verifizierung",
       "header": "E-Mail-Verifizierung",
-      "greeting": "Hallo {{name}}",
+      "greeting": "Hey",
       "thankYou": "Vielen Dank für deine Anmeldung! Bitte verwende den unten stehenden Verifizierungscode, um deine E-Mail-Adresse zu bestätigen:",
       "instructions": "Gib diesen Code in der Offlinery-App ein, um deine E-Mail-Verifizierung abzuschließen.",
       "disclaimer": "Wenn du diese E-Mail nicht angefordert hast, dann kannst du sie einfach ignorieren.",
@@ -42,11 +42,11 @@
     "request-password-reset": {
       "subject": "Offlinery: Code zum Zurücksetzen des Passworts",
       "title": "Code zum Zurücksetzen des Passworts",
-      "hello": "Hi {{name}}",
+      "greeting": "Hi",
       "receivedRequest": "Wir haben eine Anfrage zum Zurücksetzen des Passworts für dein Offlinery-Konto erhalten.",
       "instructions": "Um Ihr Passwort zurückzusetzen, verwende bitte den folgenden 6-stelligen Code:",
       "expirationNote": "Hinweis: Dieser Code läuft aus Sicherheitsgründen in 15 Minuten ab.",
-      "warningMessage": "⚠️ Wenn du das Zurücksetzen des Passworts nicht angefordert hast, ignoriere bitte diese E-Mail. ⚠️",
+      "ignoreMessage": "⚠️ Wenn du das Zurücksetzen des Passworts nicht angefordert hast, ignoriere bitte diese E-Mail. ⚠️",
       "securityNote": "Aus Sicherheitsgründen teile diesen Code niemals mit anderen.",
       "contactSupport": "Bei Fragen oder Bedenken wende dich bitte an unser Support-Team unter office@offlinery.io.",
       "footer": "Dies ist eine automatisch generierte Nachricht. Bitte antworte nicht auf diese E-Mail."

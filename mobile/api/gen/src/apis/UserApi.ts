@@ -22,6 +22,7 @@ import type {
     UpdateUserPasswordDTO,
     UserPrivateDTO,
     UserPublicDTO,
+    UserResetPwdSuccessDTO,
     VerifyResetPasswordDTO,
 } from "../models/index";
 import {
@@ -34,6 +35,7 @@ import {
     UpdateUserPasswordDTOToJSON,
     UserPrivateDTOFromJSON,
     UserPublicDTOFromJSON,
+    UserResetPwdSuccessDTOFromJSON,
     VerifyResetPasswordDTOToJSON,
 } from "../models/index";
 import * as runtime from "../runtime";
@@ -207,7 +209,7 @@ export interface UserApiInterface {
     userControllerResetPasswordRaw(
         requestParameters: UserControllerResetPasswordRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<void>>;
+    ): Promise<runtime.ApiResponse<UserResetPwdSuccessDTO>>;
 
     /**
      * Reset password of user account
@@ -215,7 +217,7 @@ export interface UserApiInterface {
     userControllerResetPassword(
         requestParameters: UserControllerResetPasswordRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<void>;
+    ): Promise<UserResetPwdSuccessDTO>;
 
     /**
      *
@@ -451,7 +453,7 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
 
         const response = await this.request(
             {
-                path: `/user/{userId}`.replace(
+                path: `/user/data/{userId}`.replace(
                     `{${"userId"}}`,
                     encodeURIComponent(String(requestParameters["userId"])),
                 ),
@@ -587,7 +589,7 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
     async userControllerResetPasswordRaw(
         requestParameters: UserControllerResetPasswordRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<void>> {
+    ): Promise<runtime.ApiResponse<UserResetPwdSuccessDTO>> {
         if (requestParameters["verifyResetPasswordDTO"] == null) {
             throw new runtime.RequiredError(
                 "verifyResetPasswordDTO",
@@ -614,7 +616,9 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
             initOverrides,
         );
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            UserResetPwdSuccessDTOFromJSON(jsonValue),
+        );
     }
 
     /**
@@ -623,11 +627,12 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
     async userControllerResetPassword(
         requestParameters: UserControllerResetPasswordRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<void> {
-        await this.userControllerResetPasswordRaw(
+    ): Promise<UserResetPwdSuccessDTO> {
+        const response = await this.userControllerResetPasswordRaw(
             requestParameters,
             initOverrides,
         );
+        return await response.value();
     }
 
     /**
@@ -750,7 +755,7 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         }
         const response = await this.request(
             {
-                path: `/user/{userId}`.replace(
+                path: `/user/data/{userId}`.replace(
                     `{${"userId"}}`,
                     encodeURIComponent(String(requestParameters["userId"])),
                 ),

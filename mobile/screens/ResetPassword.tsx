@@ -1,23 +1,32 @@
+import { Color, FontFamily } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { ONewPasswordGroup } from "@/components/ONewPasswordGroup/ONewPasswordGroup";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OSplitInput } from "@/components/OSplitInput/OSplitInput";
-import { useUserContext } from "@/context/UserContext";
+import { OTextInput } from "@/components/OTextInput/OTextInput";
+import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { API } from "@/utils/api-config";
+import { isValidEmail } from "@/utils/validation-rules.utils";
 import React, { useRef, useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 const ResetPassword = ({
     navigation,
 }: NativeStackScreenProps<MainStackParamList, typeof ROUTES.ResetPassword>) => {
-    const { state } = useUserContext();
+    const { state, dispatch } = useUserContext();
+    const [errorMessage, setErrorMessage] = React.useState("");
     const [isCodeValid, setIsCodeValid] = useState(false);
     const [isPwdValid, setIsPwdValid] = useState(false);
     const codeRef = useRef<string>("");
+
+    const setEmail = (email: string) => {
+        setErrorMessage(isValidEmail(email) ? "" : i18n.t(TR.invalidEmail));
+        dispatch({ type: EACTION_USER.UPDATE_MULTIPLE, payload: { email } });
+    };
 
     const verifyCode = async (verificationCode: string) => {
         try {
@@ -53,6 +62,10 @@ const ResetPassword = ({
         if (isCodeValid) {
             const success = await verifyCode(codeRef.current);
             if (success) {
+                dispatch({
+                    type: EACTION_USER.UPDATE_MULTIPLE,
+                    payload: { clearPassword: "" },
+                });
                 navigation.replace(ROUTES.Login);
             } else {
                 // Handle verification failure
@@ -89,7 +102,28 @@ const ResetPassword = ({
             }
             subtitle={i18n.t(TR.verificationCodeSent)}
         >
+            <OTextInput
+                value={state.email}
+                onChangeText={(email: string) => setEmail(email.trim())}
+                maxLength={125}
+                autoCapitalize="none"
+                autoComplete="email"
+                keyboardType="email-address"
+                autoCorrect={false}
+                inputMode="email"
+                placeholder={i18n.t(TR.yourEmail)}
+                containerStyle={[
+                    styles.inputField,
+                    errorMessage ? { marginBottom: 6 } : undefined,
+                ]}
+            />
+            {errorMessage && (
+                <Text style={styles.errorMessage}>{errorMessage}</Text>
+            )}
+
             <OSplitInput
+                disableRequestCode={!!errorMessage}
+                sendCodeAutomatically={false}
                 sendCode={sendVerificationCode}
                 onCodeValidChange={(isValid, code) => {
                     setIsCodeValid(isValid);
@@ -113,5 +147,16 @@ export default ResetPassword;
 const styles = StyleSheet.create({
     passwordGroup: {
         marginTop: 20,
+    },
+    inputField: {
+        marginBottom: 24,
+        width: "100%",
+    },
+    errorMessage: {
+        color: Color.redLight,
+        fontSize: 16,
+        fontFamily: FontFamily.montserratSemiBold,
+        textAlign: "left",
+        marginBottom: 16,
     },
 });

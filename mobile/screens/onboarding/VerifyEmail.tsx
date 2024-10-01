@@ -97,6 +97,7 @@ const VerifyEmail = ({
             subtitle={i18n.t(TR.verificationCodeSent)}
         >
             <OSplitInput
+                sendCodeAutomatically={true}
                 sendCode={sendVerificationCode}
                 onError={onError}
                 onCodeValidChange={(isValid, code) => {
