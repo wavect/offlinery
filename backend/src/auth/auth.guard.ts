@@ -86,7 +86,7 @@ export class AuthGuard implements CanActivate {
             return true;
         }
 
-        const request = context.switchToHttp().getRequest();
+        const request = context.switchToHttp().getRequest<Request>();
         if (this.isAdminRoute(context)) {
             return await this.isAdminApiUser(request);
         }
@@ -94,7 +94,7 @@ export class AuthGuard implements CanActivate {
         const token = extractTokenFromHeader(request);
         if (!token) {
             this.logger.debug(
-                `Unauthorized call attempt to protected route with no jwt and no valid api key`,
+                `Unauthorized call attempt to protected route ${request.route?.path} with no jwt and no valid api key`,
             );
             throw new UnauthorizedException();
         }

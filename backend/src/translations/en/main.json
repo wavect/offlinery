@@ -8,12 +8,12 @@
   "email": {
     "request-account-deletion": {
       "subject": "Offlinery: Account Deletion Requested",
-      "hello": "Hi {{name}}",
+      "hello": "Hi",
       "warning": "Account Deletion Warning",
       "receivedRequest": "We've received a request to permanently delete your account. This action is irreversible and will erase all your data from our systems.",
       "proceedInstructions": "If you wish to proceed, click the link below:",
       "deleteButton": "DELETE MY ACCOUNT",
-      "expirationNote": "Note: This link will expire in 7 days for security reasons.",
+      "expirationNote": "Note: This link will expire in 24 hours for security reasons.",
       "warningMessage": "⚠️ WARNING: This action cannot be undone! ⚠️",
       "feedbackRequest": "Before you go, we'd appreciate knowing why you're leaving. Please share your thoughts by emailing office@offlinery.io.",
       "securityWarning": "If you didn't request this deletion, please contact our support team immediately to secure your account.",
@@ -23,7 +23,7 @@
       "subject": "Offlinery: Your account has been verified",
       "title": "Offlinery: Account verified",
       "header": "You're all set!",
-      "greeting": "Hey {{name}}",
+      "greeting": "Hey",
       "verificationSuccess": "Awesome news! Your Offlinery account is now verified and ready to go.",
       "nextSteps": "What's next? Start connecting with people around you or wait for someone to approach you. The offline world is now at your fingertips!",
       "disclaimer": "If you didn't sign up for Offlinery, no worries. You can safely ignore this email.",
@@ -33,11 +33,23 @@
       "subject": "Welcome to Offlinery! Confirm your Email",
       "title": "Email Verification",
       "header": "Email Verification",
-      "greeting": "Hey {{name}}",
+      "greeting": "Hey",
       "thankYou": "Thank you for signing up! Please use the verification code below to confirm your email address:",
       "instructions": "Enter this code in the Offlinery app to complete your email verification.",
       "disclaimer": "If you didn't request this email, you can safely ignore it.",
       "footer": "This is an automated message, please do not reply to this email."
+    },
+    "request-password-reset": {
+      "subject": "Offlinery: Password Reset Code",
+      "title": "Password Reset Code",
+      "greeting": "Hi",
+      "receivedRequest": "We've received a request to reset your password for your Offlinery account.",
+      "instructions": "To reset your password, please use the following 6-digit code:",
+      "expirationNote": "Note: This code will expire in 15 minutes for security reasons.",
+      "ignoreMessage": "⚠️ If you didn't request this password reset, please ignore this email. ⚠️",
+      "securityNote": "For the security of your account, never share this code with anyone.",
+      "contactSupport": "If you have any questions or concerns, please contact our support team at support@offlinery.io.",
+      "footer": "This is an automated message. Please do not reply to this email."
     }
   }
 }

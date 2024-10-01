@@ -5,7 +5,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
 import { OTextInputWide } from "@/components/OTextInputWide/OTextInputWide";
-import { OTroubleSignIn } from "@/components/OTroubleSignIn/OTroubleSignIn";
+import { OTroubleMessage } from "@/components/OTroubleSignIn/OTroubleMessage";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
@@ -71,6 +71,10 @@ const Login = ({
         });
     };
 
+    const startResetPassword = () => {
+        navigation.navigate(ROUTES.ResetPassword);
+    };
+
     const showInvalidEmailError = state.email && !isValidEmail(state.email);
     return (
         <OPageColorContainer>
@@ -125,7 +129,11 @@ const Login = ({
 
             <OTermsDisclaimer style={styles.termsDisclaimer} />
 
-            <OTroubleSignIn style={styles.troubleSignIn} />
+            <OTroubleMessage
+                style={styles.troubleSignIn}
+                action={startResetPassword}
+                label={i18n.t(TR.passwordForgotten)}
+            />
         </OPageColorContainer>
     );
 };

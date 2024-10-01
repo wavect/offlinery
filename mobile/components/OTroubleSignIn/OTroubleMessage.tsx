@@ -1,34 +1,31 @@
 import { Color, FontFamily } from "@/GlobalStyles";
-import { TR, i18n } from "@/localization/translate.service";
-import { SUPPORT_MAIL } from "@/utils/general.constants";
 import * as React from "react";
-import { Linking, StyleSheet, Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { StyleProp } from "react-native/Libraries/StyleSheet/StyleSheet";
 import { TextStyle } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 
-interface IOTroubleSignIn {
+interface IOTroubleMessage {
     style?: StyleProp<TextStyle>;
+    action: () => void;
+    label: string;
 }
 
-export const OTroubleSignIn = (props: IOTroubleSignIn) => {
-    const writeSupportEmail = async () => {
-        await Linking.openURL(`mailto:${SUPPORT_MAIL}`);
-    };
-
+export const OTroubleMessage = (props: IOTroubleMessage) => {
+    const { action, label } = props;
     return (
         <Text
-            style={[styles.troubleSigningIn, props.style]}
-            onPress={writeSupportEmail}
+            style={[styles.contactSupport, props.style]}
+            onPress={action}
             numberOfLines={1}
             adjustsFontSizeToFit={true}
         >
-            {i18n.t(TR.troubleSignIn)}
+            {label}
         </Text>
     );
 };
 
 const styles = StyleSheet.create({
-    troubleSigningIn: {
+    contactSupport: {
         fontSize: 16,
         lineHeight: 24,
         marginTop: 10,

@@ -4,5 +4,8 @@ export const extractTokenFromHeader = (
     request: Request,
 ): string | undefined => {
     const [type, token] = request.headers.authorization?.split(" ") ?? [];
-    return type === "Bearer" ? token : undefined;
+    // @dev Token if null client side might be stringified "null"
+    return type === "Bearer" && token?.toLowerCase() !== "null"
+        ? token
+        : undefined;
 };

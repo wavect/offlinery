@@ -10,10 +10,16 @@ import {
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
+import {
+    EMAIL_CODE_EXPIRATION_IN_MS,
+    generate6DigitEmailCode,
+    RESEND_EMAIL_CODE_TIMEOUT_IN_MS,
+} from "@/utils/security.utils";
 import { MailerService } from "@nestjs-modules/mailer";
 import {
     BadRequestException,
     ConflictException,
+    ForbiddenException,
     Injectable,
     Logger,
     NotFoundException,
@@ -25,8 +31,6 @@ import { Repository } from "typeorm";
 @Injectable()
 export class PendingUserService {
     private readonly logger = new Logger(PendingUserService.name);
-    readonly VERIFICATION_CODE_EXPIRATION_IN_MIN = 15;
-    readonly RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS = 120 * 1000;
 
     constructor(
         @InjectRepository(PendingUser)
@@ -68,9 +72,8 @@ export class PendingUserService {
                     );
                     return {
                         email: pendingUser.email,
-                        timeout: this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
-                        verificationCodeIssuedAt:
-                            pendingUser.verificationCodeIssuedAt,
+                        timeout: RESEND_EMAIL_CODE_TIMEOUT_IN_MS,
+                        codeIssuedAt: pendingUser.verificationCodeIssuedAt,
                         alreadyVerifiedButNotRegistered: true,
                         registrationJWToken,
                     };
@@ -84,17 +87,15 @@ export class PendingUserService {
                         new Date(
                             pendingUser.verificationCodeIssuedAt,
                         ).getTime() +
-                            this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS
+                            RESEND_EMAIL_CODE_TIMEOUT_IN_MS
                     ) {
                         this.logger.debug(
                             `Already issued verification that has not yet expired, returning old data.`,
                         );
                         return {
                             email: pendingUser.email,
-                            timeout:
-                                this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
-                            verificationCodeIssuedAt:
-                                pendingUser.verificationCodeIssuedAt,
+                            timeout: RESEND_EMAIL_CODE_TIMEOUT_IN_MS,
+                            codeIssuedAt: pendingUser.verificationCodeIssuedAt,
                             alreadyVerifiedButNotRegistered: false,
                             registrationJWToken,
                         };
@@ -110,12 +111,7 @@ export class PendingUserService {
             this.logger.debug(`Issuing new verification code for user.`);
             pendingUser.verificationCodeIssuedAt = new Date();
 
-            let verificationNumber: string = "";
-            for (let index = 0; index <= 5; index++) {
-                const randomNumber = Math.floor(Math.random() * 9).toString();
-
-                verificationNumber = verificationNumber.concat(randomNumber);
-            }
+            const verificationNumber = generate6DigitEmailCode();
 
             // Send email before saving as pending user
             await this.sendVerificationCodeMail(
@@ -129,8 +125,8 @@ export class PendingUserService {
 
             return {
                 email: pendingUser.email,
-                verificationCodeIssuedAt: pendingUser.verificationCodeIssuedAt,
-                timeout: this.RESEND_VERIFICATION_CODE_TIMEOUT_IN_MS,
+                codeIssuedAt: pendingUser.verificationCodeIssuedAt,
+                timeout: RESEND_EMAIL_CODE_TIMEOUT_IN_MS,
                 alreadyVerifiedButNotRegistered: false,
                 registrationJWToken:
                     await this.authService.createRegistrationSession(
@@ -153,13 +149,9 @@ export class PendingUserService {
             const currentTime = new Date().getTime();
             const issuedTime = user.verificationCodeIssuedAt.getTime();
 
-            const expirationTimeInMs =
-                this.VERIFICATION_CODE_EXPIRATION_IN_MIN * 60 * 1000;
-
-            if (currentTime - issuedTime > expirationTimeInMs) {
-                throw new Error("Verification code has expired.");
+            if (currentTime - issuedTime > EMAIL_CODE_EXPIRATION_IN_MS) {
+                throw new ForbiddenException("Verification code has expired.");
             }
-
             user.verificationStatus = EEmailVerificationStatus.VERIFIED;
             await this.pendingUserRepo.save(user);
         } catch (error) {
@@ -223,7 +215,7 @@ export class PendingUserService {
             ),
             template: "../../mail/templates/verification-successful",
             context: {
-                name: user.email,
+                name: user.firstName,
                 t: (key: string, args?: any) =>
                     this.i18n.translate(
                         `main.email.verification-successful.${key}`,
@@ -249,7 +241,6 @@ export class PendingUserService {
             ),
             template: "../../mail/templates/email-verification",
             context: {
-                name: to,
                 verificationCode,
                 t: (key: string, args?: any) =>
                     this.i18n.translate(

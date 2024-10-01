@@ -1,3 +1,4 @@
+import { EmailCodeResponseADTO } from "@/DTOs/abstract/email-code-response.adto";
 import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
@@ -67,7 +68,7 @@ const setupSwagger = (app: INestApplication) => {
         .build();
     const document = SwaggerModule.createDocument(app, config, {
         deepScanRoutes: true,
-        extraModels: [NotificationNavigateUserDTO],
+        extraModels: [NotificationNavigateUserDTO, EmailCodeResponseADTO],
     });
 
     const outputPath = path.resolve(process.cwd(), "swagger.json");
