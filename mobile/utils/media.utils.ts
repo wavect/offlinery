@@ -9,9 +9,12 @@ export const getValidImgURI = (
 ): string => {
     // If the image is an `ImagePicker` we can directly access image on the user's device
     // otherwise we need to fetch it from the server.
-    return isImagePicker(img)
-        ? img.uri
-        : `${BASE_PATH.replace("/v1", "")}/img/${img}`;
+    if (isImagePicker(img)) {
+        return img.uri;
+    } else if (img.includes("file:")) {
+        return img; // keep local file uri
+    }
+    return `${BASE_PATH.replace("/v1", "")}/img/${img}`;
 };
 
 export const isImagePicker = (
