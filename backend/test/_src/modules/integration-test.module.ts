@@ -4,9 +4,23 @@ import { Message } from "@/entities/messages/message.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { UserReport } from "@/entities/user-report/user-report.entity";
 import { User } from "@/entities/user/user.entity";
+import { UserModule } from "@/entities/user/user.module";
 import { UserRepository } from "@/entities/user/user.repository";
+import { ELanguage } from "@/types/user.types";
+import { TYPED_ENV } from "@/utils/env.utils";
+import { MailerModule } from "@nestjs-modules/mailer";
+import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
+import { Module } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken, TypeOrmModule } from "@nestjs/typeorm";
+import {
+    AcceptLanguageResolver,
+    HeaderResolver,
+    I18nModule,
+    QueryResolver,
+} from "nestjs-i18n";
+import path from "node:path";
+import { join } from "path";
 import { DataSource } from "typeorm";
 import {
     createMainAppUser,
@@ -16,12 +30,18 @@ import {
 interface TestModuleSetup {
     module: TestingModule;
     mainUser: User;
-    userRepository: UserRepository;
     dataSource: DataSource;
 }
 
+// Create mock modules to break circular dependencies
+@Module({})
+class MockAuthModule {}
+
+@Module({})
+class MockMatchingModule {}
+
 export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
-    const module = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
         imports: [
             TypeOrmModule.forRoot({
                 type: "postgres",
@@ -36,6 +56,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
                     UserReport,
                     Encounter,
                     Message,
+                    PendingUser,
                 ],
                 synchronize: true,
                 dropSchema: true,
@@ -43,15 +64,44 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
                 migrations: [__dirname + "/migrations/**/*{.ts,.js}"],
                 migrationsRun: true,
             }),
-            TypeOrmModule.forFeature([
-                User,
-                BlacklistedRegion,
-                Encounter,
-                PendingUser,
-                Message,
-            ]),
+            UserModule,
+            MockAuthModule,
+            MockMatchingModule,
+            MailerModule.forRoot({
+                transport: {
+                    host: TYPED_ENV.EMAIL_HOST,
+                    auth: {
+                        user: TYPED_ENV.EMAIL_USERNAME,
+                        pass: TYPED_ENV.EMAIL_PASSWORD,
+                    },
+                },
+                defaults: {
+                    from: '"No Reply" <noreply@offlinery.io>',
+                },
+                template: {
+                    dir: join(__dirname, "../../mail/templates"),
+                    adapter: new HandlebarsAdapter(),
+                },
+            }),
+            I18nModule.forRoot({
+                fallbackLanguage: ELanguage.en,
+                loaderOptions: {
+                    path: path.join("src", "translations"),
+                    watch: true,
+                },
+                resolvers: [
+                    { use: QueryResolver, options: ["lang"] },
+                    new HeaderResolver(["x-custom-lang"]),
+                    AcceptLanguageResolver,
+                ],
+                typesOutputPath: path.join(
+                    "src",
+                    "translations",
+                    "i18n.generated.ts",
+                ),
+                logging: true,
+            }),
         ],
-        providers: [UserRepository],
     }).compile();
 
     const userRepository = module.get<UserRepository>(getRepositoryToken(User));
@@ -73,7 +123,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
         throw new Error("Failed to create or retrieve main testing user");
     }
 
-    return { module, mainUser, userRepository, dataSource };
+    return { module, mainUser, dataSource };
 };
 
 async function initializePostGIS(dataSource: DataSource) {

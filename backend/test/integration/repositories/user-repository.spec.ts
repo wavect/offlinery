@@ -62,6 +62,7 @@ describe("UserRepository ", () => {
                 expect.arrayContaining([userId2.id]),
             );
         });
+
         it("Should only find users that are LIVE", async () => {
             const userId = await createRandomAppUser(userRepository, {
                 dateMode: EDateMode.LIVE,
