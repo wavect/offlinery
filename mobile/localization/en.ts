@@ -1,5 +1,7 @@
 // @dev Other languages have to be typed as Language!
 export const en = {
+    bgLocationServiceTitle: "Real Life Dating ON",
+    bgLocationServiceBody: "Letting others know about you.",
     createAccount: "Create Account",
     signIn: "Sign in",
     invalidCredentials: "Email or password invalid.",

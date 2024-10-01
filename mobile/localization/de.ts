@@ -1,6 +1,8 @@
 import { Language } from "./translate.service";
 
 export const de: Language = {
+    bgLocationServiceTitle: "Real Life Dating EIN",
+    bgLocationServiceBody: "Bereit dich zu beeindrucken..",
     createAccount: "Registrieren",
     signIn: "Anmelden",
     invalidCredentials: "E-Mail oder Passwort falsch.",
