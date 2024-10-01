@@ -18,7 +18,6 @@ src/models/CreateUserDTO.ts
 src/models/CreateUserReportDTO.ts
 src/models/EmailCodeResponseADTO.ts
 src/models/EncounterPublicDTO.ts
-src/models/GetLocationOfEncounterDTO.ts
 src/models/GetLocationOfEncounterResponseDTO.ts
 src/models/LocationUpdateDTO.ts
 src/models/MessagePublicDTO.ts

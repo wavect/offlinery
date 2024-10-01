@@ -1,5 +1,4 @@
 import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { GetLocationOfEncounterDTO } from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
 import { getPublicProfileFromEncounter } from "@/context/EncountersContext";
@@ -53,13 +52,10 @@ const NavigateToApproach = ({
             });
             setLocation(location);
 
-            const getLocationOfEncounterDTO: GetLocationOfEncounterDTO = {
-                encounterId: navigateToPerson.encounterId,
-            };
             const encounterLoc =
                 await API.encounter.encounterControllerGetLocationOfEncounter({
                     userId: state.id!,
-                    getLocationOfEncounterDTO,
+                    encounterId: navigateToPerson.encounterId,
                 });
             setDestination(encounterLoc);
         })();
