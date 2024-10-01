@@ -3,7 +3,7 @@ import { SignInResponseDTO } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
-import { OTroubleSignIn } from "@/components/OTroubleSignIn/OTroubleSignIn";
+import { OTroubleMessage } from "@/components/OTroubleSignIn/OTroubleMessage";
 import { isAuthenticated, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
@@ -13,11 +13,12 @@ import {
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 import { API } from "@/utils/api-config";
+import { SUPPORT_MAIL } from "@/utils/general.constants";
 import { jwtExpiresSoon } from "@/utils/misc.utils";
 import { useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
-import { Dimensions, Platform, StyleSheet, View } from "react-native";
+import { Dimensions, Linking, Platform, StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "./routes";
 
@@ -97,6 +98,10 @@ const Welcome = ({
         }, [navigation]),
     );
 
+    const writeSupportEmail = async () => {
+        await Linking.openURL(`mailto:${SUPPORT_MAIL}`);
+    };
+
     const AuthScreen = () => (
         <View style={styles.authContainer}>
             <OTermsDisclaimer />
@@ -116,7 +121,11 @@ const Welcome = ({
                     style={styles.button}
                 />
             </View>
-            <OTroubleSignIn style={styles.troubleSigningIn} />
+            <OTroubleMessage
+                style={styles.troubleSigningIn}
+                action={writeSupportEmail}
+                label={i18n.t(TR.contactSupport)}
+            />
         </View>
     );
 

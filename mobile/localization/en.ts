@@ -4,7 +4,7 @@ export const en = {
     signIn: "Sign in",
     invalidCredentials: "Email or password invalid.",
     signingIn: "Signing in..",
-    troubleSignIn: "Trouble signing in?",
+    contactSupport: "Something not working?",
     gettingReadyToAmazeYou: "Getting ready to amaze you..",
     datingAppsAreBroken: "Dating apps are Broken",
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
@@ -17,6 +17,8 @@ export const en = {
     yourEmail: "Your email",
     email: "Email",
     yourPassword: "Your password",
+    resetPassword: "Reset password",
+    passwordForgotten: "Forgot your password?",
     password: "Password",
     houseRules: {
         mainTitle: "House rules",

@@ -1,3 +1,4 @@
+import { EmailCodeResponseADTO } from "@/DTOs/abstract/email-code-response.adto";
 import { ELanguage } from "@/types/user.types";
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
@@ -14,22 +15,11 @@ export class RegistrationForVerificationRequestDTO {
     language: ELanguage;
 }
 
-export class RegistrationForVerificationResponseDTO {
+export class RegistrationForVerificationResponseDTO extends EmailCodeResponseADTO {
     @ApiProperty({ example: "user@example.com" })
     @IsEmail()
     @Transform(({ value }) => value.toLowerCase())
     email: string;
-
-    @ApiProperty({
-        description:
-            "The timeout when the user can resend a verification code in milliseconds.",
-    })
-    timeout: number;
-
-    @ApiProperty({
-        description: "Timestamp when the verification code was issued.",
-    })
-    verificationCodeIssuedAt: Date;
 
     /** @dev This allows us to jump past another email verification is email already verified, but user not yet created. */
     @ApiProperty()

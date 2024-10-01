@@ -4,6 +4,7 @@ export const ROUTES = {
     /** @dev MainTabView then manages the tab routes */
     MainTabView: "Main_TabView" as const,
     Login: "Login" as const,
+    ResetPassword: "ResetPassword" as const,
     Main: {
         Encounters: "Main_Encounters" as const,
         ReportEncounter: "Main_ReportEncounter" as const,

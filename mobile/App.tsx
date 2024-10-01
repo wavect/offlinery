@@ -6,6 +6,7 @@ import Splash from "./screens/Splash";
 import Welcome from "./screens/Welcome";
 
 import { TR, i18n } from "@/localization/translate.service";
+import ResetPassword from "@/screens/ResetPassword";
 import {
     Montserrat_300Light,
     Montserrat_400Regular,
@@ -160,6 +161,14 @@ export default function App() {
                             options={{
                                 ...DEFAULT_SCREEN_PROPS,
                                 headerTitle: i18n.t(TR.yourPassword),
+                            }}
+                        />
+                        <MainStack.Screen
+                            name={ROUTES.ResetPassword}
+                            component={ResetPassword}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.resetPassword),
                             }}
                         />
                         <MainStack.Screen
