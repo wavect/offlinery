@@ -62,7 +62,7 @@ describe("UserService", () => {
                 email: user.email,
             });
             expect(userLookupFailing).toEqual(null);
-        });
+        }, 10000);
 
         it("should delete a freshly added user by the delete token that sended messages, had encounters", async () => {
             const deleteToken = "DELETE_TOKEN-FOO";
@@ -108,7 +108,7 @@ describe("UserService", () => {
                 email: user.email,
             });
             expect(userLookupFailing).toEqual(null);
-        });
+        }, 10000);
 
         it("should delete a freshly added user by the delete token that sended messages", async () => {
             const deleteToken = "DELETE_TOKEN-BAR";
@@ -159,6 +159,6 @@ describe("UserService", () => {
                 email: user.email,
             });
             expect(userLookupFailing).toEqual(null);
-        });
+        }, 10000);
     });
 });

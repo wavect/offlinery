@@ -95,9 +95,12 @@ describe("UserService", () => {
     describe("updateUser", () => {
         it("should update an existing user", async () => {
             const userId = "1";
+
+            // TODO USE BUILDERS
             const updateUserDto: UpdateUserDTO = {
                 firstName: "John Updated",
                 bio: "Updated bio",
+                indexImagesToDelete: [],
             };
             const mockImages: Express.Multer.File[] = [];
 
@@ -110,7 +113,7 @@ describe("UserService", () => {
             jest.spyOn(userRepository, "save").mockResolvedValue({
                 ...mockUser,
                 ...updateUserDto,
-            } as User);
+            });
 
             const result = await service.updateUser(
                 userId,
@@ -126,8 +129,11 @@ describe("UserService", () => {
 
         it("should throw an error if user is not found", async () => {
             const userId = "1";
+
+            // TODO USE BUILDERS
             const updateUserDto: UpdateUserDTO = {
                 firstName: "John Updated",
+                indexImagesToDelete: [],
             };
 
             jest.spyOn(userRepository, "findOneBy").mockResolvedValue(null);

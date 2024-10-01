@@ -92,9 +92,12 @@ describe("UserController", () => {
     describe("updateUser", () => {
         it("should update an existing user", async () => {
             const userId = "1";
+
+            // TODO use builders!
             const updateUserDto: UpdateUserDTO = {
                 firstName: "John Updated",
                 bio: "Updated bio",
+                indexImagesToDelete: [],
             };
             const mockImages: Express.Multer.File[] = [];
             const mockUser = new User();
