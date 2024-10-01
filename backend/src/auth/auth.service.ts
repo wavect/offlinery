@@ -7,6 +7,7 @@ import {
     Inject,
     Injectable,
     Logger,
+    NotFoundException,
     UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
@@ -116,7 +117,7 @@ export class AuthService {
             this.logger.debug("Refreshing user jwt token", !!user);
             if (!user) {
                 this.logger.debug(`Cannot refresh token. User not found.`);
-                throw new UnauthorizedException("Invalid refresh token");
+                throw new NotFoundException("Invalid refresh token");
             }
             const payload = { sub: user.id, email: user.email };
             const newAccessToken = await this.jwtService.signAsync(payload);
