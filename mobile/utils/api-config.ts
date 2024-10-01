@@ -91,6 +91,7 @@ class ApiManager {
                 if (!refreshToken) {
                     throw new Error("No refresh token found.");
                 }
+                // TODO: Endpoint is still public
                 const authApi = new AuthApi();
                 const refreshResponse =
                     (await authApi.authControllerRefreshJwtToken({
