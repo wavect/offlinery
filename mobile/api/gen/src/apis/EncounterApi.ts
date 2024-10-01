@@ -14,14 +14,12 @@
 
 import type {
     EncounterPublicDTO,
-    GetLocationOfEncounterDTO,
     GetLocationOfEncounterResponseDTO,
     PushMessageDTO,
     UpdateEncounterStatusDTO,
 } from "../models/index";
 import {
     EncounterPublicDTOFromJSON,
-    GetLocationOfEncounterDTOToJSON,
     GetLocationOfEncounterResponseDTOFromJSON,
     PushMessageDTOToJSON,
     UpdateEncounterStatusDTOToJSON,
@@ -39,7 +37,7 @@ export interface EncounterControllerGetEncountersByUserRequest {
 
 export interface EncounterControllerGetLocationOfEncounterRequest {
     userId: string;
-    getLocationOfEncounterDTO: GetLocationOfEncounterDTO;
+    encounterId: string;
 }
 
 export interface EncounterControllerPushMessageRequest {
@@ -86,7 +84,7 @@ export interface EncounterApiInterface {
      *
      * @summary Get current location of encounter.
      * @param {string} userId User ID
-     * @param {GetLocationOfEncounterDTO} getLocationOfEncounterDTO
+     * @param {string} encounterId Encounter ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EncounterApiInterface
@@ -246,10 +244,10 @@ export class EncounterApi
             );
         }
 
-        if (requestParameters["getLocationOfEncounterDTO"] == null) {
+        if (requestParameters["encounterId"] == null) {
             throw new runtime.RequiredError(
-                "getLocationOfEncounterDTO",
-                'Required parameter "getLocationOfEncounterDTO" was null or undefined when calling encounterControllerGetLocationOfEncounter().',
+                "encounterId",
+                'Required parameter "encounterId" was null or undefined when calling encounterControllerGetLocationOfEncounter().',
             );
         }
 
@@ -257,20 +255,22 @@ export class EncounterApi
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        headerParameters["Content-Type"] = "application/json";
-
         const response = await this.request(
             {
-                path: `/encounter/{userId}/encounterLocation`.replace(
-                    `{${"userId"}}`,
-                    encodeURIComponent(String(requestParameters["userId"])),
-                ),
+                path: `/encounter/{encounterId}/encounterLocation/{userId}`
+                    .replace(
+                        `{${"userId"}}`,
+                        encodeURIComponent(String(requestParameters["userId"])),
+                    )
+                    .replace(
+                        `{${"encounterId"}}`,
+                        encodeURIComponent(
+                            String(requestParameters["encounterId"]),
+                        ),
+                    ),
                 method: "GET",
                 headers: headerParameters,
                 query: queryParameters,
-                body: GetLocationOfEncounterDTOToJSON(
-                    requestParameters["getLocationOfEncounterDTO"],
-                ),
             },
             initOverrides,
         );

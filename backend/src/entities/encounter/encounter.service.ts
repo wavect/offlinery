@@ -1,6 +1,5 @@
 import { DateRangeDTO } from "@/DTOs/date-range.dto";
 import { GetLocationOfEncounterResponseDTO } from "@/DTOs/get-location-of-encounter-response.dto";
-import { GetLocationOfEncounterDTO } from "@/DTOs/get-location-of-encounter.dto";
 import { PushMessageDTO } from "@/DTOs/push-message.dto";
 import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
 import { Message } from "@/entities/messages/message.entity";
@@ -158,9 +157,8 @@ export class EncounterService {
 
     async getLocationOfEncounter(
         userId: string,
-        getLocationOfEncounterDTO: GetLocationOfEncounterDTO,
+        encounterId: string,
     ): Promise<GetLocationOfEncounterResponseDTO> {
-        const { encounterId } = getLocationOfEncounterDTO;
         this.logger.debug(
             `User ${userId} trying to access location for encounterId ${encounterId}`,
         );

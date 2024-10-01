@@ -2,7 +2,6 @@ import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
 import { DateRangeDTO } from "@/DTOs/date-range.dto";
 import { EncounterPublicDTO } from "@/DTOs/encounter-public.dto";
 import { GetLocationOfEncounterResponseDTO } from "@/DTOs/get-location-of-encounter-response.dto";
-import { GetLocationOfEncounterDTO } from "@/DTOs/get-location-of-encounter.dto";
 import { PushMessageDTO } from "@/DTOs/push-message.dto";
 import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
 import {
@@ -32,6 +31,7 @@ import { EncounterService } from "./encounter.service";
 })
 export class EncounterController {
     private readonly logger = new Logger(EncounterController.name);
+    static ENCOUNTER_ID_PARAM = "encounterId";
 
     constructor(private readonly encounterService: EncounterService) {}
 
@@ -119,11 +119,17 @@ export class EncounterController {
         return updatedEncounter.convertToPublicDTO();
     }
 
-    @Get(`:${USER_ID_PARAM}/encounterLocation`)
+    @Get(
+        `:${EncounterController.ENCOUNTER_ID_PARAM}/encounterLocation/:${USER_ID_PARAM}`,
+    )
     @OnlyOwnUserData()
     @ApiOperation({ summary: "Get current location of encounter." })
+    @ApiParam({
+        name: EncounterController.ENCOUNTER_ID_PARAM,
+        type: "string",
+        description: "Encounter ID",
+    })
     @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })
-    @ApiBody({ type: GetLocationOfEncounterDTO })
     @ApiResponse({
         status: 201,
         type: GetLocationOfEncounterResponseDTO,
@@ -132,11 +138,11 @@ export class EncounterController {
     @ApiResponse({ status: 404, description: "Encounter not found." })
     async getLocationOfEncounter(
         @Param(USER_ID_PARAM) userId: string,
-        @Body() getLocationOfEncounterDTO: GetLocationOfEncounterDTO,
+        @Param(EncounterController.ENCOUNTER_ID_PARAM) encounterId: string,
     ): Promise<GetLocationOfEncounterResponseDTO> {
         return this.encounterService.getLocationOfEncounter(
             userId,
-            getLocationOfEncounterDTO,
+            encounterId,
         );
     }
 }
