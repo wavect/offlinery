@@ -3,14 +3,15 @@ import { MainStackParamList } from "@/MainStack.navigator";
 import { UserPrivateDTOVerificationStatusEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
+import { OTroubleMessage } from "@/components/OTroubleMessage/OTroubleMessage";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { refreshUserData } from "@/services/auth.service";
 import { API } from "@/utils/api-config";
-import { SUPPORT_MAIL } from "@/utils/general.constants";
-import { A } from "@expo/html-elements";
+import { MAIN_WEBSITE } from "@/utils/general.constants";
+import { getLocalLanguageID, writeSupportEmail } from "@/utils/misc.utils";
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Linking, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -33,6 +34,12 @@ const WaitingForVerification = ({
         refreshUserData(dispatch, updatedUser);
     };
 
+    const openVerificationCallPDF = async () => {
+        await Linking.openURL(
+            `${MAIN_WEBSITE}/verification-call/verification-call_${getLocalLanguageID()}.pdf`,
+        );
+    };
+
     return (
         <OPageColorContainer refreshFunc={reloadUserState}>
             <View style={styles.btnContainer}>
@@ -52,6 +59,14 @@ const WaitingForVerification = ({
                     onPress={() => navigation.navigate(ROUTES.MainTabView)}
                     variant="light"
                 />
+                <Text
+                    numberOfLines={1}
+                    style={styles.verificationCallQuestions}
+                    onPress={openVerificationCallPDF}
+                    adjustsFontSizeToFit={true}
+                >
+                    {i18n.t(TR.verificationCallQuestions)}
+                </Text>
 
                 {state.verificationStatus !==
                     UserPrivateDTOVerificationStatusEnum.verified && (
@@ -74,9 +89,10 @@ const WaitingForVerification = ({
                 )}
             </View>
 
-            <A href={`mailto:${SUPPORT_MAIL}`} style={styles.bottomText}>
-                {i18n.t(TR.somethingWrongQ)}
-            </A>
+            <OTroubleMessage
+                action={writeSupportEmail}
+                label={i18n.t(TR.somethingWrongQ)}
+            />
         </OPageColorContainer>
     );
 };
@@ -92,15 +108,17 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     subtitleBookCall: {
-        fontSize: FontSize.size_md,
+        fontSize: FontSize.size_sm,
         color: Color.brightGray,
+        fontFamily: FontFamily.montserratLight,
     },
-    bottomText: {
-        display: "flex",
+    verificationCallQuestions: {
         color: Color.brightGray,
-        fontSize: FontSize.size_md,
         textDecorationLine: "underline",
-        fontFamily: FontFamily.montserratRegular,
+        fontSize: FontSize.size_sm,
+        paddingBottom: 10,
+        paddingHorizontal: 10, // @dev To increase "clickable size" for link
+        fontFamily: FontFamily.montserratLight,
     },
 });
 

@@ -5,7 +5,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
 import { OTextInputWide } from "@/components/OTextInputWide/OTextInputWide";
-import { OTroubleMessage } from "@/components/OTroubleSignIn/OTroubleMessage";
+import { OTroubleMessage } from "@/components/OTroubleMessage/OTroubleMessage";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
