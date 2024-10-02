@@ -14,6 +14,7 @@ interface ONewPasswordGroupProps {
         passwordError: string,
         passwordErrorConfirmation: string,
         passwordConfirmation: string,
+        doPasswordsMatch: boolean,
     ) => void;
     containerStyle?: StyleProp<ViewStyle>;
 }
@@ -60,6 +61,7 @@ export const ONewPasswordGroup = (props: ONewPasswordGroupProps) => {
                 passwordError,
                 passwordErrorConfirmation,
                 passwordConfirmation,
+                doPasswordsMatch(passwordConfirmation),
             );
         }
     }, [

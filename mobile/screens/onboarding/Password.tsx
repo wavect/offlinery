@@ -25,12 +25,8 @@ const Password = ({
     const { state } = useUserContext();
     const [isLoading, setLoading] = useState(false);
     const [oldClearPassword, setOldClearPassword] = useState("");
-    const [passwordConfirmation, setPasswordConfirmation] = useState("");
     const [oldPasswordError, setOldPasswordError] = useState("");
-
-    const doPasswordsMatch = (pwd: string) => {
-        return state.clearPassword === pwd;
-    };
+    const [doPasswordsMatch, setDoPasswordsMatch] = useState(false);
 
     const setValidateOldPassword = (pwd: string) => {
         if (oldPasswordError) {
@@ -41,13 +37,7 @@ const Password = ({
 
     const isChangePassword = !!route?.params?.isChangePassword;
 
-    const resetErrors = () => {
-        setPasswordConfirmation("");
-        setOldPasswordError("");
-    };
-
     const onSave = async () => {
-        resetErrors();
         if (isChangePassword) {
             setLoading(true);
             const updateUserPasswordDTO: UpdateUserPasswordDTO = {
@@ -87,7 +77,7 @@ const Password = ({
                     filled={true}
                     disabled={
                         !isValidPassword(state.clearPassword) ||
-                        !doPasswordsMatch(passwordConfirmation)
+                        !doPasswordsMatch
                     }
                     variant="dark"
                     onPress={onSave}
@@ -120,7 +110,10 @@ const Password = ({
                     passwordError,
                     passwordErrorConfirmation,
                     passwordConfirmation,
-                ) => setPasswordConfirmation(passwordConfirmation)}
+                    doPasswordsMatch,
+                ) => {
+                    setDoPasswordsMatch(doPasswordsMatch);
+                }}
             />
         </OPageContainer>
     );
