@@ -1,5 +1,6 @@
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
+import { MapModule } from "@/entities/map/map.module";
 import { Message } from "@/entities/messages/message.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { UserReport } from "@/entities/user-report/user-report.entity";
@@ -66,6 +67,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
             }),
             UserModule,
             MockAuthModule,
+            MapModule,
             MockMatchingModule,
             MailerModule.forRoot({
                 transport: {
