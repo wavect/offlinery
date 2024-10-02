@@ -15,7 +15,7 @@ export const WOMAN_WANTS_MAN_TESTUSER = "WOMAN_WANTS_MAN_TESTUSER";
 
 export const createRandomAppUser = async (
     userRepository: UserRepository,
-    userData: Partial<User>,
+    userData?: Partial<User>,
 ): Promise<User> => {
     const user = userRepository.create({
         firstName: `Name ${generateRandomString(10)}`,
