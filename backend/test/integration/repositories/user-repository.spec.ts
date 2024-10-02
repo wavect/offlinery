@@ -130,13 +130,16 @@ describe("UserRepository ", () => {
                 genderDesire: EGender.WOMAN,
             });
 
-            const matches =
-                await userRepository.getPotentialMatchesForNotifications(
-                    testingMainUser,
-                );
+            const matches = Array.from(
+                (
+                    await userRepository.getPotentialMatchesForNotifications(
+                        testingMainUser,
+                    )
+                ).values(),
+            );
 
-            expect(matches.size).toBe(2);
-            expect(Array.from(matches.values()).map((m) => m.id)).toEqual(
+            expect(matches.length).toBe(2);
+            expect(matches.map((m) => m.id)).toEqual(
                 expect.arrayContaining([userId.id, userId2.id]),
             );
         });

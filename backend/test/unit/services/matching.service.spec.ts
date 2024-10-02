@@ -91,10 +91,8 @@ describe("MatchingService", () => {
                 new Map(),
             );
 
-            const result = await matchingService.findPotentialMatchesForHeatmap(
-                user,
-                true,
-            );
+            const result =
+                await matchingService.findPotentialMatchesForHeatmap(user);
 
             expect(
                 userRepository.getPotentialMatchesForNotifications,
@@ -112,10 +110,8 @@ describe("MatchingService", () => {
                 new User(),
             ]);
 
-            const result = await matchingService.findPotentialMatchesForHeatmap(
-                user,
-                false,
-            );
+            const result =
+                await matchingService.findPotentialMatchesForHeatmap(user);
 
             expect(
                 userRepository.getPotentialMatchesForHeatMap,
