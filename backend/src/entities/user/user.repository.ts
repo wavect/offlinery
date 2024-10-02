@@ -83,15 +83,11 @@ export class UserRepository extends Repository<User> {
             .withUserWantingToBeApproached()
             .getMany();
 
-        // Create a Map of encounterId to User
-        const encounterUserMap = new Map<string, User>();
-        results.forEach((user) => {
-            if (user.encounters && user.encounters.length > 0) {
-                encounterUserMap.set(user.encounters[0].id, user);
-            }
-        });
-
-        return encounterUserMap;
+      return new Map(
+        results
+          .filter(user => user.encounters && user.encounters.length > 0)
+          .map(user => [user.encounters[0].id, user])
+      );
     }
 
     private addEncounterJoins(): this {
