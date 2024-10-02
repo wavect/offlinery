@@ -77,6 +77,7 @@ export const en = {
     retainRightToRejectApplicants:
         "We retain our right to reject applicants to ensure everyone feels safe and respected.",
     callBookedBtnLbl: "I'll take the call",
+    verificationCallQuestions: "What we will ask you",
     permissionToLocationDenied: "Permission to access location was denied.",
     dontApproachHere: "Don't approach me here",
     whatAreSpotsToNotApproachYou:

@@ -83,6 +83,7 @@ export const de: Language = {
     retainRightToRejectApplicants:
         "Wir behalten uns das Recht vor, Bewerber abzulehnen, um sicherzustellen, dass sich jeder sicher und respektiert fühlt.",
     callBookedBtnLbl: "Ich werde da sein",
+    verificationCallQuestions: "Was wir dich fragen",
     permissionToLocationDenied: "Zugriff auf den Standort wurde verweigert.",
     dontApproachHere: "Hier nicht ansprechen",
     whatAreSpotsToNotApproachYou:

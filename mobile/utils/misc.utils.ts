@@ -1,7 +1,9 @@
 import { CreateUserDTOPreferredLanguageEnum } from "@/api/gen/src";
 import { i18n } from "@/localization/translate.service";
+import { SUPPORT_MAIL } from "@/utils/general.constants";
 import Constants from "expo-constants";
 import { jwtDecode } from "jwt-decode";
+import { Linking } from "react-native";
 
 export const REFRESH_REMAINING_MINUTE = 1;
 
@@ -55,3 +57,7 @@ export const getLocalLanguageID = (): CreateUserDTOPreferredLanguageEnum => {
 };
 
 export const isNumericRegex = /^\d+$/;
+
+export const writeSupportEmail = async () => {
+    await Linking.openURL(`mailto:${SUPPORT_MAIL}`);
+};
