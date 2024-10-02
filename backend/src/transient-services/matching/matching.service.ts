@@ -2,6 +2,7 @@ import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
 import { EncounterService } from "@/entities/encounter/encounter.service";
 import { User } from "@/entities/user/user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
+import { OBaseNotification } from "@/transient-services/matching/matching.service.types";
 import { I18nTranslations } from "@/translations/i18n.generated";
 import { OfflineryNotification } from "@/types/notification-message.types";
 import { EDateMode } from "@/types/user.types";
@@ -61,15 +62,7 @@ export class MatchingService {
         }
 
         if (nearbyMatches.size > 0) {
-            const baseNotification: Omit<
-                OfflineryNotification,
-                "to" | "data"
-            > & {
-                data: Pick<
-                    OfflineryNotification["data"],
-                    Exclude<keyof OfflineryNotification["data"], "encounterId">
-                >;
-            } = {
+            const baseNotification: OBaseNotification = {
                 sound: "default",
                 title: this.i18n.t("main.notification.newMatch.title", {
                     args: { firstName: userToBeApproached.firstName },
