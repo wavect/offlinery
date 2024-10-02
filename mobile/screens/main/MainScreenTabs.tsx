@@ -116,8 +116,7 @@ export const MainScreenTabs = ({
                                     imageURIs:
                                         notificationData.navigateToPerson
                                             .imageURIs,
-                                    encounterId:
-                                        notificationData.navigateToPerson.id, // TODO: Is a different ID most likely (relationship ID)
+                                    encounterId: notificationData.encounterId,
                                     age: notificationData.navigateToPerson.age,
                                 };
                                 // Navigate to the specified screen, passing the user object as a prop

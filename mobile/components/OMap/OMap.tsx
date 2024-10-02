@@ -66,13 +66,9 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
     useEffect(() => {
         (async () => {
             if (state.dateMode === UserPrivateDTODateModeEnum.ghost) {
+                // @dev Resets heatmap to incentivize location sharing
                 setLocationsFromOthers([]);
             } else {
-                const promises = [];
-                if (showHeatmap) {
-                    promises.push(getOtherUsersPositions());
-                }
-
                 let { status } =
                     await Location.requestForegroundPermissionsAsync();
                 if (status !== "granted") {
@@ -80,7 +76,10 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                     return;
                 }
 
-                promises.push(getUserPosition());
+                const promises: Promise<void>[] = [getUserPosition()];
+                if (showHeatmap) {
+                    promises.push(getOtherUsersPositions());
+                }
                 await Promise.all(promises);
             }
         })();
@@ -100,11 +99,11 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
     const getUserPosition = async () => {
         try {
             const location = await Location.getCurrentPositionAsync({
-                accuracy: LocationAccuracy.BestForNavigation,
+                accuracy: LocationAccuracy.High,
             });
             setLocation(location);
         } catch (e) {
-            console.warn("Unable to get user locations");
+            console.error("Unable to get user location.");
         }
     };
 
@@ -115,7 +114,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
             });
             setLocationsFromOthers(positions);
         } catch (e) {
-            console.warn("Unable to get position from other users ", e);
+            console.error("Unable to get position from other users ", e);
         }
     };
 

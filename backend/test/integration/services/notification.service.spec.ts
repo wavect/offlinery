@@ -54,6 +54,7 @@ describe("NotificationService", () => {
                     data: {
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
                         navigateToPerson: mockUser,
+                        encounterId: "abc",
                     },
                 },
             ];
@@ -73,6 +74,7 @@ describe("NotificationService", () => {
                     data: {
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
                         navigateToPerson: mockUser,
+                        encounterId: "abc",
                     },
                 },
             ];
