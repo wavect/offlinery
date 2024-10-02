@@ -1,7 +1,8 @@
-import { Configuration } from "@/api/gen/src/runtime";
+import { Configuration, RequestContext } from "@/api/gen/src/runtime";
 import {
     SECURE_VALUE,
     getSecurelyStoredValue,
+    saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 
 import {
@@ -13,6 +14,7 @@ import {
     UserApi,
     UserReportsApi,
 } from "@/api/gen/src";
+import { jwtExpiresSoon } from "./misc.utils";
 
 /** @DEV add new ApiClasses here */
 type ApiClasses = {
@@ -65,13 +67,13 @@ class ApiManager {
             accessToken: jwtToken!,
             middleware: [
                 {
-                    pre: async (context: any) => {
+                    pre: async (request: RequestContext) => {
                         await this.ensureValidToken();
-                        context.init.headers = {
-                            ...context.init.headers,
+                        request.init.headers = {
+                            ...request.init.headers,
                             Authorization: `Bearer ${getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN)}`,
                         };
-                        return context;
+                        return request;
                     },
                 },
             ],
@@ -83,23 +85,33 @@ class ApiManager {
         const refreshToken = getSecurelyStoredValue(
             SECURE_VALUE.JWT_REFRESH_TOKEN,
         );
-
-        // if (jwtExpiresSoon(jwtToken!)) {
-        //     try {
-        //         console.log("Token has expired. Requesting a new token.");
-        //         const authApi = new AuthApi(this.config);
-        //         const refreshResponse = await authApi.authControllerRefreshJwtToken({
-        //             refreshJwtDTO: { refreshToken },
-        //         }) as any;
-        //         saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, refreshResponse.refreshToken);
-        //         saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, refreshResponse.accessToken);
-        //         console.log("JWT and Refresh update successful.");
-        //         this.config = this.createConfiguration();
-        //     } catch (e) {
-        //         console.error("Error during refreshing tokens: ", e);
-        //         throw e;
-        //     }
-        // }
+        if (jwtToken && jwtExpiresSoon(jwtToken)) {
+            try {
+                console.log("Token has expired. Requesting a new token.");
+                if (!refreshToken) {
+                    throw new Error("No refresh token found.");
+                }
+                // TODO: Endpoint is still public
+                const authApi = new AuthApi();
+                const refreshResponse =
+                    (await authApi.authControllerRefreshJwtToken({
+                        refreshJwtDTO: { refreshToken },
+                    })) as any;
+                saveValueLocallySecurely(
+                    SECURE_VALUE.JWT_REFRESH_TOKEN,
+                    refreshResponse.refreshToken,
+                );
+                saveValueLocallySecurely(
+                    SECURE_VALUE.JWT_ACCESS_TOKEN,
+                    refreshResponse.accessToken,
+                );
+                console.log("JWT and Refresh update successful.");
+                this.config = this.createConfiguration();
+            } catch (e) {
+                console.error("Error during refreshing tokens: ", e);
+                throw e;
+            }
+        }
     }
 }
 

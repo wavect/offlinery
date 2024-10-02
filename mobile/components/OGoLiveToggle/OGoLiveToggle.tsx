@@ -16,6 +16,7 @@ import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
+import React from "react";
 import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
 
 interface IOGoLiveToggleProps {
@@ -80,13 +81,21 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
             if (status === "granted" && state.id) {
                 console.log(`Live mode: Starting task ${LOCATION_TASK_NAME}`);
                 await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-                    accuracy: Location.Accuracy.BestForNavigation,
-                    timeInterval: 5000,
-                    distanceInterval: 10,
+                    /** @dev BestForNavigation more accurate than High but higher battery consumption (high already 10m) */
+                    accuracy: Location.Accuracy.BestForNavigation, // TODO: Maybe we want to track rougher locations continiously and BestForNavigation once people approach each other?
+                    timeInterval: 120_000, // 120 seconds
+                    distanceInterval: 10, // or 10m
+                    // TODO: not necessary probably as showBackgroundLocationIndicator=true but might help if we have problems, allowsBackgroundLocationUpdates: true,
+                    // @dev Ensure the task runs even when the app is in the background, still sending updates even if device isn't moving
+                    pausesUpdatesAutomatically: false, // TODO: We might be able to set this to true to save battery life, but for now we want to have maximum accuracy
+                    showsBackgroundLocationIndicator: true, // @dev Shows a blue bar/blue pill when your app is using location services in the background, iOS only
+                    // TODO: distanceFilter, deferredUpdatesDistance, etc.: minimum distance in meters a device must move before an update event is triggered -> later for saving battery life
+                    activityType: Location.ActivityType.OtherNavigation, // @dev Best for urban environments, different ways of movement (car, walking, ..)
                     foregroundService: {
-                        notificationTitle: "Background location use",
-                        notificationBody:
-                            "Tracking your location in the background.",
+                        notificationTitle: i18n.t(TR.bgLocationServiceTitle),
+                        notificationBody: i18n.t(TR.bgLocationServiceBody),
+                        notificationColor: Color.primary,
+                        killServiceOnDestroy: false, // @dev stay running if app is killed
                     },
                 });
             }
