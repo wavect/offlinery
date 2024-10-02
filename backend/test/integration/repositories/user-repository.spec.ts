@@ -135,8 +135,8 @@ describe("UserRepository ", () => {
                     testingMainUser,
                 );
 
-            expect(matches.length).toBe(2);
-            expect(matches.map((m) => m.id)).toEqual(
+            expect(matches.size).toBe(2);
+            expect(Array.from(matches.values()).map((m) => m.id)).toEqual(
                 expect.arrayContaining([userId.id, userId2.id]),
             );
         });
@@ -157,10 +157,13 @@ describe("UserRepository ", () => {
                 dateMode: EDateMode.LIVE,
             });
 
-            const matches =
-                await userRepository.getPotentialMatchesForNotifications(
-                    testingMainUser,
-                );
+            const matches = Array.from(
+                (
+                    await userRepository.getPotentialMatchesForNotifications(
+                        testingMainUser,
+                    )
+                ).values(),
+            );
 
             expect(matches.length).toBe(1);
             expect(matches.map((m) => m.id)).toEqual(
@@ -180,10 +183,13 @@ describe("UserRepository ", () => {
                 verificationStatus: EVerificationStatus.VERIFIED,
             });
 
-            const matches =
-                await userRepository.getPotentialMatchesForNotifications(
-                    testingMainUser,
-                );
+            const matches = Array.from(
+                (
+                    await userRepository.getPotentialMatchesForNotifications(
+                        testingMainUser,
+                    )
+                ).values(),
+            );
 
             expect(matches.length).toBe(1);
             expect(matches.map((m) => m.id)).toEqual(
@@ -199,10 +205,13 @@ describe("UserRepository ", () => {
                 approachChoice: EApproachChoice.BE_APPROACHED,
             });
 
-            const matches =
-                await userRepository.getPotentialMatchesForNotifications(
-                    testingMainUser,
-                );
+            const matches = Array.from(
+                (
+                    await userRepository.getPotentialMatchesForNotifications(
+                        testingMainUser,
+                    )
+                ).values(),
+            );
 
             expect(matches.length).toBe(2);
             expect(matches.map((m) => m.id)).toEqual(
@@ -217,10 +226,13 @@ describe("UserRepository ", () => {
                 dateMode: EDateMode.GHOST,
             });
 
-            const matches =
-                await userRepository.getPotentialMatchesForNotifications(
-                    testingMainUser,
-                );
+            const matches = Array.from(
+                (
+                    await userRepository.getPotentialMatchesForNotifications(
+                        testingMainUser,
+                    )
+                ).values(),
+            );
 
             expect(matches.length).toBe(0);
             expect(matches.map((m) => m.id)).toEqual(

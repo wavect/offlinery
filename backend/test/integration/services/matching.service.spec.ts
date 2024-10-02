@@ -53,7 +53,8 @@ describe("MatchingService Integration", () => {
             const user = new User();
             user.dateMode = EDateMode.GHOST;
 
-            const result = await matchingService.findNearbyMatches(user);
+            const result =
+                await matchingService.findPotentialMatchesForHeatmap(user);
 
             expect(result).toEqual([]);
         });
@@ -63,7 +64,7 @@ describe("MatchingService Integration", () => {
             user.dateMode = EDateMode.LIVE;
             user.location = { type: "Point", coordinates: [0, 0] } as Point;
 
-            await matchingService.findNearbyMatches(user, true);
+            await matchingService.findPotentialMatchesForHeatmap(user, true);
 
             expect(
                 userRepository.getPotentialMatchesForNotifications,
@@ -75,7 +76,7 @@ describe("MatchingService Integration", () => {
             user.dateMode = EDateMode.LIVE;
             user.location = { type: "Point", coordinates: [0, 0] } as Point;
 
-            await matchingService.findNearbyMatches(user, false);
+            await matchingService.findPotentialMatchesForHeatmap(user, false);
 
             expect(
                 userRepository.getPotentialMatchesForHeatMap,

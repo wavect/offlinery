@@ -70,7 +70,8 @@ describe("MatchingService", () => {
             const user = new User();
             user.dateMode = EDateMode.GHOST;
 
-            const result = await matchingService.findNearbyMatches(user);
+            const result =
+                await matchingService.findPotentialMatchesForHeatmap(user);
 
             expect(result).toEqual([]);
             expect(
@@ -87,10 +88,13 @@ describe("MatchingService", () => {
             user.location = { type: "Point", coordinates: [0, 0] };
 
             userRepository.getPotentialMatchesForNotifications.mockResolvedValue(
-                [new User()],
+                new Map(),
             );
 
-            const result = await matchingService.findNearbyMatches(user, true);
+            const result = await matchingService.findPotentialMatchesForHeatmap(
+                user,
+                true,
+            );
 
             expect(
                 userRepository.getPotentialMatchesForNotifications,
@@ -108,7 +112,10 @@ describe("MatchingService", () => {
                 new User(),
             ]);
 
-            const result = await matchingService.findNearbyMatches(user, false);
+            const result = await matchingService.findPotentialMatchesForHeatmap(
+                user,
+                false,
+            );
 
             expect(
                 userRepository.getPotentialMatchesForHeatMap,
@@ -123,9 +130,10 @@ describe("MatchingService", () => {
             user.dateMode = EDateMode.LIVE;
             user.location = { type: "Point", coordinates: [0, 0] };
 
-            jest.spyOn(matchingService, "findNearbyMatches").mockResolvedValue(
-                [],
-            );
+            jest.spyOn(
+                matchingService,
+                "findPotentialMatchesForHeatmap",
+            ).mockResolvedValue([]);
 
             await matchingService.checkAndNotifyMatches(user);
 
@@ -152,10 +160,10 @@ describe("MatchingService", () => {
             match2.id = "3";
             match2.pushToken = "token2";
 
-            jest.spyOn(matchingService, "findNearbyMatches").mockResolvedValue([
-                match1,
-                match2,
-            ]);
+            jest.spyOn(
+                matchingService,
+                "findPotentialMatchesForHeatmap",
+            ).mockResolvedValue([match1, match2]);
             i18nService.t.mockReturnValue("Translated text");
 
             await matchingService.checkAndNotifyMatches(user);
@@ -188,9 +196,10 @@ describe("MatchingService", () => {
             match.id = "2";
             match.pushToken = "token1";
 
-            jest.spyOn(matchingService, "findNearbyMatches").mockResolvedValue([
-                match,
-            ]);
+            jest.spyOn(
+                matchingService,
+                "findPotentialMatchesForHeatmap",
+            ).mockResolvedValue([match]);
             i18nService.t.mockImplementation((key) => `Translated ${key}`);
 
             await matchingService.checkAndNotifyMatches(user);
@@ -203,6 +212,7 @@ describe("MatchingService", () => {
                 data: {
                     screen: EAppScreens.NAVIGATE_TO_APPROACH,
                     navigateToPerson: expect.any(Object),
+                    encounterId: expect.any(String),
                 },
             };
 

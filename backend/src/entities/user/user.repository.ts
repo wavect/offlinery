@@ -40,45 +40,80 @@ export class UserRepository extends Repository<User> {
         return this;
     }
 
-    async getPotentialMatchesForNotifications(user: User): Promise<User[]> {
-        const [lon, lat] = user.location.coordinates;
+    /** @returns {key: encounterId, value: User}[]*/
+    async getPotentialMatchesForNotifications(
+        userToBeApproached: User,
+    ): Promise<Map<string, User>> {
+        if (
+            !userToBeApproached ||
+            !userToBeApproached.location ||
+            userToBeApproached.dateMode !== EDateMode.LIVE
+        ) {
+            this.logger.debug(
+                `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
+            );
+            return new Map();
+        }
+
+        const [lon, lat] = userToBeApproached.location.coordinates;
         const isInBlacklistedRegion = await this.isUserInBlacklistedRegion(
-            user,
+            userToBeApproached,
             lon,
             lat,
         );
 
         if (isInBlacklistedRegion) {
             this.logger.debug(
-                `User ${user.id} is right now in blacklisted location - not returning potential matches.`,
+                `User ${userToBeApproached.id} is right now in blacklisted location - not returning potential matches.`,
             );
-            return [];
+            return new Map();
         }
 
-        if (!this.isWithinApproachTime(user, lat, lon)) {
+        if (!this.isWithinApproachTime(userToBeApproached, lat, lon)) {
             this.logger.debug(
-                `User ${user.id} does not feel safe to be approached right now.`,
+                `User ${userToBeApproached.id} does not feel safe to be approached right now.`,
             );
-            return [];
+            return new Map();
         }
 
-        return this.getPotentialMatches(user);
+        return this.getPotentialMatches(userToBeApproached);
     }
 
     async getPotentialMatchesForHeatMap(
         userToBeApproached: User,
     ): Promise<User[]> {
+        if (
+            !userToBeApproached ||
+            !userToBeApproached.location ||
+            userToBeApproached.dateMode !== EDateMode.LIVE
+        ) {
+            this.logger.debug(
+                `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
+            );
+            return [];
+        }
+
         return this.createUserMatchBaseQuery(userToBeApproached).getMany();
     }
 
-    async getPotentialMatches(userToBeApproached: User): Promise<User[]> {
-        return (
-            this.createUserMatchBaseQuery(userToBeApproached)
-                /** @dev Are users within x meters - TODO: Make this configurable by users. */
-                .withinDistance(userToBeApproached.location, 1500)
-                .withUserWantingToBeApproached()
-                .getMany()
-        );
+    async getPotentialMatches(
+        userToBeApproached: User,
+    ): Promise<Map<string, User>> {
+        const results = await this.createUserMatchBaseQuery(userToBeApproached)
+            /** @dev Are users within x meters - TODO: Make this configurable by users. */
+            .withinDistance(userToBeApproached.location, 1500)
+            .withUserWantingToBeApproached()
+            .getMany();
+
+        // Create a Map of encounterId to User
+        const encounterUserMap = new Map<string, User>();
+        results.forEach((user) => {
+            if (user.encounters && user.encounters.length > 0) {
+                encounterUserMap.set(user.encounters[0].id, user);
+            }
+        });
+
+        return encounterUserMap;
     }
 
     private addEncounterJoins(): this {

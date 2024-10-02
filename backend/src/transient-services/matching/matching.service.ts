@@ -4,7 +4,6 @@ import { User } from "@/entities/user/user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
 import { I18nTranslations } from "@/translations/i18n.generated";
 import { OfflineryNotification } from "@/types/notification-message.types";
-import { EDateMode } from "@/types/user.types";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { I18nService } from "nestjs-i18n";
 import { NotificationService } from "../notification/notification.service";
@@ -21,43 +20,32 @@ export class MatchingService {
         private encounterService: EncounterService,
     ) {}
 
-    public async findNearbyMatches(
+    public async findPotentialMatchesForHeatmap(
         userToBeApproached: User,
-        enableEnableExtendedChecksForNotification = true,
     ): Promise<User[]> {
-        // @dev Do not send notifications if user does not share her live location.
-        if (
-            !userToBeApproached ||
-            !userToBeApproached.location ||
-            userToBeApproached.dateMode !== EDateMode.LIVE
-        ) {
-            this.logger.debug(
-                `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
-            );
-            return [];
-        }
-
-        if (enableEnableExtendedChecksForNotification) {
-            return this.userRepository.getPotentialMatchesForNotifications(
-                userToBeApproached,
-            );
-        } else {
-            return this.userRepository.getPotentialMatchesForHeatMap(
-                userToBeApproached,
-            );
-        }
+        return this.userRepository.getPotentialMatchesForHeatMap(
+            userToBeApproached,
+        );
     }
 
     public async checkAndNotifyMatches(
         userToBeApproached: User,
     ): Promise<void> {
-        const nearbyMatches = await this.findNearbyMatches(
-            userToBeApproached,
-            true,
-        );
+        const nearbyMatches =
+            await this.userRepository.getPotentialMatchesForNotifications(
+                userToBeApproached,
+            );
 
-        if (nearbyMatches.length > 0) {
-            const baseNotification: Omit<OfflineryNotification, "to"> = {
+        if (nearbyMatches.size > 0) {
+            const baseNotification: Omit<
+                OfflineryNotification,
+                "to" | "data"
+            > & {
+                data: Pick<
+                    OfflineryNotification["data"],
+                    Exclude<keyof OfflineryNotification["data"], "encounterId">
+                >;
+            } = {
                 sound: "default",
                 title: this.i18n.t("main.notification.newMatch.title", {
                     args: { firstName: userToBeApproached.firstName },
@@ -69,18 +57,26 @@ export class MatchingService {
                 },
             };
 
-            const notifications: OfflineryNotification[] = nearbyMatches.map(
-                (m) => {
-                    return { ...baseNotification, to: m.pushToken };
-                },
-            );
+            const usersThatWantToApproach: User[] = [];
+            const notifications: OfflineryNotification[] = [];
+            for (const [encounterId, user] of nearbyMatches.entries()) {
+                notifications.push({
+                    ...baseNotification,
+                    to: user.pushToken,
+                    data: {
+                        ...baseNotification.data,
+                        encounterId,
+                    },
+                });
+                usersThatWantToApproach.push(user);
+            }
 
             await this.notificationService.sendPushNotification(notifications);
 
             // now save as encounters into DB
             await this.encounterService.saveEncountersForUser(
                 userToBeApproached,
-                nearbyMatches,
+                usersThatWantToApproach,
                 true, // they are all nearby rn
                 true, // reset older encounters
             );
