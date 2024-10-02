@@ -4,6 +4,7 @@ import { User } from "@/entities/user/user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
 import { I18nTranslations } from "@/translations/i18n.generated";
 import { OfflineryNotification } from "@/types/notification-message.types";
+import { EDateMode } from "@/types/user.types";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { I18nService } from "nestjs-i18n";
 import { NotificationService } from "../notification/notification.service";
@@ -23,6 +24,17 @@ export class MatchingService {
     public async findPotentialMatchesForHeatmap(
         userToBeApproached: User,
     ): Promise<User[]> {
+        if (
+            !userToBeApproached ||
+            !userToBeApproached.location ||
+            userToBeApproached.dateMode !== EDateMode.LIVE
+        ) {
+            this.logger.debug(
+                `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
+            );
+            return [];
+        }
+
         return this.userRepository.getPotentialMatchesForHeatMap(
             userToBeApproached,
         );
@@ -31,10 +43,22 @@ export class MatchingService {
     public async checkAndNotifyMatches(
         userToBeApproached: User,
     ): Promise<void> {
-        const nearbyMatches =
-            await this.userRepository.getPotentialMatchesForNotifications(
-                userToBeApproached,
+        let nearbyMatches: Map<string, User>;
+        if (
+            !userToBeApproached ||
+            !userToBeApproached.location ||
+            userToBeApproached.dateMode !== EDateMode.LIVE
+        ) {
+            this.logger.debug(
+                `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
             );
+            nearbyMatches = new Map();
+        } else {
+            nearbyMatches =
+                await this.userRepository.getPotentialMatchesForNotifications(
+                    userToBeApproached,
+                );
+        }
 
         if (nearbyMatches.size > 0) {
             const baseNotification: Omit<

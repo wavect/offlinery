@@ -44,17 +44,6 @@ export class UserRepository extends Repository<User> {
     async getPotentialMatchesForNotifications(
         userToBeApproached: User,
     ): Promise<Map<string, User>> {
-        if (
-            !userToBeApproached ||
-            !userToBeApproached.location ||
-            userToBeApproached.dateMode !== EDateMode.LIVE
-        ) {
-            this.logger.debug(
-                `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
-            );
-            return new Map();
-        }
-
         const [lon, lat] = userToBeApproached.location.coordinates;
         const isInBlacklistedRegion = await this.isUserInBlacklistedRegion(
             userToBeApproached,
@@ -82,17 +71,6 @@ export class UserRepository extends Repository<User> {
     async getPotentialMatchesForHeatMap(
         userToBeApproached: User,
     ): Promise<User[]> {
-        if (
-            !userToBeApproached ||
-            !userToBeApproached.location ||
-            userToBeApproached.dateMode !== EDateMode.LIVE
-        ) {
-            this.logger.debug(
-                `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
-            );
-            return [];
-        }
-
         return this.createUserMatchBaseQuery(userToBeApproached).getMany();
     }
 
