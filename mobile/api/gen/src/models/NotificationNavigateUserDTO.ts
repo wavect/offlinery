@@ -33,6 +33,12 @@ export interface NotificationNavigateUserDTO {
      * @memberof NotificationNavigateUserDTO
      */
     navigateToPerson: UserPublicDTO;
+    /**
+     *
+     * @type {string}
+     * @memberof NotificationNavigateUserDTO
+     */
+    encounterId: string;
 }
 
 /**
@@ -56,6 +62,8 @@ export function instanceOfNotificationNavigateUserDTO(
         value["navigateToPerson"] === undefined
     )
         return false;
+    if (!("encounterId" in value) || value["encounterId"] === undefined)
+        return false;
     return true;
 }
 
@@ -75,6 +83,7 @@ export function NotificationNavigateUserDTOFromJSONTyped(
     return {
         screen: json["screen"],
         navigateToPerson: UserPublicDTOFromJSON(json["navigateToPerson"]),
+        encounterId: json["encounterId"],
     };
 }
 
@@ -87,5 +96,6 @@ export function NotificationNavigateUserDTOToJSON(
     return {
         screen: value["screen"],
         navigateToPerson: UserPublicDTOToJSON(value["navigateToPerson"]),
+        encounterId: value["encounterId"],
     };
 }

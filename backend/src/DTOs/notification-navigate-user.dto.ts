@@ -12,4 +12,7 @@ export class NotificationNavigateUserDTO {
 
     @ApiProperty({ type: UserPublicDTO })
     navigateToPerson: UserPublicDTO;
+
+    @ApiProperty()
+    encounterId: string;
 }

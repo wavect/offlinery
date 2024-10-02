@@ -40,29 +40,32 @@ export class UserRepository extends Repository<User> {
         return this;
     }
 
-    async getPotentialMatchesForNotifications(user: User): Promise<User[]> {
-        const [lon, lat] = user.location.coordinates;
+    /** @returns {key: encounterId, value: User}[]*/
+    async getPotentialMatchesForNotifications(
+        userToBeApproached: User,
+    ): Promise<Map<string, User>> {
+        const [lon, lat] = userToBeApproached.location.coordinates;
         const isInBlacklistedRegion = await this.isUserInBlacklistedRegion(
-            user,
+            userToBeApproached,
             lon,
             lat,
         );
 
         if (isInBlacklistedRegion) {
             this.logger.debug(
-                `User ${user.id} is right now in blacklisted location - not returning potential matches.`,
+                `User ${userToBeApproached.id} is right now in blacklisted location - not returning potential matches.`,
             );
-            return [];
+            return new Map();
         }
 
-        if (!this.isWithinApproachTime(user, lat, lon)) {
+        if (!this.isWithinApproachTime(userToBeApproached, lat, lon)) {
             this.logger.debug(
-                `User ${user.id} does not feel safe to be approached right now.`,
+                `User ${userToBeApproached.id} does not feel safe to be approached right now.`,
             );
-            return [];
+            return new Map();
         }
 
-        return this.getPotentialMatches(user);
+        return this.getPotentialMatches(userToBeApproached);
     }
 
     async getPotentialMatchesForHeatMap(
@@ -71,13 +74,19 @@ export class UserRepository extends Repository<User> {
         return this.createUserMatchBaseQuery(userToBeApproached).getMany();
     }
 
-    async getPotentialMatches(userToBeApproached: User): Promise<User[]> {
-        return (
-            this.createUserMatchBaseQuery(userToBeApproached)
-                /** @dev Are users within x meters - TODO: Make this configurable by users. */
-                .withinDistance(userToBeApproached.location, 1500)
-                .withUserWantingToBeApproached()
-                .getMany()
+    async getPotentialMatches(
+        userToBeApproached: User,
+    ): Promise<Map<string, User>> {
+        const results = await this.createUserMatchBaseQuery(userToBeApproached)
+            /** @dev Are users within x meters - TODO: Make this configurable by users. */
+            .withinDistance(userToBeApproached.location, 1500)
+            .withUserWantingToBeApproached()
+            .getMany();
+
+        return new Map(
+            results
+                .filter((user) => user.encounters && user.encounters.length > 0)
+                .map((user) => [user.encounters[0].id, user]),
         );
     }
 
