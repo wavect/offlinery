@@ -61,7 +61,7 @@ export class MatchingService {
                 );
         }
 
-        if (nearbyMatches.size > 0) {
+        if (nearbyMatches?.size > 0) {
             const baseNotification: OBaseNotification = {
                 sound: "default",
                 title: this.i18n.t("main.notification.newMatch.title", {

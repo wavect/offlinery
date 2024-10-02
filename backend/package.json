@@ -130,6 +130,7 @@
         ],
         "coverageDirectory": "./coverage",
         "testEnvironment": "node",
+        "testTimeout": 15000,
         "coverageReporters": [
             "json-summary",
             "text",

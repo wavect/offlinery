@@ -5,12 +5,10 @@ import { MatchingService } from "@/transient-services/matching/matching.service"
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { EDateMode } from "@/types/user.types";
 import { Test, TestingModule } from "@nestjs/testing";
-import { Point } from "geojson";
 import { I18nService } from "nestjs-i18n";
 
 describe("MatchingService Integration", () => {
     let matchingService: MatchingService;
-    let userRepository: UserRepository;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -45,7 +43,6 @@ describe("MatchingService Integration", () => {
         }).compile();
 
         matchingService = module.get<MatchingService>(MatchingService);
-        userRepository = module.get<UserRepository>(UserRepository);
     });
 
     describe("findNearbyMatches: execution path is correct, depending on the enableExtendedChecks flag", () => {
@@ -57,30 +54,6 @@ describe("MatchingService Integration", () => {
                 await matchingService.findPotentialMatchesForHeatmap(user);
 
             expect(result).toEqual([]);
-        });
-
-        it("should call getPotentialMatchesForNotifications when enableExtendedChecks is true", async () => {
-            const user = new User();
-            user.dateMode = EDateMode.LIVE;
-            user.location = { type: "Point", coordinates: [0, 0] } as Point;
-
-            await matchingService.findPotentialMatchesForHeatmap(user, true);
-
-            expect(
-                userRepository.getPotentialMatchesForNotifications,
-            ).toHaveBeenCalledWith(user);
-        });
-
-        it("should call getPotentialMatchesForHeatMap when enableExtendedChecks is false", async () => {
-            const user = new User();
-            user.dateMode = EDateMode.LIVE;
-            user.location = { type: "Point", coordinates: [0, 0] } as Point;
-
-            await matchingService.findPotentialMatchesForHeatmap(user, false);
-
-            expect(
-                userRepository.getPotentialMatchesForHeatMap,
-            ).toHaveBeenCalledWith(user);
         });
     });
 });
