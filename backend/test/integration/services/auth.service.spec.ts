@@ -1,26 +1,23 @@
 import { mockEnvConfig } from "@/__mocks__/mock-env.config";
 import { AuthService } from "@/auth/auth.service";
-import { User } from "@/entities/user/user.entity";
-import { UserRepository } from "@/entities/user/user.repository";
 import { UserService } from "@/entities/user/user.service";
 import { JwtService } from "@nestjs/jwt";
-import { getRepositoryToken } from "@nestjs/typeorm";
 import { UserEntityBuilder } from "../../_src/builders/user-entity.builder";
-import { createRandomAppUser } from "../../_src/factories/user.factory";
+import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
 
 describe("AuthService", () => {
     let authService: AuthService;
     let jwtService: JwtService;
-    let userRepository: UserRepository;
     let userService: UserService;
+    let userFactory: UserFactory;
 
     beforeEach(async () => {
-        const { module } = await getIntegrationTestModule();
+        const { module, factories } = await getIntegrationTestModule();
         authService = module.get<AuthService>(AuthService);
         jwtService = module.get<JwtService>(JwtService);
-        userRepository = module.get<UserRepository>(getRepositoryToken(User));
         userService = module.get<UserService>(UserService);
+        userFactory = factories.get("user") as UserFactory;
     });
 
     it("should create a registration session", async () => {
@@ -43,7 +40,7 @@ describe("AuthService", () => {
             .setField("email", "testuser@test.at")
             .build();
         await userService.hashNewPassword(user, pwd);
-        const persistedUser = await createRandomAppUser(userRepository, user);
+        const persistedUser = await userFactory.persistTestUser(user);
 
         const signInResponse = await authService.signIn(
             persistedUser.email,

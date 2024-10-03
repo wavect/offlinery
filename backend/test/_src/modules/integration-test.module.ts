@@ -22,16 +22,23 @@ import {
 } from "nestjs-i18n";
 import path from "node:path";
 import { join } from "path";
-import { DataSource } from "typeorm";
+import { DataSource, Repository } from "typeorm";
+import { EncounterFactory } from "../factories/encounter.factory";
 import {
-    createMainAppUser,
+    FactoryInterface,
+    FactoryPair,
+    TestFactory,
+} from "../factories/factory.interface";
+import {
     MAN_WANTS_WOMAN_TESTUSER,
+    UserFactory,
 } from "../factories/user.factory";
 
 interface TestModuleSetup {
     module: TestingModule;
     mainUser: User;
     dataSource: DataSource;
+    factories: FactoryPair;
 }
 
 // Create mock modules to break circular dependencies
@@ -107,25 +114,37 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
     }).compile();
 
     const userRepository = module.get<UserRepository>(getRepositoryToken(User));
+    const encounterRepository = module.get<Repository<Encounter>>(
+        getRepositoryToken(Encounter),
+    );
     const dataSource = module.get<DataSource>(DataSource);
 
-    // Ensure the database is synced and migrations are run
+    /** @DEV Database Operations - Ensure the database is synced and migrations are run */
     await dataSource.synchronize(true);
     await dataSource.runMigrations();
+    await initializePostGIS(dataSource); /** PostGIS/populate spatial_ref_sys */
 
-    /** @DEV Initialize PostGIS and populate spatial_ref_sys */
-    await initializePostGIS(dataSource);
+    /** @DEV Test Factories - create and get testing factories */
+    const userFactory = new UserFactory(userRepository);
+    const encounterFactory = new EncounterFactory(
+        userRepository,
+        encounterRepository,
+    );
+    const factories = new Map<TestFactory, FactoryInterface>([
+        ["user", userFactory],
+        ["encounter", encounterFactory],
+    ]);
 
-    await createMainAppUser(userRepository);
+    /** @DEV Main User - create the main testing user */
+    await userFactory.createMainAppUser();
     const mainUser = await userRepository.findOne({
         where: { firstName: MAN_WANTS_WOMAN_TESTUSER },
     });
-
     if (!mainUser) {
         throw new Error("Failed to create or retrieve main testing user");
     }
 
-    return { module, mainUser, dataSource };
+    return { module, mainUser, dataSource, factories };
 };
 
 async function initializePostGIS(dataSource: DataSource) {
