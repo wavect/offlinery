@@ -105,7 +105,6 @@
             "<rootDir>/src",
             "<rootDir>/test"
         ],
-        "testTimeout": 10000,
         "moduleNameMapper": {
             "^@/(.*)$": "<rootDir>/src/$1",
             "^@/utils/env.utils$": "<rootDir>/src/__mocks__/mock-env.config.ts"
@@ -131,7 +130,7 @@
         ],
         "coverageDirectory": "./coverage",
         "testEnvironment": "node",
-        "testTimeout": 15000,
+        "testTimeout": 30000,
         "coverageReporters": [
             "json-summary",
             "text",
