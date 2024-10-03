@@ -272,3 +272,12 @@ export const getUserImagesForUpload = (
                     : image.uri,
         }));
 };
+
+export const resetUserData = (dispatch: React.Dispatch<IUserAction>) => {
+    dispatch({
+        type: EACTION_USER.UPDATE_MULTIPLE,
+        payload: {
+            ...initialUserState,
+        },
+    });
+};
