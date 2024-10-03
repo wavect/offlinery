@@ -139,6 +139,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                         label={i18n.t(TR.leaveMessageBtnLbl)}
                                         onPress={() => setModalVisible(true)}
                                         variant={IOButtonSmallVariant.Black}
+                                        numberOfLines={1}
                                     />
                                 )}
                                 {dateStatus ===
@@ -160,6 +161,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                                 ? i18n.t(TR.reported)
                                                 : i18n.t(TR.report)
                                         }
+                                        numberOfLines={1}
                                     />
                                 )}
                                 {state.approachChoice !==
@@ -169,6 +171,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                     encounterProfile.isNearbyRightNow && (
                                         <OButtonSmall
                                             label={i18n.t(TR.navigate)}
+                                            numberOfLines={1}
                                             variant={IOButtonSmallVariant.Black}
                                             onPress={() =>
                                                 navigation.navigate(
