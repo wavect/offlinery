@@ -215,11 +215,11 @@ export class PendingUserService {
             ),
             template: "../../mail/templates/verification-successful",
             context: {
-                name: user.firstName,
-                t: (key: string, args?: any) =>
+                firstName: user.firstName,
+                t: (key: string, params?: Record<string, any>) =>
                     this.i18n.translate(
                         `main.email.verification-successful.${key}`,
-                        { lang, args },
+                        { lang, args: { ...(params?.hash ?? params) } },
                     ),
             },
         });
