@@ -367,14 +367,13 @@ export class UserService {
             ),
             template: "../../mail/templates/request-password-reset",
             context: {
-                name: user.firstName,
+                firstName: user.firstName,
                 resetPwdCode,
-                t: (key: string, params?: Record<string, any>) => {
-                    return this.i18n.translate(
+                t: (key: string, params?: Record<string, any>) =>
+                    this.i18n.translate(
                         `main.email.request-password-reset.${key}`,
-                        { lang, ...params },
-                    );
-                },
+                        { lang, args: { ...(params?.hash ?? params) } },
+                    ),
             },
         });
         await this.userRepository.save(user);
@@ -419,12 +418,12 @@ export class UserService {
             ),
             template: "../../mail/templates/request-account-deletion",
             context: {
-                name: user.firstName,
+                firstName: user.firstName,
                 deletionLink,
                 t: (key: string, params?: Record<string, any>) =>
                     this.i18n.translate(
                         `main.email.request-account-deletion.${key}`,
-                        { lang, ...params },
+                        { lang, args: { ...(params?.hash ?? params) } },
                     ),
             },
         });

@@ -8,7 +8,7 @@
   "email": {
     "request-account-deletion": {
       "subject": "Offlinery: Kontolöschung beantragt",
-      "hello": "Hi",
+      "hello": "Hi {firstName}",
       "warning": "Warnung: Kontolöschung",
       "receivedRequest": "Wir haben eine Anfrage erhalten, dein Konto dauerhaft zu löschen. Diese Aktion ist unwiderruflich und löscht alle deine Daten aus unseren Systemen.",
       "proceedInstructions": "Wenn du fortfahren möchtest, klicke auf den untenstehenden Link:",
@@ -23,7 +23,7 @@
       "subject": "Offlinery: Dein Konto wurde verifiziert",
       "title": "Offlinery: Konto verifiziert",
       "header": "Alles ist bereit!",
-      "greeting": "Hi",
+      "greeting": "Hi {firstName}",
       "verificationSuccess": "Großartige Neuigkeiten! Dein Offlinery-Konto ist jetzt verifiziert und einsatzbereit.",
       "nextSteps": "Was kommt als Nächstes? Ab jetzt kannst du andere User in der echten Welt ansprechen beziehungsweise wird von ihnen angesprochen.",
       "disclaimer": "Wenn Sie sich nicht bei Offlinery angemeldet haben, keine Sorge. Sie können diese E-Mail einfach ignorieren.",
@@ -42,7 +42,7 @@
     "request-password-reset": {
       "subject": "Offlinery: Code zum Zurücksetzen des Passworts",
       "title": "Code zum Zurücksetzen des Passworts",
-      "greeting": "Hi",
+      "greeting": "Hi {firstName}",
       "receivedRequest": "Wir haben eine Anfrage zum Zurücksetzen des Passworts für dein Offlinery-Konto erhalten.",
       "instructions": "Um Ihr Passwort zurückzusetzen, verwende bitte den folgenden 6-stelligen Code:",
       "expirationNote": "Hinweis: Dieser Code läuft aus Sicherheitsgründen in 15 Minuten ab.",
