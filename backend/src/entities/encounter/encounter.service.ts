@@ -76,10 +76,11 @@ export class EncounterService {
         usersThatWantToApproach: User[],
         areNearbyRightNow: boolean,
         resetNearbyStatusOfOtherEncounters: boolean,
-    ) {
+    ): Promise<Map<string, Encounter>> {
         this.logger.debug(
             `Saving encounters for user ${userToBeApproached.id} with ${usersThatWantToApproach.length} users that want to approach. areNearbyRightNow (${areNearbyRightNow}), resetNearbyStatusOfOtherEncounters (${resetNearbyStatusOfOtherEncounters})`,
         );
+        const newEncounters: Map<string, Encounter> = new Map();
         for (const u of usersThatWantToApproach) {
             // encounter should always be unique for a userId <> userId combination (not enforced on DB level as not possible)
             // @dev If encounter exists already, update the values, otherwise create new one.
@@ -96,7 +97,10 @@ export class EncounterService {
             encounter.lastLocationPassedBy = userToBeApproached.location;
             encounter.isNearbyRightNow = areNearbyRightNow;
 
-            await this.encounterRepository.save(encounter);
+            newEncounters.set(
+                u.id,
+                await this.encounterRepository.save(encounter),
+            );
         }
 
         if (resetNearbyStatusOfOtherEncounters) {
@@ -131,6 +135,7 @@ export class EncounterService {
 
             this.logger.debug(`Resetted nearbyStatus of other encounters.`);
         }
+        return newEncounters;
     }
 
     async updateStatus(
