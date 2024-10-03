@@ -4,7 +4,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { ONewPasswordGroup } from "@/components/ONewPasswordGroup/ONewPasswordGroup";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
-import { useUserContext } from "@/context/UserContext";
+import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
@@ -22,7 +22,7 @@ const Password = ({
     MainStackParamList,
     typeof ROUTES.Onboarding.Password
 >) => {
-    const { state } = useUserContext();
+    const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
     const [oldClearPassword, setOldClearPassword] = useState("");
     const [oldPasswordError, setOldPasswordError] = useState("");
@@ -50,6 +50,10 @@ const Password = ({
                     updateUserPasswordDTO,
                 });
 
+                dispatch({
+                    type: EACTION_USER.UPDATE_MULTIPLE,
+                    payload: { clearPassword: "" },
+                });
                 navigation.navigate(route.params.nextPage);
             } catch (err) {
                 setOldPasswordError(i18n.t(TR.oldPasswordInvalid));

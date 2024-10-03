@@ -17,6 +17,7 @@ import {
     EACTION_USER,
     getUserImagesForUpload,
     mapRegionToBlacklistedRegionDTO,
+    resetUserData,
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
@@ -182,6 +183,7 @@ const ProfileSettings = ({
 
     const handleLogout = async () => {
         await deleteSessionDataFromStorage();
+        resetUserData(dispatch);
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
