@@ -14,6 +14,7 @@ interface IOButtonSmallProps {
     onPress: () => Promise<void> | void;
     label: string;
     numberOfLines?: number;
+    adjustsFontSizeToFit?: boolean;
     isDisabled?: boolean;
     variant?: IOButtonSmallVariant;
     containerStyle?: StyleProp<ViewStyle>;
@@ -33,6 +34,7 @@ export const OButtonSmall = (props: IOButtonSmallProps) => {
         variant,
         containerStyle,
         numberOfLines,
+        adjustsFontSizeToFit,
     } = props;
     const [isLoading, setLoading] = useState(false);
 
@@ -65,7 +67,11 @@ export const OButtonSmall = (props: IOButtonSmallProps) => {
                         style={styles.activityIndicator}
                     />
                 )}
-                <Text style={styles.buttonText} numberOfLines={numberOfLines}>
+                <Text
+                    style={styles.buttonText}
+                    numberOfLines={numberOfLines}
+                    adjustsFontSizeToFit={adjustsFontSizeToFit}
+                >
                     {label}
                 </Text>
             </View>

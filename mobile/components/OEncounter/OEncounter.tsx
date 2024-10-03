@@ -140,6 +140,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                         onPress={() => setModalVisible(true)}
                                         variant={IOButtonSmallVariant.Black}
                                         numberOfLines={1}
+                                        adjustsFontSizeToFit={true}
                                     />
                                 )}
                                 {dateStatus ===
@@ -162,6 +163,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                                 : i18n.t(TR.report)
                                         }
                                         numberOfLines={1}
+                                        adjustsFontSizeToFit={true}
                                     />
                                 )}
                                 {state.approachChoice !==
@@ -187,6 +189,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                                     },
                                                 )
                                             }
+                                            adjustsFontSizeToFit={true}
                                         />
                                     )}
                             </View>
