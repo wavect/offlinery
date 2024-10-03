@@ -42,7 +42,7 @@ export class UserFactory implements FactoryInterface {
         });
 
         const savedUser = await this.userRepository.save(user);
-        savedUser.verificationStatus = userData.verificationStatus
+        savedUser.verificationStatus = userData?.verificationStatus
             ? userData.verificationStatus
             : EVerificationStatus.VERIFIED;
 

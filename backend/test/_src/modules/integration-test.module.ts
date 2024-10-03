@@ -4,6 +4,7 @@ import { MapModule } from "@/entities/map/map.module";
 import { Message } from "@/entities/messages/message.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { UserReport } from "@/entities/user-report/user-report.entity";
+import { UserReportModule } from "@/entities/user-report/user-report.module";
 import { User } from "@/entities/user/user.entity";
 import { UserModule } from "@/entities/user/user.module";
 import { UserRepository } from "@/entities/user/user.repository";
@@ -74,6 +75,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
             }),
             UserModule,
             MockAuthModule,
+            UserReportModule,
             MapModule,
             MockMatchingModule,
             MailerModule.forRoot({
