@@ -1,12 +1,12 @@
-import { BlacklistedRegion } from "../../../src/entities/blacklisted-region/blacklisted-region.entity";
-import { User } from "../../../src/entities/user/user.entity";
+import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
+import { User } from "@/entities/user/user.entity";
 import {
     EApproachChoice,
     EDateMode,
     EGender,
     EVerificationStatus,
-} from "../../../src/types/user.types";
-import { getAge } from "../../../src/utils/date.utils";
+} from "@/types/user.types";
+import { getAge } from "@/utils/date.utils";
 
 describe("User Entity", () => {
     let user: User;

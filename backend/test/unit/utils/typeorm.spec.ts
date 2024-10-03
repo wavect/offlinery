@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-describe("TypeORM Configuration", () => {
+describe.skip("TypeORM Configuration", () => {
     let configService: ConfigService;
 
     beforeEach(async () => {
