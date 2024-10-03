@@ -9,7 +9,7 @@ import { getRepositoryToken } from "@nestjs/typeorm";
 import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
 
-describe("RegistrationService", () => {
+describe("PendingUserService", () => {
     let registrationService: PendingUserService;
     let pendingUserRepo: Repository<PendingUser>;
     let userRepo: Repository<User>;

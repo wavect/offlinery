@@ -3,8 +3,7 @@ import {
     TypeOrmModuleAsyncOptions,
     TypeOrmModuleOptions,
 } from "@nestjs/typeorm";
-import { DataSource, DataSourceOptions } from "typeorm";
-import { TYPED_ENV, validateEnv } from "./utils/env.utils"; // @dev Keep relative import for typeorm cli here
+import { validateEnv } from "./utils/env.utils"; // @dev Keep relative import for typeorm cli here
 
 const baseConfig: TypeOrmModuleOptions = {
     type: "postgres",
@@ -32,12 +31,3 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
         };
     },
 };
-
-export const connectionSource = new DataSource({
-    ...baseConfig,
-    host: TYPED_ENV.DB_HOST,
-    port: TYPED_ENV.DB_PORT,
-    username: TYPED_ENV.DB_USER,
-    password: TYPED_ENV.DB_PASSWORD,
-    database: TYPED_ENV.DB_DATABASE,
-} as DataSourceOptions);

@@ -8,7 +8,8 @@ import {
 } from "@/types/user.types";
 import { TestingModule } from "@nestjs/testing";
 import { DataSource } from "typeorm";
-import { createRandomAppUser } from "../../_src/factories/user.factory";
+import { EncounterFactory } from "../../_src/factories/encounter.factory";
+import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
 import { clearDatabase } from "../../_src/utils/utils";
 
@@ -17,14 +18,19 @@ describe("UserRepository ", () => {
     let testingModule: TestingModule;
     let testingDataSource: DataSource;
     let testingMainUser: User;
+    let userFactory: UserFactory;
+    let encounterFactory: EncounterFactory;
 
     beforeAll(async () => {
-        const { module, dataSource, mainUser } =
+        const { module, dataSource, mainUser, factories } =
             await getIntegrationTestModule();
         testingMainUser = mainUser;
         testingModule = module;
         testingDataSource = dataSource;
         userRepository = module.get<UserRepository>(UserRepository);
+
+        userFactory = factories.get("user") as UserFactory;
+        encounterFactory = factories.get("encounter") as EncounterFactory;
 
         expect(testingMainUser).toBeDefined();
     });
@@ -39,13 +45,13 @@ describe("UserRepository ", () => {
 
     describe("get user positions for HeatMaps", () => {
         it("Should only find users that are the right GENDER", async () => {
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
                 genderDesire: EGender.MAN,
             });
 
-            const userId2 = await createRandomAppUser(userRepository, {
+            const userId2 = await userFactory.persistTestUser({
                 gender: EGender.WOMAN,
                 genderDesire: EGender.MAN,
             });
@@ -61,19 +67,19 @@ describe("UserRepository ", () => {
             );
         });
         it("Should only find users that are LIVE", async () => {
-            const userId = await createRandomAppUser(userRepository, {
+            const userId = await userFactory.persistTestUser({
                 dateMode: EDateMode.LIVE,
             });
-            const userId2 = await createRandomAppUser(userRepository, {
+            const userId2 = await userFactory.persistTestUser({
                 dateMode: EDateMode.LIVE,
             });
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 dateMode: EDateMode.LIVE,
             });
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 dateMode: EDateMode.GHOST,
             });
 
@@ -88,13 +94,13 @@ describe("UserRepository ", () => {
             );
         });
         it("Should not find users that are GHOST", async () => {
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            const user = await createRandomAppUser(userRepository, {
+            const user = await userFactory.persistTestUser({
                 dateMode: EDateMode.LIVE,
             });
 
@@ -114,24 +120,25 @@ describe("UserRepository ", () => {
     /** @DEV hence we need to insert users here with encounters */
     describe.skip("get users for encounters / notifications", () => {
         it("Should only find users that are the right GENDER", async () => {
-            const userId = await createRandomAppUser(userRepository, {
+            const userId = await userFactory.persistTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: EGender.MAN,
+            });
+            const userId2 = await userFactory.persistTestUser({
                 gender: EGender.WOMAN,
                 genderDesire: EGender.MAN,
             });
 
-            const userId2 = await createRandomAppUser(userRepository, {
-                gender: EGender.WOMAN,
-                genderDesire: EGender.MAN,
-            });
-
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 gender: EGender.MAN,
                 genderDesire: EGender.WOMAN,
             });
 
+            await encounterFactory.persistTestEncounter(userId, userId2);
+
             const matches = Array.from(
                 (
-                    await userRepository.getPotentialMatchesForHeatMap(
+                    await userRepository.getPotentialMatchesForNotifications(
                         testingMainUser,
                     )
                 ).values(),
@@ -143,19 +150,19 @@ describe("UserRepository ", () => {
             );
         });
         it("Should only find users that are LIVE", async () => {
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            const user = await createRandomAppUser(userRepository, {
+            const user = await userFactory.persistTestUser({
                 dateMode: EDateMode.LIVE,
             });
 
@@ -173,15 +180,15 @@ describe("UserRepository ", () => {
             );
         });
         it("Should only find users that are VERIFIED", async () => {
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 verificationStatus: EVerificationStatus.PENDING,
             });
 
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 verificationStatus: EVerificationStatus.NOT_NEEDED,
             });
 
-            const user = await createRandomAppUser(userRepository, {
+            const user = await userFactory.persistTestUser({
                 verificationStatus: EVerificationStatus.VERIFIED,
             });
 
@@ -198,12 +205,11 @@ describe("UserRepository ", () => {
                 expect.arrayContaining([user.id]),
             );
         });
-
         it("Should only find users that want to be APPROACHED", async () => {
-            const user1 = await createRandomAppUser(userRepository, {
+            const user1 = await userFactory.persistTestUser({
                 approachChoice: EApproachChoice.BE_APPROACHED,
             });
-            const user2 = await createRandomAppUser(userRepository, {
+            const user2 = await userFactory.persistTestUser({
                 approachChoice: EApproachChoice.BE_APPROACHED,
             });
 
@@ -221,10 +227,10 @@ describe("UserRepository ", () => {
             );
         });
         it("Should not find users that are GHOST", async () => {
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            await createRandomAppUser(userRepository, {
+            await userFactory.persistTestUser({
                 dateMode: EDateMode.GHOST,
             });
 

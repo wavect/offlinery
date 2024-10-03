@@ -1,6 +1,12 @@
 import { OnlyValidRegistrationSession } from "@/auth/auth-registration-session";
+import { OnlyAdmin, Public } from "@/auth/auth.guard";
+import {
+    RegistrationForVerificationRequestDTO,
+    RegistrationForVerificationResponseDTO,
+} from "@/DTOs/registration-for-verification.dto";
 import { SetAcceptedSpecialDataGenderLookingForDTO } from "@/DTOs/set-accepted-special-data-gender-looking-for.dto";
 import { UpdateUserVerificationstatusDTO } from "@/DTOs/update-user-verificationstatus.dto";
+import { VerifyEmailDTO } from "@/DTOs/verify-email.dto";
 import {
     Body,
     Controller,
@@ -12,12 +18,6 @@ import {
     ValidationPipe,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { OnlyAdmin, Public } from "src/auth/auth.guard";
-import {
-    RegistrationForVerificationRequestDTO,
-    RegistrationForVerificationResponseDTO,
-} from "src/DTOs/registration-for-verification.dto";
-import { VerifyEmailDTO } from "src/DTOs/verify-email.dto";
 import { PendingUserService } from "./pending-user.service";
 
 @ApiTags("PendingUser")
