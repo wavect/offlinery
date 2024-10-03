@@ -53,7 +53,11 @@ export const OPageContainer = (props: IOPageContainerProps) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar hidden backgroundColor="transparent" />
+            <StatusBar
+                hidden
+                backgroundColor="transparent"
+                barStyle="default"
+            />
             {props.fullpageIcon && (
                 <View style={styles.iconContainer}>
                     <MaterialIcons
