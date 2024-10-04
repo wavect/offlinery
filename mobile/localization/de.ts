@@ -154,6 +154,7 @@ export const de: Language = {
     toThisDate: "bis zu diesem Datum",
     beNearTheseHotspotsToMeet:
         "In der Nähe dieser Hotspots zu sein erhöht deine Chancen, deine bessere Hälfte zu treffen.",
+    wasSeenNear: "nahe", // OF-233 adapt to geofencing
     reportPerson: "Person melden",
     meetIRL: "Im echten Leben treffen",
     profileView: "Profilansicht",
@@ -230,4 +231,10 @@ export const de: Language = {
     deletionRequested: "Löschung beantragt",
     accountDeletionRequestedAlert:
         "Wir haben dir eine E-Mail geschickt. Klick auf den Link, um deinen Account unwiderruflich zu löschen.",
+    justNow: "gerade eben",
+    hoursAgo: "Stunde(n) her",
+    daysAgo: "Tag(e) her",
+    weeksAgo: "Woche(n) her",
+    monthsAgo: "Monat(e) her",
+    yearsAgo: "Jahr(e) her",
 };
