@@ -8,7 +8,7 @@ import {
 } from "@/types/user.types";
 import { AbstractEntityBuilder } from "./_abstract-entity-builder";
 
-export class UserEntityBuilder extends AbstractEntityBuilder<User> {
+export class UserBuilder extends AbstractEntityBuilder<User> {
     protected createEntity(): User {
         const user = new User();
         user.id = "00000000-0000-0000-0000-000000000000";

@@ -5,7 +5,7 @@ import { OfflineryNotification } from "@/types/notification-message.types";
 import { Logger } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { Expo, ExpoPushTicket } from "expo-server-sdk";
-import { UserEntityBuilder } from "../../_src/builders/user-entity.builder";
+import { UserBuilder } from "../../_src/builders/user.builder";
 
 describe("NotificationService", () => {
     let service: NotificationService;
@@ -51,7 +51,7 @@ describe("NotificationService", () => {
                     data: {
                         encounterId: "1",
                         navigateToPerson: {
-                            ...new UserEntityBuilder().build(),
+                            ...new UserBuilder().build(),
                             age: 21,
                         },
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
@@ -63,7 +63,7 @@ describe("NotificationService", () => {
                     data: {
                         encounterId: "1",
                         navigateToPerson: {
-                            ...new UserEntityBuilder().build(),
+                            ...new UserBuilder().build(),
                             age: 21,
                         },
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
@@ -112,7 +112,7 @@ describe("NotificationService", () => {
                     data: {
                         encounterId: "1",
                         navigateToPerson: {
-                            ...new UserEntityBuilder().build(),
+                            ...new UserBuilder().build(),
                             age: 21,
                         },
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
@@ -152,7 +152,7 @@ describe("NotificationService", () => {
                     data: {
                         encounterId: "1",
                         navigateToPerson: {
-                            ...new UserEntityBuilder().build(),
+                            ...new UserBuilder().build(),
                             age: 21,
                         },
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,

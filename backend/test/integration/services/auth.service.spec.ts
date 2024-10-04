@@ -2,7 +2,7 @@ import { mockEnvConfig } from "@/__mocks__/mock-env.config";
 import { AuthService } from "@/auth/auth.service";
 import { UserService } from "@/entities/user/user.service";
 import { JwtService } from "@nestjs/jwt";
-import { UserEntityBuilder } from "../../_src/builders/user-entity.builder";
+import { UserBuilder } from "../../_src/builders/user.builder";
 import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
 
@@ -36,8 +36,8 @@ describe("AuthService", () => {
 
     it("should sign in with Email/Password and then sign in with the JWT that was returned", async () => {
         const pwd = "super-safe-pwd";
-        const user = new UserEntityBuilder()
-            .setField("email", "testuser@test.at")
+        const user = new UserBuilder()
+            .with("email", "testuser@test.at")
             .build();
         await userService.hashNewPassword(user, pwd);
         const persistedUser = await userFactory.persistTestUser(user);

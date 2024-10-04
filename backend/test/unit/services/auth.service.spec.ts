@@ -2,7 +2,7 @@ import { AuthService } from "@/auth/auth.service";
 import { UserService } from "@/entities/user/user.service";
 import { JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
-import { UserEntityBuilder } from "../../_src/builders/user-entity.builder";
+import { UserBuilder } from "../../_src/builders/user.builder";
 
 describe("AuthService", () => {
     let authService: AuthService;
@@ -40,7 +40,7 @@ describe("AuthService", () => {
             const newAccessToken = "new-access-token";
             const newRefreshToken = "new-refresh-token";
 
-            const mockUser = new UserEntityBuilder().build();
+            const mockUser = new UserBuilder().build();
             jest.spyOn(userService, "findUserByRefreshToken").mockResolvedValue(
                 mockUser,
             );
