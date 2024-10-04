@@ -12,7 +12,7 @@ import {
 } from "@/types/user.types";
 import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
-import { UserEntityBuilder } from "../../_src/builders/user-entity.builder";
+import { UserBuilder } from "../../_src/builders/user.builder";
 
 describe("UserController", () => {
     let controller: UserController;
@@ -68,7 +68,7 @@ describe("UserController", () => {
             jest.spyOn(userService, "createUser").mockResolvedValue({
                 accessToken: "AT",
                 user: {
-                    ...new UserEntityBuilder().build(),
+                    ...new UserBuilder().build(),
                     markedForDeletion: false,
                     age: 26,
                 },

@@ -7,7 +7,7 @@ export abstract class AbstractEntityBuilder<T> {
 
     protected abstract createEntity(): T;
 
-    public setField<K extends keyof T>(field: K, value: T[K]): this {
+    public with<K extends keyof T>(field: K, value: T[K]): this {
         this.entity[field] = value;
         return this;
     }
