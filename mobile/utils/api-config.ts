@@ -124,8 +124,9 @@ class ApiManager {
                 this.apis = this.initApis();
                 return refreshResponse.accessToken;
             } catch (e) {
-                console.error("Error during refreshing tokens: ", e);
-                //throw e;
+                console.error("JWT unable to refresh. Logging user out");
+                saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
+                saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
             }
         }
         return jwtToken!;

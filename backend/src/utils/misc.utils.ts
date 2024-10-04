@@ -8,4 +8,5 @@ export const BE_ENDPOINT =
         ? `http://localhost:${TYPED_ENV.BE_PORT}`
         : "https://offlinery-ys39.onrender.com";
 
-export const TOKEN_TIME = "30s";
+export const TOKEN_TIME = "60m";
+export const REGISTRATION_TOKEN_TIME = "1d";

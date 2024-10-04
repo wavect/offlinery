@@ -35,7 +35,6 @@ const Welcome = ({
                 console.log("forcing re-login");
                 return;
             }
-            console.log("sign in by jwt: ", accessToken);
             const resp = await API.auth.authControllerSignInByJWT({
                 signInJwtDTO: { jwtAccessToken: accessToken },
             });

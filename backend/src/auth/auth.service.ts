@@ -2,7 +2,7 @@ import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { TYPED_ENV } from "@/utils/env.utils";
-import { TOKEN_TIME } from "@/utils/misc.utils";
+import { REGISTRATION_TOKEN_TIME, TOKEN_TIME } from "@/utils/misc.utils";
 import {
     forwardRef,
     Inject,
@@ -62,7 +62,7 @@ export class AuthService {
             { pendingUserId },
             {
                 secret: TYPED_ENV.JWT_SECRET_REGISTRATION,
-                expiresIn: TOKEN_TIME,
+                expiresIn: REGISTRATION_TOKEN_TIME,
             },
         );
     }
