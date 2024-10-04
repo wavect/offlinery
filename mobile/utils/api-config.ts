@@ -30,7 +30,7 @@ type ApiClasses = {
 class ApiManager {
     private static instance: ApiManager;
     private config: Configuration;
-    private readonly apis: ApiClasses;
+    private apis: ApiClasses;
 
     private constructor() {
         this.config = this.createConfiguration();
@@ -63,24 +63,38 @@ class ApiManager {
 
     private createConfiguration(): Configuration {
         const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
-        return new Configuration({
+        console.log("increateconfig: ", jwtToken);
+        const config = new Configuration({
             accessToken: jwtToken!,
             middleware: [
                 {
                     pre: async (request: RequestContext) => {
-                        await this.ensureValidToken();
+                        const accessToken = await this.ensureValidToken();
+
                         request.init.headers = {
                             ...request.init.headers,
-                            Authorization: `Bearer ${getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN)}`,
+                            Authorization: `Bearer ${accessToken}`,
                         };
+                        if (request.url.includes("/auth/")) {
+                            let body: Record<string, any> = {};
+                            body = JSON.parse(
+                                request.init.body?.valueOf().toString() ?? "",
+                            );
+                            body.jwtAccessToken = accessToken;
+                            request.init.body = JSON.stringify(body);
+                        }
                         return request;
                     },
                 },
             ],
         });
+        console.log("created new config");
+
+        return config;
     }
 
-    private async ensureValidToken(): Promise<void> {
+    private async ensureValidToken(): Promise<string> {
+        console.log("ensuring valid token");
         const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
         const refreshToken = getSecurelyStoredValue(
             SECURE_VALUE.JWT_REFRESH_TOKEN,
@@ -107,11 +121,14 @@ class ApiManager {
                 );
                 console.log("JWT and Refresh update successful.");
                 this.config = this.createConfiguration();
+                this.apis = this.initApis();
+                return refreshResponse.accessToken;
             } catch (e) {
                 console.error("Error during refreshing tokens: ", e);
-                throw e;
+                //throw e;
             }
         }
+        return jwtToken!;
     }
 }
 

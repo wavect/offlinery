@@ -34,7 +34,7 @@ export const jwtExpiresSoon = (token: string) => {
         const currentDate = new Date();
         const timeDifference = expirationDate.getTime() - currentDate.getTime();
         const minutesDifference = timeDifference / (1000 * 60);
-        return minutesDifference <= REFRESH_REMAINING_MINUTE; // Refresh prior to invalidation
+        return minutesDifference <= 0.1; // Refresh prior to invalidation
     } else {
         console.log("Unable to check if expired. Invalid Token received.");
     }

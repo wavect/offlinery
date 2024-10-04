@@ -50,7 +50,9 @@ export class AuthController {
     @Public()
     @HttpCode(HttpStatus.OK)
     @Post("token/refresh")
-    refreshJwtToken(@Body() signInDTO: RefreshJwtDTO): Promise<any> {
+    refreshJwtToken(
+        @Body() signInDTO: RefreshJwtDTO,
+    ): Promise<SignInResponseDTO> {
         this.logger.debug(
             `Trying to refresh jwt token with refresh token ${signInDTO.refreshToken}`,
         );

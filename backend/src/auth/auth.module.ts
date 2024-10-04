@@ -22,7 +22,7 @@ import { AuthService } from "./auth.service";
         JwtModule.register({
             global: true,
             secret: TYPED_ENV.JWT_SECRET,
-            signOptions: { expiresIn: "60m" },
+            signOptions: { expiresIn: "1m" },
         }),
         TypeOrmModule.forFeature([ApiUser]),
         ApiUserModule,
