@@ -7,32 +7,33 @@ import {
     EVerificationStatus,
 } from "@/types/user.types";
 import { getAge } from "@/utils/date.utils";
+import { UserBuilder } from "../../_src/builders/user.builder";
 
 describe("User Entity", () => {
     let user: User;
 
     beforeEach(() => {
-        user = new User();
-        user.id = "1";
-        user.firstName = "John";
-        user.email = "john@example.com";
-        user.birthDay = new Date("1990-01-01");
-        user.gender = EGender.MAN;
-        user.genderDesire = EGender.WOMAN;
-        user.imageURIs = ["image1.jpg", "image2.jpg"];
-        user.verificationStatus = EVerificationStatus.VERIFIED;
-        user.approachChoice = EApproachChoice.BOTH;
-        user.approachFromTime = new Date("2023-01-01T09:00:00Z");
-        user.approachToTime = new Date("2023-01-01T17:00:00Z");
-        user.bio = "Hello, I am John";
-        user.dateMode = EDateMode.LIVE;
-        user.trustScore = 85;
+        user = new UserBuilder()
+            .withId("1")
+            .withFirstName("John")
+            .withEmail("john@example.com")
+            .withBirthDay(new Date("1990-01-01"))
+            .withGender(EGender.MAN)
+            .withGenderDesire(EGender.WOMAN)
+            .withImageURIs(["image1.jpg", "image2.jpg"])
+            .withVerificationStatus(EVerificationStatus.VERIFIED)
+            .withApproachChoice(EApproachChoice.BOTH)
+            .withApproachFromTime(new Date("2023-01-01T09:00:00Z"))
+            .withApproachToTime(new Date("2023-01-01T17:00:00Z"))
+            .withBio("Hello, I am John")
+            .withDateMode(EDateMode.LIVE)
+            .withTrustScore(85)
+            .build();
     });
 
     describe("convertToPublicDTO", () => {
         it("should return a UserPublicDTO with correct properties", () => {
             const publicDTO = user.convertToPublicDTO();
-
             expect(publicDTO).toEqual({
                 id: "1",
                 firstName: "John",
@@ -46,13 +47,16 @@ describe("User Entity", () => {
 
     describe("convertToPrivateDTO", () => {
         it("should return a UserPrivateDTO with correct properties", () => {
-            user.isActive = true;
-            user.wantsEmailUpdates = false;
-            user.blacklistedRegions = [new BlacklistedRegion()];
+            const privateUser = new UserBuilder()
+                .withDateMode(EDateMode.LIVE)
+                .withIsActive(true)
+                .withWantsEmailUpdates(false)
+                .withBlacklistedRegions([new BlacklistedRegion()])
+                .build();
 
-            const privateDTO = user.convertToPrivateDTO();
-
-            expect(privateDTO.dateMode).toEqual(EDateMode.LIVE);
+            expect(privateUser.convertToPrivateDTO().dateMode).toEqual(
+                EDateMode.LIVE,
+            );
         });
     });
 });

@@ -36,9 +36,7 @@ describe("AuthService", () => {
 
     it("should sign in with Email/Password and then sign in with the JWT that was returned", async () => {
         const pwd = "super-safe-pwd";
-        const user = new UserBuilder()
-            .with("email", "testuser@test.at")
-            .build();
+        const user = new UserBuilder().withEmail("testuser@test.at").build();
         await userService.hashNewPassword(user, pwd);
         const persistedUser = await userFactory.persistTestUser(user);
 
