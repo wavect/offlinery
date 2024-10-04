@@ -108,7 +108,7 @@ const NavigateToApproach = ({
                 secondButton={{
                     onPress: openMapsApp,
                     disabled: !destination,
-                    text: `${i18n.t(TR.navigateTo)} ${navigateToPerson.firstName}`,
+                    text: `${i18n.t(TR.navigateTo)}`,
                     style: styles.navigateBtn,
                 }}
             />

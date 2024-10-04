@@ -162,7 +162,7 @@ export const en = {
     encounters: "Encounters",
     settings: "Settings",
     destination: "Destination",
-    navigateTo: "Navigate to ",
+    navigateTo: "Navigate",
     yourLocation: "Your location",
     calculating: "Calculating..",
     changePreferencesDescr: "Change your preferences or update your profile.",
