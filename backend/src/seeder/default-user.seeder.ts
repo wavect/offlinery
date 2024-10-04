@@ -64,7 +64,7 @@ export class DefaultUserSeeder {
                 birthDay: new Date("1990-01-01"),
                 gender: EGender.MAN,
                 genderDesire: EGender.WOMAN,
-                approachChoice: EApproachChoice.BE_APPROACHED,
+                approachChoice: EApproachChoice.APPROACH,
                 approachFromTime: new Date("2023-01-01 08:00:00"),
                 approachToTime: new Date("2023-01-01 20:00:00"),
                 dateMode: EDateMode.GHOST,
