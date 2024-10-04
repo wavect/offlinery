@@ -63,8 +63,7 @@ class ApiManager {
 
     private createConfiguration(): Configuration {
         const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
-        console.log("increateconfig: ", jwtToken);
-        const config = new Configuration({
+        return new Configuration({
             accessToken: jwtToken!,
             middleware: [
                 {
@@ -88,20 +87,15 @@ class ApiManager {
                 },
             ],
         });
-        console.log("created new config");
-
-        return config;
     }
 
     private async ensureValidToken(): Promise<string> {
-        console.log("ensuring valid token");
         const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
         const refreshToken = getSecurelyStoredValue(
             SECURE_VALUE.JWT_REFRESH_TOKEN,
         );
         if (jwtToken && jwtExpiresSoon(jwtToken)) {
             try {
-                console.log("Token has expired. Requesting a new token.");
                 if (!refreshToken) {
                     throw new Error("No refresh token found.");
                 }
