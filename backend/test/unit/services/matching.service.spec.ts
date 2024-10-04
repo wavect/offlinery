@@ -119,24 +119,24 @@ describe("MatchingService", () => {
         it("should send notifications and save encounters for nearby matches", async () => {
             /** @DEV the users' encounters */
             const usersEncounters = [
-                new EncounterBuilder().with("id", "1").build(),
-                new EncounterBuilder().with("id", "2").build(),
+                new EncounterBuilder().withId("100").build(),
+                new EncounterBuilder().withId("200").build(),
             ];
 
             /** @DEV the current user with his recent encounters */
             const testingUser = new UserBuilder()
-                .with("encounters", usersEncounters)
+                .withEncounters(usersEncounters)
                 .build();
 
             /** @DEV one of the 5 users he already encountered is currently nearby */
             const potentialMatchThatIsNearby = [
                 new UserBuilder()
-                    .with("id", "100")
-                    .with("pushToken", "push-token-1")
+                    .withId("100")
+                    .withPushToken("push-token-1")
                     .build(),
                 new UserBuilder()
-                    .with("id", "100")
-                    .with("pushToken", "push-token-2")
+                    .withId("200")
+                    .withPushToken("push-token-2")
                     .build(),
             ];
 
@@ -144,12 +144,14 @@ describe("MatchingService", () => {
                 userRepository,
                 "getPotentialMatchesForNotifications",
             ).mockResolvedValue(potentialMatchThatIsNearby);
+
             jest.spyOn(
                 encounterService,
                 "saveEncountersForUser",
             ).mockResolvedValue(
                 new Map([[usersEncounters[0].id, usersEncounters[0]]]),
             );
+
             i18nService.t.mockImplementation((key) => `Translated ${key}`);
 
             await matchingService.checkAndNotifyMatches(testingUser);
@@ -167,8 +169,8 @@ describe("MatchingService", () => {
                 expect.objectContaining({
                     id: "00000000-0000-0000-0000-000000000000",
                     encounters: expect.arrayContaining([
-                        expect.objectContaining({ id: "1" }),
-                        expect.objectContaining({ id: "2" }),
+                        expect.objectContaining({ id: "100" }),
+                        expect.objectContaining({ id: "200" }),
                     ]),
                 }),
                 expect.arrayContaining([
@@ -177,7 +179,7 @@ describe("MatchingService", () => {
                         pushToken: "push-token-1",
                     }),
                     expect.objectContaining({
-                        id: "100",
+                        id: "200",
                         pushToken: "push-token-2",
                     }),
                 ]),
@@ -189,40 +191,50 @@ describe("MatchingService", () => {
         it("should create correct notification object", async () => {
             /** @DEV the users' encounters */
             const usersEncounters = [
-                new EncounterBuilder().with("id", "100").build(),
-                new EncounterBuilder().with("id", "200").build(),
-                new EncounterBuilder().with("id", "300").build(),
-                new EncounterBuilder().with("id", "400").build(),
-                new EncounterBuilder().with("id", "500").build(),
+                new EncounterBuilder().withId("100").build(),
+                new EncounterBuilder().withId("200").build(),
+                new EncounterBuilder().withId("300").build(),
+                new EncounterBuilder().withId("400").build(),
+                new EncounterBuilder().withId("500").build(),
             ];
 
             /** @DEV the current user with his recent encounters */
             const testingUser = new UserBuilder()
-                .with("encounters", usersEncounters)
+                .withEncounters(usersEncounters)
                 .build();
 
             /** @DEV one of the 5 users he already encountered is currently nearby */
             const potentialMatchThatIsNearby = [
-                new UserBuilder().with("id", "100").build(),
+                new UserBuilder()
+                    .withId("100")
+                    .withPushToken("push-token-1000")
+                    .build(),
             ];
 
             jest.spyOn(
                 userRepository,
                 "getPotentialMatchesForNotifications",
             ).mockResolvedValue(potentialMatchThatIsNearby);
+
             jest.spyOn(
                 encounterService,
                 "saveEncountersForUser",
             ).mockResolvedValue(
                 new Map([[usersEncounters[0].id, usersEncounters[0]]]),
             );
+
+            console.log(
+                "mockedData: ",
+                new Map([[usersEncounters[0].id, usersEncounters[0]]]),
+            );
+
             i18nService.t.mockImplementation((key) => `Translated ${key}`);
 
             // ACT
             await matchingService.checkAndNotifyMatches(testingUser);
 
             const expectedNotification: OfflineryNotification = {
-                to: undefined,
+                to: "push-token-1000",
                 sound: "default",
                 title: "Translated main.notification.newMatch.title",
                 body: "Translated main.notification.newMatch.body",
