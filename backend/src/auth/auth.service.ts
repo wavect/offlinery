@@ -2,6 +2,7 @@ import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { TYPED_ENV } from "@/utils/env.utils";
+import { TOKEN_TIME } from "@/utils/misc.utils";
 import {
     forwardRef,
     Inject,
@@ -59,7 +60,10 @@ export class AuthService {
         console.log(`using.. ${TYPED_ENV.JWT_SECRET_REGISTRATION}`);
         return await this.jwtService.signAsync(
             { pendingUserId },
-            { secret: TYPED_ENV.JWT_SECRET_REGISTRATION, expiresIn: "1d" },
+            {
+                secret: TYPED_ENV.JWT_SECRET_REGISTRATION,
+                expiresIn: TOKEN_TIME,
+            },
         );
     }
 
@@ -87,7 +91,7 @@ export class AuthService {
         const payload = { sub: user.id, email: user.email };
         const accessToken = await this.jwtService.signAsync(payload, {
             secret: TYPED_ENV.JWT_SECRET,
-            expiresIn: "1m",
+            expiresIn: TOKEN_TIME,
         });
         const refreshToken = await this.generateRefreshToken(user);
 
@@ -126,7 +130,6 @@ export class AuthService {
             this.logger.debug(
                 `User jwt refresh access token was successful for user ${user.id}`,
             );
-            this.logger.debug(`New JWT: ${newAccessToken}`);
 
             return {
                 accessToken: newAccessToken,

@@ -9,6 +9,7 @@ import { userAuthenticatedUpdate } from "@/services/auth.service";
 import {
     SECURE_VALUE,
     getSecurelyStoredValue,
+    saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 import { API } from "@/utils/api-config";
 import { writeSupportEmail } from "@/utils/misc.utils";
@@ -47,7 +48,9 @@ const Welcome = ({
                 resp.refreshToken,
             );
         } catch (error) {
-            console.error("error in welcome", error);
+            saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
+            saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
+            console.log("Forcing user to re-login.");
         }
 
         return isAuthenticated();

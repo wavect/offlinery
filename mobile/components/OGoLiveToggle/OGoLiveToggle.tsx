@@ -52,11 +52,10 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
             };
 
             try {
-                console.log("updating location");
-                //   await API.user.userControllerUpdateLocation({
-                //       userId,
-                //       locationUpdateDTO: locationUpdateDTO,
-                //   });
+                await API.user.userControllerUpdateLocation({
+                    userId,
+                    locationUpdateDTO: locationUpdateDTO,
+                });
                 console.log(
                     `[TASK:LOCATION_UPDATE]: User Location updated successfully`,
                 );

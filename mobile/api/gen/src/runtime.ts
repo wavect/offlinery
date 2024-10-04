@@ -12,16 +12,9 @@
  * Do not edit the class manually.
  */
 
-import Constants from "expo-constants";
-import { isExpoGoEnvironment } from "../../../utils/misc.utils";
-
 /*export const BASE_PATH = "https://offlinery-ys39.onrender.com/v1".replace(/\/+$/, "");*/
 
-export const BASE_PATH = (
-    (isExpoGoEnvironment
-        ? `http://${Constants.expoConfig?.hostUri?.split(":").shift()?.concat(":3000")}`
-        : "https://offlinery-ys39.onrender.com") + "/v1"
-).replace(/\/+$/, "");
+export const BASE_PATH = "http://localhost:3000/v1";
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path
@@ -167,12 +160,7 @@ export class BaseAPI {
             context,
             initOverrides,
         );
-        console.log("--------------runtime.ts----------------");
-        console.log("url: ", url);
-        console.log("init: ", init);
         const response = await this.fetchApi(url, init);
-        console.log("response: ", response);
-        console.log("-------------end--------------------");
         if (response && response.status >= 200 && response.status < 300) {
             return response;
         }
@@ -253,19 +241,10 @@ export class BaseAPI {
                         fetch: this.fetchApi,
                         ...fetchParams,
                     })) || fetchParams;
-                console.log("fetchparams: ", fetchParams);
             }
         }
         let response: Response | undefined = undefined;
         try {
-            console.log("on this url: ", fetchParams.url);
-            console.log("config fetch: ", this.configuration.fetchApi);
-            console.log("fetch: ", fetch);
-
-            console.log(
-                "making actual call with: ",
-                JSON.stringify(fetchParams.init.headers),
-            );
             response = await (this.configuration.fetchApi || fetch)(
                 fetchParams.url,
                 fetchParams.init,
