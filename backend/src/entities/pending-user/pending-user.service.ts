@@ -213,7 +213,7 @@ export class PendingUserService {
                 "main.email.verification-successful.subject",
                 { lang },
             ),
-            template: "../../mail/templates/verification-successful",
+            template: "verification-successful",
             context: {
                 firstName: user.firstName,
                 t: (key: string, params?: Record<string, any>) =>
@@ -239,7 +239,7 @@ export class PendingUserService {
                 "main.email.email-verification.subject",
                 { lang: language },
             ),
-            template: "../../mail/templates/email-verification",
+            template: "email-verification",
             context: {
                 verificationCode,
                 t: (key: string, args?: any) =>

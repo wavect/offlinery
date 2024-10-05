@@ -90,7 +90,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
                     from: '"No Reply" <noreply@offlinery.io>',
                 },
                 template: {
-                    dir: join(__dirname, "../../mail/templates"),
+                    dir: join(__dirname, "../../mail"),
                     adapter: new HandlebarsAdapter(),
                 },
             }),
