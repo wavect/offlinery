@@ -137,12 +137,12 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 updateUserDTO,
             });
 
+            await configureLocationTracking(newDateMode);
+
             dispatch({
                 type: EACTION_USER.UPDATE_MULTIPLE,
                 payload: { dateMode: newDateMode },
             });
-
-            await configureLocationTracking(newDateMode);
 
             if (newDateMode === UserPrivateDTODateModeEnum.live) {
                 alert(`${i18n.t(TR.youAreLive)} ${getSuccessMessage()}`);

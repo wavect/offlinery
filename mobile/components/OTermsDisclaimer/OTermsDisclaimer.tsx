@@ -31,14 +31,8 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.montserratLight,
         fontWeight: "500",
         fontSize: FontSize.size_sm,
-        textShadowColor: "rgba(0, 0, 0, 0.25)",
-        textShadowOffset: {
-            width: 0,
-            height: 4,
-        },
         color: Color.white,
         lineHeight: 20,
-        textShadowRadius: 4,
         textAlign: "center",
     },
     termsLink: {
