@@ -44,7 +44,7 @@ export class MatchingService {
     public async checkAndNotifyMatches(
         userToBeApproached: User,
     ): Promise<void> {
-        let nearbyMatches: Map<string, User>;
+        let nearbyMatches: User[];
         if (
             !userToBeApproached ||
             !userToBeApproached.location ||
@@ -53,7 +53,7 @@ export class MatchingService {
             this.logger.debug(
                 `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
             );
-            nearbyMatches = new Map();
+            nearbyMatches = [];
         } else {
             nearbyMatches =
                 await this.userRepository.getPotentialMatchesForNotifications(
@@ -61,7 +61,7 @@ export class MatchingService {
                 );
         }
 
-        if (nearbyMatches?.size > 0) {
+        if (nearbyMatches?.length > 0) {
             const baseNotification: OBaseNotification = {
                 sound: "default",
                 title: this.i18n.t("main.notification.newMatch.title", {
@@ -74,29 +74,28 @@ export class MatchingService {
                 },
             };
 
-            const usersThatWantToApproach: User[] = [];
+            // now save as encounters into DB
+            const newEncounters =
+                await this.encounterService.saveEncountersForUser(
+                    userToBeApproached,
+                    nearbyMatches,
+                    true, // they are all nearby rn
+                    true, // reset older encounters
+                );
+
             const notifications: OfflineryNotification[] = [];
-            for (const [encounterId, user] of nearbyMatches.entries()) {
+            for (const user of nearbyMatches) {
                 notifications.push({
                     ...baseNotification,
                     to: user.pushToken,
                     data: {
                         ...baseNotification.data,
-                        encounterId,
+                        encounterId: newEncounters[user.id],
                     },
                 });
-                usersThatWantToApproach.push(user);
             }
 
             await this.notificationService.sendPushNotification(notifications);
-
-            // now save as encounters into DB
-            await this.encounterService.saveEncountersForUser(
-                userToBeApproached,
-                usersThatWantToApproach,
-                true, // they are all nearby rn
-                true, // reset older encounters
-            );
         }
     }
 }

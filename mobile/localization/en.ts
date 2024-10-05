@@ -152,6 +152,7 @@ export const en = {
     toThisDate: "to this date",
     beNearTheseHotspotsToMeet:
         "Being near these hotspots increases your odds of meeting your soulmate.",
+    wasSeenNear: " near ", // OF-233 adapt to geofencing
     reportPerson: "Report person",
     meetIRL: "Meet in IRL",
     profileView: "Profile view",
@@ -162,7 +163,7 @@ export const en = {
     encounters: "Encounters",
     settings: "Settings",
     destination: "Destination",
-    navigateTo: "Navigate to ",
+    navigateTo: "Navigate",
     yourLocation: "Your location",
     calculating: "Calculating..",
     changePreferencesDescr: "Change your preferences or update your profile.",
@@ -224,4 +225,10 @@ export const en = {
     deletionRequested: "Deletion requested",
     accountDeletionRequestedAlert:
         "We've sent you a link to your email. Click on the link to irrevocably delete your account.",
+    justNow: "just now",
+    hoursAgo: "hour(s) ago",
+    daysAgo: "day(s) ago",
+    weeksAgo: "week(s) ago",
+    monthsAgo: "month(s) ago",
+    yearsAgo: "year(s) ago",
 };

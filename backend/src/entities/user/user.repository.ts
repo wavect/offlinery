@@ -43,7 +43,7 @@ export class UserRepository extends Repository<User> {
     /** @returns {key: encounterId, value: User}[]*/
     async getPotentialMatchesForNotifications(
         userToBeApproached: User,
-    ): Promise<Map<string, User>> {
+    ): Promise<User[]> {
         const [lon, lat] = userToBeApproached.location.coordinates;
         const isInBlacklistedRegion = await this.isUserInBlacklistedRegion(
             userToBeApproached,
@@ -55,14 +55,14 @@ export class UserRepository extends Repository<User> {
             this.logger.debug(
                 `User ${userToBeApproached.id} is right now in blacklisted location - not returning potential matches.`,
             );
-            return new Map();
+            return [];
         }
 
         if (!this.isWithinApproachTime(userToBeApproached, lat, lon)) {
             this.logger.debug(
                 `User ${userToBeApproached.id} does not feel safe to be approached right now.`,
             );
-            return new Map();
+            return [];
         }
 
         return this.getPotentialMatches(userToBeApproached);
@@ -74,20 +74,12 @@ export class UserRepository extends Repository<User> {
         return this.createUserMatchBaseQuery(userToBeApproached).getMany();
     }
 
-    async getPotentialMatches(
-        userToBeApproached: User,
-    ): Promise<Map<string, User>> {
-        const results = await this.createUserMatchBaseQuery(userToBeApproached)
+    async getPotentialMatches(userToBeApproached: User): Promise<User[]> {
+        return await this.createUserMatchBaseQuery(userToBeApproached)
             /** @dev Are users within x meters - TODO: Make this configurable by users. */
             .withinDistance(userToBeApproached.location, 1500)
             .withUserWantingToBeApproached()
             .getMany();
-
-        return new Map(
-            results
-                .filter((user) => user.encounters && user.encounters.length > 0)
-                .map((user) => [user.encounters[0].id, user]),
-        );
     }
 
     private addEncounterJoins(): this {

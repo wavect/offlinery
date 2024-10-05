@@ -1,16 +1,15 @@
+/**
+ * @DEV
+ * - use builders to quickly get an entity-like object for unit tests
+ */
 export abstract class AbstractEntityBuilder<T> {
     protected entity: T;
 
     constructor() {
-        this.entity = this.createEntity();
+        this.entity = this.createInitialEntity();
     }
 
-    protected abstract createEntity(): T;
-
-    public setField<K extends keyof T>(field: K, value: T[K]): this {
-        this.entity[field] = value;
-        return this;
-    }
+    protected abstract createInitialEntity(): T;
 
     public build(): T {
         return this.entity;
