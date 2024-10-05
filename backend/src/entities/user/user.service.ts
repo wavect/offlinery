@@ -5,6 +5,7 @@ import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserPasswordDTO } from "@/DTOs/update-user-password";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
+import { UserRequestDeletionFormSuccessDTO } from "@/DTOs/user-request-deletion-form-success.dto";
 import { UserResetPwdSuccessDTO } from "@/DTOs/user-reset-pwd-success.dto";
 import { AuthService } from "@/auth/auth.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
@@ -23,6 +24,7 @@ import {
 } from "@/utils/security.utils";
 import { MailerService } from "@nestjs-modules/mailer";
 import {
+    BadRequestException,
     ForbiddenException,
     forwardRef,
     Inject,
@@ -365,7 +367,7 @@ export class UserService {
                 "main.email.request-password-reset.subject",
                 { lang },
             ),
-            template: "../../mail/templates/request-password-reset",
+            template: "request-password-reset",
             context: {
                 firstName: user.firstName,
                 resetPwdCode,
@@ -384,11 +386,7 @@ export class UserService {
         };
     }
 
-    async requestAccountDeletion(id: string) {
-        const user = await this.userRepository.findOneBy({ id });
-        if (!user) {
-            throw new NotFoundException(`User with ID ${id} does not exist!`);
-        }
+    private async requestAccountDeletion(user: User) {
         if (
             user.deletionTokenExpires &&
             user.deletionTokenExpires > new Date()
@@ -416,7 +414,7 @@ export class UserService {
                 "main.email.request-account-deletion.subject",
                 { lang },
             ),
-            template: "../../mail/templates/request-account-deletion",
+            template: "request-account-deletion",
             context: {
                 firstName: user.firstName,
                 deletionLink,
@@ -428,6 +426,35 @@ export class UserService {
             },
         });
         await this.userRepository.save(user);
+    }
+
+    /** @dev Looks like users also need to be able to delete their accounts without using the app. */
+    async requestAccountDeletionViaForm(
+        email: string,
+    ): Promise<UserRequestDeletionFormSuccessDTO> {
+        this.logger.debug(
+            `Somebody is requesting account deletion of ${email} via public form.`,
+        );
+        const user = await this.userRepository.findOneBy({ email });
+        if (!user) {
+            this.logger.debug(`User with email ${email} does not exist!`);
+            throw new BadRequestException("Invalid request data."); // @dev for security
+        }
+        await this.requestAccountDeletion(user);
+
+        return {
+            id: user.id,
+            deletionRequested: true,
+        };
+    }
+
+    async requestAccountDeletionViaApp(id: string) {
+        const user = await this.userRepository.findOneBy({ id });
+        if (!user) {
+            this.logger.debug(`User with id ${id} does not exist!`);
+            throw new BadRequestException("Invalid request data."); // @dev for security
+        }
+        await this.requestAccountDeletion(user);
     }
 
     async findUserById(id: string): Promise<User> {
