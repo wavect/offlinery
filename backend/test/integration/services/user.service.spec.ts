@@ -49,10 +49,10 @@ describe("UserService", () => {
             expect(userLookup).toBeDefined();
 
             // user lookup by delete_token works
-            const userLookupbyToken = await userRepository.findBy({
+            const userLookupByToken = await userRepository.findBy({
                 deletionToken: deleteToken,
             });
-            expect(userLookupbyToken).toBeDefined();
+            expect(userLookupByToken).toBeDefined();
 
             // act: delete the user
             await userService.deleteUserByDeletionToken(deleteToken);
