@@ -3,6 +3,7 @@ import { ApiUserModule } from "@/entities/api-user/api-user.module";
 import { ApiUserService } from "@/entities/api-user/api-user.service";
 import { UserModule } from "@/entities/user/user.module";
 import { TYPED_ENV } from "@/utils/env.utils";
+import { TOKEN_TIME } from "@/utils/misc.utils";
 import { forwardRef, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
@@ -22,7 +23,7 @@ import { AuthService } from "./auth.service";
         JwtModule.register({
             global: true,
             secret: TYPED_ENV.JWT_SECRET,
-            signOptions: { expiresIn: "60m" },
+            signOptions: { expiresIn: TOKEN_TIME },
         }),
         TypeOrmModule.forFeature([ApiUser]),
         ApiUserModule,

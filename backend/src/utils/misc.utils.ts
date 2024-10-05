@@ -7,3 +7,6 @@ export const BE_ENDPOINT =
     process.env.NODE_ENV === "development"
         ? `http://localhost:${TYPED_ENV.BE_PORT}`
         : "https://offlinery-ys39.onrender.com";
+
+export const TOKEN_TIME = "60m";
+export const REGISTRATION_TOKEN_TIME = "1d";
