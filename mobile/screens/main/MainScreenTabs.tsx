@@ -91,6 +91,8 @@ export const MainScreenTabs = ({
                     responseListener.current =
                         Notifications.addNotificationResponseReceivedListener(
                             (response) => {
+                                console.log("Notification response", response);
+
                                 // @dev Remove notification from array to update the "unread notification" bubble in the tab
                                 const filteredNotifications =
                                     unreadNotifications.filter(
@@ -101,7 +103,6 @@ export const MainScreenTabs = ({
                                     );
                                 setUnreadNotifications(filteredNotifications);
 
-                                console.log("Notification response", response);
                                 // TODO: At some point we might want to send other notifications too? then we need to be more flexible on the typing and checking it
                                 const notificationData: NotificationNavigateUserDTO =
                                     response.notification.request.content
