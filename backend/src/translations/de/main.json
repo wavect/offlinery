@@ -55,7 +55,7 @@
   "view": {
     "account-deletion-confirmation": {
       "subject": "Konto erfolgreich gelöscht",
-      "message": "Ihr Konto wurde dauerhaft gelöscht. Alle Ihre persönlichen Daten wurden aus unseren Systemen entfernt. Es tut uns leid, dass Sie gehen, und wir hoffen, dass Sie bei uns eine schöne Zeit hatten."
+      "message": "Dein Konto wurde dauerhaft gelöscht. All deine persönlichen Daten wurden aus unseren Systemen entfernt. Schade, dass du gehst, und wir hoffen, dass du bei uns dennoch eine schöne Zeit hattest."
     }
   }
 }
