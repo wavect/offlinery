@@ -287,9 +287,19 @@ export class UserService {
         await this.userRepository.delete({ deletionToken });
         await this.pendingUserRepo.delete({ email: userToDelete.email });
         this.logger.debug(`User ${userToDelete.id} successfully deleted!`);
+
+        const lang = userToDelete.preferredLanguage || ELanguage.en;
         return {
             id: userToDelete.id,
             dataDeleted: true,
+            message: await this.i18n.translate(
+                "main.view.account-deletion-confirmation.message",
+                { lang },
+            ),
+            subject: await this.i18n.translate(
+                "main.view.account-deletion-confirmation.subject",
+                { lang },
+            ),
         };
     }
 
