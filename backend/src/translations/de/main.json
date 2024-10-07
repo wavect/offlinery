@@ -51,5 +51,11 @@
       "contactSupport": "Bei Fragen oder Bedenken wende dich bitte an unser Support-Team unter office@offlinery.io.",
       "footer": "Dies ist eine automatisch generierte Nachricht. Bitte antworte nicht auf diese E-Mail."
     }
+  },
+  "view": {
+    "account-deletion-confirmation": {
+      "subject": "Konto erfolgreich gelöscht",
+      "message": "Ihr Konto wurde dauerhaft gelöscht. Alle Ihre persönlichen Daten wurden aus unseren Systemen entfernt. Es tut uns leid, dass Sie gehen, und wir hoffen, dass Sie bei uns eine schöne Zeit hatten."
+    }
   }
 }

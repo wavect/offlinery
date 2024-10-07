@@ -51,5 +51,11 @@
       "contactSupport": "If you have any questions or concerns, please contact our support team at support@offlinery.io.",
       "footer": "This is an automated message. Please do not reply to this email."
     }
+  },
+  "view": {
+    "account-deletion-confirmation": {
+      "subject": "Account Deleted Successfully",
+      "message": "Your account has been permanently deleted. All your personal data has been removed from our systems. We're sorry to see you go and hope you've enjoyed using our service."
+    }
   }
 }

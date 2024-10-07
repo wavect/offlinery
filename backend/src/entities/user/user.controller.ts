@@ -310,6 +310,7 @@ export class UserController {
         status: 200,
         description: "Account has been deleted successfully.",
     })
+    @Render("account-deletion-confirmation")
     @ApiResponse({
         status: 404,
         description: "User not found, deletion token invalid.",
