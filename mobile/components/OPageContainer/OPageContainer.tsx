@@ -8,7 +8,6 @@ import {
     Platform,
     RefreshControl,
     ScrollView,
-    StatusBar,
     Text,
     View,
 } from "react-native";
@@ -53,11 +52,6 @@ export const OPageContainer = (props: IOPageContainerProps) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar
-                hidden
-                backgroundColor="transparent"
-                barStyle="default"
-            />
             {props.fullpageIcon && (
                 <View style={styles.iconContainer}>
                     <MaterialIcons
