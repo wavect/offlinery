@@ -48,6 +48,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 24,
         width: "88%",
-        height: 45,
+        height: "auto",
     },
 });
