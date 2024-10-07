@@ -88,7 +88,6 @@ const OEncounter = (props: ISingleEncounterProps) => {
         <View style={styles.encounterContainer}>
             <View
                 style={styles.mainContent}
-                onMagicTap={() => console.log("hahahaha")}
             >
                 <TouchableOpacity
                     onPress={() => {
