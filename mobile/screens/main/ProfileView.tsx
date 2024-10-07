@@ -31,6 +31,7 @@ const ProfileView = ({
     const [fullScreenVisible, setFullScreenVisible] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const carouselRef = useRef<ICarouselInstance>(null);
+    const fullScreenCarouselRef = useRef<ICarouselInstance>(null); // Ref for full-screen carousel
 
     const renderPreviewImage = ({
         item,
@@ -38,18 +39,20 @@ const ProfileView = ({
     }: {
         item: string;
         index: number;
-    }) => (
-        <TouchableOpacity
-            onPress={() => {
-                setCurrentImageIndex(index);
-                carouselRef.current?.scrollTo({ index: index });
-                setFullScreenVisible(true);
-            }}
-            style={styles.previewImageContainer}
-        >
-            <Image source={{ uri: item }} style={styles.previewImage} />
-        </TouchableOpacity>
-    );
+    }) => {
+        return (
+            <TouchableOpacity
+                onPress={() => {
+                    setCurrentImageIndex(index);
+                    carouselRef.current?.scrollTo({ index: index });
+                    setFullScreenVisible(true);
+                }}
+                style={styles.previewImageContainer}
+            >
+                <Image source={{ uri: item }} style={styles.previewImage} />
+            </TouchableOpacity>
+        );
+    };
     const user: UserPublicDTO | undefined = route?.params?.user;
     if (!user) return <Text>{i18n.t(TR.errNoUserProvided)}</Text>;
     const bottomContainerChildren: React.ReactNode =
@@ -65,7 +68,7 @@ const ProfileView = ({
                 <Carousel
                     ref={carouselRef}
                     loop
-                    width={width - 32} // Adjust width to account for padding
+                    width={width - 32}
                     height={(width - 32) * 0.8}
                     autoPlay={false}
                     data={user.imageURIs}
@@ -79,7 +82,10 @@ const ProfileView = ({
                     }}
                     renderItem={({ item, index }) => (
                         <TouchableOpacity
-                            onPress={() => setFullScreenVisible(true)}
+                            onPress={() => {
+                                setCurrentImageIndex(index);
+                                setFullScreenVisible(true);
+                            }}
                         >
                             <Image
                                 source={{ uri: getValidImgURI(item) }}
@@ -132,10 +138,21 @@ const ProfileView = ({
                             <Text style={styles.closeButtonText}>×</Text>
                         </View>
                     </TouchableOpacity>
-                    <Image
-                        source={{ uri: user.imageURIs[currentImageIndex] }}
-                        style={styles.fullScreenImage}
-                        resizeMode="contain"
+                    <Carousel
+                        ref={fullScreenCarouselRef}
+                        loop={false}
+                        width={Dimensions.get("window").width}
+                        height={Dimensions.get("window").height}
+                        data={user.imageURIs}
+                        scrollAnimationDuration={1000}
+                        defaultIndex={currentImageIndex}
+                        renderItem={({ item }) => (
+                            <Image
+                                source={{ uri: getValidImgURI(item) }}
+                                style={styles.fullScreenImage}
+                                resizeMode="contain"
+                            />
+                        )}
                     />
                 </View>
             </Modal>
@@ -208,5 +225,4 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
 });
-
 export default ProfileView;

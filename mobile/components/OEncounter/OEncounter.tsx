@@ -21,10 +21,12 @@ import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
 import { getTimeLastMet } from "@/utils/date.utils";
 import { getValidImgURI } from "@/utils/media.utils";
+import { useNavigation } from "@react-navigation/native";
 import * as React from "react";
 import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface ISingleEncounterProps {
     encounterProfile: IEncounterProfile;
@@ -35,6 +37,7 @@ interface ISingleEncounterProps {
 const OEncounter = (props: ISingleEncounterProps) => {
     const { dispatch } = useEncountersContext();
     const { state } = useUserContext();
+    const hookNavigation = useNavigation();
     const { encounterProfile, showActions, navigation } = props;
     const [dateStates] = useState([
         {
@@ -83,14 +86,24 @@ const OEncounter = (props: ISingleEncounterProps) => {
 
     return (
         <View style={styles.encounterContainer}>
-            <View style={styles.mainContent}>
-                <Image
-                    style={styles.profileImage}
-                    contentFit="cover"
-                    source={{
-                        uri: getValidImgURI(encounterProfile.imageURIs[0]),
+            <View
+                style={styles.mainContent}
+            >
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate(ROUTES.Main.ProfileView, {
+                            user: encounterProfile,
+                        });
                     }}
-                />
+                >
+                    <Image
+                        style={styles.profileImage}
+                        contentFit="cover"
+                        source={{
+                            uri: getValidImgURI(encounterProfile.imageURIs[0]),
+                        }}
+                    />
+                </TouchableOpacity>
                 <View style={styles.encounterDetails}>
                     <Text
                         style={styles.nameAge}

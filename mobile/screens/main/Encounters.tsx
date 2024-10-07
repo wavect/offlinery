@@ -1,5 +1,5 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { MessagePublicDTO } from "@/api/gen/src";
+import { EncounterPublicDTO, MessagePublicDTO } from "@/api/gen/src";
 import {
     EDateTimeFormatters,
     ODateTimePicker,
@@ -78,7 +78,7 @@ const Encounters = ({
 
             const mappedEncounters: IEncounterProfile[] = [];
 
-            encounters.forEach((encounter: any) => {
+            encounters.forEach((encounter: EncounterPublicDTO) => {
                 const otherUser = encounter.users.filter(
                     (u) => u.id !== userState.id,
                 )[0];
@@ -108,13 +108,7 @@ const Encounters = ({
         } catch (error) {
             console.error(error);
         }
-    }, [
-        userState.id,
-        userState.jwtAccessToken,
-        dispatch,
-        metStartDateFilter,
-        metEndDateFilter,
-    ]);
+    }, [userState.id, dispatch, metStartDateFilter, metEndDateFilter]);
 
     useEffect(() => {
         fetchEncounters();
