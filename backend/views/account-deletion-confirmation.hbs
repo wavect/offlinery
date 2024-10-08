@@ -34,6 +34,43 @@
             color: #5cb85c;
             margin-bottom: 20px;
         }
+        .feedback-section {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .star-rating {
+            font-size: 24px;
+            color: #ffd700;
+            cursor: pointer;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #36797d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2c6164;
+        }
+        .feedback-message {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -43,6 +80,77 @@
         <p class="message">
             {{message}}
         </p>
+        <div class="feedback-section">
+            <h2>We'd love your feedback</h2>
+            <div class="star-rating" id="starRating">
+                <span data-rating="1">☆</span>
+                <span data-rating="2">☆</span>
+                <span data-rating="3">☆</span>
+                <span data-rating="4">☆</span>
+                <span data-rating="5">☆</span>
+            </div>
+            <textarea id="feedbackText" rows="4" maxlength="500" placeholder="Optional: Tell us more about your experience (max 500 characters)"></textarea>
+            <button id="submitFeedback">Submit Feedback</button>
+            <p id="feedbackMessage" class="feedback-message"></p>
+        </div>
     </div>
+
+    <script nonce="{{nonce}}">
+        const deletionToken = window.location.pathname.split('/').pop();
+        const starRating = document.getElementById('starRating');
+        const feedbackText = document.getElementById('feedbackText');
+        const submitButton = document.getElementById('submitFeedback');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+        let currentRating = 0;
+
+        starRating.addEventListener('click', (e) => {
+            if (e.target.tagName === 'SPAN') {
+                currentRating = parseInt(e.target.getAttribute('data-rating'));
+                updateStars();
+            }
+        });
+
+        function updateStars() {
+            const stars = starRating.children;
+            for (let i = 0; i < stars.length; i++) {
+                stars[i].textContent = i < currentRating ? '★' : '☆';
+            }
+        }
+
+        submitButton.addEventListener('click', async () => {
+            if (currentRating === 0) {
+                feedbackMessage.textContent = 'Please select a rating before submitting.';
+                return;
+            }
+            submitButton.disabled = true;
+
+            const feedback = {
+                deletionToken: deletionToken,
+                rating: currentRating,
+                feedbackText: feedbackText.value.trim()
+            };
+
+            try {
+                const response = await fetch('/v1/user-feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(feedback)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                feedbackMessage.textContent = 'Thank you for your feedback!';
+                submitButton.disabled = true;
+            } catch (error) {
+                console.error('Error:', error);
+                feedbackMessage.textContent = 'An error occurred. Please try again later.';
+                submitButton.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
