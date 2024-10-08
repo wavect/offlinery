@@ -96,7 +96,6 @@
     </div>
 
     <script nonce="{{nonce}}">
-        const deletionToken = window.location.pathname.split('/').pop();
         const starRating = document.getElementById('starRating');
         const feedbackText = document.getElementById('feedbackText');
         const submitButton = document.getElementById('submitFeedback');
@@ -125,7 +124,6 @@
             submitButton.disabled = true;
 
             const feedback = {
-                deletionToken: deletionToken,
                 rating: currentRating,
                 feedbackText: feedbackText.value.trim()
             };
