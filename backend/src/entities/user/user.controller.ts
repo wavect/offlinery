@@ -318,7 +318,18 @@ export class UserController {
     @ApiResponse({ status: 403, description: "Deletion token expired" })
     async deleteUser(
         @Param("deletionToken") deletionToken: string,
-    ): Promise<UserDeletionSuccessDTO> {
-        return await this.userService.deleteUserByDeletionToken(deletionToken);
+        @Res() res: Response,
+    ): Promise<UserDeletionSuccessDTO & { nonce: string }> {
+        const nonce = uuidv4();
+        res.setHeader(
+            "Content-Security-Policy",
+            `script-src 'self' 'nonce-${nonce}'`,
+        );
+        const deletion =
+            await this.userService.deleteUserByDeletionToken(deletionToken);
+        return {
+            ...deletion,
+            nonce,
+        };
     }
 }

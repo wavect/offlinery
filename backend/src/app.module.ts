@@ -27,6 +27,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthGuard } from "./auth/auth.guard";
 import { AuthModule } from "./auth/auth.module";
+import { UserFeedbackModule } from "./entities/user-feedback/user-feedback.module";
 import { MatchingModule } from "./transient-services/matching/matching.module";
 import { NotificationModule } from "./transient-services/notification/notification.module";
 import { typeOrmAsyncConfig } from "./typeorm.config";
@@ -101,6 +102,7 @@ import { TYPED_ENV } from "./utils/env.utils";
         SeederModule,
         MapModule,
         ApiUserModule,
+        UserFeedbackModule,
     ],
     controllers: [AppController],
     providers: [
