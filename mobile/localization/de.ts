@@ -1,5 +1,8 @@
 import { Language } from "./translate.service";
 
+const permissionDeniedText = (type: "background" | "foreground") => {
+    return `Zugriff auf den Standort ${type === "background" ? "im Hintergrund " : ""}wurde verweigert. Wir brauchen von dir, dass du die Standortverfolgung immer erlaubst, da wir sowohl im Hintergrund als auch im Vordergrund tracken müssen.`;
+};
 export const de: Language = {
     bgLocationServiceTitle: "Real Life Dating EIN",
     bgLocationServiceBody: "Bereit dich zu beeindrucken..",
@@ -84,7 +87,7 @@ export const de: Language = {
         "Wir behalten uns das Recht vor, Bewerber abzulehnen, um sicherzustellen, dass sich jeder sicher und respektiert fühlt.",
     callBookedBtnLbl: "Ich werde da sein",
     verificationCallQuestions: "Was wir dich fragen",
-    permissionToLocationDenied: "Zugriff auf den Standort wurde verweigert.",
+    permissionToLocationDenied: permissionDeniedText("foreground"),
     dontApproachHere: "Hier nicht ansprechen",
     whatAreSpotsToNotApproachYou:
         "An welchen Orten möchtest du nicht angesprochen werden? Dein Fitnessstudio, Arbeitsplatz?",
@@ -202,8 +205,7 @@ export const de: Language = {
     report: "Melden",
     reported: "Gemeldet..",
     navigate: "Navigieren",
-    permissionToBackgroundLocationDenied:
-        "Zugriff auf den Standort im Hintergrund wurde verweigert.",
+    permissionToBackgroundLocationDenied: permissionDeniedText("background"),
     youAreLive: "Du bist live!",
     ghostModeDescr:
         "Geistmodus. Niemand wird dich sehen! Drücke den Schalter oben, um live zu gehen.",
