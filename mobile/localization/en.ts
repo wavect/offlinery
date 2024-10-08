@@ -1,9 +1,5 @@
 // @dev Other languages have to be typed as Language!
 
-const permissionDeniedText = (type: "background" | "foreground") => {
-    return `Permission to access location ${type === "background" ? "in background " : ""}was denied. We need you to allow location tracking at all times, as we require both background and foreground location access. Please adjust your app settings.`;
-};
-
 export const en = {
     bgLocationServiceTitle: "Real Life Dating ON",
     bgLocationServiceBody: "Letting others know about you.",
@@ -83,7 +79,8 @@ export const en = {
         "We retain our right to reject applicants to ensure everyone feels safe and respected.",
     callBookedBtnLbl: "I'll take the call",
     verificationCallQuestions: "What we will ask you",
-    permissionToLocationDenied: permissionDeniedText("foreground"),
+    permissionToLocationDenied:
+        "Permission to access location was denied. Nobody can approach you neither can you approach someone via Offlinery without sharing your location.",
     dontApproachHere: "Don't approach me here",
     whatAreSpotsToNotApproachYou:
         "What are spots you don't want to be approached at? Your gym, workplace?",
@@ -202,7 +199,8 @@ export const en = {
     report: "Report",
     reported: "Reported..",
     navigate: "Navigate",
-    permissionToBackgroundLocationDenied: permissionDeniedText("background"),
+    permissionToBackgroundLocationDenied:
+        "Permission to access background location was denied. Nobody can approach you neither can you approach someone via Offlinery without sharing your location.",
     youAreLive: "You are live!",
     ghostModeDescr:
         "Ghost mode. Nobody will see you! Press the toggle on the top to go live.",
