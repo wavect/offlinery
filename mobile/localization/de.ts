@@ -84,7 +84,8 @@ export const de: Language = {
         "Wir behalten uns das Recht vor, Bewerber abzulehnen, um sicherzustellen, dass sich jeder sicher und respektiert fühlt.",
     callBookedBtnLbl: "Ich werde da sein",
     verificationCallQuestions: "Was wir dich fragen",
-    permissionToLocationDenied: "Zugriff auf den Standort wurde verweigert.",
+    permissionToLocationDenied:
+        "Zugriff auf den Standort wurde verweigert. Ohne deinen Standort wirst du weder angesprochen, noch kannst du jemanden via Offlinery ansprechen.",
     dontApproachHere: "Hier nicht ansprechen",
     whatAreSpotsToNotApproachYou:
         "An welchen Orten möchtest du nicht angesprochen werden? Dein Fitnessstudio, Arbeitsplatz?",
@@ -203,7 +204,7 @@ export const de: Language = {
     reported: "Gemeldet..",
     navigate: "Navigieren",
     permissionToBackgroundLocationDenied:
-        "Zugriff auf den Standort im Hintergrund wurde verweigert.",
+        "Zugriff auf den Standort im Hintergrund wurde verweigert. Ohne deinen Standort wirst du weder angesprochen, noch kannst du jemanden via Offlinery ansprechen.",
     youAreLive: "Du bist live!",
     ghostModeDescr:
         "Geistmodus. Niemand wird dich sehen! Drücke den Schalter oben, um live zu gehen.",

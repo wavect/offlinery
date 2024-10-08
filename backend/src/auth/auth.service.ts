@@ -57,7 +57,6 @@ export class AuthService {
     /** @dev Used to protect routes after the email verification and before user registration
      * to prevent people from hijacking user accounts. */
     async createRegistrationSession(pendingUserId: string) {
-        console.log(`using.. ${TYPED_ENV.JWT_SECRET_REGISTRATION}`);
         return await this.jwtService.signAsync(
             { pendingUserId },
             {

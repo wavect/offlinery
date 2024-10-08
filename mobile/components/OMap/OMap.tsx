@@ -69,10 +69,28 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                 // @dev Resets heatmap to incentivize location sharing
                 setLocationsFromOthers([]);
             } else {
-                let { status } =
-                    await Location.requestForegroundPermissionsAsync();
-                if (status !== "granted") {
-                    alert("Permission to access location was denied");
+                const { status: fStatus } =
+                    await Location.getForegroundPermissionsAsync();
+                const { status: bStatus } =
+                    await Location.getBackgroundPermissionsAsync();
+
+                if (
+                    fStatus !== Location.PermissionStatus.GRANTED ||
+                    bStatus !== Location.PermissionStatus.GRANTED
+                ) {
+                    setLocationsFromOthers([]);
+
+                    await API.user.userControllerUpdateUser({
+                        userId: state.id!,
+                        updateUserDTO: {
+                            dateMode: "ghost",
+                        },
+                    });
+                    // We dispatch afterwards so in case of a failed request, client + server is still in sync.
+                    dispatch({
+                        type: EACTION_USER.UPDATE_MULTIPLE,
+                        payload: { dateMode: "ghost" },
+                    });
                     return;
                 }
 
