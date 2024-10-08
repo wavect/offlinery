@@ -21,10 +21,12 @@ const ResetPassword = ({
     const [errorMessage, setErrorMessage] = React.useState("");
     const [isCodeValid, setIsCodeValid] = useState(false);
     const [isPwdValid, setIsPwdValid] = useState(false);
+    const [email, setEmail] = useState(state.email);
     const codeRef = useRef<string>("");
 
-    const setEmail = (email: string) => {
+    const setUserContextEmail = (email: string) => {
         setErrorMessage(isValidEmail(email) ? "" : i18n.t(TR.invalidEmail));
+        setEmail(email);
         dispatch({ type: EACTION_USER.UPDATE_MULTIPLE, payload: { email } });
     };
 
@@ -104,7 +106,9 @@ const ResetPassword = ({
         >
             <OTextInput
                 value={state.email}
-                onChangeText={(email: string) => setEmail(email.trim())}
+                onChangeText={(email: string) =>
+                    setUserContextEmail(email.trim())
+                }
                 maxLength={125}
                 autoCapitalize="none"
                 autoComplete="email"
@@ -122,7 +126,7 @@ const ResetPassword = ({
             )}
 
             <OSplitInput
-                disableRequestCode={!!errorMessage}
+                disableRequestCode={!isValidEmail(email)}
                 sendCodeAutomatically={false}
                 sendCode={sendVerificationCode}
                 onCodeValidChange={(isValid, code) => {
