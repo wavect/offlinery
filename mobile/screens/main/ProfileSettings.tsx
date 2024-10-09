@@ -13,6 +13,7 @@ import {
 } from "@/components/ODateTimePicker/ODateTimePicker";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
+import { OTooltip } from "@/components/OTooltip/OTooltip";
 import {
     EACTION_USER,
     getUserImagesForUpload,
@@ -253,7 +254,13 @@ const ProfileSettings = ({
                 )}
 
                 <View style={styles.inputContainer}>
-                    <Text style={styles.label}>{i18n.t(TR.bio)}</Text>
+                    <View style={styles.labelContainer}>
+                        <Text style={styles.label}>{i18n.t(TR.bio)}</Text>
+                        <OTooltip
+                            tooltipText={i18n.t(TR.bioTooltip)}
+                            iconName="help-outline"
+                        />
+                    </View>
                     <OTextInput
                         testID={TestData.settings.inputBio}
                         value={state.bio}
@@ -261,6 +268,8 @@ const ProfileSettings = ({
                         placeholder={i18n.t(TR.noPickUpLinesBeChill)}
                         multiline={true}
                         containerStyle={[styles.input, styles.multiline_input]}
+                        maxLength={100}
+                        showCharacterCount
                     />
                 </View>
 
@@ -502,6 +511,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         fontFamily: FontFamily.montserratSemiBold,
+    },
+    labelContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 8,
     },
     timePickerContainer: {
         marginBottom: 16,

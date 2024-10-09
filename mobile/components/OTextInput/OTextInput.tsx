@@ -19,6 +19,7 @@ interface IOTextInputProps extends Omit<TextInputProps, "secureTextEntry"> {
     bottomLabel?: string;
     isBottomLabelError?: boolean;
     isSensitiveInformation?: boolean;
+    showCharacterCount?: boolean;
 }
 
 export const OTextInput = (props: IOTextInputProps) => {
@@ -28,18 +29,34 @@ export const OTextInput = (props: IOTextInputProps) => {
         isBottomLabelError,
         isSensitiveInformation,
         containerStyle,
+        showCharacterCount,
+        maxLength,
+        onChangeText,
+        value,
+        ...rest
     } = props;
+
+    const [inputValue, setInputValue] = useState(value || "");
     const [isSecureTextVisible, setIsSecureTextVisible] = useState(
         !isSensitiveInformation,
     );
+    const [characterCount, setCharacterCount] = useState(value?.length ?? 0);
 
     const toggleSecureEntry = () => {
         setIsSecureTextVisible(!isSecureTextVisible);
     };
 
+    const handleInputChange = (text: string) => {
+        if (maxLength && text.length > maxLength) return;
+        setCharacterCount(text.length);
+        setInputValue(text);
+        onChangeText && onChangeText(text);
+    };
+
     return (
         <View style={[styles.container, containerStyle]}>
             {topLabel && <Text style={styles.topLabel}>{topLabel}</Text>}
+
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
@@ -47,7 +64,10 @@ export const OTextInput = (props: IOTextInputProps) => {
                         isSensitiveInformation && !isSecureTextVisible
                     }
                     placeholderTextColor="#999"
-                    {...props}
+                    onChangeText={handleInputChange}
+                    value={inputValue}
+                    maxLength={maxLength}
+                    {...rest}
                 />
                 {isSensitiveInformation && (
                     <TouchableOpacity
@@ -66,6 +86,13 @@ export const OTextInput = (props: IOTextInputProps) => {
                     </TouchableOpacity>
                 )}
             </View>
+
+            {showCharacterCount && maxLength && (
+                <Text style={styles.characterCount}>
+                    {characterCount}/{maxLength}
+                </Text>
+            )}
+
             {bottomLabel && (
                 <Text
                     style={[
@@ -108,6 +135,13 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.montserratSemiBold,
         marginBottom: 5,
         alignSelf: "flex-start",
+    },
+    characterCount: {
+        alignSelf: "flex-end",
+        color: Color.gray,
+        fontSize: FontSize.size_sm,
+        fontFamily: FontFamily.montserratRegular,
+        marginTop: 5,
     },
     bottomLabel: {
         color: Color.gray,

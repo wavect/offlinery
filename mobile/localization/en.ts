@@ -171,6 +171,7 @@ export const en = {
     changePreferencesDescr: "Change your preferences or update your profile.",
     bio: "Bio",
     defaultBio: "No pick-up lines please. Just be chill.",
+    bioTooltip: "Share a bit about yourself.",
     updateImages: "Update images",
     updateSafeZones: "Update Safe Zones",
     errNoUserProvided: "Error: No user provided",
