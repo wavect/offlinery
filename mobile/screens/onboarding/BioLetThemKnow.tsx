@@ -15,7 +15,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { CommonActions } from "@react-navigation/native";
 import * as React from "react";
 import { useState } from "react";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -91,12 +91,9 @@ const BioLetThemKnow = ({
                     onChangeText={setBio}
                     containerStyle={styles.input}
                     placeholder={i18n.t(TR.noPickUpLinesBeChill)}
+                    showCharacterCount
+                    maxLength={MAX_LENGTH_BIO}
                 />
-                <View style={styles.characterCountContainer}>
-                    <Text style={Subtitle}>
-                        {MAX_LENGTH_BIO - state.bio.length}
-                    </Text>
-                </View>
             </View>
 
             <OTeaserProfilePreview
