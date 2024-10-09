@@ -11,9 +11,9 @@ import {
     EDateTimeFormatters,
     ODateTimePicker,
 } from "@/components/ODateTimePicker/ODateTimePicker";
+import { OLabel } from "@/components/OLabel/OLabel";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
-import { OTooltip } from "@/components/OTooltip/OTooltip";
 import {
     EACTION_USER,
     getUserImagesForUpload,
@@ -255,10 +255,10 @@ const ProfileSettings = ({
 
                 <View style={styles.inputContainer}>
                     <View style={styles.labelContainer}>
-                        <Text style={styles.label}>{i18n.t(TR.bio)}</Text>
-                        <OTooltip
-                            tooltipText={i18n.t(TR.bioTooltip)}
+                        <OLabel
+                            text={i18n.t(TR.bio)}
                             iconName="help-outline"
+                            tooltipText={i18n.t(TR.bioTooltip)}
                         />
                     </View>
                     <OTextInput
@@ -515,7 +515,6 @@ const styles = StyleSheet.create({
     labelContainer: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 8,
     },
     timePickerContainer: {
         marginBottom: 16,
