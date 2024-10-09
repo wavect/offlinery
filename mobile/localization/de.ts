@@ -238,8 +238,4 @@ export const de: Language = {
     weeksAgo: "Woche(n) her",
     monthsAgo: "Monat(e) her",
     yearsAgo: "Jahr(e) her",
-    locationNotification: {
-        title: "Standort Tracking Aktiv",
-        body: "Dein Standort wird gerade von Offlinery verwendet.",
-    },
 };

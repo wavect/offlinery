@@ -233,8 +233,4 @@ export const en = {
     weeksAgo: "week(s) ago",
     monthsAgo: "month(s) ago",
     yearsAgo: "year(s) ago",
-    locationNotification: {
-        title: "Location Tracking Enabled",
-        body: "Your location is currently being used by Offlinery.",
-    },
 };

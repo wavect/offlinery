@@ -85,8 +85,8 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
         if (Platform.OS === "ios") {
             const id = await Notifications.scheduleNotificationAsync({
                 content: {
-                    title: i18n.t(TR.locationNotification.title),
-                    body: i18n.t(TR.locationNotification.body),
+                    title: i18n.t(TR.bgLocationServiceTitle),
+                    body: i18n.t(TR.bgLocationServiceBody),
                 },
                 trigger: null,
             });
