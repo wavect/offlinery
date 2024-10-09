@@ -174,6 +174,7 @@ export const de: Language = {
         "Ändere deine Einstellungen oder aktualisiere dein Profil.",
     bio: "Bio",
     defaultBio: "Bitte keine Pick-Up Lines. Ein nettes Hallo reicht völlig.",
+    bioTooltip: "Dies wird anderen Nutzern beim Ansprechen angezeigt.",
     updateImages: "Bilder updaten",
     updateSafeZones: "Safe Zones updaten",
     errNoUserProvided: "Fehler: Kein Nutzer angegeben",
