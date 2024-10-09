@@ -7,10 +7,6 @@ import {
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { Color } from "@/GlobalStyles";
 import { TR, i18n } from "@/localization/translate.service";
-import {
-    SECURE_VALUE,
-    getSecurelyStoredValue,
-} from "@/services/secure-storage.service";
 import { getLocallyStoredUserData } from "@/services/storage.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
@@ -44,11 +40,8 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
         const user = getLocallyStoredUserData();
         console.log("User Connected: ", user?.id?.slice(0, 8));
         const userId = user?.id;
-        const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
-        if (!userId || !jwtToken) {
-            console.error(
-                "UserID and/or jwtToken undefined in location task service.",
-            );
+        if (!userId) {
+            console.error("UserID undefined in location task service.");
             return;
         }
 
