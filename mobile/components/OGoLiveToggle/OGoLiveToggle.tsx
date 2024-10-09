@@ -1,4 +1,3 @@
-import { Color } from "@/GlobalStyles";
 import {
     LocationUpdateDTO,
     UpdateUserDTO,
@@ -6,6 +5,7 @@ import {
     UserPrivateDTODateModeEnum,
 } from "@/api/gen/src";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
+import { Color } from "@/GlobalStyles";
 import { TR, i18n } from "@/localization/translate.service";
 import {
     SECURE_VALUE,
@@ -15,9 +15,17 @@ import { getLocallyStoredUserData } from "@/services/storage.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
 import * as Location from "expo-location";
+import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
-import React from "react";
-import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
+import React, { useState } from "react";
+import {
+    Platform,
+    StyleProp,
+    Switch,
+    Text,
+    View,
+    ViewStyle,
+} from "react-native";
 
 interface IOGoLiveToggleProps {
     style?: StyleProp<ViewStyle>;
@@ -71,7 +79,20 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
 
 export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
     const { dispatch, state } = useUserContext();
+    const [notificationId, setNotificationId] = useState<string>();
 
+    const sendLocationNotification = async () => {
+        if (Platform.OS === "ios") {
+            const id = await Notifications.scheduleNotificationAsync({
+                content: {
+                    title: i18n.t(TR.bgLocationServiceTitle),
+                    body: i18n.t(TR.bgLocationServiceBody),
+                },
+                trigger: null,
+            });
+            setNotificationId(id);
+        }
+    };
     const configureLocationTracking = async (
         newDateMode: UserPrivateDTODateModeEnum,
     ) => {
@@ -98,10 +119,16 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                         killServiceOnDestroy: false, // @dev stay running if app is killed
                     },
                 });
+                await sendLocationNotification();
             }
         } else {
             try {
                 await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+                if (notificationId) {
+                    await Notifications.dismissNotificationAsync(
+                        notificationId,
+                    );
+                }
             } catch (err) {
                 console.error(err);
             }
