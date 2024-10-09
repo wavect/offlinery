@@ -4,6 +4,7 @@ export const SECURE_VALUE = {
     USER_ID: "USER_ID",
     JWT_ACCESS_TOKEN: "JWT_ACCESS_TOKEN",
     JWT_REFRESH_TOKEN: "JWT_REFRESH_TOKEN",
+    EXPO_PUSH_TOKEN: "EXPO_PUSH_TOKEN",
 };
 
 /** @dev Retrieves securely stored value from local storage. Helper function to make switching etc easier if needed. */
