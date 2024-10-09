@@ -200,8 +200,7 @@ export const en = {
     report: "Report",
     reported: "Reported..",
     navigate: "Navigate",
-    permissionToBackgroundLocationDenied:
-        "Permission to access background location was denied. Nobody can approach you neither can you approach someone via Offlinery without sharing your location.",
+    permissionToBackgroundLocationDenied: `Permission to access background location was denied. Nobody can approach you neither can you approach someone via Offlinery without sharing your location. Please change your location access to "always" in your app settings.`,
     youAreLive: "You are live!",
     ghostModeDescr:
         "Ghost mode. Nobody will see you! Press the toggle on the top to go live.",

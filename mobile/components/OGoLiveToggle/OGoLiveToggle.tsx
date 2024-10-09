@@ -133,29 +133,25 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
 
     const toggleSwitch = async () => {
         try {
-            const { status: fStatus } =
-                await Location.requestForegroundPermissionsAsync();
-
             const newDateMode: UserPrivateDTODateModeEnum =
                 state.dateMode === UserPrivateDTODateModeEnum.ghost
                     ? UserPrivateDTODateModeEnum.live
                     : UserPrivateDTODateModeEnum.ghost;
 
-            if (
-                fStatus !== "granted" &&
-                newDateMode === UserPrivateDTODateModeEnum.live
-            ) {
-                alert(i18n.t(TR.permissionToLocationDenied));
-                return;
-            }
-            const { status: bStatus } =
-                await Location.requestBackgroundPermissionsAsync();
-            if (
-                bStatus !== "granted" &&
-                newDateMode === UserPrivateDTODateModeEnum.live
-            ) {
-                alert(i18n.t(TR.permissionToBackgroundLocationDenied));
-                return;
+            if (newDateMode === UserPrivateDTODateModeEnum.live) {
+                const foregroundPermissions =
+                    await Location.requestForegroundPermissionsAsync();
+                if (foregroundPermissions.status === "granted") {
+                    const { granted } =
+                        await Location.requestBackgroundPermissionsAsync();
+                    if (!granted) {
+                        alert(i18n.t(TR.permissionToBackgroundLocationDenied));
+                        return;
+                    }
+                } else {
+                    alert(i18n.t(TR.permissionToBackgroundLocationDenied));
+                    return;
+                }
             }
 
             const updateUserDTO: UpdateUserDTO = { dateMode: newDateMode };

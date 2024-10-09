@@ -204,8 +204,7 @@ export const de: Language = {
     report: "Melden",
     reported: "Gemeldet..",
     navigate: "Navigieren",
-    permissionToBackgroundLocationDenied:
-        "Zugriff auf den Standort im Hintergrund wurde verweigert. Ohne deinen Standort wirst du weder angesprochen, noch kannst du jemanden via Offlinery ansprechen.",
+    permissionToBackgroundLocationDenied: `Zugriff auf den Standort im Hintergrund wurde verweigert. Ohne deinen Standort wirst du weder angesprochen, noch kannst du jemanden via Offlinery ansprechen. Bitte stelle den Standortzugriff auf "Immer" in den Einstellungen ein.`,
     youAreLive: "Du bist live!",
     ghostModeDescr:
         "Geistmodus. Niemand wird dich sehen! Drücke den Schalter oben, um live zu gehen.",
