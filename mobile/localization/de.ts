@@ -145,7 +145,7 @@ export const de: Language = {
     book15MinCallDescr: "Ein 15-minütiger Verifizierungsanruf.",
     iPreferKYC: "KYC starten",
     iPreferKYCDescr: "Reguliertes 3rd-Party-KYC (noch nicht verfügbar).",
-    verificationInProgress: "Verifizierung läuft..",
+    verificationInProgress: "Verifizierung läuft",
     verificationSuccessful: "Verifiziert!",
     bookNewCall: "Neuen Anruf buchen",
     pleaseDoNotMakeDoubleBookings: "Bitte keine Doppelbuchungen vornehmen.",

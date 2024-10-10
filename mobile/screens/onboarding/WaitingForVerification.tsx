@@ -25,6 +25,18 @@ const WaitingForVerification = ({
 >) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setIsLoading] = useState(false);
+    const [dots, setDots] = useState("");
+
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setDots((prevDots) => {
+                if (prevDots.length >= 3) return "";
+                return prevDots + ".";
+            });
+        }, 500);
+
+        return () => clearInterval(interval);
+    }, []);
 
     const reloadUserState = async () => {
         if (!state.id) {
@@ -77,8 +89,8 @@ const WaitingForVerification = ({
         <OPageColorContainer refreshFunc={reloadUserState}>
             <View style={styles.btnContainer}>
                 <Text style={styles.verificationInProgress}>
-                    {route.params?.overrideLabel ??
-                        i18n.t(TR.verificationInProgress)}
+                    {(route.params?.overrideLabel ??
+                        i18n.t(TR.verificationInProgress)) + dots}
                 </Text>
 
                 <Text
@@ -94,7 +106,7 @@ const WaitingForVerification = ({
                     UserPrivateDTOVerificationStatusEnum.verified && (
                     <>
                         <OButtonWide
-                            filled={false}
+                            filled={true}
                             text={i18n.t(TR.bookNewCall)}
                             variant="light"
                             style={[styles.btn, { marginTop: 30 }]}
@@ -126,6 +138,7 @@ const WaitingForVerification = ({
                             variant="light"
                             style={[styles.btn, { marginTop: 30 }]}
                             onPress={switchToBeApproached}
+                            numberOfLines={1}
                         />
                         <Text style={styles.subtitle}>
                             {i18n.t(TR.whySwitchToBeApproached)}

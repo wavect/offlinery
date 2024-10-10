@@ -25,6 +25,7 @@ interface IOButtonWideProps {
     loadingBtnText?: string;
     size?: "default" | "smaller";
     testID?: string;
+    numberOfLines?: number;
 }
 
 const getButtonStyle = (
@@ -102,6 +103,7 @@ export const OButtonWide: FC<IOButtonWideProps> = ({
     disabled = false,
     countdownEnableSeconds = 0,
     testID,
+    numberOfLines,
 }) => {
     const [countdown, setCountdown] = useState(countdownEnableSeconds);
     const [isBtnCountdownActive, setIsBtnCountdownActive] = useState(
@@ -140,6 +142,8 @@ export const OButtonWide: FC<IOButtonWideProps> = ({
                     getLabelStyle(isDisabled, filled, variant, size),
                     styleLbl,
                 ]}
+                numberOfLines={numberOfLines}
+                adjustsFontSizeToFit
             >
                 {isLoading ? (
                     <>

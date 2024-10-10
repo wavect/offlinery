@@ -143,7 +143,7 @@ export const en = {
     book15MinCallDescr: "15 minute verification call.",
     iPreferKYC: "Start KYC",
     iPreferKYCDescr: "Regulated 3rd party KYC (coming soon).",
-    verificationInProgress: "Verification in progress..",
+    verificationInProgress: "Verification in progress",
     verificationSuccessful: "You got approved!",
     verificationNeeded: "We need your verification",
     bookNewCall: "Book new call",
