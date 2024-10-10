@@ -148,6 +148,8 @@ export const de: Language = {
     verificationSuccessful: "Verifiziert!",
     bookNewCall: "Neuen Anruf buchen",
     pleaseDoNotMakeDoubleBookings: "Bitte keine Doppelbuchungen vornehmen.",
+    switchToBeApproached: `Wechsel zu "Angesprochen werden"`,
+    whySwitchToBeApproached: `Wenn du zu "Angesprochen werden" wechselst, wird keine Verifizierung benötigt und du kannst sofort loslegen. Du kannst trotzdem am Sicherheitsanruf teilnehmen, um verifiziert zu werden.`,
     somethingWrongQ: "Irgendwas schief gelaufen?",
     peopleYouMightHaveMet:
         "Menschen, die du vielleicht getroffen hast. Bewerte sie, melde sie oder bleibe in Kontakt.",

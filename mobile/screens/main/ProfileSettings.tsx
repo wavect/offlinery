@@ -1,6 +1,7 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import {
+    UpdateUserDTOApproachChoiceEnum,
     UserControllerUpdateUserRequest,
     UserPrivateDTOApproachChoiceEnum,
     UserPrivateDTOGenderDesireEnum,
@@ -92,6 +93,16 @@ const ProfileSettings = ({
         });
     };
 
+    const setApproachChoice = (item: {
+        label: string;
+        value: UpdateUserDTOApproachChoiceEnum;
+    }) => {
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: { approachChoice: item.value },
+        });
+    };
+
     const handleSave = async () => {
         try {
             setLoading(true);
@@ -108,15 +119,23 @@ const ProfileSettings = ({
                     blacklistedRegions: state.blacklistedRegions.map((r) =>
                         mapRegionToBlacklistedRegionDTO(r),
                     ),
+                    approachChoice: state.approachChoice,
                 },
                 images: getUserImagesForUpload(state),
             };
 
             await API.user.userControllerUpdateUser(request);
 
-            navigation.navigate(ROUTES.MainTabView, {
-                screen: ROUTES.Main.FindPeople,
-            });
+            if (
+                state.approachChoice !== "be_approached" &&
+                state.verificationStatus !== "verified"
+            ) {
+                navigation.navigate(ROUTES.Onboarding.WaitingVerification);
+            } else {
+                navigation.navigate(ROUTES.MainTabView, {
+                    screen: ROUTES.Main.FindPeople,
+                });
+            }
         } catch (error) {
             console.error("Error updating user profile:", error);
             // Handle error (e.g., show error message to user)
@@ -136,6 +155,15 @@ const ProfileSettings = ({
     }[] = [
         { label: i18n.t(TR.women), value: "woman" },
         { label: i18n.t(TR.men), value: "man" },
+    ];
+
+    const approachOptions: {
+        label: string;
+        value: UpdateUserDTOApproachChoiceEnum;
+    }[] = [
+        { label: i18n.t(TR.approach), value: "approach" },
+        { label: i18n.t(TR.beApproached), value: "be_approached" },
+        { label: i18n.t(TR.both), value: "both" },
     ];
 
     const SettingsButton = (props: {
@@ -316,6 +344,23 @@ const ProfileSettings = ({
                         valueField="value"
                         value={state.genderDesire}
                         onChange={setGenderDesire}
+                        style={styles.dropdown}
+                        containerStyle={styles.dropdownContainerStyle}
+                        placeholderStyle={styles.dropdownPlaceholderStyle}
+                        selectedTextStyle={styles.dropdownSelectedTextStyle}
+                        itemTextStyle={styles.dropdownItemTextStyle}
+                    />
+                </View>
+
+                <View style={styles.dropdownContainer}>
+                    <Text style={styles.label}>{i18n.t(TR.iWantTo)}</Text>
+                    <Dropdown
+                        testID={TestData.settings.inputIWantTo}
+                        data={approachOptions}
+                        labelField="label"
+                        valueField="value"
+                        value={state.approachChoice}
+                        onChange={setApproachChoice}
                         style={styles.dropdown}
                         containerStyle={styles.dropdownContainerStyle}
                         placeholderStyle={styles.dropdownPlaceholderStyle}

@@ -4,13 +4,14 @@ import { UserPrivateDTOVerificationStatusEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTroubleMessage } from "@/components/OTroubleMessage/OTroubleMessage";
-import { useUserContext } from "@/context/UserContext";
+import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { refreshUserData } from "@/services/auth.service";
 import { API } from "@/utils/api-config";
 import { MAIN_WEBSITE } from "@/utils/general.constants";
 import { getLocalLanguageID, writeSupportEmail } from "@/utils/misc.utils";
 import * as React from "react";
+import { useState } from "react";
 import { Linking, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
@@ -22,6 +23,7 @@ const WaitingForVerification = ({
     typeof ROUTES.Onboarding.WaitingVerification
 >) => {
     const { state, dispatch } = useUserContext();
+    const [isLoading, setIsLoading] = useState(false);
 
     const reloadUserState = async () => {
         if (!state.id) {
@@ -32,6 +34,10 @@ const WaitingForVerification = ({
             userId: state.id!,
         });
         refreshUserData(dispatch, updatedUser);
+
+        if (updatedUser.verificationStatus === "verified") {
+            navigation.replace(ROUTES.MainTabView);
+        }
     };
 
     const openVerificationCallPDF = async () => {
@@ -40,25 +46,39 @@ const WaitingForVerification = ({
         );
     };
 
+    const switchToBeApproached = async () => {
+        if (!state.id) {
+            // @dev This should only happen if user did not login or register and for some reason is on this screen (semantically impossible, except during debug sessions)
+            throw new Error("No user ID found!");
+        }
+        setIsLoading(true);
+
+        await API.user.userControllerUpdateUser({
+            userId: state.id,
+            updateUserDTO: {
+                approachChoice: "be_approached",
+            },
+        });
+
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: {
+                approachChoice: "be_approached",
+                verificationStatus: "not_needed",
+            },
+        });
+
+        setIsLoading(false);
+        navigation.replace(ROUTES.MainTabView);
+    };
+
     return (
         <OPageColorContainer refreshFunc={reloadUserState}>
             <View style={styles.btnContainer}>
-                <OButtonWide
-                    filled={true}
-                    text={i18n.t(
-                        state.verificationStatus !==
-                            UserPrivateDTOVerificationStatusEnum.verified
-                            ? TR.verificationInProgress
-                            : TR.verificationSuccessful,
-                    )}
-                    disabled={
-                        state.verificationStatus !==
-                        UserPrivateDTOVerificationStatusEnum.verified
-                    }
-                    style={styles.btn}
-                    onPress={() => navigation.navigate(ROUTES.MainTabView)}
-                    variant="light"
-                />
+                <Text style={styles.verificationInProgress}>
+                    {i18n.t(TR.verificationInProgress)}
+                </Text>
+
                 <Text
                     numberOfLines={1}
                     style={styles.verificationCallQuestions}
@@ -79,11 +99,29 @@ const WaitingForVerification = ({
                             onPress={() =>
                                 navigation.navigate(
                                     ROUTES.Onboarding.BookSafetyCall,
+                                    {
+                                        onCallBooked: () =>
+                                            navigation.replace(
+                                                ROUTES.Onboarding
+                                                    .WaitingVerification,
+                                            ),
+                                    },
                                 )
                             }
                         />
-                        <Text style={styles.subtitleBookCall}>
+                        <Text style={styles.subtitle}>
                             {i18n.t(TR.pleaseDoNotMakeDoubleBookings)}
+                        </Text>
+                        <OButtonWide
+                            isLoading={isLoading}
+                            filled={false}
+                            text={i18n.t(TR.switchToBeApproached)}
+                            variant="light"
+                            style={[styles.btn, { marginTop: 30 }]}
+                            onPress={switchToBeApproached}
+                        />
+                        <Text style={styles.subtitle}>
+                            {i18n.t(TR.whySwitchToBeApproached)}
                         </Text>
                     </>
                 )}
@@ -107,18 +145,27 @@ const styles = StyleSheet.create({
     btn: {
         marginBottom: 12,
     },
-    subtitleBookCall: {
+    subtitle: {
         fontSize: FontSize.size_sm,
         color: Color.brightGray,
         fontFamily: FontFamily.montserratLight,
+        textAlign: "center",
+        width: "90%",
     },
     verificationCallQuestions: {
         color: Color.brightGray,
         textDecorationLine: "underline",
         fontSize: FontSize.size_sm,
-        paddingBottom: 10,
+        marginBottom: 60,
         paddingHorizontal: 10, // @dev To increase "clickable size" for link
         fontFamily: FontFamily.montserratLight,
+    },
+    verificationInProgress: {
+        color: Color.white,
+        fontSize: FontSize.size_xl,
+        fontFamily: FontFamily.montserratSemiBold,
+        textAlign: "center",
+        marginBottom: 20,
     },
 });
 

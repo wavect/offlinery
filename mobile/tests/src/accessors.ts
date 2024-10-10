@@ -7,6 +7,7 @@ export const TestData = {
         inputBirthday: "input-my-birthday",
         inputIAmA: "input-i-am-a",
         inputIAmLookingFor: "input-i-am-looking-for",
+        inputIWantTo: "input-i-am-looking-for",
         buttonUpdateImages: "update-images",
         buttonUpdateSafeZones: "update-safe-zones",
         buttonChangePassword: "button-change-password",

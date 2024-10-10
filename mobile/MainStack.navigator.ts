@@ -21,7 +21,7 @@ export type MainStackParamList = {
     [ROUTES.Onboarding.GenderLookingFor]: undefined;
     [ROUTES.Onboarding.ApproachChoice]: undefined;
     [ROUTES.Onboarding.SafetyCheck]: undefined;
-    [ROUTES.Onboarding.BookSafetyCall]: undefined;
+    [ROUTES.Onboarding.BookSafetyCall]: { onCallBooked: Function };
     [ROUTES.Onboarding.AddPhotos]:
         | { overrideSaveBtnLbl: string; overrideOnBtnPress: () => void }
         | undefined;

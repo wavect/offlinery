@@ -147,6 +147,8 @@ export const en = {
     verificationSuccessful: "You got approved!",
     bookNewCall: "Book new call",
     pleaseDoNotMakeDoubleBookings: "Please do not make double bookings.",
+    switchToBeApproached: `Switch to "be approached"`,
+    whySwitchToBeApproached: `If you switch to "be approached", no verification is needed and you can immediately use the app. You can still attend the verification call to be verified.`,
     somethingWrongQ: "Something wrong?",
     peopleYouMightHaveMet:
         "People you might have met. Rate them, Report them or stay in touch.",
