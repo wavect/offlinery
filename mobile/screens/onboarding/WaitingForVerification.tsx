@@ -18,6 +18,7 @@ import { ROUTES } from "../routes";
 
 const WaitingForVerification = ({
     navigation,
+    route,
 }: NativeStackScreenProps<
     MainStackParamList,
     typeof ROUTES.Onboarding.WaitingVerification
@@ -76,7 +77,8 @@ const WaitingForVerification = ({
         <OPageColorContainer refreshFunc={reloadUserState}>
             <View style={styles.btnContainer}>
                 <Text style={styles.verificationInProgress}>
-                    {i18n.t(TR.verificationInProgress)}
+                    {route.params?.overrideLabel ??
+                        i18n.t(TR.verificationInProgress)}
                 </Text>
 
                 <Text
@@ -104,6 +106,11 @@ const WaitingForVerification = ({
                                             navigation.replace(
                                                 ROUTES.Onboarding
                                                     .WaitingVerification,
+                                                {
+                                                    overrideLabel: i18n.t(
+                                                        TR.verificationInProgress,
+                                                    ),
+                                                },
                                             ),
                                     },
                                 )

@@ -130,7 +130,9 @@ const ProfileSettings = ({
                 state.approachChoice !== "be_approached" &&
                 state.verificationStatus !== "verified"
             ) {
-                navigation.navigate(ROUTES.Onboarding.WaitingVerification);
+                navigation.navigate(ROUTES.Onboarding.WaitingVerification, {
+                    overrideLabel: i18n.t(TR.verificationNeeded),
+                });
             } else {
                 navigation.navigate(ROUTES.MainTabView, {
                     screen: ROUTES.Main.FindPeople,

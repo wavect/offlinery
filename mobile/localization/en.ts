@@ -145,6 +145,7 @@ export const en = {
     iPreferKYCDescr: "Regulated 3rd party KYC (coming soon).",
     verificationInProgress: "Verification in progress..",
     verificationSuccessful: "You got approved!",
+    verificationNeeded: "We need your verification",
     bookNewCall: "Book new call",
     pleaseDoNotMakeDoubleBookings: "Please do not make double bookings.",
     switchToBeApproached: `Switch to "be approached"`,

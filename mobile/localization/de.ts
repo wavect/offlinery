@@ -84,6 +84,7 @@ export const de: Language = {
         "Wir behalten uns das Recht vor, Bewerber abzulehnen, um sicherzustellen, dass sich jeder sicher und respektiert fühlt.",
     callBookedBtnLbl: "Ich werde da sein",
     verificationCallQuestions: "Was wir dich fragen",
+    verificationNeeded: "Wir brauchen deine Verifizierung",
     permissionToLocationDenied:
         "Zugriff auf den Standort wurde verweigert. Ohne deinen Standort wirst du weder angesprochen, noch kannst du jemanden via Offlinery ansprechen.",
     dontApproachHere: "Hier nicht ansprechen",
