@@ -94,7 +94,7 @@ export const de: Language = {
     myLocation: "Mein Standort",
     youAreHere: "Du bist hier.",
     longPressMapSafeZoneInstruction:
-        "Lange tippen, um eine Sicherheitszone hinzuzufügen. Tippe auf eine Region, ihren Radius anzupassen.",
+        "Lange tippen, um eine Sicherheitszone hinzuzufügen. Tippe auf eine Region, um deinen Radius anzupassen.",
     adjustRegionRadius: "Regionradius anpassen",
     whatIsYourEmail: "Was ist deine E-Mail?",
     whatIsYourEmailDescr:
