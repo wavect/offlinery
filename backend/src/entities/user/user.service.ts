@@ -274,8 +274,7 @@ export class UserService {
     private isVerificationNeeded(updateUserDto: UpdateUserDTO, user: User) {
         return (
             user.verificationStatus !== EVerificationStatus.VERIFIED &&
-            (updateUserDto.approachChoice === EApproachChoice.APPROACH ||
-                updateUserDto.approachChoice === EApproachChoice.BOTH)
+            updateUserDto.approachChoice !== EApproachChoice.BE_APPROACHED
         );
     }
 
