@@ -25,14 +25,11 @@ const WaitingForVerification = ({
 >) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setIsLoading] = useState(false);
-    const [dots, setDots] = useState("");
+    const [dotIndex, setDotIndex] = useState(0);
 
     React.useEffect(() => {
         const interval = setInterval(() => {
-            setDots((prevDots) => {
-                if (prevDots.length >= 3) return "";
-                return prevDots + ".";
-            });
+            setDotIndex((prevIndex) => (prevIndex + 1) % 4); // 0, 1, 2, 3
         }, 500);
 
         return () => clearInterval(interval);
@@ -88,10 +85,27 @@ const WaitingForVerification = ({
     return (
         <OPageColorContainer refreshFunc={reloadUserState}>
             <View style={styles.btnContainer}>
-                <Text style={styles.verificationInProgress}>
-                    {(route.params?.overrideLabel ??
-                        i18n.t(TR.verificationInProgress)) + dots}
-                </Text>
+                <View style={styles.verificationTextContainer}>
+                    <Text style={styles.verificationInProgress}>
+                        {route.params?.overrideLabel ??
+                            i18n.t(TR.verificationInProgress)}
+                    </Text>
+                    <Text style={styles.dots}>
+                        {"."
+                            .repeat(3)
+                            .split("")
+                            .map((dot, index) => (
+                                <Text
+                                    key={index}
+                                    style={{
+                                        opacity: index < dotIndex ? 1 : 0,
+                                    }}
+                                >
+                                    {dot}
+                                </Text>
+                            ))}
+                    </Text>
+                </View>
 
                 <Text
                     numberOfLines={1}
@@ -180,12 +194,21 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10, // @dev To increase "clickable size" for link
         fontFamily: FontFamily.montserratLight,
     },
+    verificationTextContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 20,
+    },
     verificationInProgress: {
         color: Color.white,
         fontSize: FontSize.size_xl,
         fontFamily: FontFamily.montserratSemiBold,
-        textAlign: "center",
-        marginBottom: 20,
+    },
+    dots: {
+        color: Color.white,
+        fontSize: FontSize.size_xl,
+        fontFamily: FontFamily.montserratSemiBold,
+        width: 30,
     },
 });
 
