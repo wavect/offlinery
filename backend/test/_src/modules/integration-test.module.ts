@@ -30,10 +30,7 @@ import {
     FactoryPair,
     TestFactory,
 } from "../factories/factory.interface";
-import {
-    MAN_WANTS_WOMAN_TESTUSER,
-    UserFactory,
-} from "../factories/user.factory";
+import { UserFactory } from "../factories/user.factory";
 
 interface TestModuleSetup {
     module: TestingModule;
@@ -138,13 +135,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
     ]);
 
     /** @DEV Main User - create the main testing user */
-    await userFactory.createMainAppUser();
-    const mainUser = await userRepository.findOne({
-        where: { firstName: MAN_WANTS_WOMAN_TESTUSER },
-    });
-    if (!mainUser) {
-        throw new Error("Failed to create or retrieve main testing user");
-    }
+    const mainUser = await userFactory.createMainAppUser();
 
     return { module, mainUser, dataSource, factories };
 };

@@ -72,8 +72,7 @@ describe("MatchingService", () => {
             const user = new User();
             user.dateMode = EDateMode.GHOST;
 
-            const result =
-                await matchingService.findPotentialMatchesForHeatmap(user);
+            const result = await matchingService.findHeatmapMatches(user);
 
             expect(result).toEqual([]);
         });
@@ -88,8 +87,7 @@ describe("MatchingService", () => {
                 new User(),
             ]);
 
-            const result =
-                await matchingService.findPotentialMatchesForHeatmap(user);
+            const result = await matchingService.findHeatmapMatches(user);
 
             expect(result).toHaveLength(2);
         });
@@ -101,10 +99,9 @@ describe("MatchingService", () => {
             user.dateMode = EDateMode.LIVE;
             user.location = { type: "Point", coordinates: [0, 0] };
 
-            jest.spyOn(
-                matchingService,
-                "findPotentialMatchesForHeatmap",
-            ).mockResolvedValue([]);
+            jest.spyOn(matchingService, "findHeatmapMatches").mockResolvedValue(
+                [],
+            );
 
             await matchingService.notifyMatches(user);
 

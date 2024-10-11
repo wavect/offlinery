@@ -50,41 +50,45 @@ export class UserFactory implements FactoryInterface {
     }
 
     public async createMainAppUser() {
-        await this.persistTestUser({
-            firstName: MAN_WANTS_MAN_TESTUSER,
-            gender: EGender.MAN,
-            genderDesire: EGender.MAN,
-            location: { type: "Point", coordinates: [0, 0] },
-            dateMode: EDateMode.LIVE,
-            verificationStatus: EVerificationStatus.VERIFIED,
-            approachChoice: EApproachChoice.APPROACH,
-        });
-        await this.persistTestUser({
-            firstName: MAN_WANTS_WOMAN_TESTUSER,
-            gender: EGender.MAN,
-            genderDesire: EGender.WOMAN,
-            location: { type: "Point", coordinates: [0, 0] },
-            dateMode: EDateMode.LIVE,
-            verificationStatus: EVerificationStatus.VERIFIED,
-            approachChoice: EApproachChoice.APPROACH,
-        });
-        await this.persistTestUser({
-            firstName: WOMAN_WANTS_WOMAN_TESTUSER,
-            gender: EGender.WOMAN,
-            genderDesire: EGender.WOMAN,
-            location: { type: "Point", coordinates: [0, 0] },
-            dateMode: EDateMode.LIVE,
-            verificationStatus: EVerificationStatus.VERIFIED,
-            approachChoice: EApproachChoice.APPROACH,
-        });
-        await this.persistTestUser({
-            firstName: WOMAN_WANTS_MAN_TESTUSER,
-            gender: EGender.WOMAN,
-            genderDesire: EGender.WOMAN,
-            location: { type: "Point", coordinates: [0, 0] },
-            dateMode: EDateMode.LIVE,
-            verificationStatus: EVerificationStatus.VERIFIED,
-            approachChoice: EApproachChoice.APPROACH,
+        const testUsers = [
+            {
+                firstName: MAN_WANTS_MAN_TESTUSER,
+                gender: EGender.MAN,
+                genderDesire: EGender.MAN,
+            },
+            {
+                firstName: MAN_WANTS_WOMAN_TESTUSER,
+                gender: EGender.MAN,
+                genderDesire: EGender.WOMAN,
+            },
+            {
+                firstName: WOMAN_WANTS_WOMAN_TESTUSER,
+                gender: EGender.WOMAN,
+                genderDesire: EGender.WOMAN,
+            },
+            {
+                firstName: WOMAN_WANTS_MAN_TESTUSER,
+                gender: EGender.WOMAN,
+                genderDesire: EGender.MAN,
+            },
+        ];
+
+        for (const user of testUsers) {
+            const existingUser = await this.userRepository.findOne({
+                where: { firstName: user.firstName },
+            });
+            if (existingUser) await this.userRepository.remove(existingUser);
+            await this.persistTestUser({
+                ...user,
+                location: { type: "Point", coordinates: [0, 0] },
+                dateMode: EDateMode.LIVE,
+                verificationStatus: EVerificationStatus.VERIFIED,
+                approachChoice: EApproachChoice.APPROACH,
+            });
+        }
+
+        return await this.userRepository.findOne({
+            where: { firstName: MAN_WANTS_WOMAN_TESTUSER },
         });
     }
 }

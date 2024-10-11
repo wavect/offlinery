@@ -26,9 +26,7 @@ export class MatchingService {
      * Returns HeatMap locations for the given
      * @param userToBeApproached
      */
-    public async findPotentialMatchesForHeatmap(
-        userToBeApproached: User,
-    ): Promise<User[]> {
+    public async findHeatmapMatches(userToBeApproached: User): Promise<User[]> {
         if (!this.isUserEligibleForMatchingLookup(userToBeApproached)) {
             return [];
         }
@@ -41,7 +39,7 @@ export class MatchingService {
      * Returns matches for the given
      * @param userToBeApproached
      */
-    public async getNearbyMatches(userToBeApproached: User): Promise<User[]> {
+    public async findNearbyMatches(userToBeApproached: User): Promise<User[]> {
         if (!this.isUserEligibleForMatchingLookup(userToBeApproached)) {
             return [];
         }
@@ -55,7 +53,7 @@ export class MatchingService {
      * @param userToBeApproached
      */
     public async notifyMatches(userToBeApproached: User): Promise<void> {
-        const nearbyMatches = await this.getNearbyMatches(userToBeApproached);
+        const nearbyMatches = await this.findNearbyMatches(userToBeApproached);
 
         if (nearbyMatches?.length > 0) {
             const baseNotification: OBaseNotification = {
