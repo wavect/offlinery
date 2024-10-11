@@ -337,10 +337,10 @@ describe("MatchingService ", () => {
             const matches =
                 await matchingService.findHeatmapMatches(testingMainUser);
 
-            expect(matches.length).toBe(1);
             expect(matches.map((m) => m.id)).toEqual(
                 expect.arrayContaining([userId2.id]),
             );
+            expect(matches.length).toBe(1);
         });
         it("Should only find users that are live", async () => {
             const userId = await userFactory.persistNewTestUser({
@@ -362,10 +362,10 @@ describe("MatchingService ", () => {
             const matches =
                 await matchingService.findHeatmapMatches(testingMainUser);
 
-            expect(matches.length).toBe(3);
             expect(matches.map((m) => m.id)).toEqual(
                 expect.arrayContaining([userId.id, userId2.id]),
             );
+            expect(matches.length).toBe(3);
         });
         it("Should only find users in the right age span", async () => {
             const testingUsersBirthYear =
@@ -404,6 +404,7 @@ describe("MatchingService ", () => {
             expect(matches.map((m) => m.id)).toEqual(
                 expect.arrayContaining([user1.id, user2.id, user3.id]),
             );
+            expect(matches.length).toEqual(3);
         });
         it("Should not find users that are ghost", async () => {
             await userFactory.persistNewTestUser({
@@ -419,10 +420,83 @@ describe("MatchingService ", () => {
             const matches =
                 await matchingService.findHeatmapMatches(testingMainUser);
 
-            expect(matches.length).toBe(1);
             expect(matches.map((m) => m.id)).toEqual(
                 expect.arrayContaining([user.id]),
             );
+            expect(matches.length).toBe(1);
+        });
+    });
+
+    describe("should test users within approach time and distance", () => {
+        /** @DEV once we introduce that the user configures this, ensure that this value comes from the user. A failing test will indicate this regardless.*/
+        const maxDistUser = 1500;
+        const DPM = 1 / 111139; // degress per meter
+
+        it("Should not consider users locations for heatmap", async () => {
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser * 0.9 * DPM), // 90% of max distance
+            });
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser * 0.5 * DPM), // 50% of max distance
+            });
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser * 1.1 * DPM), // 110% of max distance
+            });
+
+            const matches =
+                await matchingService.findHeatmapMatches(testingMainUser);
+            expect(matches.length).toEqual(3);
+        });
+
+        it("Should consider users locations for nearby-matches", async () => {
+            const user1 = await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser * 0.5 * DPM), // 50% of max distance
+            });
+            const user2 = await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser * 0.9 * DPM), // 90% of max distance
+            });
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser * 1.1 * DPM), // 110% of max distance
+            });
+
+            const matches =
+                await matchingService.findNearbyMatches(testingMainUser);
+            expect(matches.map((m) => m.id)).toEqual(
+                expect.arrayContaining([user1.id, user2.id]),
+            );
+            expect(matches.length).toEqual(2);
+        });
+
+        it("Should consider precise distance cases for nearby-matches within maxDistUser", async () => {
+            const testingMainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                genderDesire: EGender.WOMAN,
+                gender: EGender.MAN,
+                approachChoice: EApproachChoice.APPROACH,
+                birthDay: new Date("1996-09-21"),
+            });
+
+            const user1499m = await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, (maxDistUser - 1) * DPM), // 1 meter less than max
+            });
+            const user1500m = await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser * DPM), // Exactly at max distance
+            });
+            const user1501m = await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(
+                    0,
+                    (maxDistUser + 150) * DPM,
+                ), // 1 meter more than max
+            });
+
+            const matches =
+                await matchingService.findNearbyMatches(testingMainUser);
+
+            expect(matches.map((m) => m.id)).toEqual(
+                expect.arrayContaining([user1499m.id, user1500m.id]),
+            );
+            expect(matches.map((m) => m.id)).not.toContain(user1501m.id);
         });
     });
 });
