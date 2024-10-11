@@ -4,7 +4,6 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
-    EGenderDesire,
     EVerificationStatus,
 } from "@/types/user.types";
 import { generateRandomString } from "../utils/utils";
@@ -28,7 +27,7 @@ export class UserFactory implements FactoryInterface {
             bio: generateRandomString(15),
             dateMode: EDateMode.LIVE,
             gender: EGender.WOMAN,
-            genderDesire: EGenderDesire.MAN,
+            genderDesire: [EGender.MAN],
             email: `${generateRandomString(15)}@example.com`,
             passwordHash: "hashed_password",
             passwordSalt: "salt",
@@ -54,7 +53,7 @@ export class UserFactory implements FactoryInterface {
         await this.persistTestUser({
             firstName: MAN_WANTS_MAN_TESTUSER,
             gender: EGender.MAN,
-            genderDesire: EGenderDesire.MAN,
+            genderDesire: [EGender.MAN],
             location: { type: "Point", coordinates: [0, 0] },
             dateMode: EDateMode.LIVE,
             verificationStatus: EVerificationStatus.VERIFIED,
@@ -63,7 +62,7 @@ export class UserFactory implements FactoryInterface {
         await this.persistTestUser({
             firstName: MAN_WANTS_WOMAN_TESTUSER,
             gender: EGender.MAN,
-            genderDesire: EGenderDesire.WOMAN,
+            genderDesire: [EGender.WOMAN],
             location: { type: "Point", coordinates: [0, 0] },
             dateMode: EDateMode.LIVE,
             verificationStatus: EVerificationStatus.VERIFIED,
@@ -72,7 +71,7 @@ export class UserFactory implements FactoryInterface {
         await this.persistTestUser({
             firstName: WOMAN_WANTS_WOMAN_TESTUSER,
             gender: EGender.WOMAN,
-            genderDesire: EGenderDesire.WOMAN,
+            genderDesire: [EGender.WOMAN],
             location: { type: "Point", coordinates: [0, 0] },
             dateMode: EDateMode.LIVE,
             verificationStatus: EVerificationStatus.VERIFIED,
@@ -81,7 +80,7 @@ export class UserFactory implements FactoryInterface {
         await this.persistTestUser({
             firstName: WOMAN_WANTS_MAN_TESTUSER,
             gender: EGender.WOMAN,
-            genderDesire: EGenderDesire.WOMAN,
+            genderDesire: [EGender.WOMAN],
             location: { type: "Point", coordinates: [0, 0] },
             dateMode: EDateMode.LIVE,
             verificationStatus: EVerificationStatus.VERIFIED,

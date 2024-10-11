@@ -2,7 +2,7 @@ import { EncounterService } from "@/entities/encounter/encounter.service";
 import { User } from "@/entities/user/user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
 import { UserService } from "@/entities/user/user.service";
-import { EGender, EGenderDesire } from "@/types/user.types";
+import { EGender } from "@/types/user.types";
 import { EncounterFactory } from "../../_src/factories/encounter.factory";
 import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
@@ -35,7 +35,7 @@ describe("UserService", () => {
                 email: "email1@email.com",
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
-                genderDesire: EGenderDesire.MAN,
+                genderDesire: [EGender.MAN],
                 deletionToken: deleteToken,
                 deletionTokenExpires: new Date(
                     Date.now() + 24 * 60 * 60 * 1000,
@@ -70,7 +70,7 @@ describe("UserService", () => {
                 email: "email1@email.com",
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
-                genderDesire: EGenderDesire.MAN,
+                genderDesire: [EGender.MAN],
                 deletionToken: deleteToken,
                 deletionTokenExpires: new Date(
                     Date.now() + 24 * 60 * 60 * 1000,
@@ -111,7 +111,7 @@ describe("UserService", () => {
                 email: "email2@email.com",
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
-                genderDesire: EGenderDesire.MAN,
+                genderDesire: [EGender.MAN],
                 deletionToken: deleteToken,
                 deletionTokenExpires: new Date(
                     Date.now() + 24 * 60 * 60 * 1000,

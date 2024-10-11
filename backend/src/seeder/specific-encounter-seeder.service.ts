@@ -10,7 +10,6 @@ import {
     EEmailVerificationStatus,
     EEncounterStatus,
     EGender,
-    EGenderDesire,
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
@@ -153,10 +152,9 @@ export class Create10RealTestPeopleEncounters {
                 wantsEmailUpdates: true,
                 birthDay: generateRandomBirthday(25, 30),
                 gender: user.gender,
-                genderDesire:
-                    user.gender === EGender.MAN
-                        ? EGenderDesire.WOMAN
-                        : EGenderDesire.MAN,
+                genderDesire: [
+                    user.gender === EGender.MAN ? EGender.WOMAN : EGender.MAN,
+                ],
                 approachChoice: EApproachChoice.APPROACH,
                 blacklistedRegions: [],
                 approachFromTime: new Date("2023-01-01 08:00:00"),

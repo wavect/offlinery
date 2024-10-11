@@ -62,10 +62,10 @@ export interface CreateUserDTO {
     gender: CreateUserDTOGenderEnum;
     /**
      *
-     * @type {string}
+     * @type {Array<string>}
      * @memberof CreateUserDTO
      */
-    genderDesire: CreateUserDTOGenderDesireEnum;
+    genderDesire: Array<CreateUserDTOGenderDesireEnum>;
     /**
      *
      * @type {string}

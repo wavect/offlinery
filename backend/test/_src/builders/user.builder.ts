@@ -6,7 +6,6 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
-    EGenderDesire,
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
@@ -24,7 +23,7 @@ export class UserBuilder extends AbstractEntityBuilder<User> {
         user.passwordSalt = "salt";
         user.birthDay = new Date("1990-01-01");
         user.gender = EGender.MAN;
-        user.genderDesire = EGenderDesire.WOMAN;
+        user.genderDesire = [EGender.WOMAN];
         user.imageURIs = ["https://example.com/image.jpg"];
         user.verificationStatus = EVerificationStatus.VERIFIED;
         user.approachChoice = EApproachChoice.APPROACH;
@@ -83,7 +82,7 @@ export class UserBuilder extends AbstractEntityBuilder<User> {
         return this;
     }
 
-    withGenderDesire(genderDesire: EGenderDesire): this {
+    withGenderDesire(genderDesire: EGender[]): this {
         this.entity.genderDesire = genderDesire;
         return this;
     }

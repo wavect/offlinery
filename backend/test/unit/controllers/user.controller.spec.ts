@@ -8,7 +8,6 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
-    EGenderDesire,
     ELanguage,
 } from "@/types/user.types";
 import { NotFoundException } from "@nestjs/common";
@@ -53,7 +52,7 @@ describe("UserController", () => {
                 clearPassword: "password123",
                 birthDay: new Date("1990-01-01"),
                 gender: EGender.MAN,
-                genderDesire: EGenderDesire.WOMAN,
+                genderDesire: [EGender.WOMAN],
                 approachChoice: EApproachChoice.BOTH,
                 approachFromTime: new Date(),
                 approachToTime: new Date(),

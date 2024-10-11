@@ -35,7 +35,7 @@ import { CommonActions } from "@react-navigation/native";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Dropdown } from "react-native-element-dropdown";
+import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -82,13 +82,13 @@ const ProfileSettings = ({
             payload: { gender: item.value },
         });
     };
-    const setGenderDesire = (item: {
-        label: string;
-        value: UserPrivateDTOGenderDesireEnum;
-    }) => {
+
+    const setGenderDesire = (items: string[]) => {
         dispatch({
             type: EACTION_USER.UPDATE_MULTIPLE,
-            payload: { genderDesire: item.value },
+            payload: {
+                genderDesire: items as UserPrivateDTOGenderDesireEnum[],
+            },
         });
     };
 
@@ -136,7 +136,6 @@ const ProfileSettings = ({
     }[] = [
         { label: i18n.t(TR.women), value: "woman" },
         { label: i18n.t(TR.men), value: "man" },
-        { label: i18n.t(TR.both), value: "both" },
     ];
 
     const SettingsButton = (props: {
@@ -310,7 +309,7 @@ const ProfileSettings = ({
 
                 <View style={styles.dropdownContainer}>
                     <Text style={styles.label}>{i18n.t(TR.iLookFor)}</Text>
-                    <Dropdown
+                    <MultiSelect
                         testID={TestData.settings.inputIAmLookingFor}
                         data={genderLookingForItems}
                         labelField="label"

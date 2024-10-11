@@ -8,7 +8,6 @@ import {
     EDateMode,
     EEmailVerificationStatus,
     EGender,
-    EGenderDesire,
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
@@ -122,13 +121,13 @@ export class RandomUsersSeeder {
 
     private generateRandomUser(index: number): CreateUserDTO {
         const gender = Math.random() < 0.5 ? EGender.MAN : EGender.WOMAN;
-        const genderMapped = this.mapGenderToGenderDesire(gender);
-        const genderDesire =
+        const genderDesire = [
             Math.random() < 0.5
-                ? genderMapped === EGenderDesire.MAN
-                    ? EGenderDesire.WOMAN
-                    : EGenderDesire.MAN
-                : genderMapped;
+                ? gender === EGender.MAN
+                    ? EGender.WOMAN
+                    : EGender.MAN
+                : gender,
+        ];
         const dateMode =
             Math.random() < 0.95 ? EDateMode.LIVE : EDateMode.GHOST;
 
@@ -160,9 +159,5 @@ export class RandomUsersSeeder {
             dateMode,
             preferredLanguage: ELanguage.en,
         };
-    }
-
-    private mapGenderToGenderDesire(gender: EGender): EGenderDesire {
-        return gender === EGender.MAN ? EGenderDesire.MAN : EGenderDesire.WOMAN;
     }
 }
