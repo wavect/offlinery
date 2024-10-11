@@ -31,6 +31,8 @@ class ApiManager {
     private static instance: ApiManager;
     private config: Configuration;
     private apis: ApiClasses;
+    /** @DEV keeps track of an ongoing token refresh */
+    private refreshPromise: Promise<string> | null = null;
 
     private constructor() {
         this.config = this.createConfiguration();
@@ -62,6 +64,8 @@ class ApiManager {
     }
 
     private createConfiguration(): Configuration {
+        apiConfigLogger("Middleware intercepted");
+
         const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
         return new Configuration({
             accessToken: jwtToken!,
@@ -90,42 +94,72 @@ class ApiManager {
     }
 
     private async ensureValidToken(): Promise<string> {
-        const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
+        apiConfigLogger("Ensuring Valid Token");
+        let jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
+
+        if (jwtToken && !jwtExpiresSoon(jwtToken)) {
+            apiConfigLogger("✓ Valid JWT ");
+            return jwtToken;
+        }
+
+        if (!this.refreshPromise) {
+            apiConfigLogger(
+                "No current token refresh running. Requesting refresh now...",
+            );
+            this.refreshPromise = this.refreshToken().finally(() => {
+                this.refreshPromise = null;
+            });
+        } else {
+            apiConfigLogger("Token Refresh is already running. Waiting...");
+        }
+
+        await this.refreshPromise;
+        return getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN)!;
+    }
+
+    private async refreshToken(): Promise<string> {
         const refreshToken = getSecurelyStoredValue(
             SECURE_VALUE.JWT_REFRESH_TOKEN,
         );
-        if (jwtToken && jwtExpiresSoon(jwtToken)) {
-            try {
-                if (!refreshToken) {
-                    throw new Error("No refresh token found.");
-                }
-                // TODO: Endpoint is still public
-                const authApi = new AuthApi();
-                const refreshResponse =
-                    (await authApi.authControllerRefreshJwtToken({
-                        refreshJwtDTO: { refreshToken },
-                    })) as any;
-                saveValueLocallySecurely(
-                    SECURE_VALUE.JWT_REFRESH_TOKEN,
-                    refreshResponse.refreshToken,
-                );
-                saveValueLocallySecurely(
-                    SECURE_VALUE.JWT_ACCESS_TOKEN,
-                    refreshResponse.accessToken,
-                );
-                console.log("JWT and Refresh update successful.");
-                this.config = this.createConfiguration();
-                this.apis = this.initApis();
-                return refreshResponse.accessToken;
-            } catch (e) {
-                console.error("JWT unable to refresh. Logging user out");
-                saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
-                saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
-            }
+
+        if (!refreshToken) {
+            throw new Error("No refresh token found.");
         }
-        return jwtToken!;
+
+        try {
+            // TODO: Endpoint is still public
+            const authApi = new AuthApi();
+            const refreshResponse =
+                (await authApi.authControllerRefreshJwtToken({
+                    refreshJwtDTO: { refreshToken },
+                })) as any;
+
+            saveValueLocallySecurely(
+                SECURE_VALUE.JWT_REFRESH_TOKEN,
+                refreshResponse.refreshToken,
+            );
+            saveValueLocallySecurely(
+                SECURE_VALUE.JWT_ACCESS_TOKEN,
+                refreshResponse.accessToken,
+            );
+            apiConfigLogger("✓ JWT and Refresh update successful.");
+
+            this.config = this.createConfiguration();
+            this.apis = this.initApis();
+
+            return refreshResponse.accessToken;
+        } catch (e) {
+            console.error(`- JWT unable to refresh. Logging user out`);
+            saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
+            saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
+            throw e;
+        }
     }
 }
+
+const apiConfigLogger = (msg: string) => {
+    console.log(`[Api-Manager]: ${msg}`);
+};
 
 type ApiProxyType = ApiClasses & {
     api: ApiClasses;
