@@ -11,7 +11,7 @@ export class BlacklistedRegionBuilder extends AbstractEntityBuilder<BlacklistedR
             type: "Point",
             coordinates: [0, 0],
         };
-        blacklistedRegion.radius = 0;
+        blacklistedRegion.radius = 100;
         return blacklistedRegion;
     }
 

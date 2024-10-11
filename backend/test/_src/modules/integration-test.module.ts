@@ -34,7 +34,6 @@ import { UserFactory } from "../factories/user.factory";
 
 interface TestModuleSetup {
     module: TestingModule;
-    mainUser: User;
     dataSource: DataSource;
     factories: FactoryPair;
 }
@@ -116,6 +115,10 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
     const encounterRepository = module.get<Repository<Encounter>>(
         getRepositoryToken(Encounter),
     );
+    const blacklistedRegionRepository = module.get<
+        Repository<BlacklistedRegion>
+    >(getRepositoryToken(BlacklistedRegion));
+
     const dataSource = module.get<DataSource>(DataSource);
 
     /** @DEV Database Operations - Ensure the database is synced and migrations are run */
@@ -124,7 +127,10 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
     await initializePostGIS(dataSource); /** PostGIS/populate spatial_ref_sys */
 
     /** @DEV Test Factories - create and get testing factories */
-    const userFactory = new UserFactory(userRepository);
+    const userFactory = new UserFactory(
+        userRepository,
+        blacklistedRegionRepository,
+    );
     const encounterFactory = new EncounterFactory(
         userRepository,
         encounterRepository,
@@ -134,10 +140,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
         ["encounter", encounterFactory],
     ]);
 
-    /** @DEV Main User - create the main testing user */
-    const mainUser = await userFactory.createMainAppUser();
-
-    return { module, mainUser, dataSource, factories };
+    return { module, dataSource, factories };
 };
 
 async function initializePostGIS(dataSource: DataSource) {

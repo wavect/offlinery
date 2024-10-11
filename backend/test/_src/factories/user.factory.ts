@@ -1,3 +1,4 @@
+import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
 import {
@@ -6,6 +7,7 @@ import {
     EGender,
     EVerificationStatus,
 } from "@/types/user.types";
+import { Repository } from "typeorm";
 import { generateRandomString } from "../utils/utils";
 import { FactoryInterface } from "./factory.interface";
 
@@ -16,9 +18,14 @@ export const WOMAN_WANTS_MAN_TESTUSER = "WOMAN_WANTS_MAN_TESTUSER";
 
 export class UserFactory implements FactoryInterface {
     private userRepository: UserRepository;
+    private blacklistedRegionRepository: Repository<BlacklistedRegion>;
 
-    constructor(userRepository: UserRepository) {
+    constructor(
+        userRepository: UserRepository,
+        blacklistedRegionRepository: Repository<BlacklistedRegion>,
+    ) {
         this.userRepository = userRepository;
+        this.blacklistedRegionRepository = blacklistedRegionRepository;
     }
 
     public async persistTestUser(userData?: Partial<User>): Promise<User> {
@@ -28,7 +35,7 @@ export class UserFactory implements FactoryInterface {
             dateMode: EDateMode.LIVE,
             gender: EGender.WOMAN,
             genderDesire: EGender.MAN,
-            email: `${generateRandomString(15)}@example.com`,
+            email: `generated-${generateRandomString(15)}@example.com`,
             passwordHash: "hashed_password",
             passwordSalt: "salt",
             birthDay: new Date("1990-01-01"),
@@ -36,7 +43,7 @@ export class UserFactory implements FactoryInterface {
             approachToTime: new Date("2030-01-02T23:59:59Z"),
             location: { type: "Point", coordinates: [0.001, 0.001] },
             verificationStatus: EVerificationStatus.VERIFIED,
-            approachChoice: EApproachChoice.BOTH,
+            approachChoice: EApproachChoice.BE_APPROACHED,
             trustScore: 1,
             ...userData,
         });
@@ -49,27 +56,22 @@ export class UserFactory implements FactoryInterface {
         return await this.userRepository.save(savedUser);
     }
 
+    public async updateTestUser(userData: Partial<User>): Promise<User> {
+        return await this.userRepository.save({
+            ...(await this.userRepository.findOneBy({
+                email: "main-test-user@test.at",
+            })),
+            ...userData,
+        });
+    }
+
     public async createMainAppUser() {
         const testUsers = [
             {
-                firstName: MAN_WANTS_MAN_TESTUSER,
-                gender: EGender.MAN,
-                genderDesire: EGender.MAN,
-            },
-            {
+                email: "main-test-user@test.at",
                 firstName: MAN_WANTS_WOMAN_TESTUSER,
                 gender: EGender.MAN,
                 genderDesire: EGender.WOMAN,
-            },
-            {
-                firstName: WOMAN_WANTS_WOMAN_TESTUSER,
-                gender: EGender.WOMAN,
-                genderDesire: EGender.WOMAN,
-            },
-            {
-                firstName: WOMAN_WANTS_MAN_TESTUSER,
-                gender: EGender.WOMAN,
-                genderDesire: EGender.MAN,
             },
         ];
 
