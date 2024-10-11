@@ -1,3 +1,4 @@
+import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import {
     SetAcceptedSpecialDataGenderLookingForDTO,
@@ -10,7 +11,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { API } from "@/utils/api-config";
 import { GDPR_URL } from "@/utils/general.constants";
 import * as React from "react";
-import { Alert, Linking, StyleSheet, View } from "react-native";
+import { Alert, Linking, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -92,6 +93,17 @@ const GenderLookingFor = ({
                     onPress={() => toggleGender("man")}
                 />
             </View>
+            <View style={styles.optionContainer}>
+                <OButtonWide
+                    text={i18n.t(TR.more)}
+                    filled={false}
+                    variant="dark"
+                    disabled={true}
+                />
+                <Text style={[Subtitle, styles.subtitle]}>
+                    {i18n.t(TR.genderMoreComingSoon)}
+                </Text>
+            </View>
             <View style={styles.submitContainer}>
                 <OButtonWide
                     text={i18n.t(TR.continue)}
@@ -115,6 +127,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 40,
         width: "100%",
+    },
+    subtitle: {
+        textAlign: "center",
+        marginTop: 10,
+        paddingHorizontal: 20,
     },
 });
 
