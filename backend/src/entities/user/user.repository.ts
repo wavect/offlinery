@@ -3,6 +3,8 @@ import {
     EApproachChoice,
     EDateMode,
     EEncounterStatus,
+    EGender,
+    EGenderDesire,
     EVerificationStatus,
 } from "@/types/user.types";
 import { Injectable, Logger } from "@nestjs/common";
@@ -141,10 +143,10 @@ export class UserRepository extends Repository<User> {
         return this;
     }
 
-    private withDesiredGender(desiredGender: string): this {
-        if (desiredGender === "BOTH") {
+    private withDesiredGender(desiredGender: EGenderDesire): this {
+        if (desiredGender === EGenderDesire.BOTH) {
             this.queryBuilder.andWhere("user.gender IN (:...genders)", {
-                genders: ["MAN", "WOMAN"],
+                genders: [EGenderDesire.MAN, EGenderDesire.WOMAN],
             });
         } else {
             this.queryBuilder.andWhere("user.gender = :desiredGender", {
@@ -154,16 +156,14 @@ export class UserRepository extends Repository<User> {
         return this;
     }
 
-    private withGenderDesire(userGender: string): this {
-        if (userGender === "BOTH") {
-            this.queryBuilder.andWhere("user.genderDesire IN (:...genders)", {
-                genders: ["MAN", "WOMAN"],
-            });
-        } else {
-            this.queryBuilder.andWhere("user.genderDesire = :userGender", {
+    private withGenderDesire(userGender: EGender): this {
+        this.queryBuilder.andWhere(
+            "(user.genderDesire = :userGender OR user.genderDesire = :both)",
+            {
                 userGender,
-            });
-        }
+                both: EGenderDesire.BOTH,
+            },
+        );
         return this;
     }
 
