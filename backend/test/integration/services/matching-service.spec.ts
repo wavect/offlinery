@@ -47,7 +47,7 @@ describe("MatchingService ", () => {
         });
     });
 
-    describe("should check edge cases prior to retrieving users", () => {
+    describe("should test edge cases prior to retrieving users", () => {
         it("should not fetch notification matches if the user is not live", async () => {
             const userToBeApproached = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
@@ -208,7 +208,7 @@ describe("MatchingService ", () => {
         });
     });
 
-    describe("should ignore users within blacklisted regions", () => {
+    describe("should test users within blacklisted regions", () => {
         it.failing(
             "should not return a match for a blacklisted region",
             async () => {
@@ -367,7 +367,6 @@ describe("MatchingService ", () => {
                 expect.arrayContaining([userId.id, userId2.id]),
             );
         });
-
         it("Should only find users in the right age span", async () => {
             const testingUsersBirthYear =
                 testingMainUser.birthDay.getFullYear();
@@ -406,7 +405,6 @@ describe("MatchingService ", () => {
                 expect.arrayContaining([user1.id, user2.id, user3.id]),
             );
         });
-
         it("Should not find users that are ghost", async () => {
             await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,

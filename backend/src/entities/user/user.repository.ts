@@ -76,7 +76,7 @@ export class UserRepository extends Repository<User> {
 
     async getPotentialMatches(userToBeApproached: User): Promise<User[]> {
         return await this.createUserMatchBaseQuery(userToBeApproached)
-            /** @dev Are users within x meters - TODO: Make this configurable by users. */
+            /** @dev TODO: Make this configurable by users. */
             .withinDistance(userToBeApproached.location, 1500)
             .withUserWantingToBeApproached()
             .getMany();

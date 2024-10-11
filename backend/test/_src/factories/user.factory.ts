@@ -64,33 +64,4 @@ export class UserFactory implements FactoryInterface {
             ...userData,
         });
     }
-
-    public async createMainAppUser() {
-        const testUsers = [
-            {
-                email: "main-test-user@test.at",
-                firstName: MAN_WANTS_WOMAN_TESTUSER,
-                gender: EGender.MAN,
-                genderDesire: EGender.WOMAN,
-            },
-        ];
-
-        for (const user of testUsers) {
-            const existingUser = await this.userRepository.findOne({
-                where: { firstName: user.firstName },
-            });
-            if (existingUser) await this.userRepository.remove(existingUser);
-            await this.persistNewTestUser({
-                ...user,
-                location: { type: "Point", coordinates: [0, 0] },
-                dateMode: EDateMode.LIVE,
-                verificationStatus: EVerificationStatus.VERIFIED,
-                approachChoice: EApproachChoice.APPROACH,
-            });
-        }
-
-        return await this.userRepository.findOne({
-            where: { firstName: MAN_WANTS_WOMAN_TESTUSER },
-        });
-    }
 }
