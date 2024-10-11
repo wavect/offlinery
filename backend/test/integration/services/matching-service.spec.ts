@@ -118,7 +118,7 @@ describe("UserRepository ", () => {
 
     /** @DEV needs a complete refactoring, as we truly only check for ENCOUNTERS when sending notifications */
     /** @DEV hence we need to insert users here with encounters */
-    describe.skip("get users for encounters / notifications", () => {
+    describe("get users for encounters / notifications", () => {
         it("Should only find users that are the right GENDER", async () => {
             const userId = await userFactory.persistTestUser({
                 gender: EGender.WOMAN,
