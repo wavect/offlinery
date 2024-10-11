@@ -1,4 +1,3 @@
-import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import {
     SetAcceptedSpecialDataGenderLookingForDTO,
@@ -11,7 +10,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { API } from "@/utils/api-config";
 import { GDPR_URL } from "@/utils/general.constants";
 import * as React from "react";
-import { Alert, Linking, StyleSheet, Text, View } from "react-native";
+import { Alert, Linking, StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -22,15 +21,28 @@ const GenderLookingFor = ({
     typeof ROUTES.Onboarding.GenderLookingFor
 >) => {
     const { state, dispatch } = useUserContext();
+    const [selectedGenders, setSelectedGenders] = React.useState<
+        UserPrivateDTOGenderDesireEnum[]
+    >([]);
 
-    const setGender = (gender: UserPrivateDTOGenderDesireEnum) => {
+    const toggleGender = (gender: UserPrivateDTOGenderDesireEnum) => {
+        setSelectedGenders((prev) =>
+            prev.includes(gender)
+                ? prev.filter((g) => g !== gender)
+                : [...prev, gender],
+        );
+    };
+
+    const isSelected = (gender: UserPrivateDTOGenderDesireEnum) =>
+        selectedGenders.includes(gender);
+
+    const handleSubmit = () => {
         Alert.alert(
             i18n.t(TR.genderLookingForAlertTitle),
             i18n.t(TR.genderLookingForAlertDescr),
             [
                 {
                     text: i18n.t(TR.decline),
-                    //onPress: () => onDecline(),
                     style: "cancel",
                 },
                 {
@@ -45,16 +57,14 @@ const GenderLookingFor = ({
                                 email: state.email,
                                 dateTimeAccepted: new Date(),
                             };
-
                         await API.pendingUser.pendingUserControllerSetAcceptedSpecialDataGenderLookingForAt(
                             {
                                 setAcceptedSpecialDataGenderLookingForDTO,
                             },
                         );
-
                         dispatch({
                             type: EACTION_USER.UPDATE_MULTIPLE,
-                            payload: { genderDesire: gender },
+                            payload: { genderDesire: selectedGenders },
                         });
                         navigation.navigate(ROUTES.Onboarding.AddPhotos);
                     },
@@ -69,31 +79,27 @@ const GenderLookingFor = ({
             <View style={styles.optionContainer}>
                 <OButtonWide
                     text={i18n.t(TR.women)}
-                    filled={false}
+                    filled={isSelected(UserPrivateDTOGenderDesireEnum.woman)}
                     variant="dark"
-                    onPress={() => setGender("woman")}
+                    onPress={() => toggleGender("woman")}
                 />
             </View>
-
             <View style={styles.optionContainer}>
                 <OButtonWide
                     text={i18n.t(TR.men)}
-                    filled={false}
+                    filled={isSelected(UserPrivateDTOGenderDesireEnum.man)}
                     variant="dark"
-                    onPress={() => setGender("man")}
+                    onPress={() => toggleGender("man")}
                 />
             </View>
-
-            <View style={styles.optionContainer}>
+            <View style={styles.submitContainer}>
                 <OButtonWide
-                    text={i18n.t(TR.more)}
-                    filled={false}
-                    variant="dark"
-                    disabled={true}
+                    text={i18n.t(TR.continue)}
+                    filled={true}
+                    onPress={handleSubmit}
+                    variant={"dark"}
+                    disabled={selectedGenders.length === 0}
                 />
-                <Text style={[Subtitle, styles.subtitle]}>
-                    {i18n.t(TR.genderMoreComingSoon)}
-                </Text>
             </View>
         </OPageContainer>
     );
@@ -105,10 +111,10 @@ const styles = StyleSheet.create({
         marginTop: 20,
         width: "100%",
     },
-    subtitle: {
-        textAlign: "center",
-        marginTop: 10,
-        paddingHorizontal: 20,
+    submitContainer: {
+        alignItems: "center",
+        marginTop: 40,
+        width: "100%",
     },
 });
 
