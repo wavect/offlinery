@@ -8,5 +8,8 @@ export const BE_ENDPOINT =
         ? `http://localhost:${TYPED_ENV.BE_PORT}`
         : "https://api.offlinery.io";
 
-export const TOKEN_TIME = "60m";
+/** @DEV - Expiration time of each user token */
+export const TOKEN_EXPIRATION_TIME = "60m";
+
+/** @DEV - Expiration time of each registration token */
 export const REGISTRATION_TOKEN_TIME = "1d";

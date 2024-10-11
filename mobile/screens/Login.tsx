@@ -1,6 +1,6 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
-import { AuthControllerSignInRequest } from "@/api/gen/src";
+import { AuthApi, AuthControllerSignInRequest } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
@@ -10,7 +10,6 @@ import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
-import { API } from "@/utils/api-config";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
@@ -37,7 +36,10 @@ const Login = ({
         };
 
         try {
-            const signInRes = await API.auth.authControllerSignIn(signInDTO);
+            /** @DEV Do not call via middleware */
+            const signInRes = await new AuthApi().authControllerSignIn(
+                signInDTO,
+            );
 
             if (signInRes.accessToken) {
                 const user = signInRes.user;
