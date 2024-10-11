@@ -132,10 +132,11 @@ const ProfileSettings = ({
 
     const genderLookingForItems: {
         label: string;
-        value: UserPrivateDTOGenderEnum;
+        value: UserPrivateDTOGenderDesireEnum;
     }[] = [
         { label: i18n.t(TR.women), value: "woman" },
         { label: i18n.t(TR.men), value: "man" },
+        { label: i18n.t(TR.both), value: "both" },
     ];
 
     const SettingsButton = (props: {

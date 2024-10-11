@@ -188,6 +188,7 @@ export type UserPrivateDTOGenderEnum =
 export const UserPrivateDTOGenderDesireEnum = {
     woman: "woman",
     man: "man",
+    both: "both",
 } as const;
 export type UserPrivateDTOGenderDesireEnum =
     (typeof UserPrivateDTOGenderDesireEnum)[keyof typeof UserPrivateDTOGenderDesireEnum];

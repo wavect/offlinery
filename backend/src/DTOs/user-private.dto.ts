@@ -64,7 +64,7 @@ export class UserPrivateDTO extends UserPublicDTO {
     gender: EGender;
 
     @ApiProperty({
-        enum: EGender,
+        enum: EGenderDesire,
         description: "The gender the user is interested in",
     })
     genderDesire: EGenderDesire;
