@@ -114,6 +114,8 @@ class ApiManager {
         }
 
         await this.refreshPromise;
+
+        /** @DEV super important: make sure after the refresh promise was handled, the new token gets returned*/
         return getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN)!;
     }
 
