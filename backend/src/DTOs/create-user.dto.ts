@@ -2,6 +2,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    EGenderDesire,
     ELanguage,
 } from "@/types/user.types";
 import { ApiProperty } from "@nestjs/swagger";
@@ -30,7 +31,7 @@ export class CreateUserDTO {
     gender: EGender;
 
     @ApiProperty({ enum: EGender })
-    genderDesire: EGender;
+    genderDesire: EGenderDesire;
 
     @ApiProperty({ enum: EApproachChoice })
     approachChoice: EApproachChoice;

@@ -126,6 +126,7 @@ export type UpdateUserDTOGenderEnum =
 export const UpdateUserDTOGenderDesireEnum = {
     woman: "woman",
     man: "man",
+    both: "both",
 } as const;
 export type UpdateUserDTOGenderDesireEnum =
     (typeof UpdateUserDTOGenderDesireEnum)[keyof typeof UpdateUserDTOGenderDesireEnum];

@@ -142,16 +142,28 @@ export class UserRepository extends Repository<User> {
     }
 
     private withDesiredGender(desiredGender: string): this {
-        this.queryBuilder.andWhere("user.gender = :desiredGender", {
-            desiredGender,
-        });
+        if (desiredGender === "BOTH") {
+            this.queryBuilder.andWhere("user.gender IN (:...genders)", {
+                genders: ["MAN", "WOMAN"],
+            });
+        } else {
+            this.queryBuilder.andWhere("user.gender = :desiredGender", {
+                desiredGender,
+            });
+        }
         return this;
     }
 
     private withGenderDesire(userGender: string): this {
-        this.queryBuilder.andWhere("user.genderDesire = :userGender", {
-            userGender,
-        });
+        if (userGender === "BOTH") {
+            this.queryBuilder.andWhere("user.genderDesire IN (:...genders)", {
+                genders: ["MAN", "WOMAN"],
+            });
+        } else {
+            this.queryBuilder.andWhere("user.genderDesire = :userGender", {
+                userGender,
+            });
+        }
         return this;
     }
 

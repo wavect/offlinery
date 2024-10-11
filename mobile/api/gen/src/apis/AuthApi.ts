@@ -58,14 +58,14 @@ export interface AuthApiInterface {
     authControllerRefreshJwtTokenRaw(
         requestParameters: AuthControllerRefreshJwtTokenRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<object>>;
+    ): Promise<runtime.ApiResponse<SignInResponseDTO>>;
 
     /**
      */
     authControllerRefreshJwtToken(
         requestParameters: AuthControllerRefreshJwtTokenRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<object>;
+    ): Promise<SignInResponseDTO>;
 
     /**
      *
@@ -115,7 +115,7 @@ export class AuthApi extends runtime.BaseAPI implements AuthApiInterface {
     async authControllerRefreshJwtTokenRaw(
         requestParameters: AuthControllerRefreshJwtTokenRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<object>> {
+    ): Promise<runtime.ApiResponse<SignInResponseDTO>> {
         if (requestParameters["refreshJwtDTO"] == null) {
             throw new runtime.RequiredError(
                 "refreshJwtDTO",
@@ -140,7 +140,9 @@ export class AuthApi extends runtime.BaseAPI implements AuthApiInterface {
             initOverrides,
         );
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            SignInResponseDTOFromJSON(jsonValue),
+        );
     }
 
     /**
@@ -148,7 +150,7 @@ export class AuthApi extends runtime.BaseAPI implements AuthApiInterface {
     async authControllerRefreshJwtToken(
         requestParameters: AuthControllerRefreshJwtTokenRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<object> {
+    ): Promise<SignInResponseDTO> {
         const response = await this.authControllerRefreshJwtTokenRaw(
             requestParameters,
             initOverrides,

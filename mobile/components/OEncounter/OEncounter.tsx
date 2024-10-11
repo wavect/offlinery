@@ -86,9 +86,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
 
     return (
         <View style={styles.encounterContainer}>
-            <View
-                style={styles.mainContent}
-            >
+            <View style={styles.mainContent}>
                 <TouchableOpacity
                     onPress={() => {
                         navigation.navigate(ROUTES.Main.ProfileView, {

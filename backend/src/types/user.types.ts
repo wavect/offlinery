@@ -3,6 +3,12 @@ export enum EGender {
     MAN = "man",
 }
 
+export enum EGenderDesire {
+    WOMAN = "woman",
+    MAN = "man",
+    BOTH = "both",
+}
+
 export enum EDateMode {
     GHOST = "ghost",
     LIVE = "live",

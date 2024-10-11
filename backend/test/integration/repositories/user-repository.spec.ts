@@ -4,6 +4,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    EGenderDesire,
     EVerificationStatus,
 } from "@/types/user.types";
 import { TestingModule } from "@nestjs/testing";
@@ -48,12 +49,12 @@ describe("UserRepository ", () => {
             await userFactory.persistTestUser({
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
-                genderDesire: EGender.MAN,
+                genderDesire: EGenderDesire.MAN,
             });
 
             const userId2 = await userFactory.persistTestUser({
                 gender: EGender.WOMAN,
-                genderDesire: EGender.MAN,
+                genderDesire: EGenderDesire.MAN,
             });
 
             const matches =
@@ -122,16 +123,16 @@ describe("UserRepository ", () => {
         it("Should only find users that are the right GENDER", async () => {
             const userId = await userFactory.persistTestUser({
                 gender: EGender.WOMAN,
-                genderDesire: EGender.MAN,
+                genderDesire: EGenderDesire.MAN,
             });
             const userId2 = await userFactory.persistTestUser({
                 gender: EGender.WOMAN,
-                genderDesire: EGender.MAN,
+                genderDesire: EGenderDesire.MAN,
             });
 
             await userFactory.persistTestUser({
                 gender: EGender.MAN,
-                genderDesire: EGender.WOMAN,
+                genderDesire: EGenderDesire.WOMAN,
             });
 
             await encounterFactory.persistTestEncounter(userId, userId2);

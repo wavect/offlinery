@@ -8,6 +8,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    EGenderDesire,
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
@@ -88,7 +89,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
     gender: EGender;
 
     @Column()
-    genderDesire: EGender;
+    genderDesire: EGenderDesire;
 
     @Column("text", { array: true, nullable: true })
     imageURIs: string[];

@@ -9,6 +9,7 @@ src/apis/MapApi.ts
 src/apis/PendingUserApi.ts
 src/apis/PushNotificationsApi.ts
 src/apis/UserApi.ts
+src/apis/UserFeedbackApi.ts
 src/apis/UserReportsApi.ts
 src/apis/index.ts
 src/index.ts
@@ -26,6 +27,7 @@ src/models/PushMessageDTO.ts
 src/models/RefreshJwtDTO.ts
 src/models/RegistrationForVerificationRequestDTO.ts
 src/models/RegistrationForVerificationResponseDTO.ts
+src/models/RequestAccountDeletionViaFormDTO.ts
 src/models/ResetPasswordRequestDTO.ts
 src/models/ResetPasswordResponseDTO.ts
 src/models/SetAcceptedSpecialDataGenderLookingForDTO.ts
@@ -37,6 +39,7 @@ src/models/UpdateEncounterStatusDTO.ts
 src/models/UpdateUserDTO.ts
 src/models/UpdateUserPasswordDTO.ts
 src/models/UpdateUserVerificationstatusDTO.ts
+src/models/UserFeedbackRequestDTO.ts
 src/models/UserPrivateDTO.ts
 src/models/UserPublicDTO.ts
 src/models/UserResetPwdSuccessDTO.ts
