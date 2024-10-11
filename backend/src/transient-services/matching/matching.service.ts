@@ -41,10 +41,7 @@ export class MatchingService {
         );
     }
 
-    public async checkAndNotifyMatches(
-        userToBeApproached: User,
-    ): Promise<void> {
-        let nearbyMatches: User[];
+    public async getMatches(userToBeApproached: User) {
         if (
             !userToBeApproached ||
             !userToBeApproached.location ||
@@ -53,13 +50,18 @@ export class MatchingService {
             this.logger.debug(
                 `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
             );
-            nearbyMatches = [];
+            return [];
         } else {
-            nearbyMatches =
-                await this.userRepository.getPotentialMatchesForNotifications(
-                    userToBeApproached,
-                );
+            return await this.userRepository.getPotentialMatchesForNotifications(
+                userToBeApproached,
+            );
         }
+    }
+
+    public async checkAndNotifyMatches(
+        userToBeApproached: User,
+    ): Promise<void> {
+        const nearbyMatches = await this.getMatches(userToBeApproached);
 
         if (nearbyMatches?.length > 0) {
             const baseNotification: OBaseNotification = {

@@ -1,5 +1,5 @@
 import { User } from "@/entities/user/user.entity";
-import { UserRepository } from "@/entities/user/user.repository";
+import { MatchingService } from "@/transient-services/matching/matching.service";
 import {
     EApproachChoice,
     EDateMode,
@@ -8,18 +8,17 @@ import {
 } from "@/types/user.types";
 import { TestingModule } from "@nestjs/testing";
 import { DataSource } from "typeorm";
-import { EncounterFactory } from "../../_src/factories/encounter.factory";
 import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
 import { clearDatabase } from "../../_src/utils/utils";
 
-describe("UserRepository ", () => {
-    let userRepository: UserRepository;
+describe("MatchingService ", () => {
+    let matchingService: MatchingService;
+
     let testingModule: TestingModule;
     let testingDataSource: DataSource;
     let testingMainUser: User;
     let userFactory: UserFactory;
-    let encounterFactory: EncounterFactory;
 
     beforeAll(async () => {
         const { module, dataSource, mainUser, factories } =
@@ -27,10 +26,8 @@ describe("UserRepository ", () => {
         testingMainUser = mainUser;
         testingModule = module;
         testingDataSource = dataSource;
-        userRepository = module.get<UserRepository>(UserRepository);
 
         userFactory = factories.get("user") as UserFactory;
-        encounterFactory = factories.get("encounter") as EncounterFactory;
 
         expect(testingMainUser).toBeDefined();
     });
@@ -57,7 +54,7 @@ describe("UserRepository ", () => {
             });
 
             const matches =
-                await userRepository.getPotentialMatchesForHeatMap(
+                await matchingService.findPotentialMatchesForHeatmap(
                     testingMainUser,
                 );
 
@@ -84,7 +81,7 @@ describe("UserRepository ", () => {
             });
 
             const matches =
-                await userRepository.getPotentialMatchesForHeatMap(
+                await matchingService.findPotentialMatchesForHeatmap(
                     testingMainUser,
                 );
 
@@ -105,7 +102,7 @@ describe("UserRepository ", () => {
             });
 
             const matches =
-                await userRepository.getPotentialMatchesForHeatMap(
+                await matchingService.findPotentialMatchesForHeatmap(
                     testingMainUser,
                 );
 
@@ -116,8 +113,19 @@ describe("UserRepository ", () => {
         });
     });
 
-    /** @DEV needs a complete refactoring, as we truly only check for ENCOUNTERS when sending notifications */
-    /** @DEV hence we need to insert users here with encounters */
+    describe("should check edge cases prior to retrieving users", () => {
+        it("should not check and notify matches if the user is not LIVE", async () => {
+            const userToBeApproached = await userFactory.persistTestUser({
+                dateMode: EDateMode.GHOST,
+            });
+
+            expect(
+                await matchingService.getMatches(userToBeApproached),
+            ).toEqual([]);
+        });
+    });
+
+    /** @DEV Focus on real returns of users*/
     describe("get users for encounters / notifications", () => {
         it("Should only find users that are the right GENDER", async () => {
             const userId = await userFactory.persistTestUser({
@@ -134,14 +142,8 @@ describe("UserRepository ", () => {
                 genderDesire: EGender.WOMAN,
             });
 
-            await encounterFactory.persistTestEncounter(userId, userId2);
-
             const matches = Array.from(
-                (
-                    await userRepository.getPotentialMatchesForNotifications(
-                        testingMainUser,
-                    )
-                ).values(),
+                (await matchingService.getMatches(testingMainUser)).values(),
             );
 
             expect(matches.length).toBe(2);
@@ -167,11 +169,7 @@ describe("UserRepository ", () => {
             });
 
             const matches = Array.from(
-                (
-                    await userRepository.getPotentialMatchesForNotifications(
-                        testingMainUser,
-                    )
-                ).values(),
+                (await matchingService.getMatches(testingMainUser)).values(),
             );
 
             expect(matches.length).toBe(1);
@@ -193,11 +191,7 @@ describe("UserRepository ", () => {
             });
 
             const matches = Array.from(
-                (
-                    await userRepository.getPotentialMatchesForNotifications(
-                        testingMainUser,
-                    )
-                ).values(),
+                (await matchingService.getMatches(testingMainUser)).values(),
             );
 
             expect(matches.length).toBe(1);
@@ -214,11 +208,7 @@ describe("UserRepository ", () => {
             });
 
             const matches = Array.from(
-                (
-                    await userRepository.getPotentialMatchesForNotifications(
-                        testingMainUser,
-                    )
-                ).values(),
+                (await matchingService.getMatches(testingMainUser)).values(),
             );
 
             expect(matches.length).toBe(2);
@@ -235,11 +225,7 @@ describe("UserRepository ", () => {
             });
 
             const matches = Array.from(
-                (
-                    await userRepository.getPotentialMatchesForNotifications(
-                        testingMainUser,
-                    )
-                ).values(),
+                (await matchingService.getMatches(testingMainUser)).values(),
             );
 
             expect(matches.length).toBe(0);
