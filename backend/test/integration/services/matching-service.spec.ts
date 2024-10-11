@@ -37,20 +37,19 @@ describe("MatchingService ", () => {
 
     beforeEach(async () => {
         await clearDatabase(testingDataSource);
-        testingMainUser = await userFactory.persistTestUser({
+        testingMainUser = await userFactory.persistNewTestUser({
             dateMode: EDateMode.LIVE,
             location: new PointBuilder().build(0, 0),
             genderDesire: EGender.WOMAN,
             gender: EGender.MAN,
             approachChoice: EApproachChoice.APPROACH,
+            birthDay: new Date("1996-09-21"),
         });
-
-        console.log("testinUser: ", testingMainUser);
     });
 
     describe("should check edge cases prior to retrieving users", () => {
         it("should not fetch notification matches if the user is not live", async () => {
-            const userToBeApproached = await userFactory.persistTestUser({
+            const userToBeApproached = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
             });
 
@@ -59,7 +58,7 @@ describe("MatchingService ", () => {
             ).toEqual([]);
         });
         it("should not fetch notification matches if the user has no locations", async () => {
-            const userToBeApproached = await userFactory.persistTestUser({
+            const userToBeApproached = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: null,
             });
@@ -69,7 +68,7 @@ describe("MatchingService ", () => {
             ).toEqual([]);
         });
         it("should not fetch heatmap locations if the user is not live", async () => {
-            const userToBeApproached = await userFactory.persistTestUser({
+            const userToBeApproached = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: null,
             });
@@ -79,7 +78,7 @@ describe("MatchingService ", () => {
             ).toEqual([]);
         });
         it("should not fetch heatmap matches if the user has no locations", async () => {
-            const userToBeApproached = await userFactory.persistTestUser({
+            const userToBeApproached = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: null,
             });
@@ -92,16 +91,16 @@ describe("MatchingService ", () => {
 
     describe("should test nearby-match algorithm", () => {
         it("Should only find users that are the right gender", async () => {
-            const userId = await userFactory.persistTestUser({
+            const userId = await userFactory.persistNewTestUser({
                 gender: EGender.WOMAN,
                 genderDesire: EGender.MAN,
             });
-            const userId2 = await userFactory.persistTestUser({
+            const userId2 = await userFactory.persistNewTestUser({
                 gender: EGender.WOMAN,
                 genderDesire: EGender.MAN,
             });
 
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 gender: EGender.MAN,
                 genderDesire: EGender.WOMAN,
             });
@@ -118,19 +117,19 @@ describe("MatchingService ", () => {
             );
         });
         it("Should only find users that are live", async () => {
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            const user = await userFactory.persistTestUser({
+            const user = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
             });
 
@@ -146,15 +145,15 @@ describe("MatchingService ", () => {
             );
         });
         it("Should only find users that are verified", async () => {
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 verificationStatus: EVerificationStatus.PENDING,
             });
 
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 verificationStatus: EVerificationStatus.NOT_NEEDED,
             });
 
-            const user = await userFactory.persistTestUser({
+            const user = await userFactory.persistNewTestUser({
                 verificationStatus: EVerificationStatus.VERIFIED,
             });
 
@@ -170,10 +169,10 @@ describe("MatchingService ", () => {
             );
         });
         it("Should only find users that want to be approached", async () => {
-            const user1 = await userFactory.persistTestUser({
+            const user1 = await userFactory.persistNewTestUser({
                 approachChoice: EApproachChoice.BE_APPROACHED,
             });
-            const user2 = await userFactory.persistTestUser({
+            const user2 = await userFactory.persistNewTestUser({
                 approachChoice: EApproachChoice.BE_APPROACHED,
             });
 
@@ -189,10 +188,10 @@ describe("MatchingService ", () => {
             );
         });
         it("Should not find users that are ghost", async () => {
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
             });
 
@@ -209,12 +208,12 @@ describe("MatchingService ", () => {
         });
     });
 
-    describe("should ignore blacklisted regions", () => {
+    describe("should ignore users within blacklisted regions", () => {
         it.failing(
             "should not return a match for a blacklisted region",
             async () => {
                 /** @DEV random user sitting at home (in blacklisted region) */
-                await userFactory.persistTestUser({
+                await userFactory.persistNewTestUser({
                     location: new PointBuilder().build(0, 0),
                     blacklistedRegions: [
                         new BlacklistedRegionBuilder()
@@ -225,7 +224,7 @@ describe("MatchingService ", () => {
                 });
 
                 /** @DEV random user in another town */
-                await userFactory.persistTestUser({
+                await userFactory.persistNewTestUser({
                     location: new PointBuilder().build(100, 100),
                 });
 
@@ -239,7 +238,7 @@ describe("MatchingService ", () => {
             "should return nearby users that are NOT in their blacklisted regions",
             async () => {
                 /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistTestUser({
+                await userFactory.persistNewTestUser({
                     location: new PointBuilder().build(10, 10),
                     blacklistedRegions: [
                         new BlacklistedRegionBuilder()
@@ -250,7 +249,7 @@ describe("MatchingService ", () => {
                 });
 
                 /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistTestUser({
+                await userFactory.persistNewTestUser({
                     location: new PointBuilder().build(10, 10),
                     blacklistedRegions: [
                         new BlacklistedRegionBuilder()
@@ -260,7 +259,7 @@ describe("MatchingService ", () => {
                 });
 
                 /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistTestUser({
+                await userFactory.persistNewTestUser({
                     location: new PointBuilder().build(10, 10),
                     blacklistedRegions: [
                         new BlacklistedRegionBuilder()
@@ -285,7 +284,7 @@ describe("MatchingService ", () => {
                 });
 
                 /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistTestUser({
+                await userFactory.persistNewTestUser({
                     location: new PointBuilder().build(10, 10),
                     blacklistedRegions: [
                         new BlacklistedRegionBuilder()
@@ -295,7 +294,7 @@ describe("MatchingService ", () => {
                 });
 
                 /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistTestUser({
+                await userFactory.persistNewTestUser({
                     location: new PointBuilder().build(10, 10),
                     blacklistedRegions: [
                         new BlacklistedRegionBuilder()
@@ -305,7 +304,7 @@ describe("MatchingService ", () => {
                 });
 
                 /** @DEV user IN his blacklisted region, AND nearby */
-                await userFactory.persistTestUser({
+                await userFactory.persistNewTestUser({
                     location: new PointBuilder().build(10, 10),
                     blacklistedRegions: [
                         new BlacklistedRegionBuilder()
@@ -324,13 +323,13 @@ describe("MatchingService ", () => {
 
     describe("should test heatmap-match algorithm", () => {
         it("Should only find users that are the right gender", async () => {
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
                 genderDesire: EGender.MAN,
             });
 
-            const userId2 = await userFactory.persistTestUser({
+            const userId2 = await userFactory.persistNewTestUser({
                 gender: EGender.WOMAN,
                 genderDesire: EGender.MAN,
             });
@@ -344,19 +343,19 @@ describe("MatchingService ", () => {
             );
         });
         it("Should only find users that are live", async () => {
-            const userId = await userFactory.persistTestUser({
+            const userId = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
             });
-            const userId2 = await userFactory.persistTestUser({
+            const userId2 = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
             });
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
             });
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
             });
 
@@ -368,14 +367,54 @@ describe("MatchingService ", () => {
                 expect.arrayContaining([userId.id, userId2.id]),
             );
         });
+
+        it("Should only find users in the right age span", async () => {
+            const testingUsersBirthYear =
+                testingMainUser.birthDay.getFullYear();
+
+            await userFactory.persistNewTestUser({
+                birthDay: new Date(`${testingUsersBirthYear - 25}-01-01`),
+            });
+            await userFactory.persistNewTestUser({
+                birthDay: new Date(`${testingUsersBirthYear - 20}-01-01`),
+            });
+            await userFactory.persistNewTestUser({
+                birthDay: new Date(`${testingUsersBirthYear - 15}-01-01`),
+            });
+            await userFactory.persistNewTestUser({
+                birthDay: new Date(`${testingUsersBirthYear - 10}-01-01`),
+            });
+            // -- within start age range
+            const user1 = await userFactory.persistNewTestUser({
+                birthDay: new Date(`${testingUsersBirthYear - 5}-01-01`),
+            });
+            const user2 = await userFactory.persistNewTestUser({
+                birthDay: new Date(`${testingUsersBirthYear - 1}-01-01`),
+            });
+            const user3 = await userFactory.persistNewTestUser({
+                birthDay: new Date(`${testingUsersBirthYear + 5}-01-01`),
+            });
+            // -- within end age range
+            await userFactory.persistNewTestUser({
+                birthDay: new Date(`${testingUsersBirthYear + 10}-01-01`),
+            });
+
+            const matches =
+                await matchingService.findHeatmapMatches(testingMainUser);
+
+            expect(matches.map((m) => m.id)).toEqual(
+                expect.arrayContaining([user1.id, user2.id, user3.id]),
+            );
+        });
+
         it("Should not find users that are ghost", async () => {
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            await userFactory.persistTestUser({
+            await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
             });
-            const user = await userFactory.persistTestUser({
+            const user = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
             });
 

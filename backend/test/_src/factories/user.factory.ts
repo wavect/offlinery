@@ -28,7 +28,7 @@ export class UserFactory implements FactoryInterface {
         this.blacklistedRegionRepository = blacklistedRegionRepository;
     }
 
-    public async persistTestUser(userData?: Partial<User>): Promise<User> {
+    public async persistNewTestUser(userData?: Partial<User>): Promise<User> {
         const user = this.userRepository.create({
             firstName: `Name ${generateRandomString(10)}`,
             bio: generateRandomString(15),
@@ -80,7 +80,7 @@ export class UserFactory implements FactoryInterface {
                 where: { firstName: user.firstName },
             });
             if (existingUser) await this.userRepository.remove(existingUser);
-            await this.persistTestUser({
+            await this.persistNewTestUser({
                 ...user,
                 location: { type: "Point", coordinates: [0, 0] },
                 dateMode: EDateMode.LIVE,
