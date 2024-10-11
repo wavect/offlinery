@@ -22,40 +22,32 @@ export class MatchingService {
         private encounterService: EncounterService,
     ) {}
 
+    /**
+     * Returns HeatMap locations for the given
+     * @param userToBeApproached
+     */
     public async findPotentialMatchesForHeatmap(
         userToBeApproached: User,
     ): Promise<User[]> {
-        if (
-            !userToBeApproached ||
-            !userToBeApproached.location ||
-            userToBeApproached.dateMode !== EDateMode.LIVE
-        ) {
-            this.logger.debug(
-                `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
-            );
+        if (!this.isUserEligibleForMatching(userToBeApproached)) {
             return [];
         }
-
         return this.userRepository.getPotentialMatchesForHeatMap(
             userToBeApproached,
         );
     }
 
-    public async getMatches(userToBeApproached: User) {
-        if (
-            !userToBeApproached ||
-            !userToBeApproached.location ||
-            userToBeApproached.dateMode !== EDateMode.LIVE
-        ) {
-            this.logger.debug(
-                `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
-            );
+    /**
+     * Returns matches for the given
+     * @param userToBeApproached
+     */
+    public async getMatches(userToBeApproached: User): Promise<User[]> {
+        if (!this.isUserEligibleForMatching(userToBeApproached)) {
             return [];
-        } else {
-            return await this.userRepository.getPotentialMatchesForNotifications(
-                userToBeApproached,
-            );
         }
+        return this.userRepository.getPotentialMatchesForNotifications(
+            userToBeApproached,
+        );
     }
 
     public async checkAndNotifyMatches(
@@ -99,5 +91,19 @@ export class MatchingService {
 
             await this.notificationService.sendPushNotification(notifications);
         }
+    }
+
+    private isUserEligibleForMatching(userToBeApproached: User): boolean {
+        if (
+            !userToBeApproached ||
+            !userToBeApproached.location ||
+            userToBeApproached.dateMode !== EDateMode.LIVE
+        ) {
+            this.logger.debug(
+                `User is not eligible for matching: ${userToBeApproached?.id} (dateMode: ${userToBeApproached?.dateMode})`,
+            );
+            return false;
+        }
+        return true;
     }
 }
