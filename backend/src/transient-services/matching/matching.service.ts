@@ -29,7 +29,7 @@ export class MatchingService {
     public async findPotentialMatchesForHeatmap(
         userToBeApproached: User,
     ): Promise<User[]> {
-        if (!this.isUserEligibleForMatching(userToBeApproached)) {
+        if (!this.isUserEligibleForMatchingLookup(userToBeApproached)) {
             return [];
         }
         return this.userRepository.getPotentialMatchesForHeatMap(
@@ -41,8 +41,8 @@ export class MatchingService {
      * Returns matches for the given
      * @param userToBeApproached
      */
-    public async getMatches(userToBeApproached: User): Promise<User[]> {
-        if (!this.isUserEligibleForMatching(userToBeApproached)) {
+    public async getNearbyMatches(userToBeApproached: User): Promise<User[]> {
+        if (!this.isUserEligibleForMatchingLookup(userToBeApproached)) {
             return [];
         }
         return this.userRepository.getPotentialMatchesForNotifications(
@@ -50,10 +50,12 @@ export class MatchingService {
         );
     }
 
-    public async checkAndNotifyMatches(
-        userToBeApproached: User,
-    ): Promise<void> {
-        const nearbyMatches = await this.getMatches(userToBeApproached);
+    /**
+     * Sends a notification to users nearby
+     * @param userToBeApproached
+     */
+    public async notifyMatches(userToBeApproached: User): Promise<void> {
+        const nearbyMatches = await this.getNearbyMatches(userToBeApproached);
 
         if (nearbyMatches?.length > 0) {
             const baseNotification: OBaseNotification = {
@@ -93,7 +95,7 @@ export class MatchingService {
         }
     }
 
-    private isUserEligibleForMatching(userToBeApproached: User): boolean {
+    private isUserEligibleForMatchingLookup(userToBeApproached: User): boolean {
         if (
             !userToBeApproached ||
             !userToBeApproached.location ||

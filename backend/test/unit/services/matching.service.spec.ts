@@ -106,7 +106,7 @@ describe("MatchingService", () => {
                 "findPotentialMatchesForHeatmap",
             ).mockResolvedValue([]);
 
-            await matchingService.checkAndNotifyMatches(user);
+            await matchingService.notifyMatches(user);
 
             expect(
                 notificationService.sendPushNotification,
@@ -154,7 +154,7 @@ describe("MatchingService", () => {
 
             i18nService.t.mockImplementation((key) => `Translated ${key}`);
 
-            await matchingService.checkAndNotifyMatches(testingUser);
+            await matchingService.notifyMatches(testingUser);
 
             expect(
                 notificationService.sendPushNotification,
@@ -231,7 +231,7 @@ describe("MatchingService", () => {
             i18nService.t.mockImplementation((key) => `Translated ${key}`);
 
             // ACT
-            await matchingService.checkAndNotifyMatches(testingUser);
+            await matchingService.notifyMatches(testingUser);
 
             const expectedNotification: OfflineryNotification = {
                 to: "push-token-1000",
