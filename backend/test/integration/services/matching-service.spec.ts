@@ -427,8 +427,9 @@ describe("MatchingService ", () => {
         });
     });
 
-    describe("should test users within approach time and distance", () => {
-        /** @DEV once we introduce that the user configures this, ensure that this value comes from the user. A failing test will indicate this regardless.*/
+    describe("should test users within distance", () => {
+        /** @DEV Once we introduce that users can configures this, ensure that this value comes from the user object.
+         *  @DEV A failing test will indicate this regardless. */
         const maxDistUser = 1500;
         const DPM = 1 / 111139; // degress per meter
 
@@ -499,4 +500,6 @@ describe("MatchingService ", () => {
             expect(matches.map((m) => m.id)).not.toContain(user1501m.id);
         });
     });
+
+    describe("should test users within approach time", () => {});
 });
