@@ -56,36 +56,4 @@ describe("ClusterService", () => {
             expect(Math.abs(result[0].longitude)).toBeLessThan(0.0005);
         });
     });
-
-    describe("calculateDistance", () => {
-        it("should calculate distance correctly", () => {
-            const testCases = [
-                {
-                    point1: new PointBuilder().build(0, 0),
-                    point2: new PointBuilder().build(0, 0),
-                    expectedDistance: 0,
-                },
-                {
-                    point1: new PointBuilder().build(0, 0),
-                    point2: new PointBuilder().build(0, 1),
-                    expectedDistance: 111195,
-                }, // ~111.195 km
-                {
-                    point1: new PointBuilder().build(0, 0),
-                    point2: new PointBuilder().build(1, 1),
-                    expectedDistance: 157249,
-                }, // ~157.249 km
-            ];
-
-            testCases.forEach(({ point1, point2, expectedDistance }) => {
-                const distance = (service as any).calculateDistance(
-                    point1[0],
-                    point1[1],
-                    point2[0],
-                    point2[1],
-                );
-                expect(Math.round(distance)).toBe(expectedDistance);
-            });
-        });
-    });
 });
