@@ -1,5 +1,4 @@
 import { MainStackParamList } from "@/MainStack.navigator";
-import { SignInResponseDTO } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
@@ -13,7 +12,7 @@ import {
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 import { API } from "@/utils/api-config";
-import { jwtExpiresSoon, writeSupportEmail } from "@/utils/misc.utils";
+import { writeSupportEmail } from "@/utils/misc.utils";
 import { useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
@@ -29,50 +28,25 @@ const Welcome = ({
 
     const checkAuthStatus = async () => {
         try {
-            const [storedRefreshToken, storedAccessToken] = await Promise.all([
-                getSecurelyStoredValue(SECURE_VALUE.JWT_REFRESH_TOKEN),
-                getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN),
-            ]);
-
-            if (!storedRefreshToken && !storedAccessToken) {
-                console.log("No JWT or JWT_RT found, force re-login");
-                return false;
+            const accessToken = getSecurelyStoredValue(
+                SECURE_VALUE.JWT_ACCESS_TOKEN,
+            );
+            if (!accessToken) {
+                console.log("forcing re-login");
+                return;
             }
-            let signInRes: SignInResponseDTO;
-
-            if (jwtExpiresSoon(storedAccessToken!)) {
-                console.log(
-                    "Access token will expires soon, requesting new one...",
-                );
-
-                /**@DEV fix generator type bug */
-                signInRes = (await API.auth.authControllerRefreshJwtToken({
-                    refreshJwtDTO: {
-                        refreshToken: storedRefreshToken!,
-                    },
-                })) as SignInResponseDTO;
-
-                console.log("Tokens refreshed.");
-            } else {
-                // user has a valid access token
-                console.log("JWT found, authenticating via JWT.");
-                signInRes = await API.auth.authControllerSignInByJWT({
-                    signInJwtDTO: {
-                        jwtAccessToken: storedAccessToken!,
-                    },
-                });
-            }
-            if (signInRes.accessToken) {
-                console.log("JWT authentication succeeded.");
-                userAuthenticatedUpdate(
-                    dispatch,
-                    navigation,
-                    signInRes.user,
-                    signInRes.accessToken,
-                    signInRes.refreshToken,
-                );
-            }
-        } catch (e) {
+            const resp = await API.auth.authControllerSignInByJWT({
+                signInJwtDTO: { jwtAccessToken: accessToken },
+            });
+            console.log("JWT authentication succeeded");
+            userAuthenticatedUpdate(
+                dispatch,
+                navigation,
+                resp.user,
+                resp.accessToken,
+                resp.refreshToken,
+            );
+        } catch (error) {
             saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
             saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
             console.log("Forcing user to re-login.");

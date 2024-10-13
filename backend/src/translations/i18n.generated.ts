@@ -59,6 +59,12 @@ export type I18nTranslations = {
                 "footer": string;
             };
         };
+        "view": {
+            "account-deletion-confirmation": {
+                "subject": string;
+                "message": string;
+            };
+        };
     };
 };
 /* prettier-ignore */

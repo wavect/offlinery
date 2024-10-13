@@ -84,7 +84,8 @@ export const de: Language = {
         "Wir behalten uns das Recht vor, Bewerber abzulehnen, um sicherzustellen, dass sich jeder sicher und respektiert fühlt.",
     callBookedBtnLbl: "Ich werde da sein",
     verificationCallQuestions: "Was wir dich fragen",
-    permissionToLocationDenied: "Zugriff auf den Standort wurde verweigert.",
+    permissionToLocationDenied:
+        "Zugriff auf den Standort wurde verweigert. Ohne deinen Standort wirst du weder angesprochen, noch kannst du jemanden via Offlinery ansprechen.",
     dontApproachHere: "Hier nicht ansprechen",
     whatAreSpotsToNotApproachYou:
         "An welchen Orten möchtest du nicht angesprochen werden? Dein Fitnessstudio, Arbeitsplatz?",
@@ -93,7 +94,7 @@ export const de: Language = {
     myLocation: "Mein Standort",
     youAreHere: "Du bist hier.",
     longPressMapSafeZoneInstruction:
-        "Lange tippen, um eine Sicherheitszone hinzuzufügen. Tippe auf eine Region, ihren Radius anzupassen.",
+        "Lange tippen, um eine Sicherheitszone hinzuzufügen. Tippe auf eine Region, um deinen Radius anzupassen.",
     adjustRegionRadius: "Regionradius anpassen",
     whatIsYourEmail: "Was ist deine E-Mail?",
     whatIsYourEmailDescr:
@@ -173,6 +174,7 @@ export const de: Language = {
         "Ändere deine Einstellungen oder aktualisiere dein Profil.",
     bio: "Bio",
     defaultBio: "Bitte keine Pick-Up Lines. Ein nettes Hallo reicht völlig.",
+    bioTooltip: "Dies wird anderen Nutzern beim Ansprechen angezeigt.",
     updateImages: "Bilder updaten",
     updateSafeZones: "Safe Zones updaten",
     errNoUserProvided: "Fehler: Kein Nutzer angegeben",
@@ -202,8 +204,7 @@ export const de: Language = {
     report: "Melden",
     reported: "Gemeldet..",
     navigate: "Navigieren",
-    permissionToBackgroundLocationDenied:
-        "Zugriff auf den Standort im Hintergrund wurde verweigert.",
+    permissionToBackgroundLocationDenied: `Zugriff auf den Standort im Hintergrund wurde verweigert. Ohne deinen Standort wirst du weder angesprochen, noch kannst du jemanden via Offlinery ansprechen. Bitte stelle den Standortzugriff auf "Immer" in den Einstellungen ein.`,
     youAreLive: "Du bist live!",
     ghostModeDescr:
         "Geistmodus. Niemand wird dich sehen! Drücke den Schalter oben, um live zu gehen.",

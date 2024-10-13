@@ -1,9 +1,14 @@
-import { Color } from "@/GlobalStyles";
 import { StorePushTokenDTO } from "@/api/gen/src";
+import { Color } from "@/GlobalStyles";
 import { API } from "@/utils/api-config";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
+import {
+    getSecurelyStoredValue,
+    saveValueLocallySecurely,
+    SECURE_VALUE,
+} from "./secure-storage.service";
 
 export const registerForPushNotificationsAsync = async (userId: string) => {
     if (Platform.OS === "android") {
@@ -40,7 +45,13 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
     // Learn more about projectId:
     // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
     // EAS projectId is used here.
-    let token: string;
+    let token: string | null = getSecurelyStoredValue(
+        SECURE_VALUE.EXPO_PUSH_TOKEN,
+    );
+    if (token !== null) {
+        // We don't need to push the token again, as it is already saved in the backend.
+        return token;
+    }
     try {
         const projectId =
             Constants?.expoConfig?.extra?.eas?.projectId ??
@@ -68,6 +79,7 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
             userId,
             storePushTokenDTO,
         });
+        saveValueLocallySecurely(SECURE_VALUE.EXPO_PUSH_TOKEN, token);
     } catch (err) {
         console.error("Failed to send push token to backend:", err);
         throw err;

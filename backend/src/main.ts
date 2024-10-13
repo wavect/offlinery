@@ -6,17 +6,19 @@ import { Create10RealTestPeopleEncounters } from "@/seeder/specific-encounter-se
 import { API_VERSION, BE_ENDPOINT } from "@/utils/misc.utils";
 import { INestApplication, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import { NestExpressApplication } from "@nestjs/platform-express";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { writeFileSync } from "fs";
 import helmet from "helmet";
 import * as path from "path";
+import { join } from "path";
 import * as process from "process";
 import { AppModule } from "./app.module";
 import { NotificationNavigateUserDTO } from "./DTOs/notification-navigate-user.dto";
 import { TYPED_ENV, validateEnv } from "./utils/env.utils";
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule, {
+    const app = await NestFactory.create<NestExpressApplication>(AppModule, {
         cors: {
             origin: "*",
             methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -38,6 +40,12 @@ async function bootstrap() {
 
     // security base line
     app.use(helmet());
+
+    // @dev Allow views to be rendered too (e.g. forms), views need to be outside src
+    const viewsDir = join(__dirname, "..", "views");
+    app.setBaseViewsDir(viewsDir);
+    app.setViewEngine("hbs");
+    console.log("Views directory:", viewsDir);
 
     await userSeederService.seedDefaultUsers();
     await apiUserSeederService.seedApiUsers();

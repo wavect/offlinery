@@ -4,6 +4,7 @@ import { Public } from "@/auth/auth.guard";
 import { CreateUserRequestDTO } from "@/DTOs/create-user-request.dto";
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { RequestAccountDeletionViaFormDTO } from "@/DTOs/request-account-deletion-via-form.dto";
 import {
     ResetPasswordRequestDTO,
     ResetPasswordResponseDTO,
@@ -15,6 +16,7 @@ import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
 import { UserPrivateDTO } from "@/DTOs/user-private.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
+import { UserRequestDeletionFormSuccessDTO } from "@/DTOs/user-request-deletion-form-success.dto";
 import { UserResetPwdSuccessDTO } from "@/DTOs/user-reset-pwd-success.dto";
 import { VerifyResetPasswordDTO } from "@/DTOs/verify-password-reset.dto";
 import { CustomParseFilePipe } from "@/pipes/custom-parse-file.pipe";
@@ -24,12 +26,16 @@ import {
     Controller,
     FileTypeValidator,
     Get,
+    HttpCode,
+    HttpStatus,
     Logger,
     MaxFileSizeValidator,
     NotFoundException,
     Param,
     Post,
     Put,
+    Render,
+    Res,
     UploadedFiles,
     UseInterceptors,
     UsePipes,
@@ -45,6 +51,8 @@ import {
     ApiResponse,
     ApiTags,
 } from "@nestjs/swagger";
+import { Response } from "express";
+import { v4 as uuidv4 } from "uuid";
 import { UserService } from "./user.service";
 
 @ApiTags("User")
@@ -237,6 +245,43 @@ export class UserController {
         );
     }
 
+    @Get("request-deletion")
+    @Public()
+    @Render("request-account-deletion")
+    getAccountDeletionForm(@Res() res: Response) {
+        const nonce = uuidv4();
+        res.setHeader(
+            "Content-Security-Policy",
+            `script-src 'self' 'nonce-${nonce}'`,
+        );
+        return {
+            title: "Request Account Deletion | Offlinery",
+            nonce: nonce,
+        };
+    }
+
+    @Post(`request-deletion`)
+    @Public()
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: "Request deletion of user account" })
+    @ApiBody({ type: RequestAccountDeletionViaFormDTO })
+    @ApiResponse({
+        status: 200,
+        description: "Account deletion request from form has been processed.",
+    })
+    @ApiResponse({
+        status: 400,
+        description: "Invalid email provided.",
+    })
+    async requestAccountDeletionViaForm(
+        @Body()
+        requestAccountDeletionViaFormDTO: RequestAccountDeletionViaFormDTO,
+    ): Promise<UserRequestDeletionFormSuccessDTO> {
+        return await this.userService.requestAccountDeletionViaForm(
+            requestAccountDeletionViaFormDTO.email,
+        );
+    }
+
     @Put(`request-deletion/:${USER_ID_PARAM}`)
     @OnlyOwnUserData()
     @ApiOperation({ summary: "Request deletion of user account" })
@@ -249,7 +294,7 @@ export class UserController {
     async requestAccountDeletion(
         @Param(USER_ID_PARAM) userId: string,
     ): Promise<void> {
-        await this.userService.requestAccountDeletion(userId);
+        await this.userService.requestAccountDeletionViaApp(userId);
     }
 
     @Get(`delete/:deletionToken`)
@@ -265,6 +310,7 @@ export class UserController {
         status: 200,
         description: "Account has been deleted successfully.",
     })
+    @Render("account-deletion-confirmation")
     @ApiResponse({
         status: 404,
         description: "User not found, deletion token invalid.",
@@ -272,7 +318,18 @@ export class UserController {
     @ApiResponse({ status: 403, description: "Deletion token expired" })
     async deleteUser(
         @Param("deletionToken") deletionToken: string,
-    ): Promise<UserDeletionSuccessDTO> {
-        return await this.userService.deleteUserByDeletionToken(deletionToken);
+        @Res() res: Response,
+    ): Promise<UserDeletionSuccessDTO & { nonce: string }> {
+        const nonce = uuidv4();
+        res.setHeader(
+            "Content-Security-Policy",
+            `script-src 'self' 'nonce-${nonce}'`,
+        );
+        const deletion =
+            await this.userService.deleteUserByDeletionToken(deletionToken);
+        return {
+            ...deletion,
+            nonce,
+        };
     }
 }

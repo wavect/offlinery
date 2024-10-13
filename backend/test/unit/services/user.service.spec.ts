@@ -28,7 +28,7 @@ describe("UserService", () => {
     let matchingService: jest.Mocked<MatchingService>;
 
     const mockMatchingService = {
-        checkAndNotifyMatches: jest.fn(),
+        notifyMatches: jest.fn(),
     };
 
     const mockAuthService = {
@@ -181,7 +181,7 @@ describe("UserService", () => {
             jest.spyOn(userRepository, "save").mockResolvedValue(updatedUser);
 
             const checkAndNotifyMatchesSpy = jest
-                .spyOn(matchingService, "checkAndNotifyMatches")
+                .spyOn(matchingService, "notifyMatches")
                 .mockResolvedValue(undefined);
 
             const result = await service.updateLocation(
@@ -231,7 +231,7 @@ describe("UserService", () => {
             jest.spyOn(userRepository, "save").mockResolvedValue(updatedUser);
 
             const checkAndNotifyMatchesSpy = jest
-                .spyOn(matchingService, "checkAndNotifyMatches")
+                .spyOn(matchingService, "notifyMatches")
                 .mockResolvedValue(undefined);
 
             const result = await service.updateLocation(
@@ -281,7 +281,7 @@ describe("UserService", () => {
             jest.spyOn(userRepository, "save").mockResolvedValue(updatedUser);
 
             const checkAndNotifyMatchesSpy = jest
-                .spyOn(matchingService, "checkAndNotifyMatches")
+                .spyOn(matchingService, "notifyMatches")
                 .mockResolvedValue(undefined);
 
             const result = await service.updateLocation(

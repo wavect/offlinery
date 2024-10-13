@@ -61,7 +61,7 @@ const GenderChoice = ({
 const styles = StyleSheet.create({
     optionContainer: {
         alignItems: "center",
-        marginTop: 60,
+        marginTop: 20,
         width: "100%",
     },
     subtitle: {

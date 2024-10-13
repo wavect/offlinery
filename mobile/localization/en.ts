@@ -1,4 +1,5 @@
 // @dev Other languages have to be typed as Language!
+
 export const en = {
     bgLocationServiceTitle: "Real Life Dating ON",
     bgLocationServiceBody: "Letting others know about you.",
@@ -78,7 +79,8 @@ export const en = {
         "We retain our right to reject applicants to ensure everyone feels safe and respected.",
     callBookedBtnLbl: "I'll take the call",
     verificationCallQuestions: "What we will ask you",
-    permissionToLocationDenied: "Permission to access location was denied.",
+    permissionToLocationDenied:
+        "Permission to access location was denied. Nobody can approach you neither can you approach someone via Offlinery without sharing your location.",
     dontApproachHere: "Don't approach me here",
     whatAreSpotsToNotApproachYou:
         "What are spots you don't want to be approached at? Your gym, workplace?",
@@ -169,6 +171,7 @@ export const en = {
     changePreferencesDescr: "Change your preferences or update your profile.",
     bio: "Bio",
     defaultBio: "No pick-up lines please. Just be chill.",
+    bioTooltip: "This will be shown to other users when Approaching.",
     updateImages: "Update images",
     updateSafeZones: "Update Safe Zones",
     errNoUserProvided: "Error: No user provided",
@@ -197,8 +200,7 @@ export const en = {
     report: "Report",
     reported: "Reported..",
     navigate: "Navigate",
-    permissionToBackgroundLocationDenied:
-        "Permission to access location in background was denied.",
+    permissionToBackgroundLocationDenied: `Permission to access background location was denied. Nobody can approach you neither can you approach someone via Offlinery without sharing your location. Please change your location access to "always" in your app settings.`,
     youAreLive: "You are live!",
     ghostModeDescr:
         "Ghost mode. Nobody will see you! Press the toggle on the top to go live.",

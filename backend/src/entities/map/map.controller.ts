@@ -25,9 +25,7 @@ export class MapController {
     ): Promise<WeightedLatLngDTO[]> {
         const userToBeApproached = await this.userService.findUserById(userId);
         const nearbyMatches =
-            await this.matchingService.findPotentialMatchesForHeatmap(
-                userToBeApproached,
-            );
+            await this.matchingService.findHeatmapMatches(userToBeApproached);
 
         return nearbyMatches.map((match) => ({
             latitude: match.location.coordinates[1],

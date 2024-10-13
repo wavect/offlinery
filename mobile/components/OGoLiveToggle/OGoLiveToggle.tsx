@@ -1,4 +1,3 @@
-import { Color } from "@/GlobalStyles";
 import {
     LocationUpdateDTO,
     UpdateUserDTO,
@@ -6,18 +5,23 @@ import {
     UserPrivateDTODateModeEnum,
 } from "@/api/gen/src";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
-import { TR, i18n } from "@/localization/translate.service";
-import {
-    SECURE_VALUE,
-    getSecurelyStoredValue,
-} from "@/services/secure-storage.service";
+import { Color } from "@/GlobalStyles";
+import { i18n, TR } from "@/localization/translate.service";
 import { getLocallyStoredUserData } from "@/services/storage.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
 import * as Location from "expo-location";
+import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
-import React from "react";
-import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
+import React, { useState } from "react";
+import {
+    Platform,
+    StyleProp,
+    Switch,
+    Text,
+    View,
+    ViewStyle,
+} from "react-native";
 
 interface IOGoLiveToggleProps {
     style?: StyleProp<ViewStyle>;
@@ -36,11 +40,8 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
         const user = getLocallyStoredUserData();
         console.log("User Connected: ", user?.id?.slice(0, 8));
         const userId = user?.id;
-        const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
-        if (!userId || !jwtToken) {
-            console.error(
-                "UserID and/or jwtToken undefined in location task service.",
-            );
+        if (!userId) {
+            console.error("UserID undefined in location task service.");
             return;
         }
 
@@ -71,7 +72,20 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
 
 export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
     const { dispatch, state } = useUserContext();
+    const [notificationId, setNotificationId] = useState<string>();
 
+    const sendLocationNotification = async () => {
+        if (Platform.OS === "ios") {
+            const id = await Notifications.scheduleNotificationAsync({
+                content: {
+                    title: i18n.t(TR.bgLocationServiceTitle),
+                    body: i18n.t(TR.bgLocationServiceBody),
+                },
+                trigger: null,
+            });
+            setNotificationId(id);
+        }
+    };
     const configureLocationTracking = async (
         newDateMode: UserPrivateDTODateModeEnum,
     ) => {
@@ -98,10 +112,16 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                         killServiceOnDestroy: false, // @dev stay running if app is killed
                     },
                 });
+                await sendLocationNotification();
             }
         } else {
             try {
                 await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+                if (notificationId) {
+                    await Notifications.dismissNotificationAsync(
+                        notificationId,
+                    );
+                }
             } catch (err) {
                 console.error(err);
             }
@@ -113,23 +133,27 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
 
     const toggleSwitch = async () => {
         try {
-            const { status: fStatus } =
-                await Location.requestForegroundPermissionsAsync();
-            if (fStatus !== "granted") {
-                alert(i18n.t(TR.permissionToLocationDenied));
-                return;
-            }
-            const { status: bStatus } =
-                await Location.requestBackgroundPermissionsAsync();
-            if (bStatus !== "granted") {
-                alert(i18n.t(TR.permissionToBackgroundLocationDenied));
-                return;
-            }
-
             const newDateMode: UserPrivateDTODateModeEnum =
                 state.dateMode === UserPrivateDTODateModeEnum.ghost
                     ? UserPrivateDTODateModeEnum.live
                     : UserPrivateDTODateModeEnum.ghost;
+
+            if (newDateMode === UserPrivateDTODateModeEnum.live) {
+                const foregroundPermissions =
+                    await Location.requestForegroundPermissionsAsync();
+                if (foregroundPermissions.status === "granted") {
+                    const { granted } =
+                        await Location.requestBackgroundPermissionsAsync();
+                    if (!granted) {
+                        alert(i18n.t(TR.permissionToBackgroundLocationDenied));
+                        return;
+                    }
+                } else {
+                    alert(i18n.t(TR.permissionToBackgroundLocationDenied));
+                    return;
+                }
+            }
+
             const updateUserDTO: UpdateUserDTO = { dateMode: newDateMode };
 
             await API.user.userControllerUpdateUser({
@@ -137,12 +161,12 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 updateUserDTO,
             });
 
+            await configureLocationTracking(newDateMode);
+
             dispatch({
                 type: EACTION_USER.UPDATE_MULTIPLE,
                 payload: { dateMode: newDateMode },
             });
-
-            await configureLocationTracking(newDateMode);
 
             if (newDateMode === UserPrivateDTODateModeEnum.live) {
                 alert(`${i18n.t(TR.youAreLive)} ${getSuccessMessage()}`);

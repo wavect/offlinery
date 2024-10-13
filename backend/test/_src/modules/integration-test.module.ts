@@ -30,14 +30,10 @@ import {
     FactoryPair,
     TestFactory,
 } from "../factories/factory.interface";
-import {
-    MAN_WANTS_WOMAN_TESTUSER,
-    UserFactory,
-} from "../factories/user.factory";
+import { UserFactory } from "../factories/user.factory";
 
 interface TestModuleSetup {
     module: TestingModule;
-    mainUser: User;
     dataSource: DataSource;
     factories: FactoryPair;
 }
@@ -90,7 +86,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
                     from: '"No Reply" <noreply@offlinery.io>',
                 },
                 template: {
-                    dir: join(__dirname, "../../mail/templates"),
+                    dir: join(__dirname, "../../mail"),
                     adapter: new HandlebarsAdapter(),
                 },
             }),
@@ -119,6 +115,10 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
     const encounterRepository = module.get<Repository<Encounter>>(
         getRepositoryToken(Encounter),
     );
+    const blacklistedRegionRepository = module.get<
+        Repository<BlacklistedRegion>
+    >(getRepositoryToken(BlacklistedRegion));
+
     const dataSource = module.get<DataSource>(DataSource);
 
     /** @DEV Database Operations - Ensure the database is synced and migrations are run */
@@ -127,7 +127,10 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
     await initializePostGIS(dataSource); /** PostGIS/populate spatial_ref_sys */
 
     /** @DEV Test Factories - create and get testing factories */
-    const userFactory = new UserFactory(userRepository);
+    const userFactory = new UserFactory(
+        userRepository,
+        blacklistedRegionRepository,
+    );
     const encounterFactory = new EncounterFactory(
         userRepository,
         encounterRepository,
@@ -137,16 +140,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
         ["encounter", encounterFactory],
     ]);
 
-    /** @DEV Main User - create the main testing user */
-    await userFactory.createMainAppUser();
-    const mainUser = await userRepository.findOne({
-        where: { firstName: MAN_WANTS_WOMAN_TESTUSER },
-    });
-    if (!mainUser) {
-        throw new Error("Failed to create or retrieve main testing user");
-    }
-
-    return { module, mainUser, dataSource, factories };
+    return { module, dataSource, factories };
 };
 
 async function initializePostGIS(dataSource: DataSource) {

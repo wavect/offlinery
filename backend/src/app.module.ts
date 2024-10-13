@@ -6,6 +6,8 @@ import { PendingUserModule } from "@/entities/pending-user/pending-user.module";
 import { UserReportModule } from "@/entities/user-report/user-report.module";
 import { UserModule } from "@/entities/user/user.module";
 import { SeederModule } from "@/seeder/seeder.module";
+import { MailerModule } from "@nestjs-modules/mailer";
+import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { CacheInterceptor, CacheModule } from "@nestjs/cache-manager";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
@@ -25,6 +27,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthGuard } from "./auth/auth.guard";
 import { AuthModule } from "./auth/auth.module";
+import { UserFeedbackModule } from "./entities/user-feedback/user-feedback.module";
 import { MatchingModule } from "./transient-services/matching/matching.module";
 import { NotificationModule } from "./transient-services/notification/notification.module";
 import { typeOrmAsyncConfig } from "./typeorm.config";
@@ -36,6 +39,25 @@ import { TYPED_ENV } from "./utils/env.utils";
         ConfigModule.forRoot({
             isGlobal: true,
             load: [() => TYPED_ENV],
+        }),
+        MailerModule.forRoot({
+            transport: {
+                host: TYPED_ENV.EMAIL_HOST,
+                auth: {
+                    user: TYPED_ENV.EMAIL_USERNAME,
+                    pass: TYPED_ENV.EMAIL_PASSWORD,
+                },
+            },
+            defaults: {
+                from: '"No Reply" <noreply@offlinery.io>',
+            },
+            template: {
+                dir: join(__dirname, "../mail"),
+                adapter: new HandlebarsAdapter(),
+                options: {
+                    strict: true,
+                },
+            },
         }),
         TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
         CacheModule.register({
@@ -80,6 +102,7 @@ import { TYPED_ENV } from "./utils/env.utils";
         SeederModule,
         MapModule,
         ApiUserModule,
+        UserFeedbackModule,
     ],
     controllers: [AppController],
     providers: [

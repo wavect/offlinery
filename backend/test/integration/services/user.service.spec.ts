@@ -1,5 +1,4 @@
 import { EncounterService } from "@/entities/encounter/encounter.service";
-import { User } from "@/entities/user/user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
 import { UserService } from "@/entities/user/user.service";
 import { EGender } from "@/types/user.types";
@@ -11,27 +10,22 @@ describe("UserService", () => {
     let userRepository: UserRepository;
     let userService: UserService;
     let encounterService: EncounterService;
-    let testingMainUser: User;
     let userFactory: UserFactory;
     let encounterFactory: EncounterFactory;
 
     beforeAll(async () => {
-        const { module, mainUser, factories } =
-            await getIntegrationTestModule();
-        testingMainUser = mainUser;
+        const { module, factories } = await getIntegrationTestModule();
         userRepository = module.get<UserRepository>(UserRepository);
         userService = module.get<UserService>(UserService);
         encounterService = module.get<EncounterService>(EncounterService);
         userFactory = factories.get("user") as UserFactory;
         encounterFactory = factories.get("encounter") as EncounterFactory;
-
-        expect(testingMainUser).toBeDefined();
     });
 
     describe("notification service", () => {
         it("should delete a freshly added user by the delete token", async () => {
             const deleteToken = "DELETE_TOKEN";
-            const user = await userFactory.persistTestUser({
+            const user = await userFactory.persistNewTestUser({
                 email: "email1@email.com",
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
@@ -66,7 +60,7 @@ describe("UserService", () => {
 
         it("should delete a freshly added user by the delete token that sended messages, had encounters", async () => {
             const deleteToken = "DELETE_TOKEN-FOO";
-            const user = await userFactory.persistTestUser({
+            const user = await userFactory.persistNewTestUser({
                 email: "email1@email.com",
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
@@ -77,7 +71,7 @@ describe("UserService", () => {
                 ),
             });
 
-            const encounterUser = await userFactory.persistTestUser({
+            const encounterUser = await userFactory.persistNewTestUser({
                 email: "encounter@email.com",
             });
 
@@ -107,7 +101,7 @@ describe("UserService", () => {
 
         it("should delete a freshly added user by the delete token that sended messages", async () => {
             const deleteToken = "DELETE_TOKEN-BAR";
-            const user = await userFactory.persistTestUser({
+            const user = await userFactory.persistNewTestUser({
                 email: "email2@email.com",
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
@@ -118,7 +112,7 @@ describe("UserService", () => {
                 ),
             });
 
-            const encounterUser = await userFactory.persistTestUser({
+            const encounterUser = await userFactory.persistNewTestUser({
                 email: "encounter-foo@email.com",
             });
 

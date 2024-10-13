@@ -2,7 +2,7 @@
     "expo": {
         "name": "Offlinery",
         "slug": "offlinery",
-        "version": "1.0.0",
+        "version": "1.0.2",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "userInterfaceStyle": "light",
@@ -14,7 +14,11 @@
             "resizeMode": "contain",
             "backgroundColor": "#ffffff"
         },
+        "runtimeVersion": {
+            "policy": "appVersion"
+        },
         "ios": {
+            "buildNumber": "11",
             "supportsTablet": true,
             "privacyManifests": {
                 "NSPrivacyCollectedDataTypes": [
@@ -64,9 +68,10 @@
             },
             "infoPlist": {
                 "UIBackgroundModes": ["location"],
-                "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open to show you interesting people nearby.",
-                "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location even when closed to send you notifications when interesting people are nearby.",
-                "NSLocationAlwaysUsageDescription": "This app requires access to your location to inform you when interesting people are nearby."
+                "locationAlwaysPermission": "$(PRODUCT_NAME)  needs your location to show you interesting people nearby when you're using the app.",
+                "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME)  needs your location to show you interesting people nearby when you're using the app.",
+                "NSLocationAlwaysAndWhenInUseUsageDescription": "$(PRODUCT_NAME)  uses your location to notify you about interesting people nearby, even when the app is closed.",
+                "NSLocationAlwaysUsageDescription": "$(PRODUCT_NAME)  uses your location to inform you about interesting people nearby at any time."
             },
             "bundleIdentifier": "io.wavect.offlinery"
         },

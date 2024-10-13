@@ -11,4 +11,12 @@ export class UserDeletionSuccessDTO {
     @IsBoolean()
     @IsNotEmpty()
     dataDeleted: boolean;
+
+    @ApiProperty({ description: "The subject used in the template." })
+    @IsNotEmpty()
+    subject: string;
+
+    @ApiProperty({ description: "The message used in the template." })
+    @IsNotEmpty()
+    message: string;
 }
