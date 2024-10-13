@@ -533,7 +533,7 @@ export class UserService {
             this.logger.debug(
                 `Sending notifications to users that want to potentially approach userId ${user.id}`,
             );
-            await this.matchingService.checkAndNotifyMatches(user);
+            await this.matchingService.notifyMatches(user);
         }
 
         return updatedUser;

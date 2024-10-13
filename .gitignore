@@ -2,3 +2,4 @@ node_modules/
 .idea/
 backend/uploads/**/*
 mobile/true
+**/coverage-summary.json

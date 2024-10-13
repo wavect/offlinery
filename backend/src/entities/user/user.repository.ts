@@ -76,7 +76,7 @@ export class UserRepository extends Repository<User> {
 
     async getPotentialMatches(userToBeApproached: User): Promise<User[]> {
         return await this.createUserMatchBaseQuery(userToBeApproached)
-            /** @dev Are users within x meters - TODO: Make this configurable by users. */
+            /** @dev TODO: Make this configurable by users. */
             .withinDistance(userToBeApproached.location, 1500)
             .withUserWantingToBeApproached()
             .getMany();
@@ -155,7 +155,8 @@ export class UserRepository extends Repository<User> {
         return this;
     }
 
-    private withinAgeRange(userAge: number, range: number = 15): this {
+    /** @DEV TODO make range of users configurable */
+    private withinAgeRange(userAge: number, range: number = 7): this {
         this.queryBuilder.andWhere(
             "EXTRACT(YEAR FROM AGE(user.birthDay)) BETWEEN :minAge AND :maxAge",
             { minAge: userAge - range, maxAge: userAge + range },

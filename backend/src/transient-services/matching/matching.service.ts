@@ -22,44 +22,38 @@ export class MatchingService {
         private encounterService: EncounterService,
     ) {}
 
-    public async findPotentialMatchesForHeatmap(
-        userToBeApproached: User,
-    ): Promise<User[]> {
-        if (
-            !userToBeApproached ||
-            !userToBeApproached.location ||
-            userToBeApproached.dateMode !== EDateMode.LIVE
-        ) {
-            this.logger.debug(
-                `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
-            );
+    /**
+     * Returns HeatMap locations for the given
+     * @param userToBeApproached
+     */
+    public async findHeatmapMatches(userToBeApproached: User): Promise<User[]> {
+        if (!this.isUserEligibleForMatchingLookup(userToBeApproached)) {
             return [];
         }
-
         return this.userRepository.getPotentialMatchesForHeatMap(
             userToBeApproached,
         );
     }
 
-    public async checkAndNotifyMatches(
-        userToBeApproached: User,
-    ): Promise<void> {
-        let nearbyMatches: User[];
-        if (
-            !userToBeApproached ||
-            !userToBeApproached.location ||
-            userToBeApproached.dateMode !== EDateMode.LIVE
-        ) {
-            this.logger.debug(
-                `Not returning any nearbyMatches as user is not sharing his location right now: ${userToBeApproached.id} (dateMode: ${userToBeApproached.dateMode})`,
-            );
-            nearbyMatches = [];
-        } else {
-            nearbyMatches =
-                await this.userRepository.getPotentialMatchesForNotifications(
-                    userToBeApproached,
-                );
+    /**
+     * Returns matches for the given
+     * @param userToBeApproached
+     */
+    public async findNearbyMatches(userToBeApproached: User): Promise<User[]> {
+        if (!this.isUserEligibleForMatchingLookup(userToBeApproached)) {
+            return [];
         }
+        return this.userRepository.getPotentialMatchesForNotifications(
+            userToBeApproached,
+        );
+    }
+
+    /**
+     * Sends a notification to users nearby
+     * @param userToBeApproached
+     */
+    public async notifyMatches(userToBeApproached: User): Promise<void> {
+        const nearbyMatches = await this.findNearbyMatches(userToBeApproached);
 
         if (nearbyMatches?.length > 0) {
             const baseNotification: OBaseNotification = {
@@ -97,5 +91,19 @@ export class MatchingService {
 
             await this.notificationService.sendPushNotification(notifications);
         }
+    }
+
+    private isUserEligibleForMatchingLookup(userToBeApproached: User): boolean {
+        if (
+            !userToBeApproached ||
+            !userToBeApproached.location ||
+            userToBeApproached.dateMode !== EDateMode.LIVE
+        ) {
+            this.logger.debug(
+                `User is not eligible for matching: ${userToBeApproached?.id} (dateMode: ${userToBeApproached?.dateMode})`,
+            );
+            return false;
+        }
+        return true;
     }
 }

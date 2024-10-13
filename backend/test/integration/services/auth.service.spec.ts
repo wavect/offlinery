@@ -38,7 +38,7 @@ describe("AuthService", () => {
         const pwd = "super-safe-pwd";
         const user = new UserBuilder().withEmail("testuser@test.at").build();
         await userService.hashNewPassword(user, pwd);
-        const persistedUser = await userFactory.persistTestUser(user);
+        const persistedUser = await userFactory.persistNewTestUser(user);
 
         const signInResponse = await authService.signIn(
             persistedUser.email,
