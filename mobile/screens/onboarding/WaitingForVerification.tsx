@@ -10,6 +10,7 @@ import { refreshUserData } from "@/services/auth.service";
 import { API } from "@/utils/api-config";
 import { MAIN_WEBSITE } from "@/utils/general.constants";
 import { getLocalLanguageID, writeSupportEmail } from "@/utils/misc.utils";
+import { CommonActions } from "@react-navigation/native";
 import * as React from "react";
 import { useState } from "react";
 import { Linking, StyleSheet, Text, View } from "react-native";
@@ -125,20 +126,40 @@ const WaitingForVerification = ({
                             variant="light"
                             style={[styles.btn, { marginTop: 30 }]}
                             onPress={() =>
-                                navigation.navigate(
-                                    ROUTES.Onboarding.BookSafetyCall,
-                                    {
-                                        onCallBooked: () =>
-                                            navigation.replace(
-                                                ROUTES.Onboarding
-                                                    .WaitingVerification,
-                                                {
-                                                    overrideLabel: i18n.t(
-                                                        TR.verificationInProgress,
-                                                    ),
+                                navigation.dispatch(
+                                    CommonActions.reset({
+                                        index: 0,
+                                        routes: [
+                                            {
+                                                name: ROUTES.Onboarding
+                                                    .BookSafetyCall,
+                                                params: {
+                                                    onCallBooked: () => {
+                                                        navigation.dispatch(
+                                                            CommonActions.reset(
+                                                                {
+                                                                    index: 0,
+                                                                    routes: [
+                                                                        {
+                                                                            name: ROUTES
+                                                                                .Onboarding
+                                                                                .WaitingVerification,
+                                                                            params: {
+                                                                                overrideLabel:
+                                                                                    i18n.t(
+                                                                                        TR.verificationInProgress,
+                                                                                    ),
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                },
+                                                            ),
+                                                        );
+                                                    },
                                                 },
-                                            ),
-                                    },
+                                            },
+                                        ],
+                                    }),
                                 )
                             }
                         />
