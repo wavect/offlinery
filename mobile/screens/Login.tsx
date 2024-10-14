@@ -81,6 +81,10 @@ const Login = ({
     return (
         <OPageColorContainer>
             <OTextInputWide
+                id="login-email"
+                nativeID="login-email"
+                inputAccessoryViewID="login-email"
+                testID="login-email"
                 value={state.email}
                 maxLength={125}
                 autoCapitalize="none"
@@ -101,6 +105,10 @@ const Login = ({
                 ]}
             />
             <OTextInputWide
+                id="login-password"
+                nativeID="login-password"
+                inputAccessoryViewID="login-password"
+                testID="login-password"
                 value={state.clearPassword}
                 maxLength={100}
                 autoCapitalize="none"
