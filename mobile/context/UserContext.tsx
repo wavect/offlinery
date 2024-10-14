@@ -7,6 +7,7 @@ import {
     UserPrivateDTODateModeEnum,
     UserPrivateDTOGenderDesireEnum,
     UserPrivateDTOGenderEnum,
+    UserPrivateDTOIntentionsEnum,
     UserPrivateDTOVerificationStatusEnum,
     UserPublicDTO,
 } from "@/api/gen/src";
@@ -36,6 +37,7 @@ export interface IUserData {
     birthDay: Date;
     gender?: UserPrivateDTOGenderEnum;
     genderDesire?: UserPrivateDTOGenderDesireEnum[];
+    intentions?: UserPrivateDTOIntentionsEnum[];
     imageURIs: {
         [key in ImageIdx]?: ImagePicker.ImagePickerAsset | string;
     };
@@ -132,6 +134,7 @@ export const initialUserState: IUserData = {
     birthDay: new Date(2000, 1, 1),
     gender: undefined,
     genderDesire: undefined,
+    intentions: undefined,
     imageURIs: {
         "0": undefined,
         "1": undefined,
@@ -225,6 +228,7 @@ export const registerUser = async (
         birthDay: state.birthDay,
         gender: state.gender!,
         genderDesire: state.genderDesire!,
+        intentions: state.intentions!,
         approachChoice: state.approachChoice,
         blacklistedRegions: state.blacklistedRegions.map((r) =>
             mapRegionToBlacklistedRegionDTO(r),

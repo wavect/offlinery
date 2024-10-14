@@ -2,6 +2,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    EIntention,
     ELanguage,
 } from "@/types/user.types";
 import { ApiProperty } from "@nestjs/swagger";
@@ -34,6 +35,9 @@ export class CreateUserDTO {
 
     @ApiProperty({ enum: EApproachChoice })
     approachChoice: EApproachChoice;
+
+    @ApiProperty({ enum: EIntention, isArray: true })
+    intentions: EIntention[];
 
     @ApiProperty({
         type: () => [BlacklistedRegionDTO],

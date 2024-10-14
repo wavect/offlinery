@@ -8,6 +8,7 @@ export const TestData = {
         inputIAmA: "input-i-am-a",
         inputIAmLookingFor: "input-i-am-looking-for",
         inputIWantTo: "input-i-want-to",
+        inputIWantA: "input-i-want-a",
         buttonUpdateImages: "update-images",
         buttonUpdateSafeZones: "update-safe-zones",
         buttonChangePassword: "button-change-password",

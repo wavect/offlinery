@@ -133,6 +133,12 @@ export interface UserPrivateDTO {
      */
     genderDesire: Array<UserPrivateDTOGenderDesireEnum>;
     /**
+     * The user's intentions
+     * @type {Array<string>}
+     * @memberof UserPrivateDTO
+     */
+    intentions: Array<UserPrivateDTOIntentionsEnum>;
+    /**
      * Has user recently requested account deletion?
      * @type {boolean}
      * @memberof UserPrivateDTO
@@ -193,6 +199,17 @@ export type UserPrivateDTOGenderDesireEnum =
     (typeof UserPrivateDTOGenderDesireEnum)[keyof typeof UserPrivateDTOGenderDesireEnum];
 
 /**
+ * @export
+ */
+export const UserPrivateDTOIntentionsEnum = {
+    friendship: "friendship",
+    casual: "casual",
+    relationship: "relationship",
+} as const;
+export type UserPrivateDTOIntentionsEnum =
+    (typeof UserPrivateDTOIntentionsEnum)[keyof typeof UserPrivateDTOIntentionsEnum];
+
+/**
  * Check if a given object implements the UserPrivateDTO interface.
  */
 export function instanceOfUserPrivateDTO(
@@ -236,6 +253,8 @@ export function instanceOfUserPrivateDTO(
     if (!("gender" in value) || value["gender"] === undefined) return false;
     if (!("genderDesire" in value) || value["genderDesire"] === undefined)
         return false;
+    if (!("intentions" in value) || value["intentions"] === undefined)
+        return false;
     if (
         !("markedForDeletion" in value) ||
         value["markedForDeletion"] === undefined
@@ -276,6 +295,7 @@ export function UserPrivateDTOFromJSONTyped(
         approachChoice: json["approachChoice"],
         gender: json["gender"],
         genderDesire: json["genderDesire"],
+        intentions: json["intentions"],
         markedForDeletion: json["markedForDeletion"],
     };
 }
@@ -305,6 +325,7 @@ export function UserPrivateDTOToJSON(value?: UserPrivateDTO | null): any {
         approachChoice: value["approachChoice"],
         gender: value["gender"],
         genderDesire: value["genderDesire"],
+        intentions: value["intentions"],
         markedForDeletion: value["markedForDeletion"],
     };
 }

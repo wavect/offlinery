@@ -112,6 +112,9 @@ export const en = {
     man: "Man",
     men: "Men",
     more: "More",
+    casual: "Casual",
+    relationship: "Relationship",
+    friendship: "Friendship",
     iAmA: "I am a",
     genderMoreComingSoon:
         "We will be adding this option as soon as possible. You will have the option later on to change this to something you truly identify with.",
@@ -122,6 +125,7 @@ export const en = {
     accept: "Accept",
     dataPrivacy: "Data Privacy",
     iLookFor: "I look for",
+    iWantA: "I want a",
     pwdErrSecurityGuideline:
         "Password must contain at least 1 number, 1 big and small letter and have between 6-40 characters.",
     pwdErrNotMatching: "Passwords do not match.",

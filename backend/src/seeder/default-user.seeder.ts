@@ -7,6 +7,7 @@ import {
     EDateMode,
     EEmailVerificationStatus,
     EGender,
+    EIntention,
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
@@ -74,6 +75,7 @@ export class DefaultUserSeeder {
                 dateMode: EDateMode.GHOST,
                 bio: "This is a default test user for the application.",
                 blacklistedRegions: [],
+                intentions: [EIntention.RELATIONSHIP],
             };
 
             const pendingUser = await this.pendingUserRepo.findOneBy({ email });

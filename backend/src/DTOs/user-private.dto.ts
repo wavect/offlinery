@@ -3,6 +3,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    EIntention,
     EVerificationStatus,
 } from "../types/user.types";
 import { BlacklistedRegionDTO } from "./blacklisted-region.dto";
@@ -68,6 +69,13 @@ export class UserPrivateDTO extends UserPublicDTO {
         description: "The gender the user is interested in",
     })
     genderDesire: EGender[];
+
+    @ApiProperty({
+        enum: EIntention,
+        isArray: true,
+        description: "The user's intentions",
+    })
+    intentions: EIntention[];
 
     @ApiProperty({
         description: "Has user recently requested account deletion?",

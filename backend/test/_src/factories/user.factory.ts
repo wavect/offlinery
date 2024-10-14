@@ -5,6 +5,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    EIntention,
     EVerificationStatus,
 } from "@/types/user.types";
 import { Repository } from "typeorm";
@@ -35,6 +36,7 @@ export class UserFactory implements FactoryInterface {
             dateMode: EDateMode.LIVE,
             gender: EGender.WOMAN,
             genderDesire: [EGender.MAN],
+            intentions: [EIntention.RELATIONSHIP],
             email: `generated-${generateRandomString(15)}@example.com`,
             passwordHash: "hashed_password",
             passwordSalt: "salt",

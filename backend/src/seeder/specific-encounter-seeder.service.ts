@@ -10,6 +10,7 @@ import {
     EEmailVerificationStatus,
     EEncounterStatus,
     EGender,
+    EIntention,
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
@@ -162,6 +163,7 @@ export class Create10RealTestPeopleEncounters {
                 bio: `I'm ${user.name}, nice to meet you!`,
                 dateMode: EDateMode.LIVE,
                 preferredLanguage: ELanguage.en,
+                intentions: [EIntention.RELATIONSHIP],
             };
 
             await this.createVerifiedUser(userDto, [

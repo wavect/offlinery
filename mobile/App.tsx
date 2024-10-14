@@ -35,6 +35,7 @@ import Email from "./screens/onboarding/Email";
 import FirstName from "./screens/onboarding/FirstName";
 import GenderChoice from "./screens/onboarding/GenderChoice";
 import GenderLookingFor from "./screens/onboarding/GenderLookingFor";
+import IntentionChoice from "./screens/onboarding/IntentionChoice";
 import Password from "./screens/onboarding/Password";
 import SafetyCheck from "./screens/onboarding/SafetyCheck";
 import VerifyEmail from "./screens/onboarding/VerifyEmail";
@@ -211,6 +212,15 @@ export default function App() {
                                 headerTitle: i18n.t(TR.iWantTo),
                             }}
                         />
+                        <MainStack.Screen
+                            name={ROUTES.Onboarding.IntentionsChoice}
+                            component={IntentionChoice}
+                            options={{
+                                ...DEFAULT_SCREEN_PROPS,
+                                headerTitle: i18n.t(TR.iWantA),
+                            }}
+                        />
+
                         <MainStack.Screen
                             name={ROUTES.Onboarding.SafetyCheck}
                             component={SafetyCheck}

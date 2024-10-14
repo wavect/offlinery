@@ -3,6 +3,12 @@ export enum EGender {
     MAN = "man",
 }
 
+export enum EIntention {
+    FRIENDSHIP = "friendship",
+    CASUAL = "casual",
+    RELATIONSHIP = "relationship",
+}
+
 export enum EDateMode {
     GHOST = "ghost",
     LIVE = "live",

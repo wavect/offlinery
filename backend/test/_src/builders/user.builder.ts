@@ -6,6 +6,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    EIntention,
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
@@ -34,6 +35,7 @@ export class UserBuilder extends AbstractEntityBuilder<User> {
         user.trustScore = 100;
         user.location = { type: "Point", coordinates: [0, 0] };
         user.preferredLanguage = ELanguage.en;
+        user.intentions = [EIntention.RELATIONSHIP];
         return user;
     }
 
@@ -84,6 +86,11 @@ export class UserBuilder extends AbstractEntityBuilder<User> {
 
     withGenderDesire(genderDesire: EGender[]): this {
         this.entity.genderDesire = genderDesire;
+        return this;
+    }
+
+    withIntentions(intentions: EIntention[]): this {
+        this.entity.intentions = intentions;
         return this;
     }
 

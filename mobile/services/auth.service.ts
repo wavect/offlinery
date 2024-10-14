@@ -65,7 +65,9 @@ export const userAuthenticatedUpdate = (
     refreshUserData(dispatch, user, jwtAccessToken, jwtRefreshToken);
 
     if (
-        user.verificationStatus === UserPrivateDTOVerificationStatusEnum.pending
+        user.verificationStatus ===
+            UserPrivateDTOVerificationStatusEnum.pending &&
+        user.approachChoice !== "be_approached"
     ) {
         navigation.replace(ROUTES.Onboarding.WaitingVerification);
     } else {

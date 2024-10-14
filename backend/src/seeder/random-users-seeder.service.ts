@@ -8,6 +8,7 @@ import {
     EDateMode,
     EEmailVerificationStatus,
     EGender,
+    EIntention,
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
@@ -121,7 +122,7 @@ export class RandomUsersSeeder {
 
     private generateRandomUser(index: number): CreateUserDTO {
         const gender = Math.random() < 0.5 ? EGender.MAN : EGender.WOMAN;
-        const randomChance = Math.random();
+        let randomChance = Math.random();
         let genderDesire;
 
         if (randomChance < 0.33) {
@@ -135,6 +136,16 @@ export class RandomUsersSeeder {
         } else {
             // 34% chance for both genders
             genderDesire = [EGender.MAN, EGender.WOMAN];
+        }
+
+        randomChance = Math.random();
+        const intentions: EIntention[] = [];
+        if (randomChance < 0.33) {
+            intentions.push(EIntention.CASUAL);
+        } else if (randomChance < 0.66) {
+            intentions.push(EIntention.FRIENDSHIP);
+        } else {
+            intentions.push(...[EIntention.RELATIONSHIP, EIntention.CASUAL]);
         }
 
         const dateMode =
@@ -167,6 +178,7 @@ export class RandomUsersSeeder {
             bio: "I'm a friendly person who loves outdoor activities and trying new cuisines.",
             dateMode,
             preferredLanguage: ELanguage.en,
+            intentions,
         };
     }
 }
