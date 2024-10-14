@@ -84,6 +84,7 @@ export const de: Language = {
         "Wir behalten uns das Recht vor, Bewerber abzulehnen, um sicherzustellen, dass sich jeder sicher und respektiert fühlt.",
     callBookedBtnLbl: "Ich werde da sein",
     verificationCallQuestions: "Was wir dich fragen",
+    verificationNeeded: "Wir brauchen deine Verifizierung",
     permissionToLocationDenied:
         "Zugriff auf den Standort wurde verweigert. Ohne deinen Standort wirst du weder angesprochen, noch kannst du jemanden via Offlinery ansprechen.",
     dontApproachHere: "Hier nicht ansprechen",
@@ -144,10 +145,12 @@ export const de: Language = {
     book15MinCallDescr: "Ein 15-minütiger Verifizierungsanruf.",
     iPreferKYC: "KYC starten",
     iPreferKYCDescr: "Reguliertes 3rd-Party-KYC (noch nicht verfügbar).",
-    verificationInProgress: "Verifizierung läuft..",
+    verificationInProgress: "Verifizierung läuft",
     verificationSuccessful: "Verifiziert!",
     bookNewCall: "Neuen Anruf buchen",
     pleaseDoNotMakeDoubleBookings: "Bitte keine Doppelbuchungen vornehmen.",
+    switchToBeApproached: `Wechsel zu "Angesprochen werden"`,
+    whySwitchToBeApproached: `Wenn du zu "Angesprochen werden" wechselst, wird keine Verifizierung benötigt und du kannst sofort loslegen. Du kannst trotzdem am Sicherheitsanruf teilnehmen, um verifiziert zu werden.`,
     somethingWrongQ: "Irgendwas schief gelaufen?",
     peopleYouMightHaveMet:
         "Menschen, die du vielleicht getroffen hast. Bewerte sie, melde sie oder bleibe in Kontakt.",

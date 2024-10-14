@@ -15,6 +15,7 @@ import {
     EApproachChoice,
     EEmailVerificationStatus,
     ELanguage,
+    EVerificationStatus,
 } from "@/types/user.types";
 import { API_VERSION, BE_ENDPOINT } from "@/utils/misc.utils";
 import {
@@ -260,7 +261,21 @@ export class UserService {
             );
         }
 
+        if (
+            updateUserDto.approachChoice &&
+            this.isVerificationNeeded(updateUserDto, user)
+        ) {
+            user.verificationStatus = EVerificationStatus.PENDING;
+        }
+
         return await this.userRepository.save(user);
+    }
+
+    private isVerificationNeeded(updateUserDto: UpdateUserDTO, user: User) {
+        return (
+            user.verificationStatus !== EVerificationStatus.VERIFIED &&
+            updateUserDto.approachChoice !== EApproachChoice.BE_APPROACHED
+        );
     }
 
     findAll(): Promise<User[]> {

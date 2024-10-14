@@ -3,42 +3,26 @@ import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import OCalendlyInline from "@/components/OCalendlyInline/OCalendlyInline";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
-import {
-    EACTION_USER,
-    registerUser,
-    useUserContext,
-} from "@/context/UserContext";
+import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { getLocalLanguageID } from "@/utils/misc.utils";
-import { CommonActions } from "@react-navigation/native";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
-import { ROUTES } from "../routes";
 
 const BookSafetyCall = ({
-    navigation,
-}: NativeStackScreenProps<
-    MainStackParamList,
-    typeof ROUTES.Onboarding.BookSafetyCall
->) => {
+    route,
+}: NativeStackScreenProps<MainStackParamList, "Onboarding_BookSafetyCall">) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
     const [hasBookedCall, setHasBookedCall] = useState(false);
 
-    const startUserRegistration = async () => {
+    const onCallBooked = async () => {
         setLoading(true);
-        const onSuccess = () =>
-            navigation.dispatch(
-                CommonActions.reset({
-                    index: 0,
-                    routes: [{ name: ROUTES.Onboarding.WaitingVerification }],
-                }),
-            );
-        const onFailure = (err: any) => console.error(err); // TODO
+
         try {
-            await registerUser(state, dispatch, onSuccess, onFailure);
+            route.params?.onCallBooked();
         } catch (err) {
             throw err;
         } finally {
@@ -58,19 +42,17 @@ const BookSafetyCall = ({
         <OPageContainer
             subtitle={i18n.t(TR.retainRightToRejectApplicants)}
             bottomContainerChildren={
-                hasBookedCall && (
-                    <View style={styles.callBookBtnContainer}>
-                        <OButtonWide
-                            text={i18n.t(TR.callBookedBtnLbl)}
-                            filled={true}
-                            disabled={!hasBookedCall}
-                            variant="dark"
-                            onPress={startUserRegistration}
-                            isLoading={isLoading}
-                            loadingBtnText={i18n.t(TR.registering)}
-                        />
-                    </View>
-                )
+                <View style={styles.callBookBtnContainer}>
+                    <OButtonWide
+                        text={i18n.t(TR.callBookedBtnLbl)}
+                        filled={true}
+                        disabled={!hasBookedCall}
+                        variant="dark"
+                        onPress={onCallBooked}
+                        isLoading={isLoading}
+                        loadingBtnText={i18n.t(TR.registering)}
+                    />
+                </View>
             }
         >
             <OCalendlyInline

@@ -21,14 +21,14 @@ export type MainStackParamList = {
     [ROUTES.Onboarding.GenderLookingFor]: undefined;
     [ROUTES.Onboarding.ApproachChoice]: undefined;
     [ROUTES.Onboarding.SafetyCheck]: undefined;
-    [ROUTES.Onboarding.BookSafetyCall]: undefined;
+    [ROUTES.Onboarding.BookSafetyCall]: { onCallBooked: Function };
     [ROUTES.Onboarding.AddPhotos]:
         | { overrideSaveBtnLbl: string; overrideOnBtnPress: () => void }
         | undefined;
     [ROUTES.Onboarding.ApproachMeBetween]: undefined;
     [ROUTES.Onboarding.DontApproachMeHere]: undefined;
     [ROUTES.Onboarding.BioLetThemKnow]: undefined;
-    [ROUTES.Onboarding.WaitingVerification]: undefined;
+    [ROUTES.Onboarding.WaitingVerification]: { overrideLabel?: string };
     [ROUTES.MainTabView]: undefined;
 };
 export const MainStack = createStackNavigator<MainStackParamList>();
