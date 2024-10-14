@@ -1,5 +1,6 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
+import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import {
     EApproachChoice,
@@ -7,6 +8,7 @@ import {
     EEmailVerificationStatus,
     EGender,
     ELanguage,
+    EVerificationStatus,
 } from "@/types/user.types";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -23,6 +25,8 @@ export class DefaultUserSeeder {
         private userService: UserService,
         @InjectRepository(PendingUser)
         private pendingUserRepo: Repository<PendingUser>,
+        @InjectRepository(User)
+        private userRepo: Repository<User>,
     ) {}
 
     createRandomFile() {
@@ -91,6 +95,11 @@ export class DefaultUserSeeder {
             await this.userService.createUser(defaultUser, [
                 this.createRandomFile(),
             ]);
+
+            const user = await this.userRepo.findOneBy({ email });
+            user.verificationStatus = EVerificationStatus.VERIFIED;
+            await this.userRepo.save(user);
+
             this.logger.debug(`Seeded default user.`);
         }
     }
