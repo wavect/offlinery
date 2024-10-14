@@ -6,7 +6,7 @@ import {
 } from "@/api/gen/src";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { Color } from "@/GlobalStyles";
-import { TR, i18n } from "@/localization/translate.service";
+import { i18n, TR } from "@/localization/translate.service";
 import { getLocallyStoredUserData } from "@/services/storage.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";

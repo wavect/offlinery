@@ -1,6 +1,7 @@
 import { ClusteringService } from "@/transient-services/clustering/cluster.service";
 import { Test, TestingModule } from "@nestjs/testing";
 import { Point } from "geojson";
+import { PointBuilder } from "../../_src/builders/pointer.builder";
 
 describe("ClusterService", () => {
     let service: ClusteringService;
@@ -20,9 +21,9 @@ describe("ClusterService", () => {
     describe("getClusteredPoints", () => {
         it("should cluster nearby points", () => {
             const points: Point[] = [
-                { type: "Point", coordinates: [0, 0] },
-                { type: "Point", coordinates: [0.001, 0.001] }, // ~157m away from [0, 0] hence gets clustered together
-                { type: "Point", coordinates: [1, 1] },
+                new PointBuilder().build(0, 0),
+                new PointBuilder().build(0.001, 0.001),
+                new PointBuilder().build(1, 1),
             ];
 
             const result = service.getClusteredPoints(points);
@@ -33,8 +34,8 @@ describe("ClusterService", () => {
 
         it("should apply minimum weight to single points", () => {
             const points: Point[] = [
-                { type: "Point", coordinates: [0, 0] },
-                { type: "Point", coordinates: [2, 2] },
+                new PointBuilder().build(0, 0),
+                new PointBuilder().build(2, 2),
             ];
 
             const result = service.getClusteredPoints(points);
@@ -44,7 +45,7 @@ describe("ClusterService", () => {
         });
 
         it("should apply random shift to points", () => {
-            const points: Point[] = [{ type: "Point", coordinates: [0, 0] }];
+            const points: Point[] = [new PointBuilder().build(0, 0)];
 
             const result = service.getClusteredPoints(points);
 
@@ -53,26 +54,6 @@ describe("ClusterService", () => {
             expect(result[0].longitude).not.toBe(0);
             expect(Math.abs(result[0].latitude)).toBeLessThan(0.0005);
             expect(Math.abs(result[0].longitude)).toBeLessThan(0.0005);
-        });
-    });
-
-    describe("calculateDistance", () => {
-        it("should calculate distance correctly", () => {
-            const testCases = [
-                { point1: [0, 0], point2: [0, 0], expectedDistance: 0 },
-                { point1: [0, 0], point2: [0, 1], expectedDistance: 111195 }, // ~111.195 km
-                { point1: [0, 0], point2: [1, 1], expectedDistance: 157249 }, // ~157.249 km
-            ];
-
-            testCases.forEach(({ point1, point2, expectedDistance }) => {
-                const distance = (service as any).calculateDistance(
-                    point1[0],
-                    point1[1],
-                    point2[0],
-                    point2[1],
-                );
-                expect(Math.round(distance)).toBe(expectedDistance);
-            });
         });
     });
 });

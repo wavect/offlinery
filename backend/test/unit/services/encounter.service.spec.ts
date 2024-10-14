@@ -8,6 +8,9 @@ import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { EncounterBuilder } from "../../_src/builders/encounter.builder";
+import { MessageBuilder } from "../../_src/builders/message.builder";
+import { UserBuilder } from "../../_src/builders/user.builder";
 import { mockRepository } from "../../_src/utils/utils";
 
 describe("EncounterService", () => {
@@ -74,8 +77,10 @@ describe("EncounterService", () => {
                 encounterId: "encounter123",
                 status: EEncounterStatus.MET_INTERESTED,
             };
-            const mockEncounter = new Encounter();
-            mockEncounter.userStatuses = {};
+
+            const mockEncounter = new EncounterBuilder()
+                .withUserStatuses({})
+                .build();
 
             jest.spyOn(encounterRepository, "findOneBy").mockResolvedValue(
                 mockEncounter,
@@ -115,28 +120,29 @@ describe("EncounterService", () => {
                 encounterId: "encounter123",
                 content: "Hello!",
             };
-            const mockEncounter = new Encounter();
-            mockEncounter.id = "encounter123";
-            mockEncounter.messages = [
-                {
-                    id: "msg1",
-                    content: "Previous message",
-                    sender: { id: userId },
-                },
-                {
-                    id: "msg2",
-                    content: "Other user message",
-                    sender: { id: "otherUser" },
-                },
-            ] as Message[];
 
-            const newMessage = {
-                id: "newMsg",
-                content: "Hello!",
-                sentAt: new Date(),
-                sender: { id: userId },
-                encounter: mockEncounter,
-            } as Message;
+            const mockEncounter = new EncounterBuilder()
+                .withId("encounter123")
+                .withMessages([
+                    new MessageBuilder()
+                        .withId("msg1")
+                        .withContent("Previous message")
+                        .withSender(new UserBuilder().withId(userId).build())
+                        .build(),
+                    new MessageBuilder()
+                        .withId("msg2")
+                        .withContent("Other user message")
+                        .withSender(new UserBuilder().withId("other").build())
+                        .build(),
+                ])
+                .build();
+
+            const newMessage = new MessageBuilder()
+                .withId("newMsg")
+                .withContent("Hello!")
+                .withSender(new UserBuilder().withId(userId).build())
+                .withEncounter(mockEncounter)
+                .build();
 
             jest.spyOn(encounterRepository, "findOne").mockResolvedValue(
                 mockEncounter,

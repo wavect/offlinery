@@ -1,5 +1,5 @@
-import { Color } from "@/GlobalStyles";
 import { StorePushTokenDTO } from "@/api/gen/src";
+import { Color } from "@/GlobalStyles";
 import { API } from "@/utils/api-config";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";

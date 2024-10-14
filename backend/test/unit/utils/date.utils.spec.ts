@@ -1,4 +1,4 @@
-import { getAge } from "../../../src/utils/date.utils";
+import { getAge } from "@/utils/date.utils";
 
 describe("getAge", () => {
     const mockDate = new Date("2024-01-01");
