@@ -67,7 +67,7 @@ const GenderLookingFor = ({
                             type: EACTION_USER.UPDATE_MULTIPLE,
                             payload: { genderDesire: selectedGenders },
                         });
-                        navigation.navigate(ROUTES.Onboarding.IntentionsChoice);
+                        navigation.navigate(ROUTES.Onboarding.AddPhotos);
                     },
                 },
             ],

@@ -36,7 +36,7 @@ const IntentionChoice = ({
             type: EACTION_USER.UPDATE_MULTIPLE,
             payload: { intentions: selectedIntentions },
         });
-        navigation.navigate(ROUTES.Onboarding.AddPhotos);
+        navigation.navigate(ROUTES.Onboarding.GenderLookingFor);
     };
 
     return (

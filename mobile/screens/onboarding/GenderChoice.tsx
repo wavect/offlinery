@@ -20,7 +20,7 @@ const GenderChoice = ({
 
     const setGender = (gender: UserPrivateDTOGenderEnum) => {
         dispatch({ type: EACTION_USER.UPDATE_MULTIPLE, payload: { gender } });
-        navigation.navigate(ROUTES.Onboarding.GenderLookingFor);
+        navigation.navigate(ROUTES.Onboarding.IntentionsChoice);
     };
 
     return (
