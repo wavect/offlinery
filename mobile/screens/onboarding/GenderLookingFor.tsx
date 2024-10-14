@@ -76,7 +76,18 @@ const GenderLookingFor = ({
     };
 
     return (
-        <OPageContainer fullpageIcon="transgender">
+        <OPageContainer
+            fullpageIcon="transgender"
+            bottomContainerChildren={
+                <OButtonWide
+                    text={i18n.t(TR.continue)}
+                    filled={true}
+                    onPress={handleSubmit}
+                    variant={"dark"}
+                    disabled={selectedGenders.length === 0}
+                />
+            }
+        >
             <View style={styles.optionContainer}>
                 <OButtonWide
                     text={i18n.t(TR.women)}
@@ -104,15 +115,6 @@ const GenderLookingFor = ({
                     {i18n.t(TR.genderMoreComingSoon)}
                 </Text>
             </View>
-            <View style={styles.submitContainer}>
-                <OButtonWide
-                    text={i18n.t(TR.continue)}
-                    filled={true}
-                    onPress={handleSubmit}
-                    variant={"dark"}
-                    disabled={selectedGenders.length === 0}
-                />
-            </View>
         </OPageContainer>
     );
 };
@@ -121,11 +123,6 @@ const styles = StyleSheet.create({
     optionContainer: {
         alignItems: "center",
         marginTop: 20,
-        width: "100%",
-    },
-    submitContainer: {
-        alignItems: "center",
-        marginTop: 40,
         width: "100%",
     },
     subtitle: {
