@@ -22,15 +22,28 @@ const GenderLookingFor = ({
     typeof ROUTES.Onboarding.GenderLookingFor
 >) => {
     const { state, dispatch } = useUserContext();
+    const [selectedGenders, setSelectedGenders] = React.useState<
+        UserPrivateDTOGenderDesireEnum[]
+    >([]);
 
-    const setGender = (gender: UserPrivateDTOGenderDesireEnum) => {
+    const toggleGender = (gender: UserPrivateDTOGenderDesireEnum) => {
+        setSelectedGenders((prev) =>
+            prev.includes(gender)
+                ? prev.filter((g) => g !== gender)
+                : [...prev, gender],
+        );
+    };
+
+    const isSelected = (gender: UserPrivateDTOGenderDesireEnum) =>
+        selectedGenders.includes(gender);
+
+    const handleSubmit = () => {
         Alert.alert(
             i18n.t(TR.genderLookingForAlertTitle),
             i18n.t(TR.genderLookingForAlertDescr),
             [
                 {
                     text: i18n.t(TR.decline),
-                    //onPress: () => onDecline(),
                     style: "cancel",
                 },
                 {
@@ -45,16 +58,14 @@ const GenderLookingFor = ({
                                 email: state.email,
                                 dateTimeAccepted: new Date(),
                             };
-
                         await API.pendingUser.pendingUserControllerSetAcceptedSpecialDataGenderLookingForAt(
                             {
                                 setAcceptedSpecialDataGenderLookingForDTO,
                             },
                         );
-
                         dispatch({
                             type: EACTION_USER.UPDATE_MULTIPLE,
-                            payload: { genderDesire: gender },
+                            payload: { genderDesire: selectedGenders },
                         });
                         navigation.navigate(ROUTES.Onboarding.AddPhotos);
                     },
@@ -65,25 +76,34 @@ const GenderLookingFor = ({
     };
 
     return (
-        <OPageContainer fullpageIcon="transgender">
+        <OPageContainer
+            fullpageIcon="transgender"
+            bottomContainerChildren={
+                <OButtonWide
+                    text={i18n.t(TR.continue)}
+                    filled={true}
+                    onPress={handleSubmit}
+                    variant={"dark"}
+                    disabled={selectedGenders.length === 0}
+                />
+            }
+        >
             <View style={styles.optionContainer}>
                 <OButtonWide
                     text={i18n.t(TR.women)}
-                    filled={false}
+                    filled={isSelected(UserPrivateDTOGenderDesireEnum.woman)}
                     variant="dark"
-                    onPress={() => setGender("woman")}
+                    onPress={() => toggleGender("woman")}
                 />
             </View>
-
             <View style={styles.optionContainer}>
                 <OButtonWide
                     text={i18n.t(TR.men)}
-                    filled={false}
+                    filled={isSelected(UserPrivateDTOGenderDesireEnum.man)}
                     variant="dark"
-                    onPress={() => setGender("man")}
+                    onPress={() => toggleGender("man")}
                 />
             </View>
-
             <View style={styles.optionContainer}>
                 <OButtonWide
                     text={i18n.t(TR.more)}

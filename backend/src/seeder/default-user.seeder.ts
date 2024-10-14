@@ -63,7 +63,7 @@ export class DefaultUserSeeder {
                 clearPassword: "TeSTmE93!pQ",
                 birthDay: new Date("1990-01-01"),
                 gender: EGender.MAN,
-                genderDesire: EGender.WOMAN,
+                genderDesire: [EGender.WOMAN],
                 approachChoice: EApproachChoice.APPROACH,
                 approachFromTime: new Date("2023-01-01 08:00:00"),
                 approachToTime: new Date("2023-01-01 20:00:00"),

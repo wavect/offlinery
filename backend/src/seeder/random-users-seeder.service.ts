@@ -121,12 +121,22 @@ export class RandomUsersSeeder {
 
     private generateRandomUser(index: number): CreateUserDTO {
         const gender = Math.random() < 0.5 ? EGender.MAN : EGender.WOMAN;
-        const genderDesire =
-            Math.random() < 0.5
-                ? gender === EGender.MAN
-                    ? EGender.WOMAN
-                    : EGender.MAN
-                : gender;
+        const randomChance = Math.random();
+        let genderDesire;
+
+        if (randomChance < 0.33) {
+            // 33% chance for one gender opposite to the user's gender
+            genderDesire = [
+                gender === EGender.MAN ? EGender.WOMAN : EGender.MAN,
+            ];
+        } else if (randomChance < 0.66) {
+            // 33% chance for the same gender
+            genderDesire = [gender];
+        } else {
+            // 34% chance for both genders
+            genderDesire = [EGender.MAN, EGender.WOMAN];
+        }
+
         const dateMode =
             Math.random() < 0.95 ? EDateMode.LIVE : EDateMode.GHOST;
 

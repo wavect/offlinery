@@ -25,8 +25,8 @@ export class UpdateUserDTO {
     @ApiProperty({ enum: EGender, required: false })
     gender?: EGender;
 
-    @ApiProperty({ enum: EGender, required: false })
-    genderDesire?: EGender;
+    @ApiProperty({ isArray: true, enum: EGender, required: false })
+    genderDesire?: EGender[];
 
     @ApiProperty({ enum: EApproachChoice, required: false })
     approachChoice?: EApproachChoice;

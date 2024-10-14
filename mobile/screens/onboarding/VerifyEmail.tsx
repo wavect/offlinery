@@ -1,4 +1,5 @@
 import { MainStackParamList } from "@/MainStack.navigator";
+import { PendingUserApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OSplitInput } from "@/components/OSplitInput/OSplitInput";
@@ -8,7 +9,6 @@ import {
     SECURE_VALUE,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
-import { API } from "@/utils/api-config";
 import { getLocalLanguageID } from "@/utils/misc.utils";
 import React, { useRef, useState } from "react";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -23,10 +23,11 @@ const VerifyEmail = ({
     const { state, dispatch } = useUserContext();
     const [isCodeValid, setIsCodeValid] = useState(false);
     const codeRef = useRef<string>("");
+    const api = new PendingUserApi();
 
     const verifyCode = async (verificationCode: string) => {
         try {
-            await API.pendingUser.pendingUserControllerVerifyEmail({
+            await api.pendingUserControllerVerifyEmail({
                 verifyEmailDTO: { email: state.email, verificationCode },
             });
             navigation.navigate(ROUTES.Onboarding.Password);
@@ -39,14 +40,12 @@ const VerifyEmail = ({
 
     const sendVerificationCode = async () => {
         const result =
-            await API.pendingUser.pendingUserControllerRegisterUserForEmailVerification(
-                {
-                    registrationForVerificationRequestDTO: {
-                        email: state.email,
-                        language: getLocalLanguageID(),
-                    },
+            await api.pendingUserControllerRegisterUserForEmailVerification({
+                registrationForVerificationRequestDTO: {
+                    email: state.email,
+                    language: getLocalLanguageID(),
                 },
-            );
+            });
 
         if (result.registrationJWToken) {
             // @dev Registration specific jwt token, not valid for authenticating a user

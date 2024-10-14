@@ -34,7 +34,7 @@ export class UserFactory implements FactoryInterface {
             bio: generateRandomString(15),
             dateMode: EDateMode.LIVE,
             gender: EGender.WOMAN,
-            genderDesire: EGender.MAN,
+            genderDesire: [EGender.MAN],
             email: `generated-${generateRandomString(15)}@example.com`,
             passwordHash: "hashed_password",
             passwordSalt: "salt",

@@ -19,7 +19,7 @@ describe("User Entity", () => {
             .withEmail("john@example.com")
             .withBirthDay(new Date("1990-01-01"))
             .withGender(EGender.MAN)
-            .withGenderDesire(EGender.WOMAN)
+            .withGenderDesire([EGender.WOMAN])
             .withImageURIs(["image1.jpg", "image2.jpg"])
             .withVerificationStatus(EVerificationStatus.VERIFIED)
             .withApproachChoice(EApproachChoice.BOTH)

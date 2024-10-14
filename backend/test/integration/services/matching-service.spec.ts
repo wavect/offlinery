@@ -40,7 +40,7 @@ describe("MatchingService ", () => {
         testingMainUser = await userFactory.persistNewTestUser({
             dateMode: EDateMode.LIVE,
             location: new PointBuilder().build(0, 0),
-            genderDesire: EGender.WOMAN,
+            genderDesire: [EGender.WOMAN],
             gender: EGender.MAN,
             approachChoice: EApproachChoice.APPROACH,
             birthDay: new Date("1996-09-21"),
@@ -93,16 +93,16 @@ describe("MatchingService ", () => {
         it("Should only find users that are the right gender", async () => {
             const userId = await userFactory.persistNewTestUser({
                 gender: EGender.WOMAN,
-                genderDesire: EGender.MAN,
+                genderDesire: [EGender.MAN],
             });
             const userId2 = await userFactory.persistNewTestUser({
                 gender: EGender.WOMAN,
-                genderDesire: EGender.MAN,
+                genderDesire: [EGender.MAN],
             });
 
             await userFactory.persistNewTestUser({
                 gender: EGender.MAN,
-                genderDesire: EGender.WOMAN,
+                genderDesire: [EGender.WOMAN],
             });
 
             const matches = Array.from(
@@ -116,6 +116,44 @@ describe("MatchingService ", () => {
                 expect.arrayContaining([userId.id, userId2.id]),
             );
         });
+
+        it("Should find users if man and woman is desired", async () => {
+            const userId = await userFactory.persistNewTestUser({
+                gender: EGender.MAN,
+                genderDesire: [EGender.MAN, EGender.WOMAN],
+            });
+            const userId2 = await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN, EGender.WOMAN],
+            });
+
+            const matches = Array.from(
+                (await matchingService.findNearbyMatches(userId)).values(),
+            );
+
+            expect(matches.length).toBe(1);
+            expect(matches.map((m) => m.id)).toEqual(
+                expect.arrayContaining([userId2.id]),
+            );
+        });
+
+        it("Should not find users if genderDesire of personB is wrong.", async () => {
+            const userId = await userFactory.persistNewTestUser({
+                gender: EGender.MAN,
+                genderDesire: [EGender.MAN, EGender.WOMAN],
+            });
+            await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.WOMAN],
+            });
+
+            const matches = Array.from(
+                (await matchingService.findNearbyMatches(userId)).values(),
+            );
+
+            expect(matches.length).toBe(0);
+        });
+
         it("Should only find users that are live", async () => {
             await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
@@ -326,12 +364,12 @@ describe("MatchingService ", () => {
             await userFactory.persistNewTestUser({
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
-                genderDesire: EGender.MAN,
+                genderDesire: [EGender.MAN],
             });
 
             const userId2 = await userFactory.persistNewTestUser({
                 gender: EGender.WOMAN,
-                genderDesire: EGender.MAN,
+                genderDesire: [EGender.MAN],
             });
 
             const matches =
@@ -472,7 +510,7 @@ describe("MatchingService ", () => {
             const testingMainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
-                genderDesire: EGender.WOMAN,
+                genderDesire: [EGender.WOMAN],
                 gender: EGender.MAN,
                 approachChoice: EApproachChoice.APPROACH,
                 birthDay: new Date("1996-09-21"),

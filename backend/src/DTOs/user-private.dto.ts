@@ -64,9 +64,10 @@ export class UserPrivateDTO extends UserPublicDTO {
 
     @ApiProperty({
         enum: EGender,
+        isArray: true,
         description: "The gender the user is interested in",
     })
-    genderDesire: EGender;
+    genderDesire: EGender[];
 
     @ApiProperty({
         description: "Has user recently requested account deletion?",

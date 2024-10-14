@@ -15,6 +15,7 @@
 import type {
     CreateUserDTO,
     LocationUpdateDTO,
+    RequestAccountDeletionViaFormDTO,
     ResetPasswordRequestDTO,
     ResetPasswordResponseDTO,
     SignInResponseDTO,
@@ -28,6 +29,7 @@ import type {
 import {
     CreateUserDTOToJSON,
     LocationUpdateDTOToJSON,
+    RequestAccountDeletionViaFormDTOToJSON,
     ResetPasswordRequestDTOToJSON,
     ResetPasswordResponseDTOFromJSON,
     SignInResponseDTOFromJSON,
@@ -59,6 +61,10 @@ export interface UserControllerGetOwnUserDataRequest {
 
 export interface UserControllerRequestAccountDeletionRequest {
     userId: string;
+}
+
+export interface UserControllerRequestAccountDeletionViaFormRequest {
+    requestAccountDeletionViaFormDTO: RequestAccountDeletionViaFormDTO;
 }
 
 export interface UserControllerRequestPasswordChangeAsForgottenRequest {
@@ -137,6 +143,22 @@ export interface UserApiInterface {
 
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApiInterface
+     */
+    userControllerGetAccountDeletionFormRaw(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    userControllerGetAccountDeletionForm(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
+
+    /**
+     *
      * @summary Get private user data by ID
      * @param {string} userId User ID
      * @param {*} [options] Override http request option.
@@ -174,6 +196,27 @@ export interface UserApiInterface {
      */
     userControllerRequestAccountDeletion(
         requestParameters: UserControllerRequestAccountDeletionRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
+
+    /**
+     *
+     * @summary Request deletion of user account
+     * @param {RequestAccountDeletionViaFormDTO} requestAccountDeletionViaFormDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApiInterface
+     */
+    userControllerRequestAccountDeletionViaFormRaw(
+        requestParameters: UserControllerRequestAccountDeletionViaFormRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     * Request deletion of user account
+     */
+    userControllerRequestAccountDeletionViaForm(
+        requestParameters: UserControllerRequestAccountDeletionViaFormRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void>;
 
@@ -434,6 +477,36 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
     }
 
     /**
+     */
+    async userControllerGetAccountDeletionFormRaw(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request(
+            {
+                path: `/user/request-deletion`,
+                method: "GET",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async userControllerGetAccountDeletionForm(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.userControllerGetAccountDeletionFormRaw(initOverrides);
+    }
+
+    /**
      * Get private user data by ID
      */
     async userControllerGetOwnUserDataRaw(
@@ -525,6 +598,55 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void> {
         await this.userControllerRequestAccountDeletionRaw(
+            requestParameters,
+            initOverrides,
+        );
+    }
+
+    /**
+     * Request deletion of user account
+     */
+    async userControllerRequestAccountDeletionViaFormRaw(
+        requestParameters: UserControllerRequestAccountDeletionViaFormRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["requestAccountDeletionViaFormDTO"] == null) {
+            throw new runtime.RequiredError(
+                "requestAccountDeletionViaFormDTO",
+                'Required parameter "requestAccountDeletionViaFormDTO" was null or undefined when calling userControllerRequestAccountDeletionViaForm().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        const response = await this.request(
+            {
+                path: `/user/request-deletion`,
+                method: "POST",
+                headers: headerParameters,
+                query: queryParameters,
+                body: RequestAccountDeletionViaFormDTOToJSON(
+                    requestParameters["requestAccountDeletionViaFormDTO"],
+                ),
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Request deletion of user account
+     */
+    async userControllerRequestAccountDeletionViaForm(
+        requestParameters: UserControllerRequestAccountDeletionViaFormRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.userControllerRequestAccountDeletionViaFormRaw(
             requestParameters,
             initOverrides,
         );

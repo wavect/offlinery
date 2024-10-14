@@ -87,8 +87,12 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
     @Column()
     gender: EGender;
 
-    @Column()
-    genderDesire: EGender;
+    @Column({
+        type: "enum",
+        enum: EGender,
+        array: true,
+    })
+    genderDesire: EGender[];
 
     @Column("text", { array: true, nullable: true })
     imageURIs: string[];

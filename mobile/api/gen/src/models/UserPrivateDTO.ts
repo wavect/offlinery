@@ -128,10 +128,10 @@ export interface UserPrivateDTO {
     gender: UserPrivateDTOGenderEnum;
     /**
      * The gender the user is interested in
-     * @type {string}
+     * @type {Array<string>}
      * @memberof UserPrivateDTO
      */
-    genderDesire: UserPrivateDTOGenderDesireEnum;
+    genderDesire: Array<UserPrivateDTOGenderDesireEnum>;
     /**
      * Has user recently requested account deletion?
      * @type {boolean}

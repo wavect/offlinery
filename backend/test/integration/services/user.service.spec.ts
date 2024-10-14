@@ -29,7 +29,7 @@ describe("UserService", () => {
                 email: "email1@email.com",
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
-                genderDesire: EGender.MAN,
+                genderDesire: [EGender.MAN],
                 deletionToken: deleteToken,
                 deletionTokenExpires: new Date(
                     Date.now() + 24 * 60 * 60 * 1000,
@@ -64,7 +64,7 @@ describe("UserService", () => {
                 email: "email1@email.com",
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
-                genderDesire: EGender.MAN,
+                genderDesire: [EGender.MAN],
                 deletionToken: deleteToken,
                 deletionTokenExpires: new Date(
                     Date.now() + 24 * 60 * 60 * 1000,
@@ -105,7 +105,7 @@ describe("UserService", () => {
                 email: "email2@email.com",
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
-                genderDesire: EGender.MAN,
+                genderDesire: [EGender.MAN],
                 deletionToken: deleteToken,
                 deletionTokenExpires: new Date(
                     Date.now() + 24 * 60 * 60 * 1000,

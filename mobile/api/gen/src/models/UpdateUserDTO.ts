@@ -56,10 +56,10 @@ export interface UpdateUserDTO {
     gender?: UpdateUserDTOGenderEnum;
     /**
      *
-     * @type {string}
+     * @type {Array<string>}
      * @memberof UpdateUserDTO
      */
-    genderDesire?: UpdateUserDTOGenderDesireEnum;
+    genderDesire?: Array<UpdateUserDTOGenderDesireEnum>;
     /**
      *
      * @type {string}

@@ -35,7 +35,7 @@ export interface IUserData {
     clearPassword: string;
     birthDay: Date;
     gender?: UserPrivateDTOGenderEnum;
-    genderDesire?: UserPrivateDTOGenderDesireEnum;
+    genderDesire?: UserPrivateDTOGenderDesireEnum[];
     imageURIs: {
         [key in ImageIdx]?: ImagePicker.ImagePickerAsset | string;
     };

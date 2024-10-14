@@ -52,7 +52,7 @@ describe("UserController", () => {
                 clearPassword: "password123",
                 birthDay: new Date("1990-01-01"),
                 gender: EGender.MAN,
-                genderDesire: EGender.WOMAN,
+                genderDesire: [EGender.WOMAN],
                 approachChoice: EApproachChoice.BOTH,
                 approachFromTime: new Date(),
                 approachToTime: new Date(),

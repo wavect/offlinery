@@ -29,8 +29,8 @@ export class CreateUserDTO {
     @ApiProperty({ enum: EGender })
     gender: EGender;
 
-    @ApiProperty({ enum: EGender })
-    genderDesire: EGender;
+    @ApiProperty({ enum: EGender, isArray: true })
+    genderDesire: EGender[];
 
     @ApiProperty({ enum: EApproachChoice })
     approachChoice: EApproachChoice;
