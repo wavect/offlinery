@@ -99,6 +99,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
     @Column({
         type: "enum",
         enum: EIntention,
+        array: true,
     })
     intentions: EIntention[];
 

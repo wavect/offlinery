@@ -116,6 +116,10 @@ export const de: Language = {
     men: "Männer",
     more: "Mehr",
     iAmA: "Ich bin ein(e)",
+    casual: "Casual",
+    friendship: "Freundschaft",
+    relationship: "Beziehung",
+    iWantA: "Ich will eine",
     genderMoreComingSoon: "Diese Option kommt so schnell wie möglich!",
     genderLookingForAlertTitle: "Datenschutz",
     genderLookingForAlertDescr:

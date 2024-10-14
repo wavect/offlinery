@@ -21,6 +21,7 @@ export const ROUTES = {
         BirthDay: "Onboarding_Birthday" as const,
         GenderChoice: "Onboarding_GenderChoice" as const,
         GenderLookingFor: "Onboarding_GenderLookingFor" as const,
+        IntentionsChoice: "Onboarding_IntentionsChoice" as const,
         ApproachChoice: "Onboarding_ApproachChoice" as const,
         SafetyCheck: "Onboarding_SafetyCheck" as const,
         BookSafetyCall: "Onboarding_BookSafetyCall" as const,

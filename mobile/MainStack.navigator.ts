@@ -20,6 +20,7 @@ export type MainStackParamList = {
     [ROUTES.Onboarding.GenderChoice]: undefined;
     [ROUTES.Onboarding.GenderLookingFor]: undefined;
     [ROUTES.Onboarding.ApproachChoice]: undefined;
+    [ROUTES.Onboarding.IntentionsChoice]: undefined;
     [ROUTES.Onboarding.SafetyCheck]: undefined;
     [ROUTES.Onboarding.BookSafetyCall]: { onCallBooked: Function };
     [ROUTES.Onboarding.AddPhotos]:

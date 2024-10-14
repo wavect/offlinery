@@ -6,6 +6,7 @@ import {
     UserPrivateDTOApproachChoiceEnum,
     UserPrivateDTOGenderDesireEnum,
     UserPrivateDTOGenderEnum,
+    UserPrivateDTOIntentionsEnum,
 } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import {
@@ -93,6 +94,15 @@ const ProfileSettings = ({
         });
     };
 
+    const setIntentions = (items: string[]) => {
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: {
+                intentions: items as UserPrivateDTOIntentionsEnum[],
+            },
+        });
+    };
+
     const setApproachChoice = (item: {
         label: string;
         value: UpdateUserDTOApproachChoiceEnum;
@@ -116,6 +126,7 @@ const ProfileSettings = ({
                     birthDay: state.birthDay,
                     gender: state.gender,
                     genderDesire: state.genderDesire,
+                    intentions: state.intentions,
                     blacklistedRegions: state.blacklistedRegions.map((r) =>
                         mapRegionToBlacklistedRegionDTO(r),
                     ),
@@ -169,6 +180,15 @@ const ProfileSettings = ({
     }[] = [
         { label: i18n.t(TR.women), value: "woman" },
         { label: i18n.t(TR.men), value: "man" },
+    ];
+
+    const intentionItems: {
+        label: string;
+        value: UserPrivateDTOIntentionsEnum;
+    }[] = [
+        { label: i18n.t(TR.casual), value: "casual" },
+        { label: i18n.t(TR.relationship), value: "relationship" },
+        { label: i18n.t(TR.friendship), value: "friendship" },
     ];
 
     const approachOptions: {
@@ -375,6 +395,23 @@ const ProfileSettings = ({
                         valueField="value"
                         value={state.approachChoice}
                         onChange={setApproachChoice}
+                        style={styles.dropdown}
+                        containerStyle={styles.dropdownContainerStyle}
+                        placeholderStyle={styles.dropdownPlaceholderStyle}
+                        selectedTextStyle={styles.dropdownSelectedTextStyle}
+                        itemTextStyle={styles.dropdownItemTextStyle}
+                    />
+                </View>
+
+                <View style={styles.dropdownContainer}>
+                    <Text style={styles.label}>{i18n.t(TR.iWantA)}</Text>
+                    <MultiSelect
+                        testID={TestData.settings.inputIWantA}
+                        data={intentionItems}
+                        labelField="label"
+                        valueField="value"
+                        value={state.intentions}
+                        onChange={setIntentions}
                         style={styles.dropdown}
                         containerStyle={styles.dropdownContainerStyle}
                         placeholderStyle={styles.dropdownPlaceholderStyle}
