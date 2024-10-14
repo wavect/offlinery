@@ -159,7 +159,7 @@ export class UserRepository extends Repository<User> {
     }
 
     private withIntentions(intentions: EIntention[]): this {
-        this.queryBuilder.andWhere("user.intentions IN (:...intentions)", {
+        this.queryBuilder.andWhere("user.intentions && :intentions", {
             intentions,
         });
         return this;
