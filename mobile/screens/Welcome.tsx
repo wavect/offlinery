@@ -38,7 +38,6 @@ const Welcome = ({
             const resp = await API.auth.authControllerSignInByJWT({
                 signInJwtDTO: { jwtAccessToken: accessToken },
             });
-            console.log("JWT authentication succeeded");
             userAuthenticatedUpdate(
                 dispatch,
                 navigation,
