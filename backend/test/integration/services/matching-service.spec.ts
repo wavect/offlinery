@@ -116,6 +116,44 @@ describe("MatchingService ", () => {
                 expect.arrayContaining([userId.id, userId2.id]),
             );
         });
+
+        it("Should find users if man and woman is desired", async () => {
+            const userId = await userFactory.persistNewTestUser({
+                gender: EGender.MAN,
+                genderDesire: [EGender.MAN, EGender.WOMAN],
+            });
+            const userId2 = await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN, EGender.WOMAN],
+            });
+
+            const matches = Array.from(
+                (await matchingService.findNearbyMatches(userId)).values(),
+            );
+
+            expect(matches.length).toBe(1);
+            expect(matches.map((m) => m.id)).toEqual(
+                expect.arrayContaining([userId2.id]),
+            );
+        });
+
+        it("Should not find users if genderDesire of personB is wrong.", async () => {
+            const userId = await userFactory.persistNewTestUser({
+                gender: EGender.MAN,
+                genderDesire: [EGender.MAN, EGender.WOMAN],
+            });
+            await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.WOMAN],
+            });
+
+            const matches = Array.from(
+                (await matchingService.findNearbyMatches(userId)).values(),
+            );
+
+            expect(matches.length).toBe(0);
+        });
+
         it("Should only find users that are live", async () => {
             await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
