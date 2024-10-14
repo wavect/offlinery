@@ -8,6 +8,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    EIntention,
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
@@ -47,6 +48,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
             birthDay: this.birthDay,
             gender: this.gender,
             genderDesire: this.genderDesire,
+            intentions: this.intentions,
             wantsEmailUpdates: this.wantsEmailUpdates,
             blacklistedRegions: this.blacklistedRegions,
             email: this.email,
@@ -93,6 +95,12 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
         array: true,
     })
     genderDesire: EGender[];
+
+    @Column({
+        type: "enum",
+        enum: EIntention,
+    })
+    intentions: EIntention[];
 
     @Column("text", { array: true, nullable: true })
     imageURIs: string[];

@@ -6,6 +6,7 @@ import {
     EDateMode,
     EEmailVerificationStatus,
     EGender,
+    EIntention,
     ELanguage,
 } from "@/types/user.types";
 import { Injectable, Logger } from "@nestjs/common";
@@ -70,6 +71,7 @@ export class DefaultUserSeeder {
                 dateMode: EDateMode.GHOST,
                 bio: "This is a default test user for the application.",
                 blacklistedRegions: [],
+                intentions: [EIntention.RELATIONSHIP],
             };
 
             const pendingUser = await this.pendingUserRepo.findOneBy({ email });

@@ -4,6 +4,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    EIntention,
     EVerificationStatus,
 } from "@/types/user.types";
 import { TestingModule } from "@nestjs/testing";
@@ -42,6 +43,7 @@ describe("MatchingService ", () => {
             location: new PointBuilder().build(0, 0),
             genderDesire: [EGender.WOMAN],
             gender: EGender.MAN,
+            intentions: [EIntention.RELATIONSHIP],
             approachChoice: EApproachChoice.APPROACH,
             birthDay: new Date("1996-09-21"),
         });
@@ -90,19 +92,28 @@ describe("MatchingService ", () => {
     });
 
     describe("should test nearby-match algorithm", () => {
-        it("Should only find users that are the right gender", async () => {
+        it("Should only find users that are the right gender and intentions", async () => {
             const userId = await userFactory.persistNewTestUser({
                 gender: EGender.WOMAN,
                 genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
             });
             const userId2 = await userFactory.persistNewTestUser({
                 gender: EGender.WOMAN,
                 genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
             });
 
             await userFactory.persistNewTestUser({
                 gender: EGender.MAN,
                 genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.CASUAL],
+            });
+
+            await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.CASUAL],
             });
 
             const matches = Array.from(

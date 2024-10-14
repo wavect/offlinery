@@ -4,6 +4,7 @@ import {
     EDateMode,
     EEncounterStatus,
     EGender,
+    EIntention,
     EVerificationStatus,
 } from "@/types/user.types";
 import { Injectable, Logger } from "@nestjs/common";
@@ -32,6 +33,7 @@ export class UserRepository extends Repository<User> {
             .excludeUser(userToBeApproached.id)
             .withDesiredGender(userToBeApproached.genderDesire)
             .withGenderDesire(userToBeApproached.gender)
+            .withIntentions(userToBeApproached.intentions)
             .withVerificationStatusVerified()
             .withinAgeRange(this.getAge(new Date(userToBeApproached.birthDay)))
             .filterRecentEncounters()
@@ -152,6 +154,13 @@ export class UserRepository extends Repository<User> {
     private withGenderDesire(userGender: EGender): this {
         this.queryBuilder.andWhere(":userGender = ANY(user.genderDesire)", {
             userGender,
+        });
+        return this;
+    }
+
+    private withIntentions(intentions: EIntention[]): this {
+        this.queryBuilder.andWhere("user.intentions IN (:...intentions)", {
+            intentions,
         });
         return this;
     }

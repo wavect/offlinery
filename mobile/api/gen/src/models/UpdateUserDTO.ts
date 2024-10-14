@@ -67,6 +67,12 @@ export interface UpdateUserDTO {
      */
     approachChoice?: UpdateUserDTOApproachChoiceEnum;
     /**
+     *
+     * @type {Array<string>}
+     * @memberof UpdateUserDTO
+     */
+    intentions?: Array<UpdateUserDTOIntentionsEnum>;
+    /**
      * Array of blacklisted regions
      * @type {Array<BlacklistedRegionDTO>}
      * @memberof UpdateUserDTO
@@ -144,6 +150,17 @@ export type UpdateUserDTOApproachChoiceEnum =
 /**
  * @export
  */
+export const UpdateUserDTOIntentionsEnum = {
+    friendship: "friendship",
+    casual: "casual",
+    relationship: "relationship",
+} as const;
+export type UpdateUserDTOIntentionsEnum =
+    (typeof UpdateUserDTOIntentionsEnum)[keyof typeof UpdateUserDTOIntentionsEnum];
+
+/**
+ * @export
+ */
 export const UpdateUserDTODateModeEnum = {
     ghost: "ghost",
     live: "live",
@@ -192,6 +209,7 @@ export function UpdateUserDTOFromJSONTyped(
             json["genderDesire"] == null ? undefined : json["genderDesire"],
         approachChoice:
             json["approachChoice"] == null ? undefined : json["approachChoice"],
+        intentions: json["intentions"] == null ? undefined : json["intentions"],
         blacklistedRegions:
             json["blacklistedRegions"] == null
                 ? undefined
@@ -229,6 +247,7 @@ export function UpdateUserDTOToJSON(value?: UpdateUserDTO | null): any {
         gender: value["gender"],
         genderDesire: value["genderDesire"],
         approachChoice: value["approachChoice"],
+        intentions: value["intentions"],
         blacklistedRegions:
             value["blacklistedRegions"] == null
                 ? undefined
