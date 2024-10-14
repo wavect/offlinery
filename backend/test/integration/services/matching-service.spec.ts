@@ -40,7 +40,7 @@ describe("MatchingService ", () => {
         testingMainUser = await userFactory.persistNewTestUser({
             dateMode: EDateMode.LIVE,
             location: new PointBuilder().build(0, 0),
-            genderDesire: EGender.WOMAN,
+            genderDesire: [EGender.WOMAN],
             gender: EGender.MAN,
             approachChoice: EApproachChoice.APPROACH,
             birthDay: new Date("1996-09-21"),
@@ -93,16 +93,16 @@ describe("MatchingService ", () => {
         it("Should only find users that are the right gender", async () => {
             const userId = await userFactory.persistNewTestUser({
                 gender: EGender.WOMAN,
-                genderDesire: EGender.MAN,
+                genderDesire: [EGender.MAN],
             });
             const userId2 = await userFactory.persistNewTestUser({
                 gender: EGender.WOMAN,
-                genderDesire: EGender.MAN,
+                genderDesire: [EGender.MAN],
             });
 
             await userFactory.persistNewTestUser({
                 gender: EGender.MAN,
-                genderDesire: EGender.WOMAN,
+                genderDesire: [EGender.WOMAN],
             });
 
             const matches = Array.from(
@@ -326,12 +326,12 @@ describe("MatchingService ", () => {
             await userFactory.persistNewTestUser({
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
-                genderDesire: EGender.MAN,
+                genderDesire: [EGender.MAN],
             });
 
             const userId2 = await userFactory.persistNewTestUser({
                 gender: EGender.WOMAN,
-                genderDesire: EGender.MAN,
+                genderDesire: [EGender.MAN],
             });
 
             const matches =
@@ -472,7 +472,7 @@ describe("MatchingService ", () => {
             const testingMainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
-                genderDesire: EGender.WOMAN,
+                genderDesire: [EGender.WOMAN],
                 gender: EGender.MAN,
                 approachChoice: EApproachChoice.APPROACH,
                 birthDay: new Date("1996-09-21"),
