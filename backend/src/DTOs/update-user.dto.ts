@@ -35,6 +35,9 @@ export class UpdateUserDTO {
     @ApiProperty({ enum: EIntention, isArray: true, required: false })
     intentions?: EIntention[];
 
+    @ApiProperty({ type: "array", items: { type: "number" }, required: false })
+    ageRange?: number[];
+
     @ApiProperty({
         type: () => [BlacklistedRegionDTO],
         description: "Array of blacklisted regions",

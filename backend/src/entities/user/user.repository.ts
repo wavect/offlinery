@@ -7,6 +7,7 @@ import {
     EIntention,
     EVerificationStatus,
 } from "@/types/user.types";
+import { getAgeRangeParsed } from "@/utils/misc.utils";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { find as findTimeZoneByLocation } from "geo-tz";
@@ -35,7 +36,9 @@ export class UserRepository extends Repository<User> {
             .withGenderDesire(userToBeApproached.gender)
             .withIntentions(userToBeApproached.intentions)
             .withVerificationStatusVerified()
-            .withinAgeRange(this.getAge(new Date(userToBeApproached.birthDay)))
+            .withinAgeRange(
+                getAgeRangeParsed(userToBeApproached.ageRangeString),
+            )
             .filterRecentEncounters()
             .relatedToUser(userToBeApproached.id)
             .withDateModeLiveMode();
@@ -165,12 +168,17 @@ export class UserRepository extends Repository<User> {
         return this;
     }
 
-    /** @DEV TODO make range of users configurable */
-    private withinAgeRange(userAge: number, range: number = 7): this {
+    private withinAgeRange(ageRange: number[]): this {
+        if (ageRange.length !== 2) {
+            return this;
+        }
+
+        const [minAge, maxAge] = ageRange;
         this.queryBuilder.andWhere(
-            "EXTRACT(YEAR FROM AGE(user.birthDay)) BETWEEN :minAge AND :maxAge",
-            { minAge: userAge - range, maxAge: userAge + range },
+            "EXTRACT(YEAR FROM AGE(user.birthDay)) >= :minAge AND EXTRACT(YEAR FROM AGE(user.birthDay)) <= :maxAge",
+            { minAge, maxAge },
         );
+
         return this;
     }
 

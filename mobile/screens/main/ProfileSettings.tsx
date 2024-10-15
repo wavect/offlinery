@@ -8,6 +8,7 @@ import {
     UserPrivateDTOGenderEnum,
     UserPrivateDTOIntentionsEnum,
 } from "@/api/gen/src";
+import AgeRangeSlider from "@/components/OAgeRangeSlider/OAgeRangeSlider";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import {
     EDateTimeFormatters,
@@ -113,6 +114,15 @@ const ProfileSettings = ({
         });
     };
 
+    const setAgeRange = (items: number[]) => {
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: {
+                ageRange: items,
+            },
+        });
+    };
+
     const handleSave = async () => {
         try {
             setLoading(true);
@@ -127,6 +137,7 @@ const ProfileSettings = ({
                     gender: state.gender,
                     genderDesire: state.genderDesire,
                     intentions: state.intentions,
+                    ageRange: state.ageRange,
                     blacklistedRegions: state.blacklistedRegions.map((r) =>
                         mapRegionToBlacklistedRegionDTO(r),
                     ),
@@ -368,58 +379,6 @@ const ProfileSettings = ({
                         itemTextStyle={styles.dropdownItemTextStyle}
                     />
                 </View>
-
-                <View style={styles.dropdownContainer}>
-                    <Text style={styles.label}>{i18n.t(TR.iLookFor)}</Text>
-                    <MultiSelect
-                        testID={TestData.settings.inputIAmLookingFor}
-                        data={genderLookingForItems}
-                        labelField="label"
-                        valueField="value"
-                        value={state.genderDesire}
-                        onChange={setGenderDesire}
-                        style={styles.dropdown}
-                        containerStyle={styles.dropdownContainerStyle}
-                        placeholderStyle={styles.dropdownPlaceholderStyle}
-                        selectedTextStyle={styles.dropdownSelectedTextStyle}
-                        itemTextStyle={styles.dropdownItemTextStyle}
-                    />
-                </View>
-
-                <View style={styles.dropdownContainer}>
-                    <Text style={styles.label}>{i18n.t(TR.iWantTo)}</Text>
-                    <Dropdown
-                        testID={TestData.settings.inputIWantTo}
-                        data={approachOptions}
-                        labelField="label"
-                        valueField="value"
-                        value={state.approachChoice}
-                        onChange={setApproachChoice}
-                        style={styles.dropdown}
-                        containerStyle={styles.dropdownContainerStyle}
-                        placeholderStyle={styles.dropdownPlaceholderStyle}
-                        selectedTextStyle={styles.dropdownSelectedTextStyle}
-                        itemTextStyle={styles.dropdownItemTextStyle}
-                    />
-                </View>
-
-                <View style={styles.dropdownContainer}>
-                    <Text style={styles.label}>{i18n.t(TR.iWantA)}</Text>
-                    <MultiSelect
-                        testID={TestData.settings.inputIWantA}
-                        data={intentionItems}
-                        labelField="label"
-                        valueField="value"
-                        value={state.intentions}
-                        onChange={setIntentions}
-                        style={styles.dropdown}
-                        containerStyle={styles.dropdownContainerStyle}
-                        placeholderStyle={styles.dropdownPlaceholderStyle}
-                        selectedTextStyle={styles.dropdownSelectedTextStyle}
-                        itemTextStyle={styles.dropdownItemTextStyle}
-                    />
-                </View>
-
                 <View style={styles.settingsButtonsContainer}>
                     <SettingsButton
                         testID={TestData.settings.buttonUpdateImages}
@@ -457,6 +416,76 @@ const ProfileSettings = ({
                         text={i18n.t(TR.changePassword)}
                     />
                 </View>
+                <View>
+                    <Text style={styles.sectionLabel}>
+                        {i18n.t(TR.nonNegotiable)}
+                    </Text>
+                </View>
+                <View style={styles.dropdownContainer}>
+                    <Text style={styles.label}>{i18n.t(TR.iWantA)}</Text>
+                    <MultiSelect
+                        testID={TestData.settings.inputIWantA}
+                        data={intentionItems}
+                        labelField="label"
+                        valueField="value"
+                        value={state.intentions}
+                        onChange={setIntentions}
+                        style={styles.dropdown}
+                        containerStyle={styles.dropdownContainerStyle}
+                        placeholderStyle={styles.dropdownPlaceholderStyle}
+                        selectedTextStyle={styles.dropdownSelectedTextStyle}
+                        itemTextStyle={styles.dropdownItemTextStyle}
+                    />
+                </View>
+                <View>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>{i18n.t(TR.ageRange)}</Text>
+                        {state.ageRange && (
+                            <Text
+                                style={styles.ageText}
+                            >{`${state.ageRange[0]}-${state.ageRange[1]}`}</Text>
+                        )}
+                    </View>
+                    <AgeRangeSlider
+                        onChange={setAgeRange}
+                        value={state.ageRange ?? [1, 2]}
+                    />
+                </View>
+
+                <View style={styles.dropdownContainer}>
+                    <Text style={styles.label}>{i18n.t(TR.iLookFor)}</Text>
+                    <MultiSelect
+                        testID={TestData.settings.inputIAmLookingFor}
+                        data={genderLookingForItems}
+                        labelField="label"
+                        valueField="value"
+                        value={state.genderDesire}
+                        onChange={setGenderDesire}
+                        style={styles.dropdown}
+                        containerStyle={styles.dropdownContainerStyle}
+                        placeholderStyle={styles.dropdownPlaceholderStyle}
+                        selectedTextStyle={styles.dropdownSelectedTextStyle}
+                        itemTextStyle={styles.dropdownItemTextStyle}
+                    />
+                </View>
+
+                <View style={styles.dropdownContainer}>
+                    <Text style={styles.label}>{i18n.t(TR.iWantTo)}</Text>
+                    <Dropdown
+                        testID={TestData.settings.inputIWantTo}
+                        data={approachOptions}
+                        labelField="label"
+                        valueField="value"
+                        value={state.approachChoice}
+                        onChange={setApproachChoice}
+                        style={styles.dropdown}
+                        containerStyle={styles.dropdownContainerStyle}
+                        placeholderStyle={styles.dropdownPlaceholderStyle}
+                        selectedTextStyle={styles.dropdownSelectedTextStyle}
+                        itemTextStyle={styles.dropdownItemTextStyle}
+                    />
+                </View>
+
                 <View style={styles.settingsButtonsContainer}>
                     <SettingsButton
                         testID={TestData.settings.buttonHouseRules}
@@ -602,6 +631,22 @@ const styles = StyleSheet.create({
     },
     multiline_input: {
         height: 70,
+    },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    sectionLabel: {
+        fontSize: 24,
+        fontWeight: "bold",
+        fontFamily: FontFamily.montserratSemiBold,
+        marginBottom: 16,
+        marginTop: 30,
+    },
+    ageText: {
+        fontSize: 16,
+        color: "#7f8c8d",
     },
     label: {
         fontSize: 16,

@@ -7,6 +7,8 @@ import {
     EIntention,
     EVerificationStatus,
 } from "@/types/user.types";
+import { getAge } from "@/utils/date.utils";
+import { parseToAgeRangeString } from "@/utils/misc.utils";
 import { TestingModule } from "@nestjs/testing";
 import { DataSource } from "typeorm";
 import { BlacklistedRegionBuilder } from "../../_src/builders/blacklisted-region.builder";
@@ -38,6 +40,8 @@ describe("MatchingService ", () => {
 
     beforeEach(async () => {
         await clearDatabase(testingDataSource);
+
+        const birthDay = new Date("1996-09-21");
         testingMainUser = await userFactory.persistNewTestUser({
             dateMode: EDateMode.LIVE,
             location: new PointBuilder().build(0, 0),
@@ -45,7 +49,8 @@ describe("MatchingService ", () => {
             gender: EGender.MAN,
             intentions: [EIntention.RELATIONSHIP],
             approachChoice: EApproachChoice.APPROACH,
-            birthDay: new Date("1996-09-21"),
+            birthDay,
+            ageRangeString: `[${getAge(birthDay) - User.defaultAgeRange},${getAge(birthDay) + User.defaultAgeRange}]`,
         });
     });
 
@@ -455,6 +460,29 @@ describe("MatchingService ", () => {
             );
             expect(matches.length).toEqual(3);
         });
+
+        it("should find user when age is upper bound", async () => {
+            const upperBound = 35;
+            const user1 = await userFactory.persistNewTestUser({
+                birthDay: new Date(`2000-01-01`),
+                ageRangeString: parseToAgeRangeString([18, upperBound]),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+            });
+            const today = new Date();
+            const user2 = await userFactory.persistNewTestUser({
+                birthDay: new Date(`${today.getFullYear() - upperBound}-01-01`),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+            });
+
+            const matches = await matchingService.findHeatmapMatches(user1);
+
+            expect(matches.map((m) => m.id)).toEqual(
+                expect.arrayContaining([user2.id]),
+            );
+        });
+
         it("Should not find users that are ghost", async () => {
             await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,

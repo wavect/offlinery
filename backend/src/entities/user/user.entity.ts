@@ -13,9 +13,14 @@ import {
     EVerificationStatus,
 } from "@/types/user.types";
 import { getAge } from "@/utils/date.utils";
+import {
+    getAgeRangeParsedForPrivateDto,
+    parseToAgeRangeString,
+} from "@/utils/misc.utils";
 import { Point } from "geojson";
 import {
     BeforeInsert,
+    BeforeUpdate,
     Column,
     Entity,
     Index,
@@ -27,6 +32,7 @@ import {
 
 @Entity()
 export class User implements IEntityToDTOInterface<UserPublicDTO> {
+    static readonly defaultAgeRange = 7;
     /** @dev Important to not return any sensitive data */
     public convertToPublicDTO(): UserPublicDTO {
         return {
@@ -49,6 +55,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
             gender: this.gender,
             genderDesire: this.genderDesire,
             intentions: this.intentions,
+            ageRange: getAgeRangeParsedForPrivateDto(this.ageRangeString),
             wantsEmailUpdates: this.wantsEmailUpdates,
             blacklistedRegions: this.blacklistedRegions,
             email: this.email,
@@ -60,6 +67,19 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
             markedForDeletion:
                 !!this.deletionToken && this.deletionTokenExpires > new Date(),
         };
+    }
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    private ageRangeDefault() {
+        if (this.ageRangeString) {
+            return;
+        }
+
+        const age = getAge(this.birthDay);
+        const minAge = Math.max(age - User.defaultAgeRange, 18); // Ensure min age is 18
+        const maxAge = Math.min(age + User.defaultAgeRange, 99); // Ensure max age is 99
+        this.ageRangeString = parseToAgeRangeString([minAge, maxAge]);
     }
 
     @PrimaryGeneratedColumn("uuid")
@@ -102,6 +122,11 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
         array: true,
     })
     intentions: EIntention[];
+
+    @Column({
+        type: "int4range",
+    })
+    ageRangeString: string;
 
     @Column("text", { array: true, nullable: true })
     imageURIs: string[];

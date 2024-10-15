@@ -78,6 +78,14 @@ export class UserPrivateDTO extends UserPublicDTO {
     intentions: EIntention[];
 
     @ApiProperty({
+        type: "array",
+        items: { type: "number" },
+        required: false,
+        description: "The user's age range",
+    })
+    ageRange: number[];
+
+    @ApiProperty({
         description: "Has user recently requested account deletion?",
     })
     markedForDeletion: boolean;

@@ -126,6 +126,7 @@ export const en = {
     dataPrivacy: "Data Privacy",
     iLookFor: "I look for",
     iWantA: "I want a",
+    ageRange: "Age Range",
     pwdErrSecurityGuideline:
         "Password must contain at least 1 number, 1 big and small letter and have between 6-40 characters.",
     pwdErrNotMatching: "Passwords do not match.",
@@ -176,6 +177,7 @@ export const en = {
     yourLocation: "Your location",
     calculating: "Calculating..",
     changePreferencesDescr: "Change your preferences or update your profile.",
+    nonNegotiable: "Non Negotiables",
     bio: "Bio",
     defaultBio: "No pick-up lines please. Just be chill.",
     bioTooltip: "This will be shown to other users when Approaching.",

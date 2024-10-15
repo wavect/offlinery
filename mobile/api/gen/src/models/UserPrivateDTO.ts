@@ -139,6 +139,12 @@ export interface UserPrivateDTO {
      */
     intentions: Array<UserPrivateDTOIntentionsEnum>;
     /**
+     * The user's age range
+     * @type {Array<number>}
+     * @memberof UserPrivateDTO
+     */
+    ageRange?: Array<number>;
+    /**
      * Has user recently requested account deletion?
      * @type {boolean}
      * @memberof UserPrivateDTO
@@ -296,6 +302,7 @@ export function UserPrivateDTOFromJSONTyped(
         gender: json["gender"],
         genderDesire: json["genderDesire"],
         intentions: json["intentions"],
+        ageRange: json["ageRange"] == null ? undefined : json["ageRange"],
         markedForDeletion: json["markedForDeletion"],
     };
 }
@@ -326,6 +333,7 @@ export function UserPrivateDTOToJSON(value?: UserPrivateDTO | null): any {
         gender: value["gender"],
         genderDesire: value["genderDesire"],
         intentions: value["intentions"],
+        ageRange: value["ageRange"],
         markedForDeletion: value["markedForDeletion"],
     };
 }

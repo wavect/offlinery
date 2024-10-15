@@ -47,6 +47,7 @@ export class UserFactory implements FactoryInterface {
             verificationStatus: EVerificationStatus.VERIFIED,
             approachChoice: EApproachChoice.BE_APPROACHED,
             trustScore: 1,
+            ageRangeString: "[18,99]",
             ...userData,
         });
 

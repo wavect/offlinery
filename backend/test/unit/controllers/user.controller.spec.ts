@@ -73,6 +73,7 @@ describe("UserController", () => {
                     ...new UserBuilder().build(),
                     markedForDeletion: false,
                     age: 26,
+                    ageRange: [18, 99],
                 },
                 refreshToken: "RT",
             });
