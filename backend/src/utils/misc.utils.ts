@@ -13,3 +13,32 @@ export const TOKEN_EXPIRATION_TIME = "60m";
 
 /** @DEV - Expiration time of each registration token */
 export const REGISTRATION_TOKEN_TIME = "1d";
+
+export function getAgeRangeParsed(ageRangeString: string): number[] {
+    if (!ageRangeString) {
+        return [];
+    }
+    const range = ageRangeString.match(/[\d]+/g);
+    return range ? range.map(Number) : [];
+}
+
+export function getAgeRangeParsedForPrivateDto(
+    ageRangeString: string,
+): number[] {
+    const arr = getAgeRangeParsed(ageRangeString);
+    // Apparently postgres always saves ranges with the upper bound being exclusive.
+    // That means if we save [18,30], postgres actually saves [18,31). Therefore
+    // we decrement the upper bound by 1 to represent the actual range since we do not
+    // respect bounds and use the values as they are.
+    if (arr.length === 2) {
+        arr[1] -= 1;
+    }
+    return arr;
+}
+
+export function parseToAgeRangeString(range: number[]): string {
+    if (range.length !== 2) {
+        throw new Error(`Range must have length 2: ${range}`);
+    }
+    return `[${range[0]}, ${range[1]}]`;
+}

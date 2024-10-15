@@ -7,6 +7,7 @@ import {
     EIntention,
     EVerificationStatus,
 } from "@/types/user.types";
+import { getAgeRangeParsed } from "@/utils/misc.utils";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { find as findTimeZoneByLocation } from "geo-tz";
@@ -35,7 +36,9 @@ export class UserRepository extends Repository<User> {
             .withGenderDesire(userToBeApproached.gender)
             .withIntentions(userToBeApproached.intentions)
             .withVerificationStatusVerified()
-            .withinAgeRange(userToBeApproached.getAgeRangeParsed())
+            .withinAgeRange(
+                getAgeRangeParsed(userToBeApproached.ageRangeString),
+            )
             .filterRecentEncounters()
             .relatedToUser(userToBeApproached.id)
             .withDateModeLiveMode();

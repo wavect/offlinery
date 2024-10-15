@@ -17,7 +17,11 @@ import {
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
-import { API_VERSION, BE_ENDPOINT } from "@/utils/misc.utils";
+import {
+    API_VERSION,
+    BE_ENDPOINT,
+    parseToAgeRangeString,
+} from "@/utils/misc.utils";
 import {
     EMAIL_CODE_EXPIRATION_IN_MS,
     generate6DigitEmailCode,
@@ -269,9 +273,7 @@ export class UserService {
         }
 
         if (updateUserDto.ageRange) {
-            user.ageRangeString = User.parseToAgeRangeString(
-                updateUserDto.ageRange,
-            );
+            user.ageRangeString = parseToAgeRangeString(updateUserDto.ageRange);
         }
 
         return await this.userRepository.save(user);

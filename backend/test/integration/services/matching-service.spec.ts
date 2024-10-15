@@ -8,6 +8,7 @@ import {
     EVerificationStatus,
 } from "@/types/user.types";
 import { getAge } from "@/utils/date.utils";
+import { parseToAgeRangeString } from "@/utils/misc.utils";
 import { TestingModule } from "@nestjs/testing";
 import { DataSource } from "typeorm";
 import { BlacklistedRegionBuilder } from "../../_src/builders/blacklisted-region.builder";
@@ -464,7 +465,7 @@ describe("MatchingService ", () => {
             const upperBound = 35;
             const user1 = await userFactory.persistNewTestUser({
                 birthDay: new Date(`2000-01-01`),
-                ageRangeString: User.parseToAgeRangeString([18, upperBound]),
+                ageRangeString: parseToAgeRangeString([18, upperBound]),
                 gender: EGender.MAN,
                 genderDesire: [EGender.WOMAN],
             });
