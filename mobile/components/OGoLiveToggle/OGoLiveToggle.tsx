@@ -13,7 +13,7 @@ import { API } from "@/utils/api-config";
 import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Platform,
     StyleProp,
@@ -27,7 +27,7 @@ interface IOGoLiveToggleProps {
     style?: StyleProp<ViewStyle>;
 }
 
-const LOCATION_TASK_NAME = "background-location-task";
+export const LOCATION_TASK_NAME = "background-location-task";
 
 // Define the background task for location tracking
 TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
@@ -86,6 +86,22 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
             setNotificationId(id);
         }
     };
+
+    useEffect(() => {
+        async function startLocationTask() {
+            const taskStatus =
+                await TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME);
+            if (!taskStatus) {
+                configureLocationTracking(state.dateMode);
+            }
+        }
+
+        if (state.dateMode !== UserPrivateDTODateModeEnum.live) {
+            return;
+        }
+        startLocationTask();
+    }, []);
+
     const configureLocationTracking = async (
         newDateMode: UserPrivateDTODateModeEnum,
     ) => {

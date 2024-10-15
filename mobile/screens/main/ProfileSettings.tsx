@@ -20,14 +20,13 @@ import { OTextInput } from "@/components/OTextInput/OTextInput";
 import {
     EACTION_USER,
     getUserImagesForUpload,
+    logoutUser,
     mapRegionToBlacklistedRegionDTO,
-    resetUserData,
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { refreshUserData } from "@/services/auth.service";
-import { deleteSessionDataFromStorage } from "@/services/secure-storage.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
 import { GDPR_URL } from "@/utils/general.constants";
@@ -256,14 +255,7 @@ const ProfileSettings = ({
     };
 
     const handleLogout = async () => {
-        await deleteSessionDataFromStorage();
-        resetUserData(dispatch);
-        navigation.dispatch(
-            CommonActions.reset({
-                index: 0,
-                routes: [{ name: ROUTES.Welcome }],
-            }),
-        );
+        await logoutUser(dispatch, navigation);
     };
 
     return (
