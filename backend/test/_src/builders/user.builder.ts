@@ -36,6 +36,7 @@ export class UserBuilder extends AbstractEntityBuilder<User> {
         user.location = { type: "Point", coordinates: [0, 0] };
         user.preferredLanguage = ELanguage.en;
         user.intentions = [EIntention.RELATIONSHIP];
+        user.ageRangeString = "[18,99]";
         return user;
     }
 
