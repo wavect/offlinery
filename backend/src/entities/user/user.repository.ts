@@ -32,6 +32,7 @@ export class UserRepository extends Repository<User> {
         this.queryBuilder = this.createQueryBuilder("user");
         this.addEncounterJoins()
             .excludeUser(userToBeApproached.id)
+            .notInBlacklistedRegion()
             .withDesiredGender(userToBeApproached.genderDesire)
             .withGenderDesire(userToBeApproached.gender)
             .withIntentions(userToBeApproached.intentions)
@@ -144,6 +145,23 @@ export class UserRepository extends Repository<User> {
 
     private excludeUser(userId: string): this {
         this.queryBuilder.andWhere("user.id != :userId", { userId });
+        return this;
+    }
+
+    private notInBlacklistedRegion(): this {
+        this.queryBuilder.andWhere(`
+            NOT EXISTS (
+                SELECT 1
+                FROM blacklisted_region br
+                WHERE br."userId" = "user"."id"
+                AND ST_DWithin(
+                    "user"."location"::geography,
+                    br."location"::geography,
+                    br."radius"
+                )
+            )
+        `);
+
         return this;
     }
 

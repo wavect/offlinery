@@ -263,10 +263,9 @@ describe("MatchingService ", () => {
     });
 
     describe("should test users within blacklisted regions", () => {
-        it.failing(
-            "should not return a match for a blacklisted region",
-            async () => {
-                /** @DEV random user sitting at home (in blacklisted region) */
+        it("should not return a match for a blacklisted region", async () => {
+            /** @DEV random user sitting at home (in blacklisted region) */
+            const userInBlacklistedRegion =
                 await userFactory.persistNewTestUser({
                     location: new PointBuilder().build(0, 0),
                     blacklistedRegions: [
@@ -277,17 +276,25 @@ describe("MatchingService ", () => {
                     ],
                 });
 
-                /** @DEV random user in another town */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(100, 100),
-                });
+            const userToMatch = await userFactory.persistNewTestUser({
+                location: testingMainUser.location,
+            });
 
-                const matches =
-                    await matchingService.findNearbyMatches(testingMainUser);
+            /** @DEV random user in another town */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(100, 100),
+            });
 
-                expect(matches.length).toEqual(0);
-            },
-        );
+            const matches =
+                await matchingService.findNearbyMatches(testingMainUser);
+
+            expect(matches.map((m) => m.id)).toEqual(
+                expect.arrayContaining([userToMatch.id]),
+            );
+            expect(matches.map((m) => m.id)).not.toContain(
+                userInBlacklistedRegion.id,
+            );
+        });
         it.failing(
             "should return nearby users that are NOT in their blacklisted regions",
             async () => {
