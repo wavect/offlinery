@@ -11,10 +11,13 @@ import {
     UserPrivateDTOVerificationStatusEnum,
     UserPublicDTO,
 } from "@/api/gen/src";
+import { LOCATION_TASK_NAME } from "@/components/OGoLiveToggle/OGoLiveToggle";
 import { TR, i18n } from "@/localization/translate.service";
+import { ROUTES } from "@/screens/routes";
 import { refreshUserData } from "@/services/auth.service";
 import {
     SECURE_VALUE,
+    deleteSessionDataFromStorage,
     getSecurelyStoredValue,
 } from "@/services/secure-storage.service";
 import { updateUserDataLocally } from "@/services/storage.service";
@@ -22,11 +25,13 @@ import { API } from "@/utils/api-config";
 import { getAge } from "@/utils/date.utils";
 import { getValidImgURI, isImagePicker } from "@/utils/media.utils";
 import { getLocalLanguageID } from "@/utils/misc.utils";
+import { CommonActions } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
+import * as Location from "expo-location";
+import * as TaskManager from "expo-task-manager";
 import React, { Dispatch, createContext, useContext, useReducer } from "react";
 import { Platform } from "react-native";
-
 export interface IUserData {
     /** @dev Backend assigned ID for registered users */
     id?: string;
@@ -286,4 +291,29 @@ export const resetUserData = (dispatch: React.Dispatch<IUserAction>) => {
             ...initialUserState,
         },
     });
+};
+
+export const logoutUser = async (
+    dispatch: React.Dispatch<IUserAction>,
+    navigation: any,
+) => {
+    try {
+        const taskStatus =
+            await TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME);
+        if (taskStatus) {
+            await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+            console.log(`${LOCATION_TASK_NAME} has been stopped.`);
+        }
+
+        await deleteSessionDataFromStorage();
+        resetUserData(dispatch);
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: ROUTES.Welcome }],
+            }),
+        );
+    } catch (error) {
+        console.error("Error while logging out user:", error);
+    }
 };
