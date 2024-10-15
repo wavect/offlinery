@@ -379,10 +379,46 @@ const ProfileSettings = ({
                         itemTextStyle={styles.dropdownItemTextStyle}
                     />
                 </View>
-
+                <View style={styles.settingsButtonsContainer}>
+                    <SettingsButton
+                        testID={TestData.settings.buttonUpdateImages}
+                        onPress={() =>
+                            navigation.navigate(ROUTES.Onboarding.AddPhotos, {
+                                overrideOnBtnPress: () =>
+                                    navigation.navigate(ROUTES.MainTabView, {
+                                        screen: ROUTES.Main.ProfileSettings,
+                                    }),
+                                overrideSaveBtnLbl: i18n.t(TR.save),
+                            })
+                        }
+                        icon="image"
+                        text={i18n.t(TR.updateImages)}
+                    />
+                    <SettingsButton
+                        testID={TestData.settings.buttonUpdateSafeZones}
+                        onPress={() =>
+                            navigation.navigate(ROUTES.MainTabView, {
+                                screen: ROUTES.Main.FindPeople,
+                            })
+                        }
+                        icon="location-off"
+                        text={i18n.t(TR.updateSafeZones)}
+                    />
+                    <SettingsButton
+                        testID={TestData.settings.buttonChangePassword}
+                        onPress={() =>
+                            navigation.navigate(ROUTES.Onboarding.Password, {
+                                nextPage: ROUTES.MainTabView,
+                                isChangePassword: true,
+                            })
+                        }
+                        icon="lock"
+                        text={i18n.t(TR.changePassword)}
+                    />
+                </View>
                 <View>
                     <Text style={styles.sectionLabel}>
-                        {i18n.t(TR.preferences)}
+                        {i18n.t(TR.nonNegotiable)}
                     </Text>
                 </View>
                 <View style={styles.dropdownContainer}>
@@ -450,43 +486,6 @@ const ProfileSettings = ({
                     />
                 </View>
 
-                <View style={styles.settingsButtonsContainer}>
-                    <SettingsButton
-                        testID={TestData.settings.buttonUpdateImages}
-                        onPress={() =>
-                            navigation.navigate(ROUTES.Onboarding.AddPhotos, {
-                                overrideOnBtnPress: () =>
-                                    navigation.navigate(ROUTES.MainTabView, {
-                                        screen: ROUTES.Main.ProfileSettings,
-                                    }),
-                                overrideSaveBtnLbl: i18n.t(TR.save),
-                            })
-                        }
-                        icon="image"
-                        text={i18n.t(TR.updateImages)}
-                    />
-                    <SettingsButton
-                        testID={TestData.settings.buttonUpdateSafeZones}
-                        onPress={() =>
-                            navigation.navigate(ROUTES.MainTabView, {
-                                screen: ROUTES.Main.FindPeople,
-                            })
-                        }
-                        icon="location-off"
-                        text={i18n.t(TR.updateSafeZones)}
-                    />
-                    <SettingsButton
-                        testID={TestData.settings.buttonChangePassword}
-                        onPress={() =>
-                            navigation.navigate(ROUTES.Onboarding.Password, {
-                                nextPage: ROUTES.MainTabView,
-                                isChangePassword: true,
-                            })
-                        }
-                        icon="lock"
-                        text={i18n.t(TR.changePassword)}
-                    />
-                </View>
                 <View style={styles.settingsButtonsContainer}>
                     <SettingsButton
                         testID={TestData.settings.buttonHouseRules}
@@ -643,6 +642,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontFamily: FontFamily.montserratSemiBold,
         marginBottom: 16,
+        marginTop: 30,
     },
     ageText: {
         fontSize: 16,
