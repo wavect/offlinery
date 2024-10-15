@@ -459,6 +459,29 @@ describe("MatchingService ", () => {
             );
             expect(matches.length).toEqual(3);
         });
+
+        it("should find user when age is upper bound", async () => {
+            const upperBound = 35;
+            const user1 = await userFactory.persistNewTestUser({
+                birthDay: new Date(`2000-01-01`),
+                ageRangeString: User.parseToAgeRangeString([18, upperBound]),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+            });
+            const today = new Date();
+            const user2 = await userFactory.persistNewTestUser({
+                birthDay: new Date(`${today.getFullYear() - upperBound}-01-01`),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+            });
+
+            const matches = await matchingService.findHeatmapMatches(user1);
+
+            expect(matches.map((m) => m.id)).toEqual(
+                expect.arrayContaining([user2.id]),
+            );
+        });
+
         it("Should not find users that are ghost", async () => {
             await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,

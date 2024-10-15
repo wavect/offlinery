@@ -171,9 +171,8 @@ export class UserRepository extends Repository<User> {
         }
 
         const [minAge, maxAge] = ageRange;
-
         this.queryBuilder.andWhere(
-            "EXTRACT(YEAR FROM AGE(user.birthDay)) BETWEEN :minAge AND :maxAge",
+            "EXTRACT(YEAR FROM AGE(user.birthDay)) >= :minAge AND EXTRACT(YEAR FROM AGE(user.birthDay)) <= :maxAge",
             { minAge, maxAge },
         );
 

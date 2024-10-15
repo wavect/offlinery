@@ -269,7 +269,7 @@ export class UserService {
         }
 
         if (updateUserDto.ageRange) {
-            user.ageRangeString = user.parseToAgeRangeString(
+            user.ageRangeString = User.parseToAgeRangeString(
                 updateUserDto.ageRange,
             );
         }

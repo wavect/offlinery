@@ -51,7 +51,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
             gender: this.gender,
             genderDesire: this.genderDesire,
             intentions: this.intentions,
-            ageRange: this.getAgeRangeParsed(),
+            ageRange: this.getAgeRangeParsedForPrivateDto(),
             wantsEmailUpdates: this.wantsEmailUpdates,
             blacklistedRegions: this.blacklistedRegions,
             email: this.email,
@@ -73,7 +73,19 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
         return range ? range.map(Number) : [];
     }
 
-    parseToAgeRangeString(range: number[]): string {
+    getAgeRangeParsedForPrivateDto(): number[] {
+        const arr = this.getAgeRangeParsed();
+        // Apparently postgres always saves ranges with the upper bound being exclusive.
+        // That means if we save [18,30], postgres actually saves [18,31). Therefore
+        // we decrement the upper bound by 1 to represent the actual range since we do not
+        // respect bounds and use the values as they are.
+        if (arr.length === 2) {
+            arr[1] -= 1;
+        }
+        return arr;
+    }
+
+    static parseToAgeRangeString(range: number[]): string {
         if (range.length !== 2) {
             throw new Error(`Range must have length 2: ${range}`);
         }
@@ -90,7 +102,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
         const age = getAge(this.birthDay);
         const minAge = Math.max(age - User.defaultAgeRange, 18); // Ensure min age is 18
         const maxAge = Math.min(age + User.defaultAgeRange, 99); // Ensure max age is 99
-        this.ageRangeString = this.parseToAgeRangeString([minAge, maxAge]);
+        this.ageRangeString = User.parseToAgeRangeString([minAge, maxAge]);
     }
 
     @PrimaryGeneratedColumn("uuid")
