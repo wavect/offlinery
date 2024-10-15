@@ -6,9 +6,14 @@ import { StyleSheet, Text, View } from "react-native";
 interface AgeRangeSliderProps {
     onChange?: (range: number[]) => void;
     value: number[];
+    showValues?: boolean;
 }
 
-const AgeRangeSlider: React.FC<AgeRangeSliderProps> = ({ onChange, value }) => {
+const AgeRangeSlider: React.FC<AgeRangeSliderProps> = ({
+    onChange,
+    value,
+    showValues,
+}) => {
     const [ageRange, setAgeRange] = useState(value);
 
     const onValuesChange = (values: number[]) => {
@@ -18,9 +23,11 @@ const AgeRangeSlider: React.FC<AgeRangeSliderProps> = ({ onChange, value }) => {
 
     return (
         <View style={styles.container}>
-            <Text
-                style={styles.ageText}
-            >{`Ages: ${ageRange[0]} - ${ageRange[1]}`}</Text>
+            {showValues && (
+                <Text
+                    style={styles.ageText}
+                >{`${ageRange[0]} - ${ageRange[1]}`}</Text>
+            )}
             <MultiSlider
                 onValuesChange={onValuesChange}
                 isMarkersSeparated={true}
@@ -38,17 +45,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        padding: 20,
     },
     label: {
         fontSize: 18,
         fontWeight: "bold",
-        marginBottom: 10,
     },
     ageText: {
         fontSize: 16,
         color: "#7f8c8d",
-        marginBottom: 20,
     },
 });
 

@@ -177,6 +177,7 @@ export const en = {
     yourLocation: "Your location",
     calculating: "Calculating..",
     changePreferencesDescr: "Change your preferences or update your profile.",
+    preferences: "Preferences",
     bio: "Bio",
     defaultBio: "No pick-up lines please. Just be chill.",
     bioTooltip: "This will be shown to other users when Approaching.",

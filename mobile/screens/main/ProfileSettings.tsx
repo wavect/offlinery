@@ -380,6 +380,42 @@ const ProfileSettings = ({
                     />
                 </View>
 
+                <View>
+                    <Text style={styles.sectionLabel}>
+                        {i18n.t(TR.preferences)}
+                    </Text>
+                </View>
+                <View style={styles.dropdownContainer}>
+                    <Text style={styles.label}>{i18n.t(TR.iWantA)}</Text>
+                    <MultiSelect
+                        testID={TestData.settings.inputIWantA}
+                        data={intentionItems}
+                        labelField="label"
+                        valueField="value"
+                        value={state.intentions}
+                        onChange={setIntentions}
+                        style={styles.dropdown}
+                        containerStyle={styles.dropdownContainerStyle}
+                        placeholderStyle={styles.dropdownPlaceholderStyle}
+                        selectedTextStyle={styles.dropdownSelectedTextStyle}
+                        itemTextStyle={styles.dropdownItemTextStyle}
+                    />
+                </View>
+                <View>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>{i18n.t(TR.ageRange)}</Text>
+                        {state.ageRange && (
+                            <Text
+                                style={styles.ageText}
+                            >{`${state.ageRange[0]}-${state.ageRange[1]}`}</Text>
+                        )}
+                    </View>
+                    <AgeRangeSlider
+                        onChange={setAgeRange}
+                        value={state.ageRange ?? [1, 2]}
+                    />
+                </View>
+
                 <View style={styles.dropdownContainer}>
                     <Text style={styles.label}>{i18n.t(TR.iLookFor)}</Text>
                     <MultiSelect
@@ -411,31 +447,6 @@ const ProfileSettings = ({
                         placeholderStyle={styles.dropdownPlaceholderStyle}
                         selectedTextStyle={styles.dropdownSelectedTextStyle}
                         itemTextStyle={styles.dropdownItemTextStyle}
-                    />
-                </View>
-
-                <View style={styles.dropdownContainer}>
-                    <Text style={styles.label}>{i18n.t(TR.iWantA)}</Text>
-                    <MultiSelect
-                        testID={TestData.settings.inputIWantA}
-                        data={intentionItems}
-                        labelField="label"
-                        valueField="value"
-                        value={state.intentions}
-                        onChange={setIntentions}
-                        style={styles.dropdown}
-                        containerStyle={styles.dropdownContainerStyle}
-                        placeholderStyle={styles.dropdownPlaceholderStyle}
-                        selectedTextStyle={styles.dropdownSelectedTextStyle}
-                        itemTextStyle={styles.dropdownItemTextStyle}
-                    />
-                </View>
-
-                <View>
-                    <Text style={styles.label}>{i18n.t(TR.ageRange)}</Text>
-                    <AgeRangeSlider
-                        onChange={setAgeRange}
-                        value={state.ageRange ?? [1, 2]}
                     />
                 </View>
 
@@ -621,6 +632,21 @@ const styles = StyleSheet.create({
     },
     multiline_input: {
         height: 70,
+    },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    sectionLabel: {
+        fontSize: 24,
+        fontWeight: "bold",
+        fontFamily: FontFamily.montserratSemiBold,
+        marginBottom: 16,
+    },
+    ageText: {
+        fontSize: 16,
+        color: "#7f8c8d",
     },
     label: {
         fontSize: 16,

@@ -180,6 +180,7 @@ export const de: Language = {
     calculating: "Berechne..",
     changePreferencesDescr:
         "Ändere deine Einstellungen oder aktualisiere dein Profil.",
+    preferences: "Präferenzen",
     bio: "Bio",
     defaultBio: "Bitte keine Pick-Up Lines. Ein nettes Hallo reicht völlig.",
     bioTooltip: "Dies wird anderen Nutzern beim Ansprechen angezeigt.",
