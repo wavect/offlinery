@@ -35,4 +35,8 @@ export const TestData = {
     main: {
         goLiveBtn: "go-live-button",
     },
+    login: {
+        email: "login-email",
+        password: "login-password",
+    },
 };
