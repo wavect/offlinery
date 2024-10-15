@@ -268,6 +268,12 @@ export class UserService {
             user.verificationStatus = EVerificationStatus.PENDING;
         }
 
+        if (updateUserDto.ageRange) {
+            user.ageRangeString = user.parseToAgeRangeString(
+                updateUserDto.ageRange,
+            );
+        }
+
         return await this.userRepository.save(user);
     }
 

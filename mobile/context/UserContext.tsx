@@ -38,6 +38,7 @@ export interface IUserData {
     gender?: UserPrivateDTOGenderEnum;
     genderDesire?: UserPrivateDTOGenderDesireEnum[];
     intentions?: UserPrivateDTOIntentionsEnum[];
+    ageRange?: number[];
     imageURIs: {
         [key in ImageIdx]?: ImagePicker.ImagePickerAsset | string;
     };
@@ -135,6 +136,7 @@ export const initialUserState: IUserData = {
     gender: undefined,
     genderDesire: undefined,
     intentions: undefined,
+    ageRange: undefined,
     imageURIs: {
         "0": undefined,
         "1": undefined,

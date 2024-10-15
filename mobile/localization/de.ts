@@ -121,6 +121,7 @@ export const de: Language = {
     relationship: "Beziehung",
     iWantA: "Ich will eine",
     genderMoreComingSoon: "Diese Option kommt so schnell wie möglich!",
+    ageRange: "Altersgruppe",
     genderLookingForAlertTitle: "Datenschutz",
     genderLookingForAlertDescr:
         "Diese Information is notwendig, um dir grundlegende Funktionalitäten bereitzustellen. Mit dem Akzeptieren bestätigst du damit einverstanden zu sein.",

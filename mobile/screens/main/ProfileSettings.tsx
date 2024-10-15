@@ -8,6 +8,7 @@ import {
     UserPrivateDTOGenderEnum,
     UserPrivateDTOIntentionsEnum,
 } from "@/api/gen/src";
+import AgeRangeSlider from "@/components/OAgeRangeSlider/OAgeRangeSlider";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import {
     EDateTimeFormatters,
@@ -113,6 +114,15 @@ const ProfileSettings = ({
         });
     };
 
+    const setAgeRange = (items: number[]) => {
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: {
+                ageRange: items,
+            },
+        });
+    };
+
     const handleSave = async () => {
         try {
             setLoading(true);
@@ -127,6 +137,7 @@ const ProfileSettings = ({
                     gender: state.gender,
                     genderDesire: state.genderDesire,
                     intentions: state.intentions,
+                    ageRange: state.ageRange,
                     blacklistedRegions: state.blacklistedRegions.map((r) =>
                         mapRegionToBlacklistedRegionDTO(r),
                     ),
@@ -417,6 +428,14 @@ const ProfileSettings = ({
                         placeholderStyle={styles.dropdownPlaceholderStyle}
                         selectedTextStyle={styles.dropdownSelectedTextStyle}
                         itemTextStyle={styles.dropdownItemTextStyle}
+                    />
+                </View>
+
+                <View>
+                    <Text style={styles.label}>{i18n.t(TR.ageRange)}</Text>
+                    <AgeRangeSlider
+                        onChange={setAgeRange}
+                        value={state.ageRange ?? [1, 2]}
                     />
                 </View>
 

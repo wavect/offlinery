@@ -126,6 +126,7 @@ export const en = {
     dataPrivacy: "Data Privacy",
     iLookFor: "I look for",
     iWantA: "I want a",
+    ageRange: "Age Range",
     pwdErrSecurityGuideline:
         "Password must contain at least 1 number, 1 big and small letter and have between 6-40 characters.",
     pwdErrNotMatching: "Passwords do not match.",

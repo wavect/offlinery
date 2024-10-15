@@ -73,6 +73,12 @@ export interface UpdateUserDTO {
      */
     intentions?: Array<UpdateUserDTOIntentionsEnum>;
     /**
+     *
+     * @type {Array<number>}
+     * @memberof UpdateUserDTO
+     */
+    ageRange?: Array<number>;
+    /**
      * Array of blacklisted regions
      * @type {Array<BlacklistedRegionDTO>}
      * @memberof UpdateUserDTO
@@ -210,6 +216,7 @@ export function UpdateUserDTOFromJSONTyped(
         approachChoice:
             json["approachChoice"] == null ? undefined : json["approachChoice"],
         intentions: json["intentions"] == null ? undefined : json["intentions"],
+        ageRange: json["ageRange"] == null ? undefined : json["ageRange"],
         blacklistedRegions:
             json["blacklistedRegions"] == null
                 ? undefined
@@ -248,6 +255,7 @@ export function UpdateUserDTOToJSON(value?: UpdateUserDTO | null): any {
         genderDesire: value["genderDesire"],
         approachChoice: value["approachChoice"],
         intentions: value["intentions"],
+        ageRange: value["ageRange"],
         blacklistedRegions:
             value["blacklistedRegions"] == null
                 ? undefined

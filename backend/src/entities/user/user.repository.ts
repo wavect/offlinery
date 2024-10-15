@@ -35,7 +35,7 @@ export class UserRepository extends Repository<User> {
             .withGenderDesire(userToBeApproached.gender)
             .withIntentions(userToBeApproached.intentions)
             .withVerificationStatusVerified()
-            .withinAgeRange(this.getAge(new Date(userToBeApproached.birthDay)))
+            .withinAgeRange(userToBeApproached.getAgeRangeParsed())
             .filterRecentEncounters()
             .relatedToUser(userToBeApproached.id)
             .withDateModeLiveMode();
@@ -165,12 +165,18 @@ export class UserRepository extends Repository<User> {
         return this;
     }
 
-    /** @DEV TODO make range of users configurable */
-    private withinAgeRange(userAge: number, range: number = 7): this {
+    private withinAgeRange(ageRange: number[]): this {
+        if (ageRange.length !== 2) {
+            return this;
+        }
+
+        const [minAge, maxAge] = ageRange;
+
         this.queryBuilder.andWhere(
             "EXTRACT(YEAR FROM AGE(user.birthDay)) BETWEEN :minAge AND :maxAge",
-            { minAge: userAge - range, maxAge: userAge + range },
+            { minAge, maxAge },
         );
+
         return this;
     }
 

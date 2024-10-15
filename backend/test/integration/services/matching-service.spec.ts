@@ -7,6 +7,7 @@ import {
     EIntention,
     EVerificationStatus,
 } from "@/types/user.types";
+import { getAge } from "@/utils/date.utils";
 import { TestingModule } from "@nestjs/testing";
 import { DataSource } from "typeorm";
 import { BlacklistedRegionBuilder } from "../../_src/builders/blacklisted-region.builder";
@@ -38,6 +39,8 @@ describe("MatchingService ", () => {
 
     beforeEach(async () => {
         await clearDatabase(testingDataSource);
+
+        const birthDay = new Date("1996-09-21");
         testingMainUser = await userFactory.persistNewTestUser({
             dateMode: EDateMode.LIVE,
             location: new PointBuilder().build(0, 0),
@@ -45,7 +48,8 @@ describe("MatchingService ", () => {
             gender: EGender.MAN,
             intentions: [EIntention.RELATIONSHIP],
             approachChoice: EApproachChoice.APPROACH,
-            birthDay: new Date("1996-09-21"),
+            birthDay,
+            ageRangeString: `[${getAge(birthDay) - User.defaultAgeRange},${getAge(birthDay) + User.defaultAgeRange}]`,
         });
     });
 

@@ -16,6 +16,7 @@ import { getAge } from "@/utils/date.utils";
 import { Point } from "geojson";
 import {
     BeforeInsert,
+    BeforeUpdate,
     Column,
     Entity,
     Index,
@@ -27,6 +28,7 @@ import {
 
 @Entity()
 export class User implements IEntityToDTOInterface<UserPublicDTO> {
+    static readonly defaultAgeRange = 7;
     /** @dev Important to not return any sensitive data */
     public convertToPublicDTO(): UserPublicDTO {
         return {
@@ -49,6 +51,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
             gender: this.gender,
             genderDesire: this.genderDesire,
             intentions: this.intentions,
+            ageRange: this.getAgeRangeParsed(),
             wantsEmailUpdates: this.wantsEmailUpdates,
             blacklistedRegions: this.blacklistedRegions,
             email: this.email,
@@ -60,6 +63,34 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
             markedForDeletion:
                 !!this.deletionToken && this.deletionTokenExpires > new Date(),
         };
+    }
+
+    getAgeRangeParsed(): number[] {
+        if (!this.ageRangeString) {
+            return [];
+        }
+        const range = this.ageRangeString.match(/[\d]+/g);
+        return range ? range.map(Number) : [];
+    }
+
+    parseToAgeRangeString(range: number[]): string {
+        if (range.length !== 2) {
+            throw new Error(`Range must have length 2: ${range}`);
+        }
+        return `[${range[0]}, ${range[1]}]`;
+    }
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    private ageRangeDefault() {
+        if (this.ageRangeString) {
+            return;
+        }
+
+        const age = getAge(this.birthDay);
+        const minAge = Math.max(age - User.defaultAgeRange, 18); // Ensure min age is 18
+        const maxAge = Math.min(age + User.defaultAgeRange, 99); // Ensure max age is 99
+        this.ageRangeString = this.parseToAgeRangeString([minAge, maxAge]);
     }
 
     @PrimaryGeneratedColumn("uuid")
@@ -102,6 +133,11 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
         array: true,
     })
     intentions: EIntention[];
+
+    @Column({
+        type: "int4range",
+    })
+    ageRangeString: string;
 
     @Column("text", { array: true, nullable: true })
     imageURIs: string[];

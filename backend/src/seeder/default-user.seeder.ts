@@ -100,6 +100,7 @@ export class DefaultUserSeeder {
 
             const user = await this.userRepo.findOneBy({ email });
             user.verificationStatus = EVerificationStatus.VERIFIED;
+            user.ageRangeString = `[${18},${99}]`;
             await this.userRepo.save(user);
 
             this.logger.debug(`Seeded default user.`);
