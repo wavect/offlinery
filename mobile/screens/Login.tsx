@@ -10,6 +10,7 @@ import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
+import { TestData } from "@/tests/src/accessors";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
@@ -81,6 +82,10 @@ const Login = ({
     return (
         <OPageColorContainer>
             <OTextInputWide
+                id={TestData.login.email}
+                nativeID={TestData.login.email}
+                inputAccessoryViewID={TestData.login.email}
+                testID={TestData.login.email}
                 value={state.email}
                 maxLength={125}
                 autoCapitalize="none"
@@ -101,6 +106,10 @@ const Login = ({
                 ]}
             />
             <OTextInputWide
+                id={TestData.login.password}
+                nativeID={TestData.login.password}
+                inputAccessoryViewID={TestData.login.password}
+                testID={TestData.login.password}
                 value={state.clearPassword}
                 maxLength={100}
                 autoCapitalize="none"
