@@ -31,5 +31,6 @@ export const ROUTES = {
         DontApproachMeHere: "Onboarding_DontApproachMeHere" as const,
         ApproachMeBetween: "Onboarding_ApproachMeBetween" as const,
         BioLetThemKnow: "Onboarding_BioLetThemKnow" as const,
+        AppIntroductionSlider: "Onboarding_AppIntroductionSlider" as const,
     },
 };

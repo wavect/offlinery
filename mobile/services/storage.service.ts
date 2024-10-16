@@ -25,6 +25,7 @@ const storage = getStorageLib();
 export const LOCAL_VALUE = {
     USER_DATA: "user_data",
     ENCOUNTERS: "encounters",
+    HAS_SEEN_INTRO: "has_seen_intro",
 };
 
 export const getLocallyStoredUserData = (): Omit<
@@ -85,5 +86,21 @@ export const saveEncountersLocally = (encounters: IEncounterProfile[]) => {
         saveValueLocallySecurely(LOCAL_VALUE.ENCOUNTERS, encounterDataString);
     } else {
         storage.set(LOCAL_VALUE.ENCOUNTERS, encounterDataString);
+    }
+};
+
+export const saveDeviceUserHasSeenIntro = () => {
+    if (!storage) {
+        saveValueLocallySecurely(LOCAL_VALUE.HAS_SEEN_INTRO, "true");
+    } else {
+        storage.set(LOCAL_VALUE.HAS_SEEN_INTRO, "true");
+    }
+};
+
+export const getDeviceUserHasSeenIntro = () => {
+    if (!storage) {
+        return getSecurelyStoredValue(LOCAL_VALUE.HAS_SEEN_INTRO);
+    } else {
+        return storage.getString(LOCAL_VALUE.HAS_SEEN_INTRO);
     }
 };
