@@ -242,4 +242,5 @@ export const en = {
     weeksAgo: "week(s) ago",
     monthsAgo: "month(s) ago",
     yearsAgo: "year(s) ago",
+    dropdownSelectChoicePlaceholder: "Select an option",
 };
