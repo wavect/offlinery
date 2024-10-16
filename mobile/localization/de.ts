@@ -247,5 +247,5 @@ export const de: Language = {
     weeksAgo: "Woche(n) her",
     monthsAgo: "Monat(e) her",
     yearsAgo: "Jahr(e) her",
-    dropdownSelectChoicePlaceholder: "Hinzufügen",
+    dropdownSelectChoicePlaceholder: "Bitte wähle",
 };

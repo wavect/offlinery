@@ -592,7 +592,7 @@ const styles = StyleSheet.create({
         padding: 24,
         marginBottom: 16,
         zIndex: 1000,
-        backgroundColor: "white", // Important for shadow to be visible
+        backgroundColor: Color.white,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -732,7 +732,6 @@ const styles = StyleSheet.create({
     },
     cardTitle: {
         fontSize: 18,
-        fontWeight: "bold",
         color: Color.black,
         marginBottom: 16,
         fontFamily: FontFamily.montserratSemiBold,
