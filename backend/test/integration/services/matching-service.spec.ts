@@ -295,91 +295,126 @@ describe("MatchingService ", () => {
                 userInBlacklistedRegion.id,
             );
         });
-        it.failing(
-            "should return nearby users that are NOT in their blacklisted regions",
-            async () => {
-                /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(10, 10),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(25, 25))
-                            .withRadius(100)
-                            .build(),
-                    ],
-                });
+        it("should return nearby users that are NOT in their blacklisted regions", async () => {
+            /** @DEV user not in his blacklisted region, but nearby */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, 0),
+                blacklistedRegions: [
+                    new BlacklistedRegionBuilder()
+                        .withLocation(new PointBuilder().build(5, 5))
+                        .build(),
+                ],
+            });
 
-                /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(10, 10),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(25, 25))
-                            .build(),
-                    ],
-                });
+            /** @DEV user not in his blacklisted region, but nearby */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, 0),
+                blacklistedRegions: [
+                    new BlacklistedRegionBuilder()
+                        .withLocation(new PointBuilder().build(10, 10))
+                        .build(),
+                ],
+            });
 
-                /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(10, 10),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(10, 10))
-                            .withRadius(1000)
-                            .build(),
-                    ],
-                });
+            /** @DEV user IN his blacklisted region, but nearby */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, 0),
+                blacklistedRegions: [
+                    new BlacklistedRegionBuilder()
+                        .withLocation(new PointBuilder().build(15, 15))
+                        .build(),
+                ],
+            });
 
-                expect(
-                    (await matchingService.findNearbyMatches(testingMainUser))
-                        .length,
-                ).toEqual(3);
-            },
-        );
-        it.failing(
-            "should return users not in their blacklisted regions",
-            async () => {
-                /** @DEV manipulate active user */
-                const testUser = await userFactory.updateTestUser({
-                    location: new PointBuilder().build(10, 10),
-                });
+            expect(
+                (await matchingService.findNearbyMatches(testingMainUser))
+                    .length,
+            ).toEqual(3);
+        });
+        it("should return nearby users and consider users that are in their blacklisted regions", async () => {
+            /** @DEV user not in his blacklisted region, but nearby */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, 0),
+                blacklistedRegions: [
+                    new BlacklistedRegionBuilder()
+                        .withLocation(new PointBuilder().build(5, 5))
+                        .build(),
+                ],
+            });
 
-                /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(10, 10),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(10, 10))
-                            .build(),
-                    ],
-                });
+            /** @DEV user not in his blacklisted region, but nearby */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, 0),
+                blacklistedRegions: [
+                    new BlacklistedRegionBuilder()
+                        .withLocation(new PointBuilder().build(0, 0))
+                        .build(),
+                ],
+            });
 
-                /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(10, 10),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(11, 11))
-                            .build(),
-                    ],
-                });
+            /** @DEV user IN his blacklisted region, but nearby */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0.01, 0.01),
+                blacklistedRegions: [
+                    new BlacklistedRegionBuilder()
+                        .withLocation(new PointBuilder().build(0.01, 0.01))
+                        .build(),
+                ],
+            });
 
-                /** @DEV user IN his blacklisted region, AND nearby */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(10, 10),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(10, 10))
-                            .withRadius(10000)
-                            .build(),
-                    ],
-                });
-
-                expect(
-                    (await matchingService.findNearbyMatches(testUser)).length,
-                ).toEqual(2);
-            },
-        );
+            expect(
+                (await matchingService.findNearbyMatches(testingMainUser))
+                    .length,
+            ).toEqual(1);
+        });
+        it("should return users NOT in their blacklisted regions with precise radius I", async () => {
+            /** @DEV user not in his blacklisted region, but nearby */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, 0),
+                blacklistedRegions: [
+                    new BlacklistedRegionBuilder()
+                        .withLocation(new PointBuilder().build(0.15, 0.15))
+                        .withRadius(25_000)
+                        .build(),
+                ],
+            });
+            expect(
+                (await matchingService.findNearbyMatches(testingMainUser))
+                    .length,
+            ).toEqual(0);
+        });
+        it("should return users NOT in their blacklisted regions with precise radius II ", async () => {
+            /** @DEV user not in his blacklisted region, but nearby */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, 0),
+                blacklistedRegions: [
+                    new BlacklistedRegionBuilder()
+                        .withLocation(new PointBuilder().build(0.001, 0.001))
+                        .withRadius(158) // 158 exceeds 0 <> 0.001
+                        .build(),
+                ],
+            });
+            expect(
+                (await matchingService.findNearbyMatches(testingMainUser))
+                    .length,
+            ).toEqual(0);
+        });
+        it("should return users NOT in their blacklisted regions with precise radius III ", async () => {
+            /** @DEV user not in his blacklisted region, but nearby */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, 0),
+                blacklistedRegions: [
+                    new BlacklistedRegionBuilder()
+                        .withLocation(new PointBuilder().build(0.001, 0.001))
+                        .withRadius(100) // 100 is not within 0 <> 0.001
+                        .build(),
+                ],
+            });
+            expect(
+                (await matchingService.findNearbyMatches(testingMainUser))
+                    .length,
+            ).toEqual(1);
+        });
     });
 
     describe("should test heatmap-match algorithm", () => {
