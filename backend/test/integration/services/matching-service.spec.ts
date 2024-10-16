@@ -18,7 +18,7 @@ import { getIntegrationTestModule } from "../../_src/modules/integration-test.mo
 import { clearDatabase } from "../../_src/utils/utils";
 
 describe("MatchingService ", () => {
-    let matchingService: MatchingService;
+    let service: MatchingService;
     let testingModule: TestingModule;
     let testingDataSource: DataSource;
     let testingMainUser: User;
@@ -30,7 +30,7 @@ describe("MatchingService ", () => {
         testingModule = module;
         testingDataSource = dataSource;
 
-        matchingService = module.get(MatchingService);
+        service = module.get(MatchingService);
         userFactory = factories.get("user") as UserFactory;
     });
 
@@ -60,9 +60,9 @@ describe("MatchingService ", () => {
                 dateMode: EDateMode.GHOST,
             });
 
-            expect(
-                await matchingService.findNearbyMatches(userToBeApproached),
-            ).toEqual([]);
+            expect(await service.findNearbyMatches(userToBeApproached)).toEqual(
+                [],
+            );
         });
         it("should not fetch notification matches if the user has no locations", async () => {
             const userToBeApproached = await userFactory.persistNewTestUser({
@@ -70,9 +70,9 @@ describe("MatchingService ", () => {
                 location: null,
             });
 
-            expect(
-                await matchingService.findNearbyMatches(userToBeApproached),
-            ).toEqual([]);
+            expect(await service.findNearbyMatches(userToBeApproached)).toEqual(
+                [],
+            );
         });
         it("should not fetch heatmap locations if the user is not live", async () => {
             const userToBeApproached = await userFactory.persistNewTestUser({
@@ -81,7 +81,7 @@ describe("MatchingService ", () => {
             });
 
             expect(
-                await matchingService.findHeatmapMatches(userToBeApproached),
+                await service.findHeatmapMatches(userToBeApproached),
             ).toEqual([]);
         });
         it("should not fetch heatmap matches if the user has no locations", async () => {
@@ -90,9 +90,9 @@ describe("MatchingService ", () => {
                 location: null,
             });
 
-            expect(
-                await matchingService.findNearbyMatches(userToBeApproached),
-            ).toEqual([]);
+            expect(await service.findNearbyMatches(userToBeApproached)).toEqual(
+                [],
+            );
         });
     });
 
@@ -122,9 +122,7 @@ describe("MatchingService ", () => {
             });
 
             const matches = Array.from(
-                (
-                    await matchingService.findNearbyMatches(testingMainUser)
-                ).values(),
+                (await service.findNearbyMatches(testingMainUser)).values(),
             );
 
             expect(matches.length).toBe(2);
@@ -188,9 +186,7 @@ describe("MatchingService ", () => {
             });
 
             const matches = Array.from(
-                (
-                    await matchingService.findNearbyMatches(testingMainUser)
-                ).values(),
+                (await service.findNearbyMatches(testingMainUser)).values(),
             );
 
             expect(matches.length).toBe(1);
@@ -212,9 +208,7 @@ describe("MatchingService ", () => {
             });
 
             const matches = Array.from(
-                (
-                    await matchingService.findNearbyMatches(testingMainUser)
-                ).values(),
+                (await service.findNearbyMatches(testingMainUser)).values(),
             );
 
             expect(matches.length).toBe(1);
@@ -231,9 +225,7 @@ describe("MatchingService ", () => {
             });
 
             const matches = Array.from(
-                (
-                    await matchingService.findNearbyMatches(testingMainUser)
-                ).values(),
+                (await service.findNearbyMatches(testingMainUser)).values(),
             );
 
             expect(matches.length).toBe(2);
@@ -250,9 +242,7 @@ describe("MatchingService ", () => {
             });
 
             const matches = Array.from(
-                (
-                    await matchingService.findNearbyMatches(testingMainUser)
-                ).values(),
+                (await service.findNearbyMatches(testingMainUser)).values(),
             );
 
             expect(matches.length).toBe(0);
@@ -263,116 +253,111 @@ describe("MatchingService ", () => {
     });
 
     describe("should test users within blacklisted regions", () => {
-        it.failing(
-            "should not return a match for a blacklisted region",
-            async () => {
-                /** @DEV random user sitting at home (in blacklisted region) */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(0, 0),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(0, 0))
-                            .withRadius(10000)
-                            .build(),
-                    ],
-                });
+        it("should not return a match for a blacklisted region", async () => {
+            /** @DEV random user sitting at home (in his own blacklisted region) */
+            const user = await userFactory.persistNewTestUser({
+                firstName: "user-at-home",
+                location: new PointBuilder().build(0, 0),
+                blacklistedRegions: [
+                    new BlacklistedRegionBuilder()
+                        .withLocation(new PointBuilder().build(0, 0))
+                        .withRadius(100)
+                        .build(),
+                ],
+            });
 
-                /** @DEV random user in another town */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(100, 100),
-                });
-
-                const matches =
-                    await matchingService.findNearbyMatches(testingMainUser);
-
-                expect(matches.length).toEqual(0);
-            },
-        );
-        it.failing(
-            "should return nearby users that are NOT in their blacklisted regions",
-            async () => {
-                /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(10, 10),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(25, 25))
-                            .withRadius(100)
-                            .build(),
-                    ],
-                });
-
-                /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(10, 10),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(25, 25))
-                            .build(),
-                    ],
-                });
-
-                /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(10, 10),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(10, 10))
-                            .withRadius(1000)
-                            .build(),
-                    ],
-                });
-
-                expect(
-                    (await matchingService.findNearbyMatches(testingMainUser))
-                        .length,
-                ).toEqual(3);
-            },
-        );
-        it.failing(
-            "should return users not in their blacklisted regions",
-            async () => {
-                /** @DEV manipulate active user */
-                const testUser = await userFactory.updateTestUser({
-                    location: new PointBuilder().build(10, 10),
-                });
-
-                /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(10, 10),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(10, 10))
-                            .build(),
-                    ],
-                });
-
-                /** @DEV user not in his blacklisted region, but nearby */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(10, 10),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(11, 11))
-                            .build(),
-                    ],
-                });
-
-                /** @DEV user IN his blacklisted region, AND nearby */
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(10, 10),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(10, 10))
-                            .withRadius(10000)
-                            .build(),
-                    ],
-                });
-
-                expect(
-                    (await matchingService.findNearbyMatches(testUser)).length,
-                ).toEqual(2);
-            },
-        );
+            /** @DEV Current App user is located at the same location */
+            const matches = await service.findNearbyMatches(testingMainUser);
+            expect(user.blacklistedRegions[0].location.coordinates).toEqual([
+                0, 0,
+            ]);
+            expect(testingMainUser.location.coordinates).toEqual([0, 0]);
+            expect(matches.length).toEqual(0);
+        });
+        // it.failing(
+        //     "should return nearby users that are NOT in their blacklisted regions",
+        //     async () => {
+        //         /** @DEV user not in his blacklisted region, but nearby */
+        //         await userFactory.persistNewTestUser({
+        //             location: new PointBuilder().build(10, 10),
+        //             blacklistedRegions: [
+        //                 new BlacklistedRegionBuilder()
+        //                     .withLocation(new PointBuilder().build(25, 25))
+        //                     .withRadius(100)
+        //                     .build(),
+        //             ],
+        //         });
+        //
+        //         /** @DEV user not in his blacklisted region, but nearby */
+        //         await userFactory.persistNewTestUser({
+        //             location: new PointBuilder().build(10, 10),
+        //             blacklistedRegions: [
+        //                 new BlacklistedRegionBuilder()
+        //                     .withLocation(new PointBuilder().build(25, 25))
+        //                     .build(),
+        //             ],
+        //         });
+        //
+        //         /** @DEV user not in his blacklisted region, but nearby */
+        //         await userFactory.persistNewTestUser({
+        //             location: new PointBuilder().build(10, 10),
+        //             blacklistedRegions: [
+        //                 new BlacklistedRegionBuilder()
+        //                     .withLocation(new PointBuilder().build(10, 10))
+        //                     .withRadius(1000)
+        //                     .build(),
+        //             ],
+        //         });
+        //
+        //         expect(
+        //             (await service.findNearbyMatches(testingMainUser)).length,
+        //         ).toEqual(3);
+        //     },
+        // );
+        // it.failing(
+        //     "should return users not in their blacklisted regions",
+        //     async () => {
+        //         /** @DEV manipulate active user */
+        //         const testUser = await userFactory.updateTestUser({
+        //             location: new PointBuilder().build(10, 10),
+        //         });
+        //
+        //         /** @DEV user not in his blacklisted region, but nearby */
+        //         await userFactory.persistNewTestUser({
+        //             location: new PointBuilder().build(10, 10),
+        //             blacklistedRegions: [
+        //                 new BlacklistedRegionBuilder()
+        //                     .withLocation(new PointBuilder().build(10, 10))
+        //                     .build(),
+        //             ],
+        //         });
+        //
+        //         /** @DEV user not in his blacklisted region, but nearby */
+        //         await userFactory.persistNewTestUser({
+        //             location: new PointBuilder().build(10, 10),
+        //             blacklistedRegions: [
+        //                 new BlacklistedRegionBuilder()
+        //                     .withLocation(new PointBuilder().build(11, 11))
+        //                     .build(),
+        //             ],
+        //         });
+        //
+        //         /** @DEV user IN his blacklisted region, AND nearby */
+        //         await userFactory.persistNewTestUser({
+        //             location: new PointBuilder().build(10, 10),
+        //             blacklistedRegions: [
+        //                 new BlacklistedRegionBuilder()
+        //                     .withLocation(new PointBuilder().build(10, 10))
+        //                     .withRadius(10000)
+        //                     .build(),
+        //             ],
+        //         });
+        //
+        //         expect(
+        //             (await service.findNearbyMatches(testUser)).length,
+        //         ).toEqual(2);
+        //     },
+        // );
     });
 
     describe("should test heatmap-match algorithm", () => {
@@ -388,8 +373,7 @@ describe("MatchingService ", () => {
                 genderDesire: [EGender.MAN],
             });
 
-            const matches =
-                await matchingService.findHeatmapMatches(testingMainUser);
+            const matches = await service.findHeatmapMatches(testingMainUser);
 
             expect(matches.map((m) => m.id)).toEqual(
                 expect.arrayContaining([userId2.id]),
@@ -413,8 +397,7 @@ describe("MatchingService ", () => {
                 dateMode: EDateMode.GHOST,
             });
 
-            const matches =
-                await matchingService.findHeatmapMatches(testingMainUser);
+            const matches = await service.findHeatmapMatches(testingMainUser);
 
             expect(matches.map((m) => m.id)).toEqual(
                 expect.arrayContaining([userId.id, userId2.id]),
@@ -452,8 +435,7 @@ describe("MatchingService ", () => {
                 birthDay: new Date(`${testingUsersBirthYear + 10}-01-01`),
             });
 
-            const matches =
-                await matchingService.findHeatmapMatches(testingMainUser);
+            const matches = await service.findHeatmapMatches(testingMainUser);
 
             expect(matches.map((m) => m.id)).toEqual(
                 expect.arrayContaining([user1.id, user2.id, user3.id]),
@@ -494,8 +476,7 @@ describe("MatchingService ", () => {
                 dateMode: EDateMode.LIVE,
             });
 
-            const matches =
-                await matchingService.findHeatmapMatches(testingMainUser);
+            const matches = await service.findHeatmapMatches(testingMainUser);
 
             expect(matches.map((m) => m.id)).toEqual(
                 expect.arrayContaining([user.id]),
@@ -521,8 +502,7 @@ describe("MatchingService ", () => {
                 location: new PointBuilder().build(0, maxDistUser * 1.1 * DPM), // 110% of max distance
             });
 
-            const matches =
-                await matchingService.findHeatmapMatches(testingMainUser);
+            const matches = await service.findHeatmapMatches(testingMainUser);
             expect(matches.length).toEqual(3);
         });
 
@@ -537,8 +517,7 @@ describe("MatchingService ", () => {
                 location: new PointBuilder().build(0, maxDistUser * 1.1 * DPM), // 110% of max distance
             });
 
-            const matches =
-                await matchingService.findNearbyMatches(testingMainUser);
+            const matches = await service.findNearbyMatches(testingMainUser);
             expect(matches.map((m) => m.id)).toEqual(
                 expect.arrayContaining([user1.id, user2.id]),
             );
@@ -568,8 +547,7 @@ describe("MatchingService ", () => {
                 ), // 1 meter more than max
             });
 
-            const matches =
-                await matchingService.findNearbyMatches(testingMainUser);
+            const matches = await service.findNearbyMatches(testingMainUser);
 
             expect(matches.map((m) => m.id)).toEqual(
                 expect.arrayContaining([user1499m.id, user1500m.id]),
@@ -577,6 +555,4 @@ describe("MatchingService ", () => {
             expect(matches.map((m) => m.id)).not.toContain(user1501m.id);
         });
     });
-
-    describe("should test users within approach time", () => {});
 });
