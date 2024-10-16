@@ -28,10 +28,11 @@ export class UserRepository extends Repository<User> {
         super(User, dataSource.createEntityManager());
     }
 
-    private createUserMatchBaseQuery(userToBeApproached: User): this {
+    private findUserMatchBaseQuery(userToBeApproached: User): this {
         this.queryBuilder = this.createQueryBuilder("user");
         this.addEncounterJoins()
             .excludeUser(userToBeApproached.id)
+            .withNotInBlacklistedRegion()
             .withDesiredGender(userToBeApproached.genderDesire)
             .withGenderDesire(userToBeApproached.gender)
             .withIntentions(userToBeApproached.intentions)
@@ -77,11 +78,11 @@ export class UserRepository extends Repository<User> {
     async getPotentialMatchesForHeatMap(
         userToBeApproached: User,
     ): Promise<User[]> {
-        return this.createUserMatchBaseQuery(userToBeApproached).getMany();
+        return this.findUserMatchBaseQuery(userToBeApproached).getMany();
     }
 
     async getPotentialMatches(userToBeApproached: User): Promise<User[]> {
-        return await this.createUserMatchBaseQuery(userToBeApproached)
+        return await this.findUserMatchBaseQuery(userToBeApproached)
             /** @dev TODO: Make this configurable by users. */
             .withinDistance(userToBeApproached.location, 1500)
             .withUserWantingToBeApproached()
@@ -144,6 +145,23 @@ export class UserRepository extends Repository<User> {
 
     private excludeUser(userId: string): this {
         this.queryBuilder.andWhere("user.id != :userId", { userId });
+        return this;
+    }
+
+    private withNotInBlacklistedRegion(): this {
+        this.queryBuilder.andWhere(`
+            NOT EXISTS (
+                SELECT 1
+                FROM blacklisted_region br
+                WHERE br."userId" = "user"."id"
+                AND ST_DWithin(
+                    "user"."location"::geography,
+                    br."location"::geography,
+                    br."radius"
+                )
+            )
+        `);
+
         return this;
     }
 
