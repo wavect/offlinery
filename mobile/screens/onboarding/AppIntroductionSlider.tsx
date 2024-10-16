@@ -85,7 +85,7 @@ const AppIntroduction: React.FC<AppIntroductionProps> = ({ navigation }) => {
                             color={Color.primary}
                         />
                     </TouchableOpacity>
-                    {currentPage === 4 ? (
+                    {currentPage === swiperComponents.length ? (
                         <>
                             <TouchableOpacity
                                 onPress={proceedToWelcomePage}
