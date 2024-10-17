@@ -355,7 +355,7 @@ const ProfileSettings = ({
                     />
                 </View>
 
-                <View style={styles.dropdownContainer}>
+                <View style={styles.inputContainer}>
                     <Text style={styles.label}>{i18n.t(TR.iAmA)}</Text>
                     <Dropdown
                         testID={TestData.settings.inputIAmA}
@@ -367,7 +367,7 @@ const ProfileSettings = ({
                         style={styles.dropdown}
                         containerStyle={styles.dropdownContainerStyle}
                         placeholderStyle={styles.dropdownPlaceholderStyle}
-                        selectedTextStyle={styles.dropdownSelectedTextStyle}
+                        selectedTextStyle={styles.inputSelectedTextStyle}
                         itemTextStyle={styles.dropdownItemTextStyle}
                     />
                 </View>
@@ -408,13 +408,13 @@ const ProfileSettings = ({
                         text={i18n.t(TR.changePassword)}
                     />
                 </View>
-                <View>
+                <View style={styles.separator}>
                     <Text style={styles.sectionLabel}>
                         {i18n.t(TR.nonNegotiable)}
                     </Text>
                 </View>
-                <View style={styles.dropdownContainer}>
-                    <Text style={styles.label}>{i18n.t(TR.iWantA)}</Text>
+                <View style={styles.nonNegotiableOptionContainer}>
+                    <Text style={styles.cardTitle}>{i18n.t(TR.iWantA)}</Text>
                     <MultiSelect
                         testID={TestData.settings.inputIWantA}
                         data={intentionItems}
@@ -423,15 +423,18 @@ const ProfileSettings = ({
                         value={state.intentions}
                         onChange={setIntentions}
                         style={styles.dropdown}
+                        placeholder={i18n.t(TR.dropdownSelectChoicePlaceholder)}
                         containerStyle={styles.dropdownContainerStyle}
                         placeholderStyle={styles.dropdownPlaceholderStyle}
                         selectedTextStyle={styles.dropdownSelectedTextStyle}
-                        itemTextStyle={styles.dropdownItemTextStyle}
+                        selectedStyle={styles.itemSelectedStyle}
                     />
                 </View>
-                <View>
+                <View style={styles.nonNegotiableOptionContainer}>
                     <View style={styles.row}>
-                        <Text style={styles.label}>{i18n.t(TR.ageRange)}</Text>
+                        <Text style={styles.cardTitle}>
+                            {i18n.t(TR.ageRange)}
+                        </Text>
                         {state.ageRange && (
                             <Text
                                 style={styles.ageText}
@@ -444,8 +447,8 @@ const ProfileSettings = ({
                     />
                 </View>
 
-                <View style={styles.dropdownContainer}>
-                    <Text style={styles.label}>{i18n.t(TR.iLookFor)}</Text>
+                <View style={styles.nonNegotiableOptionContainer}>
+                    <Text style={styles.cardTitle}>{i18n.t(TR.iLookFor)}</Text>
                     <MultiSelect
                         testID={TestData.settings.inputIAmLookingFor}
                         data={genderLookingForItems}
@@ -454,15 +457,16 @@ const ProfileSettings = ({
                         value={state.genderDesire}
                         onChange={setGenderDesire}
                         style={styles.dropdown}
+                        placeholder={i18n.t(TR.dropdownSelectChoicePlaceholder)}
                         containerStyle={styles.dropdownContainerStyle}
                         placeholderStyle={styles.dropdownPlaceholderStyle}
                         selectedTextStyle={styles.dropdownSelectedTextStyle}
-                        itemTextStyle={styles.dropdownItemTextStyle}
+                        selectedStyle={styles.itemSelectedStyle}
                     />
                 </View>
 
-                <View style={styles.dropdownContainer}>
-                    <Text style={styles.label}>{i18n.t(TR.iWantTo)}</Text>
+                <View style={styles.nonNegotiableOptionContainer}>
+                    <Text style={styles.cardTitle}>{i18n.t(TR.iWantTo)}</Text>
                     <Dropdown
                         testID={TestData.settings.inputIWantTo}
                         data={approachOptions}
@@ -470,10 +474,12 @@ const ProfileSettings = ({
                         valueField="value"
                         value={state.approachChoice}
                         onChange={setApproachChoice}
+                        placeholder={i18n.t(TR.dropdownSelectChoicePlaceholder)}
                         style={styles.dropdown}
+                        itemContainerStyle={styles.dropdownItemTextStyle}
                         containerStyle={styles.dropdownContainerStyle}
                         placeholderStyle={styles.dropdownPlaceholderStyle}
-                        selectedTextStyle={styles.dropdownSelectedTextStyle}
+                        selectedTextStyle={styles.inputSelectedTextStyle}
                         itemTextStyle={styles.dropdownItemTextStyle}
                     />
                 </View>
@@ -583,9 +589,20 @@ const styles = StyleSheet.create({
     buttonContainer: {
         alignItems: "center",
     },
-    dropdownContainer: {
+    nonNegotiableOptionContainer: {
+        padding: 24,
         marginBottom: 16,
         zIndex: 1000,
+        backgroundColor: Color.white,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.05,
+        shadowRadius: 3.84,
+        borderRadius: 10,
+        elevation: 5,
     },
     dropdown: {
         marginTop: 8,
@@ -604,10 +621,23 @@ const styles = StyleSheet.create({
     },
     dropdownSelectedTextStyle: {
         fontSize: 16,
+        color: Color.white,
     },
     dropdownItemTextStyle: {
         zIndex: 10000,
         fontSize: 16,
+    },
+    inputSelectedTextStyle: {
+        color: Color.black,
+    },
+    itemSelectedStyle: {
+        borderRadius: 10,
+        backgroundColor: Color.primary,
+        color: Color.red,
+        textShadowColor: Color.white,
+        shadowColor: Color.white,
+        borderColor: Color.primary,
+        borderWidth: 2,
     },
     container: {
         flex: 1,
@@ -704,6 +734,12 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         fontFamily: FontFamily.montserratSemiBold,
     },
+    cardTitle: {
+        fontSize: 18,
+        color: Color.black,
+        marginBottom: 16,
+        fontFamily: FontFamily.montserratSemiBold,
+    },
     dangerButtonsContainer: {
         flexDirection: "column",
     },
@@ -727,6 +763,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 6,
         marginLeft: 10,
+    },
+    separator: {
+        marginTop: 24,
+        marginBottom: 8,
     },
 });
 

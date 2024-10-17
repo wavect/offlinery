@@ -45,7 +45,7 @@ importers:
         specifier: ^5.24.3
         version: 5.24.3(expo@51.0.38(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2)))(react-native@0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       expo:
-        specifier: ~51.0.37
+        specifier: ~51.0.38
         version: 51.0.38(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))
       expo-build-properties:
         specifier: ~0.12.5
@@ -134,9 +134,6 @@ importers:
       react-native-screens:
         specifier: 3.31.1
         version: 3.31.1(react-native@0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react-native-swiper:
-        specifier: ^1.6.0
-        version: 1.6.0
       react-native-web:
         specifier: ~0.19.10
         version: 0.19.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -3800,9 +3797,6 @@ packages:
     peerDependencies:
       react: '*'
       react-native: '*'
-
-  react-native-swiper@1.6.0:
-    resolution: {integrity: sha512-OnkTTZi+9uZUgy0uz1I9oYDhCU3z36lZn+LFsk9FXPRelxb/KeABzvPs3r3SrHWy1aA67KGtSFj0xNK2QD0NJQ==}
 
   react-native-web@0.19.12:
     resolution: {integrity: sha512-o2T0oztoVDQjztt4YksO9S1XRjoH/AqcSvifgWLrPJgGVbMWsfhILgl6lfUdEamVZzZSVV/2gqDVMAk/qq7mZw==}
@@ -9251,10 +9245,6 @@ snapshots:
       react-freeze: 1.0.4(react@18.2.0)
       react-native: 0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.2.79)(react@18.2.0)
       warn-once: 0.1.1
-
-  react-native-swiper@1.6.0:
-    dependencies:
-      prop-types: 15.8.1
 
   react-native-web@0.19.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
