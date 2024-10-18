@@ -8,6 +8,7 @@ import {
     IOButtonSmallVariant,
     OButtonSmall,
 } from "@/components/OButtonSmall/OButtonSmall";
+import { dateStateConfig } from "@/components/OEncounter/Oencounter.config";
 import OMessageModal from "@/components/OMessageModal/OMessageModal";
 import {
     EACTION_ENCOUNTERS,
@@ -21,7 +22,6 @@ import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
 import { getTimeLastMet } from "@/utils/date.utils";
 import { getValidImgURI } from "@/utils/media.utils";
-import { useNavigation } from "@react-navigation/native";
 import * as React from "react";
 import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
@@ -37,25 +37,8 @@ interface ISingleEncounterProps {
 const OEncounter = (props: ISingleEncounterProps) => {
     const { dispatch } = useEncountersContext();
     const { state } = useUserContext();
-    const hookNavigation = useNavigation();
     const { encounterProfile, showActions, navigation } = props;
-    const [dateStates] = useState([
-        {
-            label: i18n.t(TR.encounterInterest.notMet),
-            value: EncounterPublicDTOStatusEnum.not_met,
-            testID: "dropdown-option-not-met",
-        },
-        {
-            label: i18n.t(TR.encounterInterest.metNotInterested),
-            value: EncounterPublicDTOStatusEnum.met_not_interested,
-            testID: "dropdown-option-met-not-interested",
-        },
-        {
-            label: i18n.t(TR.encounterInterest.metInterested),
-            value: EncounterPublicDTOStatusEnum.met_interested,
-            testID: "dropdown-option-met-interested",
-        },
-    ]);
+    const [dateStates] = useState(dateStateConfig);
     const [modalVisible, setModalVisible] = useState(false);
 
     const setDateStatus = async (item: {
