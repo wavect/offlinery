@@ -1,3 +1,5 @@
+import { TR, i18n } from "@/localization/translate.service";
+
 export const getAge = (birthday: Date | string): number => {
     let birthdayDate: Date;
     if (typeof birthday === "string") {
@@ -24,8 +26,6 @@ export const formatDate = (dateString?: string) => {
 };
 
 export const getTimePassedWithText = (
-    i18n: any,
-    TR: any,
     timestampStr: string | undefined,
 ): string => {
     if (!timestampStr) return "N/V";

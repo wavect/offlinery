@@ -112,7 +112,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     </Text>
                     <Text
                         style={styles.encounterInfo}
-                    >{`${getTimePassedWithText(i18n, TR, encounterProfile.lastTimePassedBy)}`}</Text>
+                    >{`${getTimePassedWithText(encounterProfile.lastTimePassedBy)}`}</Text>
 
                     {showActions && (
                         <View style={styles.actionContainer}>

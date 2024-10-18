@@ -137,8 +137,6 @@ const NavigateToApproach = ({
                     {i18n.t(TR.userLocationWasUpdatedLastTime)}
                     <Text style={styles.lastUpdateTimeText}>
                         {getTimePassedWithText(
-                            i18n,
-                            TR,
                             destination?.lastTimeLocationUpdated?.toISOString(),
                         )}
                     </Text>
