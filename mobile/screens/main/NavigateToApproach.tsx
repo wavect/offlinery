@@ -105,12 +105,13 @@ const NavigateToApproach = ({
                 navigation={navigation}
                 publicProfile={getPublicProfileFromEncounter(navigateToPerson)}
                 showOpenProfileButton={true}
-                secondButton={{
-                    onPress: openMapsApp,
-                    disabled: !destination,
-                    text: `${i18n.t(TR.navigateTo)}`,
-                    style: styles.navigateBtn,
-                }}
+                // TODO navigate to disabled for now
+                // secondButton={{
+                //     onPress: openMapsApp,
+                //     disabled: !destination,
+                //     text: `${i18n.t(TR.navigateTo)}`,
+                //     style: styles.navigateBtn,
+                // }}
             />
             <MapView
                 ref={mapRef}

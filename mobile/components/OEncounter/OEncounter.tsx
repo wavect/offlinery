@@ -2,7 +2,6 @@ import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import {
     EncounterPublicDTOStatusEnum,
     UpdateEncounterStatusDTO,
-    UserPrivateDTOApproachChoiceEnum,
 } from "@/api/gen/src";
 import {
     IOButtonSmallVariant,
@@ -177,10 +176,11 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                         adjustsFontSizeToFit={true}
                                     />
                                 )}
-                                {state.approachChoice !==
-                                    UserPrivateDTOApproachChoiceEnum.be_approached &&
-                                    dateStatus ===
-                                        EncounterPublicDTOStatusEnum.not_met &&
+                                {
+                                    // state.approachChoice !==
+                                    // UserPrivateDTOApproachChoiceEnum.be_approached &&
+                                    // dateStatus ===
+                                    //     EncounterPublicDTOStatusEnum.not_met &&
                                     encounterProfile.isNearbyRightNow && (
                                         <OButtonSmall
                                             label={i18n.t(TR.navigate)}
@@ -202,7 +202,8 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                             }
                                             adjustsFontSizeToFit={true}
                                         />
-                                    )}
+                                    )
+                                }
                             </View>
                         </View>
                     )}
