@@ -242,10 +242,12 @@ export const de: Language = {
     accountDeletionRequestedAlert:
         "Wir haben dir eine E-Mail geschickt. Klick auf den Link, um deinen Account unwiderruflich zu löschen.",
     justNow: "gerade eben",
+    minutesAgo: "Minute(n) her",
     hoursAgo: "Stunde(n) her",
     daysAgo: "Tag(e) her",
     weeksAgo: "Woche(n) her",
     monthsAgo: "Monat(e) her",
     yearsAgo: "Jahr(e) her",
     dropdownSelectChoicePlaceholder: "Bitte wähle",
+    userLocationWasUpdatedLastTime: "Zuletzt hier gesehen: ",
 };

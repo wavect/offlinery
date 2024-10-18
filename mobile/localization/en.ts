@@ -237,10 +237,12 @@ export const en = {
     accountDeletionRequestedAlert:
         "We've sent you a link to your email. Click on the link to irrevocably delete your account.",
     justNow: "just now",
+    minutesAgo: "minute(s) ago",
     hoursAgo: "hour(s) ago",
     daysAgo: "day(s) ago",
     weeksAgo: "week(s) ago",
     monthsAgo: "month(s) ago",
     yearsAgo: "year(s) ago",
     dropdownSelectChoicePlaceholder: "Select an option",
+    userLocationWasUpdatedLastTime: "Last time seen here: ",
 };

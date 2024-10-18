@@ -8,6 +8,7 @@ import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator
 import { ROUTES } from "@/screens/routes";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
+import { getTimePassedWithText } from "@/utils/date.utils";
 import { getMapProvider } from "@/utils/map-provider";
 import { calculateDistance, getRegionForCoordinates } from "@/utils/map.utils";
 import * as Location from "expo-location";
@@ -35,31 +36,49 @@ const NavigateToApproach = ({
     const mapRef = React.useRef(null);
     const [distance, setDistance] = useState<number | null>(null);
     const [destination, setDestination] = useState<{
+        lastTimeLocationUpdated: Date;
         longitude: number;
         latitude: number;
     } | null>(null);
 
     useEffect(() => {
-        (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== "granted") {
-                alert(i18n.t(TR.permissionToLocationDenied));
-                return;
-            }
-
-            const location = await Location.getCurrentPositionAsync({
-                accuracy: LocationAccuracy.BestForNavigation,
-            });
-            setLocation(location);
-
-            const encounterLoc =
-                await API.encounter.encounterControllerGetLocationOfEncounter({
-                    userId: state.id!,
-                    encounterId: navigateToPerson.encounterId,
+        let intervalId;
+        const fetchLocations = async () => {
+            try {
+                let { status } =
+                    await Location.requestForegroundPermissionsAsync();
+                if (status !== "granted") {
+                    alert(i18n.t(TR.permissionToLocationDenied));
+                    return;
+                }
+                const location = await Location.getCurrentPositionAsync({
+                    accuracy: LocationAccuracy.BestForNavigation,
                 });
-            setDestination(encounterLoc);
-        })();
-    }, []);
+                setLocation(location);
+
+                /** @DEV name might be misleading, this is actually the REAL location of the other user, not the location where they met. */
+                const encounterLoc =
+                    await API.encounter.encounterControllerGetLocationOfEncounter(
+                        {
+                            userId: state.id!,
+                            encounterId: navigateToPerson.encounterId,
+                        },
+                    );
+                setDestination(encounterLoc);
+            } catch (error) {
+                console.error("Error fetching locations:", error);
+            }
+        };
+        fetchLocations();
+        intervalId = setInterval(fetchLocations, 5000);
+
+        /** @DEV - clear the interval if component is unmounted */
+        return () => {
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
+        };
+    }, [state.id, navigateToPerson.encounterId]);
 
     useEffect(() => {
         if (location && destination) {
@@ -113,6 +132,18 @@ const NavigateToApproach = ({
                 //     style: styles.navigateBtn,
                 // }}
             />
+            {destination?.lastTimeLocationUpdated && (
+                <Text style={styles.lastUpdateText}>
+                    {i18n.t(TR.userLocationWasUpdatedLastTime)}
+                    <Text style={styles.lastUpdateTimeText}>
+                        {getTimePassedWithText(
+                            i18n,
+                            TR,
+                            destination?.lastTimeLocationUpdated?.toISOString(),
+                        )}
+                    </Text>
+                </Text>
+            )}
             <MapView
                 ref={mapRef}
                 style={styles.map}
@@ -195,6 +226,13 @@ const styles = StyleSheet.create({
         color: Color.primary,
         fontFamily: FontFamily.montserratRegular,
         fontSize: FontSize.size_sm,
+    },
+    lastUpdateText: {
+        textAlign: "center",
+        marginBottom: 10,
+    },
+    lastUpdateTimeText: {
+        color: Color.primary,
     },
 });
 

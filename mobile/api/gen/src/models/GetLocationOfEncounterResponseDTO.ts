@@ -30,6 +30,12 @@ export interface GetLocationOfEncounterResponseDTO {
      * @memberof GetLocationOfEncounterResponseDTO
      */
     longitude: number;
+    /**
+     * Last time this location was updated
+     * @type {Date}
+     * @memberof GetLocationOfEncounterResponseDTO
+     */
+    lastTimeLocationUpdated: Date;
 }
 
 /**
@@ -40,6 +46,11 @@ export function instanceOfGetLocationOfEncounterResponseDTO(
 ): value is GetLocationOfEncounterResponseDTO {
     if (!("latitude" in value) || value["latitude"] === undefined) return false;
     if (!("longitude" in value) || value["longitude"] === undefined)
+        return false;
+    if (
+        !("lastTimeLocationUpdated" in value) ||
+        value["lastTimeLocationUpdated"] === undefined
+    )
         return false;
     return true;
 }
@@ -60,6 +71,7 @@ export function GetLocationOfEncounterResponseDTOFromJSONTyped(
     return {
         latitude: json["latitude"],
         longitude: json["longitude"],
+        lastTimeLocationUpdated: new Date(json["lastTimeLocationUpdated"]),
     };
 }
 
@@ -72,5 +84,6 @@ export function GetLocationOfEncounterResponseDTOToJSON(
     return {
         latitude: value["latitude"],
         longitude: value["longitude"],
+        lastTimeLocationUpdated: value["lastTimeLocationUpdated"].toISOString(),
     };
 }

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, Max, Min } from "class-validator";
+import { IsDate, IsNumber, Max, Min } from "class-validator";
 
 export class GetLocationOfEncounterResponseDTO {
     @ApiProperty({
@@ -23,4 +23,10 @@ export class GetLocationOfEncounterResponseDTO {
     @Min(-180)
     @Max(180)
     longitude: number;
+
+    @ApiProperty({
+        description: "Last time location was updated",
+    })
+    @IsDate()
+    lastTimeLocationUpdated: Date;
 }

@@ -18,7 +18,7 @@ import { ROUTES } from "@/screens/routes";
 import { TestData } from "@/tests/src/accessors";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
-import { getTimeLastMet } from "@/utils/date.utils";
+import { getTimePassedWithText } from "@/utils/date.utils";
 import { getValidImgURI } from "@/utils/media.utils";
 import { useNavigation } from "@react-navigation/native";
 import * as React from "react";
@@ -111,7 +111,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     </Text>
                     <Text
                         style={styles.encounterInfo}
-                    >{`${getTimeLastMet(i18n, TR, encounterProfile.lastTimePassedBy)}`}</Text>
+                    >{`${getTimePassedWithText(i18n, TR, encounterProfile.lastTimePassedBy)}`}</Text>
 
                     {showActions && (
                         <View style={styles.actionContainer}>
