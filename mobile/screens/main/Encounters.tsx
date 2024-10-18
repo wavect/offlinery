@@ -100,7 +100,6 @@ const Encounters = ({
                     ),
                 });
             });
-
             dispatch({
                 type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
                 payload: mappedEncounters,
@@ -201,7 +200,6 @@ const Encounters = ({
                         />
                     </View>
                 </View>
-
                 {renderContent()}
             </View>
         </OPageContainer>

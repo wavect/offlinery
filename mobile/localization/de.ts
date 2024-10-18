@@ -24,7 +24,7 @@ export const de: Language = {
     yourEmail: "Deine E-Mail",
     email: "E-Mail",
     yourPassword: "Dein Passwort",
-    resetPassword: "Password zurücksetzen",
+    resetPassword: "Passwort zurücksetzen",
     passwordForgotten: "Passwort vergessen?",
     password: "Passwort",
     houseRules: {

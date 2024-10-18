@@ -102,7 +102,6 @@ const ResetPassword = ({
                     onPress={handleSubmit}
                 />
             }
-            subtitle={i18n.t(TR.verificationCodeSent)}
         >
             <OTextInput
                 value={state.email}
@@ -125,6 +124,9 @@ const ResetPassword = ({
                 <Text style={styles.errorMessage}>{errorMessage}</Text>
             )}
 
+            <Text style={styles.sixDigitCodeExplainer}>
+                {i18n.t(TR.verificationCodeSent)}
+            </Text>
             <OSplitInput
                 disableRequestCode={!isValidEmail(email)}
                 sendCodeAutomatically={false}
@@ -161,6 +163,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: FontFamily.montserratSemiBold,
         textAlign: "left",
+        marginBottom: 16,
+    },
+    sixDigitCodeExplainer: {
+        fontSize: 16,
+        color: Color.gray,
+        marginTop: 4,
         marginBottom: 16,
     },
 });
