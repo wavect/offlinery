@@ -271,8 +271,6 @@ export const de: Language = {
     page3Title: "Was wir brauchen",
     page3Description:
         "Damit dies funktioniert, muss Offlinery immer wissen, wo du bist. Du kannst das Tracking einfach pausieren und konfigurieren, wann und wie du Leute treffen möchtest.",
-    page3AdditionalText:
-        "Bitte klicke immer auf ERLAUBEN, wenn dein Telefon dich nach deinem Standort fragt.",
     page3AddText1: "Bitte ",
     page3AddText2: "klicke ",
     page3AddText3: "immer auf ",

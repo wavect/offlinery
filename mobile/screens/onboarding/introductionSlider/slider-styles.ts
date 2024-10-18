@@ -41,8 +41,10 @@ export const introductionSliderStyles = StyleSheet.create({
         marginBottom: 20,
     },
     slide: {
-        padding: 24,
         flex: 1,
+        paddingRight: 24,
+        paddingLeft: 24,
+        paddingBottom: 0,
         textAlign: "left",
     },
     skipButton: {
@@ -159,5 +161,14 @@ export const introductionSliderStyles = StyleSheet.create({
     },
     invisibleButton: {
         opacity: 0,
+    },
+    bottomAdditionalContainer: {
+        position: "absolute",
+        left: "0%",
+        right: "0%",
+        bottom: 10,
+    },
+    fixedSizeViewContainer: {
+        minHeight: 100,
     },
 });

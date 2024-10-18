@@ -12,33 +12,37 @@ export const IntroductionSliderMeetInRealLife: React.FC = () => {
                 <Image source={img} style={styles.image} resizeMode="contain" />
             </View>
             <Text style={styles.title}>{i18n.t(TR.page1Title)}</Text>
-            <Text style={styles.description}>
-                {i18n.t(TR.page1DescriptionFirstSentence)}
-            </Text>
-            <Text style={styles.description}>
-                {i18n.t(TR.page1DescriptionSecondSentence)}
-            </Text>
-            <Text style={styles.description}>
-                {i18n.t(TR.page1DescriptionThirdSentence)}
-            </Text>
-            <View style={styles.divideContainer}>
-                <View style={styles.divider} />
-            </View>
-            <View style={styles.oneLineTextContainer}>
-                <Text style={styles.additionalTextBold}>
-                    {i18n.t(TR.page1AddText1)}
+            <View style={styles.fixedSizeViewContainer}>
+                <Text style={styles.description}>
+                    {i18n.t(TR.page1DescriptionFirstSentence)}
                 </Text>
-                <Text style={styles.additionalText}>
-                    {i18n.t(TR.page1AddText2)}
+                <Text style={styles.description}>
+                    {i18n.t(TR.page1DescriptionSecondSentence)}
                 </Text>
-                <Text style={styles.additionalTextBold}>
-                    {i18n.t(TR.page1AddText3)}
+                <Text style={styles.description}>
+                    {i18n.t(TR.page1DescriptionThirdSentence)}
                 </Text>
             </View>
-            <View style={styles.oneLineTextContainer}>
-                <Text style={styles.additionalText}>
-                    {i18n.t(TR.page1AddText4)}
-                </Text>
+            <View style={styles.bottomAdditionalContainer}>
+                <View style={styles.divideContainer}>
+                    <View style={styles.divider} />
+                </View>
+                <View style={styles.oneLineTextContainer}>
+                    <Text style={styles.additionalTextBold}>
+                        {i18n.t(TR.page1AddText1)}
+                    </Text>
+                    <Text style={styles.additionalText}>
+                        {i18n.t(TR.page1AddText2)}
+                    </Text>
+                    <Text style={styles.additionalTextBold}>
+                        {i18n.t(TR.page1AddText3)}
+                    </Text>
+                </View>
+                <View style={styles.oneLineTextContainer}>
+                    <Text style={styles.additionalText}>
+                        {i18n.t(TR.page1AddText4)}
+                    </Text>
+                </View>
             </View>
         </View>
     );

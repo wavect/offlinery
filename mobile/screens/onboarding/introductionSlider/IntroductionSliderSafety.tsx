@@ -12,21 +12,25 @@ export const IntroductionSliderSafety: React.FC = () => {
                 <Image source={img} style={styles.image} resizeMode="contain" />
             </View>
             <Text style={styles.title}>{i18n.t(TR.page4Title)}</Text>
-            <Text style={styles.description}>
-                {i18n.t(TR.page4Description)}
-            </Text>
-            <View style={styles.divideContainer}>
-                <View style={styles.divider} />
-            </View>
-            <View style={styles.oneLineTextContainer}>
-                <Text style={styles.additionalText}>
-                    {i18n.t(TR.page4AddText1)}
+            <View style={styles.fixedSizeViewContainer}>
+                <Text style={styles.description}>
+                    {i18n.t(TR.page4Description)}
                 </Text>
             </View>
-            <View style={styles.oneLineTextContainer}>
-                <Text style={styles.additionalTextBold}>
-                    {i18n.t(TR.page4AddText2)}
-                </Text>
+            <View style={styles.bottomAdditionalContainer}>
+                <View style={styles.divideContainer}>
+                    <View style={styles.divider} />
+                </View>
+                <View style={styles.oneLineTextContainer}>
+                    <Text style={styles.additionalText}>
+                        {i18n.t(TR.page4AddText1)}
+                    </Text>
+                </View>
+                <View style={styles.oneLineTextContainer}>
+                    <Text style={styles.additionalTextBold}>
+                        {i18n.t(TR.page4AddText2)}
+                    </Text>
+                </View>
             </View>
         </View>
     );

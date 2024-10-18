@@ -12,35 +12,34 @@ export const IntroductionSliderWhatWeNeed: React.FC = () => {
                 <Image source={img} style={styles.image} resizeMode="contain" />
             </View>
             <Text style={styles.title}>{i18n.t(TR.page3Title)}</Text>
-            <Text style={styles.description}>
-                {i18n.t(TR.page3Description)}
-            </Text>
-            <View style={styles.divideContainer}>
-                <View style={styles.divider} />
-            </View>
-            <View style={styles.oneLineTextContainer}>
-                <Text style={styles.additionalText}>
-                    {i18n.t(TR.page3AddText1)}
-                </Text>
-                <Text style={styles.additionalTextBold}>
-                    {i18n.t(TR.page3AddText2)}
-                </Text>
-                <Text style={styles.additionalText}>
-                    {i18n.t(TR.page3AddText3)}
-                </Text>
-                <Text style={styles.additionalTextBold}>
-                    {i18n.t(TR.page3AddText4)}
+            <View style={styles.fixedSizeViewContainer}>
+                <Text style={styles.description}>
+                    {i18n.t(TR.page3Description)}
                 </Text>
             </View>
-            <View style={styles.oneLineTextContainer}>
-                <Text style={styles.additionalText}>
-                    {i18n.t(TR.page3AddText5)}
-                </Text>
-            </View>
-            <View style={styles.oneLineTextContainer}>
-                <Text style={styles.additionalText}>
-                    {i18n.t(TR.page3AddText6)}
-                </Text>
+            <View style={styles.bottomAdditionalContainer}>
+                <View style={styles.divideContainer}>
+                    <View style={styles.divider} />
+                </View>
+                <View style={styles.oneLineTextContainer}>
+                    <Text style={styles.additionalText}>
+                        {i18n.t(TR.page3AddText1)}
+                    </Text>
+                    <Text style={styles.additionalTextBold}>
+                        {i18n.t(TR.page3AddText2)}
+                    </Text>
+                    <Text style={styles.additionalText}>
+                        {i18n.t(TR.page3AddText3)}
+                    </Text>
+                    <Text style={styles.additionalTextBold}>
+                        {i18n.t(TR.page3AddText4)}
+                    </Text>
+                </View>
+                <View style={styles.oneLineTextContainer}>
+                    <Text style={styles.additionalText}>
+                        {i18n.t(TR.page3AddText5)}
+                    </Text>
+                </View>
             </View>
         </View>
     );

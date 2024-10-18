@@ -265,8 +265,6 @@ export const en = {
     page3Title: "What we NEED",
     page3Description:
         "For this to work Offlinery always need to know where you are. You can easily pause tracking and configure when and how you want to meet people.",
-    page3AdditionalText:
-        "Please always click ALLOW whenever your phone asks you about your location.",
     page3AddText1: "Please ",
     page3AddText2: "always ",
     page3AddText3: "click ",

@@ -55,9 +55,11 @@ const AppIntroduction: React.FC<AppIntroductionProps> = ({ navigation }) => {
                 <View style={styles.header}>
                     <Text style={styles.pageIndicator}>{currentPage}/4</Text>
                     <TouchableOpacity onPress={proceedToWelcomePage}>
-                        <Text style={styles.skipLink}>
-                            {i18n.t(TR.appIntroductionSkip)}
-                        </Text>
+                        {currentPage !== swiperComponents.length && (
+                            <Text style={styles.skipLink}>
+                                {i18n.t(TR.appIntroductionSkip)}
+                            </Text>
+                        )}
                     </TouchableOpacity>
                 </View>
                 <Swiper
