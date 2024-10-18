@@ -30,6 +30,7 @@ export type MainStackParamList = {
     [ROUTES.Onboarding.DontApproachMeHere]: undefined;
     [ROUTES.Onboarding.BioLetThemKnow]: undefined;
     [ROUTES.Onboarding.WaitingVerification]: { overrideLabel?: string };
+    [ROUTES.Onboarding.AppIntroductionSlider]: undefined;
     [ROUTES.MainTabView]: undefined;
 };
 export const MainStack = createStackNavigator<MainStackParamList>();

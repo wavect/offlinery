@@ -7,6 +7,8 @@ import Welcome from "./screens/Welcome";
 
 import { TR, i18n } from "@/localization/translate.service";
 import ResetPassword from "@/screens/ResetPassword";
+import AppIntroductionSwiperScreen from "@/screens/onboarding/AppIntroductionSlider";
+import { getDeviceUserHasSeenIntro } from "@/services/storage.service";
 import {
     Montserrat_300Light,
     Montserrat_400Regular,
@@ -117,14 +119,24 @@ export default function App() {
         return <Splash />;
     }
 
+    /** @DEV Custom 4-Slider on App Start is shown to the user if unseen */
+    const userHasSeenIntro = getDeviceUserHasSeenIntro();
+    const initialComponent = userHasSeenIntro
+        ? ROUTES.Welcome
+        : ROUTES.Onboarding.AppIntroductionSlider;
+
     return (
         <GlobalErrorHandler>
             <NavigationContainer>
                 <UserProvider>
                     <MainStack.Navigator
-                        initialRouteName={ROUTES.Welcome}
+                        initialRouteName={initialComponent}
                         screenOptions={NO_HEADER}
                     >
+                        <MainStack.Screen
+                            name={ROUTES.Onboarding.AppIntroductionSlider}
+                            component={AppIntroductionSwiperScreen}
+                        />
                         <MainStack.Screen
                             name={ROUTES.Welcome}
                             component={Welcome}
