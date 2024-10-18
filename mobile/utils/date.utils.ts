@@ -1,3 +1,5 @@
+import { TR, i18n } from "@/localization/translate.service";
+
 export const getAge = (birthday: Date | string): number => {
     let birthdayDate: Date;
     if (typeof birthday === "string") {
@@ -23,34 +25,35 @@ export const formatDate = (dateString?: string) => {
     return `${day}.${month}.${year}`;
 };
 
-export const getTimeLastMet = (
-    i18n: any,
-    TR: any,
+export const getTimePassedWithText = (
     timestampStr: string | undefined,
 ): string => {
-    if (!timestampStr) return "";
+    if (!timestampStr) return "N/V";
 
     const timestamp = new Date(timestampStr);
     const now = new Date();
     const diff = now.getTime() - timestamp.getTime();
-    const minutes = diff / 60000;
-    const hours = minutes / 60;
-    const days = hours / 24;
-    const weeks = days / 7;
-    const months = days / 30.44;
-    const years = days / 365.25;
 
-    if (minutes < 60) {
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+    const months = Math.floor(days / 30.44);
+    const years = Math.floor(days / 365.25);
+
+    if (minutes < 5) {
         return i18n.t(TR.justNow);
+    } else if (minutes < 60) {
+        return `${minutes} ${i18n.t(TR.minutesAgo)}`;
     } else if (hours < 24) {
-        return `${Math.floor(hours)} ${i18n.t(TR.hoursAgo)}`;
+        return `${hours} ${i18n.t(TR.hoursAgo)}`;
     } else if (days < 7) {
-        return `${Math.floor(days)} ${i18n.t(TR.daysAgo)}`;
+        return `${days} ${i18n.t(TR.daysAgo)}`;
     } else if (weeks < 4) {
-        return `${Math.floor(weeks)} ${i18n.t(TR.weeksAgo)}`;
+        return `${weeks} ${i18n.t(TR.weeksAgo)}`;
     } else if (months < 12) {
-        return `${Math.floor(months)} ${i18n.t(TR.monthsAgo)}`;
+        return `${months} ${i18n.t(TR.monthsAgo)}`;
     } else {
-        return `${Math.floor(years)} ${i18n.t(TR.yearsAgo)}`;
+        return `${years} ${i18n.t(TR.yearsAgo)}`;
     }
 };

@@ -546,6 +546,7 @@ export class UserService {
         }
 
         user.location = { type: "Point", coordinates: [longitude, latitude] };
+        user.locationLastTimeUpdated = new Date();
         const updatedUser = await this.userRepository.save(user);
 
         // Check for matches and send notifications (from a semantic perspective we only send notifications if a person to be approached sends a location update)

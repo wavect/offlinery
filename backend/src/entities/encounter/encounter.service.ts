@@ -188,6 +188,7 @@ export class EncounterService {
             );
         }
         return {
+            lastTimeLocationUpdated: otherUser.locationLastTimeUpdated,
             longitude: otherUser.location.coordinates[0],
             latitude: otherUser.location.coordinates[1],
         };

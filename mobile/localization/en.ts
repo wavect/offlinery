@@ -237,6 +237,7 @@ export const en = {
     accountDeletionRequestedAlert:
         "We've sent you a link to your email. Click on the link to irrevocably delete your account.",
     justNow: "just now",
+    minutesAgo: "minute(s) ago",
     hoursAgo: "hour(s) ago",
     daysAgo: "day(s) ago",
     weeksAgo: "week(s) ago",
@@ -278,4 +279,6 @@ export const en = {
     page4AddText1: "This won't work if you don't feel",
     page4AddText2: "safe at all times.",
     letsMeetIRL: "Lets Meet IRL",
+    dropdownSelectChoicePlaceholder: "Select an option",
+    userLocationWasUpdatedLastTime: "Last time seen here: ",
 };

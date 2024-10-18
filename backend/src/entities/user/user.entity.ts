@@ -199,6 +199,9 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
     location: Point;
 
     @Column({ nullable: true })
+    locationLastTimeUpdated: Date;
+
+    @Column({ nullable: true })
     preferredLanguage: ELanguage;
 
     @Column({ nullable: true })

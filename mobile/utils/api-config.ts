@@ -94,7 +94,6 @@ class ApiManager {
     }
 
     private async ensureValidToken(): Promise<string> {
-        apiConfigLogger("Ensuring Valid Token");
         let jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
 
         if (jwtToken && !jwtExpiresSoon(jwtToken)) {
