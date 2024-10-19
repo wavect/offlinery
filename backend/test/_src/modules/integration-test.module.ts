@@ -3,6 +3,9 @@ import { Encounter } from "@/entities/encounter/encounter.entity";
 import { MapModule } from "@/entities/map/map.module";
 import { Message } from "@/entities/messages/message.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
+import { PendingUserModule } from "@/entities/pending-user/pending-user.module";
+import { UserFeedback } from "@/entities/user-feedback/user-feedback.entity";
+import { UserFeedbackModule } from "@/entities/user-feedback/user-feedback.module";
 import { UserReport } from "@/entities/user-report/user-report.entity";
 import { UserReportModule } from "@/entities/user-report/user-report.module";
 import { User } from "@/entities/user/user.entity";
@@ -62,6 +65,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
                     Encounter,
                     Message,
                     PendingUser,
+                    UserFeedback,
                 ],
                 synchronize: true,
                 dropSchema: true,
@@ -74,6 +78,8 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
             UserReportModule,
             MapModule,
             MockMatchingModule,
+            UserFeedbackModule,
+            PendingUserModule,
             MailerModule.forRoot({
                 transport: {
                     host: TYPED_ENV.EMAIL_HOST,
