@@ -1,4 +1,5 @@
 import { User } from "@/entities/user/user.entity";
+import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
 import {
     EApproachChoice,
@@ -130,8 +131,7 @@ describe("service ", () => {
                 expect.arrayContaining([userId.id, userId2.id]),
             );
         });
-
-        it("Should find users if man and woman is desired", async () => {
+        it("Should only find users if man and woman is desired", async () => {
             const userId = await userFactory.persistNewTestUser({
                 gender: EGender.MAN,
                 genderDesire: [EGender.MAN, EGender.WOMAN],
@@ -150,24 +150,6 @@ describe("service ", () => {
                 expect.arrayContaining([userId2.id]),
             );
         });
-
-        it("Should not find users if genderDesire of personB is wrong.", async () => {
-            const userId = await userFactory.persistNewTestUser({
-                gender: EGender.MAN,
-                genderDesire: [EGender.MAN, EGender.WOMAN],
-            });
-            await userFactory.persistNewTestUser({
-                gender: EGender.WOMAN,
-                genderDesire: [EGender.WOMAN],
-            });
-
-            const matches = Array.from(
-                (await service.findNearbyMatches(userId)).values(),
-            );
-
-            expect(matches.length).toBe(0);
-        });
-
         it("Should only find users that are live", async () => {
             await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
@@ -250,40 +232,25 @@ describe("service ", () => {
                 expect.arrayContaining([]),
             );
         });
+        it("Should not find users if genderDesire of personB is wrong.", async () => {
+            const userId = await userFactory.persistNewTestUser({
+                gender: EGender.MAN,
+                genderDesire: [EGender.MAN, EGender.WOMAN],
+            });
+            await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.WOMAN],
+            });
+
+            const matches = Array.from(
+                (await service.findNearbyMatches(userId)).values(),
+            );
+
+            expect(matches.length).toBe(0);
+        });
     });
 
     describe("should test users within blacklisted regions", () => {
-        it("should not return a match for a blacklisted region", async () => {
-            /** @DEV random user sitting at home (in blacklisted region) */
-            const userInBlacklistedRegion =
-                await userFactory.persistNewTestUser({
-                    location: new PointBuilder().build(0, 0),
-                    blacklistedRegions: [
-                        new BlacklistedRegionBuilder()
-                            .withLocation(new PointBuilder().build(0, 0))
-                            .withRadius(10000)
-                            .build(),
-                    ],
-                });
-
-            const userToMatch = await userFactory.persistNewTestUser({
-                location: testingMainUser.location,
-            });
-
-            /** @DEV random user in another town */
-            await userFactory.persistNewTestUser({
-                location: new PointBuilder().build(100, 100),
-            });
-
-            const matches = await service.findNearbyMatches(testingMainUser);
-
-            expect(matches.map((m) => m.id)).toEqual(
-                expect.arrayContaining([userToMatch.id]),
-            );
-            expect(matches.map((m) => m.id)).not.toContain(
-                userInBlacklistedRegion.id,
-            );
-        });
         it("should return nearby users that are NOT in their blacklisted regions", async () => {
             /** @DEV user not in his blacklisted region, but nearby */
             await userFactory.persistNewTestUser({
@@ -399,6 +366,37 @@ describe("service ", () => {
                 (await service.findNearbyMatches(testingMainUser)).length,
             ).toEqual(1);
         });
+        it("should not return a match for a blacklisted region", async () => {
+            /** @DEV random user sitting at home (in blacklisted region) */
+            const userInBlacklistedRegion =
+                await userFactory.persistNewTestUser({
+                    location: new PointBuilder().build(0, 0),
+                    blacklistedRegions: [
+                        new BlacklistedRegionBuilder()
+                            .withLocation(new PointBuilder().build(0, 0))
+                            .withRadius(10000)
+                            .build(),
+                    ],
+                });
+
+            const userToMatch = await userFactory.persistNewTestUser({
+                location: testingMainUser.location,
+            });
+
+            /** @DEV random user in another town */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(100, 100),
+            });
+
+            const matches = await service.findNearbyMatches(testingMainUser);
+
+            expect(matches.map((m) => m.id)).toEqual(
+                expect.arrayContaining([userToMatch.id]),
+            );
+            expect(matches.map((m) => m.id)).not.toContain(
+                userInBlacklistedRegion.id,
+            );
+        });
     });
 
     describe("should test heatmap-match algorithm", () => {
@@ -483,8 +481,7 @@ describe("service ", () => {
             );
             expect(matches.length).toEqual(3);
         });
-
-        it("should find user when age is upper bound", async () => {
+        it("should only find user when age is upper bound", async () => {
             const upperBound = 35;
             const user1 = await userFactory.persistNewTestUser({
                 birthDay: new Date(`2000-01-01`),
@@ -505,7 +502,6 @@ describe("service ", () => {
                 expect.arrayContaining([user2.id]),
             );
         });
-
         it("Should not find users that are ghost", async () => {
             await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
@@ -530,7 +526,7 @@ describe("service ", () => {
         /** @DEV Once we introduce that users can configures this, ensure that this value comes from the user object.
          *  @DEV A failing test will indicate this regardless. */
         const maxDistUser = 1500;
-        const DPM = 1 / 111139; // degress per meter
+        const DPM = 1 / 111139;
 
         it("Should not consider users locations for heatmap", async () => {
             await userFactory.persistNewTestUser({
@@ -546,7 +542,6 @@ describe("service ", () => {
             const matches = await service.findHeatmapMatches(testingMainUser);
             expect(matches.length).toEqual(3);
         });
-
         it("Should consider users locations for nearby-matches", async () => {
             const user1 = await userFactory.persistNewTestUser({
                 location: new PointBuilder().build(0, maxDistUser * 0.5 * DPM), // 50% of max distance
@@ -564,7 +559,6 @@ describe("service ", () => {
             );
             expect(matches.length).toEqual(2);
         });
-
         it("Should consider precise distance cases for nearby-matches within maxDistUser", async () => {
             const testingMainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
@@ -594,6 +588,64 @@ describe("service ", () => {
                 expect.arrayContaining([user1499m.id, user1500m.id]),
             );
             expect(matches.map((m) => m.id)).not.toContain(user1501m.id);
+        });
+    });
+
+    describe("should tests users that approach each other", () => {
+        it("should test happy path: one user approaches another and gets a notification", async () => {
+            const userService = testingModule.get<UserService>(UserService);
+            const matchingService =
+                testingModule.get<MatchingService>(MatchingService);
+            const girlWantsToBeApproached =
+                await userFactory.persistNewTestUser({
+                    location: new PointBuilder().build(0.005, 0.005),
+                    gender: EGender.WOMAN,
+                    genderDesire: [EGender.MAN],
+                    approachChoice: EApproachChoice.BE_APPROACHED,
+                });
+
+            const preDefinedLocations = [
+                [0.00001, 0.00001],
+                [0.0001, 0.0001],
+                [0.001, 0.001],
+            ];
+
+            // Spy on matchingService.notifyMatches
+            const notifyMatchesSpy = jest.spyOn(
+                matchingService,
+                "notifyMatches",
+            );
+
+            /*** @DEV User approaches another user */
+            for (let i = 0; i < 3; i++) {
+                await userService.updateLocation(testingMainUser.id, {
+                    latitude: preDefinedLocations[i][0],
+                    longitude: preDefinedLocations[i][1],
+                });
+
+                testingMainUser = await userService.findUserById(
+                    testingMainUser.id,
+                );
+                expect(testingMainUser.location.coordinates[0]).toEqual(
+                    preDefinedLocations[i][0],
+                );
+                expect(testingMainUser.location.coordinates[1]).toEqual(
+                    preDefinedLocations[i][1],
+                );
+            }
+
+            /*** @DEV Now the user TO BE approach slightly moves, triggering a location update and notification */
+            await userService.updateLocation(girlWantsToBeApproached.id, {
+                longitude: 0.001,
+                latitude: 0.001,
+            });
+
+            /** @DEV User that approaches, receives a notification about a girl nearby */
+            expect(notifyMatchesSpy).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    id: girlWantsToBeApproached.id,
+                }),
+            );
         });
     });
 });
