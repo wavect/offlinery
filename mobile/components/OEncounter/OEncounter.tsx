@@ -8,7 +8,7 @@ import {
     IOButtonSmallVariant,
     OButtonSmall,
 } from "@/components/OButtonSmall/OButtonSmall";
-import { dateStateConfig } from "@/components/OEncounter/Oencounter.config";
+import { dateStateConfig } from "@/components/OEncounter/OEncounter.config";
 import OMessageModal from "@/components/OMessageModal/OMessageModal";
 import {
     EACTION_ENCOUNTERS,

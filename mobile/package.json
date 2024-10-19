@@ -19,7 +19,7 @@
         "pre-commit": "npx prettier . --write",
         "e2e:ios:build": "expo run:ios --configuration Release",
         "e2e:ios": "EXPO_PUBLIC_ENVIRONMENT=development maestro test  --debug-output=true -e APP_PATH=ios/build/Build/Products/Debug-iphonesimulator/Offlinery.app -e EXPO_PUBLIC_ENVIRONMENT=development ./tests/e2e",
-        "e2e:ios:single": "EXPO_PUBLIC_ENVIRONMENT=development maestro test -e APP_PATH=ios/build/Build/Products/Debug-iphonesimulator/Offlinery.app -e EXPO_PUBLIC_ENVIRONMENT=development ./tests/e2e/go-live-mode.e2e.yaml"
+        "e2e:ios:single": "EXPO_PUBLIC_ENVIRONMENT=development maestro test -e APP_PATH=ios/build/Build/Products/Debug-iphonesimulator/Offlinery.app -e EXPO_PUBLIC_ENVIRONMENT=development ./tests/e2e/basic-location-updates.e2e.yaml"
     },
     "dependencies": {
         "@expo-google-fonts/montserrat": "^0.2.3",
