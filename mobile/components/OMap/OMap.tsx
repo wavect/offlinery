@@ -62,6 +62,8 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
     });
+    /** @DEV use a temp value here, so we do not update and re-use the same value (lagging) */
+    const [tempSliderValue, setTempSliderValue] = useState(0);
 
     useEffect(() => {
         (async () => {
@@ -164,6 +166,10 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
 
     const handleRegionPress = useCallback((index: number) => {
         setActiveRegionIndex(index);
+        const mapRegion = state.blacklistedRegions.find(
+            (blacklistedRegin, ind) => ind === index,
+        );
+        setTempSliderValue(mapRegion!.radius);
     }, []);
 
     const handleRemoveRegion = useCallback(
@@ -343,10 +349,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                             minimumValue={100}
                             maximumValue={2000}
                             step={10}
-                            value={
-                                state.blacklistedRegions[activeRegionIndex]
-                                    ?.radius
-                            }
+                            value={tempSliderValue}
                             onValueChange={handleRadiusChange}
                         />
                     </View>
