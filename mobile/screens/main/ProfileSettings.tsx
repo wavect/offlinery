@@ -313,12 +313,11 @@ const ProfileSettings = ({
                             />
                         )}
                     />
-                    {errors.firstName && (
-                        <OErrorMessage
-                            errorMessage={i18n.t(TR.fieldRequired)}
-                            style={styles.errorMessage}
-                        />
-                    )}
+                    <OErrorMessage
+                        errorMessage={i18n.t(TR.fieldRequired)}
+                        style={styles.errorMessage}
+                        show={errors.firstName !== undefined}
+                    />
                 </View>
 
                 {state.approachChoice !==
@@ -395,12 +394,14 @@ const ProfileSettings = ({
                                 />
                             </View>
                         </View>
-                        {(errors.approachFromTime || errors.approachToTime) && (
-                            <OErrorMessage
-                                errorMessage={i18n.t(TR.inputInvalid)}
-                                style={styles.errorMessage}
-                            />
-                        )}
+                        <OErrorMessage
+                            errorMessage={i18n.t(TR.inputInvalid)}
+                            style={styles.errorMessage}
+                            show={
+                                errors.approachFromTime !== undefined ||
+                                errors.approachToTime !== undefined
+                            }
+                        />
                     </View>
                 )}
 
@@ -436,11 +437,10 @@ const ProfileSettings = ({
                             />
                         )}
                     />
-                    {errors.bio && (
-                        <OErrorMessage
-                            errorMessage={i18n.t(TR.fieldRequired)}
-                        />
-                    )}
+                    <OErrorMessage
+                        errorMessage={i18n.t(TR.fieldRequired)}
+                        show={errors.bio !== undefined}
+                    />
                 </View>
 
                 <View
@@ -467,9 +467,10 @@ const ProfileSettings = ({
                             />
                         )}
                     />
-                    {errors.birthday && (
-                        <OErrorMessage errorMessage={i18n.t(TR.inputInvalid)} />
-                    )}
+                    <OErrorMessage
+                        errorMessage={i18n.t(TR.inputInvalid)}
+                        show={errors.birthday !== undefined}
+                    />
                 </View>
 
                 <View style={styles.inputContainer}>
@@ -502,12 +503,11 @@ const ProfileSettings = ({
                             />
                         )}
                     />
-                    {errors.gender && (
-                        <OErrorMessage
-                            errorMessage={i18n.t(TR.inputInvalid)}
-                            style={styles.errorMessage}
-                        />
-                    )}
+                    <OErrorMessage
+                        errorMessage={i18n.t(TR.inputInvalid)}
+                        style={styles.errorMessage}
+                        show={errors.gender !== undefined}
+                    />
                 </View>
                 <View style={styles.settingsButtonsContainer}>
                     <SettingsButton
@@ -586,12 +586,11 @@ const ProfileSettings = ({
                             />
                         )}
                     />
-                    {errors.intentions && (
-                        <OErrorMessage
-                            errorMessage={i18n.t(TR.fieldRequired)}
-                            style={styles.errorMessage}
-                        />
-                    )}
+                    <OErrorMessage
+                        errorMessage={i18n.t(TR.fieldRequired)}
+                        style={styles.errorMessage}
+                        show={errors.intentions !== undefined}
+                    />
                 </View>
 
                 <View style={styles.nonNegotiableOptionContainer}>
@@ -619,12 +618,11 @@ const ProfileSettings = ({
                             />
                         )}
                     />
-                    {errors.ageRage && (
-                        <OErrorMessage
-                            style={styles.errorMessage}
-                            errorMessage={i18n.t(TR.inputInvalid)}
-                        />
-                    )}
+                    <OErrorMessage
+                        style={styles.errorMessage}
+                        errorMessage={i18n.t(TR.inputInvalid)}
+                        show={errors.ageRage !== undefined}
+                    />
                 </View>
 
                 <View style={styles.nonNegotiableOptionContainer}>
@@ -660,12 +658,11 @@ const ProfileSettings = ({
                             />
                         )}
                     />
-                    {errors.genderDesire && (
-                        <OErrorMessage
-                            errorMessage={i18n.t(TR.fieldRequired)}
-                            style={styles.errorMessage}
-                        />
-                    )}
+                    <OErrorMessage
+                        errorMessage={i18n.t(TR.fieldRequired)}
+                        style={styles.errorMessage}
+                        show={errors.genderDesire !== undefined}
+                    />
                 </View>
 
                 <View style={styles.nonNegotiableOptionContainer}>
@@ -704,12 +701,11 @@ const ProfileSettings = ({
                             />
                         )}
                     />
-                    {errors.approachChoice && (
-                        <OErrorMessage
-                            style={styles.errorMessage}
-                            errorMessage={i18n.t(TR.inputInvalid)}
-                        />
-                    )}
+                    <OErrorMessage
+                        style={styles.errorMessage}
+                        errorMessage={i18n.t(TR.inputInvalid)}
+                        show={errors.approachChoice !== undefined}
+                    />
                 </View>
 
                 <View style={styles.settingsButtonsContainer}>

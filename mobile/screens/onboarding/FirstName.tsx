@@ -76,9 +76,10 @@ const FirstName = ({
                         />
                     )}
                 />
-                {errors.firstName && (
-                    <OErrorMessage errorMessage={i18n.t(TR.inputInvalid)} />
-                )}
+                <OErrorMessage
+                    errorMessage={i18n.t(TR.inputInvalid)}
+                    show={errors.firstName !== undefined}
+                />
             </View>
         </OPageContainer>
     );

@@ -122,12 +122,11 @@ const ApproachMeBetween = ({
                     )}
                 />
             </View>
-            {(errors.from || errors.to) && (
-                <OErrorMessage
-                    style={{ alignSelf: "center" }}
-                    errorMessage={i18n.t(TR.inputInvalid)}
-                />
-            )}
+            <OErrorMessage
+                style={{ alignSelf: "center" }}
+                errorMessage={i18n.t(TR.inputInvalid)}
+                show={errors.from !== undefined || errors.to !== undefined}
+            />
         </OPageContainer>
     );
 };

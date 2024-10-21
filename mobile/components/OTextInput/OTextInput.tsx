@@ -96,8 +96,9 @@ export const OTextInput = (props: IOTextInputProps) => {
 
             {bottomLabel && isBottomLabelError ? (
                 <OErrorMessage
-                    style={styles.bottomLabelError}
+                    style={[styles.bottomLabelError]}
                     errorMessage={bottomLabel}
+                    show
                 />
             ) : (
                 <Text style={styles.bottomLabel}>{bottomLabel}</Text>

@@ -102,12 +102,11 @@ const VerifyEmail = ({
                     codeRef.current = code;
                 }}
             />
-            {!isCodeValid && codeRef.current.length === 6 && (
-                <OErrorMessage
-                    style={{ alignSelf: "center" }}
-                    errorMessage={i18n.t(TR.verificationCodeInvalid)}
-                />
-            )}
+            <OErrorMessage
+                style={{ alignSelf: "center" }}
+                errorMessage={i18n.t(TR.verificationCodeInvalid)}
+                show={!isCodeValid && codeRef.current.length === 6}
+            />
         </OPageContainer>
     );
 };

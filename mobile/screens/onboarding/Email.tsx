@@ -91,9 +91,10 @@ const Email = ({
                     />
                 )}
             />
-            {errors.email && (
-                <OErrorMessage errorMessage={i18n.t(TR.invalidEmail)} />
-            )}
+            <OErrorMessage
+                errorMessage={i18n.t(TR.invalidEmail)}
+                show={errors.email !== undefined}
+            />
             <OCheckbox
                 onValueChange={setCheckboxChecked}
                 checkboxState={state.wantsEmailUpdates}

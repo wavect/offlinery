@@ -121,12 +121,11 @@ const ResetPassword = ({
                     errorMessage ? { marginBottom: 6 } : undefined,
                 ]}
             />
-            {errorMessage && (
-                <OErrorMessage
-                    style={styles.errorMessage}
-                    errorMessage={errorMessage}
-                />
-            )}
+            <OErrorMessage
+                style={styles.errorMessage}
+                errorMessage={errorMessage}
+                show={errorMessage !== undefined}
+            />
 
             <Text style={styles.sixDigitCodeExplainer}>
                 {i18n.t(TR.verificationCodeSent)}

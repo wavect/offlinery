@@ -122,12 +122,11 @@ const BioLetThemKnow = ({
                     )}
                 />
             </View>
-            {errors.bio && (
-                <OErrorMessage
-                    style={{ marginTop: -50, marginBottom: 40 }}
-                    errorMessage={i18n.t(TR.fieldRequired)}
-                />
-            )}
+            <OErrorMessage
+                style={{ marginTop: -50, marginBottom: 40 }}
+                errorMessage={i18n.t(TR.fieldRequired)}
+                show={errors.bio !== undefined}
+            />
 
             <OTeaserProfilePreview
                 prefixText={i18n.t(TR.findWithSpace)}
