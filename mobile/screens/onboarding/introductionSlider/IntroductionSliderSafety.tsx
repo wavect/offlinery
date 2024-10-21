@@ -17,7 +17,7 @@ export const IntroductionSliderSafety: React.FC = () => {
                     {i18n.t(TR.page4Description)}
                 </Text>
             </View>
-            <View style={styles.bottomAdditionalContainer}>
+            <View>
                 <View style={styles.divideContainer}>
                     <View style={styles.divider} />
                 </View>

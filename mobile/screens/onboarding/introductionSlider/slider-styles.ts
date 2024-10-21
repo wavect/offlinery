@@ -37,6 +37,8 @@ export const introductionSliderStyles = StyleSheet.create({
         marginBottom: 3,
     },
     imageContainer: {
+        display: "flex",
+        justifyContent: "flex-end",
         marginTop: 20,
         marginBottom: 20,
     },
@@ -46,13 +48,14 @@ export const introductionSliderStyles = StyleSheet.create({
         paddingLeft: 24,
         paddingBottom: 0,
         textAlign: "left",
+        justifyContent: "flex-end",
     },
     skipButton: {
         width: 100,
     },
     title: {
         fontFamily: FontFamily.montserratSemiBold,
-        fontSize: 36,
+        fontSize: 28,
         fontWeight: "bold",
         color: "white",
         marginTop: 20,
@@ -63,17 +66,17 @@ export const introductionSliderStyles = StyleSheet.create({
         fontFamily: FontFamily.montserratMedium,
         fontSize: 16,
         color: "white",
-        lineHeight: 28,
+        lineHeight: 20,
     },
     additionalText: {
         fontFamily: FontFamily.montserratRegular,
-        fontSize: 18,
+        fontSize: 16,
         color: "white",
         marginBottom: 10,
     },
     additionalTextBold: {
         fontFamily: FontFamily.montserratSemiBold,
-        fontSize: 20,
+        fontSize: 16,
         color: "white",
         marginBottom: 10,
     },
@@ -92,7 +95,7 @@ export const introductionSliderStyles = StyleSheet.create({
     },
     image: {
         width: "100%",
-        height: 250,
+        height: "60%",
     },
     oneLineTextContainer: {
         display: "flex",
@@ -161,12 +164,6 @@ export const introductionSliderStyles = StyleSheet.create({
     },
     invisibleButton: {
         opacity: 0,
-    },
-    bottomAdditionalContainer: {
-        position: "absolute",
-        left: "0%",
-        right: "0%",
-        bottom: 10,
     },
     fixedSizeViewContainer: {
         minHeight: 100,
