@@ -1,9 +1,11 @@
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import OErrorMessage from "@/components/OErrorMessage.tsx/OErrorMessage";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import * as React from "react";
+import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
@@ -16,14 +18,21 @@ const FirstName = ({
 >) => {
     const { state, dispatch } = useUserContext();
 
+    const {
+        control,
+        formState: { errors },
+    } = useForm({
+        mode: "onChange",
+        defaultValues: {
+            firstName: state.firstName,
+        },
+    });
+
     const setFirstName = (firstName: string) => {
         dispatch({
             type: EACTION_USER.UPDATE_MULTIPLE,
             payload: { firstName },
         });
-    };
-    const isValidFirstName = () => {
-        return state.firstName.length > 2;
     };
 
     return (
@@ -33,7 +42,7 @@ const FirstName = ({
                 <OButtonWide
                     text={i18n.t(TR.continue)}
                     filled={true}
-                    disabled={!isValidFirstName()}
+                    disabled={Object.keys(errors).length > 0}
                     variant="dark"
                     onPress={() =>
                         navigation.navigate(ROUTES.Onboarding.BirthDay)
@@ -43,18 +52,33 @@ const FirstName = ({
             subtitle={i18n.t(TR.myFirstNameDescr)}
         >
             <View style={styles.inputField}>
-                <TextInput
-                    style={styles.input}
-                    value={state.firstName}
-                    onChangeText={setFirstName}
-                    maxLength={100}
-                    autoCapitalize="words"
-                    autoComplete="given-name"
-                    inputMode="text"
-                    autoCorrect={false}
-                    keyboardType="default"
-                    placeholder={i18n.t(TR.enterFirstName)}
-                    placeholderTextColor="#999"
+                <Controller
+                    control={control}
+                    rules={{ required: true, maxLength: 100, minLength: 3 }}
+                    name="firstName"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <TextInput
+                            style={styles.input}
+                            value={value}
+                            onBlur={onBlur}
+                            onChangeText={(text) => {
+                                onChange(text);
+                                setFirstName(text);
+                            }}
+                            maxLength={100}
+                            autoCapitalize="words"
+                            autoComplete="given-name"
+                            inputMode="text"
+                            autoCorrect={false}
+                            keyboardType="default"
+                            placeholder={i18n.t(TR.enterFirstName)}
+                            placeholderTextColor="#999"
+                        />
+                    )}
+                />
+                <OErrorMessage
+                    errorMessage={i18n.t(TR.inputInvalid)}
+                    show={errors.firstName !== undefined}
                 />
             </View>
         </OPageContainer>

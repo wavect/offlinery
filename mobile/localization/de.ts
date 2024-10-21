@@ -287,4 +287,6 @@ export const de: Language = {
     letsMeetIRL: "Jetzt treffen!",
     dropdownSelectChoicePlaceholder: "Bitte wähle",
     userLocationWasUpdatedLastTime: "Zuletzt hier gesehen: ",
+    fieldRequired: "Dieses Feld wird benötigt",
+    inputInvalid: "Eingabe ist ungültig",
 };
