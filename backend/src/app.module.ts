@@ -6,6 +6,7 @@ import { PendingUserModule } from "@/entities/pending-user/pending-user.module";
 import { UserReportModule } from "@/entities/user-report/user-report.module";
 import { UserModule } from "@/entities/user/user.module";
 import { SeederModule } from "@/seeder/seeder.module";
+import { IS_DEV_MODE } from "@/utils/misc.utils";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { CacheInterceptor, CacheModule } from "@nestjs/cache-manager";
@@ -21,7 +22,6 @@ import {
     I18nModule,
     QueryResolver,
 } from "nestjs-i18n";
-import * as path from "node:path";
 import { join } from "path";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -66,20 +66,20 @@ import { TYPED_ENV } from "./utils/env.utils";
         I18nModule.forRoot({
             fallbackLanguage: ELanguage.en,
             loaderOptions: {
-                path: path.join("src", "translations"), // Updated path
-                watch: true,
+                path: join(__dirname, "translations"), // Updated path
+                watch: IS_DEV_MODE,
             },
             resolvers: [
                 { use: QueryResolver, options: ["lang"] },
                 new HeaderResolver(["x-custom-lang"]),
                 AcceptLanguageResolver,
             ],
-            typesOutputPath: path.join(
-                "src",
+            typesOutputPath: join(
+                __dirname,
                 "translations",
                 "i18n.generated.ts",
             ),
-            logging: true,
+            logging: IS_DEV_MODE,
         }),
         ThrottlerModule.forRoot([
             {
