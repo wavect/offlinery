@@ -1,6 +1,7 @@
 import { MainStackParamList } from "@/MainStack.navigator";
 import { PendingUserApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import OErrorMessage from "@/components/OErrorMessage.tsx/OErrorMessage";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OSplitInput } from "@/components/OSplitInput/OSplitInput";
 import { useUserContext } from "@/context/UserContext";
@@ -33,7 +34,6 @@ const VerifyEmail = ({
             navigation.navigate(ROUTES.Onboarding.Password);
             return true;
         } catch (error) {
-            console.error(error);
             return false;
         }
     };
@@ -64,9 +64,7 @@ const VerifyEmail = ({
     };
 
     const onError = async () => {
-        navigation.replace(ROUTES.Onboarding.Email, {
-            errorMessage: i18n.t(TR.invalidEmailOrExists),
-        });
+        setIsCodeValid(false);
     };
 
     const handleSubmit = async () => {
@@ -104,6 +102,12 @@ const VerifyEmail = ({
                     codeRef.current = code;
                 }}
             />
+            {!isCodeValid && codeRef.current.length === 6 && (
+                <OErrorMessage
+                    style={{ alignSelf: "center" }}
+                    errorMessage={i18n.t(TR.verificationCodeInvalid)}
+                />
+            )}
         </OPageContainer>
     );
 };
