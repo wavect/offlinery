@@ -1,10 +1,10 @@
 import { ErrorMessage } from "@/GlobalStyles";
 import React from "react";
-import { Text, TextStyle } from "react-native";
+import { StyleProp, Text, TextStyle } from "react-native";
 
 interface OErrorMessageProps {
     errorMessage: string;
-    style?: TextStyle;
+    style?: StyleProp<TextStyle>;
 }
 
 const OErrorMessage: React.FC<OErrorMessageProps> = ({
