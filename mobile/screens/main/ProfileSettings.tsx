@@ -63,7 +63,7 @@ const ProfileSettings = ({
             bio: state.bio,
             birthday: state.birthDay,
             gender: state.gender,
-            ageRage: state.ageRange,
+            ageRange: state.ageRange,
             genderDesire: state.genderDesire,
             intentions: state.intentions,
             approachChoice: state.approachChoice,
@@ -607,7 +607,7 @@ const ProfileSettings = ({
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="ageRage"
+                        name="ageRange"
                         render={({ field: { onChange, value } }) => (
                             <AgeRangeSlider
                                 onChange={(age) => {
@@ -621,7 +621,7 @@ const ProfileSettings = ({
                     <OErrorMessage
                         style={styles.errorMessage}
                         errorMessage={i18n.t(TR.inputInvalid)}
-                        show={errors.ageRage !== undefined}
+                        show={errors.ageRange !== undefined}
                     />
                 </View>
 
