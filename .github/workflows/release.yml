@@ -37,7 +37,8 @@ jobs:
         id: get_version
         run: |
           if [ "${{ github.event_name }}" = "release" ]; then
-            VERSION=${GITHUB_REF#refs/tags/v}
+            # Extract version from tag, removing both 'refs/tags/' and 'v' prefix if present
+            VERSION=$(echo ${GITHUB_REF#refs/tags/} | sed 's/^v//')
           else
             VERSION=${{ github.event.inputs.version }}
           fi
