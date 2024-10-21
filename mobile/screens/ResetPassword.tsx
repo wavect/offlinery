@@ -1,6 +1,7 @@
 import { Color, FontFamily } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import OErrorMessage from "@/components/OErrorMessage.tsx/OErrorMessage";
 import { ONewPasswordGroup } from "@/components/ONewPasswordGroup/ONewPasswordGroup";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OSplitInput } from "@/components/OSplitInput/OSplitInput";
@@ -121,7 +122,10 @@ const ResetPassword = ({
                 ]}
             />
             {errorMessage && (
-                <Text style={styles.errorMessage}>{errorMessage}</Text>
+                <OErrorMessage
+                    style={styles.errorMessage}
+                    errorMessage={errorMessage}
+                />
             )}
 
             <Text style={styles.sixDigitCodeExplainer}>
