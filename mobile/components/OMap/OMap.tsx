@@ -181,37 +181,29 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         setDraggingIndex(index);
     }, []);
 
-    const handleRegionDragEnd = useCallback(
-        (event: MarkerDragStartEndEvent) => {
-            if (draggingIndex !== null) {
-                const { latitude, longitude } = event.nativeEvent.coordinate;
-                const newRegions = state.blacklistedRegions.map(
-                    (region, index) =>
-                        index === draggingIndex
-                            ? { ...region, latitude, longitude }
-                            : region,
-                );
-                setBlacklistedRegions(newRegions);
-            }
-            setDraggingIndex(null);
-        },
-        [draggingIndex, state.blacklistedRegions, setBlacklistedRegions],
-    );
+    const handleRegionDragEnd = (event: MarkerDragStartEndEvent) => {
+        if (draggingIndex !== null) {
+            const { latitude, longitude } = event.nativeEvent.coordinate;
+            const newRegions = state.blacklistedRegions.map((region, index) =>
+                index === draggingIndex
+                    ? { ...region, latitude, longitude }
+                    : region,
+            );
+            setBlacklistedRegions(newRegions);
+        }
+        setDraggingIndex(null);
+    };
 
-    const handleRadiusChange = useCallback(
-        (value: number) => {
-            if (activeRegionIndex !== null) {
-                const newRegions = state.blacklistedRegions.map(
-                    (region, index) =>
-                        index === activeRegionIndex
-                            ? { ...region, radius: value }
-                            : region,
-                );
-                setBlacklistedRegions(newRegions);
-            }
-        },
-        [activeRegionIndex, state.blacklistedRegions, setBlacklistedRegions],
-    );
+    const handleRadiusChange = (value: number) => {
+        if (activeRegionIndex !== null) {
+            const newRegions = [...state.blacklistedRegions];
+            newRegions[activeRegionIndex] = {
+                ...newRegions[activeRegionIndex],
+                radius: value,
+            };
+            setBlacklistedRegions(newRegions);
+        }
+    };
 
     useEffect(() => {
         // @dev During onboarding we don't want to save these onChange etc.
