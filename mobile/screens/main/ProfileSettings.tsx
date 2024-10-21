@@ -873,6 +873,7 @@ const styles = StyleSheet.create({
     },
     input: {
         marginTop: 8,
+        marginBottom: 16,
         height: 45,
         width: "100%",
     },
