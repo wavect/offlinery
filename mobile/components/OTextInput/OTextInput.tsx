@@ -12,6 +12,7 @@ import {
     ViewStyle,
 } from "react-native";
 import { TextInputProps } from "react-native/Libraries/Components/TextInput/TextInput";
+import OErrorMessage from "../OErrorMessage.tsx/OErrorMessage";
 
 interface IOTextInputProps extends Omit<TextInputProps, "secureTextEntry"> {
     containerStyle?: StyleProp<ViewStyle>;
@@ -93,15 +94,13 @@ export const OTextInput = (props: IOTextInputProps) => {
                 </Text>
             )}
 
-            {bottomLabel && (
-                <Text
-                    style={[
-                        styles.bottomLabel,
-                        isBottomLabelError ? styles.bottomLabelError : null,
-                    ]}
-                >
-                    {bottomLabel}
-                </Text>
+            {bottomLabel && isBottomLabelError ? (
+                <OErrorMessage
+                    style={styles.bottomLabelError}
+                    errorMessage={bottomLabel}
+                />
+            ) : (
+                <Text style={styles.bottomLabel}>{bottomLabel}</Text>
             )}
         </View>
     );
@@ -151,7 +150,7 @@ const styles = StyleSheet.create({
         alignSelf: "flex-start",
     },
     bottomLabelError: {
-        color: Color.red,
-        fontFamily: FontFamily.montserratSemiBold,
+        marginTop: 5,
+        alignSelf: "flex-start",
     },
 });
