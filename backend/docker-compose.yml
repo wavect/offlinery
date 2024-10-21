@@ -54,20 +54,20 @@ services:
     depends_on:
       - postgres
 
-  backend:
-    image: of-backend
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 3000:3000
-    env_file:
-      .env
-    networks:
-      - app_network
-    depends_on:
-      - postgres
-    restart: on-failure
+ # backend:
+ #   image: of-backend
+ #   build:
+ #     context: .
+ #     dockerfile: Dockerfile
+ #   ports:
+ #     - 3000:3000
+ #   env_file:
+ #     .env
+ #   networks:
+ #     - app_network
+ #   depends_on:
+ #     - postgres
+ #   restart: on-failure
 
 # TODO: Later on, for MVP use in-memory store for cheaper hosting
 #  redis:
