@@ -22,6 +22,7 @@ interface IOButtonSmallProps {
 }
 
 export enum IOButtonSmallVariant {
+    Primary = "buttonPrimary",
     Danger = "buttonDanger",
     Black = "buttonBlack",
 }

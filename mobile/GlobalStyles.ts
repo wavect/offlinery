@@ -19,7 +19,7 @@ export const FontSize = {
 export const Color = {
     black: "#000",
     white: "#fff",
-    red: "#ff0000",
+    red: "#d33131",
     /** @dev Great to use as error color on blue color backgrounds */
     lightOrange: "#FFD580",
     /** @dev general error color */
