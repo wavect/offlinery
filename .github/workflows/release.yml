@@ -16,6 +16,40 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+        # Setup Google Cloud Authentication
+      - name: Google Auth
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          token_format: 'access_token'
+
+      # Configure Docker for GCP Artifact Registry
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker europe-west6-docker.pkg.dev
+
+      # Get the version for Docker tag
+      - name: Get version
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+          else
+            VERSION=${{ github.event.inputs.version }}
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      # Build and push Docker image
+      - name: Build and push Docker image
+        working-directory: ./backend
+        run: |
+          docker build -t europe-west6-docker.pkg.dev/offlinery-439317/offlinery-backend/nestjs:${{ env.VERSION }} .
+          docker push europe-west6-docker.pkg.dev/offlinery-439317/offlinery-backend/nestjs:${{ env.VERSION }}
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
@@ -51,5 +85,6 @@ jobs:
         with:
           body: |
             Expo Build URL: ${{ env.BUILD_URL }}
+            Backend Docker Image: europe-west6-docker.pkg.dev/offlinery-439317/offlinery-backend/nestjs:${{ env.VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
