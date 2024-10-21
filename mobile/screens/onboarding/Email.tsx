@@ -1,7 +1,7 @@
-import { Color, FontFamily } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OCheckbox } from "@/components/OCheckbox/OCheckbox";
+import OErrorMessage from "@/components/OErrorMessage.tsx/OErrorMessage";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
@@ -9,7 +9,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useEffect } from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -79,9 +79,7 @@ const Email = ({
                     errorMessage ? { marginBottom: 6 } : undefined,
                 ]}
             />
-            {errorMessage && (
-                <Text style={styles.errorMessage}>{errorMessage}</Text>
-            )}
+            {errorMessage && <OErrorMessage errorMessage={errorMessage} />}
             <OCheckbox
                 onValueChange={setCheckboxChecked}
                 checkboxState={state.wantsEmailUpdates}
@@ -112,13 +110,6 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         alignItems: "center",
-    },
-    errorMessage: {
-        color: Color.redLight,
-        fontSize: 16,
-        fontFamily: FontFamily.montserratSemiBold,
-        textAlign: "left",
-        marginBottom: 16,
     },
 });
 

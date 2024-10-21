@@ -49,6 +49,14 @@ export const Subtitle: StyleProp<TextStyle> = {
     marginBottom: 24,
 };
 
+export const ErrorMessage: StyleProp<TextStyle> = {
+    color: Color.redLight,
+    fontSize: 16,
+    fontFamily: FontFamily.montserratSemiBold,
+    textAlign: "left",
+    marginBottom: 16,
+};
+
 export const Padding = {
     p_5xl: 24,
     p_3xs: 10,

@@ -281,4 +281,6 @@ export const en = {
     letsMeetIRL: "Lets Meet IRL",
     dropdownSelectChoicePlaceholder: "Select an option",
     userLocationWasUpdatedLastTime: "Last time seen here: ",
+    fieldRequired: "This field is required",
+    inputInvalid: "Input is invalid",
 };
