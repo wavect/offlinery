@@ -504,7 +504,10 @@ export class UserService {
     }
 
     async findUserByEmailOrFail(email: string): Promise<User> {
-        const user = await this.userRepository.findOne({
+        if (!email) {
+            throw new NotFoundException("Email is undefined.");
+        }
+        const user = await this.userRepository.findOneOrFail({
             where: { email },
             relations: ["blacklistedRegions"], // Include related entities if needed
         });
