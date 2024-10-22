@@ -106,8 +106,7 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 1,
-        lineHeight: 28,
-        fontSize: FontSize.size_xl,
+        fontSize: FontSize.size_lg,
         fontFamily: FontFamily.montserratLight,
         fontWeight: "500",
         padding: 6,
