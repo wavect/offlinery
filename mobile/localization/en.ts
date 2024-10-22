@@ -283,4 +283,9 @@ export const en = {
     userLocationWasUpdatedLastTime: "Last time seen here: ",
     fieldRequired: "This field is required",
     inputInvalid: "Input is invalid",
+    goToSettings: "Go to Settings",
+    cancel: "Cancel",
+    permissionRequired: "Permission Required",
+    pleaseChangePermission:
+        "Please change the permissions in your settings to continue using the app.",
 };

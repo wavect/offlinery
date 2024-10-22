@@ -4,12 +4,23 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { PhotoContainer } from "@/components/OPhotoContainer/OPhotoContainer";
 import { ImageIdx, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import {
+    SECURE_VALUE,
+    saveValueLocallySecurely,
+} from "@/services/secure-storage.service";
 import { API } from "@/utils/api-config";
 import { isImagePicker } from "@/utils/media.utils";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import { useState } from "react";
-import { StyleSheet, View, useWindowDimensions } from "react-native";
+import {
+    Alert,
+    Linking,
+    Platform,
+    StyleSheet,
+    View,
+    useWindowDimensions,
+} from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -27,6 +38,52 @@ const AddPhotos = ({
     const hasAnyImage = Object.values(state.imageURIs).some(Boolean);
 
     const { width } = useWindowDimensions();
+
+    const showAlert = () => {
+        Alert.alert(
+            i18n.t(TR.permissionRequired),
+            i18n.t(TR.pleaseChangePermission),
+            [
+                {
+                    text: i18n.t(TR.cancel),
+                    style: "cancel",
+                },
+                {
+                    text: i18n.t(TR.goToSettings),
+                    onPress: () => openSettings(),
+                },
+            ],
+            { cancelable: true },
+        );
+    };
+    const openSettings = async () => {
+        if (!route.params?.overrideOnBtnPress) {
+            saveValueLocallySecurely(
+                SECURE_VALUE.ONBOARDING_USER,
+                JSON.stringify(state),
+            );
+            saveValueLocallySecurely(
+                SECURE_VALUE.ONBOARDING_SCREEN,
+                ROUTES.Onboarding.AddPhotos,
+            );
+        }
+
+        if (Platform.OS === "ios") {
+            Linking.openURL("app-settings:");
+        } else if (Platform.OS === "android") {
+            await Linking.openSettings();
+        }
+    };
+
+    React.useEffect(() => {
+        if (
+            mediaLibStatus &&
+            !mediaLibStatus?.granted &&
+            !mediaLibStatus?.canAskAgain
+        ) {
+            showAlert();
+        }
+    }, [mediaLibStatus]);
 
     // Calculate the size of each photo container based on screen width
     const containerPadding = 20;

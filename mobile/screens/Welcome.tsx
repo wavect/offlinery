@@ -3,11 +3,17 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
 import { OTroubleMessage } from "@/components/OTroubleMessage/OTroubleMessage";
-import { isAuthenticated, useUserContext } from "@/context/UserContext";
+import {
+    EACTION_USER,
+    IUserData,
+    isAuthenticated,
+    useUserContext,
+} from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
 import {
     SECURE_VALUE,
+    deleteSecurelyStoredValue,
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
@@ -57,7 +63,9 @@ const Welcome = ({
         useCallback(() => {
             const checkAuthentication = async () => {
                 try {
-                    await checkAuthStatus();
+                    if (!isOnboardingInProgress()) {
+                        await checkAuthStatus();
+                    }
                 } catch (error) {
                     console.error("Error checking authentication:", error);
                     throw error;
@@ -69,6 +77,39 @@ const Welcome = ({
             checkAuthentication();
         }, [navigation]),
     );
+
+    const isOnboardingInProgress = () => {
+        const savedUser = getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER);
+        return savedUser !== null;
+    };
+
+    const restoreOnboarding = async () => {
+        const savedUser = getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER);
+        const savedScreen = getSecurelyStoredValue(
+            SECURE_VALUE.ONBOARDING_SCREEN,
+        );
+        if (!savedUser || !savedScreen) {
+            return;
+        }
+        await deleteSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER);
+        await deleteSecurelyStoredValue(SECURE_VALUE.ONBOARDING_SCREEN);
+
+        const userParsed = JSON.parse(savedUser) as IUserData;
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: {
+                ...userParsed,
+                approachFromTime: new Date(userParsed.approachFromTime),
+                approachToTime: new Date(userParsed.approachToTime),
+                birthDay: new Date(userParsed.birthDay),
+            },
+        });
+        navigation.navigate(savedScreen as "Onboarding_AddPhotos");
+    };
+
+    React.useEffect(() => {
+        restoreOnboarding();
+    }, []);
 
     const AuthScreen = () => (
         <View style={styles.authContainer}>
