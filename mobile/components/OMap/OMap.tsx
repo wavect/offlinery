@@ -62,6 +62,8 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
     });
+    /** @DEV use a temp value here, so we do not update and re-use the same value (lagging) */
+    const [tempSliderValue, setTempSliderValue] = useState(0);
 
     useEffect(() => {
         (async () => {
@@ -164,6 +166,10 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
 
     const handleRegionPress = useCallback((index: number) => {
         setActiveRegionIndex(index);
+        const mapRegion = state.blacklistedRegions.find(
+            (blacklistedRegin, ind) => ind === index,
+        );
+        setTempSliderValue(mapRegion!.radius);
     }, []);
 
     const handleRemoveRegion = useCallback(
@@ -181,37 +187,29 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         setDraggingIndex(index);
     }, []);
 
-    const handleRegionDragEnd = useCallback(
-        (event: MarkerDragStartEndEvent) => {
-            if (draggingIndex !== null) {
-                const { latitude, longitude } = event.nativeEvent.coordinate;
-                const newRegions = state.blacklistedRegions.map(
-                    (region, index) =>
-                        index === draggingIndex
-                            ? { ...region, latitude, longitude }
-                            : region,
-                );
-                setBlacklistedRegions(newRegions);
-            }
-            setDraggingIndex(null);
-        },
-        [draggingIndex, state.blacklistedRegions, setBlacklistedRegions],
-    );
+    const handleRegionDragEnd = (event: MarkerDragStartEndEvent) => {
+        if (draggingIndex !== null) {
+            const { latitude, longitude } = event.nativeEvent.coordinate;
+            const newRegions = state.blacklistedRegions.map((region, index) =>
+                index === draggingIndex
+                    ? { ...region, latitude, longitude }
+                    : region,
+            );
+            setBlacklistedRegions(newRegions);
+        }
+        setDraggingIndex(null);
+    };
 
-    const handleRadiusChange = useCallback(
-        (value: number) => {
-            if (activeRegionIndex !== null) {
-                const newRegions = state.blacklistedRegions.map(
-                    (region, index) =>
-                        index === activeRegionIndex
-                            ? { ...region, radius: value }
-                            : region,
-                );
-                setBlacklistedRegions(newRegions);
-            }
-        },
-        [activeRegionIndex, state.blacklistedRegions, setBlacklistedRegions],
-    );
+    const handleRadiusChange = (value: number) => {
+        if (activeRegionIndex !== null) {
+            const newRegions = [...state.blacklistedRegions];
+            newRegions[activeRegionIndex] = {
+                ...newRegions[activeRegionIndex],
+                radius: value,
+            };
+            setBlacklistedRegions(newRegions);
+        }
+    };
 
     useEffect(() => {
         // @dev During onboarding we don't want to save these onChange etc.
@@ -351,10 +349,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                             minimumValue={100}
                             maximumValue={2000}
                             step={10}
-                            value={
-                                state.blacklistedRegions[activeRegionIndex]
-                                    ?.radius
-                            }
+                            value={tempSliderValue}
                             onValueChange={handleRadiusChange}
                         />
                     </View>
