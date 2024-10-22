@@ -10,6 +10,7 @@ import { i18n, TR } from "@/localization/translate.service";
 import { getLocallyStoredUserData } from "@/services/storage.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
+import { showOpenAppSettingsAlert } from "@/utils/misc.utils";
 import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
@@ -161,11 +162,15 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                     const { granted } =
                         await Location.requestBackgroundPermissionsAsync();
                     if (!granted) {
-                        alert(i18n.t(TR.permissionToBackgroundLocationDenied));
+                        showOpenAppSettingsAlert(
+                            i18n.t(TR.permissionToBackgroundLocationDenied),
+                        );
                         return;
                     }
                 } else {
-                    alert(i18n.t(TR.permissionToBackgroundLocationDenied));
+                    showOpenAppSettingsAlert(
+                        i18n.t(TR.permissionToBackgroundLocationDenied),
+                    );
                     return;
                 }
             }
