@@ -10,6 +10,9 @@ import { StyleSheet, TextInput, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
+const MIN_LENGTH = 2;
+const MAX_LENGTH = 50;
+
 const FirstName = ({
     navigation,
 }: NativeStackScreenProps<
@@ -20,13 +23,19 @@ const FirstName = ({
 
     const {
         control,
-        formState: { errors },
+        formState: { errors, isValid, dirtyFields },
+        trigger,
     } = useForm({
         mode: "onChange",
         defaultValues: {
-            firstName: state.firstName,
+            firstName: state.firstName || "",
         },
     });
+
+    const isFormValid =
+        isValid &&
+        dirtyFields.firstName &&
+        state.firstName?.trim().length >= MIN_LENGTH;
 
     const setFirstName = (firstName: string) => {
         dispatch({
@@ -35,6 +44,10 @@ const FirstName = ({
         });
     };
 
+    React.useEffect(() => {
+        trigger("firstName");
+    }, [trigger]);
+
     return (
         <OPageContainer
             fullpageIcon="person"
@@ -42,7 +55,7 @@ const FirstName = ({
                 <OButtonWide
                     text={i18n.t(TR.continue)}
                     filled={true}
-                    disabled={Object.keys(errors).length > 0}
+                    disabled={!isFormValid}
                     variant="dark"
                     onPress={() =>
                         navigation.navigate(ROUTES.Onboarding.BirthDay)
@@ -54,7 +67,11 @@ const FirstName = ({
             <View style={styles.inputField}>
                 <Controller
                     control={control}
-                    rules={{ required: true, maxLength: 100, minLength: 3 }}
+                    rules={{
+                        required: true,
+                        maxLength: MAX_LENGTH,
+                        minLength: MIN_LENGTH,
+                    }}
                     name="firstName"
                     render={({ field: { onChange, onBlur, value } }) => (
                         <TextInput
@@ -78,7 +95,10 @@ const FirstName = ({
                 />
                 <OErrorMessage
                     errorMessage={i18n.t(TR.inputInvalid)}
-                    show={errors.firstName !== undefined}
+                    show={
+                        (dirtyFields.firstName ?? false) &&
+                        errors.firstName !== undefined
+                    }
                 />
             </View>
         </OPageContainer>
