@@ -1,5 +1,5 @@
-# Development stage
-FROM node:20-alpine AS development
+# builder stage
+FROM node:20-alpine AS builder
 
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -18,6 +18,9 @@ COPY . .
 
 # Build the application
 RUN pnpm build
+
+# Copy mail templates to dist during build
+RUN cp -r mail dist/
 
 # Production stage
 FROM node:20-alpine AS production
@@ -38,11 +41,17 @@ COPY pnpm-lock.yaml package.json ./
 # Install only production dependencies
 RUN pnpm install --prod
 
-# Copy built application from development stage
-COPY --from=development /usr/src/app/dist ./dist
+# Copy built application from builder stage
+COPY --from=builder /usr/src/app/dist ./dist
+
+# Create a specific directory for mail templates
+RUN mkdir -p /app/dist/mail
+COPY --from=builder /usr/src/app/dist/mail ./dist/mail
 
 # Expose application port
 EXPOSE 3000
+
+ENV NODE_ENV=production
 
 # Start the application
 CMD ["node", "dist/main"]
