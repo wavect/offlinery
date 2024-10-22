@@ -289,4 +289,9 @@ export const de: Language = {
     userLocationWasUpdatedLastTime: "Zuletzt hier gesehen: ",
     fieldRequired: "Dieses Feld wird benötigt",
     inputInvalid: "Eingabe ist ungültig",
+    cancel: "Abbrechen",
+    goToSettings: "Gehe zu Einstellungen",
+    permissionRequired: "Zugriff auf Gallerie benötigt",
+    pleaseChangePermission:
+        "Bitte ändere die Zugriffsrechte auf deine Bilder um fortzufahren.",
 };

@@ -5,6 +5,8 @@ export const SECURE_VALUE = {
     JWT_ACCESS_TOKEN: "JWT_ACCESS_TOKEN",
     JWT_REFRESH_TOKEN: "JWT_REFRESH_TOKEN",
     EXPO_PUSH_TOKEN: "EXPO_PUSH_TOKEN",
+    ONBOARDING_USER: "ONBOARDING_USER",
+    ONBOARDING_SCREEN: "ONBOARDING_SCREEN",
 };
 
 /** @dev Retrieves securely stored value from local storage. Helper function to make switching etc easier if needed. */
@@ -15,6 +17,10 @@ export const getSecurelyStoredValue = (key: string) => {
 /** @dev Saves value in local, secure storage */
 export const saveValueLocallySecurely = (key: string, value: string) => {
     SecureStore.setItem(key, value);
+};
+
+export const deleteSecurelyStoredValue = async (key: string) => {
+    await SecureStore.deleteItemAsync(key);
 };
 
 export const deleteSessionDataFromStorage = async () => {
