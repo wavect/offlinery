@@ -33,6 +33,8 @@ export class EncounterService {
             .createQueryBuilder("encounter")
             .innerJoinAndSelect("encounter.users", "user")
             .leftJoinAndSelect("encounter.userReports", "userReports")
+            .innerJoinAndSelect("encounter.messages", "messages")
+            .leftJoinAndSelect("messages.sender", "sender")
             /** @DEV CHANGE! */
             .where(
                 ':userId IN (SELECT "userId" FROM user_encounters_encounter WHERE "encounterId" = encounter.id)',
@@ -226,6 +228,6 @@ export class EncounterService {
 
         await this.messageRepository.save(newMessage);
         encounter.messages.push(newMessage);
-        return this.encounterRepository.save(encounter);
+        return await this.encounterRepository.save(encounter);
     }
 }

@@ -199,6 +199,17 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     </Text>
                 )}
             </View>
+            {dateStatus === EncounterPublicDTOStatusEnum.met_interested &&
+                encounterProfile.lastReceivedMessage && (
+                    <View style={styles.receivedMessageContainer}>
+                        <Text style={styles.receivedMessageTitle}>
+                            {i18n.t(TR.receivedMessage)}:
+                        </Text>
+                        <Text style={styles.receivedMessageText}>
+                            {encounterProfile.lastReceivedMessage.content}
+                        </Text>
+                    </View>
+                )}
             <OMessageModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
