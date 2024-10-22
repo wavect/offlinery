@@ -10,17 +10,11 @@ import {
 } from "@/services/secure-storage.service";
 import { API } from "@/utils/api-config";
 import { isImagePicker } from "@/utils/media.utils";
+import { openAppSettings, showOpenAppSettingsAlert } from "@/utils/misc.utils";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import { useState } from "react";
-import {
-    Alert,
-    Linking,
-    Platform,
-    StyleSheet,
-    View,
-    useWindowDimensions,
-} from "react-native";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -38,24 +32,6 @@ const AddPhotos = ({
     const hasAnyImage = Object.values(state.imageURIs).some(Boolean);
 
     const { width } = useWindowDimensions();
-
-    const showAlert = () => {
-        Alert.alert(
-            i18n.t(TR.permissionRequired),
-            i18n.t(TR.pleaseChangePermission),
-            [
-                {
-                    text: i18n.t(TR.cancel),
-                    style: "cancel",
-                },
-                {
-                    text: i18n.t(TR.goToSettings),
-                    onPress: () => openSettings(),
-                },
-            ],
-            { cancelable: true },
-        );
-    };
     const openSettings = async () => {
         if (!route.params?.overrideOnBtnPress) {
             saveValueLocallySecurely(
@@ -68,20 +44,18 @@ const AddPhotos = ({
             );
         }
 
-        if (Platform.OS === "ios") {
-            Linking.openURL("app-settings:");
-        } else if (Platform.OS === "android") {
-            await Linking.openSettings();
-        }
+        openAppSettings();
     };
-
     React.useEffect(() => {
         if (
             mediaLibStatus &&
             !mediaLibStatus?.granted &&
             !mediaLibStatus?.canAskAgain
         ) {
-            showAlert();
+            showOpenAppSettingsAlert(
+                i18n.t(TR.pleaseChangePermission),
+                openSettings,
+            );
         }
     }, [mediaLibStatus]);
 
