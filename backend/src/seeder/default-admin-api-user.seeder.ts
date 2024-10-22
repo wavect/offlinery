@@ -9,11 +9,10 @@ export class DefaultApiUserSeeder {
     constructor(private apiUserService: ApiUserService) {}
 
     async seedApiUsers(): Promise<void> {
-        if (
-            await this.apiUserService.findApiUserByEmail(
-                TYPED_ENV.EMAIL_USERNAME,
-            )
-        ) {
+        const defaultApiUser = await this.apiUserService.findApiUserByEmail(
+            TYPED_ENV.EMAIL_USERNAME,
+        );
+        if (defaultApiUser) {
             this.logger.debug(
                 `Default api user already seeded: ${TYPED_ENV.EMAIL_USERNAME}`,
             );
@@ -24,7 +23,7 @@ export class DefaultApiUserSeeder {
                 true,
             );
             this.logger.debug(
-                `Seeded admin api user for ${TYPED_ENV.EMAIL_USERNAME}`,
+                `Seeded admin api user for ${TYPED_ENV.EMAIL_USERNAME}, ${defaultApiUser.apiKey} (api key), Note: You also need the secret which is hashed.`,
             );
         }
     }
