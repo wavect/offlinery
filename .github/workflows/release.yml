@@ -66,6 +66,21 @@ jobs:
         run: |
           pnpm install:all
 
+      - name: Setup Sentry CLI
+        run: |
+          curl -sL https://sentry.io/get-cli/ | bash
+          sentry-cli --version
+
+      - name: Create Sentry Release
+        working-directory: ./mobile
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          sentry-cli releases new ${{ env.VERSION }}
+          sentry-cli releases set-commits ${{ env.VERSION }} --auto
+
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v8
         with:
@@ -78,7 +93,59 @@ jobs:
           BUILD_URL=$(eas build --platform all --non-interactive --json | jq -r '.buildUrl')
           echo "BUILD_URL=$BUILD_URL" >> $GITHUB_ENV
 
-      # TODO: We could also automatically submit the builds once we are live
+      # Create archives for source maps
+      - name: Archive Source Maps
+        working-directory: ./mobile
+        run: |
+          # Archive Android source maps
+          if [ -d "android/app/build/generated/sourcemaps" ]; then
+            tar -czf android-sourcemaps.tar.gz -C android/app/build/generated/sourcemaps .
+          fi
+          
+          # Archive iOS source maps
+          if [ -d "ios/build/generated/sourcemaps" ]; then
+            tar -czf ios-sourcemaps.tar.gz -C ios/build/generated/sourcemaps .
+          fi
+
+      # Upload source maps to Sentry after the build
+      - name: Upload Source Maps to Sentry
+        working-directory: ./mobile
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          # Upload source maps for Android
+          sentry-cli react-native sourcemaps upload \
+            --release ${{ env.VERSION }} \
+            --dist android \
+            --platform android \
+            android/app/build/generated/sourcemaps
+
+          # Upload source maps for iOS
+          sentry-cli react-native sourcemaps upload \
+            --release ${{ env.VERSION }} \
+            --dist ios \
+            --platform ios \
+            ios/build/generated/sourcemaps
+
+          # Upload Proguard mappings for Android
+          if [ -f "android/app/build/outputs/mapping/release/mapping.txt" ]; then
+            sentry-cli upload-proguard \
+              --android-manifest android/app/build/intermediates/merged_manifests/release/AndroidManifest.xml \
+              --project ${{ secrets.SENTRY_PROJECT }} \
+              --org ${{ secrets.SENTRY_ORG }} \
+              android/app/build/outputs/mapping/release/mapping.txt
+          fi
+
+      - name: Finalize Sentry Release
+        working-directory: ./mobile
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          sentry-cli releases finalize ${{ env.VERSION }}
 
       - name: Update GitHub Release
         uses: softprops/action-gh-release@v1
@@ -87,5 +154,26 @@ jobs:
           body: |
             Expo Build URL: ${{ env.BUILD_URL }}
             Backend Docker Image: europe-west6-docker.pkg.dev/offlinery-439317/offlinery-backend/nestjs:${{ env.VERSION }}
+          files: |
+            mobile/android-sourcemaps.tar.gz
+            mobile/ios-sourcemaps.tar.gz
+            mobile/android/app/build/outputs/mapping/release/mapping.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            # Submit to app stores
+      - name: Submit to App Store Connect (TestFlight)
+        working-directory: ./mobile
+        if: env.IOS_BUILD_ID != ''
+        env:
+          EXPO_APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.EXPO_APPLE_APP_SPECIFIC_PASSWORD }}
+        run: |
+          eas submit --platform ios --id ${{ env.IOS_BUILD_ID }} --non-interactive
+
+      - name: Submit to Google Play Console (Internal Testing)
+        working-directory: ./mobile
+        if: env.ANDROID_BUILD_ID != ''
+        env:
+          EXPO_GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.EXPO_GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          eas submit --platform android --id ${{ env.ANDROID_BUILD_ID }} --track internal --non-interactive

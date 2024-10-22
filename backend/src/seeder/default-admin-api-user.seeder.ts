@@ -9,7 +9,7 @@ export class DefaultApiUserSeeder {
     constructor(private apiUserService: ApiUserService) {}
 
     async seedApiUsers(): Promise<void> {
-        const defaultApiUser = await this.apiUserService.findApiUserByEmail(
+        let defaultApiUser = await this.apiUserService.findApiUserByEmail(
             TYPED_ENV.EMAIL_USERNAME,
         );
         if (defaultApiUser) {
@@ -17,7 +17,7 @@ export class DefaultApiUserSeeder {
                 `Default api user already seeded: ${TYPED_ENV.EMAIL_USERNAME}`,
             );
         } else {
-            await this.apiUserService.createApiUser(
+            defaultApiUser = await this.apiUserService.createApiUser(
                 TYPED_ENV.EMAIL_USERNAME,
                 true,
                 true,
