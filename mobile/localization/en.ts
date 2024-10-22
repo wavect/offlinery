@@ -223,7 +223,7 @@ export const en = {
     saving: "Saving..",
     enterMessage: "Enter message or contact details..",
     sendMessage: "Send message",
-    receivedMessage: "Received message",
+    receivedMessage: "Last message",
     leaveMessage: "Leave message",
     leaveMessageBtnLbl: "Contact",
     messageInstructions:

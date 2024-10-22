@@ -228,7 +228,7 @@ export const de: Language = {
     saving: "Speichern..",
     enterMessage: "Nachricht oder Kontaktdetails eingeben..",
     sendMessage: "Senden",
-    receivedMessage: "Erhaltene Nachricht",
+    receivedMessage: "Letzte Nachricht",
     leaveMessage: "Nachricht schreiben",
     leaveMessageBtnLbl: "Kontakt",
     messageInstructions:
