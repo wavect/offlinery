@@ -41,6 +41,8 @@ interface OMapProps {
     showBlacklistedRegions: boolean;
 }
 
+const DEFAULT_RADIUS_SIZE = 1000;
+
 export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
     const { saveChangesToBackend, showHeatmap, showBlacklistedRegions } = props;
     const { state, dispatch } = useUserContext();
@@ -158,7 +160,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
             const { latitude, longitude } = coordinate;
             setBlacklistedRegions([
                 ...state.blacklistedRegions,
-                { latitude, longitude, radius: 1000 },
+                { latitude, longitude, radius: DEFAULT_RADIUS_SIZE },
             ]);
         },
         [state.blacklistedRegions, setBlacklistedRegions],
@@ -169,7 +171,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         const mapRegion = state.blacklistedRegions.find(
             (blacklistedRegin, ind) => ind === index,
         );
-        setTempSliderValue(mapRegion!.radius);
+        setTempSliderValue(mapRegion?.radius ?? DEFAULT_RADIUS_SIZE);
     }, []);
 
     const handleRemoveRegion = useCallback(
@@ -282,7 +284,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                             <React.Fragment key={`region-${index}`}>
                                 <Circle
                                     center={region}
-                                    radius={region.radius}
+                                    radius={region?.radius}
                                     fillColor={
                                         index === activeRegionIndex
                                             ? "rgba(255, 0, 0, 0.4)"
