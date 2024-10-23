@@ -2,6 +2,7 @@ import { AuthService } from "@/auth/auth.service";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { PendingUserService } from "@/entities/pending-user/pending-user.service";
 import { User } from "@/entities/user/user.entity";
+import { MailchimpService } from "@/transient-services/mailchimp/mailchimp.service";
 import { EEmailVerificationStatus, ELanguage } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Test, TestingModule } from "@nestjs/testing";
@@ -36,6 +37,12 @@ describe("PendingUserService", () => {
                     provide: MailerService,
                     useValue: {
                         sendMail: jest.fn(),
+                    },
+                },
+                {
+                    provide: MailchimpService,
+                    useValue: {
+                        addMailchimpSubscriber: jest.fn(),
                     },
                 },
                 {
