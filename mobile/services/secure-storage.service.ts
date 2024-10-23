@@ -23,6 +23,11 @@ export const deleteSecurelyStoredValue = async (key: string) => {
     await SecureStore.deleteItemAsync(key);
 };
 
+export const deleteOnboardingDataFromStorage = async () => {
+    await SecureStore.deleteItemAsync(SECURE_VALUE.ONBOARDING_SCREEN);
+    await SecureStore.deleteItemAsync(SECURE_VALUE.ONBOARDING_USER);
+};
+
 export const deleteSessionDataFromStorage = async () => {
     const deleteOps: Promise<void>[] = [
         SecureStore.deleteItemAsync(SECURE_VALUE.JWT_ACCESS_TOKEN),

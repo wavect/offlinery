@@ -6,20 +6,20 @@ import { OTroubleMessage } from "@/components/OTroubleMessage/OTroubleMessage";
 import {
     EACTION_USER,
     IUserData,
-    isAuthenticated,
+    isAuthenticatedOrOnboarding,
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
 import {
     SECURE_VALUE,
-    deleteSecurelyStoredValue,
+    deleteOnboardingDataFromStorage,
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
 import { API } from "@/utils/api-config";
 import { writeSupportEmail } from "@/utils/misc.utils";
-import { useFocusEffect } from "@react-navigation/native";
+import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
 import { Dimensions, Platform, StyleSheet, View } from "react-native";
@@ -28,6 +28,7 @@ import { ROUTES } from "./routes";
 
 const Welcome = ({
     navigation,
+    route,
 }: NativeStackScreenProps<MainStackParamList, typeof ROUTES.Welcome>) => {
     const { dispatch } = useUserContext();
     const [isLoading, setIsLoading] = useState(true);
@@ -44,6 +45,9 @@ const Welcome = ({
             const resp = await API.auth.authControllerSignInByJWT({
                 signInJwtDTO: { jwtAccessToken: accessToken },
             });
+
+            await deleteOnboardingDataFromStorage();
+
             userAuthenticatedUpdate(
                 dispatch,
                 navigation,
@@ -57,7 +61,7 @@ const Welcome = ({
             console.log("Forcing user to re-login.");
         }
 
-        return isAuthenticated();
+        return isAuthenticatedOrOnboarding();
     };
     useFocusEffect(
         useCallback(() => {
@@ -85,14 +89,13 @@ const Welcome = ({
 
     const restoreOnboarding = async () => {
         const savedUser = getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER);
-        const savedScreen = getSecurelyStoredValue(
+        const savedStack = getSecurelyStoredValue(
             SECURE_VALUE.ONBOARDING_SCREEN,
         );
-        if (!savedUser || !savedScreen) {
+        if (!savedUser || !savedStack) {
             return;
         }
-        await deleteSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER);
-        await deleteSecurelyStoredValue(SECURE_VALUE.ONBOARDING_SCREEN);
+        await deleteOnboardingDataFromStorage();
 
         const userParsed = JSON.parse(savedUser) as IUserData;
         dispatch({
@@ -104,7 +107,34 @@ const Welcome = ({
                 birthDay: new Date(userParsed.birthDay),
             },
         });
-        navigation.navigate(savedScreen as "Onboarding_AddPhotos");
+        const parsedStack = JSON.parse(savedStack);
+        const restoredRoutes = parsedStack.routes as {
+            name: string;
+            params?: unknown[];
+        }[];
+
+        const filteredRoutes = restoredRoutes
+            .map((r) => ({
+                name: r.name,
+                params: r.params,
+            }))
+            .filter((r) => r.name !== ROUTES.Onboarding.VerifyEmail)
+            .reduce(
+                (acc, current) => {
+                    if (!acc.find((item) => item.name === current.name)) {
+                        acc.push(current);
+                    }
+                    return acc;
+                },
+                [] as { name: string; params?: unknown[] }[],
+            );
+
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: filteredRoutes,
+            }),
+        );
     };
 
     React.useEffect(() => {
@@ -140,7 +170,7 @@ const Welcome = ({
 
     return (
         <OPageColorContainer isLoading={isLoading}>
-            {!isAuthenticated() && <AuthScreen />}
+            {!isAuthenticatedOrOnboarding() && <AuthScreen />}
         </OPageColorContainer>
     );
 };

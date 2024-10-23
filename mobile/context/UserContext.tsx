@@ -17,6 +17,7 @@ import { ROUTES } from "@/screens/routes";
 import { refreshUserData } from "@/services/auth.service";
 import {
     SECURE_VALUE,
+    deleteOnboardingDataFromStorage,
     deleteSessionDataFromStorage,
     getSecurelyStoredValue,
 } from "@/services/secure-storage.service";
@@ -58,8 +59,12 @@ export interface IUserData {
     markedForDeletion: boolean;
 }
 
-export const isAuthenticated = () => {
-    return !!getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
+export const isAuthenticatedOrOnboarding = () => {
+    return (
+        getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN) !== undefined &&
+        getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER) === undefined &&
+        getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_SCREEN) === undefined
+    );
 };
 
 export interface MapRegion {
@@ -257,6 +262,8 @@ export const registerUser = async (
             await API.user.userControllerCreateUser(requestParameters);
         const { user, accessToken, refreshToken } = signInResponseDTO;
         console.log("User created successfully:", user);
+
+        await deleteOnboardingDataFromStorage();
 
         // Update the user state
         refreshUserData(dispatch, user, accessToken, refreshToken);

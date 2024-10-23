@@ -4,6 +4,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { saveOnboardingState } from "@/utils/misc.utils";
 import * as React from "react";
 import { StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -38,6 +39,10 @@ const IntentionChoice = ({
         });
         navigation.navigate(ROUTES.Onboarding.GenderLookingFor);
     };
+
+    React.useEffect(() => {
+        saveOnboardingState(state, navigation.getState());
+    }, []);
 
     return (
         <OPageContainer

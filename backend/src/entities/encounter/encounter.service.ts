@@ -40,6 +40,7 @@ export class EncounterService {
                 ':userId IN (SELECT "userId" FROM user_encounters_encounter WHERE "encounterId" = encounter.id)',
                 { userId },
             )
+            .andWhere("userReports.id IS NULL")
             .leftJoinAndSelect("encounter.users", "allUsers");
 
         if (dateRange.startDate && dateRange.endDate) {

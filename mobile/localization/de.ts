@@ -62,7 +62,7 @@ export const de: Language = {
     beApproachedDescr: "Werde angesprochen. Sicher und respektvoll.",
     both: "Beides",
     bothDescr: "Sprich an und werde angesprochen.",
-    changePossible: "Du kannst diese Einstellung später nicht ändern.",
+    changePossible: "Du kannst diese Einstellung später ändern.",
     approachMeBetween: "Sprich mich an..",
     approachMeBetweenDescr:
         "Zu welchen Zeiten fühlst du dich wohl, angesprochen zu werden? Standard ist tagsüber.",
