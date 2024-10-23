@@ -32,6 +32,9 @@ describe("Environment Validation", () => {
             EMAIL_PASSWORD: "emailpassword",
             BE_PORT: "3000",
             JWT_SECRET_REGISTRATION: "12345",
+            MAILCHIMP_SERVER_PREFIX: "abc",
+            MAILCHIMP_API_KEY: "xyz",
+            MAILCHIMP_AUDIENCE_ID: "123",
         };
 
         const { validateEnv } = require("../../../src/utils/env.utils");
