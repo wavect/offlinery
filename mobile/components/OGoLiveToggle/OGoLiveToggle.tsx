@@ -135,18 +135,24 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
             try {
                 await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
 
-                const allNotifications =
-                    await Notifications.getPresentedNotificationsAsync();
-                for (let index = 0; index < allNotifications.length; index++) {
-                    const notification = allNotifications[index];
-                    if (
-                        notification.request.content.title?.includes(
-                            i18n.t(TR.bgLocationServiceTitle),
-                        )
+                if (Platform.OS === "ios") {
+                    const allNotifications =
+                        await Notifications.getPresentedNotificationsAsync();
+                    for (
+                        let index = 0;
+                        index < allNotifications.length;
+                        index++
                     ) {
-                        await Notifications.dismissNotificationAsync(
-                            notification.request.identifier,
-                        );
+                        const notification = allNotifications[index];
+                        if (
+                            notification.request.content.title?.includes(
+                                i18n.t(TR.bgLocationServiceTitle),
+                            )
+                        ) {
+                            await Notifications.dismissNotificationAsync(
+                                notification.request.identifier,
+                            );
+                        }
                     }
                 }
             } catch (err) {
