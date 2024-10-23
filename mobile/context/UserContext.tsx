@@ -60,7 +60,11 @@ export interface IUserData {
 }
 
 export const isAuthenticated = () => {
-    return !!getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
+    return (
+        getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN) !== undefined &&
+        getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER) === undefined &&
+        getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_SCREEN) === undefined
+    );
 };
 
 export interface MapRegion {

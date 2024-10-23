@@ -19,7 +19,7 @@ import {
 } from "@/services/secure-storage.service";
 import { API } from "@/utils/api-config";
 import { writeSupportEmail } from "@/utils/misc.utils";
-import { useFocusEffect } from "@react-navigation/native";
+import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
 import { Dimensions, Platform, StyleSheet, View } from "react-native";
@@ -28,6 +28,7 @@ import { ROUTES } from "./routes";
 
 const Welcome = ({
     navigation,
+    route,
 }: NativeStackScreenProps<MainStackParamList, typeof ROUTES.Welcome>) => {
     const { dispatch } = useUserContext();
     const [isLoading, setIsLoading] = useState(true);
@@ -91,7 +92,7 @@ const Welcome = ({
         const savedScreen = getSecurelyStoredValue(
             SECURE_VALUE.ONBOARDING_SCREEN,
         );
-        if (!savedUser || !savedScreen) {
+        if (!savedUser || !savedScreen || route.params?.dontResetOnboarding) {
             return;
         }
         await deleteOnboardingDataFromStorage();
@@ -106,7 +107,18 @@ const Welcome = ({
                 birthDay: new Date(userParsed.birthDay),
             },
         });
-        navigation.navigate(savedScreen as any);
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    {
+                        name: ROUTES.Welcome,
+                        params: { dontResetOnboarding: true },
+                    },
+                    { name: savedScreen },
+                ],
+            }),
+        );
     };
 
     React.useEffect(() => {
