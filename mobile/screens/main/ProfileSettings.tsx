@@ -500,6 +500,7 @@ const ProfileSettings = ({
                                     styles.inputSelectedTextStyle
                                 }
                                 itemTextStyle={styles.dropdownItemTextStyle}
+                                activeColor={Color.primaryBright}
                             />
                         )}
                     />
@@ -583,6 +584,7 @@ const ProfileSettings = ({
                                     styles.dropdownSelectedTextStyle
                                 }
                                 selectedStyle={styles.itemSelectedStyle}
+                                activeColor={Color.primaryBright}
                             />
                         )}
                     />
@@ -655,6 +657,7 @@ const ProfileSettings = ({
                                     styles.dropdownSelectedTextStyle
                                 }
                                 selectedStyle={styles.itemSelectedStyle}
+                                activeColor={Color.primaryBright}
                             />
                         )}
                     />
@@ -698,6 +701,7 @@ const ProfileSettings = ({
                                     styles.inputSelectedTextStyle
                                 }
                                 itemTextStyle={styles.dropdownItemTextStyle}
+                                activeColor={Color.primaryBright}
                             />
                         )}
                     />
