@@ -92,7 +92,7 @@ const Welcome = ({
         const savedStack = getSecurelyStoredValue(
             SECURE_VALUE.ONBOARDING_SCREEN,
         );
-        if (!savedUser || !savedStack || route.params?.dontResetOnboarding) {
+        if (!savedUser || !savedStack) {
             return;
         }
         await deleteOnboardingDataFromStorage();

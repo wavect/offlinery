@@ -2,7 +2,7 @@ import { ROUTES } from "@/screens/routes";
 import { createStackNavigator } from "@react-navigation/stack";
 
 export type MainStackParamList = {
-    [ROUTES.Welcome]: { dontResetOnboarding?: boolean } | undefined;
+    [ROUTES.Welcome]: undefined;
     [ROUTES.Login]: undefined;
     [ROUTES.HouseRules]: {
         forceWaitSeconds?: number;
