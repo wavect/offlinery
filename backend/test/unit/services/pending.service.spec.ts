@@ -77,6 +77,7 @@ describe("PendingUserService", () => {
                 registrationService.registerPendingUser({
                     email: "test@example.com",
                     language: ELanguage.en,
+                    wantsEmailUpdates: undefined,
                 }),
             ).rejects.toThrow("Email already exists.");
         });
@@ -93,6 +94,7 @@ describe("PendingUserService", () => {
             const result = await registrationService.registerPendingUser({
                 email,
                 language: ELanguage.en,
+                wantsEmailUpdates: undefined,
             });
 
             expect(result).toHaveProperty("email", email);
@@ -121,6 +123,7 @@ describe("PendingUserService", () => {
             const result = await registrationService.registerPendingUser({
                 email,
                 language: ELanguage.en,
+                wantsEmailUpdates: undefined,
             });
 
             expect(result).toHaveProperty("email", email);
@@ -145,6 +148,7 @@ describe("PendingUserService", () => {
             const result = await registrationService.registerPendingUser({
                 email,
                 language: ELanguage.en,
+                wantsEmailUpdates: undefined,
             });
 
             expect(result).toHaveProperty("email", email);
