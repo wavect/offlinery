@@ -1,9 +1,15 @@
 import { CreateUserDTOPreferredLanguageEnum } from "@/api/gen/src";
+import { IUserData } from "@/context/UserContext";
 import { i18n, TR } from "@/localization/translate.service";
+import {
+    saveValueLocallySecurely,
+    SECURE_VALUE,
+} from "@/services/secure-storage.service";
 import { SUPPORT_MAIL } from "@/utils/general.constants";
 import Constants from "expo-constants";
 import { jwtDecode } from "jwt-decode";
 import { Alert, Linking, Platform } from "react-native";
+import { NativeStackNavigationOptions } from "react-native-screens/lib/typescript/native-stack";
 
 export const REFRESH_REMAINING_MINUTE = 1;
 
@@ -88,5 +94,19 @@ export const showOpenAppSettingsAlert = (
             },
         ],
         { cancelable: true },
+    );
+};
+
+export const saveOnboardingState = (
+    state: IUserData,
+    stack: NativeStackNavigationOptions,
+) => {
+    saveValueLocallySecurely(
+        SECURE_VALUE.ONBOARDING_USER,
+        JSON.stringify(state),
+    );
+    saveValueLocallySecurely(
+        SECURE_VALUE.ONBOARDING_SCREEN,
+        JSON.stringify(stack),
     );
 };

@@ -10,6 +10,7 @@ import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { API } from "@/utils/api-config";
 import { GDPR_URL } from "@/utils/general.constants";
+import { saveOnboardingState } from "@/utils/misc.utils";
 import * as React from "react";
 import { Alert, Linking, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -74,6 +75,10 @@ const GenderLookingFor = ({
             { cancelable: false },
         );
     };
+
+    React.useEffect(() => {
+        saveOnboardingState(state, navigation.getState());
+    }, []);
 
     return (
         <OPageContainer

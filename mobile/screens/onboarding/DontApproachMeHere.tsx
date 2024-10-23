@@ -5,7 +5,9 @@ import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OMap } from "@/components/OMap/OMap";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { saveOnboardingState } from "@/utils/misc.utils";
 import { ROUTES } from "../routes";
 
 type DontApproachMeHereProps = NativeStackScreenProps<
@@ -16,6 +18,12 @@ type DontApproachMeHereProps = NativeStackScreenProps<
 const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
     navigation,
 }) => {
+    const { state } = useUserContext();
+
+    React.useEffect(() => {
+        saveOnboardingState(state, navigation.getState());
+    }, []);
+
     return (
         <OPageContainer
             subtitle={i18n.t(TR.whatAreSpotsToNotApproachYou)}

@@ -7,6 +7,7 @@ import {
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { saveOnboardingState } from "@/utils/misc.utils";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import * as React from "react";
 import { Platform, StyleSheet, View } from "react-native";
@@ -20,6 +21,10 @@ const Birthday = ({
     typeof ROUTES.Onboarding.BirthDay
 >) => {
     const { state, dispatch } = useUserContext();
+
+    React.useEffect(() => {
+        saveOnboardingState(state, navigation.getState());
+    }, []);
 
     const onDatePickerEvent = (event: DateTimePickerEvent, date?: Date) => {
         dispatch({
