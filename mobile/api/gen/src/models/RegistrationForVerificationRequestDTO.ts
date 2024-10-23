@@ -30,6 +30,12 @@ export interface RegistrationForVerificationRequestDTO {
      * @memberof RegistrationForVerificationRequestDTO
      */
     language: RegistrationForVerificationRequestDTOLanguageEnum;
+    /**
+     *
+     * @type {boolean}
+     * @memberof RegistrationForVerificationRequestDTO
+     */
+    wantsEmailUpdates: boolean;
 }
 
 /**
@@ -50,6 +56,11 @@ export function instanceOfRegistrationForVerificationRequestDTO(
 ): value is RegistrationForVerificationRequestDTO {
     if (!("email" in value) || value["email"] === undefined) return false;
     if (!("language" in value) || value["language"] === undefined) return false;
+    if (
+        !("wantsEmailUpdates" in value) ||
+        value["wantsEmailUpdates"] === undefined
+    )
+        return false;
     return true;
 }
 
@@ -69,6 +80,7 @@ export function RegistrationForVerificationRequestDTOFromJSONTyped(
     return {
         email: json["email"],
         language: json["language"],
+        wantsEmailUpdates: json["wantsEmailUpdates"],
     };
 }
 
@@ -81,5 +93,6 @@ export function RegistrationForVerificationRequestDTOToJSON(
     return {
         email: value["email"],
         language: value["language"],
+        wantsEmailUpdates: value["wantsEmailUpdates"],
     };
 }

@@ -6,6 +6,7 @@ import { PendingUserModule } from "@/entities/pending-user/pending-user.module";
 import { UserReportModule } from "@/entities/user-report/user-report.module";
 import { UserModule } from "@/entities/user/user.module";
 import { SeederModule } from "@/seeder/seeder.module";
+import { MailchimpModule } from "@/transient-services/mailchimp/mailchimp.module";
 import { IS_DEV_MODE } from "@/utils/misc.utils";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
@@ -94,6 +95,7 @@ import { TYPED_ENV } from "./utils/env.utils";
         UserModule,
         MatchingModule,
         NotificationModule,
+        MailchimpModule,
         BlacklistedRegionModule,
         UserReportModule,
         AuthModule,

@@ -14,6 +14,7 @@ import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
 import { Create10RealTestPeopleEncounters } from "@/seeder/specific-encounter-seeder.service";
+import { MailchimpModule } from "@/transient-services/mailchimp/mailchimp.module";
 import { MatchingModule } from "@/transient-services/matching/matching.module";
 import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -31,6 +32,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
         PendingUserModule,
         forwardRef(() => MatchingModule),
         forwardRef(() => AuthModule),
+        MailchimpModule,
     ],
     providers: [
         DefaultUserSeeder,

@@ -13,6 +13,11 @@ export class RegistrationForVerificationRequestDTO {
     @ApiProperty({ enum: ELanguage })
     @IsNotEmpty()
     language: ELanguage;
+
+    @ApiProperty()
+    @IsBoolean()
+    @IsNotEmpty()
+    wantsEmailUpdates: boolean;
 }
 
 export class RegistrationForVerificationResponseDTO extends EmailCodeResponseADTO {
