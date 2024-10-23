@@ -50,6 +50,6 @@ export class ApiUserService {
             isAdmin,
             isActive,
         });
-        await this.apiUserRepository.save(newApiUser);
+        return await this.apiUserRepository.save(newApiUser);
     }
 }

@@ -1,4 +1,7 @@
-import { NavigationContainer } from "@react-navigation/native";
+import {
+    NavigationContainer,
+    NavigationContainerRef,
+} from "@react-navigation/native";
 import * as React from "react";
 import { ROUTES } from "./screens/routes";
 
@@ -9,6 +12,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import ResetPassword from "@/screens/ResetPassword";
 import AppIntroductionSwiperScreen from "@/screens/onboarding/AppIntroductionSlider";
 import { getDeviceUserHasSeenIntro } from "@/services/storage.service";
+import { navigationIntegration, setupSentry } from "@/utils/sentry.utils";
 import {
     Montserrat_300Light,
     Montserrat_400Regular,
@@ -16,10 +20,9 @@ import {
     Montserrat_600SemiBold,
 } from "@expo-google-fonts/montserrat";
 import { MaterialIcons } from "@expo/vector-icons";
-import * as Sentry from "@sentry/react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Color, FontSize } from "./GlobalStyles";
 import { MainStack } from "./MainStack.navigator";
 import { UserProvider } from "./context/UserContext";
@@ -44,12 +47,7 @@ import VerifyEmail from "./screens/onboarding/VerifyEmail";
 import WaitingForVerification from "./screens/onboarding/WaitingForVerification";
 import GlobalErrorHandler from "./services/global-error.service";
 
-Sentry.init({
-    dsn: "https://580af3edb138d4a6c73999e61efbe013@o4507911356743680.ingest.de.sentry.io/4507911361003600",
-
-    // uncomment the line below to enable Spotlight (https://spotlightjs.com)
-    // enableSpotlight: __DEV__,
-});
+setupSentry();
 
 const BackIcon = ({ color }: { color: string }) => (
     <MaterialIcons
@@ -93,6 +91,7 @@ export default function App() {
         Montserrat_800ExtraBold,
         Montserrat_900Black,*/
     });
+    const navContainerRef = useRef<NavigationContainerRef<any>>(null);
 
     useEffect(() => {
         async function prepare() {
@@ -127,7 +126,17 @@ export default function App() {
 
     return (
         <GlobalErrorHandler>
-            <NavigationContainer>
+            <NavigationContainer
+                ref={navContainerRef}
+                onReady={() => {
+                    if (!__DEV__) {
+                        // @dev Sentry only in prod
+                        navigationIntegration.registerNavigationContainer(
+                            navContainerRef,
+                        );
+                    }
+                }}
+            >
                 <UserProvider>
                     <MainStack.Navigator
                         initialRouteName={initialComponent}
