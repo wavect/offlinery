@@ -13,6 +13,7 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { saveOnboardingState } from "@/utils/misc.utils";
 import { CommonActions } from "@react-navigation/native";
 import * as React from "react";
 import { useState } from "react";
@@ -76,6 +77,10 @@ const BioLetThemKnow = ({
     const continueToOtherFlow = () => {
         navigation.navigate(ROUTES.Onboarding.SafetyCheck);
     };
+
+    React.useEffect(() => {
+        saveOnboardingState(state, ROUTES.Onboarding.BioLetThemKnow);
+    }, []);
 
     return (
         <OPageContainer

@@ -5,6 +5,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { saveOnboardingState } from "@/utils/misc.utils";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -16,12 +17,16 @@ const GenderChoice = ({
     MainStackParamList,
     typeof ROUTES.Onboarding.GenderChoice
 >) => {
-    const { dispatch } = useUserContext();
+    const { state, dispatch } = useUserContext();
 
     const setGender = (gender: UserPrivateDTOGenderEnum) => {
         dispatch({ type: EACTION_USER.UPDATE_MULTIPLE, payload: { gender } });
         navigation.navigate(ROUTES.Onboarding.IntentionsChoice);
     };
+
+    React.useEffect(() => {
+        saveOnboardingState(state, ROUTES.Onboarding.GenderChoice);
+    }, []);
 
     return (
         <OPageContainer fullpageIcon="transgender">

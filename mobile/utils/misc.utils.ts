@@ -1,5 +1,10 @@
 import { CreateUserDTOPreferredLanguageEnum } from "@/api/gen/src";
+import { IUserData } from "@/context/UserContext";
 import { i18n, TR } from "@/localization/translate.service";
+import {
+    saveValueLocallySecurely,
+    SECURE_VALUE,
+} from "@/services/secure-storage.service";
 import { SUPPORT_MAIL } from "@/utils/general.constants";
 import Constants from "expo-constants";
 import { jwtDecode } from "jwt-decode";
@@ -89,4 +94,12 @@ export const showOpenAppSettingsAlert = (
         ],
         { cancelable: true },
     );
+};
+
+export const saveOnboardingState = (state: IUserData, screen: any) => {
+    saveValueLocallySecurely(
+        SECURE_VALUE.ONBOARDING_USER,
+        JSON.stringify(state),
+    );
+    saveValueLocallySecurely(SECURE_VALUE.ONBOARDING_SCREEN, screen);
 };

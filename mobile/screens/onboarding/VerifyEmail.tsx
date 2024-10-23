@@ -10,7 +10,7 @@ import {
     SECURE_VALUE,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
-import { getLocalLanguageID } from "@/utils/misc.utils";
+import { getLocalLanguageID, saveOnboardingState } from "@/utils/misc.utils";
 import React, { useRef, useState } from "react";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
@@ -78,6 +78,10 @@ const VerifyEmail = ({
             }
         }
     };
+
+    React.useEffect(() => {
+        saveOnboardingState(state, ROUTES.Onboarding.Email);
+    }, []);
 
     return (
         <OPageContainer

@@ -8,6 +8,7 @@ import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
+import { saveOnboardingState } from "@/utils/misc.utils";
 import { isValidPassword } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { useState } from "react";
@@ -66,6 +67,12 @@ const Password = ({
             navigation.navigate(ROUTES.Onboarding.FirstName);
         }
     };
+
+    React.useEffect(() => {
+        if (!isChangePassword) {
+            saveOnboardingState(state, ROUTES.Onboarding.Password);
+        }
+    }, []);
 
     return (
         <OPageContainer

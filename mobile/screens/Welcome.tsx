@@ -13,7 +13,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
 import {
     SECURE_VALUE,
-    deleteSecurelyStoredValue,
+    deleteOnboardingDataFromStorage,
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
@@ -44,6 +44,9 @@ const Welcome = ({
             const resp = await API.auth.authControllerSignInByJWT({
                 signInJwtDTO: { jwtAccessToken: accessToken },
             });
+
+            await deleteOnboardingDataFromStorage();
+
             userAuthenticatedUpdate(
                 dispatch,
                 navigation,
@@ -91,8 +94,7 @@ const Welcome = ({
         if (!savedUser || !savedScreen) {
             return;
         }
-        await deleteSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER);
-        await deleteSecurelyStoredValue(SECURE_VALUE.ONBOARDING_SCREEN);
+        await deleteOnboardingDataFromStorage();
 
         const userParsed = JSON.parse(savedUser) as IUserData;
         dispatch({
@@ -104,7 +106,7 @@ const Welcome = ({
                 birthDay: new Date(userParsed.birthDay),
             },
         });
-        navigation.navigate(savedScreen as "Onboarding_AddPhotos");
+        navigation.navigate(savedScreen as any);
     };
 
     React.useEffect(() => {

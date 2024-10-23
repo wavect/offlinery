@@ -17,6 +17,7 @@ import { ROUTES } from "@/screens/routes";
 import { refreshUserData } from "@/services/auth.service";
 import {
     SECURE_VALUE,
+    deleteOnboardingDataFromStorage,
     deleteSessionDataFromStorage,
     getSecurelyStoredValue,
 } from "@/services/secure-storage.service";
@@ -257,6 +258,8 @@ export const registerUser = async (
             await API.user.userControllerCreateUser(requestParameters);
         const { user, accessToken, refreshToken } = signInResponseDTO;
         console.log("User created successfully:", user);
+
+        await deleteOnboardingDataFromStorage();
 
         // Update the user state
         refreshUserData(dispatch, user, accessToken, refreshToken);

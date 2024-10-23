@@ -4,13 +4,13 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { PhotoContainer } from "@/components/OPhotoContainer/OPhotoContainer";
 import { ImageIdx, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import {
-    SECURE_VALUE,
-    saveValueLocallySecurely,
-} from "@/services/secure-storage.service";
 import { API } from "@/utils/api-config";
 import { isImagePicker } from "@/utils/media.utils";
-import { openAppSettings, showOpenAppSettingsAlert } from "@/utils/misc.utils";
+import {
+    openAppSettings,
+    saveOnboardingState,
+    showOpenAppSettingsAlert,
+} from "@/utils/misc.utils";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import { useState } from "react";
@@ -34,17 +34,10 @@ const AddPhotos = ({
     const { width } = useWindowDimensions();
     const openSettings = async () => {
         if (!route.params?.overrideOnBtnPress) {
-            saveValueLocallySecurely(
-                SECURE_VALUE.ONBOARDING_USER,
-                JSON.stringify(state),
-            );
-            saveValueLocallySecurely(
-                SECURE_VALUE.ONBOARDING_SCREEN,
-                ROUTES.Onboarding.AddPhotos,
-            );
+            saveOnboardingState(state, ROUTES.Onboarding.AddPhotos);
         }
 
-        openAppSettings();
+        await openAppSettings();
     };
     React.useEffect(() => {
         if (

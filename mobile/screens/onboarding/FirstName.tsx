@@ -4,6 +4,7 @@ import OErrorMessage from "@/components/OErrorMessage.tsx/OErrorMessage";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { saveOnboardingState } from "@/utils/misc.utils";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, TextInput, View } from "react-native";
@@ -31,6 +32,10 @@ const FirstName = ({
             firstName: state.firstName || "",
         },
     });
+
+    React.useEffect(() => {
+        saveOnboardingState(state, ROUTES.Onboarding.FirstName);
+    }, []);
 
     const isFormValid =
         isValid &&
