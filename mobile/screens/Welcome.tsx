@@ -6,7 +6,7 @@ import { OTroubleMessage } from "@/components/OTroubleMessage/OTroubleMessage";
 import {
     EACTION_USER,
     IUserData,
-    isAuthenticated,
+    isAuthenticatedOrOnboarding,
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
@@ -61,7 +61,7 @@ const Welcome = ({
             console.log("Forcing user to re-login.");
         }
 
-        return isAuthenticated();
+        return isAuthenticatedOrOnboarding();
     };
     useFocusEffect(
         useCallback(() => {
@@ -170,7 +170,7 @@ const Welcome = ({
 
     return (
         <OPageColorContainer isLoading={isLoading}>
-            {!isAuthenticated() && <AuthScreen />}
+            {!isAuthenticatedOrOnboarding() && <AuthScreen />}
         </OPageColorContainer>
     );
 };

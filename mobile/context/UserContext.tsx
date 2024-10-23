@@ -59,7 +59,7 @@ export interface IUserData {
     markedForDeletion: boolean;
 }
 
-export const isAuthenticated = () => {
+export const isAuthenticatedOrOnboarding = () => {
     return (
         getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN) !== undefined &&
         getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER) === undefined &&
