@@ -40,6 +40,11 @@ export const IntroductionSliderWhatWeNeed: React.FC = () => {
                         {i18n.t(TR.page3AddText5)}
                     </Text>
                 </View>
+                <View style={styles.oneLineTextContainer}>
+                    <Text style={styles.additionalText}>
+                        {i18n.t(TR.page3AddText6)}
+                    </Text>
+                </View>
             </View>
         </View>
     );
