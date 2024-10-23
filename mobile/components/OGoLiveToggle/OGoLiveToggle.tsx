@@ -11,6 +11,7 @@ import { getLocallyStoredUserData } from "@/services/storage.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
 import { showOpenAppSettingsAlert } from "@/utils/misc.utils";
+import { setupSentry } from "@/utils/sentry.utils";
 import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
@@ -32,6 +33,7 @@ export const LOCATION_TASK_NAME = "background-location-task";
 
 // Define the background task for location tracking
 TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
+    setupSentry();
     if (error) {
         console.error(`Task error ${error}`);
         return;
