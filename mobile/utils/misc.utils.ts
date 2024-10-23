@@ -9,6 +9,7 @@ import { SUPPORT_MAIL } from "@/utils/general.constants";
 import Constants from "expo-constants";
 import { jwtDecode } from "jwt-decode";
 import { Alert, Linking, Platform } from "react-native";
+import { NativeStackNavigationOptions } from "react-native-screens/lib/typescript/native-stack";
 
 export const REFRESH_REMAINING_MINUTE = 1;
 
@@ -96,10 +97,16 @@ export const showOpenAppSettingsAlert = (
     );
 };
 
-export const saveOnboardingState = (state: IUserData, screen: any) => {
+export const saveOnboardingState = (
+    state: IUserData,
+    stack: NativeStackNavigationOptions,
+) => {
     saveValueLocallySecurely(
         SECURE_VALUE.ONBOARDING_USER,
         JSON.stringify(state),
     );
-    saveValueLocallySecurely(SECURE_VALUE.ONBOARDING_SCREEN, screen);
+    saveValueLocallySecurely(
+        SECURE_VALUE.ONBOARDING_SCREEN,
+        JSON.stringify(stack),
+    );
 };

@@ -77,7 +77,7 @@ const GenderLookingFor = ({
     };
 
     React.useEffect(() => {
-        saveOnboardingState(state, ROUTES.Onboarding.GenderLookingFor);
+        saveOnboardingState(state, navigation.getState());
     }, []);
 
     return (

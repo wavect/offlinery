@@ -25,7 +25,7 @@ const GenderChoice = ({
     };
 
     React.useEffect(() => {
-        saveOnboardingState(state, ROUTES.Onboarding.GenderChoice);
+        saveOnboardingState(state, navigation.getState());
     }, []);
 
     return (

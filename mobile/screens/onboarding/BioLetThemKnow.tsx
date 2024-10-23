@@ -79,7 +79,7 @@ const BioLetThemKnow = ({
     };
 
     React.useEffect(() => {
-        saveOnboardingState(state, ROUTES.Onboarding.BioLetThemKnow);
+        saveOnboardingState(state, navigation.getState());
     }, []);
 
     return (

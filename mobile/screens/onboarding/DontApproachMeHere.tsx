@@ -21,7 +21,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
     const { state } = useUserContext();
 
     React.useEffect(() => {
-        saveOnboardingState(state, ROUTES.Onboarding.DontApproachMeHere);
+        saveOnboardingState(state, navigation.getState());
     }, []);
 
     return (

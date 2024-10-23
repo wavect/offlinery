@@ -34,7 +34,7 @@ const FirstName = ({
     });
 
     React.useEffect(() => {
-        saveOnboardingState(state, ROUTES.Onboarding.FirstName);
+        saveOnboardingState(state, navigation.getState());
     }, []);
 
     const isFormValid =

@@ -23,7 +23,7 @@ const Birthday = ({
     const { state, dispatch } = useUserContext();
 
     React.useEffect(() => {
-        saveOnboardingState(state, ROUTES.Onboarding.BirthDay);
+        saveOnboardingState(state, navigation.getState());
     }, []);
 
     const onDatePickerEvent = (event: DateTimePickerEvent, date?: Date) => {

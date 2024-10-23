@@ -50,7 +50,7 @@ const Email = ({
     };
 
     React.useEffect(() => {
-        saveOnboardingState(state, ROUTES.Onboarding.Email);
+        saveOnboardingState(state, navigation.getState());
     }, []);
 
     return (

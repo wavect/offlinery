@@ -41,7 +41,7 @@ const IntentionChoice = ({
     };
 
     React.useEffect(() => {
-        saveOnboardingState(state, ROUTES.Onboarding.IntentionsChoice);
+        saveOnboardingState(state, navigation.getState());
     }, []);
 
     return (

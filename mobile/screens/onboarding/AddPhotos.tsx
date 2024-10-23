@@ -34,7 +34,7 @@ const AddPhotos = ({
     const { width } = useWindowDimensions();
     const openSettings = async () => {
         if (!route.params?.overrideOnBtnPress) {
-            saveOnboardingState(state, ROUTES.Onboarding.AddPhotos);
+            saveOnboardingState(state, navigation.getState());
         }
 
         await openAppSettings();

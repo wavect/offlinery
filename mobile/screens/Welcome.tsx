@@ -89,10 +89,10 @@ const Welcome = ({
 
     const restoreOnboarding = async () => {
         const savedUser = getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER);
-        const savedScreen = getSecurelyStoredValue(
+        const savedStack = getSecurelyStoredValue(
             SECURE_VALUE.ONBOARDING_SCREEN,
         );
-        if (!savedUser || !savedScreen || route.params?.dontResetOnboarding) {
+        if (!savedUser || !savedStack || route.params?.dontResetOnboarding) {
             return;
         }
         await deleteOnboardingDataFromStorage();
@@ -107,16 +107,32 @@ const Welcome = ({
                 birthDay: new Date(userParsed.birthDay),
             },
         });
+        const parsedStack = JSON.parse(savedStack);
+        const restoredRoutes = parsedStack.routes as {
+            name: string;
+            params?: unknown[];
+        }[];
+
+        const filteredRoutes = restoredRoutes
+            .map((r) => ({
+                name: r.name,
+                params: r.params,
+            }))
+            .filter((r) => r.name !== ROUTES.Onboarding.VerifyEmail)
+            .reduce(
+                (acc, current) => {
+                    if (!acc.find((item) => item.name === current.name)) {
+                        acc.push(current);
+                    }
+                    return acc;
+                },
+                [] as { name: string; params?: unknown[] }[],
+            );
+
         navigation.dispatch(
             CommonActions.reset({
                 index: 1,
-                routes: [
-                    {
-                        name: ROUTES.Welcome,
-                        params: { dontResetOnboarding: true },
-                    },
-                    { name: savedScreen },
-                ],
+                routes: filteredRoutes,
             }),
         );
     };

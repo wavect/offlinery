@@ -65,7 +65,7 @@ const ApproachChoice = ({
     };
 
     React.useEffect(() => {
-        saveOnboardingState(state, ROUTES.Onboarding.ApproachChoice);
+        saveOnboardingState(state, navigation.getState());
     }, []);
 
     return (

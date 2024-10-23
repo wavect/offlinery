@@ -55,7 +55,7 @@ const ApproachMeBetween = ({
     };
 
     React.useEffect(() => {
-        saveOnboardingState(state, ROUTES.Onboarding.ApproachMeBetween);
+        saveOnboardingState(state, navigation.getState());
     }, []);
 
     return (

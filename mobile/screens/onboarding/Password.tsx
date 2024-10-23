@@ -70,7 +70,7 @@ const Password = ({
 
     React.useEffect(() => {
         if (!isChangePassword) {
-            saveOnboardingState(state, ROUTES.Onboarding.Password);
+            saveOnboardingState(state, navigation.getState());
         }
     }, []);
 
