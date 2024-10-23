@@ -50,6 +50,9 @@ describe("Environment Validation", () => {
         expect(result.EMAIL_HOST).toBe("smtp.example.com");
         expect(result.EMAIL_USERNAME).toBe("user@example.com");
         expect(result.EMAIL_PASSWORD).toBe("emailpassword");
+        expect(result.MAILCHIMP_SERVER_PREFIX).toBe("abc");
+        expect(result.MAILCHIMP_API_KEY).toBe("xyz");
+        expect(result.MAILCHIMP_AUDIENCE_ID).toBe("123");
         expect(result.BE_PORT).toBe(3000);
     });
 
