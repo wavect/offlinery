@@ -1,6 +1,9 @@
+import { FontFamily } from "@/GlobalStyles";
 import { CreateUserDTOPreferredLanguageEnum } from "@/api/gen/src";
 import { getLocales } from "expo-localization";
 import { I18n } from "i18n-js";
+import React, { ReactNode } from "react";
+import { Text } from "react-native";
 import { de } from "./de";
 import { en } from "./en";
 
@@ -55,3 +58,22 @@ function createDeepKeyMirror<T extends Record<string, any>>(
 
     return result as DeepKeyMirror<T>;
 }
+
+export const formatBoldText = (text: string): ReactNode => {
+    const parts = text.split(/(<b>|<\/b>)/);
+
+    return parts.map((part: string, index: number) => {
+        if (part === "<b>" || part === "</b>") return null;
+        if (parts[index - 1] === "<b>") {
+            return (
+                <Text
+                    key={index}
+                    style={{ fontFamily: FontFamily.montserratSemiBold }}
+                >
+                    {part}
+                </Text>
+            );
+        }
+        return <Text key={index}>{part}</Text>;
+    });
+};
