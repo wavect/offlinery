@@ -73,6 +73,7 @@ const OMessageModal = (props: IOMessageModalProps) => {
                         onChangeText={setMessage}
                         value={message}
                         placeholder={i18n.t(TR.enterMessage)}
+                        placeholderTextColor={Color.gray}
                         multiline
                     />
                     {messageError && (
