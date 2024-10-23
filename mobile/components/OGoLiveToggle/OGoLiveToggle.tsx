@@ -15,7 +15,7 @@ import { setupSentry } from "@/utils/sentry.utils";
 import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
     Platform,
     StyleProp,
@@ -75,18 +75,16 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
 
 export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
     const { dispatch, state } = useUserContext();
-    const [notificationId, setNotificationId] = useState<string>();
 
     const sendLocationNotification = async () => {
         if (Platform.OS === "ios") {
-            const id = await Notifications.scheduleNotificationAsync({
+            await Notifications.scheduleNotificationAsync({
                 content: {
                     title: i18n.t(TR.bgLocationServiceTitle),
                     body: i18n.t(TR.bgLocationServiceBody),
                 },
                 trigger: null,
             });
-            setNotificationId(id);
         }
     };
 
@@ -136,10 +134,26 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
         } else {
             try {
                 await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
-                if (notificationId) {
-                    await Notifications.dismissNotificationAsync(
-                        notificationId,
-                    );
+
+                if (Platform.OS === "ios") {
+                    const allNotifications =
+                        await Notifications.getPresentedNotificationsAsync();
+                    for (
+                        let index = 0;
+                        index < allNotifications.length;
+                        index++
+                    ) {
+                        const notification = allNotifications[index];
+                        if (
+                            notification.request.content.title?.includes(
+                                i18n.t(TR.bgLocationServiceTitle),
+                            )
+                        ) {
+                            await Notifications.dismissNotificationAsync(
+                                notification.request.identifier,
+                            );
+                        }
+                    }
                 }
             } catch (err) {
                 console.error(err);
