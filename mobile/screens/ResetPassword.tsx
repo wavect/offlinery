@@ -1,5 +1,6 @@
 import { Color, FontFamily } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
+import { UserApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import OErrorMessage from "@/components/OErrorMessage.tsx/OErrorMessage";
 import { ONewPasswordGroup } from "@/components/ONewPasswordGroup/ONewPasswordGroup";
@@ -49,12 +50,14 @@ const ResetPassword = ({
     };
 
     const sendVerificationCode = async () => {
-        const result =
-            await API.user.userControllerRequestPasswordChangeAsForgotten({
+        const api = new UserApi();
+        const result = await api.userControllerRequestPasswordChangeAsForgotten(
+            {
                 resetPasswordRequestDTO: {
                     email: state.email,
                 },
-            });
+            },
+        );
         if (!result.email) {
             throw new Error("User does not exist or unknown error.");
         }
