@@ -5,13 +5,12 @@ import {
     EGender,
     EIntention,
 } from "@/types/user.types";
-import { writeBenchmarkResult } from "@/utils/misc.utils";
 import { TestingModule } from "@nestjs/testing";
 import { DataSource } from "typeorm";
 import { PointBuilder } from "../../../_src/builders/point.builder";
 import { UserFactory } from "../../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../../_src/modules/integration-test.module";
-import { clearDatabase } from "../../../_src/utils/utils";
+import { clearDatabase, writeBenchmarkResult } from "../../../_src/utils/utils";
 const Benchmarkify = require("benchmarkify");
 
 describe("Matching Service Benchmarks ", () => {
