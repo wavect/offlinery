@@ -85,7 +85,6 @@ export class UserRepository extends Repository<User> {
             /** @dev TODO: Make this configurable by users. */
             .withinDistance(userToBeApproached.location, 1500)
             .withUserWantingToBeApproached()
-            .withVerificationStatusVerified()
             .getMany();
     }
 
