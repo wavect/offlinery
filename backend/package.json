@@ -32,6 +32,7 @@
         "migration:revert": "pnpm run typeorm -- -d ./src/typeorm.config.ts migration:revert"
     },
     "dependencies": {
+        "@influxdata/influxdb-client": "^1.35.0",
         "@mailchimp/mailchimp_marketing": "^3.0.80",
         "@nestjs-modules/mailer": "^2.0.2",
         "@nestjs/cache-manager": "^2.2.2",
