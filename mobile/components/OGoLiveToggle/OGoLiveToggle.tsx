@@ -1,17 +1,16 @@
+import { Color } from "@/GlobalStyles";
 import {
-    LocationUpdateDTO,
     UpdateUserDTO,
     UserPrivateDTOApproachChoiceEnum,
     UserPrivateDTODateModeEnum,
 } from "@/api/gen/src";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
-import { Color } from "@/GlobalStyles";
-import { i18n, TR } from "@/localization/translate.service";
-import { getLocallyStoredUserData } from "@/services/storage.service";
+import { TR, i18n } from "@/localization/translate.service";
+import { LOCATION_TASK_NAME } from "@/tasks/location.task";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
 import { showOpenAppSettingsAlert } from "@/utils/misc.utils";
-import { setupSentry } from "@/utils/sentry.utils";
+import * as Sentry from "@sentry/react-native";
 import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
@@ -28,50 +27,6 @@ import {
 interface IOGoLiveToggleProps {
     style?: StyleProp<ViewStyle>;
 }
-
-export const LOCATION_TASK_NAME = "background-location-task";
-
-// Define the background task for location tracking
-TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
-    setupSentry();
-    if (error) {
-        console.error(`Task error ${error}`);
-        return;
-    }
-    if (data) {
-        const locations = (data as any).locations as Location.LocationObject[];
-        const user = getLocallyStoredUserData();
-        console.log("User Connected: ", user?.id?.slice(0, 8));
-        const userId = user?.id;
-        if (!userId) {
-            console.error("UserID undefined in location task service.");
-            return;
-        }
-
-        if (locations && locations.length > 0 && userId) {
-            const location = locations[locations.length - 1];
-            const locationUpdateDTO: LocationUpdateDTO = {
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-            };
-
-            try {
-                await API.user.userControllerUpdateLocation({
-                    userId,
-                    locationUpdateDTO: locationUpdateDTO,
-                });
-                console.log(
-                    `[TASK:LOCATION_UPDATE]: User Location updated successfully`,
-                );
-            } catch (error) {
-                console.error(
-                    "Error updating location:",
-                    JSON.stringify(error),
-                );
-            }
-        }
-    }
-});
 
 export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
     const { dispatch, state } = useUserContext();
@@ -143,6 +98,11 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 }
             } catch (err) {
                 console.error(err);
+                Sentry.captureException(err, {
+                    tags: {
+                        location_service: "startBackgroundLocationTracking",
+                    },
+                });
             }
             console.log(
                 "Not running location service due to user settings (ghost mode).",
