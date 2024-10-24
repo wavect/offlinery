@@ -12,6 +12,7 @@ import {
 } from "@/services/secure-storage.service";
 import { getLocalLanguageID, saveOnboardingState } from "@/utils/misc.utils";
 import React, { useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
@@ -22,8 +23,18 @@ const VerifyEmail = ({
     MainStackParamList,
     typeof ROUTES.Onboarding.VerifyEmail
 >) => {
-    const { state, dispatch } = useUserContext();
+    const { state } = useUserContext();
     const [isCodeValid, setIsCodeValid] = useState(false);
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            code: "",
+        },
+    });
+
     const codeRef = useRef<string>("");
     const api = new PendingUserApi();
 
@@ -69,7 +80,7 @@ const VerifyEmail = ({
         setIsCodeValid(false);
     };
 
-    const handleSubmit = async () => {
+    const onSubmit = async () => {
         if (isCodeValid) {
             const success = await verifyCode(codeRef.current);
             if (success) {
@@ -94,29 +105,35 @@ const VerifyEmail = ({
                     filled={true}
                     disabled={!isCodeValid}
                     variant="dark"
-                    onPress={handleSubmit}
+                    onPress={handleSubmit(onSubmit)}
                 />
             }
             subtitle={i18n.t(TR.verificationCodeSent)}
         >
-            <OSplitInput
-                sendCodeAutomatically={true}
-                sendCode={sendVerificationCode}
-                onError={onError}
-                onCodeValidChange={(isValid, code) => {
-                    setIsCodeValid(isValid);
-                    codeRef.current = code;
+            <Controller
+                control={control}
+                name="code"
+                rules={{
+                    validate: () => isCodeValid,
                 }}
+                render={({ field: { onChange } }) => (
+                    <OSplitInput
+                        sendCodeAutomatically={true}
+                        sendCode={sendVerificationCode}
+                        onError={onError}
+                        onCodeValidChange={(isValid, code) => {
+                            setIsCodeValid(isValid);
+                            onChange(code);
+                            codeRef.current = code;
+                        }}
+                    />
+                )}
             />
+
             <OErrorMessage
                 style={styles.errorMsg}
                 errorMessage={i18n.t(TR.verificationCodeInvalid)}
                 show={!isCodeValid && codeRef.current.length === 6}
-            />
-            <OErrorMessage
-                style={styles.errorMsg}
-                errorMessage={i18n.t(TR.invalidEmailOrExists)}
-                show={!isCodeValid && codeRef.current.length === 0}
             />
         </OPageContainer>
     );
