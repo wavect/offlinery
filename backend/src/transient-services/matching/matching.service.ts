@@ -55,6 +55,9 @@ export class MatchingService {
     public async notifyMatches(userToBeApproached: User): Promise<void> {
         const nearbyMatches = await this.findNearbyMatches(userToBeApproached);
 
+        this.logger.debug(
+            `Found ${nearbyMatches.length} for user ${userToBeApproached.id}`,
+        );
         if (nearbyMatches?.length > 0) {
             const baseNotification: OBaseNotification = {
                 sound: "default",
@@ -76,6 +79,9 @@ export class MatchingService {
                     true, // they are all nearby rn
                     true, // reset older encounters
                 );
+            this.logger.debug(
+                `Saved ${newEncounters.size} new encounters for user ${userToBeApproached.id}`,
+            );
 
             const notifications: OfflineryNotification[] = [];
             for (const user of nearbyMatches) {
@@ -90,6 +96,9 @@ export class MatchingService {
             }
 
             await this.notificationService.sendPushNotification(notifications);
+            this.logger.debug(
+                `Sent ${notifications.length} notifications for userToBeApproached ${userToBeApproached.id}`,
+            );
         }
     }
 
