@@ -1,4 +1,5 @@
 import { TYPED_ENV } from "@/utils/env.utils";
+import { existsSync, mkdirSync, writeFileSync } from "fs";
 import process from "process";
 
 export const API_VERSION = "1";
@@ -41,4 +42,15 @@ export function parseToAgeRangeString(range: number[]): string {
         throw new Error(`Range must have length 2: ${range}`);
     }
     return `[${range[0]}, ${range[1]}]`;
+}
+
+export function writeBenchmarkResult(result: any) {
+    const benchmarksDir = "./benchmarks";
+    if (!existsSync(benchmarksDir)) {
+        mkdirSync(benchmarksDir);
+    }
+
+    const filePath = `${benchmarksDir}/benchmark-results-${new Date().toISOString()}.json`;
+    writeFileSync(filePath, JSON.stringify(result, null, 2));
+    console.log(`Benchmark results written to ${filePath}`);
 }
