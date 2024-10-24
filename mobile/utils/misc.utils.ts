@@ -5,8 +5,10 @@ import {
     saveValueLocallySecurely,
     SECURE_VALUE,
 } from "@/services/secure-storage.service";
+import { LOCATION_TASK_NAME } from "@/tasks/location.task";
 import { SUPPORT_MAIL } from "@/utils/general.constants";
 import Constants from "expo-constants";
+import * as TaskManager from "expo-task-manager";
 import { jwtDecode } from "jwt-decode";
 import { Alert, Linking, Platform } from "react-native";
 import { NativeStackNavigationOptions } from "react-native-screens/lib/typescript/native-stack";
@@ -109,4 +111,10 @@ export const saveOnboardingState = (
         SECURE_VALUE.ONBOARDING_SCREEN,
         JSON.stringify(stack),
     );
+};
+
+export const stopLocationBackgroundTask = async () => {
+    if (await TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME)) {
+        TaskManager.unregisterTaskAsync(LOCATION_TASK_NAME);
+    }
 };
