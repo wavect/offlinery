@@ -189,10 +189,10 @@ export const MainScreenTabs = ({
                 options={{
                     tabBarLabel: i18n.t(TR.encounters),
                     headerTitle: i18n.t(TR.encounters),
-                    tabBarBadge:
-                        unreadNotifications.length === 0
-                            ? undefined
-                            : unreadNotifications.length,
+                    // tabBarBadge:
+                    // unreadNotifications.length === 0
+                    //     ? undefined
+                    //     : unreadNotifications.length,
                     tabBarIcon: ({ color, size }) => (
                         <MaterialIcons
                             name="emoji-people"
