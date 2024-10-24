@@ -47,7 +47,7 @@ import VerifyEmail from "./screens/onboarding/VerifyEmail";
 import WaitingForVerification from "./screens/onboarding/WaitingForVerification";
 import GlobalErrorHandler from "./services/global-error.service";
 
-setupSentry();
+setupSentry(false);
 
 const BackIcon = ({ color }: { color: string }) => (
     <MaterialIcons

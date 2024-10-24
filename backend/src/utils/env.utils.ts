@@ -17,6 +17,9 @@ const envSchema = z.object({
     EMAIL_USERNAME: z.string(),
     EMAIL_PASSWORD: z.string(),
     BE_PORT: z.string().transform(Number),
+    MAILCHIMP_AUDIENCE_ID: z.string(),
+    MAILCHIMP_API_KEY: z.string(),
+    MAILCHIMP_SERVER_PREFIX: z.string(),
 });
 
 // Type for the validated environment

@@ -1,6 +1,7 @@
 import { AuthModule } from "@/auth/auth.module";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
+import { MailchimpModule } from "@/transient-services/mailchimp/mailchimp.module";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -12,6 +13,7 @@ import { PendingUserService } from "./pending-user.service";
         ConfigModule.forRoot(),
         TypeOrmModule.forFeature([PendingUser, User]),
         AuthModule,
+        MailchimpModule,
     ],
     providers: [PendingUserService],
     controllers: [PendingUserController],

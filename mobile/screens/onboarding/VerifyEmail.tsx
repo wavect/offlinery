@@ -12,6 +12,7 @@ import {
 } from "@/services/secure-storage.service";
 import { getLocalLanguageID, saveOnboardingState } from "@/utils/misc.utils";
 import React, { useRef, useState } from "react";
+import { StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -44,6 +45,7 @@ const VerifyEmail = ({
                 registrationForVerificationRequestDTO: {
                     email: state.email,
                     language: getLocalLanguageID(),
+                    wantsEmailUpdates: state.wantsEmailUpdates,
                 },
             });
 
@@ -107,12 +109,24 @@ const VerifyEmail = ({
                 }}
             />
             <OErrorMessage
-                style={{ alignSelf: "center" }}
+                style={styles.errorMsg}
                 errorMessage={i18n.t(TR.verificationCodeInvalid)}
                 show={!isCodeValid && codeRef.current.length === 6}
+            />
+            <OErrorMessage
+                style={styles.errorMsg}
+                errorMessage={i18n.t(TR.invalidEmailOrExists)}
+                show={!isCodeValid && codeRef.current.length === 0}
             />
         </OPageContainer>
     );
 };
+
+const styles = StyleSheet.create({
+    errorMsg: {
+        alignSelf: "center",
+        marginTop: 6,
+    },
+});
 
 export default VerifyEmail;

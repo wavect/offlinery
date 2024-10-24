@@ -31,7 +31,7 @@ export interface GetLocationOfEncounterResponseDTO {
      */
     longitude: number;
     /**
-     * Last time this location was updated
+     * Last time location was updated
      * @type {Date}
      * @memberof GetLocationOfEncounterResponseDTO
      */

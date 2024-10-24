@@ -5,6 +5,7 @@ import {
 } from "@/DTOs/registration-for-verification.dto";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
+import { MailchimpService } from "@/transient-services/mailchimp/mailchimp.service";
 import {
     EEmailVerificationStatus,
     ELanguage,
@@ -40,6 +41,7 @@ export class PendingUserService {
         private readonly mailService: MailerService,
         private readonly i18n: I18nService,
         private authService: AuthService,
+        private mailchimpService: MailchimpService,
     ) {}
 
     public async registerPendingUser(
@@ -106,6 +108,16 @@ export class PendingUserService {
                 pendingUser.email = dto.email;
                 pendingUser.verificationStatus =
                     EEmailVerificationStatus.PENDING;
+
+                if (dto.wantsEmailUpdates) {
+                    const newsletterSignUpSuccessful =
+                        await this.mailchimpService.addMailchimpSubscriber(
+                            pendingUser.email,
+                        );
+                    this.logger.debug(
+                        `Tried to sign up user to mailchimp newsletter as checkbox checked. Success: ${newsletterSignUpSuccessful}, email: ${dto.email}`,
+                    );
+                }
             }
 
             this.logger.debug(`Issuing new verification code for user.`);
