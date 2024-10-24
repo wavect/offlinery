@@ -17,11 +17,9 @@ import {
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
+import { stopLocationBackgroundTask } from "@/tasks/location.task";
 import { API } from "@/utils/api-config";
-import {
-    stopLocationBackgroundTask,
-    writeSupportEmail,
-} from "@/utils/misc.utils";
+import { writeSupportEmail } from "@/utils/misc.utils";
 import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";

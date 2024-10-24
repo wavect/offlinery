@@ -122,3 +122,9 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
         });
     }
 });
+
+export const stopLocationBackgroundTask = async () => {
+    if (await TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME)) {
+        TaskManager.unregisterTaskAsync(LOCATION_TASK_NAME);
+    }
+};

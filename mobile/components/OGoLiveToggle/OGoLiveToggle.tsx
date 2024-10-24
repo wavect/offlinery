@@ -6,13 +6,13 @@ import {
 } from "@/api/gen/src";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { LOCATION_TASK_NAME } from "@/tasks/location.task";
+import {
+    LOCATION_TASK_NAME,
+    stopLocationBackgroundTask,
+} from "@/tasks/location.task";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
-import {
-    showOpenAppSettingsAlert,
-    stopLocationBackgroundTask,
-} from "@/utils/misc.utils";
+import { showOpenAppSettingsAlert } from "@/utils/misc.utils";
 import * as Sentry from "@sentry/react-native";
 import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
