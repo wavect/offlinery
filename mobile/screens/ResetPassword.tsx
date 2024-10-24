@@ -10,7 +10,6 @@ import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
-import { API } from "@/utils/api-config";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import React, { useRef, useState } from "react";
 import { StyleSheet, Text } from "react-native";
@@ -34,7 +33,8 @@ const ResetPassword = ({
 
     const verifyCode = async (verificationCode: string) => {
         try {
-            await API.user.userControllerResetPassword({
+            const api = new UserApi();
+            await api.userControllerResetPassword({
                 verifyResetPasswordDTO: {
                     email: state.email,
                     verificationCode,
