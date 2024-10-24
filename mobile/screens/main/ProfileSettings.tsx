@@ -188,10 +188,6 @@ const ProfileSettings = ({
                         ],
                     }),
                 );
-            } else {
-                navigation.navigate(ROUTES.MainTabView, {
-                    screen: ROUTES.Main.FindPeople,
-                });
             }
         } catch (error) {
             console.error("Error updating user profile:", error);
