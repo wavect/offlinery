@@ -14,7 +14,7 @@
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-        "test": "jest --silent --forceExit --runInBand",
+        "test": "jest --silent --forceExit --runInBand --testPathIgnorePatterns=\"/node_modules/|/test/unit/_src/|/test/_src/|/test/_config/|/test/integration/services/benchmarks/\"",
         "test:watch": "jest --watch --detectOpenHandles --runInBand",
         "test:cov": "jest --coverage --detectOpenHandles --runInBand",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -120,8 +120,7 @@
         "testPathIgnorePatterns": [
             "<rootDir>/test/unit/_src/",
             "<rootDir>/test/_src/",
-            "<rootDir>/test/_config/",
-            "<rootDir>/test/integration/services/benchmarks"
+            "<rootDir>/test/_config/"
         ],
         "transform": {
             "^.+\\.(t|j)s$": "ts-jest"
