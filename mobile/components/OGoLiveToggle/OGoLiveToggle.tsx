@@ -9,7 +9,10 @@ import { TR, i18n } from "@/localization/translate.service";
 import { LOCATION_TASK_NAME } from "@/tasks/location.task";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
-import { showOpenAppSettingsAlert } from "@/utils/misc.utils";
+import {
+    showOpenAppSettingsAlert,
+    stopLocationBackgroundTask,
+} from "@/utils/misc.utils";
 import * as Sentry from "@sentry/react-native";
 import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
@@ -88,7 +91,7 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
             }
         } else {
             try {
-                await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+                await stopLocationBackgroundTask();
 
                 if (Platform.OS === "ios") {
                     const allNotifications =
