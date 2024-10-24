@@ -36,7 +36,6 @@ export class UserRepository extends Repository<User> {
             .withDesiredGender(userToBeApproached.genderDesire)
             .withGenderDesire(userToBeApproached.gender)
             .withIntentions(userToBeApproached.intentions)
-            .withVerificationStatusVerified()
             .withinAgeRange(
                 getAgeRangeParsed(userToBeApproached.ageRangeString),
             )
