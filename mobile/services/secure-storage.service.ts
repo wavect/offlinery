@@ -16,7 +16,7 @@ export const getSecurelyStoredValue = (key: string) => {
 
 /** @dev Saves value in local, secure storage */
 export const saveValueLocallySecurely = (key: string, value: string) => {
-    SecureStore.setItem(key, value);
+    SecureStore.setItem(key, value, { keychainAccessible: SecureStore.ALWAYS });
 };
 
 export const deleteSecurelyStoredValue = async (key: string) => {
@@ -24,8 +24,11 @@ export const deleteSecurelyStoredValue = async (key: string) => {
 };
 
 export const deleteOnboardingDataFromStorage = async () => {
-    await SecureStore.deleteItemAsync(SECURE_VALUE.ONBOARDING_SCREEN);
-    await SecureStore.deleteItemAsync(SECURE_VALUE.ONBOARDING_USER);
+    const deleteOps: Promise<void>[] = [
+        SecureStore.deleteItemAsync(SECURE_VALUE.ONBOARDING_SCREEN),
+        SecureStore.deleteItemAsync(SECURE_VALUE.ONBOARDING_USER),
+    ];
+    await Promise.all(deleteOps);
 };
 
 export const deleteSessionDataFromStorage = async () => {
