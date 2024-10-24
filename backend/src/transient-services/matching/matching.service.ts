@@ -56,7 +56,7 @@ export class MatchingService {
         const nearbyMatches = await this.findNearbyMatches(userToBeApproached);
 
         this.logger.debug(
-            `Found ${nearbyMatches.length} for user ${userToBeApproached.id}`,
+            `Found ${nearbyMatches?.length ?? 0} for user ${userToBeApproached.id}`,
         );
         if (nearbyMatches?.length > 0) {
             const baseNotification: OBaseNotification = {
