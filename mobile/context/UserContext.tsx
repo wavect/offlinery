@@ -11,7 +11,6 @@ import {
     UserPrivateDTOVerificationStatusEnum,
     UserPublicDTO,
 } from "@/api/gen/src";
-import { LOCATION_TASK_NAME } from "@/components/OGoLiveToggle/OGoLiveToggle";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { refreshUserData } from "@/services/auth.service";
@@ -22,6 +21,7 @@ import {
     getSecurelyStoredValue,
 } from "@/services/secure-storage.service";
 import { updateUserDataLocally } from "@/services/storage.service";
+import { LOCATION_TASK_NAME } from "@/tasks/location.task";
 import { API } from "@/utils/api-config";
 import { getAge } from "@/utils/date.utils";
 import { getValidImgURI, isImagePicker } from "@/utils/media.utils";
