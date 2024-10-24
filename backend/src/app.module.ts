@@ -53,7 +53,7 @@ import { TYPED_ENV } from "./utils/env.utils";
                 from: '"No Reply" <noreply@offlinery.io>',
             },
             template: {
-                dir: join(__dirname, "mail"),
+                dir: join(__dirname, IS_DEV_MODE ? "../mail" : "mail"),
                 adapter: new HandlebarsAdapter(),
                 options: {
                     strict: true,
