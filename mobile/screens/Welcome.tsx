@@ -6,7 +6,7 @@ import { OTroubleMessage } from "@/components/OTroubleMessage/OTroubleMessage";
 import {
     EACTION_USER,
     IUserData,
-    isAuthenticatedOrOnboarding,
+    isAuthenticatedAndNotOnboarding,
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
@@ -36,14 +36,15 @@ const Welcome = ({
 
     const checkAuthStatus = async () => {
         try {
-            const accessToken = getSecurelyStoredValue(
-                SECURE_VALUE.JWT_ACCESS_TOKEN,
+            const refreshToken = getSecurelyStoredValue(
+                SECURE_VALUE.JWT_REFRESH_TOKEN,
             );
-            if (!accessToken) {
+            if (!refreshToken) {
                 console.log("forcing re-login");
                 await stopLocationBackgroundTask();
                 return;
             }
+            const accessToken = API.ensureValidToken(); // TODO: NOT WORKING YET, but this might be the solution?
             const resp = await API.auth.authControllerSignInByJWT({
                 signInJwtDTO: { jwtAccessToken: accessToken },
             });
@@ -65,7 +66,7 @@ const Welcome = ({
             console.log("Forcing user to re-login.");
         }
 
-        return isAuthenticatedOrOnboarding();
+        return isAuthenticatedAndNotOnboarding();
     };
     useFocusEffect(
         useCallback(() => {
@@ -175,7 +176,7 @@ const Welcome = ({
 
     return (
         <OPageColorContainer isLoading={isLoading}>
-            {!isAuthenticatedOrOnboarding() && <AuthScreen />}
+            {!isAuthenticatedAndNotOnboarding() && <AuthScreen />}
         </OPageColorContainer>
     );
 };

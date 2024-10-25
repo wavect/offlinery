@@ -93,7 +93,7 @@ class ApiManager {
         });
     }
 
-    private async ensureValidToken(): Promise<string> {
+    public async ensureValidToken(): Promise<string> {
         let jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
 
         if (jwtToken && !jwtExpiresSoon(jwtToken)) {
