@@ -11,7 +11,7 @@ import {
     PROVIDER_TOKEN_LOGGER,
 } from "@/transient-services/logging/influx-db.logger";
 import { MailchimpModule } from "@/transient-services/mailchimp/mailchimp.module";
-import { IS_DEV_MODE } from "@/utils/misc.utils";
+import { environmentSpecificPathPrefix, IS_DEV_MODE } from "@/utils/misc.utils";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { CacheInterceptor, CacheModule } from "@nestjs/cache-manager";
@@ -57,7 +57,7 @@ import { TYPED_ENV } from "./utils/env.utils";
                 from: '"No Reply" <noreply@offlinery.io>',
             },
             template: {
-                dir: join(__dirname, IS_DEV_MODE ? "../mail" : "mail"),
+                dir: join(__dirname, environmentSpecificPathPrefix, "mail"),
                 adapter: new HandlebarsAdapter(),
                 options: {
                     strict: true,
@@ -93,7 +93,11 @@ import { TYPED_ENV } from "./utils/env.utils";
             },
         ]),
         ServeStaticModule.forRoot({
-            rootPath: join(__dirname, "..", "uploads/img"),
+            rootPath: join(
+                __dirname,
+                environmentSpecificPathPrefix,
+                "uploads/img",
+            ),
             serveRoot: "/img",
         }),
         UserModule,

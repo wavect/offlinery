@@ -1,4 +1,5 @@
 import { TYPED_ENV } from "@/utils/env.utils";
+import { IS_DEV_MODE } from "@/utils/misc.utils";
 import { InfluxDB, Point } from "@influxdata/influxdb-client";
 import { ConsoleLogger, Injectable, LoggerService } from "@nestjs/common";
 
@@ -19,7 +20,7 @@ export class InfluxLogger extends ConsoleLogger implements LoggerService {
         const token = TYPED_ENV.INFLUXDB_TOKEN;
         this.org = TYPED_ENV.INFLUXDB_ORG || "offlinery";
         this.bucket = TYPED_ENV.INFLUXDB_BUCKET || "logs";
-        this.isProduction = TYPED_ENV.NODE_ENV?.toLowerCase() === "production";
+        this.isProduction = !IS_DEV_MODE;
 
         if (!this.isProduction) {
             super.warn(

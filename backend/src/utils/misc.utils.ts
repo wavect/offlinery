@@ -1,8 +1,8 @@
 import { TYPED_ENV } from "@/utils/env.utils";
-import process from "process";
 
 export const API_VERSION = "1";
-export const IS_DEV_MODE = process.env.NODE_ENV === "development";
+export const IS_DEV_MODE =
+    TYPED_ENV.NODE_ENV?.toLowerCase()?.trim() === "development";
 
 export const BE_ENDPOINT = IS_DEV_MODE
     ? `http://localhost:${TYPED_ENV.BE_PORT}`
@@ -42,3 +42,5 @@ export function parseToAgeRangeString(range: number[]): string {
     }
     return `[${range[0]}, ${range[1]}]`;
 }
+
+export const environmentSpecificPathPrefix = IS_DEV_MODE ? ".." : "";

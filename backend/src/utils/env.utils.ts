@@ -24,7 +24,7 @@ const envSchema = z.object({
     INFLUXDB_TOKEN: z.string().optional(),
     INFLUXDB_ORG: z.string().optional(),
     INFLUXDB_BUCKET: z.string().optional(),
-    NODE_ENV: z.string().optional(), // @dev supplied in Dockerfile
+    NODE_ENV: z.string().default("development"), // @dev supplied in Dockerfile
 });
 
 // Type for the validated environment
