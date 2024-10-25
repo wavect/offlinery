@@ -20,7 +20,7 @@ jobs:
         id: benchmark
         working-directory: ./backend
         run: |
-          pnpm test
+          pnpm benchmark
           # Archive benchmark result files
           if [ -d "benchmarks" ]; then
             tar -czf benchmarks.tar.gz -C benchmarks .
