@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 10,
         textAlign: "center",
+        maxWidth: "95%",
     },
     description: {
         fontFamily: FontFamily.montserratLight,

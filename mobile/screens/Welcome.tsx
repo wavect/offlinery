@@ -17,6 +17,7 @@ import {
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
+import { stopLocationBackgroundTask } from "@/tasks/location.task";
 import { API } from "@/utils/api-config";
 import { writeSupportEmail } from "@/utils/misc.utils";
 import { CommonActions, useFocusEffect } from "@react-navigation/native";
@@ -40,6 +41,7 @@ const Welcome = ({
             );
             if (!accessToken) {
                 console.log("forcing re-login");
+                await stopLocationBackgroundTask();
                 return;
             }
             const resp = await API.auth.authControllerSignInByJWT({
@@ -58,6 +60,8 @@ const Welcome = ({
         } catch (error) {
             saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
             saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
+            await stopLocationBackgroundTask();
+
             console.log("Forcing user to re-login.");
         }
 
@@ -70,6 +74,7 @@ const Welcome = ({
                     if (!isOnboardingInProgress()) {
                         await checkAuthStatus();
                     }
+                    await stopLocationBackgroundTask();
                 } catch (error) {
                     console.error("Error checking authentication:", error);
                     throw error;

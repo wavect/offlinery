@@ -6,6 +6,10 @@ import { PendingUserModule } from "@/entities/pending-user/pending-user.module";
 import { UserReportModule } from "@/entities/user-report/user-report.module";
 import { UserModule } from "@/entities/user/user.module";
 import { SeederModule } from "@/seeder/seeder.module";
+import {
+    InfluxLogger,
+    PROVIDER_TOKEN_LOGGER,
+} from "@/transient-services/logging/influx-db.logger";
 import { MailchimpModule } from "@/transient-services/mailchimp/mailchimp.module";
 import { IS_DEV_MODE } from "@/utils/misc.utils";
 import { MailerModule } from "@nestjs-modules/mailer";
@@ -53,7 +57,7 @@ import { TYPED_ENV } from "./utils/env.utils";
                 from: '"No Reply" <noreply@offlinery.io>',
             },
             template: {
-                dir: join(__dirname, "mail"),
+                dir: join(__dirname, IS_DEV_MODE ? "../mail" : "mail"),
                 adapter: new HandlebarsAdapter(),
                 options: {
                     strict: true,
@@ -117,6 +121,11 @@ import { TYPED_ENV } from "./utils/env.utils";
             provide: APP_GUARD,
             useClass: AuthGuard,
         },
+        {
+            provide: PROVIDER_TOKEN_LOGGER,
+            useClass: InfluxLogger,
+        },
     ],
+    exports: [PROVIDER_TOKEN_LOGGER],
 })
 export class AppModule {}

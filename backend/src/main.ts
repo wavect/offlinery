@@ -3,6 +3,7 @@ import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
 import { Create10RealTestPeopleEncounters } from "@/seeder/specific-encounter-seeder.service";
+import { InfluxLogger } from "@/transient-services/logging/influx-db.logger";
 import { API_VERSION, BE_ENDPOINT } from "@/utils/misc.utils";
 import { INestApplication, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
@@ -25,6 +26,7 @@ async function bootstrap() {
             preflightContinue: false,
             optionsSuccessStatus: 204,
         },
+        logger: new InfluxLogger(),
     });
 
     const userSeederService = app.get(DefaultUserSeeder);
@@ -37,6 +39,9 @@ async function bootstrap() {
     app.enableVersioning({
         type: VersioningType.URI,
     });
+
+    // Ensure logs are written on application shutdown
+    app.enableShutdownHooks();
 
     // security base line
     app.use(helmet());

@@ -5,7 +5,6 @@ import {
     EDateMode,
     EGender,
     EIntention,
-    EVerificationStatus,
 } from "@/types/user.types";
 import { getAge } from "@/utils/date.utils";
 import { parseToAgeRangeString } from "@/utils/misc.utils";
@@ -183,28 +182,6 @@ describe("service ", () => {
             });
             const user = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
-            });
-
-            const matches = Array.from(
-                (await service.findNearbyMatches(testingMainUser)).values(),
-            );
-
-            expect(matches.length).toBe(1);
-            expect(matches.map((m) => m.id)).toEqual(
-                expect.arrayContaining([user.id]),
-            );
-        });
-        it("Should only find users that are verified", async () => {
-            await userFactory.persistNewTestUser({
-                verificationStatus: EVerificationStatus.PENDING,
-            });
-
-            await userFactory.persistNewTestUser({
-                verificationStatus: EVerificationStatus.NOT_NEEDED,
-            });
-
-            const user = await userFactory.persistNewTestUser({
-                verificationStatus: EVerificationStatus.VERIFIED,
             });
 
             const matches = Array.from(

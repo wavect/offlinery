@@ -6,7 +6,10 @@ import {
 } from "@/api/gen/src";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { LOCATION_TASK_NAME } from "@/tasks/location.task";
+import {
+    LOCATION_TASK_NAME,
+    stopLocationBackgroundTask,
+} from "@/tasks/location.task";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
 import { showOpenAppSettingsAlert } from "@/utils/misc.utils";
@@ -88,7 +91,7 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
             }
         } else {
             try {
-                await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+                await stopLocationBackgroundTask();
 
                 if (Platform.OS === "ios") {
                     const allNotifications =

@@ -112,7 +112,7 @@ export class EncounterService {
                 (u) => u.id,
             );
 
-            await this.encounterRepository
+            const updateRes = await this.encounterRepository
                 .createQueryBuilder("encounter")
                 .innerJoin(
                     "encounter.users",
@@ -136,7 +136,9 @@ export class EncounterService {
                 .set({ isNearbyRightNow: false })
                 .execute();
 
-            this.logger.debug(`Resetted nearbyStatus of other encounters.`);
+            this.logger.debug(
+                `Resetted nearbyStatus of ${updateRes.affected} other encounters.`,
+            );
         }
         return newEncounters;
     }
