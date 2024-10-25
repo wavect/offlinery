@@ -91,6 +91,8 @@ services:
       - INFLUXDB_BUCKET=${INFLUXDB_BUCKET:-logs}
     networks:
       - app_network
+    volumes:
+      - ./uploads:/usr/src/app/uploads
     depends_on:
       - postgres
       - influxdb

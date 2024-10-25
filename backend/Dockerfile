@@ -49,7 +49,7 @@ RUN mkdir -p /app/dist/mail
 COPY --from=builder /usr/src/app/dist/mail ./dist/mail
 
 # Create a specific directory for view templates
-RUN mkdir -p /app/dist/views
+RUN mkdir -p /app/dist/views && mkdir -p /app/dist/uploads
 COPY --from=builder /usr/src/app/dist/views ./dist/views
 
 # Expose application port
