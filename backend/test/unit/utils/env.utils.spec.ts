@@ -123,6 +123,7 @@ describe("Environment Validation", () => {
             MAILCHIMP_SERVER_PREFIX: "abc",
             MAILCHIMP_API_KEY: "xyz",
             MAILCHIMP_AUDIENCE_ID: "123",
+            NODE_ENV: "development",
         });
     });
 });
