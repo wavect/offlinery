@@ -1,3 +1,4 @@
+import { TYPED_ENV } from "@/utils/env.utils";
 import { InfluxDB, Point } from "@influxdata/influxdb-client";
 import { ConsoleLogger, Injectable, LoggerService } from "@nestjs/common";
 
@@ -9,14 +10,23 @@ export class InfluxLogger extends ConsoleLogger implements LoggerService {
     private readonly org: string;
     private readonly bucket: string;
     private readonly writeApi: any;
+    private readonly isProduction: boolean;
 
     constructor() {
         super();
         // Load configuration from environment variables
-        const url = process.env.INFLUXDB_URL || "http://localhost:8086";
-        const token = process.env.INFLUXDB_TOKEN;
-        this.org = process.env.INFLUXDB_ORG || "offlinery";
-        this.bucket = process.env.INFLUXDB_BUCKET || "logs";
+        const url = TYPED_ENV.INFLUXDB_URL || "http://localhost:8086";
+        const token = TYPED_ENV.INFLUXDB_TOKEN;
+        this.org = TYPED_ENV.INFLUXDB_ORG || "offlinery";
+        this.bucket = TYPED_ENV.INFLUXDB_BUCKET || "logs";
+        this.isProduction = TYPED_ENV.NODE_ENV?.toLowerCase() === "production";
+
+        if (!this.isProduction) {
+            super.warn(
+                "Not saving logs into InfluxDB as backend not set to production!",
+            );
+            return;
+        }
 
         // Initialize InfluxDB client
         this.influx = new InfluxDB({ url, token });
@@ -29,27 +39,29 @@ export class InfluxLogger extends ConsoleLogger implements LoggerService {
         context?: string,
         trace?: string,
     ) {
-        try {
-            const point = new Point("log")
-                .tag("level", level)
-                .tag("context", context || "global")
-                .tag("message", message.substring(0, 249)) // InfluxDB tags have a length limit, but are indexable
-                .stringField("message", message);
+        if (this.isProduction) {
+            try {
+                const point = new Point("log")
+                    .tag("level", level)
+                    .tag("context", context || "global")
+                    .tag("message", message.substring(0, 249)) // InfluxDB tags have a length limit, but are indexable
+                    .stringField("message", message);
 
-            if (trace) {
-                point.stringField("trace", trace);
+                if (trace) {
+                    point.stringField("trace", trace);
+                }
+
+                // Add timestamp
+                point.timestamp(new Date());
+
+                // Write to InfluxDB
+                this.writeApi.writePoint(point);
+                this.writeApi.flush().catch((err: Error) => {
+                    super.error("Error writing to InfluxDB:", err);
+                });
+            } catch (err) {
+                super.error(`InfluxDB Logger could not save log to influxDB.`);
             }
-
-            // Add timestamp
-            point.timestamp(new Date());
-
-            // Write to InfluxDB
-            this.writeApi.writePoint(point);
-            this.writeApi.flush().catch((err: Error) => {
-                console.error("Error writing to InfluxDB:", err);
-            });
-        } catch (err) {
-            super.error(`InfluxDB Logger could not save log to influxDB.`);
         }
     }
 

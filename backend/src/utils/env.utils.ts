@@ -20,6 +20,11 @@ const envSchema = z.object({
     MAILCHIMP_AUDIENCE_ID: z.string(),
     MAILCHIMP_API_KEY: z.string(),
     MAILCHIMP_SERVER_PREFIX: z.string(),
+    INFLUXDB_URL: z.string().optional(),
+    INFLUXDB_TOKEN: z.string().optional(),
+    INFLUXDB_ORG: z.string().optional(),
+    INFLUXDB_BUCKET: z.string().optional(),
+    NODE_ENV: z.string().optional(), // @dev supplied in Dockerfile
 });
 
 // Type for the validated environment
