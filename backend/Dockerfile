@@ -19,8 +19,8 @@ COPY . .
 # Build the application
 RUN pnpm build
 
-# Copy mail templates to dist during build
-RUN cp -r mail dist/
+# Copy mail & view templates to dist during build
+RUN cp -r mail dist/ && cp -r views dist/
 
 # Production stage
 FROM node:20-alpine AS production
@@ -47,6 +47,10 @@ COPY --from=builder /usr/src/app/dist ./dist
 # Create a specific directory for mail templates
 RUN mkdir -p /app/dist/mail
 COPY --from=builder /usr/src/app/dist/mail ./dist/mail
+
+# Create a specific directory for view templates
+RUN mkdir -p /app/dist/views
+COPY --from=builder /usr/src/app/dist/views ./dist/views
 
 # Expose application port
 EXPOSE 3000

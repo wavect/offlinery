@@ -4,7 +4,11 @@ import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
 import { Create10RealTestPeopleEncounters } from "@/seeder/specific-encounter-seeder.service";
 import { InfluxLogger } from "@/transient-services/logging/influx-db.logger";
-import { API_VERSION, BE_ENDPOINT } from "@/utils/misc.utils";
+import {
+    API_VERSION,
+    BE_ENDPOINT,
+    environmentSpecificPathPrefix,
+} from "@/utils/misc.utils";
 import { INestApplication, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
@@ -47,7 +51,7 @@ async function bootstrap() {
     app.use(helmet());
 
     // @dev Allow views to be rendered too (e.g. forms), views need to be outside src
-    const viewsDir = join(__dirname, "..", "views");
+    const viewsDir = join(__dirname, environmentSpecificPathPrefix, "views");
     app.setBaseViewsDir(viewsDir);
     app.setViewEngine("hbs");
     console.log("Views directory:", viewsDir);
