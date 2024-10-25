@@ -6,7 +6,7 @@ import { OTroubleMessage } from "@/components/OTroubleMessage/OTroubleMessage";
 import {
     EACTION_USER,
     IUserData,
-    isAuthenticatedOrOnboarding,
+    isAuthenticated,
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
@@ -29,7 +29,6 @@ import { ROUTES } from "./routes";
 
 const Welcome = ({
     navigation,
-    route,
 }: NativeStackScreenProps<MainStackParamList, typeof ROUTES.Welcome>) => {
     const { dispatch } = useUserContext();
     const [isLoading, setIsLoading] = useState(true);
@@ -65,7 +64,7 @@ const Welcome = ({
             console.log("Forcing user to re-login.");
         }
 
-        return isAuthenticatedOrOnboarding();
+        return isAuthenticated();
     };
     useFocusEffect(
         useCallback(() => {
@@ -89,7 +88,7 @@ const Welcome = ({
 
     const isOnboardingInProgress = () => {
         const savedUser = getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER);
-        return savedUser !== null;
+        return !!savedUser;
     };
 
     const restoreOnboarding = async () => {
@@ -175,7 +174,7 @@ const Welcome = ({
 
     return (
         <OPageColorContainer isLoading={isLoading}>
-            {!isAuthenticatedOrOnboarding() && <AuthScreen />}
+            {!isAuthenticated() && <AuthScreen />}
         </OPageColorContainer>
     );
 };

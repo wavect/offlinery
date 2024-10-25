@@ -60,12 +60,8 @@ export interface IUserData {
     markedForDeletion: boolean;
 }
 
-export const isAuthenticatedOrOnboarding = () => {
-    return (
-        getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN) !== undefined &&
-        getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER) === undefined &&
-        getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_SCREEN) === undefined
-    );
+export const isAuthenticated = () => {
+    return !!getSecurelyStoredValue(SECURE_VALUE.JWT_REFRESH_TOKEN);
 };
 
 export interface MapRegion {
