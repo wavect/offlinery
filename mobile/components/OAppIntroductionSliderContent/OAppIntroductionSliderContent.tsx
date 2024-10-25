@@ -15,45 +15,47 @@ export const OAppIntroductionSliderContent = (
 ) => {
     const { img, title, description, conclusion } = props;
     return (
-        <View style={[styles.slide, { justifyContent: "space-between" }]}>
+        <View style={styles.slide}>
             <View style={{ flex: 1 }}>
-                <View style={[styles.imageContainer, { flex: 0.6 }]}>
+                <View style={styles.imageContainer}>
                     <Image
                         source={img}
-                        style={[styles.image, { height: "100%" }]}
+                        style={styles.image}
                         resizeMode="contain"
                     />
                 </View>
 
                 <View style={{ flex: 0.4 }}>
-                    <Text style={[styles.title, { marginTop: 0 }]}>
+                    <Text
+                        style={styles.title}
+                        adjustsFontSizeToFit={true}
+                        numberOfLines={2}
+                    >
                         {title}
                     </Text>
                     <View>
-                        <Text style={styles.description}>
+                        <Text
+                            style={styles.description}
+                            adjustsFontSizeToFit={true}
+                            numberOfLines={5}
+                        >
                             {formatBoldText(description)}
                         </Text>
                     </View>
                 </View>
             </View>
 
-            <View
-                style={[
-                    styles.bottomAdditionalContainer,
-                    {
-                        marginTop: "auto",
-                        paddingBottom: 60,
-                    },
-                ]}
-            >
+            <View style={styles.bottomAdditionalContainer}>
                 <View style={styles.divideContainer}>
-                    <View style={[styles.divider, { marginVertical: 16 }]} />
+                    <View style={styles.divider} />
                 </View>
 
-                <View
-                    style={[styles.oneLineTextContainer, { marginBottom: 8 }]}
-                >
-                    <Text style={styles.conclusion}>
+                <View style={styles.conclusionContainer}>
+                    <Text
+                        style={styles.conclusion}
+                        adjustsFontSizeToFit={true}
+                        numberOfLines={3}
+                    >
                         {formatBoldText(conclusion)}
                     </Text>
                 </View>
@@ -67,24 +69,21 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingRight: 24,
         paddingLeft: 24,
-        paddingBottom: 0,
-        textAlign: "left",
+        justifyContent: "space-between",
     },
     imageContainer: {
-        display: "flex",
+        flex: 0.6,
         marginTop: 20,
         marginBottom: 20,
     },
     image: {
-        width: "100%",
-        height: "60%",
+        height: "100%",
     },
     title: {
         fontFamily: FontFamily.montserratSemiBold,
         fontSize: 28,
         fontWeight: "bold",
         color: "white",
-        marginTop: 20,
         marginBottom: 10,
         textAlign: "center",
         maxWidth: "95%",
@@ -92,6 +91,8 @@ const styles = StyleSheet.create({
     description: {
         fontFamily: FontFamily.montserratLight,
         fontSize: 18,
+        marginLeft: 20,
+        marginRight: 20,
         color: "white",
         textAlign: "center",
     },
@@ -108,16 +109,15 @@ const styles = StyleSheet.create({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 10,
-        marginBottom: 10,
+        marginTop: 20,
+        marginBottom: 20,
     },
     divider: {
         height: 1,
         backgroundColor: "white",
         width: "50%",
-        marginVertical: 20,
     },
-    oneLineTextContainer: {
+    conclusionContainer: {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",

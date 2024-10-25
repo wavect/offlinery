@@ -79,6 +79,7 @@ const AppIntroduction: React.FC<AppIntroductionProps> = ({ navigation }) => {
         <OLinearBackground>
             <View style={styles.container}>
                 <View style={styles.header}>
+                    <Text style={styles.pageIndicator}>{currentPage}/4</Text>
                     <TouchableOpacity
                         onPress={proceedToWelcomePage}
                         style={[
@@ -92,37 +93,35 @@ const AppIntroduction: React.FC<AppIntroductionProps> = ({ navigation }) => {
                         </Text>
                     </TouchableOpacity>
                 </View>
-                <Swiper
-                    ref={swiperRef}
-                    showsButtons={true}
-                    showsPagination={true}
-                    dotColor={Color.white}
-                    activeDotColor={Color.schemesPrimary}
-                    nextButton={
-                        <MaterialIcons
-                            name="chevron-right"
-                            size={45}
-                            color={Color.schemesPrimary}
-                        />
-                    }
-                    prevButton={
-                        <MaterialIcons
-                            name="chevron-left"
-                            size={45}
-                            color={Color.schemesPrimary}
-                        />
-                    }
-                    paginationStyle={{
-                        bottom: 0,
-                        paddingBottom: 20,
-                    }}
-                    loop={false}
-                    onIndexChanged={(index) => setCurrentPage(index + 1)}
-                >
-                    {swiperComponents.map((SwipableComponent, index) => (
-                        <SwipableComponent key={index} />
-                    ))}
-                </Swiper>
+                <View style={styles.swiperContainer}>
+                    <Swiper
+                        ref={swiperRef}
+                        showsButtons={true}
+                        showsPagination={false}
+                        dotColor={Color.white}
+                        activeDotColor={Color.schemesPrimary}
+                        nextButton={
+                            <MaterialIcons
+                                name="chevron-right"
+                                size={45}
+                                color={Color.schemesPrimary}
+                            />
+                        }
+                        prevButton={
+                            <MaterialIcons
+                                name="chevron-left"
+                                size={45}
+                                color={Color.schemesPrimary}
+                            />
+                        }
+                        loop={false}
+                        onIndexChanged={(index) => setCurrentPage(index + 1)}
+                    >
+                        {swiperComponents.map((SwipableComponent, index) => (
+                            <SwipableComponent key={index} />
+                        ))}
+                    </Swiper>
+                </View>
                 <View style={styles.footer}>
                     <TouchableOpacity
                         onPress={proceedToWelcomePage}
@@ -153,29 +152,44 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: "row",
-        justifyContent: "flex-end",
-        alignItems: "flex-end",
+        justifyContent: "space-between",
+        alignItems: "center",
         paddingTop: Platform.OS === "ios" ? 60 : 40,
         paddingBottom: 20,
+        paddingHorizontal: 20, // Add padding to match skipLinkContainer's right margin
+    },
+    pageIndicator: {
+        fontFamily: FontFamily.montserratSemiBold,
+        color: Color.white,
+        fontSize: 16,
+        marginLeft: 20,
+    },
+    swiperContainer: {
+        flex: 1,
     },
     skipLinkContainer: {
-        height: 24, // Fixed height to maintain space
+        height: 24,
         marginRight: 20,
     },
     skipLink: {
         fontFamily: FontFamily.montserratSemiBold,
-        color: "white",
+        color: Color.white,
         fontSize: 16,
         textDecorationLine: "none",
     },
     footer: {
         flexDirection: "row",
-        justifyContent: "center", // Changed to center since we only have one button
+        justifyContent: "center",
         alignItems: "center",
         marginTop: 20,
         marginBottom: Platform.OS === "ios" ? 40 : 20,
         paddingHorizontal: 20,
-        height: 52, // Fixed height to maintain space
+        height: 52,
+        zIndex: 1, // Ensure footer stays above pagination
+    },
+    pagination: {
+        bottom: Platform.OS === "ios" ? -10 : -20, // Position pagination below the footer
+        zIndex: 0, // Keep pagination behind footer
     },
     registerNowContainer: {
         display: "flex",
