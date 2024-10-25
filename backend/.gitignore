@@ -1,4 +1,5 @@
 .idea
+benchmarks/
 
 # compiled output
 /dist
