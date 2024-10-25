@@ -180,6 +180,11 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 "\nStack trace:",
                 error.stack,
             );
+            Sentry.captureException(error, {
+                tags: {
+                    location_service: "switchLocationToggle",
+                },
+            });
             alert(i18n.t(TR.errRequestingPermissions));
         }
     };
