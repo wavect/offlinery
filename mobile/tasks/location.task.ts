@@ -3,6 +3,7 @@ import { API } from "@/utils/api-config";
 import { setupSentry } from "@/utils/sentry.utils";
 import * as Sentry from "@sentry/react-native";
 import * as Location from "expo-location";
+import * as Network from "expo-network";
 import * as TaskManager from "expo-task-manager";
 
 export const LOCATION_TASK_NAME = "background-location-task";
@@ -73,6 +74,14 @@ const updateUserLocation = async (
 
 TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     try {
+        const networkState = await Network.getNetworkStateAsync();
+        if (!networkState?.isInternetReachable) {
+            console.warn(
+                `Tried running backgroundLocationService but not active internet connection. Exiting function.`,
+            );
+            return;
+        }
+
         setupSentry(true);
 
         if (error) {
