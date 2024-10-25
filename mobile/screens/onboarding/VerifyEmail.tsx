@@ -24,12 +24,10 @@ const VerifyEmail = ({
     typeof ROUTES.Onboarding.VerifyEmail
 >) => {
     const { state } = useUserContext();
-    const [isCodeValid, setIsCodeValid] = useState(false);
-    const {
-        control,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
+    const [isCodeValid, setIsCodeValid] = useState<
+        "invalidMail" | "invalidCode" | "valid" | undefined
+    >();
+    const { control, handleSubmit } = useForm({
         defaultValues: {
             code: "",
         },
@@ -51,33 +49,36 @@ const VerifyEmail = ({
     };
 
     const sendVerificationCode = async () => {
-        const result =
-            await api.pendingUserControllerRegisterUserForEmailVerification({
-                registrationForVerificationRequestDTO: {
-                    email: state.email,
-                    language: getLocalLanguageID(),
-                    wantsEmailUpdates: state.wantsEmailUpdates,
-                },
-            });
+        try {
+            const result =
+                await api.pendingUserControllerRegisterUserForEmailVerification(
+                    {
+                        registrationForVerificationRequestDTO: {
+                            email: state.email,
+                            language: getLocalLanguageID(),
+                            wantsEmailUpdates: state.wantsEmailUpdates,
+                        },
+                    },
+                );
 
-        if (result.registrationJWToken) {
-            // @dev Registration specific jwt token, not valid for authenticating a user
-            saveValueLocallySecurely(
-                SECURE_VALUE.JWT_ACCESS_TOKEN,
-                result.registrationJWToken,
-            );
+            if (result.registrationJWToken) {
+                // @dev Registration specific jwt token, not valid for authenticating a user
+                saveValueLocallySecurely(
+                    SECURE_VALUE.JWT_ACCESS_TOKEN,
+                    result.registrationJWToken,
+                );
+            }
+
+            if (!result.email) {
+                throw new Error("Error registering email");
+            } else if (result.alreadyVerifiedButNotRegistered) {
+                navigation.replace(ROUTES.Onboarding.Password);
+            }
+            return result;
+        } catch (error) {
+            setIsCodeValid("invalidMail");
+            throw error;
         }
-
-        if (!result.email) {
-            throw new Error("Error registering email");
-        } else if (result.alreadyVerifiedButNotRegistered) {
-            navigation.replace(ROUTES.Onboarding.Password);
-        }
-        return result;
-    };
-
-    const onError = async () => {
-        setIsCodeValid(false);
     };
 
     const onSubmit = async () => {
@@ -87,7 +88,7 @@ const VerifyEmail = ({
                 navigation.replace(ROUTES.Onboarding.Password);
             } else {
                 // Handle verification failure
-                setIsCodeValid(false);
+                setIsCodeValid("invalidCode");
             }
         }
     };
@@ -103,7 +104,7 @@ const VerifyEmail = ({
                 <OButtonWide
                     text={i18n.t(TR.verify)}
                     filled={true}
-                    disabled={!isCodeValid}
+                    disabled={isCodeValid !== "valid"}
                     variant="dark"
                     onPress={handleSubmit(onSubmit)}
                 />
@@ -114,15 +115,16 @@ const VerifyEmail = ({
                 control={control}
                 name="code"
                 rules={{
-                    validate: () => isCodeValid,
+                    validate: () => isCodeValid === "valid",
                 }}
                 render={({ field: { onChange } }) => (
                     <OSplitInput
                         sendCodeAutomatically={true}
                         sendCode={sendVerificationCode}
-                        onError={onError}
                         onCodeValidChange={(isValid, code) => {
-                            setIsCodeValid(isValid);
+                            console.log("code: ", code);
+                            console.log("isvalid: ", isValid);
+                            setIsCodeValid(isValid ? "valid" : "invalidCode");
                             onChange(code);
                             codeRef.current = code;
                         }}
@@ -133,7 +135,15 @@ const VerifyEmail = ({
             <OErrorMessage
                 style={styles.errorMsg}
                 errorMessage={i18n.t(TR.verificationCodeInvalid)}
-                show={!isCodeValid && codeRef.current.length === 6}
+                show={
+                    isCodeValid === "invalidCode" &&
+                    codeRef.current.length === 6
+                }
+            />
+            <OErrorMessage
+                style={styles.errorMsg}
+                errorMessage={i18n.t(TR.invalidEmailOrExists)}
+                show={isCodeValid === "invalidMail"}
             />
         </OPageContainer>
     );
