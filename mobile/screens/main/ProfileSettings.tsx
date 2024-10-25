@@ -250,7 +250,13 @@ const ProfileSettings = ({
             >
                 <View style={styles.settingsButtonContent}>
                     <MaterialIcons name={icon} size={30} color="#000" />
-                    <Text style={styles.settingsButtonText}>{text}</Text>
+                    <Text
+                        style={styles.settingsButtonText}
+                        adjustsFontSizeToFit={true}
+                        numberOfLines={2}
+                    >
+                        {text}
+                    </Text>
                 </View>
             </TouchableOpacity>
         );

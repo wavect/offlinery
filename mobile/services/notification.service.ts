@@ -11,6 +11,29 @@ import {
     SECURE_VALUE,
 } from "./secure-storage.service";
 
+const getExpoProjectId = () => {
+    // Try multiple methods to get project ID
+    let projectId = Constants.expoConfig?.extra?.eas?.projectId;
+
+    if (!projectId) {
+        projectId = Constants.easConfig?.projectId;
+    }
+
+    if (!projectId && Constants.manifest2) {
+        // For Expo Go
+        projectId = Constants.manifest2?.extra?.eas?.projectId;
+    }
+
+    if (!projectId) {
+        throw new Error(
+            "Project ID not found. Make sure it's configured in app.json or app.config.js",
+        );
+    }
+
+    console.log("Using project ID:", projectId); // Helpful for debugging
+    return projectId;
+};
+
 export const registerForPushNotificationsAsync = async (userId: string) => {
     if (Platform.OS === "android") {
         await Notifications.setNotificationChannelAsync("default", {
@@ -38,7 +61,7 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
             shouldShowAlert: true,
-            shouldPlaySound: false,
+            shouldPlaySound: true,
             shouldSetBadge: true,
         }),
     });
@@ -49,17 +72,12 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
     let token: string | null = getSecurelyStoredValue(
         SECURE_VALUE.EXPO_PUSH_TOKEN,
     );
-    if (token !== null) {
+    if (!!token) {
         // We don't need to push the token again, as it is already saved in the backend.
         return token;
     }
     try {
-        const projectId =
-            Constants?.expoConfig?.extra?.eas?.projectId ??
-            Constants?.easConfig?.projectId;
-        if (!projectId) {
-            throw new Error("Project ID not found");
-        }
+        const projectId = getExpoProjectId();
         token = (
             await Notifications.getExpoPushTokenAsync({
                 projectId,
