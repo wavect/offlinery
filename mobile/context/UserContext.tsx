@@ -14,6 +14,7 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { refreshUserData } from "@/services/auth.service";
+import { compressImages } from "@/services/image.service";
 import {
     SECURE_VALUE,
     deleteOnboardingDataFromStorage,
@@ -251,7 +252,7 @@ export const registerUser = async (
 
     const requestParameters: UserControllerCreateUserRequest = {
         createUserDTO: userData,
-        images: getUserImagesForUpload(state),
+        images: await getUserImagesForUpload(state),
     };
 
     try {
@@ -279,18 +280,17 @@ export const registerUser = async (
     }
 };
 
-export const getUserImagesForUpload = (
+export const getUserImagesForUpload = async (
     state: IUserData,
-): ImagePickerAsset[] => {
-    return Object.values(state.imageURIs)
-        .filter(isImagePicker)
-        .map((image) => ({
-            ...image,
-            uri:
-                Platform.OS === "ios"
-                    ? image.uri.replace("file://", "")
-                    : image.uri,
-        }));
+): Promise<ImagePickerAsset[]> => {
+    const newImages = Object.values(state.imageURIs).filter(isImagePicker);
+    return (await compressImages(newImages)).map((image) => ({
+        ...image,
+        uri:
+            Platform.OS === "ios"
+                ? image.uri.replace("file://", "")
+                : image.uri,
+    }));
 };
 
 export const resetUserData = (dispatch: React.Dispatch<IUserAction>) => {
