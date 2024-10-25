@@ -1,5 +1,6 @@
 import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import OProgressBar from "@/components/OProgressBar/OProgressBar";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
 import { getPublicProfileFromEncounter } from "@/context/EncountersContext";
 import { useUserContext } from "@/context/UserContext";
@@ -29,6 +30,7 @@ const NavigateToApproach = ({
     const navigateToPerson: IEncounterProfile = route.params.navigateToPerson;
 
     const { state } = useUserContext();
+    const [isLoading, setIsLoading] = useState(false);
     const [mapRegion, setMapRegion] = useState<Region | null>(null);
     const [location, setLocation] = useState<Location.LocationObject | null>(
         null,
@@ -45,6 +47,8 @@ const NavigateToApproach = ({
         let intervalId;
         const fetchLocations = async () => {
             try {
+                setIsLoading(true);
+
                 let { status } =
                     await Location.requestForegroundPermissionsAsync();
                 if (status !== "granted") {
@@ -64,9 +68,12 @@ const NavigateToApproach = ({
                             encounterId: navigateToPerson.encounterId,
                         },
                     );
+
                 setDestination(encounterLoc);
             } catch (error) {
                 console.error("Error fetching locations:", error);
+            } finally {
+                setIsLoading(false);
             }
         };
         fetchLocations();
@@ -142,6 +149,7 @@ const NavigateToApproach = ({
                     </Text>
                 </Text>
             )}
+            {isLoading && <OProgressBar />}
             <MapView
                 ref={mapRef}
                 style={styles.map}

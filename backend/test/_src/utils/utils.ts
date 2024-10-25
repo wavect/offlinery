@@ -1,3 +1,4 @@
+import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { DataSource } from "typeorm";
 
 export const clearDatabase = async (dataSource: DataSource) => {
@@ -32,3 +33,14 @@ export const mockRepository = {
         getMany: jest.fn(),
     })),
 };
+
+export function writeBenchmarkResult(result: any) {
+    const benchmarksDir = "./benchmarks";
+    if (!existsSync(benchmarksDir)) {
+        mkdirSync(benchmarksDir);
+    }
+
+    const filePath = `${benchmarksDir}/benchmark-results-${new Date().toISOString()}.json`;
+    writeFileSync(filePath, JSON.stringify(result, null, 2));
+    console.log(`Benchmark results written to ${filePath}`);
+}

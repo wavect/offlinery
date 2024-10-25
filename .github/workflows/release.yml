@@ -16,6 +16,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Benchmark
+        id: benchmark
+        working-directory: ./backend
+        run: |
+          pnpm benchmark
+          # Archive benchmark result files
+          if [ -d "benchmarks" ]; then
+            tar -czf benchmarks.tar.gz -C benchmarks .
+          else
+            echo "No benchmarks directory found."
+          fi
+
         # Setup Google Cloud Authentication
       - name: Google Auth
         id: auth
