@@ -46,11 +46,11 @@ COPY --from=builder /usr/src/app/dist ./dist
 
 # Create a specific directory for mail templates
 RUN mkdir -p /app/dist/mail
-COPY --from=builder /usr/src/app/dist/mail ./dist/mail
+COPY --from=builder /usr/src/app/dist/mail ./mail
 
 # Create a specific directory for view templates
-RUN mkdir -p /app/dist/views && mkdir -p /app/dist/uploads
-COPY --from=builder /usr/src/app/dist/views ./dist/views
+RUN mkdir -p /app/dist/views && mkdir -p /app/uploads
+COPY --from=builder /usr/src/app/dist/views ./views
 
 # Expose application port
 EXPOSE 3000

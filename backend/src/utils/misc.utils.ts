@@ -42,5 +42,3 @@ export function parseToAgeRangeString(range: number[]): string {
     }
     return `[${range[0]}, ${range[1]}]`;
 }
-
-export const environmentSpecificPathPrefix = IS_DEV_MODE ? ".." : "";
