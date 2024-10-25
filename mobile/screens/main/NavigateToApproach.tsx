@@ -12,6 +12,7 @@ import { API } from "@/utils/api-config";
 import { getTimePassedWithText } from "@/utils/date.utils";
 import { getMapProvider } from "@/utils/map-provider";
 import { calculateDistance, getRegionForCoordinates } from "@/utils/map.utils";
+import * as Sentry from "@sentry/react-native";
 import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import * as React from "react";
@@ -72,6 +73,11 @@ const NavigateToApproach = ({
                 setDestination(encounterLoc);
             } catch (error) {
                 console.error("Error fetching locations:", error);
+                Sentry.captureException(error, {
+                    tags: {
+                        navigateTo: "fetchingLocation",
+                    },
+                });
             } finally {
                 setIsLoading(false);
             }

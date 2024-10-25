@@ -6,6 +6,7 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { getLocalLanguageID } from "@/utils/misc.utils";
+import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -23,8 +24,13 @@ const BookSafetyCall = ({
 
         try {
             route.params?.onCallBooked();
-        } catch (err) {
-            throw err;
+        } catch (error) {
+            Sentry.captureException(error, {
+                tags: {
+                    safetyCall: "onCallBooked",
+                },
+            });
+            throw error;
         } finally {
             setLoading(false);
             /** @dev Delete clear password once logged in */

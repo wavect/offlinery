@@ -12,6 +12,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { API } from "@/utils/api-config";
 import { getMapProvider } from "@/utils/map-provider";
 import Slider from "@react-native-community/slider";
+import * as Sentry from "@sentry/react-native";
 import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import React, {
@@ -124,8 +125,13 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                 accuracy: LocationAccuracy.High,
             });
             setLocation(location);
-        } catch (e) {
-            console.error("Unable to get user location.");
+        } catch (error) {
+            console.error("Unable to get user location.", error);
+            Sentry.captureException(error, {
+                tags: {
+                    map: "location",
+                },
+            });
         }
     };
 
@@ -135,8 +141,13 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                 userId: state.id!,
             });
             setLocationsFromOthers(positions);
-        } catch (e) {
-            console.error("Unable to get position from other users ", e);
+        } catch (error) {
+            console.error("Unable to get position from other users ", error);
+            Sentry.captureException(error, {
+                tags: {
+                    map: "heatmap",
+                },
+            });
         }
     };
 

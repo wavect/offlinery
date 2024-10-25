@@ -27,6 +27,7 @@ import { getAge } from "@/utils/date.utils";
 import { getValidImgURI, isImagePicker } from "@/utils/media.utils";
 import { getLocalLanguageID } from "@/utils/misc.utils";
 import { CommonActions } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
 import * as Location from "expo-location";
@@ -273,6 +274,11 @@ export const registerUser = async (
     } catch (error: any) {
         console.error("Error creating user:", error, JSON.stringify(error));
         onError(error);
+        Sentry.captureException(error, {
+            tags: {
+                userContext: "registration",
+            },
+        });
         // Handle the error (e.g., show an error message to the user)
     }
 };
@@ -322,5 +328,10 @@ export const logoutUser = async (
         );
     } catch (error) {
         console.error("Error while logging out user:", error);
+        Sentry.captureException(error, {
+            tags: {
+                userContext: "logout",
+            },
+        });
     }
 };

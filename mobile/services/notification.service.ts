@@ -1,6 +1,7 @@
 import { StorePushTokenDTO } from "@/api/gen/src";
 import { Color } from "@/GlobalStyles";
 import { API } from "@/utils/api-config";
+import * as Sentry from "@sentry/react-native";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
@@ -64,8 +65,13 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
                 projectId,
             })
         ).data;
-    } catch (err) {
-        console.error(" Failed to get expo push token", err);
+    } catch (error) {
+        console.error(" Failed to get expo push token", error);
+        Sentry.captureException(error, {
+            tags: {
+                notifications: "getPushToken",
+            },
+        });
         return;
     }
 
@@ -80,9 +86,14 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
             storePushTokenDTO,
         });
         saveValueLocallySecurely(SECURE_VALUE.EXPO_PUSH_TOKEN, token);
-    } catch (err) {
-        console.error("Failed to send push token to backend:", err);
-        throw err;
+    } catch (error) {
+        console.error("Failed to send push token to backend:", error);
+        Sentry.captureException(error, {
+            tags: {
+                notifications: "pushToken",
+            },
+        });
+        throw error;
     }
 
     return token;

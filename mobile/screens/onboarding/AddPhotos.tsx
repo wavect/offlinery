@@ -11,6 +11,7 @@ import {
     saveOnboardingState,
     showOpenAppSettingsAlert,
 } from "@/utils/misc.utils";
+import * as Sentry from "@sentry/react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import { useState } from "react";
@@ -91,8 +92,13 @@ const AddPhotos = ({
                     })(),
                 });
                 route.params.overrideOnBtnPress();
-            } catch (err) {
-                throw err;
+            } catch (error) {
+                Sentry.captureException(error, {
+                    tags: {
+                        addPhotos: "submit",
+                    },
+                });
+                throw error;
             } finally {
                 setLoading(false);
             }

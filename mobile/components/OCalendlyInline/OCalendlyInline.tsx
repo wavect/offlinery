@@ -1,4 +1,5 @@
 import { TR, i18n } from "@/localization/translate.service";
+import * as Sentry from "@sentry/react-native";
 import React, { FC, useRef, useState } from "react";
 import { DimensionValue } from "react-native";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
@@ -82,6 +83,11 @@ const OCalendlyInline: FC<Props> = ({
             }
         } catch (error) {
             console.error("Failed to parse WebView message:", error);
+            Sentry.captureException(error, {
+                tags: {
+                    calendly: "webView",
+                },
+            });
         }
     };
 

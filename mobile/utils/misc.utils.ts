@@ -6,6 +6,7 @@ import {
     SECURE_VALUE,
 } from "@/services/secure-storage.service";
 import { SUPPORT_MAIL } from "@/utils/general.constants";
+import * as Sentry from "@sentry/react-native";
 import Constants from "expo-constants";
 import { jwtDecode } from "jwt-decode";
 import { Alert, Linking, Platform } from "react-native";
@@ -51,6 +52,11 @@ function decodeJWT(token: string) {
         return jwtDecode(token);
     } catch (error) {
         console.error("Error decoding JWT:", error);
+        Sentry.captureException(error, {
+            tags: {
+                jwt: "decoding",
+            },
+        });
         throw error;
     }
 }

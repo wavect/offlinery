@@ -7,6 +7,7 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
+import * as Sentry from "@sentry/react-native";
 import React, { useState } from "react";
 import {
     Modal,
@@ -42,10 +43,15 @@ const OMessageModal = (props: IOMessageModalProps) => {
             // only close, if message was successful, otherwise let user re-send or close it
             onClose();
             setMessageError(false);
-        } catch (e) {
-            console.log("Unable to send dm: ", e);
+        } catch (error) {
+            console.error("Unable to send dm: ", error);
             setMessageError(true);
             setMessage("");
+            Sentry.captureException(error, {
+                tags: {
+                    chat: "message",
+                },
+            });
         }
     };
 

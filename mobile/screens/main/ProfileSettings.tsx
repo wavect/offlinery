@@ -35,6 +35,7 @@ import { A } from "@expo/html-elements";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CommonActions } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -191,6 +192,11 @@ const ProfileSettings = ({
             }
         } catch (error) {
             console.error("Error updating user profile:", error);
+            Sentry.captureException(error, {
+                tags: {
+                    settings: "submit",
+                },
+            });
             // Handle error (e.g., show error message to user)
         } finally {
             setLoading(false);
@@ -267,8 +273,13 @@ const ProfileSettings = ({
                 payload: { markedForDeletion: true },
             });
             alert(i18n.t(TR.accountDeletionRequestedAlert));
-        } catch (err) {
-            throw err;
+        } catch (error) {
+            Sentry.captureException(error, {
+                tags: {
+                    settings: "requestDeletion",
+                },
+            });
+            throw error;
         }
     };
 

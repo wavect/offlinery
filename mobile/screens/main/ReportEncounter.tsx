@@ -15,6 +15,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
 import { API } from "@/utils/api-config";
+import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
@@ -82,8 +83,13 @@ const ReportEncounter = ({
                 ],
             });
             navigation.goBack();
-        } catch (err) {
-            console.error(err, JSON.stringify(err));
+        } catch (error) {
+            console.error(error);
+            Sentry.captureException(error, {
+                tags: {
+                    report: "submit",
+                },
+            });
             // TODO
         } finally {
             setLoading(false);
