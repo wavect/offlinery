@@ -30,7 +30,7 @@ const DEFAULT_DURATION = 1000;
 const DEFAULT_SIZE = 40;
 const DEFAULT_COLOR = "#0000ff";
 
-export const CustomLoadingSpinner: React.FC<SpinnerProps> = ({
+export const OLoadingSpinner: React.FC<SpinnerProps> = ({
     size = DEFAULT_SIZE,
     color = DEFAULT_COLOR,
     text,
@@ -124,5 +124,3 @@ const styles = StyleSheet.create<SpinnerStyles>({
         borderLeftColor: "transparent",
     },
 });
-
-export default CustomLoadingSpinner;

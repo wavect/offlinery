@@ -1,5 +1,5 @@
 import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
-import OLoadingCircle from "@/components/OLoadingCircle/OLoadingCircle";
+import { OLoadingSpinner } from "@/components/OLoadingCircle/OLoadingCircle";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
 import { getPublicProfileFromEncounter } from "@/context/EncountersContext";
@@ -155,7 +155,7 @@ const NavigateToApproach = ({
                 </Text>
             )}
             {isLoading ? (
-                <OLoadingCircle
+                <OLoadingSpinner
                     size={60}
                     color={Color.primary}
                     text={i18n.t(TR.loadingTextNavigateTo)}
