@@ -321,15 +321,6 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                                 />
                             </React.Fragment>
                         ))}
-                    {location && (
-                        <Marker
-                            title={i18n.t(TR.myLocation)}
-                            description={i18n.t(TR.youAreHere)}
-                            pinColor="blue"
-                            coordinate={location.coords}
-                            tracksViewChanges={false}
-                        />
-                    )}
                 </MapView>
                 {showBlacklistedRegions && activeRegionIndex !== null && (
                     <OFloatingActionButton
