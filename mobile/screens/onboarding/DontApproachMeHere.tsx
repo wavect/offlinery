@@ -7,7 +7,7 @@ import { OMap } from "@/components/OMap/OMap";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { saveOnboardingState } from "@/utils/misc.utils";
+import { saveOnboardingState } from "@/services/storage.service";
 import { ROUTES } from "../routes";
 
 type DontApproachMeHereProps = NativeStackScreenProps<

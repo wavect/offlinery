@@ -13,10 +13,14 @@ import { TR, i18n } from "@/localization/translate.service";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
 import {
     SECURE_VALUE,
-    deleteOnboardingDataFromStorage,
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
+import {
+    LOCAL_VALUE,
+    deleteOnboardingState,
+    getLocalValue,
+} from "@/services/storage.service";
 import { stopLocationBackgroundTask } from "@/tasks/location.task";
 import { API } from "@/utils/api-config";
 import { writeSupportEmail } from "@/utils/misc.utils";
@@ -47,7 +51,7 @@ const Welcome = ({
                 signInJwtDTO: { jwtAccessToken: accessToken },
             });
 
-            await deleteOnboardingDataFromStorage();
+            await deleteOnboardingState();
 
             userAuthenticatedUpdate(
                 dispatch,
@@ -87,19 +91,17 @@ const Welcome = ({
     );
 
     const isOnboardingInProgress = () => {
-        const savedUser = getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER);
+        const savedUser = getLocalValue(LOCAL_VALUE.ONBOARDING_USER);
         return !!savedUser;
     };
 
     const restoreOnboarding = async () => {
-        const savedUser = getSecurelyStoredValue(SECURE_VALUE.ONBOARDING_USER);
-        const savedStack = getSecurelyStoredValue(
-            SECURE_VALUE.ONBOARDING_SCREEN,
-        );
+        const savedUser = getLocalValue(LOCAL_VALUE.ONBOARDING_USER);
+        const savedStack = getLocalValue(LOCAL_VALUE.ONBOARDING_SCREEN);
         if (!savedUser || !savedStack) {
             return;
         }
-        await deleteOnboardingDataFromStorage();
+        await deleteOnboardingState();
 
         const userParsed = JSON.parse(savedUser) as IUserData;
         dispatch({
