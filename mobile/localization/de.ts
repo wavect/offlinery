@@ -279,4 +279,5 @@ export const de: Language = {
     permissionRequired: "Zugriff auf Gallerie benötigt",
     pleaseChangePermission:
         "Bitte ändere die Zugriffsrechte auf deine Bilder um fortzufahren.",
+    loadingTextNavigateTo: "Berechne Route...",
 };
