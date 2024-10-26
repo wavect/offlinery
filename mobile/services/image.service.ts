@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react-native";
 import * as ImageManipulator from "expo-image-manipulator";
 import { ImagePickerAsset } from "expo-image-picker";
 import { Platform } from "react-native";
@@ -79,6 +80,14 @@ export const compressImages = async (
         return await Promise.all(compressionPromises);
     } catch (error) {
         console.error("Error compressing multiple images:", error);
-        throw error;
+        Sentry.captureException(error, {
+            tags: {
+                imageService: "compressImages",
+                amountImages: images?.length,
+            },
+        });
+
+        // @dev silently fail (log to sentry) and return uncompressed images
+        return images;
     }
 };
