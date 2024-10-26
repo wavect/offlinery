@@ -53,9 +53,7 @@ export class AuthController {
     refreshJwtToken(
         @Body() signInDTO: RefreshJwtDTO,
     ): Promise<SignInResponseDTO> {
-        this.logger.debug(
-            `Trying to refresh jwt token with refresh token ${signInDTO.refreshToken}`,
-        );
+        this.logger.debug(`Refresh Request: ${signInDTO.refreshToken}`);
         return this.authService.refreshAccessToken(signInDTO.refreshToken);
     }
 }

@@ -129,9 +129,8 @@ export class AuthService {
             const payload = { sub: user.id, email: user.email };
             const newAccessToken = await this.jwtService.signAsync(payload);
             const newRefreshToken = await this.generateRefreshToken(user);
-            this.logger.debug(
-                `User jwt refresh access token was successful for user ${user.id}`,
-            );
+
+            this.logger.debug(`✓ JWT REFRESH DONE`);
 
             return {
                 accessToken: newAccessToken,
