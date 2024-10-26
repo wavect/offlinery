@@ -31,6 +31,7 @@ export class UserRepository extends Repository<User> {
     private findUserMatchBaseQuery(userToBeApproached: User): this {
         this.queryBuilder = this.createQueryBuilder("user");
         this.addEncounterJoins()
+            .withRecentLocationsOnly()
             .excludeUser(userToBeApproached.id)
             .withNotInBlacklistedRegion()
             .withDesiredGender(userToBeApproached.genderDesire)
@@ -167,6 +168,18 @@ export class UserRepository extends Repository<User> {
             )
         `);
 
+        return this;
+    }
+
+    private withRecentLocationsOnly(): this {
+        const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
+        this.queryBuilder.andWhere(
+            `
+                user.locationLastTimeUpdated IS NOT NULL 
+                AND user.locationLastTimeUpdated >= :threeHoursAgo
+            `,
+            { threeHoursAgo },
+        );
         return this;
     }
 

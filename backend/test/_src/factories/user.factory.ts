@@ -43,6 +43,9 @@ export class UserFactory implements FactoryInterface {
             birthDay: new Date("1990-01-01"),
             approachFromTime: new Date("2024-01-01T01:00:00Z"),
             approachToTime: new Date("2030-01-02T23:59:59Z"),
+            locationLastTimeUpdated: new Date(
+                new Date().getTime() - 2 * 60 * 60 * 1000,
+            ),
             location: { type: "Point", coordinates: [0.001, 0.001] },
             verificationStatus: EVerificationStatus.VERIFIED,
             approachChoice: EApproachChoice.BE_APPROACHED,
