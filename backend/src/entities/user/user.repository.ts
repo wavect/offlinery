@@ -50,6 +50,12 @@ export class UserRepository extends Repository<User> {
     async getPotentialMatchesForNotifications(
         userToBeApproached: User,
     ): Promise<User[]> {
+        if (!userToBeApproached.location) {
+            this.logger.error(
+                `No location found for user ${userToBeApproached.id}: ${userToBeApproached.location}`,
+            );
+            return [];
+        }
         const [lon, lat] = userToBeApproached.location.coordinates;
         const isInBlacklistedRegion = await this.isUserInBlacklistedRegion(
             userToBeApproached,
