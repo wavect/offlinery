@@ -31,7 +31,7 @@ const NavigateToApproach = ({
     const navigateToPerson: IEncounterProfile = route.params.navigateToPerson;
 
     const { state } = useUserContext();
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [mapRegion, setMapRegion] = useState<Region | null>(null);
     const [location, setLocation] = useState<Location.LocationObject | null>(
         null,
