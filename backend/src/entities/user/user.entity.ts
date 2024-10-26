@@ -196,7 +196,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
         srid: 4326,
         nullable: true,
     })
-    location: Point;
+    location?: Point;
 
     @Column({ nullable: true })
     locationLastTimeUpdated: Date;

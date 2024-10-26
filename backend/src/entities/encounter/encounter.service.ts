@@ -9,6 +9,7 @@ import {
     Injectable,
     Logger,
     NotFoundException,
+    PreconditionFailedException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { In, Repository } from "typeorm";
@@ -190,6 +191,11 @@ export class EncounterService {
         if (!otherUser) {
             throw new NotFoundException(
                 `Other user of Encounter ${encounterId} not found! Requesting user: ${userId}`,
+            );
+        }
+        if (!otherUser.location) {
+            throw new PreconditionFailedException(
+                `Other user of Encounter ${encounterId} has not location: ${otherUser.location}`,
             );
         }
         return {
