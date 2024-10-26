@@ -42,3 +42,8 @@ export function parseToAgeRangeString(range: number[]): string {
     }
     return `[${range[0]}, ${range[1]}]`;
 }
+
+export function arraySafeCheck<T>(obj: any): Array<T> {
+    if (!obj) return [];
+    return obj;
+}
