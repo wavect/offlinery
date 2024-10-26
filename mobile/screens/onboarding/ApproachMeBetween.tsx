@@ -14,7 +14,7 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { saveOnboardingState } from "@/utils/misc.utils";
+import { saveOnboardingState } from "@/services/storage.service";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";

@@ -6,7 +6,7 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { saveOnboardingState } from "@/utils/misc.utils";
+import { saveOnboardingState } from "@/services/storage.service";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";

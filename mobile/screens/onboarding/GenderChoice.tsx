@@ -5,7 +5,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { saveOnboardingState } from "@/utils/misc.utils";
+import { saveOnboardingState } from "@/services/storage.service";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
