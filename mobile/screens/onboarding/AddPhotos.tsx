@@ -73,14 +73,14 @@ const AddPhotos = ({
                         const indexImagesToDelete: number[] = [];
 
                         (["0", "1", "2", "3", "4", "5"] as ImageIdx[]).forEach(
-                            (idx) => {
+                            (idx: ImageIdx) => {
                                 const img = state.imageURIs[idx];
                                 if (isImagePicker(img)) {
-                                    images[Number(idx)] = img;
+                                    images[idx] = img;
                                 } else if (img === null) {
-                                    indexImagesToDelete.push(Number(idx));
+                                    indexImagesToDelete.push(parseInt(idx));
                                 } else {
-                                    images[Number(idx)] = undefined;
+                                    images[idx] = undefined;
                                 }
                             },
                         );

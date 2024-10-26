@@ -14,7 +14,6 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { refreshUserData } from "@/services/auth.service";
-import { compressImages } from "@/services/image.service";
 import {
     SECURE_VALUE,
     deleteOnboardingDataFromStorage,
@@ -35,6 +34,11 @@ import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import React, { Dispatch, createContext, useContext, useReducer } from "react";
 import { Platform } from "react-native";
+
+type UserImages = {
+    [key in ImageIdx]?: ImagePicker.ImagePickerAsset | string;
+};
+
 export interface IUserData {
     /** @dev Backend assigned ID for registered users */
     id?: string;
@@ -47,9 +51,7 @@ export interface IUserData {
     genderDesire?: UserPrivateDTOGenderDesireEnum[];
     intentions?: UserPrivateDTOIntentionsEnum[];
     ageRange?: number[];
-    imageURIs: {
-        [key in ImageIdx]?: ImagePicker.ImagePickerAsset | string;
-    };
+    imageURIs: UserImages;
     verificationStatus: UserPrivateDTOVerificationStatusEnum;
     approachChoice: UserPrivateDTOApproachChoiceEnum;
     /** @dev Regions the user that wants to be approached marked as blacklisted */
@@ -252,7 +254,7 @@ export const registerUser = async (
 
     const requestParameters: UserControllerCreateUserRequest = {
         createUserDTO: userData,
-        images: await getUserImagesForUpload(state),
+        images: await getUserImagesForUpload(state.imageURIs),
     };
 
     try {
@@ -281,16 +283,18 @@ export const registerUser = async (
 };
 
 export const getUserImagesForUpload = async (
-    state: IUserData,
+    userImages: UserImages,
 ): Promise<ImagePickerAsset[]> => {
-    const newImages = Object.values(state.imageURIs).filter(isImagePicker);
-    return (await compressImages(newImages)).map((image) => ({
-        ...image,
-        uri:
-            Platform.OS === "ios"
-                ? image.uri.replace("file://", "")
-                : image.uri,
-    }));
+    // @dev Images already compressed when saved into UserState
+    return Object.values(userImages)
+        .filter(isImagePicker)
+        .map((image) => ({
+            ...image,
+            uri:
+                Platform.OS === "ios"
+                    ? image.uri.replace("file://", "")
+                    : image.uri,
+        }));
 };
 
 export const resetUserData = (dispatch: React.Dispatch<IUserAction>) => {

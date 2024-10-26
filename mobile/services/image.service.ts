@@ -15,7 +15,7 @@ interface CompressImageOptions {
  * @param options Compression options
  * @returns Compressed ImagePickerAsset
  */
-const compressImage = async (
+export const compressImage = async (
     image: ImagePickerAsset,
     options: CompressImageOptions = {},
 ): Promise<ImagePickerAsset> => {
@@ -59,7 +59,12 @@ const compressImage = async (
         };
     } catch (error) {
         console.error("Error compressing image:", error);
-        throw error;
+        Sentry.captureException(error, {
+            tags: {
+                imageService: "compressImage",
+            },
+        });
+        return image; // @dev return original image in case of failure
     }
 };
 
