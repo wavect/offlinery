@@ -274,4 +274,5 @@ export const en = {
     permissionRequired: "Permission Required",
     pleaseChangePermission:
         "Please change the permissions in your settings to continue using the app.",
+    loadingTextNavigateTo: "Preparing...",
 };
