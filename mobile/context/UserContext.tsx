@@ -16,11 +16,14 @@ import { ROUTES } from "@/screens/routes";
 import { refreshUserData } from "@/services/auth.service";
 import {
     SECURE_VALUE,
-    deleteOnboardingDataFromStorage,
     deleteSessionDataFromStorage,
     getSecurelyStoredValue,
 } from "@/services/secure-storage.service";
-import { updateUserDataLocally } from "@/services/storage.service";
+import {
+    LOCAL_VALUE,
+    deleteOnboardingState,
+    saveLocalValue,
+} from "@/services/storage.service";
 import { LOCATION_TASK_NAME } from "@/tasks/location.task";
 import { API } from "@/utils/api-config";
 import { getAge } from "@/utils/date.utils";
@@ -194,8 +197,10 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             const payload: Partial<IUserData> =
                 action.payload as Partial<IUserData>;
 
-            // @dev cache locally
-            updateUserDataLocally(payload);
+            if (payload.id) {
+                // @dev Needed for location service which has no access to userContext
+                saveLocalValue(LOCAL_VALUE.USER_ID, payload.id);
+            }
 
             return { ...state, ...payload };
         default:
@@ -263,7 +268,7 @@ export const registerUser = async (
         const { user, accessToken, refreshToken } = signInResponseDTO;
         console.log("User created successfully:", user);
 
-        await deleteOnboardingDataFromStorage();
+        await deleteOnboardingState();
 
         // Update the user state
         refreshUserData(dispatch, user, accessToken, refreshToken);

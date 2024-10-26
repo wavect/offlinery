@@ -7,7 +7,7 @@ import {
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { saveOnboardingState } from "@/utils/misc.utils";
+import { saveOnboardingState } from "@/services/storage.service";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import * as React from "react";
 import { Platform, StyleSheet, View } from "react-native";

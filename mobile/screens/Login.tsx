@@ -10,7 +10,7 @@ import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
-import { deleteOnboardingDataFromStorage } from "@/services/secure-storage.service";
+import { deleteOnboardingState } from "@/services/storage.service";
 import { TestData } from "@/tests/src/accessors";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
@@ -43,7 +43,7 @@ const Login = ({
                 signInDTO,
             );
 
-            await deleteOnboardingDataFromStorage();
+            await deleteOnboardingState();
 
             if (signInRes.accessToken) {
                 const user = signInRes.user;

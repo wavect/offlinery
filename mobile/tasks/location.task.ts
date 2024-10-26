@@ -1,6 +1,6 @@
 import { Color } from "@/GlobalStyles";
 import { i18n, TR } from "@/localization/translate.service";
-import { getLocallyStoredUserData } from "@/services/storage.service";
+import { getLocalValue, LOCAL_VALUE } from "@/services/storage.service";
 import { API } from "@/utils/api-config";
 import { setupSentry } from "@/utils/sentry.utils";
 import * as Sentry from "@sentry/react-native";
@@ -29,13 +29,13 @@ const isValidLocation = (location: Location.LocationObject): boolean => {
     );
 };
 
-const getUserData = (): string => {
+const getUserId = (): string => {
     try {
-        const user = getLocallyStoredUserData();
-        if (!user?.id) {
+        const userId = getLocalValue(LOCAL_VALUE.USER_ID);
+        if (!userId) {
             throw new Error("User ID is undefined");
         }
-        return user.id;
+        return userId;
     } catch (error) {
         Sentry.captureException(error, {
             tags: {
@@ -108,7 +108,7 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
             throw new Error("No locations received from location task");
         }
 
-        const userId = getUserData();
+        const userId = getUserId();
         console.log("User Connected: ", userId);
 
         const location = locations[locations.length - 1];
