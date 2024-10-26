@@ -279,6 +279,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                     zoomEnabled={true}
                     zoomTapEnabled={true}
                     maxZoomLevel={13}
+                    minZoomLevel={8}
                     onPress={handleMapPress}
                     onLongPress={
                         showBlacklistedRegions ? handleMapLongPress : undefined
