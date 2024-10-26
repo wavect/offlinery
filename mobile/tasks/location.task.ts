@@ -1,10 +1,14 @@
+import { Color } from "@/GlobalStyles";
+import { i18n, TR } from "@/localization/translate.service";
 import { getLocallyStoredUserData } from "@/services/storage.service";
 import { API } from "@/utils/api-config";
 import { setupSentry } from "@/utils/sentry.utils";
 import * as Sentry from "@sentry/react-native";
 import * as Location from "expo-location";
 import * as Network from "expo-network";
+import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
+import { Platform } from "react-native";
 
 export const LOCATION_TASK_NAME = "background-location-task";
 
@@ -134,6 +138,80 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
 
 export const stopLocationBackgroundTask = async () => {
     if (await TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME)) {
-        TaskManager.unregisterTaskAsync(LOCATION_TASK_NAME);
+        await TaskManager.unregisterTaskAsync(LOCATION_TASK_NAME);
+    }
+
+    // @dev iOS live notification is created by us, not the OS. So we need to manage it ourselves.
+    if (Platform.OS === "ios") {
+        const allNotifications =
+            await Notifications.getPresentedNotificationsAsync();
+        for (let index = 0; index < allNotifications.length; index++) {
+            const notification = allNotifications[index];
+            if (
+                notification.request.content.title?.includes(
+                    i18n.t(TR.bgLocationServiceTitle),
+                )
+            ) {
+                await Notifications.dismissNotificationAsync(
+                    notification.request.identifier,
+                );
+            }
+        }
+    }
+};
+
+/// @dev iOS does not send a sticky notification as Android for services. So we create one ourselves.
+const sendLocationNotification = async () => {
+    if (Platform.OS === "ios") {
+        await Notifications.scheduleNotificationAsync({
+            content: {
+                title: i18n.t(TR.bgLocationServiceTitle),
+                body: i18n.t(TR.bgLocationServiceBody),
+            },
+            trigger: null,
+        });
+    }
+};
+
+export const startLocationBackgroundTask = async (
+    userId: string | undefined,
+) => {
+    const { status } = await Location.requestBackgroundPermissionsAsync();
+    if (status === "granted" && userId) {
+        const isRunning =
+            await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+        if (!isRunning) {
+            console.log(
+                `Starting locationBackground task ${LOCATION_TASK_NAME}`,
+            );
+            await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+                /** @dev BestForNavigation more accurate than High but higher battery consumption (high already 10m) */
+                accuracy: Location.Accuracy.BestForNavigation, // TODO: Maybe we want to track rougher locations continiously and BestForNavigation once people approach each other?
+                timeInterval: 120_000, // 120 seconds
+                distanceInterval: 10, // or 10m
+                // TODO: not necessary probably as showBackgroundLocationIndicator=true but might help if we have problems, allowsBackgroundLocationUpdates: true,
+                // @dev Ensure the task runs even when the app is in the background, still sending updates even if device isn't moving
+                pausesUpdatesAutomatically: false, // TODO: We might be able to set this to true to save battery life, but for now we want to have maximum accuracy
+                showsBackgroundLocationIndicator: true, // @dev Shows a blue bar/blue pill when your app is using location services in the background, iOS only
+                // TODO: distanceFilter, deferredUpdatesDistance, etc.: minimum distance in meters a device must move before an update event is triggered -> later for saving battery life
+                activityType: Location.ActivityType.OtherNavigation, // @dev Best for urban environments, different ways of movement (car, walking, ..)
+                foregroundService: {
+                    notificationTitle: i18n.t(TR.bgLocationServiceTitle),
+                    notificationBody: i18n.t(TR.bgLocationServiceBody),
+                    notificationColor: Color.primary,
+                    killServiceOnDestroy: false, // @dev stay running if app is killed
+                },
+            });
+            await sendLocationNotification();
+        } else {
+            /** @dev OS specific behavior of calling startLocationUpdatesAsync repeatedly:
+             *
+             * iOS: Will restart service. (the if check avoids that)
+             * Android: Existing service NOT stopped, just a configuration update.
+             * */
+            console.log(
+                `Background location service already running. Not starting again.`,
+            );
+        }
     }
 };
