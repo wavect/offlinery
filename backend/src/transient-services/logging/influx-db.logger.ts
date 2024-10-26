@@ -42,10 +42,12 @@ export class InfluxLogger extends ConsoleLogger implements LoggerService {
     ) {
         if (this.isProduction) {
             try {
+                const actualContext = context || this.context || "global";
                 const point = new Point("log")
                     .tag("level", level)
-                    .tag("context", context || "global")
+                    .tag("context", actualContext)
                     .tag("message", message.substring(0, 249)) // InfluxDB tags have a length limit, but are indexable
+                    .stringField("context", actualContext)
                     .stringField("message", message);
 
                 if (trace) {

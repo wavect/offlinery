@@ -32,17 +32,24 @@ services:
       - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG:-offlinery}
       - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET:-logs}
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_ADMIN_TOKEN:-your-super-secret-admin-token}
+      # Add retention period in hours (2160 hours = 90 days)
+      - DOCKER_INFLUXDB_INIT_RETENTION=${INFLUXDB_RETENTION:-2160h}
+      # Add these to ensure proper binding
+      - INFLUXD_HTTP_BIND_ADDRESS=:8086
+      - DOCKER_INFLUXDB_INIT_HOST=influxdb  # Change from localhost to container name
     volumes:
       - influxdb_data:/var/lib/influxdb2
+      - ./init-scripts/influxdb/init-retention.sh:/docker-entrypoint-initdb.d/init-retention.sh
     ports:
-      - '127.0.0.1:8086:8086'  # Only allow local connections
+      - '8086:8086'
     networks:
       - app_network
     healthcheck:
-      test: ["CMD", "influx", "ping"]
-      interval: 10s
-      timeout: 5s
+      test: ["CMD", "curl", "-f", "http://localhost:8086/health"]
+      interval: 30s
+      timeout: 10s
       retries: 5
+      start_period: 40s
 
   grafana:
     image: grafana/grafana:latest

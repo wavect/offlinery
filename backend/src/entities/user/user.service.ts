@@ -566,6 +566,10 @@ export class UserService {
                 `Sending notifications to users that want to potentially approach userId ${user.id}`,
             );
             await this.matchingService.notifyMatches(user);
+        } else {
+            this.logger.debug(
+                `User is only approaching, not sending any notifications for userId ${user.id}`,
+            );
         }
 
         return updatedUser;

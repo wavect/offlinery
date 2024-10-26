@@ -27,10 +27,12 @@ export class MapController {
         const nearbyMatches =
             await this.matchingService.findHeatmapMatches(userToBeApproached);
 
-        return nearbyMatches.map((match) => ({
-            latitude: match.location.coordinates[1],
-            longitude: match.location.coordinates[0],
-            weight: 10,
-        }));
+        return nearbyMatches
+            .filter((match) => !!match.location)
+            .map((match) => ({
+                latitude: match.location.coordinates[1],
+                longitude: match.location.coordinates[0],
+                weight: 10,
+            }));
     }
 }

@@ -92,8 +92,6 @@ export const de: Language = {
         "An welchen Orten möchtest du nicht angesprochen werden? Dein Fitnessstudio, Arbeitsplatz?",
     youAreUndercover: "Du bist undercover",
     nobodyWillSeeYou: "Niemand wird dich hier sehen.",
-    myLocation: "Mein Standort",
-    youAreHere: "Du bist hier.",
     longPressMapSafeZoneInstruction:
         "Lange tippen, um eine Sicherheitszone hinzuzufügen. Tippe auf eine Region, um deinen Radius anzupassen.",
     adjustRegionRadius: "Regionradius anpassen",
@@ -281,4 +279,5 @@ export const de: Language = {
     permissionRequired: "Zugriff auf Gallerie benötigt",
     pleaseChangePermission:
         "Bitte ändere die Zugriffsrechte auf deine Bilder um fortzufahren.",
+    loadingTextNavigateTo: "Berechne Route...",
 };
