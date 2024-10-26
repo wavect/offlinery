@@ -15,7 +15,7 @@ interface CompressImageOptions {
  * @param options Compression options
  * @returns Compressed ImagePickerAsset
  */
-export const compressImage = async (
+const compressImage = async (
     image: ImagePickerAsset,
     options: CompressImageOptions = {},
 ): Promise<ImagePickerAsset> => {

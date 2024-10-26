@@ -133,6 +133,7 @@ export class UserService {
 
         return user;
     }
+
     async hashNewPassword(user: User, clearPwd: string): Promise<User> {
         // @dev https://docs.nestjs.com/security/encryption-and-hashing
         user.passwordSalt = await bcrypt.genSalt();
