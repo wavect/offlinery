@@ -8,6 +8,7 @@ import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import {
     LOCATION_TASK_NAME,
+    startLocationBackgroundTask,
     stopLocationBackgroundTask,
 } from "@/tasks/location.task";
 import { TestData } from "@/tests/src/accessors";
@@ -15,17 +16,9 @@ import { API } from "@/utils/api-config";
 import { showOpenAppSettingsAlert } from "@/utils/misc.utils";
 import * as Sentry from "@sentry/react-native";
 import * as Location from "expo-location";
-import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
 import React, { useEffect } from "react";
-import {
-    Platform,
-    StyleProp,
-    Switch,
-    Text,
-    View,
-    ViewStyle,
-} from "react-native";
+import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
 
 interface IOGoLiveToggleProps {
     style?: StyleProp<ViewStyle>;
@@ -34,30 +27,18 @@ interface IOGoLiveToggleProps {
 export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
     const { dispatch, state } = useUserContext();
 
-    const sendLocationNotification = async () => {
-        if (Platform.OS === "ios") {
-            await Notifications.scheduleNotificationAsync({
-                content: {
-                    title: i18n.t(TR.bgLocationServiceTitle),
-                    body: i18n.t(TR.bgLocationServiceBody),
-                },
-                trigger: null,
-            });
-        }
-    };
-
     useEffect(() => {
-        async function startLocationTask() {
-            const taskStatus =
-                await TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME);
-            if (!taskStatus) {
-                configureLocationTracking(state.dateMode);
-            }
-        }
-
         if (state.dateMode !== UserPrivateDTODateModeEnum.live) {
             return;
         }
+
+        const startLocationTask = async () => {
+            const taskStatus =
+                await TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME);
+            if (!taskStatus) {
+                await configureLocationTracking(state.dateMode);
+            }
+        };
         startLocationTask();
     }, []);
 
@@ -65,54 +46,10 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
         newDateMode: UserPrivateDTODateModeEnum,
     ) => {
         if (newDateMode === UserPrivateDTODateModeEnum.live) {
-            const { status } =
-                await Location.requestBackgroundPermissionsAsync();
-            if (status === "granted" && state.id) {
-                console.log(`Live mode: Starting task ${LOCATION_TASK_NAME}`);
-                await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-                    /** @dev BestForNavigation more accurate than High but higher battery consumption (high already 10m) */
-                    accuracy: Location.Accuracy.BestForNavigation, // TODO: Maybe we want to track rougher locations continiously and BestForNavigation once people approach each other?
-                    timeInterval: 120_000, // 120 seconds
-                    distanceInterval: 10, // or 10m
-                    // TODO: not necessary probably as showBackgroundLocationIndicator=true but might help if we have problems, allowsBackgroundLocationUpdates: true,
-                    // @dev Ensure the task runs even when the app is in the background, still sending updates even if device isn't moving
-                    pausesUpdatesAutomatically: false, // TODO: We might be able to set this to true to save battery life, but for now we want to have maximum accuracy
-                    showsBackgroundLocationIndicator: true, // @dev Shows a blue bar/blue pill when your app is using location services in the background, iOS only
-                    // TODO: distanceFilter, deferredUpdatesDistance, etc.: minimum distance in meters a device must move before an update event is triggered -> later for saving battery life
-                    activityType: Location.ActivityType.OtherNavigation, // @dev Best for urban environments, different ways of movement (car, walking, ..)
-                    foregroundService: {
-                        notificationTitle: i18n.t(TR.bgLocationServiceTitle),
-                        notificationBody: i18n.t(TR.bgLocationServiceBody),
-                        notificationColor: Color.primary,
-                        killServiceOnDestroy: false, // @dev stay running if app is killed
-                    },
-                });
-                await sendLocationNotification();
-            }
+            await startLocationBackgroundTask(state.id);
         } else {
             try {
                 await stopLocationBackgroundTask();
-
-                if (Platform.OS === "ios") {
-                    const allNotifications =
-                        await Notifications.getPresentedNotificationsAsync();
-                    for (
-                        let index = 0;
-                        index < allNotifications.length;
-                        index++
-                    ) {
-                        const notification = allNotifications[index];
-                        if (
-                            notification.request.content.title?.includes(
-                                i18n.t(TR.bgLocationServiceTitle),
-                            )
-                        ) {
-                            await Notifications.dismissNotificationAsync(
-                                notification.request.identifier,
-                            );
-                        }
-                    }
-                }
             } catch (err) {
                 console.error(err);
                 Sentry.captureException(err, {
