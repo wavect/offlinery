@@ -165,7 +165,7 @@ const ProfileSettings = ({
                     ),
                     approachChoice: state.approachChoice,
                 },
-                images: getUserImagesForUpload(state),
+                images: await getUserImagesForUpload(state),
             };
 
             await API.user.userControllerUpdateUser(request);
