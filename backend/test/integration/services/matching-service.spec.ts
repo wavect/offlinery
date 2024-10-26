@@ -302,7 +302,7 @@ describe("service ", () => {
                 userInBlacklistedRegion.id,
             );
         });
-        it("should return nearby users that are NOT in their blacklisted regions", async () => {
+        it("should return nearby users that are not in their blacklisted regions", async () => {
             /** @DEV user not in his blacklisted region, but nearby */
             await userFactory.persistNewTestUser({
                 location: new PointBuilder().build(0, 0),
@@ -372,7 +372,7 @@ describe("service ", () => {
                 (await service.findNearbyMatches(testingMainUser)).length,
             ).toEqual(1);
         });
-        it("should return users NOT in their blacklisted regions with precise radius I", async () => {
+        it("should return users not in their blacklisted regions with precise radius I", async () => {
             /** @DEV user not in his blacklisted region, but nearby */
             await userFactory.persistNewTestUser({
                 location: new PointBuilder().build(0, 0),
@@ -387,7 +387,7 @@ describe("service ", () => {
                 (await service.findNearbyMatches(testingMainUser)).length,
             ).toEqual(0);
         });
-        it("should return users NOT in their blacklisted regions with precise radius II ", async () => {
+        it("should return users not in their blacklisted regions with precise radius II ", async () => {
             /** @DEV user not in his blacklisted region, but nearby */
             await userFactory.persistNewTestUser({
                 location: new PointBuilder().build(0, 0),
@@ -402,7 +402,7 @@ describe("service ", () => {
                 (await service.findNearbyMatches(testingMainUser)).length,
             ).toEqual(0);
         });
-        it("should return users NOT in their blacklisted regions with precise radius III ", async () => {
+        it("should return users not in their blacklisted regions with precise radius III ", async () => {
             /** @DEV user not in his blacklisted region, but nearby */
             await userFactory.persistNewTestUser({
                 location: new PointBuilder().build(0, 0),
@@ -543,11 +543,8 @@ describe("service ", () => {
     });
 
     describe("should test users within distance", () => {
-        /** @DEV Once we introduce that users can configures this, ensure that this value comes from the user object.
-         *  @DEV A failing test will indicate this regardless. */
         const maxDistUser = 1500;
-        const DPM = 1 / 111139; // degress per meter
-
+        const DPM = 1 / 111139;
         it("Should not consider users locations for heatmap", async () => {
             await userFactory.persistNewTestUser({
                 location: new PointBuilder().build(0, maxDistUser * 0.9 * DPM), // 90% of max distance
