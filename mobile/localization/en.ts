@@ -167,6 +167,8 @@ export const en = {
     noUserIdAssignedCannotListenToNotifications:
         "No user ID assigned! Cannot listen to notifications!",
     couldNotFetchNotificationToken: "Could not fetch notification token",
+    permissionNotificationRejected:
+        "Permission to show notifications rejected. Without we can't notify you about new encounters.",
     findPeople: "Find people",
     encounters: "Encounters",
     settings: "Settings",
