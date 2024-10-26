@@ -102,6 +102,7 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
     }
 
     try {
+        initializeFirebase();
         const projectId = getExpoProjectId();
         token = (
             await Notifications.getExpoPushTokenAsync({
