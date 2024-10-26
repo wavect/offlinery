@@ -86,8 +86,6 @@ export const en = {
         "What are spots you don't want to be approached at? Your gym, workplace?",
     youAreUndercover: "You're undercover",
     nobodyWillSeeYou: "Nobody will see you here.",
-    myLocation: "My Location",
-    youAreHere: "You are here.",
     longPressMapSafeZoneInstruction:
         "Long press on the map to add a circular region. Tap a region to select it and adjust its radius.",
     adjustRegionRadius: "Adjust Region Radius",
