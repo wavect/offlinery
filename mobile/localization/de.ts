@@ -169,6 +169,8 @@ export const de: Language = {
         "Kein Benutzer-ID zugewiesen! Kann keine Benachrichtigungen empfangen!",
     couldNotFetchNotificationToken:
         "Benachrichtigungstoken konnte nicht abgerufen werden",
+    permissionNotificationRejected:
+        "Benachrichtungen abgelehnt. Ohne deine Erlaubnis können wir dich nicht über neue Begegnungen benachrichtigen.",
     findPeople: "Finden",
     encounters: "Begegnungen",
     settings: "Einstellungen",
