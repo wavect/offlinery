@@ -8,6 +8,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { saveOnboardingState } from "@/services/storage.service";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -19,7 +20,7 @@ const ApproachChoice = ({
     MainStackParamList,
     typeof ROUTES.Onboarding.ApproachChoice
 >) => {
-    const { dispatch } = useUserContext();
+    const { state, dispatch } = useUserContext();
 
     const setApproachChoice = (
         approachChoice: UserPrivateDTOApproachChoiceEnum,
@@ -62,6 +63,10 @@ const ApproachChoice = ({
                 navigation.navigate(ROUTES.Onboarding.DontApproachMeHere);
         }
     };
+
+    React.useEffect(() => {
+        saveOnboardingState(state, navigation.getState());
+    }, []);
 
     return (
         <OPageContainer

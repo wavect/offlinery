@@ -133,6 +133,7 @@ export class UserService {
 
         return user;
     }
+
     async hashNewPassword(user: User, clearPwd: string): Promise<User> {
         // @dev https://docs.nestjs.com/security/encryption-and-hashing
         user.passwordSalt = await bcrypt.genSalt();
@@ -504,6 +505,9 @@ export class UserService {
     }
 
     async findUserByEmailOrFail(email: string): Promise<User> {
+        if (!email) {
+            throw new NotFoundException("Email is undefined.");
+        }
         const user = await this.userRepository.findOne({
             where: { email },
             relations: ["blacklistedRegions"], // Include related entities if needed
@@ -548,6 +552,11 @@ export class UserService {
         user.location = { type: "Point", coordinates: [longitude, latitude] };
         user.locationLastTimeUpdated = new Date();
         const updatedUser = await this.userRepository.save(user);
+        this.logger.debug(
+            `Saved new locationUpdate for user ${user.id}`,
+            longitude,
+            latitude,
+        );
 
         // Check for matches and send notifications (from a semantic perspective we only send notifications if a person to be approached sends a location update)
         if (
@@ -558,6 +567,10 @@ export class UserService {
                 `Sending notifications to users that want to potentially approach userId ${user.id}`,
             );
             await this.matchingService.notifyMatches(user);
+        } else {
+            this.logger.debug(
+                `User is only approaching, not sending any notifications for userId ${user.id}`,
+            );
         }
 
         return updatedUser;

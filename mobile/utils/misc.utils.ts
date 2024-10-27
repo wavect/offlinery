@@ -1,9 +1,10 @@
 import { CreateUserDTOPreferredLanguageEnum } from "@/api/gen/src";
-import { i18n } from "@/localization/translate.service";
+import { i18n, TR } from "@/localization/translate.service";
 import { SUPPORT_MAIL } from "@/utils/general.constants";
+import * as Sentry from "@sentry/react-native";
 import Constants from "expo-constants";
 import { jwtDecode } from "jwt-decode";
-import { Linking } from "react-native";
+import { Alert, Linking, Platform } from "react-native";
 
 export const REFRESH_REMAINING_MINUTE = 1;
 
@@ -45,6 +46,11 @@ function decodeJWT(token: string) {
         return jwtDecode(token);
     } catch (error) {
         console.error("Error decoding JWT:", error);
+        Sentry.captureException(error, {
+            tags: {
+                jwt: "decoding",
+            },
+        });
         throw error;
     }
 }
@@ -60,4 +66,33 @@ export const isNumericRegex = /^\d+$/;
 
 export const writeSupportEmail = async () => {
     await Linking.openURL(`mailto:${SUPPORT_MAIL}`);
+};
+
+export const openAppSettings = async () => {
+    if (Platform.OS === "ios") {
+        Linking.openURL("app-settings:");
+    } else if (Platform.OS === "android") {
+        await Linking.openSettings();
+    }
+};
+
+export const showOpenAppSettingsAlert = (
+    body: string,
+    onOpenAppSettings: Function = openAppSettings,
+) => {
+    Alert.alert(
+        i18n.t(TR.permissionRequired),
+        body,
+        [
+            {
+                text: i18n.t(TR.cancel),
+                style: "cancel",
+            },
+            {
+                text: i18n.t(TR.goToSettings),
+                onPress: () => onOpenAppSettings(),
+            },
+        ],
+        { cancelable: true },
+    );
 };

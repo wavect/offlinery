@@ -6,6 +6,7 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { saveOnboardingState } from "@/services/storage.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
 import { isValidPassword } from "@/utils/validation-rules.utils";
@@ -66,6 +67,12 @@ const Password = ({
             navigation.navigate(ROUTES.Onboarding.FirstName);
         }
     };
+
+    React.useEffect(() => {
+        if (!isChangePassword) {
+            saveOnboardingState(state, navigation.getState());
+        }
+    }, []);
 
     return (
         <OPageContainer

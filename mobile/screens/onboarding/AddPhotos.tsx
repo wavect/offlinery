@@ -6,6 +6,12 @@ import { ImageIdx, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { API } from "@/utils/api-config";
 import { isImagePicker } from "@/utils/media.utils";
+import {
+    openAppSettings,
+    saveOnboardingState,
+    showOpenAppSettingsAlert,
+} from "@/utils/misc.utils";
+import * as Sentry from "@sentry/react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import { useState } from "react";
@@ -27,6 +33,25 @@ const AddPhotos = ({
     const hasAnyImage = Object.values(state.imageURIs).some(Boolean);
 
     const { width } = useWindowDimensions();
+    const openSettings = async () => {
+        if (!route.params?.overrideOnBtnPress) {
+            saveOnboardingState(state, navigation.getState());
+        }
+
+        await openAppSettings();
+    };
+    React.useEffect(() => {
+        if (
+            mediaLibStatus &&
+            !mediaLibStatus?.granted &&
+            !mediaLibStatus?.canAskAgain
+        ) {
+            showOpenAppSettingsAlert(
+                i18n.t(TR.pleaseChangePermission),
+                openSettings,
+            );
+        }
+    }, [mediaLibStatus]);
 
     // Calculate the size of each photo container based on screen width
     const containerPadding = 20;
@@ -48,14 +73,14 @@ const AddPhotos = ({
                         const indexImagesToDelete: number[] = [];
 
                         (["0", "1", "2", "3", "4", "5"] as ImageIdx[]).forEach(
-                            (idx) => {
+                            (idx: ImageIdx) => {
                                 const img = state.imageURIs[idx];
                                 if (isImagePicker(img)) {
-                                    images[Number(idx)] = img;
+                                    images[idx] = img;
                                 } else if (img === null) {
-                                    indexImagesToDelete.push(Number(idx));
+                                    indexImagesToDelete.push(parseInt(idx));
                                 } else {
-                                    images[Number(idx)] = undefined;
+                                    images[idx] = undefined;
                                 }
                             },
                         );
@@ -67,8 +92,13 @@ const AddPhotos = ({
                     })(),
                 });
                 route.params.overrideOnBtnPress();
-            } catch (err) {
-                throw err;
+            } catch (error) {
+                Sentry.captureException(error, {
+                    tags: {
+                        addPhotos: "submit",
+                    },
+                });
+                throw error;
             } finally {
                 setLoading(false);
             }

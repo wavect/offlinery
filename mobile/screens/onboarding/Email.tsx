@@ -1,15 +1,16 @@
-import { Color, FontFamily } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OCheckbox } from "@/components/OCheckbox/OCheckbox";
+import OErrorMessage from "@/components/OErrorMessage.tsx/OErrorMessage";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { saveOnboardingState } from "@/services/storage.service";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
-import { useEffect } from "react";
-import { StyleSheet, Text } from "react-native";
+import { Controller, useForm } from "react-hook-form";
+import { StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -21,21 +22,19 @@ const Email = ({
     typeof ROUTES.Onboarding.Email
 >) => {
     const { state, dispatch } = useUserContext();
-    const [errorMessage, setErrorMessage] = React.useState("");
 
-    useEffect(() => {
-        const unsubscribe = navigation.addListener("focus", () => {
-            const params = route.params;
-            if (params?.errorMessage) {
-                setErrorMessage(params.errorMessage);
-            }
-        });
-
-        return unsubscribe;
-    }, [navigation, route]);
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        mode: "onChange",
+        defaultValues: {
+            email: state.email,
+        },
+    });
 
     const setEmail = (email: string) => {
-        setErrorMessage(isValidEmail(email) ? "" : i18n.t(TR.invalidEmail));
         dispatch({ type: EACTION_USER.UPDATE_MULTIPLE, payload: { email } });
     };
 
@@ -50,6 +49,10 @@ const Email = ({
         navigation.navigate(ROUTES.Onboarding.VerifyEmail);
     };
 
+    React.useEffect(() => {
+        saveOnboardingState(state, navigation.getState());
+    }, []);
+
     return (
         <OPageContainer
             fullpageIcon="alternate-email"
@@ -57,31 +60,46 @@ const Email = ({
                 <OButtonWide
                     text={i18n.t(TR.continue)}
                     filled={true}
-                    disabled={!isValidEmail(state.email)}
+                    disabled={Object.keys(errors).length > 0}
                     variant="dark"
-                    onPress={onContinue}
+                    onPress={handleSubmit(onContinue)}
                 />
             }
             subtitle={i18n.t(TR.whatIsYourEmailDescr)}
         >
-            <OTextInput
-                value={state.email}
-                onChangeText={(email: string) => setEmail(email.trim())}
-                maxLength={125}
-                autoCapitalize="none"
-                autoComplete="email"
-                keyboardType="email-address"
-                autoCorrect={false}
-                inputMode="email"
-                placeholder={i18n.t(TR.yourEmail)}
-                containerStyle={[
-                    styles.inputField,
-                    errorMessage ? { marginBottom: 6 } : undefined,
-                ]}
+            <Controller
+                control={control}
+                rules={{
+                    required: true,
+                    validate: (email) => isValidEmail(email),
+                }}
+                name="email"
+                render={({ field: { onChange, onBlur, value } }) => (
+                    <OTextInput
+                        value={value}
+                        onBlur={onBlur}
+                        onChangeText={(email: string) => {
+                            onChange(email);
+                            setEmail(email.trim());
+                        }}
+                        maxLength={125}
+                        autoCapitalize="none"
+                        autoComplete="email"
+                        keyboardType="email-address"
+                        autoCorrect={false}
+                        inputMode="email"
+                        placeholder={i18n.t(TR.yourEmail)}
+                        containerStyle={[
+                            styles.inputField,
+                            errors.email ? { marginBottom: 6 } : undefined,
+                        ]}
+                    />
+                )}
             />
-            {errorMessage && (
-                <Text style={styles.errorMessage}>{errorMessage}</Text>
-            )}
+            <OErrorMessage
+                errorMessage={i18n.t(TR.invalidEmail)}
+                show={errors.email !== undefined}
+            />
             <OCheckbox
                 onValueChange={setCheckboxChecked}
                 checkboxState={state.wantsEmailUpdates}
@@ -112,13 +130,6 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         alignItems: "center",
-    },
-    errorMessage: {
-        color: Color.redLight,
-        fontSize: 16,
-        fontFamily: FontFamily.montserratSemiBold,
-        textAlign: "left",
-        marginBottom: 16,
     },
 });
 

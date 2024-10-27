@@ -32,6 +32,9 @@ describe("Environment Validation", () => {
             EMAIL_PASSWORD: "emailpassword",
             BE_PORT: "3000",
             JWT_SECRET_REGISTRATION: "12345",
+            MAILCHIMP_SERVER_PREFIX: "abc",
+            MAILCHIMP_API_KEY: "xyz",
+            MAILCHIMP_AUDIENCE_ID: "123",
         };
 
         const { validateEnv } = require("../../../src/utils/env.utils");
@@ -47,6 +50,9 @@ describe("Environment Validation", () => {
         expect(result.EMAIL_HOST).toBe("smtp.example.com");
         expect(result.EMAIL_USERNAME).toBe("user@example.com");
         expect(result.EMAIL_PASSWORD).toBe("emailpassword");
+        expect(result.MAILCHIMP_SERVER_PREFIX).toBe("abc");
+        expect(result.MAILCHIMP_API_KEY).toBe("xyz");
+        expect(result.MAILCHIMP_AUDIENCE_ID).toBe("123");
         expect(result.BE_PORT).toBe(3000);
     });
 
@@ -71,6 +77,9 @@ describe("Environment Validation", () => {
             EMAIL_PASSWORD: "emailpassword",
             BE_PORT: "3000",
             JWT_SECRET_REGISTRATION: "12345",
+            MAILCHIMP_SERVER_PREFIX: "abc",
+            MAILCHIMP_API_KEY: "xyz",
+            MAILCHIMP_AUDIENCE_ID: "123",
         };
 
         const { validateEnv } = require("../../../src/utils/env.utils");
@@ -93,6 +102,9 @@ describe("Environment Validation", () => {
             EMAIL_PASSWORD: "emailpassword",
             BE_PORT: "3000",
             JWT_SECRET_REGISTRATION: "12345",
+            MAILCHIMP_SERVER_PREFIX: "abc",
+            MAILCHIMP_API_KEY: "xyz",
+            MAILCHIMP_AUDIENCE_ID: "123",
         };
 
         const { TYPED_ENV } = require("../../../src/utils/env.utils");
@@ -108,6 +120,10 @@ describe("Environment Validation", () => {
             EMAIL_PASSWORD: "emailpassword",
             BE_PORT: 3000,
             JWT_SECRET_REGISTRATION: "12345",
+            MAILCHIMP_SERVER_PREFIX: "abc",
+            MAILCHIMP_API_KEY: "xyz",
+            MAILCHIMP_AUDIENCE_ID: "123",
+            NODE_ENV: "development",
         });
     });
 });

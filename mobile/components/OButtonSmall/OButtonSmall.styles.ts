@@ -21,6 +21,10 @@ export const styles = StyleSheet.create({
         fontFamily: FontFamily.montserratLight,
         fontSize: FontSize.size_md,
     },
+    buttonPrimary: {
+        backgroundColor: Color.primary,
+        borderColor: Color.primaryBright,
+    },
     buttonDanger: {
         backgroundColor: Color.red,
         borderColor: "#c00f0c",

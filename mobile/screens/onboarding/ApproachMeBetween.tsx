@@ -5,6 +5,7 @@ import {
     EDateTimeFormatters,
     ODateTimePicker,
 } from "@/components/ODateTimePicker/ODateTimePicker";
+import OErrorMessage from "@/components/OErrorMessage.tsx/OErrorMessage";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import {
     DEFAULT_FROM_TIME,
@@ -13,8 +14,10 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { saveOnboardingState } from "@/services/storage.service";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import * as React from "react";
+import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
@@ -26,6 +29,17 @@ const ApproachMeBetween = ({
     typeof ROUTES.Onboarding.ApproachMeBetween
 >) => {
     const { state, dispatch } = useUserContext();
+
+    const {
+        control,
+        formState: { errors },
+    } = useForm({
+        mode: "onChange",
+        defaultValues: {
+            from: DEFAULT_FROM_TIME,
+            to: DEFAULT_TO_TIME,
+        },
+    });
 
     const onFromTimeChange = (event: DateTimePickerEvent, date?: Date) => {
         dispatch({
@@ -40,6 +54,10 @@ const ApproachMeBetween = ({
         });
     };
 
+    React.useEffect(() => {
+        saveOnboardingState(state, navigation.getState());
+    }, []);
+
     return (
         <OPageContainer
             subtitle={i18n.t(TR.approachMeBetweenDescr)}
@@ -49,6 +67,7 @@ const ApproachMeBetween = ({
                     text={i18n.t(TR.continue)}
                     filled={true}
                     variant="dark"
+                    disabled={Object.keys(errors).length > 0}
                     onPress={() =>
                         navigation.navigate(ROUTES.Onboarding.BioLetThemKnow)
                     }
@@ -57,31 +76,62 @@ const ApproachMeBetween = ({
         >
             <View style={styles.timePickerContainer}>
                 <Text style={styles.timePickerLabel}>{i18n.t(TR.from)}</Text>
-                <ODateTimePicker
-                    display="default"
-                    mode="time"
-                    onChange={onFromTimeChange}
-                    accessibilityLabel={i18n.t(TR.fromDescr)}
-                    value={state.approachFromTime}
-                    style={styles.timePicker}
-                    dateTimeFormatter={EDateTimeFormatters.TIME}
-                    androidTextStyle={styles.timePickerAndroidText}
+                <Controller
+                    control={control}
+                    rules={{
+                        required: true,
+                        validate: (value) => value < state.approachToTime,
+                    }}
+                    name="from"
+                    render={({ field: { onChange, value } }) => (
+                        <ODateTimePicker
+                            display="default"
+                            mode="time"
+                            onChange={(event, date) => {
+                                onChange(date);
+                                onFromTimeChange(event, date);
+                            }}
+                            accessibilityLabel={i18n.t(TR.fromDescr)}
+                            value={value}
+                            style={styles.timePicker}
+                            dateTimeFormatter={EDateTimeFormatters.TIME}
+                            androidTextStyle={styles.timePickerAndroidText}
+                        />
+                    )}
                 />
             </View>
 
             <View style={styles.timePickerContainer}>
                 <Text style={styles.timePickerLabel}>{i18n.t(TR.until)}</Text>
-                <ODateTimePicker
-                    display="default"
-                    mode="time"
-                    onChange={onToTimeChange}
-                    accessibilityLabel={i18n.t(TR.untilDescr)}
-                    value={state.approachToTime}
-                    style={styles.timePicker}
-                    dateTimeFormatter={EDateTimeFormatters.TIME}
-                    androidTextStyle={styles.timePickerAndroidText}
+                <Controller
+                    control={control}
+                    rules={{
+                        required: true,
+                        validate: (value) => value > state.approachFromTime,
+                    }}
+                    name="to"
+                    render={({ field: { onChange, value } }) => (
+                        <ODateTimePicker
+                            display="default"
+                            mode="time"
+                            onChange={(event, date) => {
+                                onChange(date);
+                                onToTimeChange(event, date);
+                            }}
+                            accessibilityLabel={i18n.t(TR.untilDescr)}
+                            value={value}
+                            style={styles.timePicker}
+                            dateTimeFormatter={EDateTimeFormatters.TIME}
+                            androidTextStyle={styles.timePickerAndroidText}
+                        />
+                    )}
                 />
             </View>
+            <OErrorMessage
+                style={{ alignSelf: "center" }}
+                errorMessage={i18n.t(TR.inputInvalid)}
+                show={errors.from !== undefined || errors.to !== undefined}
+            />
         </OPageContainer>
     );
 };

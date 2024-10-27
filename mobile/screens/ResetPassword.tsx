@@ -1,6 +1,8 @@
 import { Color, FontFamily } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
+import { UserApi } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import OErrorMessage from "@/components/OErrorMessage.tsx/OErrorMessage";
 import { ONewPasswordGroup } from "@/components/ONewPasswordGroup/ONewPasswordGroup";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OSplitInput } from "@/components/OSplitInput/OSplitInput";
@@ -8,7 +10,6 @@ import { OTextInput } from "@/components/OTextInput/OTextInput";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
-import { API } from "@/utils/api-config";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import React, { useRef, useState } from "react";
 import { StyleSheet, Text } from "react-native";
@@ -32,7 +33,8 @@ const ResetPassword = ({
 
     const verifyCode = async (verificationCode: string) => {
         try {
-            await API.user.userControllerResetPassword({
+            const api = new UserApi();
+            await api.userControllerResetPassword({
                 verifyResetPasswordDTO: {
                     email: state.email,
                     verificationCode,
@@ -48,12 +50,14 @@ const ResetPassword = ({
     };
 
     const sendVerificationCode = async () => {
-        const result =
-            await API.user.userControllerRequestPasswordChangeAsForgotten({
+        const api = new UserApi();
+        const result = await api.userControllerRequestPasswordChangeAsForgotten(
+            {
                 resetPasswordRequestDTO: {
                     email: state.email,
                 },
-            });
+            },
+        );
         if (!result.email) {
             throw new Error("User does not exist or unknown error.");
         }
@@ -120,9 +124,11 @@ const ResetPassword = ({
                     errorMessage ? { marginBottom: 6 } : undefined,
                 ]}
             />
-            {errorMessage && (
-                <Text style={styles.errorMessage}>{errorMessage}</Text>
-            )}
+            <OErrorMessage
+                style={styles.errorMessage}
+                errorMessage={errorMessage}
+                show={errorMessage !== undefined}
+            />
 
             <Text style={styles.sixDigitCodeExplainer}>
                 {i18n.t(TR.verificationCodeSent)}

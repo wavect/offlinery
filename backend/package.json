@@ -14,7 +14,7 @@
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-        "test": "jest --silent --forceExit --runInBand",
+        "test": "jest --silent --forceExit --runInBand --testPathIgnorePatterns=\"/node_modules/|/test/unit/_src/|/test/_src/|/test/_config/|/test/integration/services/benchmarks/\"",
         "test:watch": "jest --watch --detectOpenHandles --runInBand",
         "test:cov": "jest --coverage --detectOpenHandles --runInBand",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -29,9 +29,12 @@
         "migration:run": "pnpm run typeorm migration:run -- -d ./src/typeorm.config.ts",
         "migration:generate": "pnpm run typeorm -- -d ./src/typeorm.config.ts migration:generate ./src/migrations/$npm_config_name",
         "migration:create": "pnpm run typeorm -- migration:create ./src/migrations/$npm_config_name",
-        "migration:revert": "pnpm run typeorm -- -d ./src/typeorm.config.ts migration:revert"
+        "migration:revert": "pnpm run typeorm -- -d ./src/typeorm.config.ts migration:revert",
+        "benchmark": "jest --testPathPattern=matching-service.benchmark"
     },
     "dependencies": {
+        "@influxdata/influxdb-client": "^1.35.0",
+        "@mailchimp/mailchimp_marketing": "^3.0.80",
         "@nestjs-modules/mailer": "^2.0.2",
         "@nestjs/cache-manager": "^2.2.2",
         "@nestjs/common": "^10.0.0",
@@ -77,6 +80,7 @@
         "@types/supertest": "^6.0.0",
         "@typescript-eslint/eslint-plugin": "^7.0.0",
         "@typescript-eslint/parser": "^7.0.0",
+        "benchmarkify": "^4.0.0",
         "eslint": "^8.42.0",
         "eslint-config-prettier": "^9.0.0",
         "eslint-plugin-prettier": "^5.0.0",

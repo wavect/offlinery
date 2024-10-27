@@ -132,7 +132,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                     <OButtonSmall
                                         label={i18n.t(TR.leaveMessageBtnLbl)}
                                         onPress={() => setModalVisible(true)}
-                                        variant={IOButtonSmallVariant.Black}
+                                        variant={IOButtonSmallVariant.Primary}
                                         numberOfLines={1}
                                         adjustsFontSizeToFit={true}
                                     />
@@ -168,7 +168,9 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                         <OButtonSmall
                                             label={i18n.t(TR.navigate)}
                                             numberOfLines={1}
-                                            variant={IOButtonSmallVariant.Black}
+                                            variant={
+                                                IOButtonSmallVariant.Primary
+                                            }
                                             onPress={() =>
                                                 navigation.navigate(
                                                     ROUTES.HouseRules,
@@ -199,6 +201,17 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     </Text>
                 )}
             </View>
+            {dateStatus === EncounterPublicDTOStatusEnum.met_interested &&
+                encounterProfile.lastReceivedMessage && (
+                    <View style={styles.receivedMessageContainer}>
+                        <Text style={styles.receivedMessageTitle}>
+                            {i18n.t(TR.receivedMessage)}:
+                        </Text>
+                        <Text style={styles.receivedMessageText}>
+                            {encounterProfile.lastReceivedMessage.content}
+                        </Text>
+                    </View>
+                )}
             <OMessageModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}

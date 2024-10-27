@@ -1,3 +1,4 @@
+import { BlacklistedRegionDTO } from "@/DTOs/blacklisted-region.dto";
 import { UserPrivateDTO } from "@/DTOs/user-private.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
@@ -14,6 +15,7 @@ import {
 } from "@/types/user.types";
 import { getAge } from "@/utils/date.utils";
 import {
+    arraySafeCheck,
     getAgeRangeParsedForPrivateDto,
     parseToAgeRangeString,
 } from "@/utils/misc.utils";
@@ -57,7 +59,9 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
             intentions: this.intentions,
             ageRange: getAgeRangeParsedForPrivateDto(this.ageRangeString),
             wantsEmailUpdates: this.wantsEmailUpdates,
-            blacklistedRegions: this.blacklistedRegions,
+            blacklistedRegions: arraySafeCheck<BlacklistedRegionDTO>(
+                this.blacklistedRegions,
+            ),
             email: this.email,
             approachChoice: this.approachChoice,
             approachFromTime: this.approachFromTime,
@@ -196,7 +200,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
         srid: 4326,
         nullable: true,
     })
-    location: Point;
+    location?: Point;
 
     @Column({ nullable: true })
     locationLastTimeUpdated: Date;

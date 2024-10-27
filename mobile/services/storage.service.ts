@@ -1,9 +1,10 @@
-import { initialUserState, IUserData } from "@/context/UserContext";
+import { IUserData } from "@/context/UserContext";
 import {
+    deleteSecurelyStoredValue,
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
-import { IEncounterProfile } from "@/types/PublicProfile.types";
+import { NativeStackNavigationOptions } from "react-native-screens/native-stack";
 
 /** @dev React-native-mmkv is blazing fast as it uses native modules. For that reason it does not work with Expo Go. To keep Expo Go working, we fallback to secure service if not available. */
 const getStorageLib = () => {
@@ -22,85 +23,60 @@ const getStorageLib = () => {
 /** @dev If MMKV store defined use it, otherwise is false to use secure-service instead. */
 const storage = getStorageLib();
 
-export const LOCAL_VALUE = {
-    USER_DATA: "user_data",
-    ENCOUNTERS: "encounters",
-    HAS_SEEN_INTRO: "has_seen_intro",
-};
+export enum LOCAL_VALUE {
+    USER_ID = "user_id",
+    HAS_SEEN_INTRO = "has_seen_intro",
+    ONBOARDING_SCREEN = "onboarding_screen",
+    ONBOARDING_USER = "onboarding_user",
+}
 
-export const getLocallyStoredUserData = (): Omit<
-    IUserData,
-    "imageURIs"
-> | null => {
-    let userDataString: string | null;
-    if (!storage) {
-        userDataString = getSecurelyStoredValue(LOCAL_VALUE.USER_DATA);
+export const saveLocalValue = (key: LOCAL_VALUE, value: string) => {
+    if (storage) {
+        // @dev use mmkv
+        storage.set(key, value);
     } else {
-        userDataString = storage.getString(LOCAL_VALUE.USER_DATA);
-    }
-    return userDataString ? (JSON.parse(userDataString) as IUserData) : null;
-};
-
-export const updateUserDataLocally = (
-    partialUserData: Omit<Partial<IUserData>, "imageURIs">,
-) => {
-    saveUserData({
-        ...(getLocallyStoredUserData() ?? initialUserState),
-        ...partialUserData,
-    });
-};
-
-export const saveUserData = (userData: Omit<IUserData, "imageURIs">) => {
-    // jwtAccessToken should be stored in more secure local storage, see secure-storage.service.ts
-    const internalUserDataObj = { ...userData }; // clone object to not remove accessToken for user.context.ts too etc.
-    // if the type check didn't work, we manually delete the jwt token from the object to not save it.
-    if ((internalUserDataObj as IUserData).imageURIs) {
-        (internalUserDataObj as IUserData).imageURIs = {};
-    }
-
-    const userDataString = JSON.stringify(internalUserDataObj);
-
-    if (!storage) {
-        saveValueLocallySecurely(LOCAL_VALUE.USER_DATA, userDataString);
-    } else {
-        storage.set(LOCAL_VALUE.USER_DATA, userDataString);
+        // @dev use expo-secure-storage if mmkv not available (e.g. for expo go)
+        saveValueLocallySecurely(key, value);
     }
 };
 
-export const getLocallyStoredEncounters = (): IEncounterProfile[] => {
-    let encounterDataString: string | null;
-    if (!storage) {
-        encounterDataString = getSecurelyStoredValue(LOCAL_VALUE.ENCOUNTERS);
+export const getLocalValue = (key: LOCAL_VALUE) => {
+    if (storage) {
+        // @dev use mmkv
+        return storage.getString(key);
     } else {
-        encounterDataString = storage.getString(LOCAL_VALUE.ENCOUNTERS);
+        // @dev use expo-secure-storage if mmkv not available (e.g. for expo go)
+        return getSecurelyStoredValue(key);
     }
-    return encounterDataString
-        ? (JSON.parse(encounterDataString) as IEncounterProfile[])
-        : [];
 };
 
-/** @dev Since encounters is an array, we always update the full storage directly in Encounters.context.ts */
-export const saveEncountersLocally = (encounters: IEncounterProfile[]) => {
-    const encounterDataString = JSON.stringify(encounters);
-    if (!storage) {
-        saveValueLocallySecurely(LOCAL_VALUE.ENCOUNTERS, encounterDataString);
+export const deleteLocalValue = (key: LOCAL_VALUE) => {
+    if (storage) {
+        // @dev use mmkv
+        return storage.delete(key);
     } else {
-        storage.set(LOCAL_VALUE.ENCOUNTERS, encounterDataString);
+        // @dev use expo-secure-storage if mmkv not available (e.g. for expo go)
+        return deleteSecurelyStoredValue(key);
     }
 };
 
 export const saveDeviceUserHasSeenIntro = () => {
-    if (!storage) {
-        saveValueLocallySecurely(LOCAL_VALUE.HAS_SEEN_INTRO, "true");
-    } else {
-        storage.set(LOCAL_VALUE.HAS_SEEN_INTRO, "true");
-    }
+    saveLocalValue(LOCAL_VALUE.HAS_SEEN_INTRO, "true");
 };
 
 export const getDeviceUserHasSeenIntro = () => {
-    if (!storage) {
-        return getSecurelyStoredValue(LOCAL_VALUE.HAS_SEEN_INTRO);
-    } else {
-        return storage.getString(LOCAL_VALUE.HAS_SEEN_INTRO);
-    }
+    return getLocalValue(LOCAL_VALUE.HAS_SEEN_INTRO);
+};
+
+export const saveOnboardingState = (
+    state: IUserData,
+    stack: NativeStackNavigationOptions,
+) => {
+    saveLocalValue(LOCAL_VALUE.ONBOARDING_USER, JSON.stringify(state));
+    saveLocalValue(LOCAL_VALUE.ONBOARDING_SCREEN, JSON.stringify(stack));
+};
+
+export const deleteOnboardingState = async () => {
+    deleteLocalValue(LOCAL_VALUE.ONBOARDING_SCREEN);
+    deleteLocalValue(LOCAL_VALUE.ONBOARDING_USER);
 };

@@ -14,6 +14,7 @@ import {
     EDateTimeFormatters,
     ODateTimePicker,
 } from "@/components/ODateTimePicker/ODateTimePicker";
+import OErrorMessage from "@/components/OErrorMessage.tsx/OErrorMessage";
 import { OLabel } from "@/components/OLabel/OLabel";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
@@ -34,8 +35,10 @@ import { A } from "@expo/html-elements";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CommonActions } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Dropdown, MultiSelect } from "react-native-element-dropdown";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -47,6 +50,26 @@ const ProfileSettings = ({
     NativeStackScreenProps<MainStackParamList, typeof ROUTES.MainTabView>) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
+
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        mode: "onChange",
+        defaultValues: {
+            firstName: state.firstName,
+            approachFromTime: state.approachFromTime,
+            approachToTime: state.approachToTime,
+            bio: state.bio,
+            birthday: state.birthDay,
+            gender: state.gender,
+            ageRange: state.ageRange,
+            genderDesire: state.genderDesire,
+            intentions: state.intentions,
+            approachChoice: state.approachChoice,
+        },
+    });
 
     const setFirstName = async (firstName: string) => {
         dispatch({
@@ -142,7 +165,7 @@ const ProfileSettings = ({
                     ),
                     approachChoice: state.approachChoice,
                 },
-                images: getUserImagesForUpload(state),
+                images: await getUserImagesForUpload(state.imageURIs),
             };
 
             await API.user.userControllerUpdateUser(request);
@@ -166,13 +189,14 @@ const ProfileSettings = ({
                         ],
                     }),
                 );
-            } else {
-                navigation.navigate(ROUTES.MainTabView, {
-                    screen: ROUTES.Main.FindPeople,
-                });
             }
         } catch (error) {
             console.error("Error updating user profile:", error);
+            Sentry.captureException(error, {
+                tags: {
+                    settings: "submit",
+                },
+            });
             // Handle error (e.g., show error message to user)
         } finally {
             setLoading(false);
@@ -226,7 +250,13 @@ const ProfileSettings = ({
             >
                 <View style={styles.settingsButtonContent}>
                     <MaterialIcons name={icon} size={30} color="#000" />
-                    <Text style={styles.settingsButtonText}>{text}</Text>
+                    <Text
+                        style={styles.settingsButtonText}
+                        adjustsFontSizeToFit={true}
+                        numberOfLines={2}
+                    >
+                        {text}
+                    </Text>
                 </View>
             </TouchableOpacity>
         );
@@ -249,14 +279,26 @@ const ProfileSettings = ({
                 payload: { markedForDeletion: true },
             });
             alert(i18n.t(TR.accountDeletionRequestedAlert));
-        } catch (err) {
-            throw err;
+        } catch (error) {
+            Sentry.captureException(error, {
+                tags: {
+                    settings: "requestDeletion",
+                },
+            });
+            throw error;
         }
     };
 
     const handleLogout = async () => {
         await logoutUser(dispatch, navigation);
     };
+
+    const today = new Date();
+    const eighteenYearsAgo = new Date(
+        today.getFullYear() - 18,
+        today.getMonth(),
+        today.getDate(),
+    );
 
     return (
         <OPageContainer
@@ -266,12 +308,28 @@ const ProfileSettings = ({
             <View style={styles.container} testID={TestData.settings.page}>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>{i18n.t(TR.myFirstNameIs)}</Text>
-                    <OTextInput
-                        testID={TestData.settings.inputFirstName}
-                        value={state.firstName}
-                        onChangeText={setFirstName}
-                        placeholder={i18n.t(TR.enterFirstName)}
-                        containerStyle={styles.input}
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name="firstName"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <OTextInput
+                                testID={TestData.settings.inputFirstName}
+                                value={value}
+                                onChangeText={(text) => {
+                                    onChange(text);
+                                    setFirstName(text);
+                                }}
+                                onBlur={onBlur}
+                                placeholder={i18n.t(TR.enterFirstName)}
+                                containerStyle={styles.input}
+                            />
+                        )}
+                    />
+                    <OErrorMessage
+                        errorMessage={i18n.t(TR.fieldRequired)}
+                        style={styles.errorMessage}
+                        show={errors.firstName !== undefined}
                     />
                 </View>
 
@@ -284,37 +342,79 @@ const ProfileSettings = ({
                         <View style={styles.timePickerRow}>
                             <View style={styles.timePicker}>
                                 <Text>{i18n.t(TR.from)}</Text>
-                                <ODateTimePicker
-                                    value={new Date(state.approachFromTime)}
-                                    mode="time"
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={(event, selectedTime) =>
-                                        setApproachFromTime(selectedTime)
-                                    }
-                                    dateTimeFormatter={EDateTimeFormatters.TIME}
-                                    androidTextStyle={
-                                        styles.androidDateTimeValue
-                                    }
+                                <Controller
+                                    control={control}
+                                    rules={{
+                                        required: true,
+                                        validate: (value) =>
+                                            value < state.approachToTime,
+                                    }}
+                                    name="approachFromTime"
+                                    render={({
+                                        field: { onChange, onBlur, value },
+                                    }) => (
+                                        <ODateTimePicker
+                                            value={value}
+                                            mode="time"
+                                            is24Hour={true}
+                                            display="default"
+                                            onChange={(event, selectedTime) => {
+                                                onChange(selectedTime);
+                                                setApproachFromTime(
+                                                    selectedTime,
+                                                );
+                                            }}
+                                            dateTimeFormatter={
+                                                EDateTimeFormatters.TIME
+                                            }
+                                            androidTextStyle={
+                                                styles.androidDateTimeValue
+                                            }
+                                        />
+                                    )}
                                 />
                             </View>
                             <View style={styles.timePicker}>
                                 <Text>{i18n.t(TR.until)}</Text>
-                                <ODateTimePicker
-                                    value={new Date(state.approachToTime)}
-                                    mode="time"
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={(event, selectedTime) =>
-                                        setApproachToTime(selectedTime)
-                                    }
-                                    dateTimeFormatter={EDateTimeFormatters.TIME}
-                                    androidTextStyle={
-                                        styles.androidDateTimeValue
-                                    }
+                                <Controller
+                                    control={control}
+                                    rules={{
+                                        required: true,
+                                        validate: (value) =>
+                                            value > state.approachFromTime,
+                                    }}
+                                    name="approachToTime"
+                                    render={({
+                                        field: { onChange, value },
+                                    }) => (
+                                        <ODateTimePicker
+                                            value={value}
+                                            mode="time"
+                                            is24Hour={true}
+                                            display="default"
+                                            onChange={(event, selectedTime) => {
+                                                onChange(selectedTime);
+                                                setApproachToTime(selectedTime);
+                                            }}
+                                            dateTimeFormatter={
+                                                EDateTimeFormatters.TIME
+                                            }
+                                            androidTextStyle={
+                                                styles.androidDateTimeValue
+                                            }
+                                        />
+                                    )}
                                 />
                             </View>
                         </View>
+                        <OErrorMessage
+                            errorMessage={i18n.t(TR.inputInvalid)}
+                            style={styles.errorMessage}
+                            show={
+                                errors.approachFromTime !== undefined ||
+                                errors.approachToTime !== undefined
+                            }
+                        />
                     </View>
                 )}
 
@@ -326,15 +426,33 @@ const ProfileSettings = ({
                             tooltipText={i18n.t(TR.bioTooltip)}
                         />
                     </View>
-                    <OTextInput
-                        testID={TestData.settings.inputBio}
-                        value={state.bio}
-                        onChangeText={setBio}
-                        placeholder={i18n.t(TR.noPickUpLinesBeChill)}
-                        multiline={true}
-                        containerStyle={[styles.input, styles.multiline_input]}
-                        maxLength={100}
-                        showCharacterCount
+                    <Controller
+                        control={control}
+                        rules={{ required: true, maxLength: 100, minLength: 1 }}
+                        name="bio"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <OTextInput
+                                testID={TestData.settings.inputBio}
+                                value={value}
+                                onChangeText={(text) => {
+                                    onChange(text);
+                                    setBio(text);
+                                }}
+                                onBlur={onBlur}
+                                placeholder={i18n.t(TR.noPickUpLinesBeChill)}
+                                multiline={true}
+                                containerStyle={[
+                                    styles.input,
+                                    styles.multiline_input,
+                                ]}
+                                maxLength={100}
+                                showCharacterCount
+                            />
+                        )}
+                    />
+                    <OErrorMessage
+                        errorMessage={i18n.t(TR.fieldRequired)}
+                        show={errors.bio !== undefined}
                     />
                 </View>
 
@@ -343,32 +461,66 @@ const ProfileSettings = ({
                     testID={TestData.settings.labelBirthday}
                 >
                     <Text style={styles.label}>{i18n.t(TR.myBirthDayIs)}</Text>
-                    <ODateTimePicker
-                        value={state.birthDay}
-                        mode="date"
-                        display="default"
-                        onChange={(event, selectedDate) =>
-                            setBirthday(selectedDate)
-                        }
-                        dateTimeFormatter={EDateTimeFormatters.DATE}
-                        androidTextStyle={styles.androidDateTimeValue}
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name="birthday"
+                        render={({ field: { onChange, value } }) => (
+                            <ODateTimePicker
+                                value={value}
+                                mode="date"
+                                display="default"
+                                maximumDate={eighteenYearsAgo}
+                                onChange={(event, selectedDate) => {
+                                    onChange(selectedDate);
+                                    setBirthday(selectedDate);
+                                }}
+                                dateTimeFormatter={EDateTimeFormatters.DATE}
+                                androidTextStyle={styles.androidDateTimeValue}
+                            />
+                        )}
+                    />
+                    <OErrorMessage
+                        errorMessage={i18n.t(TR.inputInvalid)}
+                        show={errors.birthday !== undefined}
                     />
                 </View>
 
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>{i18n.t(TR.iAmA)}</Text>
-                    <Dropdown
-                        testID={TestData.settings.inputIAmA}
-                        data={genderItems}
-                        labelField="label"
-                        valueField="value"
-                        value={state.gender}
-                        onChange={setGender}
-                        style={styles.dropdown}
-                        containerStyle={styles.dropdownContainerStyle}
-                        placeholderStyle={styles.dropdownPlaceholderStyle}
-                        selectedTextStyle={styles.inputSelectedTextStyle}
-                        itemTextStyle={styles.dropdownItemTextStyle}
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name="gender"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <Dropdown
+                                testID={TestData.settings.inputIAmA}
+                                data={genderItems}
+                                labelField="label"
+                                valueField="value"
+                                onBlur={onBlur}
+                                value={value}
+                                onChange={(item) => {
+                                    onChange(item);
+                                    setGender(item);
+                                }}
+                                style={styles.dropdown}
+                                containerStyle={styles.dropdownContainerStyle}
+                                placeholderStyle={
+                                    styles.dropdownPlaceholderStyle
+                                }
+                                selectedTextStyle={
+                                    styles.inputSelectedTextStyle
+                                }
+                                itemTextStyle={styles.dropdownItemTextStyle}
+                                activeColor={Color.primaryBright}
+                            />
+                        )}
+                    />
+                    <OErrorMessage
+                        errorMessage={i18n.t(TR.inputInvalid)}
+                        style={styles.errorMessage}
+                        show={errors.gender !== undefined}
                     />
                 </View>
                 <View style={styles.settingsButtonsContainer}>
@@ -415,21 +567,47 @@ const ProfileSettings = ({
                 </View>
                 <View style={styles.nonNegotiableOptionContainer}>
                     <Text style={styles.cardTitle}>{i18n.t(TR.iWantA)}</Text>
-                    <MultiSelect
-                        testID={TestData.settings.inputIWantA}
-                        data={intentionItems}
-                        labelField="label"
-                        valueField="value"
-                        value={state.intentions}
-                        onChange={setIntentions}
-                        style={styles.dropdown}
-                        placeholder={i18n.t(TR.dropdownSelectChoicePlaceholder)}
-                        containerStyle={styles.dropdownContainerStyle}
-                        placeholderStyle={styles.dropdownPlaceholderStyle}
-                        selectedTextStyle={styles.dropdownSelectedTextStyle}
-                        selectedStyle={styles.itemSelectedStyle}
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        name="intentions"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <MultiSelect
+                                testID={TestData.settings.inputIWantA}
+                                data={intentionItems}
+                                labelField="label"
+                                valueField="value"
+                                value={value}
+                                onChange={(item) => {
+                                    onChange(item);
+                                    setIntentions(item);
+                                }}
+                                onBlur={onBlur}
+                                style={styles.dropdown}
+                                placeholder={i18n.t(
+                                    TR.dropdownSelectChoicePlaceholder,
+                                )}
+                                containerStyle={styles.dropdownContainerStyle}
+                                placeholderStyle={
+                                    styles.dropdownPlaceholderStyle
+                                }
+                                selectedTextStyle={
+                                    styles.dropdownSelectedTextStyle
+                                }
+                                selectedStyle={styles.itemSelectedStyle}
+                                activeColor={Color.primaryBright}
+                            />
+                        )}
+                    />
+                    <OErrorMessage
+                        errorMessage={i18n.t(TR.fieldRequired)}
+                        style={styles.errorMessage}
+                        show={errors.intentions !== undefined}
                     />
                 </View>
+
                 <View style={styles.nonNegotiableOptionContainer}>
                     <View style={styles.row}>
                         <Text style={styles.cardTitle}>
@@ -441,46 +619,109 @@ const ProfileSettings = ({
                             >{`${state.ageRange[0]}-${state.ageRange[1]}`}</Text>
                         )}
                     </View>
-                    <AgeRangeSlider
-                        onChange={setAgeRange}
-                        value={state.ageRange ?? [1, 2]}
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name="ageRange"
+                        render={({ field: { onChange, value } }) => (
+                            <AgeRangeSlider
+                                onChange={(age) => {
+                                    onChange(age);
+                                    setAgeRange(age);
+                                }}
+                                value={value ?? [18, 30]}
+                            />
+                        )}
+                    />
+                    <OErrorMessage
+                        style={styles.errorMessage}
+                        errorMessage={i18n.t(TR.inputInvalid)}
+                        show={errors.ageRange !== undefined}
                     />
                 </View>
 
                 <View style={styles.nonNegotiableOptionContainer}>
                     <Text style={styles.cardTitle}>{i18n.t(TR.iLookFor)}</Text>
-                    <MultiSelect
-                        testID={TestData.settings.inputIAmLookingFor}
-                        data={genderLookingForItems}
-                        labelField="label"
-                        valueField="value"
-                        value={state.genderDesire}
-                        onChange={setGenderDesire}
-                        style={styles.dropdown}
-                        placeholder={i18n.t(TR.dropdownSelectChoicePlaceholder)}
-                        containerStyle={styles.dropdownContainerStyle}
-                        placeholderStyle={styles.dropdownPlaceholderStyle}
-                        selectedTextStyle={styles.dropdownSelectedTextStyle}
-                        selectedStyle={styles.itemSelectedStyle}
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name="genderDesire"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <MultiSelect
+                                testID={TestData.settings.inputIAmLookingFor}
+                                data={genderLookingForItems}
+                                onBlur={onBlur}
+                                labelField="label"
+                                valueField="value"
+                                value={value}
+                                onChange={(gender) => {
+                                    onChange(gender);
+                                    setGenderDesire(gender);
+                                }}
+                                style={styles.dropdown}
+                                placeholder={i18n.t(
+                                    TR.dropdownSelectChoicePlaceholder,
+                                )}
+                                containerStyle={styles.dropdownContainerStyle}
+                                placeholderStyle={
+                                    styles.dropdownPlaceholderStyle
+                                }
+                                selectedTextStyle={
+                                    styles.dropdownSelectedTextStyle
+                                }
+                                selectedStyle={styles.itemSelectedStyle}
+                                activeColor={Color.primaryBright}
+                            />
+                        )}
+                    />
+                    <OErrorMessage
+                        errorMessage={i18n.t(TR.fieldRequired)}
+                        style={styles.errorMessage}
+                        show={errors.genderDesire !== undefined}
                     />
                 </View>
 
                 <View style={styles.nonNegotiableOptionContainer}>
                     <Text style={styles.cardTitle}>{i18n.t(TR.iWantTo)}</Text>
-                    <Dropdown
-                        testID={TestData.settings.inputIWantTo}
-                        data={approachOptions}
-                        labelField="label"
-                        valueField="value"
-                        value={state.approachChoice}
-                        onChange={setApproachChoice}
-                        placeholder={i18n.t(TR.dropdownSelectChoicePlaceholder)}
-                        style={styles.dropdown}
-                        itemContainerStyle={styles.dropdownItemTextStyle}
-                        containerStyle={styles.dropdownContainerStyle}
-                        placeholderStyle={styles.dropdownPlaceholderStyle}
-                        selectedTextStyle={styles.inputSelectedTextStyle}
-                        itemTextStyle={styles.dropdownItemTextStyle}
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name="approachChoice"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <Dropdown
+                                testID={TestData.settings.inputIWantTo}
+                                data={approachOptions}
+                                labelField="label"
+                                valueField="value"
+                                value={value}
+                                onBlur={onBlur}
+                                onChange={(choice) => {
+                                    onChange(choice);
+                                    setApproachChoice(choice);
+                                }}
+                                placeholder={i18n.t(
+                                    TR.dropdownSelectChoicePlaceholder,
+                                )}
+                                style={styles.dropdown}
+                                itemContainerStyle={
+                                    styles.dropdownItemTextStyle
+                                }
+                                containerStyle={styles.dropdownContainerStyle}
+                                placeholderStyle={
+                                    styles.dropdownPlaceholderStyle
+                                }
+                                selectedTextStyle={
+                                    styles.inputSelectedTextStyle
+                                }
+                                itemTextStyle={styles.dropdownItemTextStyle}
+                                activeColor={Color.primaryBright}
+                            />
+                        )}
+                    />
+                    <OErrorMessage
+                        style={styles.errorMessage}
+                        errorMessage={i18n.t(TR.inputInvalid)}
+                        show={errors.approachChoice !== undefined}
                     />
                 </View>
 
@@ -508,7 +749,8 @@ const ProfileSettings = ({
                         variant="dark"
                         isLoading={isLoading}
                         loadingBtnText={i18n.t(TR.saving)}
-                        onPress={handleSave}
+                        disabled={Object.keys(errors).length > 0}
+                        onPress={handleSubmit(handleSave)}
                     />
                 </View>
 
@@ -648,6 +890,7 @@ const styles = StyleSheet.create({
     },
     input: {
         marginTop: 8,
+        marginBottom: 16,
         height: 45,
         width: "100%",
     },
@@ -767,6 +1010,9 @@ const styles = StyleSheet.create({
     separator: {
         marginTop: 24,
         marginBottom: 8,
+    },
+    errorMessage: {
+        marginTop: 5,
     },
 });
 

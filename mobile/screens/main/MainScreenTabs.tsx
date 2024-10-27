@@ -14,6 +14,7 @@ import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { useFocusEffect } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 import * as Notifications from "expo-notifications";
 import { Subscription } from "expo-notifications";
 import * as React from "react";
@@ -66,7 +67,14 @@ export const MainScreenTabs = ({
                                 return;
                             }
                         })
-                        .catch(console.error);
+                        .catch((error) => {
+                            console.error(error);
+                            Sentry.captureException(error, {
+                                tags: {
+                                    notifications: "setup",
+                                },
+                            });
+                        });
 
                     if (Platform.OS === "android") {
                         Notifications.getNotificationChannelsAsync().then(
@@ -92,7 +100,6 @@ export const MainScreenTabs = ({
                         Notifications.addNotificationResponseReceivedListener(
                             (response) => {
                                 console.log("Notification response", response);
-
                                 // @dev Remove notification from array to update the "unread notification" bubble in the tab
                                 const filteredNotifications =
                                     unreadNotifications.filter(
@@ -108,6 +115,9 @@ export const MainScreenTabs = ({
                                     response.notification.request.content
                                         .data as NotificationNavigateUserDTO;
 
+                                if (!("navigateToPerson" in notificationData)) {
+                                    return;
+                                }
                                 // TODO: Move As many types as possible into backend for generation (e.g. PublicUser, Encounter, ..)
                                 const encounterProfile: IEncounterProfile = {
                                     firstName:
@@ -189,10 +199,10 @@ export const MainScreenTabs = ({
                 options={{
                     tabBarLabel: i18n.t(TR.encounters),
                     headerTitle: i18n.t(TR.encounters),
-                    tabBarBadge:
-                        unreadNotifications.length === 0
-                            ? undefined
-                            : unreadNotifications.length,
+                    // tabBarBadge:
+                    // unreadNotifications.length === 0
+                    //     ? undefined
+                    //     : unreadNotifications.length,
                     tabBarIcon: ({ color, size }) => (
                         <MaterialIcons
                             name="emoji-people"

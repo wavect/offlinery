@@ -17,6 +17,14 @@ const envSchema = z.object({
     EMAIL_USERNAME: z.string(),
     EMAIL_PASSWORD: z.string(),
     BE_PORT: z.string().transform(Number),
+    MAILCHIMP_AUDIENCE_ID: z.string(),
+    MAILCHIMP_API_KEY: z.string(),
+    MAILCHIMP_SERVER_PREFIX: z.string(),
+    INFLUXDB_URL: z.string().optional(),
+    INFLUXDB_TOKEN: z.string().optional(),
+    INFLUXDB_ORG: z.string().optional(),
+    INFLUXDB_BUCKET: z.string().optional(),
+    NODE_ENV: z.string().default("development"), // @dev supplied in Dockerfile
 });
 
 // Type for the validated environment

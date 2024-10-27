@@ -3,7 +3,12 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
 import { OTroubleMessage } from "@/components/OTroubleMessage/OTroubleMessage";
-import { isAuthenticated, useUserContext } from "@/context/UserContext";
+import {
+    EACTION_USER,
+    IUserData,
+    isAuthenticated,
+    useUserContext,
+} from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
 import {
@@ -11,9 +16,15 @@ import {
     getSecurelyStoredValue,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
+import {
+    LOCAL_VALUE,
+    deleteOnboardingState,
+    getLocalValue,
+} from "@/services/storage.service";
+import { stopLocationBackgroundTask } from "@/tasks/location.task";
 import { API } from "@/utils/api-config";
 import { writeSupportEmail } from "@/utils/misc.utils";
-import { useFocusEffect } from "@react-navigation/native";
+import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
 import { Dimensions, Platform, StyleSheet, View } from "react-native";
@@ -33,11 +44,15 @@ const Welcome = ({
             );
             if (!accessToken) {
                 console.log("forcing re-login");
+                await stopLocationBackgroundTask();
                 return;
             }
             const resp = await API.auth.authControllerSignInByJWT({
                 signInJwtDTO: { jwtAccessToken: accessToken },
             });
+
+            await deleteOnboardingState();
+
             userAuthenticatedUpdate(
                 dispatch,
                 navigation,
@@ -48,6 +63,8 @@ const Welcome = ({
         } catch (error) {
             saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
             saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
+            await stopLocationBackgroundTask();
+
             console.log("Forcing user to re-login.");
         }
 
@@ -57,7 +74,10 @@ const Welcome = ({
         useCallback(() => {
             const checkAuthentication = async () => {
                 try {
-                    await checkAuthStatus();
+                    if (!isOnboardingInProgress()) {
+                        await checkAuthStatus();
+                    }
+                    await stopLocationBackgroundTask();
                 } catch (error) {
                     console.error("Error checking authentication:", error);
                     throw error;
@@ -69,6 +89,63 @@ const Welcome = ({
             checkAuthentication();
         }, [navigation]),
     );
+
+    const isOnboardingInProgress = () => {
+        const savedUser = getLocalValue(LOCAL_VALUE.ONBOARDING_USER);
+        return !!savedUser;
+    };
+
+    const restoreOnboarding = async () => {
+        const savedUser = getLocalValue(LOCAL_VALUE.ONBOARDING_USER);
+        const savedStack = getLocalValue(LOCAL_VALUE.ONBOARDING_SCREEN);
+        if (!savedUser || !savedStack) {
+            return;
+        }
+        await deleteOnboardingState();
+
+        const userParsed = JSON.parse(savedUser) as IUserData;
+        dispatch({
+            type: EACTION_USER.UPDATE_MULTIPLE,
+            payload: {
+                ...userParsed,
+                approachFromTime: new Date(userParsed.approachFromTime),
+                approachToTime: new Date(userParsed.approachToTime),
+                birthDay: new Date(userParsed.birthDay),
+            },
+        });
+        const parsedStack = JSON.parse(savedStack);
+        const restoredRoutes = parsedStack.routes as {
+            name: string;
+            params?: unknown[];
+        }[];
+
+        const filteredRoutes = restoredRoutes
+            .map((r) => ({
+                name: r.name,
+                params: r.params,
+            }))
+            .filter((r) => r.name !== ROUTES.Onboarding.VerifyEmail)
+            .reduce(
+                (acc, current) => {
+                    if (!acc.find((item) => item.name === current.name)) {
+                        acc.push(current);
+                    }
+                    return acc;
+                },
+                [] as { name: string; params?: unknown[] }[],
+            );
+
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: filteredRoutes,
+            }),
+        );
+    };
+
+    React.useEffect(() => {
+        restoreOnboarding();
+    }, []);
 
     const AuthScreen = () => (
         <View style={styles.authContainer}>

@@ -57,7 +57,7 @@ export const en = {
         "Be approached by people you are interested in. Safely and Respectfully.",
     both: "Both",
     bothDescr: "Want to approach and be approached by people you like?",
-    changePossible: "You can't change this later.",
+    changePossible: "You can change this later.",
     approachMeBetween: "Approach me between",
     approachMeBetweenDescr:
         "What are times you feel comfortable being approached at? Default is during the day.",
@@ -86,8 +86,6 @@ export const en = {
         "What are spots you don't want to be approached at? Your gym, workplace?",
     youAreUndercover: "You're undercover",
     nobodyWillSeeYou: "Nobody will see you here.",
-    myLocation: "My Location",
-    youAreHere: "You are here.",
     longPressMapSafeZoneInstruction:
         "Long press on the map to add a circular region. Tap a region to select it and adjust its radius.",
     adjustRegionRadius: "Adjust Region Radius",
@@ -169,6 +167,8 @@ export const en = {
     noUserIdAssignedCannotListenToNotifications:
         "No user ID assigned! Cannot listen to notifications!",
     couldNotFetchNotificationToken: "Could not fetch notification token",
+    permissionNotificationRejected:
+        "Permission to show notifications rejected. Without we can't notify you about new encounters.",
     findPeople: "Find people",
     encounters: "Encounters",
     settings: "Settings",
@@ -223,7 +223,7 @@ export const en = {
     saving: "Saving..",
     enterMessage: "Enter message or contact details..",
     sendMessage: "Send message",
-    receivedMessage: "Received message",
+    receivedMessage: "Last message",
     leaveMessage: "Leave message",
     leaveMessageBtnLbl: "Contact",
     messageInstructions:
@@ -248,37 +248,33 @@ export const en = {
     appIntroductionNext: "Next",
     appIntroductionGetStarted: "Get Started",
     page1Title: "Meet In Real Life",
-    page1DescriptionFirstSentence: "Everything happens offline.",
-    page1DescriptionSecondSentence: "No long chats. No swiping.",
-    page1DescriptionThirdSentence: "Let's build genuine connections again.",
-    page1AddText1: "Get approached ",
-    page1AddText2: "or ",
-    page1AddText3: "approach ",
-    page1AddText4: "people as we used to. ",
+    page1Description:
+        "Everything happens <b>offline</b>. No long chats. No swiping. Let's build genuine connections again.",
+    page1Conclusion:
+        "<b>Get approached</b> or <b>approach</b> people as we used to.",
     page2Title: "Safely",
     page2Description:
-        "People that approach need to pass our strict screening. We also track users' trustworthiness internally and continuosly add new safety features",
-    page2AdditionalText: "We have 0 tolerance for disrepectful behavior.",
-    page2AddText1: "We have ",
-    page2AddText2: "0 tolerance ",
-    page2AddText3: "for",
-    page2AddText4: "disrespected behavior",
+        "People that approach need to pass a <b>strict screening</b>. We do track users' trustworthiness and continuously add new safety features",
+    page2Conclusion: "We have <b>0 tolerance</b> for disrespectful behavior.",
     page3Title: "What we NEED",
     page3Description:
         "For this to work Offlinery always need to know where you are. You can easily pause tracking and configure when and how you want to meet people.",
-    page3AddText1: "Please ",
-    page3AddText2: "always ",
-    page3AddText3: "click ",
-    page3AddText4: "ALLOW ",
-    page3AddText5: "whenever your phone asks you",
-    page3AddText6: "about your location",
+    page3Conclusion:
+        "Please click on '<b>Allow Always</b>' whenever Offlinery asks you for your location.",
     page4Title: "Data & Your Safety",
     page4Description:
-        "We care about your data privacy. As such this app is GDPR compliant. Offlinery has been designed from the ground up to make everyone feel safe.",
-    page4AdditionalText: "24/7 support and extensive resources.",
-    page4AddText1: "This won't work if you don't feel",
-    page4AddText2: "safe at all times.",
-    letsMeetIRL: "Lets Meet IRL",
+        "This app is <b>GDPR compliant</b>. Offlinery has been designed from the ground up to make <b>everyone feel safe</b>.",
+    page4Conclusion:
+        "This app won't work if you don't <b>feel safe at all times</b>.",
+    letsMeetIRL: "Meet IRL",
     dropdownSelectChoicePlaceholder: "Select an option",
     userLocationWasUpdatedLastTime: "Last time seen here: ",
+    fieldRequired: "This field is required",
+    inputInvalid: "Input is invalid",
+    goToSettings: "Go to Settings",
+    cancel: "Cancel",
+    permissionRequired: "Permission Required",
+    pleaseChangePermission:
+        "Please change the permissions in your settings to continue using the app.",
+    loadingTextNavigateTo: "Preparing...",
 };

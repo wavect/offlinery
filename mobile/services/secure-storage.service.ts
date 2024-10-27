@@ -9,12 +9,16 @@ export const SECURE_VALUE = {
 
 /** @dev Retrieves securely stored value from local storage. Helper function to make switching etc easier if needed. */
 export const getSecurelyStoredValue = (key: string) => {
-    return SecureStore.getItem(key);
+    return SecureStore.getItem(key, { keychainAccessible: SecureStore.ALWAYS });
 };
 
 /** @dev Saves value in local, secure storage */
 export const saveValueLocallySecurely = (key: string, value: string) => {
-    SecureStore.setItem(key, value);
+    SecureStore.setItem(key, value, { keychainAccessible: SecureStore.ALWAYS });
+};
+
+export const deleteSecurelyStoredValue = async (key: string) => {
+    await SecureStore.deleteItemAsync(key);
 };
 
 export const deleteSessionDataFromStorage = async () => {

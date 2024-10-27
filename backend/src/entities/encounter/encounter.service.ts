@@ -9,6 +9,7 @@ import {
     Injectable,
     Logger,
     NotFoundException,
+    PreconditionFailedException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { In, Repository } from "typeorm";
@@ -33,11 +34,14 @@ export class EncounterService {
             .createQueryBuilder("encounter")
             .innerJoinAndSelect("encounter.users", "user")
             .leftJoinAndSelect("encounter.userReports", "userReports")
+            .leftJoinAndSelect("encounter.messages", "messages")
+            .leftJoinAndSelect("messages.sender", "sender")
             /** @DEV CHANGE! */
             .where(
                 ':userId IN (SELECT "userId" FROM user_encounters_encounter WHERE "encounterId" = encounter.id)',
                 { userId },
             )
+            .andWhere("userReports.id IS NULL")
             .leftJoinAndSelect("encounter.users", "allUsers");
 
         if (dateRange.startDate && dateRange.endDate) {
@@ -109,7 +113,7 @@ export class EncounterService {
                 (u) => u.id,
             );
 
-            await this.encounterRepository
+            const updateRes = await this.encounterRepository
                 .createQueryBuilder("encounter")
                 .innerJoin(
                     "encounter.users",
@@ -133,7 +137,9 @@ export class EncounterService {
                 .set({ isNearbyRightNow: false })
                 .execute();
 
-            this.logger.debug(`Resetted nearbyStatus of other encounters.`);
+            this.logger.debug(
+                `Resetted nearbyStatus of ${updateRes.affected} other encounters.`,
+            );
         }
         return newEncounters;
     }
@@ -187,6 +193,11 @@ export class EncounterService {
                 `Other user of Encounter ${encounterId} not found! Requesting user: ${userId}`,
             );
         }
+        if (!otherUser.location) {
+            throw new PreconditionFailedException(
+                `Other user of Encounter ${encounterId} has not location: ${otherUser.location}`,
+            );
+        }
         return {
             lastTimeLocationUpdated: otherUser.locationLastTimeUpdated,
             longitude: otherUser.location.coordinates[0],
@@ -226,6 +237,6 @@ export class EncounterService {
 
         await this.messageRepository.save(newMessage);
         encounter.messages.push(newMessage);
-        return this.encounterRepository.save(encounter);
+        return await this.encounterRepository.save(encounter);
     }
 }

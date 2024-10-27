@@ -13,13 +13,14 @@ export const FontSize = {
     size_xs: 12,
     size_sm: 14,
     size_md: 16,
+    size_lg: 18,
     size_xl: 20,
 };
 /* Colors */
 export const Color = {
     black: "#000",
     white: "#fff",
-    red: "#ff0000",
+    red: "#d33131",
     /** @dev Great to use as error color on blue color backgrounds */
     lightOrange: "#FFD580",
     /** @dev general error color */
@@ -47,6 +48,14 @@ export const Subtitle: StyleProp<TextStyle> = {
     fontSize: FontSize.size_md,
     color: Color.gray,
     marginBottom: 24,
+};
+
+export const ErrorMessage: StyleProp<TextStyle> = {
+    color: Color.redLight,
+    fontSize: 16,
+    fontFamily: FontFamily.montserratSemiBold,
+    textAlign: "left",
+    marginBottom: 16,
 };
 
 export const Padding = {

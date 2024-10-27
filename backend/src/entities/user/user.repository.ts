@@ -31,12 +31,12 @@ export class UserRepository extends Repository<User> {
     private findUserMatchBaseQuery(userToBeApproached: User): this {
         this.queryBuilder = this.createQueryBuilder("user");
         this.addEncounterJoins()
+            .withRecentLocationsOnly()
             .excludeUser(userToBeApproached.id)
             .withNotInBlacklistedRegion()
             .withDesiredGender(userToBeApproached.genderDesire)
             .withGenderDesire(userToBeApproached.gender)
             .withIntentions(userToBeApproached.intentions)
-            .withVerificationStatusVerified()
             .withinAgeRange(
                 getAgeRangeParsed(userToBeApproached.ageRangeString),
             )
@@ -51,6 +51,12 @@ export class UserRepository extends Repository<User> {
     async getPotentialMatchesForNotifications(
         userToBeApproached: User,
     ): Promise<User[]> {
+        if (!userToBeApproached.location) {
+            this.logger.error(
+                `No location found for user ${userToBeApproached.id}: ${userToBeApproached.location}`,
+            );
+            return [];
+        }
         const [lon, lat] = userToBeApproached.location.coordinates;
         const isInBlacklistedRegion = await this.isUserInBlacklistedRegion(
             userToBeApproached,
@@ -162,6 +168,18 @@ export class UserRepository extends Repository<User> {
             )
         `);
 
+        return this;
+    }
+
+    private withRecentLocationsOnly(): this {
+        const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
+        this.queryBuilder.andWhere(
+            `
+                user.locationLastTimeUpdated IS NOT NULL 
+                AND user.locationLastTimeUpdated >= :threeHoursAgo
+            `,
+            { threeHoursAgo },
+        );
         return this;
     }
 

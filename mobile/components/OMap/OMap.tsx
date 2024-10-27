@@ -12,6 +12,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { API } from "@/utils/api-config";
 import { getMapProvider } from "@/utils/map-provider";
 import Slider from "@react-native-community/slider";
+import * as Sentry from "@sentry/react-native";
 import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import React, {
@@ -41,6 +42,8 @@ interface OMapProps {
     showBlacklistedRegions: boolean;
 }
 
+const DEFAULT_RADIUS_SIZE = 1000;
+
 export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
     const { saveChangesToBackend, showHeatmap, showBlacklistedRegions } = props;
     const { state, dispatch } = useUserContext();
@@ -62,6 +65,8 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
     });
+    /** @DEV use a temp value here, so we do not update and re-use the same value (lagging) */
+    const [tempSliderValue, setTempSliderValue] = useState(0);
 
     useEffect(() => {
         (async () => {
@@ -120,8 +125,13 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                 accuracy: LocationAccuracy.High,
             });
             setLocation(location);
-        } catch (e) {
-            console.error("Unable to get user location.");
+        } catch (error) {
+            console.error("Unable to get user location.", error);
+            Sentry.captureException(error, {
+                tags: {
+                    map: "location",
+                },
+            });
         }
     };
 
@@ -131,8 +141,13 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                 userId: state.id!,
             });
             setLocationsFromOthers(positions);
-        } catch (e) {
-            console.error("Unable to get position from other users ", e);
+        } catch (error) {
+            console.error("Unable to get position from other users ", error);
+            Sentry.captureException(error, {
+                tags: {
+                    map: "heatmap",
+                },
+            });
         }
     };
 
@@ -156,7 +171,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
             const { latitude, longitude } = coordinate;
             setBlacklistedRegions([
                 ...state.blacklistedRegions,
-                { latitude, longitude, radius: 1000 },
+                { latitude, longitude, radius: DEFAULT_RADIUS_SIZE },
             ]);
         },
         [state.blacklistedRegions, setBlacklistedRegions],
@@ -164,6 +179,10 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
 
     const handleRegionPress = useCallback((index: number) => {
         setActiveRegionIndex(index);
+        const mapRegion = state.blacklistedRegions.find(
+            (blacklistedRegin, ind) => ind === index,
+        );
+        setTempSliderValue(mapRegion?.radius ?? DEFAULT_RADIUS_SIZE);
     }, []);
 
     const handleRemoveRegion = useCallback(
@@ -181,37 +200,29 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         setDraggingIndex(index);
     }, []);
 
-    const handleRegionDragEnd = useCallback(
-        (event: MarkerDragStartEndEvent) => {
-            if (draggingIndex !== null) {
-                const { latitude, longitude } = event.nativeEvent.coordinate;
-                const newRegions = state.blacklistedRegions.map(
-                    (region, index) =>
-                        index === draggingIndex
-                            ? { ...region, latitude, longitude }
-                            : region,
-                );
-                setBlacklistedRegions(newRegions);
-            }
-            setDraggingIndex(null);
-        },
-        [draggingIndex, state.blacklistedRegions, setBlacklistedRegions],
-    );
+    const handleRegionDragEnd = (event: MarkerDragStartEndEvent) => {
+        if (draggingIndex !== null) {
+            const { latitude, longitude } = event.nativeEvent.coordinate;
+            const newRegions = state.blacklistedRegions.map((region, index) =>
+                index === draggingIndex
+                    ? { ...region, latitude, longitude }
+                    : region,
+            );
+            setBlacklistedRegions(newRegions);
+        }
+        setDraggingIndex(null);
+    };
 
-    const handleRadiusChange = useCallback(
-        (value: number) => {
-            if (activeRegionIndex !== null) {
-                const newRegions = state.blacklistedRegions.map(
-                    (region, index) =>
-                        index === activeRegionIndex
-                            ? { ...region, radius: value }
-                            : region,
-                );
-                setBlacklistedRegions(newRegions);
-            }
-        },
-        [activeRegionIndex, state.blacklistedRegions, setBlacklistedRegions],
-    );
+    const handleRadiusChange = (value: number) => {
+        if (activeRegionIndex !== null) {
+            const newRegions = [...state.blacklistedRegions];
+            newRegions[activeRegionIndex] = {
+                ...newRegions[activeRegionIndex],
+                radius: value,
+            };
+            setBlacklistedRegions(newRegions);
+        }
+    };
 
     useEffect(() => {
         // @dev During onboarding we don't want to save these onChange etc.
@@ -268,6 +279,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                     zoomEnabled={true}
                     zoomTapEnabled={true}
                     maxZoomLevel={13}
+                    minZoomLevel={8}
                     onPress={handleMapPress}
                     onLongPress={
                         showBlacklistedRegions ? handleMapLongPress : undefined
@@ -284,7 +296,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                             <React.Fragment key={`region-${index}`}>
                                 <Circle
                                     center={region}
-                                    radius={region.radius}
+                                    radius={region?.radius}
                                     fillColor={
                                         index === activeRegionIndex
                                             ? "rgba(255, 0, 0, 0.4)"
@@ -310,15 +322,6 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                                 />
                             </React.Fragment>
                         ))}
-                    {location && (
-                        <Marker
-                            title={i18n.t(TR.myLocation)}
-                            description={i18n.t(TR.youAreHere)}
-                            pinColor="blue"
-                            coordinate={location.coords}
-                            tracksViewChanges={false}
-                        />
-                    )}
                 </MapView>
                 {showBlacklistedRegions && activeRegionIndex !== null && (
                     <OFloatingActionButton
@@ -351,10 +354,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                             minimumValue={100}
                             maximumValue={2000}
                             step={10}
-                            value={
-                                state.blacklistedRegions[activeRegionIndex]
-                                    ?.radius
-                            }
+                            value={tempSliderValue}
                             onValueChange={handleRadiusChange}
                         />
                     </View>

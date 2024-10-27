@@ -1,3 +1,4 @@
+import { OLoadingSpinner } from "@/components/OLoadingCircle/OLoadingCircle";
 import {
     EACTION_USER,
     ImageIdx,
@@ -6,10 +7,12 @@ import {
 } from "@/context/UserContext";
 import { BorderRadius, Color } from "@/GlobalStyles";
 import { i18n, TR } from "@/localization/translate.service";
+import { compressImage } from "@/services/image.service";
 import { getValidImgURI } from "@/utils/media.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
+import { useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 interface IPhotoContainerProps {
@@ -31,7 +34,10 @@ export const PhotoContainer = (props: IPhotoContainerProps) => {
         size,
     } = props;
 
+    const [isLoading, setLoading] = useState(false);
+
     const openMediaLibrary = async () => {
+        setLoading(true);
         let mediaAccessGranted = mediaStatus?.granted;
         if (!mediaAccessGranted) {
             mediaAccessGranted = (await requestMediaLibPermission()).granted;
@@ -45,7 +51,8 @@ export const PhotoContainer = (props: IPhotoContainerProps) => {
 
             if (!result.canceled) {
                 // remove, override, add image
-                const image = result.assets[0];
+                const image = await compressImage(result.assets[0]);
+
                 dispatch({
                     type: EACTION_USER.UPDATE_MULTIPLE,
                     payload: {
@@ -59,6 +66,7 @@ export const PhotoContainer = (props: IPhotoContainerProps) => {
         } else {
             alert(i18n.t(TR.noAccessToMediaLib));
         }
+        setLoading(false);
     };
 
     const removeImage = () => {
@@ -74,22 +82,23 @@ export const PhotoContainer = (props: IPhotoContainerProps) => {
     };
 
     const img = state.imageURIs[imageIdx];
+    const imageContainerContent = !img ? (
+        <MaterialIcons
+            name="add-circle-outline"
+            size={size * 0.2}
+            color={Color.primary}
+        />
+    ) : (
+        <Image
+            style={styles.previewImage}
+            source={{ uri: getValidImgURI(img) }}
+        />
+    );
 
     return (
         <View style={[styles.photoContainer, { width: size, height: size }]}>
             <Pressable style={styles.photoContent} onPress={openMediaLibrary}>
-                {!img ? (
-                    <MaterialIcons
-                        name="add-circle-outline"
-                        size={size * 0.2}
-                        color={Color.primary}
-                    />
-                ) : (
-                    <Image
-                        style={styles.previewImage}
-                        source={{ uri: getValidImgURI(img) }}
-                    />
-                )}
+                {isLoading ? <OLoadingSpinner /> : imageContainerContent}
             </Pressable>
             {img && (
                 <Pressable style={styles.removeButton} onPress={removeImage}>

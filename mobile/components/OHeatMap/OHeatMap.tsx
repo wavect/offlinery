@@ -19,8 +19,8 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
             <Heatmap
                 testID={TestData.encounters.heatMapComponent}
                 points={locations}
-                opacity={0.5}
-                radius={350}
+                opacity={0.6}
+                radius={200}
                 gradient={{
                     colors: ["blue", "green", "yellow", "red"],
                     startPoints: [0.01, 0.25, 0.5, 0.75],

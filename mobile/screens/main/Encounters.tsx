@@ -16,6 +16,7 @@ import { ROUTES } from "@/screens/routes";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -106,6 +107,11 @@ const Encounters = ({
             });
         } catch (error) {
             console.error(error);
+            Sentry.captureException(error, {
+                tags: {
+                    encounters: "fetch",
+                },
+            });
         }
     }, [userState.id, dispatch, metStartDateFilter, metEndDateFilter]);
 

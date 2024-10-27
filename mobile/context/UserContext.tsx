@@ -11,7 +11,6 @@ import {
     UserPrivateDTOVerificationStatusEnum,
     UserPublicDTO,
 } from "@/api/gen/src";
-import { LOCATION_TASK_NAME } from "@/components/OGoLiveToggle/OGoLiveToggle";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { refreshUserData } from "@/services/auth.service";
@@ -20,18 +19,29 @@ import {
     deleteSessionDataFromStorage,
     getSecurelyStoredValue,
 } from "@/services/secure-storage.service";
-import { updateUserDataLocally } from "@/services/storage.service";
+import {
+    LOCAL_VALUE,
+    deleteOnboardingState,
+    saveLocalValue,
+} from "@/services/storage.service";
+import { LOCATION_TASK_NAME } from "@/tasks/location.task";
 import { API } from "@/utils/api-config";
 import { getAge } from "@/utils/date.utils";
 import { getValidImgURI, isImagePicker } from "@/utils/media.utils";
 import { getLocalLanguageID } from "@/utils/misc.utils";
 import { CommonActions } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import React, { Dispatch, createContext, useContext, useReducer } from "react";
 import { Platform } from "react-native";
+
+type UserImages = {
+    [key in ImageIdx]?: ImagePicker.ImagePickerAsset | string;
+};
+
 export interface IUserData {
     /** @dev Backend assigned ID for registered users */
     id?: string;
@@ -44,9 +54,7 @@ export interface IUserData {
     genderDesire?: UserPrivateDTOGenderDesireEnum[];
     intentions?: UserPrivateDTOIntentionsEnum[];
     ageRange?: number[];
-    imageURIs: {
-        [key in ImageIdx]?: ImagePicker.ImagePickerAsset | string;
-    };
+    imageURIs: UserImages;
     verificationStatus: UserPrivateDTOVerificationStatusEnum;
     approachChoice: UserPrivateDTOApproachChoiceEnum;
     /** @dev Regions the user that wants to be approached marked as blacklisted */
@@ -59,7 +67,7 @@ export interface IUserData {
 }
 
 export const isAuthenticated = () => {
-    return !!getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
+    return !!getSecurelyStoredValue(SECURE_VALUE.JWT_REFRESH_TOKEN);
 };
 
 export interface MapRegion {
@@ -189,8 +197,10 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
             const payload: Partial<IUserData> =
                 action.payload as Partial<IUserData>;
 
-            // @dev cache locally
-            updateUserDataLocally(payload);
+            if (payload.id) {
+                // @dev Needed for location service which has no access to userContext
+                saveLocalValue(LOCAL_VALUE.USER_ID, payload.id);
+            }
 
             return { ...state, ...payload };
         default:
@@ -249,7 +259,7 @@ export const registerUser = async (
 
     const requestParameters: UserControllerCreateUserRequest = {
         createUserDTO: userData,
-        images: getUserImagesForUpload(state),
+        images: await getUserImagesForUpload(state.imageURIs),
     };
 
     try {
@@ -257,6 +267,8 @@ export const registerUser = async (
             await API.user.userControllerCreateUser(requestParameters);
         const { user, accessToken, refreshToken } = signInResponseDTO;
         console.log("User created successfully:", user);
+
+        await deleteOnboardingState();
 
         // Update the user state
         refreshUserData(dispatch, user, accessToken, refreshToken);
@@ -266,14 +278,20 @@ export const registerUser = async (
     } catch (error: any) {
         console.error("Error creating user:", error, JSON.stringify(error));
         onError(error);
+        Sentry.captureException(error, {
+            tags: {
+                userContext: "registration",
+            },
+        });
         // Handle the error (e.g., show an error message to the user)
     }
 };
 
-export const getUserImagesForUpload = (
-    state: IUserData,
-): ImagePickerAsset[] => {
-    return Object.values(state.imageURIs)
+export const getUserImagesForUpload = async (
+    userImages: UserImages,
+): Promise<ImagePickerAsset[]> => {
+    // @dev Images already compressed when saved into UserState
+    return Object.values(userImages)
         .filter(isImagePicker)
         .map((image) => ({
             ...image,
@@ -315,5 +333,10 @@ export const logoutUser = async (
         );
     } catch (error) {
         console.error("Error while logging out user:", error);
+        Sentry.captureException(error, {
+            tags: {
+                userContext: "logout",
+            },
+        });
     }
 };

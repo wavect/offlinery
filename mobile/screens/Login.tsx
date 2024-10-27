@@ -10,6 +10,7 @@ import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
+import { deleteOnboardingState } from "@/services/storage.service";
 import { TestData } from "@/tests/src/accessors";
 import { isValidEmail } from "@/utils/validation-rules.utils";
 import * as React from "react";
@@ -41,6 +42,8 @@ const Login = ({
             const signInRes = await new AuthApi().authControllerSignIn(
                 signInDTO,
             );
+
+            await deleteOnboardingState();
 
             if (signInRes.accessToken) {
                 const user = signInRes.user;

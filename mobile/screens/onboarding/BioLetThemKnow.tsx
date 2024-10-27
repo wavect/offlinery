@@ -2,6 +2,7 @@ import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { UserPrivateDTOApproachChoiceEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
+import OErrorMessage from "@/components/OErrorMessage.tsx/OErrorMessage";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
@@ -12,9 +13,11 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { saveOnboardingState } from "@/services/storage.service";
 import { CommonActions } from "@react-navigation/native";
 import * as React from "react";
 import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
@@ -28,6 +31,16 @@ const BioLetThemKnow = ({
 >) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
+
+    const {
+        control,
+        formState: { errors },
+    } = useForm({
+        mode: "onChange",
+        defaultValues: {
+            bio: state.bio,
+        },
+    });
 
     const setBio = (bio: string) => {
         if (bio.length > MAX_LENGTH_BIO) return;
@@ -65,6 +78,10 @@ const BioLetThemKnow = ({
         navigation.navigate(ROUTES.Onboarding.SafetyCheck);
     };
 
+    React.useEffect(() => {
+        saveOnboardingState(state, navigation.getState());
+    }, []);
+
     return (
         <OPageContainer
             subtitle={i18n.t(TR.messageShownToPersonApproaching)}
@@ -86,15 +103,35 @@ const BioLetThemKnow = ({
             }
         >
             <View style={styles.inputContainer}>
-                <OTextInput
-                    value={state.bio}
-                    onChangeText={setBio}
-                    containerStyle={styles.input}
-                    placeholder={i18n.t(TR.noPickUpLinesBeChill)}
-                    showCharacterCount
-                    maxLength={MAX_LENGTH_BIO}
+                <Controller
+                    control={control}
+                    rules={{
+                        required: true,
+                        maxLength: MAX_LENGTH_BIO,
+                        minLength: 3,
+                    }}
+                    name="bio"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <OTextInput
+                            value={value}
+                            onBlur={onBlur}
+                            onChangeText={(text) => {
+                                onChange(text);
+                                setBio(text);
+                            }}
+                            containerStyle={styles.input}
+                            placeholder={i18n.t(TR.noPickUpLinesBeChill)}
+                            showCharacterCount
+                            maxLength={MAX_LENGTH_BIO}
+                        />
+                    )}
                 />
             </View>
+            <OErrorMessage
+                style={{ marginTop: -50, marginBottom: 40 }}
+                errorMessage={i18n.t(TR.fieldRequired)}
+                show={errors.bio !== undefined}
+            />
 
             <OTeaserProfilePreview
                 prefixText={i18n.t(TR.findWithSpace)}

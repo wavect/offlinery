@@ -1,4 +1,5 @@
 import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { OLoadingSpinner } from "@/components/OLoadingCircle/OLoadingCircle";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
 import { getPublicProfileFromEncounter } from "@/context/EncountersContext";
@@ -11,6 +12,7 @@ import { API } from "@/utils/api-config";
 import { getTimePassedWithText } from "@/utils/date.utils";
 import { getMapProvider } from "@/utils/map-provider";
 import { calculateDistance, getRegionForCoordinates } from "@/utils/map.utils";
+import * as Sentry from "@sentry/react-native";
 import * as Location from "expo-location";
 import { LocationAccuracy } from "expo-location";
 import * as React from "react";
@@ -29,6 +31,7 @@ const NavigateToApproach = ({
     const navigateToPerson: IEncounterProfile = route.params.navigateToPerson;
 
     const { state } = useUserContext();
+    const [isLoading, setIsLoading] = useState(false);
     const [mapRegion, setMapRegion] = useState<Region | null>(null);
     const [location, setLocation] = useState<Location.LocationObject | null>(
         null,
@@ -45,6 +48,8 @@ const NavigateToApproach = ({
         let intervalId;
         const fetchLocations = async () => {
             try {
+                setIsLoading(true);
+
                 let { status } =
                     await Location.requestForegroundPermissionsAsync();
                 if (status !== "granted") {
@@ -64,9 +69,17 @@ const NavigateToApproach = ({
                             encounterId: navigateToPerson.encounterId,
                         },
                     );
+
                 setDestination(encounterLoc);
             } catch (error) {
                 console.error("Error fetching locations:", error);
+                Sentry.captureException(error, {
+                    tags: {
+                        navigateTo: "fetchingLocation",
+                    },
+                });
+            } finally {
+                setIsLoading(false);
             }
         };
         fetchLocations();
@@ -90,7 +103,6 @@ const NavigateToApproach = ({
             );
             setDistance(calculatedDistance);
 
-            // Calculate the region that includes both points
             const newRegion = getRegionForCoordinates([
                 {
                     latitude: location.coords.latitude,
@@ -132,7 +144,7 @@ const NavigateToApproach = ({
                 //     style: styles.navigateBtn,
                 // }}
             />
-            {destination?.lastTimeLocationUpdated && (
+            {!isLoading && destination?.lastTimeLocationUpdated && (
                 <Text style={styles.lastUpdateText}>
                     {i18n.t(TR.userLocationWasUpdatedLastTime)}
                     <Text style={styles.lastUpdateTimeText}>
@@ -142,62 +154,70 @@ const NavigateToApproach = ({
                     </Text>
                 </Text>
             )}
-            <MapView
-                ref={mapRef}
-                style={styles.map}
-                region={mapRegion || undefined}
-                provider={getMapProvider()}
-            >
-                {location && (
-                    <Marker
-                        coordinate={location.coords}
-                        title={i18n.t(TR.yourLocation)}
-                        pinColor={Color.black}
-                    />
-                )}
-                {destination && (
-                    <Marker
-                        coordinate={destination}
-                        title={navigateToPerson.firstName}
-                    />
-                )}
-                {location && destination && (
-                    <>
-                        <Polyline
-                            coordinates={[
-                                {
-                                    latitude: location.coords.latitude,
-                                    longitude: location.coords.longitude,
-                                },
-                                destination,
-                            ]}
-                            strokeColor={Color.primary}
-                            strokeWidth={2}
-                        />
+            {isLoading ? (
+                <OLoadingSpinner
+                    size={60}
+                    color={Color.primary}
+                    text={i18n.t(TR.loadingTextNavigateTo)}
+                />
+            ) : (
+                <MapView
+                    ref={mapRef}
+                    style={styles.map}
+                    region={mapRegion || undefined}
+                    provider={getMapProvider()}
+                >
+                    {location && (
                         <Marker
-                            coordinate={{
-                                latitude:
-                                    (location.coords.latitude +
-                                        destination.latitude) /
-                                    2,
-                                longitude:
-                                    (location.coords.longitude +
-                                        destination.longitude) /
-                                    2,
-                            }}
-                            anchor={{ x: 0.5, y: 0.5 }}
-                        >
-                            <View style={styles.distanceMarker}>
-                                <Text style={styles.distanceText}>
-                                    {distance
-                                        ? `${distance.toFixed(2)} km`
-                                        : i18n.t(TR.calculating)}
-                                </Text>
-                            </View>
-                        </Marker>
-                    </>
-                )}
-            </MapView>
+                            coordinate={location.coords}
+                            title={i18n.t(TR.yourLocation)}
+                            pinColor={Color.black}
+                        />
+                    )}
+                    {destination && (
+                        <Marker
+                            coordinate={destination}
+                            title={navigateToPerson.firstName}
+                        />
+                    )}
+                    {location && destination && (
+                        <>
+                            <Polyline
+                                coordinates={[
+                                    {
+                                        latitude: location.coords.latitude,
+                                        longitude: location.coords.longitude,
+                                    },
+                                    destination,
+                                ]}
+                                strokeColor={Color.primary}
+                                strokeWidth={2}
+                            />
+                            <Marker
+                                coordinate={{
+                                    latitude:
+                                        (location.coords.latitude +
+                                            destination.latitude) /
+                                        2,
+                                    longitude:
+                                        (location.coords.longitude +
+                                            destination.longitude) /
+                                        2,
+                                }}
+                                anchor={{ x: 0.5, y: 0.5 }}
+                            >
+                                <View style={styles.distanceMarker}>
+                                    <Text style={styles.distanceText}>
+                                        {distance
+                                            ? `${distance.toFixed(2)} km`
+                                            : i18n.t(TR.calculating)}
+                                    </Text>
+                                </View>
+                            </Marker>
+                        </>
+                    )}
+                </MapView>
+            )}
         </OPageContainer>
     );
 };

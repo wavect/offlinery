@@ -22,6 +22,26 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    restart: always
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USER:-admin}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_PASSWORD:-adminpassword}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG:-offlinery}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET:-logs}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_ADMIN_TOKEN:-your-super-secret-admin-token}
+    ports:
+      - '127.0.0.1:8086:8086'  # Only allow local connections
+    networks:
+      - app_network
+    healthcheck:
+      test: [ "CMD", "influx", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   postgres_test:
     image: postgis/postgis:16-master
     container_name: postgres_test
@@ -53,6 +73,22 @@ services:
       - app_network
     depends_on:
       - postgres
+
+ # backend:
+ #   image: of-backend
+ #   build:
+ #     context: .
+ #     dockerfile: Dockerfile
+ #   ports:
+ #     - 3000:3000
+ #   env_file:
+ #     .env
+ #   networks:
+ #     - app_network
+ #   depends_on:
+ #     - postgres
+ #   restart: on-failure
+
 # TODO: Later on, for MVP use in-memory store for cheaper hosting
 #  redis:
 #    image: redis:6.2-alpine
@@ -77,3 +113,4 @@ networks:
 #volumes:
 #  postgres_data:
 #  redis_data:
+#  influxdb_data:

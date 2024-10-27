@@ -8,6 +8,7 @@ import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { saveOnboardingState } from "@/services/storage.service";
 import { API } from "@/utils/api-config";
 import { GDPR_URL } from "@/utils/general.constants";
 import * as React from "react";
@@ -74,6 +75,10 @@ const GenderLookingFor = ({
             { cancelable: false },
         );
     };
+
+    React.useEffect(() => {
+        saveOnboardingState(state, navigation.getState());
+    }, []);
 
     return (
         <OPageContainer

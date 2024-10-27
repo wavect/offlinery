@@ -13,6 +13,9 @@ export const mockEnvConfig: TypedEnv = {
     EMAIL_USERNAME: "test@example.com",
     EMAIL_PASSWORD: "testpassword",
     BE_PORT: 3000,
+    MAILCHIMP_SERVER_PREFIX: "abc",
+    MAILCHIMP_API_KEY: "xyz",
+    MAILCHIMP_AUDIENCE_ID: "123",
 };
 
 export const validateEnv = jest.fn().mockReturnValue(mockEnvConfig);

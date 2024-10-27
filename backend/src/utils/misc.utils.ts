@@ -1,12 +1,12 @@
 import { TYPED_ENV } from "@/utils/env.utils";
-import process from "process";
 
 export const API_VERSION = "1";
+export const IS_DEV_MODE =
+    TYPED_ENV.NODE_ENV?.toLowerCase()?.trim() === "development";
 
-export const BE_ENDPOINT =
-    process.env.NODE_ENV === "development"
-        ? `http://localhost:${TYPED_ENV.BE_PORT}`
-        : "https://api.offlinery.io";
+export const BE_ENDPOINT = IS_DEV_MODE
+    ? `http://localhost:${TYPED_ENV.BE_PORT}`
+    : "https://api.offlinery.io";
 
 /** @DEV - Expiration time of each user token */
 export const TOKEN_EXPIRATION_TIME = "60m";
@@ -41,4 +41,9 @@ export function parseToAgeRangeString(range: number[]): string {
         throw new Error(`Range must have length 2: ${range}`);
     }
     return `[${range[0]}, ${range[1]}]`;
+}
+
+export function arraySafeCheck<T>(obj: any): Array<T> {
+    if (!obj) return [];
+    return obj;
 }
