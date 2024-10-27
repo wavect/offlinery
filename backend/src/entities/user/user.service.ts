@@ -559,19 +559,11 @@ export class UserService {
         );
 
         // Check for matches and send notifications (from a semantic perspective we only send notifications if a person to be approached sends a location update)
-        if (
-            user.approachChoice === EApproachChoice.BOTH ||
-            user.approachChoice === EApproachChoice.BE_APPROACHED
-        ) {
-            this.logger.debug(
-                `Sending notifications to users that want to potentially approach userId ${user.id}`,
-            );
-            await this.matchingService.notifyMatches(user);
-        } else {
-            this.logger.debug(
-                `User is only approaching, not sending any notifications for userId ${user.id}`,
-            );
-        }
+        // TODO: Make sure notification not send double if other user then sends update!
+        this.logger.debug(
+            `Sending notifications to users that want to potentially approach or be approached by userId ${user.id}`,
+        );
+        await this.matchingService.notifyMatches(user);
 
         return updatedUser;
     }

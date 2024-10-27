@@ -4,6 +4,7 @@ import { PushMessageDTO } from "@/DTOs/push-message.dto";
 import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
 import { Message } from "@/entities/messages/message.entity";
 import { User } from "@/entities/user/user.entity";
+import { EEncounterStatus } from "@/types/user.types";
 import {
     ForbiddenException,
     Injectable,
@@ -69,66 +70,91 @@ export class EncounterService {
     }
 
     /**
-     * @param userToBeApproached
-     * @param usersThatWantToApproach
+     * @param userSendingLocationUpdate
+     * @param userMatches
      * @param areNearbyRightNow All encounters will be set to this value - isNearbyRightNow
      * @param resetNearbyStatusOfOtherEncounters If true all usersThatWantToApproach
      *     that are not supplied to this function will be set to isNearbyRightNow=false as they are e.g. not supplied by the matching service.
      * that are not supplied to this function will be set to isNearbyRightNow=false as they are e.g. not supplied by the matching service. */
     async saveEncountersForUser(
-        userToBeApproached: User,
-        usersThatWantToApproach: User[],
+        userSendingLocationUpdate: User,
+        userMatches: User[],
         areNearbyRightNow: boolean,
         resetNearbyStatusOfOtherEncounters: boolean,
     ): Promise<Map<string, Encounter>> {
         this.logger.debug(
-            `Saving encounters for user ${userToBeApproached.id} with ${usersThatWantToApproach.length} users that want to approach. areNearbyRightNow (${areNearbyRightNow}), resetNearbyStatusOfOtherEncounters (${resetNearbyStatusOfOtherEncounters})`,
+            `Saving encounters for user ${userSendingLocationUpdate.id} with ${userMatches.length} users that want to approach. areNearbyRightNow (${areNearbyRightNow}), resetNearbyStatusOfOtherEncounters (${resetNearbyStatusOfOtherEncounters})`,
         );
         const newEncounters: Map<string, Encounter> = new Map();
-        for (const u of usersThatWantToApproach) {
+        for (const u of userMatches) {
             // encounter should always be unique for a userId <> userId combination (not enforced on DB level as not possible)
             // @dev If encounter exists already, update the values, otherwise create new one.
             const encounter: Encounter =
                 (await this.encounterRepository.findOne({
                     relations: ["users"],
                     where: {
-                        users: { id: In([userToBeApproached.id, u.id]) },
+                        users: { id: In([userSendingLocationUpdate.id, u.id]) },
                     },
                 })) ?? new Encounter();
 
-            encounter.users = [userToBeApproached, u];
+            // @dev Still sending new notifications if encounter status is MET_INTERESTED (because why not, multiple times to meet)
+            if (encounter.status === EEncounterStatus.MET_NOT_INTERESTED) {
+                encounter.isNearbyRightNow = false; // @dev make sure user cannot navigate
+                newEncounters.set(
+                    u.id,
+                    await this.encounterRepository.save(encounter),
+                );
+                this.logger.debug(
+                    `Skipping encounter update for users ${u.id} and ${userSendingLocationUpdate.id} as encounterStatus is "MET_NOT_INTERESTED". Set isNearByRightNow to false.`,
+                );
+                continue;
+            }
+
+            encounter.users = [userSendingLocationUpdate, u];
             encounter.lastDateTimePassedBy = new Date();
-            encounter.lastLocationPassedBy = userToBeApproached.location;
+            encounter.lastLocationPassedBy = userSendingLocationUpdate.location;
             encounter.isNearbyRightNow = areNearbyRightNow;
+            encounter.setUserStatus(
+                userSendingLocationUpdate.id,
+                EEncounterStatus.NOT_MET,
+            );
+            encounter.setUserStatus(u.id, EEncounterStatus.NOT_MET);
 
             newEncounters.set(
                 u.id,
                 await this.encounterRepository.save(encounter),
             );
+            this.logger.debug(
+                `Created new/Updated encounter for ${u.id} and ${userSendingLocationUpdate.id}.`,
+            );
         }
 
         if (resetNearbyStatusOfOtherEncounters) {
             // @dev We need to set older encounters to isNearbyRightNow false to hide the navigate button on the frontend, etc.
-            const usersThatWantToApproachIds = usersThatWantToApproach.map(
-                (u) => u.id,
-            );
+            const userMatchIds = userMatches.map((u) => u.id);
 
             const updateRes = await this.encounterRepository
                 .createQueryBuilder("encounter")
                 .innerJoin(
                     "encounter.users",
                     "user",
-                    "user.id = :userToBeApproachedId",
-                    { userToBeApproachedId: userToBeApproached.id },
+                    "user.id = :userSendingLocationUpdateId",
+                    {
+                        userSendingLocationUpdateId:
+                            userSendingLocationUpdate.id,
+                    },
                 )
                 .leftJoin(
                     "encounter.users",
                     "otherUser",
-                    "otherUser.id != :userToBeApproachedId",
-                    { userToBeApproachedId: userToBeApproached.id },
+                    "otherUser.id != :userSendingLocationUpdateId",
+                    {
+                        userSendingLocationUpdateId:
+                            userSendingLocationUpdate.id,
+                    },
                 )
-                .where("otherUser.id NOT IN (:...usersThatWantToApproachIds)", {
-                    usersThatWantToApproachIds,
+                .where("otherUser.id NOT IN (:...userMatchIds)", {
+                    userMatchIds,
                 })
                 .andWhere("encounter.isNearbyRightNow = :isNearby", {
                     isNearby: true,
@@ -162,7 +188,7 @@ export class EncounterService {
             );
         }
 
-        encounter.userStatuses[userId] = status;
+        encounter.setUserStatus(userId, status);
         return this.encounterRepository.save(encounter);
     }
 
