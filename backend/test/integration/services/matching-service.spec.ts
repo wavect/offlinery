@@ -657,10 +657,16 @@ describe("Matching Service Integration Tests ", () => {
             });
 
             /** @DEV location update that triggers notifyMatches */
-            await userService.updateLocation(testingMainUser.id, {
-                latitude: 0,
-                longitude: 0,
-            });
+            const userUpdated = await userService.updateLocation(
+                testingMainUser.id,
+                {
+                    latitude: 0,
+                    longitude: 0,
+                },
+            );
+
+            /** expect to run through without failure */
+            expect(userUpdated).toBeDefined();
         });
     });
 });
