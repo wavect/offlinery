@@ -1,4 +1,5 @@
 import { User } from "@/entities/user/user.entity";
+import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
 import {
     EApproachChoice,
