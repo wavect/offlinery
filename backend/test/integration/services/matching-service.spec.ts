@@ -1,4 +1,5 @@
 import { User } from "@/entities/user/user.entity";
+import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
 import {
     EApproachChoice,
@@ -22,6 +23,7 @@ describe("Matching Service Integration Tests ", () => {
     let testingDataSource: DataSource;
     let testingMainUser: User;
     let userFactory: UserFactory;
+    let userService: UserService;
 
     beforeAll(async () => {
         const { module, dataSource, factories } =
@@ -29,6 +31,7 @@ describe("Matching Service Integration Tests ", () => {
         testingModule = module;
         testingDataSource = dataSource;
 
+        userService = module.get(UserService);
         service = module.get(MatchingService);
         userFactory = factories.get("user") as UserFactory;
     });
@@ -629,6 +632,35 @@ describe("Matching Service Integration Tests ", () => {
                 expect.arrayContaining([user1499m.id, user1500m.id]),
             );
             expect(matches.map((m) => m.id)).not.toContain(user1501m.id);
+        });
+
+        it("should send a notification to a REAL device after a match nearby was found", async () => {
+            const testingMainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                pushToken: "ExponentPushToken[sv2J8DEa84U3iStoXhafI0]",
+                genderDesire: [EGender.WOMAN],
+                gender: EGender.MAN,
+                approachChoice: EApproachChoice.APPROACH,
+                birthDay: new Date("1996-09-21"),
+            });
+
+            /** @DEV three random users that are nearby */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, (maxDistUser - 1) * DPM), // 1 meter less than max
+            });
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser * DPM), // Exactly at max distance
+            });
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, (maxDistUser + 15) * DPM),
+            });
+
+            /** @DEV location update that triggers notifyMatches */
+            await userService.updateLocation(testingMainUser.id, {
+                latitude: 0,
+                longitude: 0,
+            });
         });
     });
 });
