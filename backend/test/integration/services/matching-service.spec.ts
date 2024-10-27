@@ -16,7 +16,7 @@ import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
 import { clearDatabase } from "../../_src/utils/utils";
 
-describe("service ", () => {
+describe("Matching Service Integration Tests ", () => {
     let service: MatchingService;
     let testingModule: TestingModule;
     let testingDataSource: DataSource;
@@ -97,22 +97,22 @@ describe("service ", () => {
 
     describe("should test nearby-match algorithm", () => {
         it("should only find users if man and woman is desired", async () => {
-            const userId = await userFactory.persistNewTestUser({
+            await userFactory.persistNewTestUser({
                 gender: EGender.MAN,
                 genderDesire: [EGender.MAN, EGender.WOMAN],
             });
-            const userId2 = await userFactory.persistNewTestUser({
+            const userId1 = await userFactory.persistNewTestUser({
                 gender: EGender.WOMAN,
                 genderDesire: [EGender.MAN, EGender.WOMAN],
             });
 
             const matches = Array.from(
-                (await service.findNearbyMatches(userId)).values(),
+                (await service.findNearbyMatches(testingMainUser)).values(),
             );
 
             expect(matches.length).toBe(1);
             expect(matches.map((m) => m.id)).toEqual(
-                expect.arrayContaining([userId2.id]),
+                expect.arrayContaining([userId1.id]),
             );
         });
         it("should only find users that are live", async () => {
@@ -267,6 +267,30 @@ describe("service ", () => {
             expect(matches.map((m) => m.id)).toEqual(
                 expect.arrayContaining([]),
             );
+        });
+        it("should not find more than 3 users", async () => {
+            await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN, EGender.WOMAN],
+            });
+            await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN, EGender.WOMAN],
+            });
+            await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN, EGender.WOMAN],
+            });
+            await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN, EGender.WOMAN],
+            });
+
+            const matches = Array.from(
+                (await service.findNearbyMatches(testingMainUser)).values(),
+            );
+
+            expect(matches.length).toBe(3);
         });
     });
 

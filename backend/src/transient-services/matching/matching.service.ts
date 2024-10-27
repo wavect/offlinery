@@ -59,6 +59,10 @@ export class MatchingService {
      * @param userSendingLocationUpdate
      */
     public async notifyMatches(userSendingLocationUpdate: User): Promise<void> {
+        console.log(
+            "user sending location update: ",
+            userSendingLocationUpdate,
+        );
         const nearbyMatches = await this.findNearbyMatches(
             userSendingLocationUpdate,
         );
@@ -88,9 +92,13 @@ export class MatchingService {
                     true, // they are all nearby rn
                     true, // reset older encounters
                 );
+
             this.logger.debug(
                 `Saved ${newEncounters.size} new encounters for user ${userSendingLocationUpdate.id}`,
             );
+
+            console.log("got new encounters...", newEncounters);
+            console.log("got nearby matches", nearbyMatches);
 
             const notifications: OfflineryNotification[] = [];
             for (const user of nearbyMatches) {

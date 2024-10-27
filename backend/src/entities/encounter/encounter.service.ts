@@ -114,6 +114,11 @@ export class EncounterService {
             encounter.lastDateTimePassedBy = new Date();
             encounter.lastLocationPassedBy = userSendingLocationUpdate.location;
             encounter.isNearbyRightNow = areNearbyRightNow;
+            console.log(
+                "setting...",
+                userSendingLocationUpdate.id,
+                EEncounterStatus.NOT_MET,
+            );
             encounter.setUserStatus(
                 userSendingLocationUpdate.id,
                 EEncounterStatus.NOT_MET,

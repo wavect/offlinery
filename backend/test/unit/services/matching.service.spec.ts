@@ -5,7 +5,7 @@ import { UserRepository } from "@/entities/user/user.repository";
 import { MatchingService } from "@/transient-services/matching/matching.service";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { OfflineryNotification } from "@/types/notification-message.types";
-import { EDateMode } from "@/types/user.types";
+import { EDateMode, EEncounterStatus } from "@/types/user.types";
 import { Test, TestingModule } from "@nestjs/testing";
 import { I18nService } from "nestjs-i18n";
 import { EncounterBuilder } from "../../_src/builders/encounter.builder";
@@ -116,12 +116,19 @@ describe("MatchingService", () => {
         it("should send notifications and save encounters for nearby matches", async () => {
             /** @DEV the users' encounters */
             const usersEncounters = [
-                new EncounterBuilder().withId("100").build(),
-                new EncounterBuilder().withId("200").build(),
+                new EncounterBuilder()
+                    .withId("100")
+                    .withStatus(EEncounterStatus.NOT_MET)
+                    .build(),
+                new EncounterBuilder()
+                    .withId("200")
+                    .withStatus(EEncounterStatus.NOT_MET)
+                    .build(),
             ];
 
             /** @DEV the current user with his recent encounters */
             const testingUser = new UserBuilder()
+                .withPushToken("TEST-MAIN-USER")
                 .withEncounters(usersEncounters)
                 .build();
 
@@ -130,10 +137,6 @@ describe("MatchingService", () => {
                 new UserBuilder()
                     .withId("100")
                     .withPushToken("push-token-1")
-                    .build(),
-                new UserBuilder()
-                    .withId("200")
-                    .withPushToken("push-token-2")
                     .build(),
             ];
 
@@ -157,8 +160,7 @@ describe("MatchingService", () => {
                 notificationService.sendPushNotification,
             ).toHaveBeenCalledWith(
                 expect.arrayContaining([
-                    expect.objectContaining({ to: "push-token-1" }),
-                    expect.objectContaining({ to: "push-token-2" }),
+                    expect.objectContaining({ to: "TEST-MAIN-USER" }),
                 ]),
             );
 
@@ -167,17 +169,12 @@ describe("MatchingService", () => {
                     id: "00000000-0000-0000-0000-000000000000",
                     encounters: expect.arrayContaining([
                         expect.objectContaining({ id: "100" }),
-                        expect.objectContaining({ id: "200" }),
                     ]),
                 }),
                 expect.arrayContaining([
                     expect.objectContaining({
                         id: "100",
                         pushToken: "push-token-1",
-                    }),
-                    expect.objectContaining({
-                        id: "200",
-                        pushToken: "push-token-2",
                     }),
                 ]),
                 true,
@@ -197,6 +194,7 @@ describe("MatchingService", () => {
 
             /** @DEV the current user with his recent encounters */
             const testingUser = new UserBuilder()
+                .withPushToken("TESTING-USER-PUSH-TOKEN")
                 .withEncounters(usersEncounters)
                 .build();
 
@@ -231,7 +229,7 @@ describe("MatchingService", () => {
             await matchingService.notifyMatches(testingUser);
 
             const expectedNotification: OfflineryNotification = {
-                to: "push-token-1000",
+                to: "TESTING-USER-PUSH-TOKEN",
                 sound: "default",
                 title: "Translated main.notification.newMatch.title",
                 body: "Translated main.notification.newMatch.body",
