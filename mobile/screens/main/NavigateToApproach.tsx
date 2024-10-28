@@ -45,7 +45,7 @@ const NavigateToApproach = ({
     } | null>(null);
 
     useEffect(() => {
-        let intervalId;
+        let intervalId: string | number | NodeJS.Timeout | undefined;
         const fetchLocations = async () => {
             try {
                 setIsLoading(true);

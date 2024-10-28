@@ -4,13 +4,10 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { PhotoContainer } from "@/components/OPhotoContainer/OPhotoContainer";
 import { ImageIdx, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { saveOnboardingState } from "@/services/storage.service";
 import { API } from "@/utils/api-config";
 import { isImagePicker } from "@/utils/media.utils";
-import {
-    openAppSettings,
-    saveOnboardingState,
-    showOpenAppSettingsAlert,
-} from "@/utils/misc.utils";
+import { openAppSettings, showOpenAppSettingsAlert } from "@/utils/misc.utils";
 import * as Sentry from "@sentry/react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
@@ -104,9 +101,7 @@ const AddPhotos = ({
             }
         } else {
             // @dev Saved on account creation
-            navigation.navigate(ROUTES.HouseRules, {
-                nextPage: ROUTES.Onboarding.ApproachChoice,
-            });
+            navigation.navigate(ROUTES.Onboarding.ApproachChoice);
         }
     };
 
