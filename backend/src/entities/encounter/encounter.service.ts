@@ -134,44 +134,6 @@ export class EncounterService {
             );
         }
 
-        if (resetNearbyStatusOfOtherEncounters) {
-            // @dev We need to set older encounters to isNearbyRightNow false to hide the navigate button on the frontend, etc.
-            const userMatchIds = userMatches.map((u) => u.id);
-
-            const updateRes = await this.encounterRepository
-                .createQueryBuilder("encounter")
-                .innerJoin(
-                    "encounter.users",
-                    "user",
-                    "user.id = :userSendingLocationUpdateId",
-                    {
-                        userSendingLocationUpdateId:
-                            userSendingLocationUpdate.id,
-                    },
-                )
-                .leftJoin(
-                    "encounter.users",
-                    "otherUser",
-                    "otherUser.id != :userSendingLocationUpdateId",
-                    {
-                        userSendingLocationUpdateId:
-                            userSendingLocationUpdate.id,
-                    },
-                )
-                .where("otherUser.id NOT IN (:...userMatchIds)", {
-                    userMatchIds,
-                })
-                .andWhere("encounter.isNearbyRightNow = :isNearby", {
-                    isNearby: true,
-                })
-                .update()
-                .set({ isNearbyRightNow: false })
-                .execute();
-
-            this.logger.debug(
-                `Resetted nearbyStatus of ${updateRes.affected} other encounters.`,
-            );
-        }
         return newEncounters;
     }
 
