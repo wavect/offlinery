@@ -174,6 +174,8 @@ export const de: Language = {
     findPeople: "Finden",
     encounters: "Begegnungen",
     settings: "Einstellungen",
+    settingsError: "Konnte Einstellungen nicht speichern.",
+    settingsSuccess: "Einstellungen gespeichert.",
     destination: "Ziel",
     navigateTo: "Navigiere zu ",
     yourLocation: "Dein Standort",
