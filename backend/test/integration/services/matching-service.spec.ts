@@ -609,7 +609,7 @@ describe("service ", () => {
             );
             expect(matches.map((m) => m.id)).not.toContain(user1501m.id);
         });
-        it("should send a notification to a REAL device after a match nearby was found", async () => {
+        it.skip("should send a notification to a REAL device after a match nearby was found", async () => {
             /*** @DEV user walks through the town... */
             const testingMainUser = await userFactory.persistNewTestUser({
                 firstName: "should work now",
