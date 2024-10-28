@@ -1,4 +1,5 @@
 import { User } from "@/entities/user/user.entity";
+import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
 import {
     EApproachChoice,
@@ -18,6 +19,7 @@ import { clearDatabase } from "../../_src/utils/utils";
 
 describe("service ", () => {
     let service: MatchingService;
+    let userService: UserService;
     let testingModule: TestingModule;
     let testingDataSource: DataSource;
     let testingMainUser: User;
@@ -29,6 +31,7 @@ describe("service ", () => {
         testingModule = module;
         testingDataSource = dataSource;
 
+        userService = module.get(UserService);
         service = module.get(MatchingService);
         userFactory = factories.get("user") as UserFactory;
     });
@@ -605,6 +608,53 @@ describe("service ", () => {
                 expect.arrayContaining([user1499m.id, user1500m.id]),
             );
             expect(matches.map((m) => m.id)).not.toContain(user1501m.id);
+        });
+        it("should send a notification to a REAL device after a match nearby was found", async () => {
+            /*** @DEV user walks through the town... */
+            const testingMainUser = await userFactory.persistNewTestUser({
+                firstName: "should work now",
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                pushToken: "ExponentPushToken[MbIGoaN3gTd61gYRRCRz8C]",
+                genderDesire: [EGender.WOMAN],
+                gender: EGender.MAN,
+                approachChoice: EApproachChoice.BE_APPROACHED,
+                birthDay: new Date("1996-09-21"),
+            });
+
+            const kevinToken = "ExponentPushToken[MbIGoaN3gTd61gYRRCRz8C]";
+
+            /** @DEV three random users that are nearby */
+            await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                pushToken: kevinToken,
+                location: new PointBuilder().build(0, (maxDistUser - 1) * DPM), // 1 meter less than max
+            });
+            await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                pushToken: kevinToken,
+                location: new PointBuilder().build(0, maxDistUser * DPM), // Exactly at max distance
+            });
+            await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                pushToken: kevinToken,
+                location: new PointBuilder().build(0, (maxDistUser + 15) * DPM),
+            });
+
+            /** @DEV location update that triggers notifyMatches */
+            const userUpdated = await userService.updateLocation(
+                testingMainUser.id,
+                {
+                    latitude: 0,
+                    longitude: 0,
+                },
+            );
+
+            /** expect to run through without failure */
+            expect(userUpdated).toBeDefined();
         });
     });
 });

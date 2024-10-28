@@ -53,11 +53,16 @@ export class MatchingService {
      * @param userToBeApproached
      */
     public async notifyMatches(userToBeApproached: User): Promise<void> {
+        console.log(
+            `checking from perspective: ${userToBeApproached.firstName}`,
+        );
         const nearbyMatches = await this.findNearbyMatches(userToBeApproached);
 
         this.logger.debug(
             `Found ${nearbyMatches?.length ?? 0} for user ${userToBeApproached.id}`,
         );
+
+        console.log("found matches...", nearbyMatches.length);
         if (nearbyMatches?.length > 0) {
             const baseNotification: OBaseNotification = {
                 sound: "default",
@@ -71,6 +76,7 @@ export class MatchingService {
                 },
             };
 
+            console.log("saving encounters...");
             // now save as encounters into DB
             const newEncounters =
                 await this.encounterService.saveEncountersForUser(
@@ -79,11 +85,16 @@ export class MatchingService {
                     true, // they are all nearby rn
                     true, // reset older encounters
                 );
+
+            console.log("encounters saved...");
             this.logger.debug(
                 `Saved ${newEncounters.size} new encounters for user ${userToBeApproached.id}`,
             );
 
             const notifications: OfflineryNotification[] = [];
+
+            console.log("nearby matches are: ", nearbyMatches);
+
             for (const user of nearbyMatches) {
                 notifications.push({
                     ...baseNotification,

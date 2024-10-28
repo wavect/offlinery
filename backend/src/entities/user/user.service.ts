@@ -544,6 +544,7 @@ export class UserService {
         userId: string,
         { latitude, longitude }: LocationUpdateDTO,
     ): Promise<User> {
+        console.log("updating...");
         const user = await this.userRepository.findOneBy({ id: userId });
         if (!user) {
             throw new NotFoundException(`User with ID ${userId} not found`);
@@ -552,12 +553,14 @@ export class UserService {
         user.location = { type: "Point", coordinates: [longitude, latitude] };
         user.locationLastTimeUpdated = new Date();
         const updatedUser = await this.userRepository.save(user);
+        console.log("storing new user...");
         this.logger.debug(
             `Saved new locationUpdate for user ${user.id}`,
             longitude,
             latitude,
         );
 
+        console.log("user approach choice is: ", user.approachChoice);
         // Check for matches and send notifications (from a semantic perspective we only send notifications if a person to be approached sends a location update)
         if (
             user.approachChoice === EApproachChoice.BOTH ||
@@ -566,6 +569,8 @@ export class UserService {
             this.logger.debug(
                 `Sending notifications to users that want to potentially approach userId ${user.id}`,
             );
+
+            console.log("NOTIFYING NOW");
             await this.matchingService.notifyMatches(user);
         } else {
             this.logger.debug(

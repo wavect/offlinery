@@ -64,7 +64,7 @@ describe("NotificationService", () => {
             expect(res[0].status).toBe("ok");
         });
 
-        it.skip("send push notification to Chris' device", async () => {
+        it("send push notification to Chris' device", async () => {
             const messages: OfflineryNotification[] = [
                 {
                     to: testPushTokenChris,

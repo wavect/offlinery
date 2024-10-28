@@ -115,26 +115,25 @@ export class EncounterService {
 
             const updateRes = await this.encounterRepository
                 .createQueryBuilder("encounter")
-                .innerJoin(
-                    "encounter.users",
-                    "user",
-                    "user.id = :userToBeApproachedId",
-                    { userToBeApproachedId: userToBeApproached.id },
-                )
-                .leftJoin(
-                    "encounter.users",
-                    "otherUser",
-                    "otherUser.id != :userToBeApproachedId",
-                    { userToBeApproachedId: userToBeApproached.id },
-                )
-                .where("otherUser.id NOT IN (:...usersThatWantToApproachIds)", {
-                    usersThatWantToApproachIds,
-                })
-                .andWhere("encounter.isNearbyRightNow = :isNearby", {
-                    isNearby: true,
-                })
                 .update()
                 .set({ isNearbyRightNow: false })
+                .where(
+                    `encounter.id IN (
+                            SELECT encounter.id 
+                            FROM encounter
+                            INNER JOIN user_encounters_encounter ue1 ON ue1."encounterId" = encounter.id
+                            INNER JOIN "user" ON "user".id = ue1."userId" AND "user".id = :userToBeApproachedId
+                            INNER JOIN user_encounters_encounter ue2 ON ue2."encounterId" = encounter.id
+                            INNER JOIN "user" otherUser ON otherUser.id = ue2."userId" AND otherUser.id != :userToBeApproachedId
+                            WHERE otherUser.id NOT IN (:...usersThatWantToApproachIds)
+                            AND encounter."isNearbyRightNow" = :isNearby
+                )`,
+                    {
+                        userToBeApproachedId: userToBeApproached.id,
+                        usersThatWantToApproachIds,
+                        isNearby: true,
+                    },
+                )
                 .execute();
 
             this.logger.debug(
