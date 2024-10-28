@@ -50,6 +50,9 @@ const ProfileSettings = ({
     NativeStackScreenProps<MainStackParamList, typeof ROUTES.MainTabView>) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
+    const [isSubmitSuccessful, setSubmitSuccessful] = useState<
+        boolean | undefined
+    >();
 
     const {
         control,
@@ -190,6 +193,7 @@ const ProfileSettings = ({
                     }),
                 );
             }
+            setSubmitSuccessful(true);
         } catch (error) {
             console.error("Error updating user profile:", error);
             Sentry.captureException(error, {
@@ -197,9 +201,13 @@ const ProfileSettings = ({
                     settings: "submit",
                 },
             });
+            setSubmitSuccessful(false);
             // Handle error (e.g., show error message to user)
         } finally {
             setLoading(false);
+            setTimeout(() => {
+                setSubmitSuccessful(undefined);
+            }, 5000);
         }
     };
 
@@ -752,6 +760,27 @@ const ProfileSettings = ({
                         disabled={Object.keys(errors).length > 0}
                         onPress={handleSubmit(handleSave)}
                     />
+
+                    {isSubmitSuccessful === true ? (
+                        <Text
+                            style={[
+                                styles.settingsSubmitMsg,
+                                { color: Color.schemesPrimary },
+                            ]}
+                        >
+                            {i18n.t(TR.settingsSuccess)}
+                        </Text>
+                    ) : undefined}
+                    {isSubmitSuccessful === false ? (
+                        <Text
+                            style={[
+                                styles.settingsSubmitMsg,
+                                { color: Color.red },
+                            ]}
+                        >
+                            {i18n.t(TR.settingsError)}
+                        </Text>
+                    ) : undefined}
                 </View>
 
                 <View style={styles.dangerZone}>
@@ -817,6 +846,11 @@ const ProfileSettings = ({
 };
 
 const styles = StyleSheet.create({
+    settingsSubmitMsg: {
+        marginTop: 10,
+        fontFamily: FontFamily.montserratMedium,
+        fontSize: 16,
+    },
     gdpr: {
         textDecorationLine: "underline",
         color: Color.gray,
