@@ -246,7 +246,6 @@ export class Create10RealTestPeopleEncounters {
     ): Promise<void> {
         const encounter = new Encounter();
         encounter.users = [wavectUser, user2];
-        encounter.isNearbyRightNow = Math.random() < 0.8; // 80% chance of being nearby
         encounter.lastDateTimePassedBy = this.getRandomPastDate();
         encounter.lastLocationPassedBy = this.getRandomPoint();
         encounter.userStatuses = {

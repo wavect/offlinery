@@ -1,6 +1,7 @@
 import { AuthModule } from "@/auth/auth.module";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
+import { EncounterModule } from "@/entities/encounter/encounter.module";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { UserReport } from "@/entities/user-report/user-report.entity";
 import { UserRepository } from "@/entities/user/user.repository";
@@ -23,6 +24,7 @@ import { UserService } from "./user.service";
         ]),
         forwardRef(() => MatchingModule),
         forwardRef(() => AuthModule),
+        forwardRef(() => EncounterModule),
     ],
     providers: [UserService, UserRepository],
     controllers: [UserController],

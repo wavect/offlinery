@@ -1,5 +1,6 @@
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
+import { EncounterModule } from "@/entities/encounter/encounter.module";
 import { MapModule } from "@/entities/map/map.module";
 import { Message } from "@/entities/messages/message.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
@@ -8,6 +9,7 @@ import { UserReportModule } from "@/entities/user-report/user-report.module";
 import { User } from "@/entities/user/user.entity";
 import { UserModule } from "@/entities/user/user.module";
 import { UserRepository } from "@/entities/user/user.repository";
+import { MatchingModule } from "@/transient-services/matching/matching.module";
 import { ELanguage } from "@/types/user.types";
 import { TYPED_ENV } from "@/utils/env.utils";
 import { MailerModule } from "@nestjs-modules/mailer";
@@ -74,6 +76,8 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
             UserReportModule,
             MapModule,
             MockMatchingModule,
+            EncounterModule,
+            MatchingModule,
             MailerModule.forRoot({
                 transport: {
                     host: TYPED_ENV.EMAIL_HOST,

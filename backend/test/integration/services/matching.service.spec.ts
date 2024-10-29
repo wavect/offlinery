@@ -638,7 +638,7 @@ describe("Matching Service Integration Tests ", () => {
             const testingMainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
-                pushToken: "ExponentPushToken[sv2J8DEa84U3iStoXhafI0]",
+                pushToken: "ExponentPushToken[Iasu_IB5Wc7Nmk65lYsj2g]",
                 genderDesire: [EGender.WOMAN],
                 gender: EGender.MAN,
                 approachChoice: EApproachChoice.APPROACH,

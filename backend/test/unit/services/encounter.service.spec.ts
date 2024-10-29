@@ -2,6 +2,7 @@ import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { EncounterService } from "@/entities/encounter/encounter.service";
 import { Message } from "@/entities/messages/message.entity";
+import { UserService } from "@/entities/user/user.service";
 import { EEncounterStatus } from "@/types/user.types";
 import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
@@ -16,6 +17,7 @@ describe("EncounterService", () => {
     let service: EncounterService;
     let encounterRepository: Repository<Encounter>;
     let messageRepository: Repository<Message>;
+    let mockUserService: jest.Mocked<UserService>;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -28,6 +30,10 @@ describe("EncounterService", () => {
                 {
                     provide: getRepositoryToken(Message),
                     useValue: mockRepository,
+                },
+                {
+                    provide: UserService,
+                    useValue: mockUserService,
                 },
             ],
         }).compile();

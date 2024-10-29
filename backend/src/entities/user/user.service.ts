@@ -43,6 +43,7 @@ import * as bcrypt from "bcrypt";
 import { randomBytes } from "crypto";
 import { Expo } from "expo-server-sdk";
 import * as fs from "fs";
+import { Point } from "geojson";
 import { I18nService } from "nestjs-i18n";
 import * as path from "path";
 import { Repository } from "typeorm";
@@ -594,5 +595,28 @@ export class UserService {
             refreshToken: null,
             refreshTokenExpires: null,
         });
+    }
+
+    async findUsersNearbyByUserIds(
+        ids: string[],
+        fromLocation: Point,
+        maxDistanceMeters: number = 1500,
+    ): Promise<string[]> {
+        const result = await this.userRepository
+            .createQueryBuilder("user")
+            .select("user.id")
+            .where("user.id IN (:...ids)", { ids })
+            .andWhere(
+                `ST_DWithin(ST_SetSRID(ST_GeomFromGeoJSON(:point), 4326)::geography,"location"::geography,:distance)`,
+                {
+                    point: JSON.stringify(fromLocation),
+                    distance: maxDistanceMeters,
+                },
+            )
+            .andWhere("user.location IS NOT NULL")
+            .andWhere("user.isActive = :isActive", { isActive: true })
+            .getRawMany();
+
+        return result.map((row) => row.user_id);
     }
 }

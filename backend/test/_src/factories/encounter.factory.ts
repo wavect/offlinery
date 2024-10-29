@@ -37,7 +37,6 @@ export class EncounterFactory implements FactoryInterface {
     public persistTestEncounter = async (user1, user2): Promise<Encounter> => {
         const encounter = new Encounter();
         encounter.users = [user1, user2];
-        encounter.isNearbyRightNow = Math.random() < 0.2;
         encounter.lastDateTimePassedBy = this.getRandomPastDate();
         encounter.lastLocationPassedBy = this.getRandomPoint();
         encounter.userStatuses = {

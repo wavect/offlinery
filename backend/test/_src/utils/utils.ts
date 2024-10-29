@@ -1,6 +1,9 @@
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { DataSource } from "typeorm";
 
+export const chrisNativeIosPushToken =
+    "ExponentPushToken[Iasu_IB5Wc7Nmk65lYsj2g]";
+
 export const clearDatabase = async (dataSource: DataSource) => {
     await dataSource.query(`
             TRUNCATE TABLE "user", encounter, user_report RESTART IDENTITY CASCADE;

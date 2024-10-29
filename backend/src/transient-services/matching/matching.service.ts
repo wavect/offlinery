@@ -23,6 +23,7 @@ export class MatchingService {
         private userRepository: UserRepository,
         @Inject(forwardRef(() => NotificationService))
         private notificationService: NotificationService,
+        @Inject(forwardRef(() => EncounterService))
         private encounterService: EncounterService,
     ) {}
 
@@ -59,10 +60,6 @@ export class MatchingService {
      * @param userSendingLocationUpdate
      */
     public async notifyMatches(userSendingLocationUpdate: User): Promise<void> {
-        console.log(
-            "user sending location update: ",
-            userSendingLocationUpdate,
-        );
         const nearbyMatches = await this.findNearbyMatches(
             userSendingLocationUpdate,
         );
@@ -133,6 +130,7 @@ export class MatchingService {
                 }
             }
 
+            console.log("sending! ", notifications);
             await this.notificationService.sendPushNotification(notifications);
             this.logger.debug(
                 `Sent ${notifications.length} notifications for user ${userSendingLocationUpdate.id} (approachChoice: ${userSendingLocationUpdate.approachChoice})`,
