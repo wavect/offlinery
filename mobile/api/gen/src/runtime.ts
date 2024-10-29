@@ -15,7 +15,7 @@
 import Constants from "expo-constants";
 import { isExpoGoEnvironment } from "../../../utils/misc.utils";
 
-/*export const BASE_PATH = "http://localhost:3000/v1".replace(/\/+$/, "");*/
+/*export const BASE_PATH = "https://api.offlinery.io/v1".replace(/\/+$/, "");*/
 
 export const BASE_PATH = (
     (isExpoGoEnvironment

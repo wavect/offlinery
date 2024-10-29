@@ -8,7 +8,7 @@ import { Alert, Linking, Platform } from "react-native";
 
 export const REFRESH_REMAINING_MINUTE = 1;
 
-export const isExpoGoEnvironment = Constants.appOwnership === "expo" && false;
+export const isExpoGoEnvironment = Constants.appOwnership === "expo";
 
 export const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));

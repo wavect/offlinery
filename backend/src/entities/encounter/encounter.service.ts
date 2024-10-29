@@ -160,18 +160,10 @@ export class EncounterService {
             encounter.users = [userSendingLocationUpdate, u];
             encounter.lastDateTimePassedBy = new Date();
             encounter.lastLocationPassedBy = userSendingLocationUpdate.location;
-            console.log(
-                "setting...",
-                userSendingLocationUpdate.id,
-                EEncounterStatus.NOT_MET,
-                "on encounter",
-                encounter,
-            );
             encounter.setUserStatus(
                 userSendingLocationUpdate.id,
                 EEncounterStatus.NOT_MET,
             );
-            console.log("IS THIS EVER PRINTED?");
             encounter.setUserStatus(u.id, EEncounterStatus.NOT_MET);
 
             newEncounters.set(

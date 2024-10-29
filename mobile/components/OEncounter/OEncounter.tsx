@@ -163,7 +163,8 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                 {state.approachChoice !==
                                     UserPrivateDTOApproachChoiceEnum.be_approached &&
                                     dateStatus ===
-                                        EncounterPublicDTOStatusEnum.not_met && (
+                                        EncounterPublicDTOStatusEnum.not_met &&
+                                    encounterProfile.isNearbyRightNow && (
                                         <OButtonSmall
                                             label={i18n.t(TR.navigate)}
                                             numberOfLines={1}
