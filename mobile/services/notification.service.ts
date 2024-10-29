@@ -1,14 +1,34 @@
 import { StorePushTokenDTO } from "@/api/gen/src";
 import { Color } from "@/GlobalStyles";
+import { i18n, TR } from "@/localization/translate.service";
 import { API } from "@/utils/api-config";
 import * as Sentry from "@sentry/react-native";
 import Constants from "expo-constants";
+import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import { initializeApp } from "firebase/app";
 import { Platform } from "react-native";
 import {
     saveValueLocallySecurely,
     SECURE_VALUE,
 } from "./secure-storage.service";
+
+/** @dev Notifications on iOS are tightly coupled with the OS.
+ * On Android we need to EXPLICITLY initialize Firebase to show notifications, etc. */
+const initializeFirebase = () => {
+    if (Device.isDevice && Platform.OS === "android") {
+        const firebaseConfig = {
+            apiKey: "AIzaSyAmGdqKi4Kzdi4Ghzzv6g2qA29FxmvpRKc",
+            authDomain: "offlinery-60d52.firebaseapp.com",
+            projectId: "offlinery-60d52",
+            storageBucket: "offlinery-60d52.appspot.com",
+            messagingSenderId: "1054045326528",
+            appId: "1:1054045326528:android:7c5f1bbb8663439e21b125",
+        };
+
+        initializeApp(firebaseConfig);
+    }
+};
 
 const getExpoProjectId = () => {
     // Try multiple methods to get project ID
@@ -53,7 +73,7 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
     }
 
     if (finalStatus !== "granted") {
-        alert("Failed to get push token for push notification!");
+        alert(i18n.t(TR.permissionNotificationRejected));
         return;
     }
 
@@ -68,8 +88,13 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
     // Learn more about projectId:
     // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
     // EAS projectId is used here.
+    // Check if physical device or emulator
     let token: string | null;
+    if (!Device.isDevice) {
+        return;
+    }
     try {
+        initializeFirebase();
         const projectId = getExpoProjectId();
         token = (
             await Notifications.getExpoPushTokenAsync({
@@ -85,8 +110,6 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
         });
         return;
     }
-
-    console.log("current user: ");
 
     // Send this token to your backend
     const storePushTokenDTO: StorePushTokenDTO = {

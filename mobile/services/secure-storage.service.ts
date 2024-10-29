@@ -9,7 +9,7 @@ export const SECURE_VALUE = {
 
 /** @dev Retrieves securely stored value from local storage. Helper function to make switching etc easier if needed. */
 export const getSecurelyStoredValue = (key: string) => {
-    return SecureStore.getItem(key);
+    return SecureStore.getItem(key, { keychainAccessible: SecureStore.ALWAYS });
 };
 
 /** @dev Saves value in local, secure storage */

@@ -44,6 +44,14 @@ export const de: Language = {
         descrDontRush:
             "Versuche nicht, „abzuschließen“. Habe eine gute Zeit, der Rest passiert von selbst.",
     },
+    specificHouseRulesBeApproached: {
+        titleEmpathy: "Zeig Empathie",
+        descrEmpathy: "Es braucht viel Mut jemanden anzusprechen. Sei nett.",
+        titleHonest: "Sei ehrlich",
+        descrHonest: "Nicht interessiert? Sags der Person.",
+        titleGoodTime: "Genieß die Zeit",
+        descrGoodTime: "Das ist kein Date.",
+    },
     iUnderstand: "Verstanden",
     violatingRules: {
         p1: "Das Verletzen dieser Regeln sperrt dich für mindestens ",
@@ -169,9 +177,13 @@ export const de: Language = {
         "Kein Benutzer-ID zugewiesen! Kann keine Benachrichtigungen empfangen!",
     couldNotFetchNotificationToken:
         "Benachrichtigungstoken konnte nicht abgerufen werden",
+    permissionNotificationRejected:
+        "Benachrichtungen abgelehnt. Ohne deine Erlaubnis können wir dich nicht über neue Begegnungen benachrichtigen.",
     findPeople: "Finden",
     encounters: "Begegnungen",
     settings: "Einstellungen",
+    settingsError: "Konnte Einstellungen nicht speichern.",
+    settingsSuccess: "Einstellungen gespeichert.",
     destination: "Ziel",
     navigateTo: "Navigiere zu ",
     yourLocation: "Dein Standort",

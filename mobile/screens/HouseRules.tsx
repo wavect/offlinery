@@ -1,7 +1,9 @@
 import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
+import { UserPrivateDTOApproachChoiceEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
+import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { TestData } from "@/tests/src/accessors";
@@ -10,34 +12,80 @@ import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
+type Rule = { title: string; description: string };
+
+const getRules = (approachChoice: UserPrivateDTOApproachChoiceEnum): Rule[] => {
+    const houseRules: Rule[] = [
+        {
+            title: TR.houseRules.titleRespectful,
+            description: TR.houseRules.descrRespectful,
+        },
+        {
+            title: TR.houseRules.titleAuthentic,
+            description: TR.houseRules.descrAuthentic,
+        },
+    ];
+
+    switch (approachChoice) {
+        case UserPrivateDTOApproachChoiceEnum.be_approached:
+            return [
+                ...houseRules,
+                {
+                    title: TR.specificHouseRulesBeApproached.titleEmpathy,
+                    description: TR.specificHouseRulesBeApproached.descrEmpathy,
+                },
+                {
+                    title: TR.specificHouseRulesBeApproached.titleHonest,
+                    description: TR.specificHouseRulesBeApproached.descrHonest,
+                },
+                {
+                    title: TR.specificHouseRulesBeApproached.titleGoodTime,
+                    description:
+                        TR.specificHouseRulesBeApproached.descrGoodTime,
+                },
+            ];
+            break;
+        case UserPrivateDTOApproachChoiceEnum.approach:
+        case UserPrivateDTOApproachChoiceEnum.both:
+        default:
+            return [
+                ...houseRules,
+                {
+                    title: TR.houseRules.titleAcceptNo,
+                    description: TR.houseRules.descrAcceptNo,
+                },
+                {
+                    title: TR.houseRules.titleWaitWeird,
+                    description: TR.houseRules.descrWaitWeird,
+                },
+                {
+                    title: TR.houseRules.titleDontRush,
+                    description: TR.houseRules.descrDontRush,
+                },
+            ];
+    }
+};
+
 const HouseRules = ({
     route,
     navigation,
 }: NativeStackScreenProps<MainStackParamList, typeof ROUTES.HouseRules>) => {
+    const { state } = useUserContext();
     const forceWaitSeconds = route.params?.forceWaitSeconds ?? 5;
+
+    const rules: Rule[] = getRules(state.approachChoice);
 
     return (
         <OPageColorContainer>
-            <RuleItem
-                title={i18n.t(TR.houseRules.titleRespectful)}
-                description={i18n.t(TR.houseRules.descrRespectful)}
-            />
-            <RuleItem
-                title={i18n.t(TR.houseRules.titleAcceptNo)}
-                description={i18n.t(TR.houseRules.descrAcceptNo)}
-            />
-            <RuleItem
-                title={i18n.t(TR.houseRules.titleAuthentic)}
-                description={i18n.t(TR.houseRules.descrAuthentic)}
-            />
-            <RuleItem
-                title={i18n.t(TR.houseRules.titleWaitWeird)}
-                description={i18n.t(TR.houseRules.descrWaitWeird)}
-            />
-            <RuleItem
-                title={i18n.t(TR.houseRules.titleDontRush)}
-                description={i18n.t(TR.houseRules.descrDontRush)}
-            />
+            {rules.map((r) => {
+                return (
+                    <RuleItem
+                        key={r.title}
+                        title={i18n.t(r.title)}
+                        description={i18n.t(r.description)}
+                    />
+                );
+            })}
 
             <View style={styles.buttonContainer}>
                 <OButtonWide

@@ -10,7 +10,8 @@ import {
     SECURE_VALUE,
     saveValueLocallySecurely,
 } from "@/services/secure-storage.service";
-import { getLocalLanguageID, saveOnboardingState } from "@/utils/misc.utils";
+import { saveOnboardingState } from "@/services/storage.service";
+import { getLocalLanguageID } from "@/utils/misc.utils";
 import React, { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { StyleSheet } from "react-native";

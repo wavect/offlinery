@@ -669,4 +669,62 @@ describe("Matching Service Integration Tests ", () => {
             expect(userUpdated).toBeDefined();
         });
     });
+
+    describe("should tests users that approach each other", () => {
+        it("should test happy path: one user approaches another and gets a notification", async () => {
+            const userService = testingModule.get<UserService>(UserService);
+            const matchingService =
+                testingModule.get<MatchingService>(MatchingService);
+            const girlWantsToBeApproached =
+                await userFactory.persistNewTestUser({
+                    location: new PointBuilder().build(0.005, 0.005),
+                    gender: EGender.WOMAN,
+                    genderDesire: [EGender.MAN],
+                    approachChoice: EApproachChoice.BE_APPROACHED,
+                });
+
+            const preDefinedLocations = [
+                [0.00001, 0.00001],
+                [0.0001, 0.0001],
+                [0.001, 0.001],
+            ];
+
+            // Spy on matchingService.notifyMatches
+            const notifyMatchesSpy = jest.spyOn(
+                matchingService,
+                "notifyMatches",
+            );
+
+            /*** @DEV User approaches another user */
+            for (let i = 0; i < 3; i++) {
+                await userService.updateLocation(testingMainUser.id, {
+                    latitude: preDefinedLocations[i][0],
+                    longitude: preDefinedLocations[i][1],
+                });
+
+                testingMainUser = await userService.findUserById(
+                    testingMainUser.id,
+                );
+                expect(testingMainUser.location.coordinates[0]).toEqual(
+                    preDefinedLocations[i][0],
+                );
+                expect(testingMainUser.location.coordinates[1]).toEqual(
+                    preDefinedLocations[i][1],
+                );
+            }
+
+            /*** @DEV Now the user TO BE approach slightly moves, triggering a location update and notification */
+            await userService.updateLocation(girlWantsToBeApproached.id, {
+                longitude: 0.001,
+                latitude: 0.001,
+            });
+
+            /** @DEV User that approaches, receives a notification about a girl nearby */
+            expect(notifyMatchesSpy).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    id: girlWantsToBeApproached.id,
+                }),
+            );
+        });
+    });
 });

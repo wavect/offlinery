@@ -39,7 +39,9 @@ const ApproachChoice = ({
                             UserPrivateDTOVerificationStatusEnum.pending,
                     },
                 });
-                navigation.navigate(ROUTES.Onboarding.SafetyCheck);
+                navigation.navigate(ROUTES.HouseRules, {
+                    nextPage: ROUTES.Onboarding.SafetyCheck,
+                });
                 break;
             case UserPrivateDTOApproachChoiceEnum.be_approached:
                 dispatch({
@@ -49,7 +51,9 @@ const ApproachChoice = ({
                             UserPrivateDTOVerificationStatusEnum.not_needed,
                     },
                 });
-                navigation.navigate(ROUTES.Onboarding.DontApproachMeHere); // not doing IliveHere for now, to avoid geoFencing their address
+                navigation.navigate(ROUTES.HouseRules, {
+                    nextPage: ROUTES.Onboarding.DontApproachMeHere,
+                });
                 break;
             case UserPrivateDTOApproachChoiceEnum.both:
                 // @dev both flows need to be completed, checked on last screen
@@ -60,7 +64,9 @@ const ApproachChoice = ({
                             UserPrivateDTOVerificationStatusEnum.pending,
                     },
                 });
-                navigation.navigate(ROUTES.Onboarding.DontApproachMeHere);
+                navigation.navigate(ROUTES.HouseRules, {
+                    nextPage: ROUTES.Onboarding.DontApproachMeHere,
+                });
         }
     };
 

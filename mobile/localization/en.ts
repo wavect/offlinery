@@ -38,6 +38,14 @@ export const en = {
         descrDontRush:
             "Don't try to 'close'. Have a good time, the rest follows naturally.",
     },
+    specificHouseRulesBeApproached: {
+        titleEmpathy: "Have Empathy",
+        descrEmpathy: "Approaching takes lots of bravery. Be nice.",
+        titleHonest: "Be Honest",
+        descrHonest: "If you're not interested. Tell them.",
+        titleGoodTime: "Have a good Time",
+        descrGoodTime: "Enjoy the conversation. This is not a date.",
+    },
     iUnderstand: "I understand",
     violatingRules: {
         p1: "Violating these rules blocks you from using this app for at least ",
@@ -167,9 +175,13 @@ export const en = {
     noUserIdAssignedCannotListenToNotifications:
         "No user ID assigned! Cannot listen to notifications!",
     couldNotFetchNotificationToken: "Could not fetch notification token",
+    permissionNotificationRejected:
+        "Permission to show notifications rejected. Without we can't notify you about new encounters.",
     findPeople: "Find people",
     encounters: "Encounters",
     settings: "Settings",
+    settingsError: "Settings couldn't be saved.",
+    settingsSuccess: "Settings updated.",
     destination: "Destination",
     navigateTo: "Navigate",
     yourLocation: "Your location",
