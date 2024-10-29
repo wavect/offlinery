@@ -15,7 +15,7 @@ import { BlacklistedRegionBuilder } from "../../_src/builders/blacklisted-region
 import { PointBuilder } from "../../_src/builders/point.builder";
 import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
-import { clearDatabase } from "../../_src/utils/utils";
+import { chrisNativeIosPushToken, clearDatabase } from "../../_src/utils/utils";
 
 describe("Matching Service Integration Tests ", () => {
     let service: MatchingService;
@@ -638,7 +638,7 @@ describe("Matching Service Integration Tests ", () => {
             const testingMainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
-                pushToken: "ExponentPushToken[Iasu_IB5Wc7Nmk65lYsj2g]",
+                pushToken: chrisNativeIosPushToken,
                 genderDesire: [EGender.WOMAN],
                 gender: EGender.MAN,
                 approachChoice: EApproachChoice.APPROACH,

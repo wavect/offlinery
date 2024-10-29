@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { DataSource } from "typeorm";
 
 export const chrisNativeIosPushToken =
-    "ExponentPushToken[Iasu_IB5Wc7Nmk65lYsj2g]";
+    "ExponentPushToken[sv2J8DEa84U3iStoXhafI0]";
 
 export const clearDatabase = async (dataSource: DataSource) => {
     await dataSource.query(`
