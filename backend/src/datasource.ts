@@ -10,6 +10,7 @@ const dataSource = new DataSource({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
     synchronize: false,
+    entities: ["dist/**/*.entity{.ts,.js}"],
     autoLoadEntities: true,
     migrationsRun: true,
     migrations: [__dirname + "/migrations/**/*{.ts,.js}"],

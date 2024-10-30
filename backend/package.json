@@ -27,9 +27,10 @@
         "pre-commit": "pnpm run format && pnpm run lint",
         "typeorm": "ts-node ./node_modules/typeorm/cli",
         "migration:run": "npx typeorm migration:run -- -d ./src/typeorm.config.ts",
-        "migration:generate": "npx typeorm-ts-node-commonjs -d ./src/datasource.ts migration:generate ./src/migrations/$npm_config_name",
+        "migration:generate": "npx typeorm -d ./src/datasource.ts migration:generate ./src/migrations/${npm_config_name:-NewMigration}",
         "migration:create": "npx typeorm migration:create ./src/migrations/$npm_config_name",
-        "migration:revert": "npx typeorm -d ./src/typeorm.config.ts migration:revert",
+        "migration:revert": "npx typeorm -d ./src/datasource.ts migration:revert",
+        "migrations:drop": "npx typeorm schema:drop -d ./src/datasource.ts -- -t migration",
         "benchmark": "jest --testPathPattern=matching-service.benchmark"
     },
     "dependencies": {
