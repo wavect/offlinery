@@ -1,4 +1,4 @@
-import { TYPED_ENV } from "@/utils/env.utils";
+import { TYPED_ENV } from "./env.utils"; // @dev keep relative import here for migrations
 
 export const API_VERSION = "1";
 export const IS_DEV_MODE =

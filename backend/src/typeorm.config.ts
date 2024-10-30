@@ -3,11 +3,12 @@ import {
     TypeOrmModuleAsyncOptions,
     TypeOrmModuleOptions,
 } from "@nestjs/typeorm";
-import { validateEnv } from "./utils/env.utils"; // @dev Keep relative import for typeorm cli here
+import { validateEnv } from "./utils/env.utils";
+import { IS_DEV_MODE } from "./utils/misc.utils"; // @dev Keep relative import for typeorm cli here
 
 const baseConfig: TypeOrmModuleOptions = {
     type: "postgres",
-    synchronize: true, // TODO: Remove in prod
+    synchronize: IS_DEV_MODE,
     autoLoadEntities: true,
     migrationsRun: true,
     logging: ["error", "schema", "warn", "info"],

@@ -1,6 +1,11 @@
 import { UserFeedbackDTO } from "@/DTOs/user-feedback.dto";
 import { IEntityToDTOInterface } from "@/interfaces/IEntityToDTO.interface";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+} from "typeorm";
 
 @Entity()
 export class UserFeedback implements IEntityToDTOInterface<UserFeedbackDTO> {
@@ -19,4 +24,7 @@ export class UserFeedback implements IEntityToDTOInterface<UserFeedbackDTO> {
 
     @Column()
     feedbackText?: string;
+
+    @CreateDateColumn()
+    created: Date;
 }

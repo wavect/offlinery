@@ -1,7 +1,12 @@
 import { PendingUserPublicDTO } from "@/DTOs/pending-user.dto";
 import { IEntityToDTOInterface } from "@/interfaces/IEntityToDTO.interface";
 import { EEmailVerificationStatus } from "@/types/user.types";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+} from "typeorm";
 
 @Entity()
 export class PendingUser
@@ -33,4 +38,7 @@ export class PendingUser
     /** @dev Sexual orientation needs dedicated prompt (explicit yes/no). */
     @Column({ type: "timestamptz", nullable: true })
     acceptedSpecialDataGenderLookingForAt?: Date;
+
+    @CreateDateColumn()
+    created: Date;
 }

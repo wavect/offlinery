@@ -1,7 +1,13 @@
 import { Logger } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { randomBytes } from "crypto";
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+    BeforeInsert,
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+} from "typeorm";
 
 @Entity()
 export class ApiUser {
@@ -44,4 +50,7 @@ export class ApiUser {
             this.apiSecretTokenSalt,
         );
     }
+
+    @CreateDateColumn()
+    created: Date;
 }

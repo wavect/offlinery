@@ -24,6 +24,7 @@ import {
     BeforeInsert,
     BeforeUpdate,
     Column,
+    CreateDateColumn,
     Entity,
     Index,
     JoinTable,
@@ -228,4 +229,7 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
                 ? EVerificationStatus.PENDING
                 : EVerificationStatus.NOT_NEEDED;
     }
+
+    @CreateDateColumn()
+    created: Date;
 }

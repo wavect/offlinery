@@ -26,10 +26,10 @@
         "openapi:generate": "npx @openapitools/openapi-generator-cli generate -i ./swagger.json -g typescript-fetch -o ../mobile/api/gen/ -c openapi-config.json -t ./custom-templates && cd .. && pnpm run format:all",
         "pre-commit": "pnpm run format && pnpm run lint",
         "typeorm": "ts-node ./node_modules/typeorm/cli",
-        "migration:run": "pnpm run typeorm migration:run -- -d ./src/typeorm.config.ts",
-        "migration:generate": "pnpm run typeorm -- -d ./src/typeorm.config.ts migration:generate ./src/migrations/$npm_config_name",
-        "migration:create": "pnpm run typeorm -- migration:create ./src/migrations/$npm_config_name",
-        "migration:revert": "pnpm run typeorm -- -d ./src/typeorm.config.ts migration:revert",
+        "migration:run": "npx typeorm migration:run -- -d ./src/typeorm.config.ts",
+        "migration:generate": "npx typeorm-ts-node-commonjs -d ./src/datasource.ts migration:generate ./src/migrations/$npm_config_name",
+        "migration:create": "npx typeorm migration:create ./src/migrations/$npm_config_name",
+        "migration:revert": "npx typeorm -d ./src/typeorm.config.ts migration:revert",
         "benchmark": "jest --testPathPattern=matching-service.benchmark"
     },
     "dependencies": {
