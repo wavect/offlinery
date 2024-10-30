@@ -27,7 +27,7 @@
         "pre-commit": "pnpm run format && pnpm run lint",
         "typeorm": "ts-node ./node_modules/typeorm/cli",
         "migration:run": "npx typeorm migration:run -- -d ./src/typeorm.config.ts",
-        "migration:generate": "npx typeorm -d ./src/datasource.ts migration:generate ./src/migrations/${npm_config_name:-NewMigration}",
+        "migration:generate": "npx typeorm -d ./src/datasource.ts migration:generate ./src/migrations/NewMigration",
         "migration:create": "npx typeorm migration:create ./src/migrations/$npm_config_name",
         "migration:revert": "npx typeorm -d ./src/datasource.ts migration:revert",
         "migrations:drop": "npx typeorm schema:drop -d ./src/datasource.ts -- -t migration",
