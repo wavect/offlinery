@@ -1,13 +1,21 @@
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { DataSource } from "typeorm";
 
-export const chrisNativeIosPushToken =
+export const testChrisNativeIosPushToken =
     "ExponentPushToken[sv2J8DEa84U3iStoXhafI0]";
+
+export const testChrisNativeAndroidPushToken =
+    "ExponentPushToken[P1GXh7Fr_ElGmNf7PySou-]";
 
 export const clearDatabase = async (dataSource: DataSource) => {
     await dataSource.query(`
             TRUNCATE TABLE "user", encounter, user_report RESTART IDENTITY CASCADE;
         `);
+};
+
+/** @DEV use this with caution and rarely. */
+export const testSleep = (ms) => {
+    return new Promise((r) => setTimeout(r, ms));
 };
 
 export const generateRandomString = (length: number = 15): string => {

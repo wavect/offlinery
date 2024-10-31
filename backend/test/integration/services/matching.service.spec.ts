@@ -15,7 +15,11 @@ import { BlacklistedRegionBuilder } from "../../_src/builders/blacklisted-region
 import { PointBuilder } from "../../_src/builders/point.builder";
 import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
-import { chrisNativeIosPushToken, clearDatabase } from "../../_src/utils/utils";
+import {
+    clearDatabase,
+    testChrisNativeAndroidPushToken,
+    testChrisNativeIosPushToken,
+} from "../../_src/utils/utils";
 
 describe("Matching Service Integration Tests ", () => {
     let service: MatchingService;
@@ -634,11 +638,11 @@ describe("Matching Service Integration Tests ", () => {
             expect(matches.map((m) => m.id)).not.toContain(user1501m.id);
         });
 
-        it("should send a notification to a REAL device after a match nearby was found", async () => {
+        it("should send a notification to a REAL device after a match nearby was found on iOS", async () => {
             const testingMainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
-                pushToken: chrisNativeIosPushToken,
+                pushToken: testChrisNativeIosPushToken,
                 genderDesire: [EGender.WOMAN],
                 gender: EGender.MAN,
                 approachChoice: EApproachChoice.APPROACH,
@@ -651,6 +655,74 @@ describe("Matching Service Integration Tests ", () => {
             });
             await userFactory.persistNewTestUser({
                 location: new PointBuilder().build(0, maxDistUser * DPM), // Exactly at max distance
+            });
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, (maxDistUser + 15) * DPM),
+            });
+
+            /** @DEV location update that triggers notifyMatches */
+            const userUpdated = await userService.updateLocation(
+                testingMainUser.id,
+                {
+                    latitude: 0,
+                    longitude: 0,
+                },
+            );
+
+            /** expect to run through without failure */
+            expect(userUpdated).toBeDefined();
+        });
+        it("should send a notification to a REAL device after a match nearby was found on android", async () => {
+            const testingMainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                pushToken: testChrisNativeAndroidPushToken,
+                genderDesire: [EGender.WOMAN],
+                gender: EGender.MAN,
+                approachChoice: EApproachChoice.APPROACH,
+                birthDay: new Date("1996-09-21"),
+            });
+
+            /** @DEV three random users that are nearby */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, (maxDistUser - 1) * DPM), // 1 meter less than max
+            });
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser * DPM), // Exactly at max distance
+            });
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, (maxDistUser + 15) * DPM),
+            });
+
+            /** @DEV location update that triggers notifyMatches */
+            const userUpdated = await userService.updateLocation(
+                testingMainUser.id,
+                {
+                    latitude: 0,
+                    longitude: 0,
+                },
+            );
+
+            /** expect to run through without failure */
+            expect(userUpdated).toBeDefined();
+        });
+        it("should not send ore than 3 notification per daz to a REAL device after a match nearby was found", async () => {
+            const testingMainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                pushToken: testChrisNativeIosPushToken,
+                genderDesire: [EGender.WOMAN],
+                gender: EGender.MAN,
+                approachChoice: EApproachChoice.APPROACH,
+                birthDay: new Date("1996-09-21"),
+            });
+
+            /** @DEV three random users that are nearby */
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, (maxDistUser - 1) * DPM), // 1 meter less than max
+            });
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser - 2 * DPM), // Exactly at max distance
             });
             await userFactory.persistNewTestUser({
                 location: new PointBuilder().build(0, (maxDistUser + 15) * DPM),
