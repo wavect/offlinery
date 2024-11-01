@@ -122,10 +122,18 @@ export class MatchingService {
                         // @dev Sending notification to user itself as he was the one sending the locationUpdate
                         notifications.push({
                             ...baseNotification,
+                            title: this.i18n.t(
+                                "main.notification.newMatch.title",
+                                {
+                                    args: {
+                                        firstName: user.firstName,
+                                    },
+                                },
+                            ),
                             to: userSendingLocationUpdate.pushToken,
                             data: {
                                 ...baseNotification.data,
-                                encounterId: newEncounters[user.id],
+                                encounterId: encounter.id,
                             },
                         });
                     }
