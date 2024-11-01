@@ -15,7 +15,7 @@ import {
     PreconditionFailedException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { In, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { Encounter } from "./encounter.entity";
 
 @Injectable()
@@ -49,7 +49,7 @@ export class EncounterService {
             .andWhere("userReports.id IS NULL")
             .leftJoinAndSelect("encounter.users", "allUsers");
 
-        if (dateRange.startDate && dateRange.endDate) {
+        if (dateRange?.startDate && dateRange?.endDate) {
             query = query.andWhere(
                 "encounter.lastDateTimePassedBy BETWEEN :startDate AND :endDate",
                 {
@@ -57,12 +57,12 @@ export class EncounterService {
                     endDate: dateRange.endDate,
                 },
             );
-        } else if (dateRange.startDate) {
+        } else if (dateRange?.startDate) {
             query = query.andWhere(
                 "encounter.lastDateTimePassedBy >= :startDate",
                 { startDate: dateRange.startDate },
             );
-        } else if (dateRange.endDate) {
+        } else if (dateRange?.endDate) {
             query = query.andWhere(
                 "encounter.lastDateTimePassedBy <= :endDate",
                 { endDate: dateRange.endDate },
@@ -134,16 +134,38 @@ export class EncounterService {
             `Saving encounters for user ${userSendingLocationUpdate.id} with ${userMatches.length} users that want to approach. areNearbyRightNow (${areNearbyRightNow}), resetNearbyStatusOfOtherEncounters (${resetNearbyStatusOfOtherEncounters})`,
         );
         const newEncounters: Map<string, Encounter> = new Map();
+
+        console.log(
+            "got userMatches: ",
+            userMatches.map((b) => b.id),
+        );
+
         for (const u of userMatches) {
+            console.log(
+                "checking if encounter exists: ",
+                userSendingLocationUpdate.id,
+                u.id,
+            );
             // encounter should always be unique for a userId <> userId combination (not enforced on DB level as not possible)
             // @dev If encounter exists already, update the values, otherwise create new one.
-            const encounter: Encounter =
-                (await this.encounterRepository.findOne({
-                    relations: ["users"],
-                    where: {
-                        users: { id: In([userSendingLocationUpdate.id, u.id]) },
-                    },
-                })) ?? new Encounter();
+            const existingEncounter =
+                await this.findExistingEncounterBetweenTwoUsers(
+                    userSendingLocationUpdate.id,
+                    u.id,
+                );
+
+            let encounter: Encounter;
+
+            if (existingEncounter) {
+                console.log(
+                    "Reusing existing encounter with ID:",
+                    existingEncounter.id,
+                );
+                encounter = existingEncounter;
+            } else {
+                console.log("Creating new encounter");
+                encounter = new Encounter();
+            }
 
             // @dev Still sending new notifications if encounter status is MET_INTERESTED (because why not, multiple times to meet)
             if (encounter.status === EEncounterStatus.MET_NOT_INTERESTED) {
@@ -166,10 +188,11 @@ export class EncounterService {
             );
             encounter.setUserStatus(u.id, EEncounterStatus.NOT_MET);
 
-            newEncounters.set(
-                u.id,
-                await this.encounterRepository.save(encounter),
-            );
+            const persistedEncounter =
+                await this.encounterRepository.save(encounter);
+
+            newEncounters.set(u.id, persistedEncounter);
+
             this.logger.debug(
                 `Created new/Updated encounter for ${u.id} and ${userSendingLocationUpdate.id}.`,
             );
@@ -267,5 +290,25 @@ export class EncounterService {
         await this.messageRepository.save(newMessage);
         encounter.messages.push(newMessage);
         return await this.encounterRepository.save(encounter);
+    }
+
+    /**
+     * verify that a current encounter between two users really exists, considering both cases
+     * [user1, user2] or [user2, user1]
+     * @param user1Id
+     * @param user2Id
+     * @private
+     */
+    private async findExistingEncounterBetweenTwoUsers(
+        user1Id: string,
+        user2Id: string,
+    ) {
+        return await this.encounterRepository
+            .createQueryBuilder("encounter")
+            .innerJoinAndSelect("encounter.users", "users")
+            .where("users.id IN (:...userIds)", { userIds: [user1Id, user2Id] })
+            .groupBy("encounter.id, users.id") // Added users.id to GROUP BY
+            .having("COUNT(DISTINCT users.id) = 2")
+            .getOne();
     }
 }

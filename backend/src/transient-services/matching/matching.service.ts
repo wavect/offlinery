@@ -94,6 +94,10 @@ export class MatchingService {
                 `Saved ${newEncounters.size} new encounters for user ${userSendingLocationUpdate.id}`,
             );
 
+            console.log(
+                `Saved ${newEncounters.size} new encounters for user ${userSendingLocationUpdate.id}`,
+            );
+
             const notifications: OfflineryNotification[] = [];
             for (const user of nearbyMatches) {
                 const encounter = newEncounters.get(user.id);
@@ -130,7 +134,6 @@ export class MatchingService {
                 }
             }
 
-            console.log("sending! ", notifications);
             await this.notificationService.sendPushNotification(notifications);
             this.logger.debug(
                 `Sent ${notifications.length} notifications for user ${userSendingLocationUpdate.id} (approachChoice: ${userSendingLocationUpdate.approachChoice})`,
