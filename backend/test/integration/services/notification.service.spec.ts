@@ -63,7 +63,6 @@ describe("NotificationService", () => {
             expect(res.length).toBe(1);
             expect(res[0].status).toBe("ok");
         });
-
         it.skip("send push notification to Chris' device", async () => {
             const messages: OfflineryNotification[] = [
                 {
@@ -83,5 +82,6 @@ describe("NotificationService", () => {
             expect(res.length).toBe(1);
             expect(res[0].status).toBe("ok");
         });
+        it("should send a valid notification to users after ", function () {});
     });
 });

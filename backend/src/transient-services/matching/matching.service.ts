@@ -56,10 +56,12 @@ export class MatchingService {
     }
 
     /**
-     * Sends a notification to users nearby
+     * Checks for encounters and returns the notifications
      * @param userSendingLocationUpdate
      */
-    public async notifyMatches(userSendingLocationUpdate: User): Promise<void> {
+    public async checkForEncounters(
+        userSendingLocationUpdate: User,
+    ): Promise<OfflineryNotification[]> {
         const nearbyMatches = await this.findNearbyMatches(
             userSendingLocationUpdate,
         );
@@ -134,10 +136,9 @@ export class MatchingService {
                 }
             }
 
-            await this.notificationService.sendPushNotification(notifications);
-            this.logger.debug(
-                `Sent ${notifications.length} notifications for user ${userSendingLocationUpdate.id} (approachChoice: ${userSendingLocationUpdate.approachChoice})`,
-            );
+            return notifications;
+        } else {
+            return [];
         }
     }
 

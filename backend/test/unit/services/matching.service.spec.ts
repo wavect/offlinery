@@ -1,4 +1,3 @@
-import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
 import { EncounterService } from "@/entities/encounter/encounter.service";
 import { User } from "@/entities/user/user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
@@ -103,7 +102,7 @@ describe("MatchingService", () => {
                 [],
             );
 
-            await matchingService.notifyMatches(user);
+            await matchingService.checkForEncounters(user);
 
             expect(
                 notificationService.sendPushNotification,
@@ -154,32 +153,29 @@ describe("MatchingService", () => {
 
             i18nService.t.mockImplementation((key) => `Translated ${key}`);
 
-            await matchingService.notifyMatches(testingUser);
+            const result =
+                await matchingService.checkForEncounters(testingUser);
 
-            expect(
-                notificationService.sendPushNotification,
-            ).toHaveBeenCalledWith(
-                expect.arrayContaining([
-                    expect.objectContaining({ to: "TEST-MAIN-USER" }),
-                ]),
-            );
-
-            expect(encounterService.saveEncountersForUser).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    id: "00000000-0000-0000-0000-000000000000",
-                    encounters: expect.arrayContaining([
-                        expect.objectContaining({ id: "100" }),
-                    ]),
-                }),
-                expect.arrayContaining([
-                    expect.objectContaining({
-                        id: "100",
-                        pushToken: "push-token-1",
-                    }),
-                ]),
-                true,
-                true,
-            );
+            expect(result).toEqual([
+                {
+                    body: "Translated main.notification.newMatch.body",
+                    data: {
+                        encounterId: undefined,
+                        navigateToPerson: {
+                            age: 34,
+                            bio: "Hello, I am John",
+                            firstName: "John",
+                            id: "00000000-0000-0000-0000-000000000000",
+                            imageURIs: ["https://example.com/image.jpg"],
+                            trustScore: 100,
+                        },
+                        screen: "Main_NavigateToApproach",
+                    },
+                    sound: "default",
+                    title: "Translated main.notification.newMatch.title",
+                    to: "TEST-MAIN-USER",
+                },
+            ]);
         });
 
         it("should create correct notification object", async () => {
@@ -226,32 +222,28 @@ describe("MatchingService", () => {
             i18nService.t.mockImplementation((key) => `Translated ${key}`);
 
             // ACT
-            await matchingService.notifyMatches(testingUser);
+            const notifications =
+                await matchingService.checkForEncounters(testingUser);
 
             const expectedNotification: OfflineryNotification = {
-                to: "TESTING-USER-PUSH-TOKEN",
-                sound: "default",
-                title: "Translated main.notification.newMatch.title",
                 body: "Translated main.notification.newMatch.body",
                 data: {
-                    screen: EAppScreens.NAVIGATE_TO_APPROACH,
-                    navigateToPerson: expect.objectContaining({
-                        id: expect.any(String),
-                        firstName: expect.any(String),
-                        age: expect.any(Number),
-                        bio: expect.any(String),
-                        imageURIs: expect.any(Array),
-                        trustScore: expect.any(Number),
-                    }),
                     encounterId: undefined,
+                    navigateToPerson: {
+                        age: 34,
+                        bio: "Hello, I am John",
+                        firstName: "John",
+                        id: "00000000-0000-0000-0000-000000000000",
+                        imageURIs: ["https://example.com/image.jpg"],
+                        trustScore: 100,
+                    },
+                    screen: "Main_NavigateToApproach" as any,
                 },
+                sound: "default",
+                title: "Translated main.notification.newMatch.title",
+                to: "TESTING-USER-PUSH-TOKEN",
             };
-
-            expect(
-                notificationService.sendPushNotification,
-            ).toHaveBeenCalledWith(
-                expect.arrayContaining([expectedNotification]),
-            );
+            expect(notifications).toEqual([expectedNotification]);
         });
     });
 });

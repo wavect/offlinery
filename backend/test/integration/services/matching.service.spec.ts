@@ -576,20 +576,6 @@ describe("Matching Service Integration Tests ", () => {
     describe("should test users within distance", () => {
         const maxDistUser = 1500;
         const DPM = 1 / 111139;
-        it("Should not consider users locations for heatmap", async () => {
-            await userFactory.persistNewTestUser({
-                location: new PointBuilder().build(0, maxDistUser * 0.9 * DPM), // 90% of max distance
-            });
-            await userFactory.persistNewTestUser({
-                location: new PointBuilder().build(0, maxDistUser * 0.5 * DPM), // 50% of max distance
-            });
-            await userFactory.persistNewTestUser({
-                location: new PointBuilder().build(0, maxDistUser * 1.1 * DPM), // 110% of max distance
-            });
-
-            const matches = await service.findHeatmapMatches(testingMainUser);
-            expect(matches.length).toEqual(3);
-        });
         it("Should consider users locations for nearby-matches", async () => {
             const user1 = await userFactory.persistNewTestUser({
                 location: new PointBuilder().build(0, maxDistUser * 0.5 * DPM), // 50% of max distance
@@ -637,7 +623,6 @@ describe("Matching Service Integration Tests ", () => {
             );
             expect(matches.map((m) => m.id)).not.toContain(user1501m.id);
         });
-
         it("should send a notification to a REAL device after a match nearby was found on iOS", async () => {
             const testingMainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
@@ -740,6 +725,20 @@ describe("Matching Service Integration Tests ", () => {
             /** expect to run through without failure */
             expect(userUpdated).toBeDefined();
         });
+        it("Should not consider users locations for heatmap", async () => {
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser * 0.9 * DPM), // 90% of max distance
+            });
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser * 0.5 * DPM), // 50% of max distance
+            });
+            await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser * 1.1 * DPM), // 110% of max distance
+            });
+
+            const matches = await service.findHeatmapMatches(testingMainUser);
+            expect(matches.length).toEqual(3);
+        });
     });
 
     describe("should tests users that approach each other", () => {
@@ -764,7 +763,7 @@ describe("Matching Service Integration Tests ", () => {
             // Spy on matchingService.notifyMatches
             const notifyMatchesSpy = jest.spyOn(
                 matchingService,
-                "notifyMatches",
+                "checkForEncounters",
             );
 
             /*** @DEV User approaches another user */

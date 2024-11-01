@@ -11,6 +11,7 @@ import { AuthService } from "@/auth/auth.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { MatchingService } from "@/transient-services/matching/matching.service";
+import { NotificationService } from "@/transient-services/notification/notification.service";
 import {
     EApproachChoice,
     EEmailVerificationStatus,
@@ -62,6 +63,8 @@ export class UserService {
         private blacklistedRegionRepository: Repository<BlacklistedRegion>,
         @InjectRepository(PendingUser)
         private pendingUserRepo: Repository<PendingUser>,
+        @Inject(forwardRef(() => NotificationService))
+        private notificationService: NotificationService,
         @Inject(forwardRef(() => MatchingService))
         private matchingService: MatchingService,
         @Inject(forwardRef(() => AuthService))
@@ -564,7 +567,10 @@ export class UserService {
         this.logger.debug(
             `Sending notifications to users that want to potentially approach or be approached by userId ${user.id}`,
         );
-        await this.matchingService.notifyMatches(user);
+        const notifications =
+            await this.matchingService.checkForEncounters(user);
+
+        await this.notificationService.sendPushNotification(notifications);
 
         return updatedUser;
     }
