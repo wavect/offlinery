@@ -4,6 +4,7 @@ import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserController } from "@/entities/user/user.controller";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
+import { NotificationService } from "@/transient-services/notification/notification.service";
 import {
     EApproachChoice,
     EDateMode,
@@ -30,6 +31,12 @@ describe("UserController", () => {
                         updateUser: jest.fn(),
                         findUserById: jest.fn(),
                         updateLocation: jest.fn(),
+                    },
+                },
+                {
+                    provide: NotificationService,
+                    useValue: {
+                        sendPushNotification: jest.fn(),
                     },
                 },
             ],

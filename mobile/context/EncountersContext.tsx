@@ -1,5 +1,4 @@
 import { UserPublicDTO } from "@/api/gen/src";
-import { saveEncountersLocally } from "@/services/storage.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import React, { Dispatch, createContext, useContext, useReducer } from "react";
 
@@ -49,7 +48,8 @@ const userReducer = (
     switch (action.type) {
         case EACTION_ENCOUNTERS.PUSH_MULTIPLE:
             const fetchedEncounters = action.payload as IEncounterProfile[];
-            saveEncountersLocally(fetchedEncounters);
+            /** @DEV TODO */
+            // saveEncountersLocally(fetchedEncounters);
             return {
                 ...state,
                 encounters: fetchedEncounters,
@@ -87,7 +87,8 @@ const userReducer = (
                 ...updatedEncounters,
                 ...newEncounters,
             ];
-            saveEncountersLocally(updatedEncounters);
+            /** @DEV TODO */
+            // saveEncountersLocally(fetchedEncounters);
 
             return {
                 ...state,

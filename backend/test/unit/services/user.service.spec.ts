@@ -6,6 +6,7 @@ import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
+import { NotificationService } from "@/transient-services/notification/notification.service";
 import { EApproachChoice } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
 import { NotFoundException } from "@nestjs/common";
@@ -28,7 +29,7 @@ describe("UserService", () => {
     let matchingService: jest.Mocked<MatchingService>;
 
     const mockMatchingService = {
-        notifyMatches: jest.fn(),
+        checkForEncounters: jest.fn(),
     };
 
     const mockAuthService = {
@@ -78,6 +79,12 @@ describe("UserService", () => {
                     provide: I18nService,
                     useValue: {
                         t: jest.fn(),
+                    },
+                },
+                {
+                    provide: NotificationService,
+                    useValue: {
+                        sendPushNotification: jest.fn(),
                     },
                 },
             ],
@@ -181,7 +188,7 @@ describe("UserService", () => {
             jest.spyOn(userRepository, "save").mockResolvedValue(updatedUser);
 
             const checkAndNotifyMatchesSpy = jest
-                .spyOn(matchingService, "notifyMatches")
+                .spyOn(matchingService, "checkForEncounters")
                 .mockResolvedValue(undefined);
 
             const result = await service.updateLocation(
@@ -231,7 +238,7 @@ describe("UserService", () => {
             jest.spyOn(userRepository, "save").mockResolvedValue(updatedUser);
 
             const checkAndNotifyMatchesSpy = jest
-                .spyOn(matchingService, "notifyMatches")
+                .spyOn(matchingService, "checkForEncounters")
                 .mockResolvedValue(undefined);
 
             const result = await service.updateLocation(
@@ -281,7 +288,7 @@ describe("UserService", () => {
             jest.spyOn(userRepository, "save").mockResolvedValue(updatedUser);
 
             const checkAndNotifyMatchesSpy = jest
-                .spyOn(matchingService, "notifyMatches")
+                .spyOn(matchingService, "checkForEncounters")
                 .mockResolvedValue(undefined);
 
             const result = await service.updateLocation(

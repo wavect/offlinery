@@ -12,7 +12,7 @@ import { MatchingService } from "./matching.service";
         TypeOrmModule.forFeature([User, BlacklistedRegion]),
         forwardRef(() => UserModule),
         forwardRef(() => NotificationModule),
-        EncounterModule,
+        forwardRef(() => EncounterModule),
     ],
     providers: [MatchingService],
     controllers: [],

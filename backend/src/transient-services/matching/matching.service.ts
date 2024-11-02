@@ -5,7 +5,11 @@ import { UserRepository } from "@/entities/user/user.repository";
 import { OBaseNotification } from "@/transient-services/matching/matching.service.types";
 import { I18nTranslations } from "@/translations/i18n.generated";
 import { OfflineryNotification } from "@/types/notification-message.types";
-import { EDateMode } from "@/types/user.types";
+import {
+    EApproachChoice,
+    EDateMode,
+    EEncounterStatus,
+} from "@/types/user.types";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { I18nService } from "nestjs-i18n";
 import { NotificationService } from "../notification/notification.service";
@@ -19,6 +23,7 @@ export class MatchingService {
         private userRepository: UserRepository,
         @Inject(forwardRef(() => NotificationService))
         private notificationService: NotificationService,
+        @Inject(forwardRef(() => EncounterService))
         private encounterService: EncounterService,
     ) {}
 
@@ -37,68 +42,110 @@ export class MatchingService {
 
     /**
      * Returns matches for the given
-     * @param userToBeApproached
+     * @param userSendingLocationUpdate
      */
-    public async findNearbyMatches(userToBeApproached: User): Promise<User[]> {
-        if (!this.isUserEligibleForMatchingLookup(userToBeApproached)) {
+    public async findNearbyMatches(
+        userSendingLocationUpdate: User,
+    ): Promise<User[]> {
+        if (!this.isUserEligibleForMatchingLookup(userSendingLocationUpdate)) {
             return [];
         }
         return this.userRepository.getPotentialMatchesForNotifications(
-            userToBeApproached,
+            userSendingLocationUpdate,
         );
     }
 
     /**
-     * Sends a notification to users nearby
-     * @param userToBeApproached
+     * Checks for encounters and returns the notifications
+     * @param userSendingLocationUpdate
      */
-    public async notifyMatches(userToBeApproached: User): Promise<void> {
-        const nearbyMatches = await this.findNearbyMatches(userToBeApproached);
+    public async checkForEncounters(
+        userSendingLocationUpdate: User,
+    ): Promise<OfflineryNotification[]> {
+        const nearbyMatches = await this.findNearbyMatches(
+            userSendingLocationUpdate,
+        );
 
         this.logger.debug(
-            `Found ${nearbyMatches?.length ?? 0} for user ${userToBeApproached.id}`,
+            `Found ${nearbyMatches?.length ?? 0} for user ${userSendingLocationUpdate.id}`,
         );
         if (nearbyMatches?.length > 0) {
             const baseNotification: OBaseNotification = {
                 sound: "default",
                 title: this.i18n.t("main.notification.newMatch.title", {
-                    args: { firstName: userToBeApproached.firstName },
+                    args: { firstName: userSendingLocationUpdate.firstName },
                 }),
                 body: this.i18n.t("main.notification.newMatch.body"),
                 data: {
                     screen: EAppScreens.NAVIGATE_TO_APPROACH,
-                    navigateToPerson: userToBeApproached.convertToPublicDTO(),
+                    navigateToPerson:
+                        userSendingLocationUpdate.convertToPublicDTO(),
                 },
             };
 
             // now save as encounters into DB
             const newEncounters =
                 await this.encounterService.saveEncountersForUser(
-                    userToBeApproached,
+                    userSendingLocationUpdate,
                     nearbyMatches,
-                    true, // they are all nearby rn
                     true, // reset older encounters
                 );
+
             this.logger.debug(
-                `Saved ${newEncounters.size} new encounters for user ${userToBeApproached.id}`,
+                `Saved ${newEncounters.size} new encounters for user ${userSendingLocationUpdate.id}`,
+            );
+
+            console.log(
+                `Saved ${newEncounters.size} new encounters for user ${userSendingLocationUpdate.id}`,
             );
 
             const notifications: OfflineryNotification[] = [];
             for (const user of nearbyMatches) {
-                notifications.push({
-                    ...baseNotification,
-                    to: user.pushToken,
-                    data: {
-                        ...baseNotification.data,
-                        encounterId: newEncounters[user.id],
-                    },
-                });
+                const encounter = newEncounters.get(user.id);
+
+                // @dev Still sending new notifications if encounter status is MET_INTERESTED (because why not, multiple times to meet)
+                if (encounter.status !== EEncounterStatus.MET_NOT_INTERESTED) {
+                    if (
+                        userSendingLocationUpdate.approachChoice ===
+                        EApproachChoice.BE_APPROACHED
+                    ) {
+                        notifications.push({
+                            ...baseNotification,
+                            to: user.pushToken,
+                            data: {
+                                ...baseNotification.data,
+                                encounterId: encounter.id,
+                            },
+                        });
+                    } else {
+                        // @dev Sending notification to user itself as he was the one sending the locationUpdate
+                        notifications.push({
+                            ...baseNotification,
+                            title: this.i18n.t(
+                                "main.notification.newMatch.title",
+                                {
+                                    args: {
+                                        firstName: user.firstName,
+                                    },
+                                },
+                            ),
+                            to: userSendingLocationUpdate.pushToken,
+                            data: {
+                                ...baseNotification.data,
+                                encounterId: encounter.id,
+                            },
+                        });
+                    }
+                } else {
+                    this.logger.debug(
+                        `Not sending notification for encounter ${encounter.id} as encounterStatus ${encounter.status}.`,
+                    );
+                }
             }
 
-            await this.notificationService.sendPushNotification(notifications);
-            this.logger.debug(
-                `Sent ${notifications.length} notifications for userToBeApproached ${userToBeApproached.id}`,
-            );
+            return notifications;
+        } else {
+            return [];
         }
     }
 

@@ -1,5 +1,4 @@
 import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
-import { DateRangeDTO } from "@/DTOs/date-range.dto";
 import { EncounterPublicDTO } from "@/DTOs/encounter-public.dto";
 import { GetLocationOfEncounterResponseDTO } from "@/DTOs/get-location-of-encounter-response.dto";
 import { PushMessageDTO } from "@/DTOs/push-message.dto";
@@ -57,22 +56,11 @@ export class EncounterController {
         @Query("startDate") startDate: Date,
         @Query("endDate") endDate: Date,
     ): Promise<EncounterPublicDTO[]> {
-        this.logger.debug(
-            `User ${userId} fetches encounters from ${startDate} to ${endDate}`,
-        );
-        const dateRange: DateRangeDTO = { startDate, endDate };
-
-        const encounters = await this.encounterService.findEncountersByUser(
+        return this.encounterService.getEncountersByUser(
             userId,
-            dateRange,
+            startDate,
+            endDate,
         );
-        this.logger.debug(
-            `Found ${encounters?.length} encounters for user ${userId}.`,
-        );
-        if (!encounters || encounters.length === 0) {
-            return [];
-        }
-        return encounters.map((e) => e.convertToPublicDTO());
     }
 
     @Put(`:${USER_ID_PARAM}/status`)

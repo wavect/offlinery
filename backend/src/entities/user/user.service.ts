@@ -11,6 +11,7 @@ import { AuthService } from "@/auth/auth.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { MatchingService } from "@/transient-services/matching/matching.service";
+import { NotificationService } from "@/transient-services/notification/notification.service";
 import {
     EApproachChoice,
     EEmailVerificationStatus,
@@ -43,6 +44,7 @@ import * as bcrypt from "bcrypt";
 import { randomBytes } from "crypto";
 import { Expo } from "expo-server-sdk";
 import * as fs from "fs";
+import { Point } from "geojson";
 import { I18nService } from "nestjs-i18n";
 import * as path from "path";
 import { Repository } from "typeorm";
@@ -61,6 +63,8 @@ export class UserService {
         private blacklistedRegionRepository: Repository<BlacklistedRegion>,
         @InjectRepository(PendingUser)
         private pendingUserRepo: Repository<PendingUser>,
+        @Inject(forwardRef(() => NotificationService))
+        private notificationService: NotificationService,
         @Inject(forwardRef(() => MatchingService))
         private matchingService: MatchingService,
         @Inject(forwardRef(() => AuthService))
@@ -559,19 +563,14 @@ export class UserService {
         );
 
         // Check for matches and send notifications (from a semantic perspective we only send notifications if a person to be approached sends a location update)
-        if (
-            user.approachChoice === EApproachChoice.BOTH ||
-            user.approachChoice === EApproachChoice.BE_APPROACHED
-        ) {
-            this.logger.debug(
-                `Sending notifications to users that want to potentially approach userId ${user.id}`,
-            );
-            await this.matchingService.notifyMatches(user);
-        } else {
-            this.logger.debug(
-                `User is only approaching, not sending any notifications for userId ${user.id}`,
-            );
-        }
+        // TODO: Make sure notification not send double if other user then sends update!
+        this.logger.debug(
+            `Sending notifications to users that want to potentially approach or be approached by userId ${user.id}`,
+        );
+        const notifications =
+            await this.matchingService.checkForEncounters(user);
+
+        await this.notificationService.sendPushNotification(notifications);
 
         return updatedUser;
     }
@@ -602,5 +601,28 @@ export class UserService {
             refreshToken: null,
             refreshTokenExpires: null,
         });
+    }
+
+    async findUsersNearbyByUserIds(
+        ids: string[],
+        fromLocation: Point,
+        maxDistanceMeters: number = 1500,
+    ): Promise<string[]> {
+        const result = await this.userRepository
+            .createQueryBuilder("user")
+            .select("user.id")
+            .where("user.id IN (:...ids)", { ids })
+            .andWhere(
+                `ST_DWithin(ST_SetSRID(ST_GeomFromGeoJSON(:point), 4326)::geography,"location"::geography,:distance)`,
+                {
+                    point: JSON.stringify(fromLocation),
+                    distance: maxDistanceMeters,
+                },
+            )
+            .andWhere("user.location IS NOT NULL")
+            .andWhere("user.isActive = :isActive", { isActive: true })
+            .getRawMany();
+
+        return result.map((row) => row.user_id);
     }
 }

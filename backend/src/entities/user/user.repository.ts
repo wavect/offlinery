@@ -49,36 +49,36 @@ export class UserRepository extends Repository<User> {
 
     /** @returns {key: encounterId, value: User}[]*/
     async getPotentialMatchesForNotifications(
-        userToBeApproached: User,
+        userSendingLocationUpdate: User,
     ): Promise<User[]> {
-        if (!userToBeApproached.location) {
+        if (!userSendingLocationUpdate.location) {
             this.logger.error(
-                `No location found for user ${userToBeApproached.id}: ${userToBeApproached.location}`,
+                `No location found for user ${userSendingLocationUpdate.id}: ${userSendingLocationUpdate.location}`,
             );
             return [];
         }
-        const [lon, lat] = userToBeApproached.location.coordinates;
+        const [lon, lat] = userSendingLocationUpdate.location.coordinates;
         const isInBlacklistedRegion = await this.isUserInBlacklistedRegion(
-            userToBeApproached,
+            userSendingLocationUpdate,
             lon,
             lat,
         );
 
         if (isInBlacklistedRegion) {
             this.logger.debug(
-                `User ${userToBeApproached.id} is right now in blacklisted location - not returning potential matches.`,
+                `User ${userSendingLocationUpdate.id} is right now in blacklisted location - not returning potential matches.`,
             );
             return [];
         }
 
-        if (!this.isWithinApproachTime(userToBeApproached, lat, lon)) {
+        if (!this.isWithinApproachTime(userSendingLocationUpdate, lat, lon)) {
             this.logger.debug(
-                `User ${userToBeApproached.id} does not feel safe to be approached right now.`,
+                `User ${userSendingLocationUpdate.id} does not feel safe to be approached right now or does not want to approach right now.`,
             );
             return [];
         }
 
-        return this.getPotentialMatches(userToBeApproached);
+        return this.getPotentialMatches(userSendingLocationUpdate);
     }
 
     async getPotentialMatchesForHeatMap(
@@ -87,11 +87,16 @@ export class UserRepository extends Repository<User> {
         return this.findUserMatchBaseQuery(userToBeApproached).getMany();
     }
 
-    async getPotentialMatches(userToBeApproached: User): Promise<User[]> {
-        return await this.findUserMatchBaseQuery(userToBeApproached)
+    async getPotentialMatches(
+        userSendingLocationUpdate: User,
+    ): Promise<User[]> {
+        return await this.findUserMatchBaseQuery(userSendingLocationUpdate)
             /** @dev TODO: Make this configurable by users. */
-            .withinDistance(userToBeApproached.location, 1500)
-            .withUserWantingToBeApproached()
+            .withinDistance(userSendingLocationUpdate.location, 1500)
+            .userWithSuitableApproachSettings(
+                userSendingLocationUpdate.approachChoice,
+            )
+            .limit(3) // @dev we don't want to overload both users with matches
             .getMany();
     }
 
@@ -237,15 +242,35 @@ export class UserRepository extends Repository<User> {
         return this;
     }
 
-    private withUserWantingToBeApproached(): this {
-        this.queryBuilder.andWhere(
-            '("user"."approachChoice" = :bothChoice OR "user"."approachChoice" = :beApproachedChoice)',
-            {
-                bothChoice: EApproachChoice.BOTH,
-                beApproachedChoice: EApproachChoice.BE_APPROACHED,
-            },
-        );
+    private userWithSuitableApproachSettings(
+        approachChoice: EApproachChoice,
+    ): this {
+        if (
+            approachChoice === EApproachChoice.APPROACH ||
+            approachChoice === EApproachChoice.BOTH
+        ) {
+            this.queryBuilder.andWhere(
+                '("user"."approachChoice" = :bothChoice OR "user"."approachChoice" = :beApproachedChoice)',
+                {
+                    bothChoice: EApproachChoice.BOTH,
+                    beApproachedChoice: EApproachChoice.BE_APPROACHED,
+                },
+            );
+        } else {
+            this.queryBuilder.andWhere(
+                '("user"."approachChoice" = :bothChoice OR "user"."approachChoice" = :approachChoice)',
+                {
+                    bothChoice: EApproachChoice.BOTH,
+                    approachChoice: EApproachChoice.APPROACH,
+                },
+            );
+        }
 
+        return this;
+    }
+
+    private limit(amount: number): this {
+        this.queryBuilder.limit(amount);
         return this;
     }
 

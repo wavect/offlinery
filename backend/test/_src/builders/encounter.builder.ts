@@ -10,7 +10,6 @@ export class EncounterBuilder extends AbstractEntityBuilder<Encounter> {
     protected createInitialEntity(): Encounter {
         const encounter = new Encounter();
         encounter.id = "00000000-0000-0000-0000-000000000000";
-        encounter.isNearbyRightNow = true;
         encounter.lastDateTimePassedBy = new Date();
         encounter.status = EEncounterStatus.MET_INTERESTED;
         encounter.lastLocationPassedBy = {
@@ -25,11 +24,6 @@ export class EncounterBuilder extends AbstractEntityBuilder<Encounter> {
 
     withId(id: string): this {
         this.entity.id = id;
-        return this;
-    }
-
-    withIsNearbyRightNow(isNearbyRightNow: boolean): this {
-        this.entity.isNearbyRightNow = isNearbyRightNow;
         return this;
     }
 

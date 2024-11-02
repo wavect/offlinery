@@ -2,7 +2,7 @@ import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { EncounterService } from "@/entities/encounter/encounter.service";
 import { Message } from "@/entities/messages/message.entity";
-import { User } from "@/entities/user/user.entity";
+import { UserService } from "@/entities/user/user.service";
 import { EEncounterStatus } from "@/types/user.types";
 import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
@@ -17,6 +17,7 @@ describe("EncounterService", () => {
     let service: EncounterService;
     let encounterRepository: Repository<Encounter>;
     let messageRepository: Repository<Message>;
+    let mockUserService: jest.Mocked<UserService>;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -29,6 +30,10 @@ describe("EncounterService", () => {
                 {
                     provide: getRepositoryToken(Message),
                     useValue: mockRepository,
+                },
+                {
+                    provide: UserService,
+                    useValue: mockUserService,
                 },
             ],
         }).compile();
@@ -44,30 +49,6 @@ describe("EncounterService", () => {
 
     it("should be defined", () => {
         expect(service).toBeDefined();
-    });
-
-    describe("saveEncountersForUser", () => {
-        it("should save encounters for a user", async () => {
-            const userToBeApproached = new User();
-            userToBeApproached.id = "user1";
-            const usersThatWantToApproach = [new User(), new User()];
-            usersThatWantToApproach[0].id = "user2";
-            usersThatWantToApproach[1].id = "user3";
-
-            jest.spyOn(encounterRepository, "findOne").mockResolvedValue(null);
-            jest.spyOn(encounterRepository, "save").mockResolvedValue(
-                {} as Encounter,
-            );
-
-            await service.saveEncountersForUser(
-                userToBeApproached,
-                usersThatWantToApproach,
-                true,
-                false,
-            );
-
-            expect(encounterRepository.save).toHaveBeenCalledTimes(2);
-        });
     });
 
     describe("updateStatus", () => {

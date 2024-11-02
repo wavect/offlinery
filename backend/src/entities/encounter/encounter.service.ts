@@ -4,15 +4,18 @@ import { PushMessageDTO } from "@/DTOs/push-message.dto";
 import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
 import { Message } from "@/entities/messages/message.entity";
 import { User } from "@/entities/user/user.entity";
+import { UserService } from "@/entities/user/user.service";
+import { EEncounterStatus } from "@/types/user.types";
 import {
-    ForbiddenException,
+    forwardRef,
+    Inject,
     Injectable,
     Logger,
     NotFoundException,
     PreconditionFailedException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { In, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { Encounter } from "./encounter.entity";
 
 @Injectable()
@@ -24,11 +27,13 @@ export class EncounterService {
         private encounterRepository: Repository<Encounter>,
         @InjectRepository(Message)
         private messageRepository: Repository<Message>,
+        @Inject(forwardRef(() => UserService))
+        private readonly userService: UserService,
     ) {}
 
     async findEncountersByUser(
         userId: string,
-        dateRange: DateRangeDTO,
+        dateRange?: DateRangeDTO,
     ): Promise<Encounter[]> {
         let query = this.encounterRepository
             .createQueryBuilder("encounter")
@@ -44,7 +49,7 @@ export class EncounterService {
             .andWhere("userReports.id IS NULL")
             .leftJoinAndSelect("encounter.users", "allUsers");
 
-        if (dateRange.startDate && dateRange.endDate) {
+        if (dateRange?.startDate && dateRange?.endDate) {
             query = query.andWhere(
                 "encounter.lastDateTimePassedBy BETWEEN :startDate AND :endDate",
                 {
@@ -52,12 +57,12 @@ export class EncounterService {
                     endDate: dateRange.endDate,
                 },
             );
-        } else if (dateRange.startDate) {
+        } else if (dateRange?.startDate) {
             query = query.andWhere(
                 "encounter.lastDateTimePassedBy >= :startDate",
                 { startDate: dateRange.startDate },
             );
-        } else if (dateRange.endDate) {
+        } else if (dateRange?.endDate) {
             query = query.andWhere(
                 "encounter.lastDateTimePassedBy <= :endDate",
                 { endDate: dateRange.endDate },
@@ -68,79 +73,132 @@ export class EncounterService {
         return await query.getMany();
     }
 
+    async getEncountersByUser(
+        userId: string,
+        startDate?: Date,
+        endDate?: Date,
+    ) {
+        const [user, encounters] = await Promise.all([
+            this.userService.findUserById(userId),
+            this.findEncountersByUser(userId, {
+                startDate,
+                endDate,
+            }),
+        ]);
+
+        if (!encounters?.length) {
+            return [];
+        }
+
+        const otherUserIds = [];
+        const userEncounters = encounters.map((encounter) => {
+            const dto = encounter.convertToPublicDTO();
+            const otherUser = dto.users.find((u) => u.id !== userId);
+            otherUserIds.push(otherUser.id);
+            return dto;
+        });
+
+        // Get nearby users and convert to Set for O(1) lookups
+        const nearbyUsers = new Set(
+            await this.userService.findUsersNearbyByUserIds(
+                otherUserIds,
+                user.location,
+            ),
+        );
+
+        userEncounters.forEach((encounter) => {
+            const otherUser = encounter.users.find((u) => u.id !== userId);
+            encounter.isNearbyRightNow = nearbyUsers.has(otherUser.id)
+                ? true
+                : null;
+        });
+
+        this.logger.debug(
+            `Found ${encounters.length} encounters for user ${userId}`,
+        );
+
+        return userEncounters;
+    }
+
     /**
-     * @param userToBeApproached
-     * @param usersThatWantToApproach
-     * @param areNearbyRightNow All encounters will be set to this value - isNearbyRightNow
+     * @param userSendingLocationUpdate
+     * @param userMatches
      * @param resetNearbyStatusOfOtherEncounters If true all usersThatWantToApproach
-     *     that are not supplied to this function will be set to isNearbyRightNow=false as they are e.g. not supplied by the matching service.
+     *
      * that are not supplied to this function will be set to isNearbyRightNow=false as they are e.g. not supplied by the matching service. */
     async saveEncountersForUser(
-        userToBeApproached: User,
-        usersThatWantToApproach: User[],
-        areNearbyRightNow: boolean,
+        userSendingLocationUpdate: User,
+        userMatches: User[],
         resetNearbyStatusOfOtherEncounters: boolean,
     ): Promise<Map<string, Encounter>> {
         this.logger.debug(
-            `Saving encounters for user ${userToBeApproached.id} with ${usersThatWantToApproach.length} users that want to approach. areNearbyRightNow (${areNearbyRightNow}), resetNearbyStatusOfOtherEncounters (${resetNearbyStatusOfOtherEncounters})`,
+            `Saving encounters for user ${userSendingLocationUpdate.id} with ${userMatches.length} users that want to approach. resetNearbyStatusOfOtherEncounters (${resetNearbyStatusOfOtherEncounters})`,
         );
         const newEncounters: Map<string, Encounter> = new Map();
-        for (const u of usersThatWantToApproach) {
+
+        console.log(
+            "got userMatches: ",
+            userMatches.map((b) => b.id),
+        );
+
+        for (const u of userMatches) {
+            console.log(
+                "checking if encounter exists: ",
+                userSendingLocationUpdate.id,
+                u.id,
+            );
             // encounter should always be unique for a userId <> userId combination (not enforced on DB level as not possible)
             // @dev If encounter exists already, update the values, otherwise create new one.
-            const encounter: Encounter =
-                (await this.encounterRepository.findOne({
-                    relations: ["users"],
-                    where: {
-                        users: { id: In([userToBeApproached.id, u.id]) },
-                    },
-                })) ?? new Encounter();
+            const existingEncounter =
+                await this.findExistingEncounterBetweenTwoUsers(
+                    userSendingLocationUpdate.id,
+                    u.id,
+                );
 
-            encounter.users = [userToBeApproached, u];
+            let encounter: Encounter;
+
+            if (existingEncounter) {
+                console.log(
+                    "Reusing existing encounter with ID:",
+                    existingEncounter.id,
+                );
+                encounter = existingEncounter;
+            } else {
+                console.log("Creating new encounter");
+                encounter = new Encounter();
+            }
+
+            // @dev Still sending new notifications if encounter status is MET_INTERESTED (because why not, multiple times to meet)
+            if (encounter.status === EEncounterStatus.MET_NOT_INTERESTED) {
+                newEncounters.set(
+                    u.id,
+                    await this.encounterRepository.save(encounter),
+                );
+                this.logger.debug(
+                    `Skipping encounter update for users ${u.id} and ${userSendingLocationUpdate.id} as encounterStatus is "MET_NOT_INTERESTED".`,
+                );
+                continue;
+            }
+
+            encounter.users = [userSendingLocationUpdate, u];
             encounter.lastDateTimePassedBy = new Date();
-            encounter.lastLocationPassedBy = userToBeApproached.location;
-            encounter.isNearbyRightNow = areNearbyRightNow;
-
-            newEncounters.set(
-                u.id,
-                await this.encounterRepository.save(encounter),
+            encounter.lastLocationPassedBy = userSendingLocationUpdate.location;
+            encounter.setUserStatus(
+                userSendingLocationUpdate.id,
+                EEncounterStatus.NOT_MET,
             );
-        }
+            encounter.setUserStatus(u.id, EEncounterStatus.NOT_MET);
 
-        if (resetNearbyStatusOfOtherEncounters) {
-            // @dev We need to set older encounters to isNearbyRightNow false to hide the navigate button on the frontend, etc.
-            const usersThatWantToApproachIds = usersThatWantToApproach.map(
-                (u) => u.id,
-            );
+            const persistedEncounter =
+                await this.encounterRepository.save(encounter);
 
-            const updateRes = await this.encounterRepository
-                .createQueryBuilder("encounter")
-                .innerJoin(
-                    "encounter.users",
-                    "user",
-                    "user.id = :userToBeApproachedId",
-                    { userToBeApproachedId: userToBeApproached.id },
-                )
-                .leftJoin(
-                    "encounter.users",
-                    "otherUser",
-                    "otherUser.id != :userToBeApproachedId",
-                    { userToBeApproachedId: userToBeApproached.id },
-                )
-                .where("otherUser.id NOT IN (:...usersThatWantToApproachIds)", {
-                    usersThatWantToApproachIds,
-                })
-                .andWhere("encounter.isNearbyRightNow = :isNearby", {
-                    isNearby: true,
-                })
-                .update()
-                .set({ isNearbyRightNow: false })
-                .execute();
+            newEncounters.set(u.id, persistedEncounter);
 
             this.logger.debug(
-                `Resetted nearbyStatus of ${updateRes.affected} other encounters.`,
+                `Created new/Updated encounter for ${u.id} and ${userSendingLocationUpdate.id}.`,
             );
         }
+
         return newEncounters;
     }
 
@@ -162,7 +220,7 @@ export class EncounterService {
             );
         }
 
-        encounter.userStatuses[userId] = status;
+        encounter.setUserStatus(userId, status);
         return this.encounterRepository.save(encounter);
     }
 
@@ -182,12 +240,9 @@ export class EncounterService {
                 `Encounter with ID ${encounterId} not found`,
             );
         }
-        if (!encounter.isNearbyRightNow) {
-            throw new ForbiddenException(
-                `Users are not nearby. You are not allowed to access another user's location.`,
-            );
-        }
-        const otherUser = encounter.users.find((u) => u.id != userId);
+
+        const currentUser = encounter.users.find((u) => u.id === userId);
+        const otherUser = encounter.users.find((u) => u.id !== userId);
         if (!otherUser) {
             throw new NotFoundException(
                 `Other user of Encounter ${encounterId} not found! Requesting user: ${userId}`,
@@ -198,6 +253,19 @@ export class EncounterService {
                 `Other user of Encounter ${encounterId} has not location: ${otherUser.location}`,
             );
         }
+
+        // final check, is user really nearby?
+        const res = await this.userService.findUsersNearbyByUserIds(
+            [otherUser.id],
+            currentUser.location,
+        );
+
+        if (!res.includes(otherUser.id)) {
+            throw new PreconditionFailedException(
+                `Other user of Encounter ${encounterId} is not nearby right now.`,
+            );
+        }
+
         return {
             lastTimeLocationUpdated: otherUser.locationLastTimeUpdated,
             longitude: otherUser.location.coordinates[0],
@@ -238,5 +306,25 @@ export class EncounterService {
         await this.messageRepository.save(newMessage);
         encounter.messages.push(newMessage);
         return await this.encounterRepository.save(encounter);
+    }
+
+    /**
+     * verify that a current encounter between two users really exists, considering both cases
+     * [user1, user2] or [user2, user1]
+     * @param user1Id
+     * @param user2Id
+     * @private
+     */
+    private async findExistingEncounterBetweenTwoUsers(
+        user1Id: string,
+        user2Id: string,
+    ) {
+        return await this.encounterRepository
+            .createQueryBuilder("encounter")
+            .innerJoinAndSelect("encounter.users", "users")
+            .where("users.id IN (:...userIds)", { userIds: [user1Id, user2Id] })
+            .groupBy("encounter.id, users.id") // Added users.id to GROUP BY
+            .having("COUNT(DISTINCT users.id) = 2")
+            .getOne();
     }
 }

@@ -27,15 +27,12 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
             users: this.users?.map((u) => u.convertToPublicDTO()) ?? [],
             /** @DEV MAKE DEFAULT [] not check here*/
             messages: this.messages?.map((m) => m.convertToPublicDTO()) ?? [],
-            isNearbyRightNow: this.isNearbyRightNow,
+            isNearbyRightNow: null,
         };
     }
 
     @PrimaryGeneratedColumn("uuid")
     id: string;
-
-    @Column({ type: "boolean", default: false })
-    isNearbyRightNow: boolean;
 
     @Column({ type: "jsonb", default: {} })
     userStatuses: Record<string, EEncounterStatus>;
@@ -115,6 +112,9 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
     }
 
     public setUserStatus(userId: string, status: EEncounterStatus): void {
+        if (!this.userStatuses) {
+            this.userStatuses = {};
+        }
         this.userStatuses[userId] = status;
         this.updateStatus();
     }

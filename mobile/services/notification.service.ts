@@ -9,7 +9,6 @@ import * as Notifications from "expo-notifications";
 import { initializeApp } from "firebase/app";
 import { Platform } from "react-native";
 import {
-    getSecurelyStoredValue,
     saveValueLocallySecurely,
     SECURE_VALUE,
 } from "./secure-storage.service";
@@ -89,18 +88,11 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
     // Learn more about projectId:
     // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
     // EAS projectId is used here.
-    let token: string | null = getSecurelyStoredValue(
-        SECURE_VALUE.EXPO_PUSH_TOKEN,
-    );
-    if (!!token) {
-        // We don't need to push the token again, as it is already saved in the backend.
-        return token;
-    }
     // Check if physical device or emulator
+    let token: string | null;
     if (!Device.isDevice) {
         return;
     }
-
     try {
         initializeFirebase();
         const projectId = getExpoProjectId();
