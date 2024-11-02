@@ -108,7 +108,9 @@ export class EncounterService {
 
         userEncounters.forEach((encounter) => {
             const otherUser = encounter.users.find((u) => u.id !== userId);
-            encounter.isNearbyRightNow = nearbyUsers.has(otherUser.id);
+            encounter.isNearbyRightNow = nearbyUsers.has(otherUser.id)
+                ? true
+                : null;
         });
 
         this.logger.debug(
@@ -238,7 +240,9 @@ export class EncounterService {
                 `Encounter with ID ${encounterId} not found`,
             );
         }
-        const otherUser = encounter.users.find((u) => u.id != userId);
+
+        const currentUser = encounter.users.find((u) => u.id === userId);
+        const otherUser = encounter.users.find((u) => u.id !== userId);
         if (!otherUser) {
             throw new NotFoundException(
                 `Other user of Encounter ${encounterId} not found! Requesting user: ${userId}`,
@@ -249,6 +253,19 @@ export class EncounterService {
                 `Other user of Encounter ${encounterId} has not location: ${otherUser.location}`,
             );
         }
+
+        // final check, is user really nearby?
+        const res = await this.userService.findUsersNearbyByUserIds(
+            [otherUser.id],
+            currentUser.location,
+        );
+
+        if (!res.includes(otherUser.id)) {
+            throw new PreconditionFailedException(
+                `Other user of Encounter ${encounterId} is not nearby right now.`,
+            );
+        }
+
         return {
             lastTimeLocationUpdated: otherUser.locationLastTimeUpdated,
             longitude: otherUser.location.coordinates[0],
