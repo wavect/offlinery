@@ -34,17 +34,23 @@ export class EncounterFactory implements FactoryInterface {
         };
     };
 
-    public persistTestEncounter = async (user1, user2): Promise<Encounter> => {
-        const encounter = new Encounter();
-        encounter.users = [user1, user2];
-        encounter.lastDateTimePassedBy = this.getRandomPastDate();
-        encounter.lastLocationPassedBy = this.getRandomPoint();
-        encounter.userStatuses = {
-            [user1.id]: EEncounterStatus.MET_INTERESTED,
-            [user2.id]: EEncounterStatus.MET_INTERESTED,
-        };
-
-        const savedEncounter = await this.encounterRepository.save(encounter);
+    public persistNewTestEncounter = async (
+        user1,
+        user2,
+        otherConfiguration?: Partial<Encounter>,
+    ): Promise<Encounter> => {
+        const encounter = await this.encounterRepository.create({
+            users: [user1, user2],
+            lastDateTimePassedBy: this.getRandomPastDate(),
+            lastLocationPassedBy: this.getRandomPoint(),
+            userStatuses: {
+                [user1.id]: EEncounterStatus.MET_INTERESTED,
+                [user2.id]: EEncounterStatus.MET_INTERESTED,
+            },
+            messages: [],
+            status: EEncounterStatus.MET_INTERESTED,
+            ...otherConfiguration,
+        });
 
         if (!user2.encounters?.length) {
             user2.encounters = [];
@@ -54,12 +60,14 @@ export class EncounterFactory implements FactoryInterface {
             user1.encounters = [];
         }
 
+        await this.encounterRepository.save(encounter);
+
         user1.encounters.push(encounter);
         await this.userRepository.save(user1);
 
         user2.encounters.push(encounter);
         await this.userRepository.save(user2);
 
-        return savedEncounter;
+        return encounter;
     };
 }

@@ -44,7 +44,7 @@ describe("NotificationService", () => {
         const { module, factories } = await getIntegrationTestModule();
 
         userService = module.get<UserService>(UserService);
-        userFactory = factories.get("encounter") as UserFactory;
+        userFactory = factories.get("user") as UserFactory;
         notificationService =
             module.get<NotificationService>(NotificationService);
         i18nService = module.get<I18nService<I18nTranslations>>(I18nService);

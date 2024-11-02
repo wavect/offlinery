@@ -31,18 +31,16 @@ export class UserFactory implements FactoryInterface {
 
     public async persistNewTestUser(userData?: Partial<User>): Promise<User> {
         /** @DEV predefine here to re-use */
-        const firstName = `G-${generateRandomString(10)}`;
-        const email = `G-${generateRandomString(15)}@example.com`;
-        const pushToken = `G-${generateRandomString(10)}`;
+        const pushToken = `G-${generateRandomString(15)}`;
 
         const user = this.userRepository.create({
-            firstName: firstName,
+            firstName: `G-${generateRandomString(15)}`,
             bio: generateRandomString(15),
             dateMode: EDateMode.LIVE,
             gender: EGender.WOMAN,
             genderDesire: [EGender.MAN],
             intentions: [EIntention.RELATIONSHIP],
-            email,
+            email: `G-${generateRandomString(15)}@example.com`,
             passwordHash: "hashed_password",
             passwordSalt: "salt",
             birthDay: new Date("1990-01-01"),

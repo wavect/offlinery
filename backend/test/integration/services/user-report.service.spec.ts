@@ -42,7 +42,7 @@ describe("UserReportService Integration Test", () => {
         it("should create a user report", async () => {
             const reportingUser = await userFactory.persistNewTestUser();
             const reportedUser = await userFactory.persistNewTestUser();
-            const encounter = await encounterFactory.persistTestEncounter(
+            const encounter = await encounterFactory.persistNewTestEncounter(
                 reportingUser,
                 reportedUser,
             );

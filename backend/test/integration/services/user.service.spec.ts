@@ -214,7 +214,7 @@ describe("UserService", () => {
             });
             expect(userLookupbyToken).toBeDefined();
 
-            await encounterFactory.persistTestEncounter(user, encounterUser);
+            await encounterFactory.persistNewTestEncounter(user, encounterUser);
 
             // act: delete the user
             await userService.deleteUserByDeletionToken(deleteToken);
@@ -254,7 +254,7 @@ describe("UserService", () => {
             });
             expect(userLookupbyToken).toBeDefined();
 
-            const encounter = await encounterFactory.persistTestEncounter(
+            const encounter = await encounterFactory.persistNewTestEncounter(
                 user,
                 encounterUser,
             );

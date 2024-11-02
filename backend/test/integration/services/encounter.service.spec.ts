@@ -68,9 +68,9 @@ describe("Encounter Service Integration Tests ", () => {
             });
 
             /** @DEV insert 3 test encounters to the user */
-            await encounterFactory.persistTestEncounter(mainUser, user1);
-            await encounterFactory.persistTestEncounter(mainUser, user2);
-            await encounterFactory.persistTestEncounter(mainUser, user3);
+            await encounterFactory.persistNewTestEncounter(mainUser, user1);
+            await encounterFactory.persistNewTestEncounter(mainUser, user2);
+            await encounterFactory.persistNewTestEncounter(mainUser, user3);
 
             expect(
                 (await encounterService.getEncountersByUser(mainUser.id))
@@ -103,8 +103,8 @@ describe("Encounter Service Integration Tests ", () => {
             });
 
             /** @DEV insert 3 test encounters to the user */
-            await encounterFactory.persistTestEncounter(mainUser, user1);
-            await encounterFactory.persistTestEncounter(mainUser, user2);
+            await encounterFactory.persistNewTestEncounter(mainUser, user1);
+            await encounterFactory.persistNewTestEncounter(mainUser, user2);
 
             const encounters = await encounterService.getEncountersByUser(
                 mainUser.id,
@@ -150,8 +150,6 @@ describe("Encounter Service Integration Tests ", () => {
             const userEncounters = await encounterService.findEncountersByUser(
                 userNearby.id,
             );
-
-            console.log("userEncounter: ", userEncounters);
 
             expect(userEncounters.length).toEqual(1);
             expect(

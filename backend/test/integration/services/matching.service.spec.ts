@@ -4,6 +4,7 @@ import { MatchingService } from "@/transient-services/matching/matching.service"
 import {
     EApproachChoice,
     EDateMode,
+    EEncounterStatus,
     EGender,
     EIntention,
 } from "@/types/user.types";
@@ -13,6 +14,7 @@ import { TestingModule } from "@nestjs/testing";
 import { DataSource } from "typeorm";
 import { BlacklistedRegionBuilder } from "../../_src/builders/blacklisted-region.builder";
 import { PointBuilder } from "../../_src/builders/point.builder";
+import { EncounterFactory } from "../../_src/factories/encounter.factory";
 import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
 import {
@@ -28,6 +30,7 @@ describe("Matching Service Integration Tests ", () => {
     let testingMainUser: User;
     let userFactory: UserFactory;
     let userService: UserService;
+    let encounterFactory: EncounterFactory;
 
     beforeAll(async () => {
         const { module, dataSource, factories } =
@@ -38,6 +41,7 @@ describe("Matching Service Integration Tests ", () => {
         userService = module.get(UserService);
         matchingService = module.get(MatchingService);
         userFactory = factories.get("user") as UserFactory;
+        encounterFactory = factories.get("encounter") as EncounterFactory;
     });
 
     afterAll(async () => {
@@ -470,7 +474,7 @@ describe("Matching Service Integration Tests ", () => {
     });
 
     describe("should test heatmap-match algorithm", () => {
-        it("Should only find users that are the right gender", async () => {
+        it("should only find users that are the right gender", async () => {
             await userFactory.persistNewTestUser({
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
@@ -490,7 +494,7 @@ describe("Matching Service Integration Tests ", () => {
             );
             expect(matches.length).toBe(1);
         });
-        it("Should only find users that are live", async () => {
+        it("should only find users that are live", async () => {
             const userId = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
             });
@@ -515,7 +519,7 @@ describe("Matching Service Integration Tests ", () => {
             );
             expect(matches.length).toBe(3);
         });
-        it("Should only find users in the right age span", async () => {
+        it("should only find users in the right age span", async () => {
             const testingUsersBirthYear =
                 testingMainUser.birthDay.getFullYear();
 
@@ -575,7 +579,7 @@ describe("Matching Service Integration Tests ", () => {
                 expect.arrayContaining([user2.id]),
             );
         });
-        it("Should not find users that are ghost", async () => {
+        it("should not find users that are ghost", async () => {
             await userFactory.persistNewTestUser({
                 dateMode: EDateMode.GHOST,
             });
@@ -599,7 +603,7 @@ describe("Matching Service Integration Tests ", () => {
     describe("should test users within distance", () => {
         const maxDistUser = 1500;
         const DPM = 1 / 111139;
-        it("Should consider users locations for nearby-matches", async () => {
+        it("should consider users locations for nearby-matches", async () => {
             const user1 = await userFactory.persistNewTestUser({
                 location: new PointBuilder().build(0, maxDistUser * 0.5 * DPM), // 50% of max distance
             });
@@ -617,7 +621,7 @@ describe("Matching Service Integration Tests ", () => {
             );
             expect(matches.length).toEqual(2);
         });
-        it("Should consider precise distance cases for nearby-matches within maxDistUser", async () => {
+        it("should consider precise distance cases for nearby-matches within maxDistUser", async () => {
             const testingMainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
@@ -760,7 +764,7 @@ describe("Matching Service Integration Tests ", () => {
                 },
             ]);
         });
-        it("Should not consider users locations for heatmap", async () => {
+        it("should not consider users locations for heatmap", async () => {
             await userFactory.persistNewTestUser({
                 location: new PointBuilder().build(0, maxDistUser * 0.9 * DPM), // 90% of max distance
             });
@@ -832,6 +836,42 @@ describe("Matching Service Integration Tests ", () => {
                     id: girlWantsToBeApproached.id,
                 }),
             );
+        });
+        it("should not create a notification if the encounter status is met_not_interested", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            await encounterFactory.persistNewTestEncounter(
+                mainUser,
+                otherUser,
+                {
+                    status: EEncounterStatus.MET_NOT_INTERESTED,
+                    userStatuses: {
+                        [mainUser.id]: EEncounterStatus.MET_NOT_INTERESTED,
+                        [otherUser.id]: EEncounterStatus.MET_NOT_INTERESTED,
+                    },
+                },
+            );
+
+            const notifications =
+                await matchingService.checkForEncounters(testingMainUser);
+
+            expect(notifications).toEqual([]);
         });
     });
 });
