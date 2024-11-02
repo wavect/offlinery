@@ -111,7 +111,7 @@ describe("Encounter Service Integration Tests ", () => {
             );
 
             expect(encounters[0].isNearbyRightNow).toEqual(true);
-            expect(encounters[1].isNearbyRightNow).toEqual(false);
+            expect(encounters[1].isNearbyRightNow).toEqual(null);
             expect(encounters.length).toEqual(2);
 
             expect(1).toEqual(1);

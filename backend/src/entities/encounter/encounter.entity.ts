@@ -27,7 +27,7 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
             users: this.users?.map((u) => u.convertToPublicDTO()) ?? [],
             /** @DEV MAKE DEFAULT [] not check here*/
             messages: this.messages?.map((m) => m.convertToPublicDTO()) ?? [],
-            isNearbyRightNow: false,
+            isNearbyRightNow: null,
         };
     }
 

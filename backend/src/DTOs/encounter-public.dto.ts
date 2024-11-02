@@ -45,6 +45,6 @@ export class EncounterPublicDTO {
     })
     messages: MessagePublicDTO[];
 
-    @ApiProperty({ default: false })
-    isNearbyRightNow: boolean;
+    @ApiProperty({ default: null })
+    isNearbyRightNow: boolean | null;
 }
