@@ -127,11 +127,10 @@ export class EncounterService {
     async saveEncountersForUser(
         userSendingLocationUpdate: User,
         userMatches: User[],
-        areNearbyRightNow: boolean,
         resetNearbyStatusOfOtherEncounters: boolean,
     ): Promise<Map<string, Encounter>> {
         this.logger.debug(
-            `Saving encounters for user ${userSendingLocationUpdate.id} with ${userMatches.length} users that want to approach. areNearbyRightNow (${areNearbyRightNow}), resetNearbyStatusOfOtherEncounters (${resetNearbyStatusOfOtherEncounters})`,
+            `Saving encounters for user ${userSendingLocationUpdate.id} with ${userMatches.length} users that want to approach. resetNearbyStatusOfOtherEncounters (${resetNearbyStatusOfOtherEncounters})`,
         );
         const newEncounters: Map<string, Encounter> = new Map();
 
