@@ -132,7 +132,9 @@
                         "extraProguardRules": "-keep public class com.horcrux.svg.** {*;}",
                         "allowBackup": false
                     },
-                    "ios": {}
+                    "ios": {
+                        "useFrameworks": "static"
+                    }
                 }
             ],
             [
