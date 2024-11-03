@@ -13,22 +13,15 @@ import { User } from "@/entities/user/user.entity";
 import { UserModule } from "@/entities/user/user.module";
 import { UserRepository } from "@/entities/user/user.repository";
 import { MatchingModule } from "@/transient-services/matching/matching.module";
-import { ELanguage } from "@/types/user.types";
 import { TYPED_ENV } from "@/utils/env.utils";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { Module } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken, TypeOrmModule } from "@nestjs/typeorm";
-import {
-    AcceptLanguageResolver,
-    HeaderResolver,
-    I18nModule,
-    QueryResolver,
-} from "nestjs-i18n";
-import path from "node:path";
 import { join } from "path";
 import { DataSource, Repository } from "typeorm";
+import { i18nModuleOptions } from "../../../dist/app.module.options";
 import { EncounterFactory } from "../factories/encounter.factory";
 import {
     FactoryInterface,
@@ -100,24 +93,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
                     adapter: new HandlebarsAdapter(),
                 },
             }),
-            I18nModule.forRoot({
-                fallbackLanguage: ELanguage.en,
-                loaderOptions: {
-                    path: path.join("src", "translations"),
-                    watch: true,
-                },
-                resolvers: [
-                    { use: QueryResolver, options: ["lang"] },
-                    new HeaderResolver(["x-custom-lang"]),
-                    AcceptLanguageResolver,
-                ],
-                typesOutputPath: path.join(
-                    "src",
-                    "translations",
-                    "i18n.generated.ts",
-                ),
-                logging: true,
-            }),
+            i18nModuleOptions,
         ],
     }).compile();
 
