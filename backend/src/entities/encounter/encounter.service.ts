@@ -2,10 +2,12 @@ import { DateRangeDTO } from "@/DTOs/date-range.dto";
 import { GetLocationOfEncounterResponseDTO } from "@/DTOs/get-location-of-encounter-response.dto";
 import { PushMessageDTO } from "@/DTOs/push-message.dto";
 import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
+import { Encounter } from "@/entities/encounter/encounter.entity";
 import { Message } from "@/entities/messages/message.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { EEncounterStatus } from "@/types/user.types";
+import { MAX_ENCOUNTERS_PER_DAY_FOR_USER } from "@/utils/misc.utils";
 import {
     forwardRef,
     Inject,
@@ -16,7 +18,6 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { Encounter } from "./encounter.entity";
 
 @Injectable()
 export class EncounterService {
@@ -143,14 +144,14 @@ export class EncounterService {
             userMatches.map((b) => b.id),
         );
 
+        let userEncounterCount = await this.findCreatedEncountersPerDay(
+            userSendingLocationUpdate.id,
+        );
+
         for (const u of userMatches) {
-            if (
-                await this.userHasReachedEncounterLimit(
-                    userSendingLocationUpdate.id,
-                )
-            ) {
+            if (userEncounterCount >= MAX_ENCOUNTERS_PER_DAY_FOR_USER) {
                 this.logger.debug(
-                    `User ${userSendingLocationUpdate.id} has reached the daily encounter limit. Will not create encounter.`,
+                    `User ${userSendingLocationUpdate.id} has reached the daily encounter limit (${userEncounterCount}/${MAX_ENCOUNTERS_PER_DAY_FOR_USER}). Will not create encounter.`,
                 );
                 return;
             }
@@ -205,6 +206,8 @@ export class EncounterService {
                 `Created new/Updated encounter for ${u.id} and ${userSendingLocationUpdate.id}.`,
             );
         }
+
+        userEncounterCount++;
 
         return newEncounters;
     }
@@ -335,10 +338,7 @@ export class EncounterService {
             .getOne();
     }
 
-    private async userHasReachedEncounterLimit(
-        userId: string,
-        limit = 3,
-    ): Promise<boolean> {
+    private async findCreatedEncountersPerDay(userId: string): Promise<number> {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
@@ -361,6 +361,6 @@ export class EncounterService {
 
         this.logger.log(`User ${userId} has created ${count} encounters today`);
 
-        return count >= limit;
+        return count;
     }
 }

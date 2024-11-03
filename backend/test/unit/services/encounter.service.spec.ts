@@ -2,6 +2,7 @@ import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { EncounterService } from "@/entities/encounter/encounter.service";
 import { Message } from "@/entities/messages/message.entity";
+import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { EEncounterStatus } from "@/types/user.types";
 import { NotFoundException } from "@nestjs/common";
@@ -29,6 +30,10 @@ describe("EncounterService", () => {
                 },
                 {
                     provide: getRepositoryToken(Message),
+                    useValue: mockRepository,
+                },
+                {
+                    provide: getRepositoryToken(User),
                     useValue: mockRepository,
                 },
                 {
