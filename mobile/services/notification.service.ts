@@ -13,6 +13,16 @@ import {
     SECURE_VALUE,
 } from "./secure-storage.service";
 
+export enum TokenFetchStatus {
+    SUCCESS,
+    ERROR,
+    INVALID_DEVICE_OR_EMULATOR,
+}
+interface NotificationTokenFetchResponse {
+    token: string | null;
+    tokenFetchStatus: TokenFetchStatus;
+}
+
 /** @dev Notifications on iOS are tightly coupled with the OS.
  * On Android we need to EXPLICITLY initialize Firebase to show notifications, etc. */
 const initializeFirebase = () => {
@@ -53,7 +63,9 @@ const getExpoProjectId = () => {
     return projectId;
 };
 
-export const registerForPushNotificationsAsync = async (userId: string) => {
+export const registerForPushNotificationsAsync = async (
+    userId: string,
+): Promise<NotificationTokenFetchResponse> => {
     if (Platform.OS === "android") {
         await Notifications.setNotificationChannelAsync("default", {
             name: "default",
@@ -74,7 +86,10 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
 
     if (finalStatus !== "granted") {
         alert(i18n.t(TR.permissionNotificationRejected));
-        return;
+        return {
+            token: null,
+            tokenFetchStatus: TokenFetchStatus.ERROR,
+        };
     }
 
     Notifications.setNotificationHandler({
@@ -91,7 +106,10 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
     // Check if physical device or emulator
     let token: string | null;
     if (!Device.isDevice) {
-        return;
+        return {
+            token: null,
+            tokenFetchStatus: TokenFetchStatus.INVALID_DEVICE_OR_EMULATOR,
+        };
     }
     try {
         initializeFirebase();
@@ -108,7 +126,10 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
                 notifications: "getPushToken",
             },
         });
-        return;
+        return {
+            token: null,
+            tokenFetchStatus: TokenFetchStatus.ERROR,
+        };
     }
 
     // Send this token to your backend
@@ -131,6 +152,8 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
         });
         throw error;
     }
-
-    return token;
+    return {
+        token,
+        tokenFetchStatus: TokenFetchStatus.SUCCESS,
+    };
 };

@@ -9,7 +9,10 @@ import {
     MainScreenTabsParamList,
     MainTabs,
 } from "@/screens/main/MainScreenTabs.navigator";
-import { registerForPushNotificationsAsync } from "@/services/notification.service";
+import {
+    TokenFetchStatus,
+    registerForPushNotificationsAsync,
+} from "@/services/notification.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
@@ -60,11 +63,19 @@ export const MainScreenTabs = ({
                 } else {
                     registerForPushNotificationsAsync(state.id)
                         .then((token) => {
-                            if (!token) {
+                            if (
+                                token.tokenFetchStatus ===
+                                TokenFetchStatus.ERROR
+                            ) {
                                 console.error(
                                     i18n.t(TR.couldNotFetchNotificationToken),
                                 );
                                 return;
+                            } else if (
+                                token.tokenFetchStatus ===
+                                TokenFetchStatus.INVALID_DEVICE_OR_EMULATOR
+                            ) {
+                                console.info("Emulator | No Expo Push Token");
                             }
                         })
                         .catch((error) => {
