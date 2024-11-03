@@ -91,6 +91,11 @@ export class MatchingService {
                     true, // reset older encounters
                 );
 
+            if (!newEncounters?.size) {
+                this.logger.debug(`Reached daily encounter limit for user`);
+                return [];
+            }
+
             this.logger.debug(
                 `Saved ${newEncounters.size} new encounters for user ${userSendingLocationUpdate.id}`,
             );

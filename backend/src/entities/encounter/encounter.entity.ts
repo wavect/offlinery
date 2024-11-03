@@ -83,6 +83,9 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
     })
     status: EEncounterStatus;
 
+    @Column({ type: "timestamptz", nullable: true })
+    createdAt: Date;
+
     @AfterLoad()
     updateStatusAfterLoad() {
         this.status = this.calculateStatus();

@@ -27,6 +27,8 @@ export class EncounterService {
         private encounterRepository: Repository<Encounter>,
         @InjectRepository(Message)
         private messageRepository: Repository<Message>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
         @Inject(forwardRef(() => UserService))
         private readonly userService: UserService,
     ) {}
@@ -142,11 +144,16 @@ export class EncounterService {
         );
 
         for (const u of userMatches) {
-            console.log(
-                "checking if encounter exists: ",
-                userSendingLocationUpdate.id,
-                u.id,
-            );
+            if (
+                await this.userHasReachedEncounterLimit(
+                    userSendingLocationUpdate.id,
+                )
+            ) {
+                this.logger.debug(
+                    `User ${userSendingLocationUpdate.id} has reached the daily encounter limit. Will not create encounter.`,
+                );
+                return;
+            }
             // encounter should always be unique for a userId <> userId combination (not enforced on DB level as not possible)
             // @dev If encounter exists already, update the values, otherwise create new one.
             const existingEncounter =
@@ -188,7 +195,7 @@ export class EncounterService {
                 EEncounterStatus.NOT_MET,
             );
             encounter.setUserStatus(u.id, EEncounterStatus.NOT_MET);
-
+            encounter.createdAt = new Date();
             const persistedEncounter =
                 await this.encounterRepository.save(encounter);
 
@@ -326,5 +333,34 @@ export class EncounterService {
             .groupBy("encounter.id, users.id") // Added users.id to GROUP BY
             .having("COUNT(DISTINCT users.id) = 2")
             .getOne();
+    }
+
+    private async userHasReachedEncounterLimit(
+        userId: string,
+        limit = 3,
+    ): Promise<boolean> {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        const encounterCount = await this.userRepository
+            .createQueryBuilder("user")
+            .innerJoin("user.encounters", "encounter")
+            .where("user.id = :userId", { userId })
+            .andWhere("encounter.lastDateTimePassedBy >= :today", { today })
+            .andWhere("encounter.lastDateTimePassedBy < :tomorrow", {
+                tomorrow,
+            })
+            .groupBy("user.id")
+            .select("COUNT(encounter.id)", "count")
+            .getRawOne();
+
+        const count = parseInt(encounterCount?.count || "0");
+
+        this.logger.log(`User ${userId} has created ${count} encounters today`);
+
+        return count >= limit;
     }
 }

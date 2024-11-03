@@ -66,6 +66,16 @@ export class UserFactory implements FactoryInterface {
         return await this.userRepository.save(savedUser);
     }
 
+    public persistNewTestUserMany = async (
+        amount: number,
+        userData?: Partial<User>,
+    ) =>
+        Promise.all(
+            Array.from({ length: amount }, () =>
+                this.persistNewTestUser(userData),
+            ),
+        );
+
     public async updateTestUser(userData: Partial<User>): Promise<User> {
         return await this.userRepository.save({
             ...(await this.userRepository.findOneBy({
