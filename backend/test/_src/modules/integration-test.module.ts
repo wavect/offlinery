@@ -1,3 +1,4 @@
+import { i18nLngModule } from "@/app.module.configuration";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { EncounterModule } from "@/entities/encounter/encounter.module";
@@ -21,7 +22,6 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken, TypeOrmModule } from "@nestjs/typeorm";
 import { join } from "path";
 import { DataSource, Repository } from "typeorm";
-import { i18nModuleOptions } from "../../../dist/app.module.options";
 import { EncounterFactory } from "../factories/encounter.factory";
 import {
     FactoryInterface,
@@ -93,7 +93,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
                     adapter: new HandlebarsAdapter(),
                 },
             }),
-            i18nModuleOptions,
+            i18nLngModule,
         ],
     }).compile();
 
