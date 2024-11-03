@@ -1,10 +1,10 @@
 import {
-    cacheModuleOptions,
+    cacheModule,
     configModule,
     i18nLngModule,
     mailerModule,
     staticModule,
-    throttlerModuleOptions,
+    throttlerModule,
 } from "@/app.module.configuration";
 import { ApiUserModule } from "@/entities/api-user/api-user.module";
 import { BlacklistedRegionModule } from "@/entities/blacklisted-region/blacklisted-region.module";
@@ -39,8 +39,8 @@ import { typeOrmAsyncConfig } from "./typeorm.config";
         mailerModule,
         i18nLngModule,
         staticModule,
-        throttlerModuleOptions,
-        cacheModuleOptions,
+        throttlerModule,
+        cacheModule,
         UserModule,
         MatchingModule,
         NotificationModule,

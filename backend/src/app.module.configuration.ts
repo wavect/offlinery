@@ -59,14 +59,14 @@ export const staticModule = ServeStaticModule.forRoot({
     serveRoot: "/img",
 });
 
-export const throttlerModuleOptions = ThrottlerModule.forRoot([
+export const throttlerModule = ThrottlerModule.forRoot([
     {
         ttl: 60000,
         limit: 10,
     },
 ]);
 
-export const cacheModuleOptions = CacheModule.register({
+export const cacheModule = CacheModule.register({
     isGlobal: true,
 });
 
