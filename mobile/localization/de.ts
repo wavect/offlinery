@@ -292,4 +292,8 @@ export const de: Language = {
     pleaseChangePermission:
         "Bitte ändere die Zugriffsrechte in deinen Einstellungen um fortzufahren.",
     loadingTextNavigateTo: "Berechne Route...",
+    noEmailAppError: "Keine E-Mail App",
+    noEmailAppErrorDescr: "Keine E-Mail App auf deinem Gerät gefunden.",
+    error: "Fehler",
+    emailAppOpenErrorDescr: "Wir konnten deine E-Mail App nicht öffnen.",
 };
