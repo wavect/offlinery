@@ -1,5 +1,6 @@
 import { Color } from "@/GlobalStyles";
 import { i18n, TR } from "@/localization/translate.service";
+import { isSecretStorageAvailable } from "@/services/secure-storage.service";
 import { getLocalValue, LOCAL_VALUE } from "@/services/storage.service";
 import { API } from "@/utils/api-config";
 import { setupSentry } from "@/utils/sentry.utils";
@@ -106,6 +107,18 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
 
         if (!locations?.length) {
             throw new Error("No locations received from location task");
+        }
+
+        if (!(await isSecretStorageAvailable())) {
+            const storageErr = new Error(
+                "Secret storage not available right now.",
+            );
+            Sentry.captureException(storageErr, {
+                tags: {
+                    location_service: "backgroundTaskSecretStorage",
+                },
+            });
+            throw storageErr;
         }
 
         const userId = getUserId();
