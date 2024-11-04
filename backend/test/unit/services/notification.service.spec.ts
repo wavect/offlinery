@@ -5,6 +5,7 @@ import { OfflineryNotification } from "@/types/notification-message.types";
 import { Logger } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { Expo, ExpoPushTicket } from "expo-server-sdk";
+import { I18nService } from "nestjs-i18n";
 import { UserBuilder } from "../../_src/builders/user.builder";
 
 describe("NotificationService", () => {
@@ -34,6 +35,13 @@ describe("NotificationService", () => {
                 {
                     provide: UserService,
                     useValue: mockUserService,
+                },
+                {
+                    provide: I18nService,
+                    useValue: {
+                        t: jest.fn(),
+                        translate: jest.fn(),
+                    },
                 },
             ],
         }).compile();

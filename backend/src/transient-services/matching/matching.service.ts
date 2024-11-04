@@ -1,8 +1,6 @@
-import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
 import { EncounterService } from "@/entities/encounter/encounter.service";
 import { User } from "@/entities/user/user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
-import { OBaseNotification } from "@/transient-services/matching/matching.service.types";
 import { I18nTranslations } from "@/translations/i18n.generated";
 import { OfflineryNotification } from "@/types/notification-message.types";
 import {
@@ -12,7 +10,10 @@ import {
 } from "@/types/user.types";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { I18nService } from "nestjs-i18n";
-import { NotificationService } from "../notification/notification.service";
+import {
+    NotificationService,
+    NotificationType,
+} from "../notification/notification.service";
 
 @Injectable()
 export class MatchingService {
@@ -65,23 +66,18 @@ export class MatchingService {
         const nearbyMatches = await this.findNearbyMatches(
             userSendingLocationUpdate,
         );
+        const userLanguage =
+            userSendingLocationUpdate.preferredLanguage ?? "en";
 
         this.logger.debug(
             `Found ${nearbyMatches?.length ?? 0} for user ${userSendingLocationUpdate.id}`,
         );
         if (nearbyMatches?.length > 0) {
-            const baseNotification: OBaseNotification = {
-                sound: "default",
-                title: this.i18n.t("main.notification.newMatch.title", {
-                    args: { firstName: userSendingLocationUpdate.firstName },
-                }),
-                body: this.i18n.t("main.notification.newMatch.body"),
-                data: {
-                    screen: EAppScreens.NAVIGATE_TO_APPROACH,
-                    navigateToPerson:
-                        userSendingLocationUpdate.convertToPublicDTO(),
-                },
-            };
+            const baseNotification =
+                await this.notificationService.buildBaseNotification(
+                    userSendingLocationUpdate,
+                    NotificationType.NEW_MATCH,
+                );
 
             // now save as encounters into DB
             const newEncounters =
@@ -118,15 +114,20 @@ export class MatchingService {
                             },
                         });
                     } else {
-                        // @dev Sending notification to user itself as he was the one sending the locationUpdate
+                        /** @DEV Sending notification to user itself as he was the one sending the locationUpdate with custom title */
+                        const notificationContent =
+                            await this.notificationService.getNotificationOptionByType(
+                                NotificationType.NEW_MATCH,
+                            );
                         notifications.push({
                             ...baseNotification,
-                            title: this.i18n.t(
-                                "main.notification.newMatch.title",
+                            title: this.i18n.translate(
+                                notificationContent.title,
                                 {
                                     args: {
                                         firstName: user.firstName,
                                     },
+                                    lang: userLanguage,
                                 },
                             ),
                             to: userSendingLocationUpdate.pushToken,
