@@ -288,8 +288,8 @@ export const de: Language = {
     inputInvalid: "Eingabe ist ungültig",
     cancel: "Abbrechen",
     goToSettings: "Gehe zu Einstellungen",
-    permissionRequired: "Zugriff auf Gallerie benötigt",
+    permissionRequired: "Zugriff benötigt",
     pleaseChangePermission:
-        "Bitte ändere die Zugriffsrechte auf deine Bilder um fortzufahren.",
+        "Bitte ändere die Zugriffsrechte in deinen Einstellungen um fortzufahren.",
     loadingTextNavigateTo: "Berechne Route...",
 };
