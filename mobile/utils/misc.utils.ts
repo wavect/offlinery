@@ -65,7 +65,36 @@ export const getLocalLanguageID = (): CreateUserDTOPreferredLanguageEnum => {
 export const isNumericRegex = /^\d+$/;
 
 export const writeSupportEmail = async () => {
-    await Linking.openURL(`mailto:${SUPPORT_MAIL}`);
+    try {
+        const url = `mailto:${SUPPORT_MAIL}`;
+        const canOpen = await Linking.canOpenURL(url);
+
+        if (canOpen) {
+            await Linking.openURL(url);
+        } else {
+            // Handle case where no email app is available
+            Alert.alert(
+                i18n.t(TR.noEmailAppError),
+                i18n.t(TR.noEmailAppErrorDescr),
+            );
+            Sentry.captureException(
+                { message: "No Email App available" },
+                {
+                    tags: {
+                        writeSupportEmail: "noMailApp",
+                    },
+                },
+            );
+        }
+    } catch (error) {
+        console.error("Error opening email:", error);
+        Alert.alert(i18n.t(TR.error), i18n.t(TR.emailAppOpenErrorDescr));
+        Sentry.captureException(error, {
+            tags: {
+                writeSupportEmail: "openMailApp",
+            },
+        });
+    }
 };
 
 export const openAppSettings = async () => {
