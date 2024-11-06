@@ -1,3 +1,4 @@
+import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
 import { GenericApiStatusDTO } from "@/DTOs/generic-api-status.dto";
 import { NewEventDTO } from "@/DTOs/new-event.dto";
@@ -17,11 +18,6 @@ import {
 } from "@nestjs/common";
 import { Expo, ExpoPushTicket } from "expo-server-sdk";
 import { I18nService } from "nestjs-i18n";
-
-export enum NotificationType {
-    NEW_MATCH,
-    NEW_EVENT,
-}
 
 @Injectable()
 export class NotificationService {
@@ -60,6 +56,7 @@ export class NotificationService {
                     body: eventDescription,
                     to: user.pushToken,
                     data: {
+                        type: ENotificationType.NEW_EVENT,
                         screen: EAppScreens.NEW_EVENT,
                     },
                 });
@@ -94,6 +91,7 @@ export class NotificationService {
                 lang: userLanguage,
             }),
             data: {
+                type: ENotificationType.NEW_MATCH,
                 screen: EAppScreens.NAVIGATE_TO_APPROACH,
             },
         };

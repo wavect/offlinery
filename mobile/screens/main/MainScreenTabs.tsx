@@ -1,6 +1,9 @@
 import { Color, Title } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
-import { NotificationNavigateUserDTO } from "@/api/gen/src";
+import {
+    NotificationNavigateUserDTOTypeEnum,
+    NotificationNewEventDTOTypeEnum,
+} from "@/api/gen/src";
 import { OGoLiveToggle } from "@/components/OGoLiveToggle/OGoLiveToggle";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
@@ -11,9 +14,10 @@ import {
 } from "@/screens/main/MainScreenTabs.navigator";
 import {
     TokenFetchStatus,
+    reactToNewEncounterNotification,
+    reactToNewEventNotification,
     registerForPushNotificationsAsync,
 } from "@/services/notification.service";
-import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { useFocusEffect } from "@react-navigation/native";
@@ -96,6 +100,7 @@ export const MainScreenTabs = ({
                     notificationListener.current =
                         Notifications.addNotificationReceivedListener(
                             (notification) => {
+                                // TODO: we likely will also need to check for notification type here then
                                 setUnreadNotifications([
                                     ...unreadNotifications,
                                     notification,
@@ -111,43 +116,85 @@ export const MainScreenTabs = ({
                         Notifications.addNotificationResponseReceivedListener(
                             (response) => {
                                 console.log("Notification response", response);
-                                // @dev Remove notification from array to update the "unread notification" bubble in the tab
-                                const filteredNotifications =
-                                    unreadNotifications.filter(
-                                        (n) =>
-                                            n.request.identifier !==
-                                            response.notification.request
-                                                .identifier,
+
+                                // Differentiate between different notifications
+                                const notificationType =
+                                    response.notification.request.content?.data
+                                        ?.type; // @dev defined through backend side abstract class
+
+                                if (!notificationType) {
+                                    Sentry.captureException(
+                                        new Error(
+                                            "No notification type found in notification.",
+                                        ),
+                                        {
+                                            tags: {
+                                                notificationService:
+                                                    "MainScreenTabs:invalid notification",
+                                                notification: JSON.stringify(
+                                                    response.notification
+                                                        .request.content
+                                                        ?.data ?? {},
+                                                ),
+                                            },
+                                        },
                                     );
-                                setUnreadNotifications(filteredNotifications);
-
-                                // TODO: At some point we might want to send other notifications too? then we need to be more flexible on the typing and checking it
-                                const notificationData: NotificationNavigateUserDTO =
-                                    response.notification.request.content
-                                        .data as NotificationNavigateUserDTO;
-
-                                if (!("navigateToPerson" in notificationData)) {
-                                    return;
+                                    navigation.navigate(ROUTES.MainTabView, {
+                                        screen: ROUTES.Main.FindPeople, // default
+                                    });
                                 }
-                                // TODO: Move As many types as possible into backend for generation (e.g. PublicUser, Encounter, ..)
-                                const encounterProfile: IEncounterProfile = {
-                                    firstName:
-                                        notificationData.navigateToPerson
-                                            .firstName,
-                                    bio: notificationData.navigateToPerson.bio,
-                                    imageURIs:
-                                        notificationData.navigateToPerson
-                                            .imageURIs,
-                                    encounterId: notificationData.encounterId,
-                                    age: notificationData.navigateToPerson.age,
-                                };
-                                // Navigate to the specified screen, passing the user object as a prop
-                                navigation.navigate(ROUTES.MainTabView, {
-                                    screen: notificationData.screen,
-                                    params: {
-                                        navigateToPerson: encounterProfile,
-                                    },
-                                });
+
+                                switch (notificationType) {
+                                    case NotificationNewEventDTOTypeEnum.event:
+                                        reactToNewEventNotification(
+                                            response,
+                                            navigation,
+                                        );
+                                        break;
+                                    case NotificationNavigateUserDTOTypeEnum.match:
+                                        // @dev Remove notification from array to update the "unread notification" bubble in the tab
+                                        const filteredNotifications =
+                                            unreadNotifications.filter(
+                                                (n) =>
+                                                    n.request.identifier !==
+                                                    response.notification
+                                                        .request.identifier,
+                                            );
+                                        setUnreadNotifications(
+                                            filteredNotifications,
+                                        );
+                                        reactToNewEncounterNotification(
+                                            response,
+                                            navigation,
+                                        );
+                                        break;
+                                    default:
+                                        Sentry.captureException(
+                                            new Error(
+                                                "Received unknown notification type - app version cannot handle it yet.",
+                                            ),
+                                            {
+                                                tags: {
+                                                    notificationService:
+                                                        "MainScreenTabs: unsupported notification type",
+                                                    notificationType,
+                                                    notification:
+                                                        JSON.stringify(
+                                                            response
+                                                                .notification
+                                                                .request.content
+                                                                ?.data ?? {},
+                                                        ),
+                                                },
+                                            },
+                                        );
+                                        navigation.navigate(
+                                            ROUTES.MainTabView,
+                                            {
+                                                screen: ROUTES.Main.FindPeople, // default
+                                            },
+                                        );
+                                }
                             },
                         );
 
