@@ -1,4 +1,4 @@
-import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
+import { EAppScreens } from "@/DTOs/notifications/notification-navigate-user.dto";
 import { UserService } from "@/entities/user/user.service";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { OfflineryNotification } from "@/types/notification-message.types";
@@ -91,7 +91,7 @@ describe("NotificationService", () => {
                 .mockResolvedValueOnce([mockTickets[0]])
                 .mockResolvedValueOnce([mockTickets[1]]);
 
-            const result = await service.sendPushNotification(messages);
+            const result = await service.sendPushNotifications(messages);
 
             expect(mockExpo.chunkPushNotifications).toHaveBeenCalledWith(
                 messages,
@@ -135,7 +135,7 @@ describe("NotificationService", () => {
             const mockError = new Error("Failed to send notification");
             mockExpo.sendPushNotificationsAsync.mockRejectedValue(mockError);
 
-            const result = await service.sendPushNotification(messages);
+            const result = await service.sendPushNotifications(messages);
 
             expect(mockExpo.chunkPushNotifications).toHaveBeenCalledWith(
                 messages,
@@ -174,7 +174,7 @@ describe("NotificationService", () => {
                 throw mockError;
             });
 
-            const result = await service.sendPushNotification(messages);
+            const result = await service.sendPushNotifications(messages);
 
             expect(mockExpo.chunkPushNotifications).toHaveBeenCalledWith(
                 messages,

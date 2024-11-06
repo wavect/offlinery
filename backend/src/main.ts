@@ -15,7 +15,7 @@ import * as path from "path";
 import { join } from "path";
 import * as process from "process";
 import { AppModule } from "./app.module";
-import { NotificationNavigateUserDTO } from "./DTOs/notification-navigate-user.dto";
+import { NotificationNavigateUserDTO } from "./DTOs/notifications/notification-navigate-user.dto";
 import { TYPED_ENV, validateEnv } from "./utils/env.utils";
 
 async function bootstrap() {

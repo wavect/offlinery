@@ -570,7 +570,7 @@ export class UserService {
         const notifications =
             await this.matchingService.checkForEncounters(user);
 
-        await this.notificationService.sendPushNotification(notifications);
+        await this.notificationService.sendPushNotifications(notifications);
 
         return updatedUser;
     }

@@ -1,16 +1,26 @@
-import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
+import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
+import { GenericApiStatusDTO } from "@/DTOs/generic-api-status.dto";
+import { NewEventDTO } from "@/DTOs/new-event.dto";
 import { StorePushTokenDTO } from "@/DTOs/store-push-token.dto";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
-import { OBaseNotification } from "@/transient-services/matching/matching.service.types";
+import { OBaseNewMatchNotification } from "@/transient-services/matching/matching.service.types";
 import { I18nTranslations } from "@/translations/i18n.generated";
 import { OfflineryNotification } from "@/types/notification-message.types";
-import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
+import { ELanguage } from "@/types/user.types";
+import {
+    forwardRef,
+    Inject,
+    Injectable,
+    InternalServerErrorException,
+    Logger,
+} from "@nestjs/common";
 import { Expo, ExpoPushTicket } from "expo-server-sdk";
 import { I18nService } from "nestjs-i18n";
 
 export enum NotificationType {
     NEW_MATCH,
+    NEW_EVENT,
 }
 
 @Injectable()
@@ -33,50 +43,64 @@ export class NotificationService {
         );
     }
 
-    async buildBaseNotification(
+    async createNewEvent(newEvent: NewEventDTO): Promise<GenericApiStatusDTO> {
+        try {
+            const notifications: OfflineryNotification[] = [];
+            const users = await this.userService.findAll(); // TODO!!!!
+
+            for (const user of users) {
+                const userLanguage = user.preferredLanguage ?? ELanguage.en;
+                const eventTitle: string = newEvent.eventTitle[userLanguage];
+                const eventDescription: string =
+                    newEvent.eventDescription[userLanguage];
+
+                notifications.push({
+                    sound: "default" as const,
+                    title: eventTitle,
+                    body: eventDescription,
+                    to: user.pushToken,
+                    data: {
+                        screen: EAppScreens.NEW_EVENT,
+                    },
+                });
+            }
+
+            await this.sendPushNotifications(notifications);
+        } catch (err) {
+            throw new InternalServerErrorException(err);
+        }
+
+        return { requestSuccessful: true };
+    }
+
+    async buildNewMatchBaseNotification(
         userSendingLocationUpdate: User,
-        type: NotificationType,
-    ): Promise<OBaseNotification> {
+    ): Promise<OBaseNewMatchNotification> {
         const userLanguage =
             userSendingLocationUpdate.preferredLanguage ?? "en";
-        const notificationContent =
-            await this.getNotificationOptionByType(type);
+
         return {
-            sound: notificationContent.sound,
-            title: await this.i18n.translate(notificationContent.title, {
-                args: {
-                    firstName: userSendingLocationUpdate.firstName,
+            sound: "default" as const,
+            title: await this.i18n.translate(
+                "main.notification.newMatch.title",
+                {
+                    args: {
+                        firstName: userSendingLocationUpdate.firstName,
+                    },
+                    lang: userLanguage,
                 },
-                lang: userLanguage,
-            }),
-            body: this.i18n.translate(notificationContent.body, {
+            ),
+            body: this.i18n.translate("main.notification.newMatch.body", {
                 lang: userLanguage,
             }),
             data: {
-                screen: notificationContent.screen,
-                navigateToPerson:
-                    userSendingLocationUpdate.convertToPublicDTO(),
+                screen: EAppScreens.NAVIGATE_TO_APPROACH,
             },
         };
     }
 
-    async getNotificationOptionByType(notificationType: NotificationType) {
-        switch (notificationType) {
-            case NotificationType.NEW_MATCH:
-                return {
-                    sound: "default" as const,
-                    title: "main.notification.newMatch.title" as const,
-                    body: "main.notification.newMatch.body" as const,
-                    screen: EAppScreens.NAVIGATE_TO_APPROACH,
-                };
-            default: {
-                return null;
-            }
-        }
-    }
-
     /** @dev The ExpoPushToken remains the same for the user infinitely, except they reinstall the app, etc. */
-    async sendPushNotification(messages: OfflineryNotification[]) {
+    async sendPushNotifications(messages: OfflineryNotification[]) {
         const tickets: ExpoPushTicket[] = [];
         try {
             const chunks = this.expo.chunkPushNotifications(messages);

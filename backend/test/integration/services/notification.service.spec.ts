@@ -1,11 +1,8 @@
-import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
+import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
 import { UserReport } from "@/entities/user-report/user-report.entity";
 import { UserService } from "@/entities/user/user.service";
-import {
-    NotificationService,
-    NotificationType,
-} from "@/transient-services/notification/notification.service";
+import { NotificationService } from "@/transient-services/notification/notification.service";
 import { I18nTranslations } from "@/translations/i18n.generated";
 import { OfflineryNotification } from "@/types/notification-message.types";
 import {
@@ -77,7 +74,7 @@ describe("NotificationService", () => {
                 },
             ];
             const res =
-                await notificationService.sendPushNotification(messages);
+                await notificationService.sendPushNotifications(messages);
             expect(res.length).toBe(1);
             expect(res[0].status).toBe("ok");
         });
@@ -96,7 +93,7 @@ describe("NotificationService", () => {
                 },
             ];
             const res =
-                await notificationService.sendPushNotification(messages);
+                await notificationService.sendPushNotifications(messages);
             expect(res.length).toBe(1);
             expect(res[0].status).toBe("ok");
         });
@@ -115,7 +112,7 @@ describe("NotificationService", () => {
                 },
             ];
             const res =
-                await notificationService.sendPushNotification(messages);
+                await notificationService.sendPushNotifications(messages);
             expect(res.length).toBe(1);
             expect(res[0].status).toBe("ok");
         });
@@ -128,21 +125,24 @@ describe("NotificationService", () => {
             expect(lang).toContain("en");
         });
         it("should lead NEW_MATCH notification users to the Encounter Screen", async () => {
-            const string =
-                await notificationService.getNotificationOptionByType(
-                    NotificationType.NEW_MATCH,
-                );
-            expect(string.screen).toEqual(EAppScreens.NAVIGATE_TO_APPROACH);
+            const user = await userFactory.persistNewTestUser({
+                firstName: "Lisa Maria",
+                pushToken: testPushTokenChris,
+                preferredLanguage: ELanguage.de,
+            });
+            const notification =
+                await notificationService.buildNewMatchBaseNotification(user);
+            expect(notification.data.screen).toEqual(
+                EAppScreens.NAVIGATE_TO_APPROACH,
+            );
         });
         it("should create a NEW_MATCH notification in EN", async () => {
             const user = await userFactory.persistNewTestUser({
                 pushToken: testPushTokenChris,
                 preferredLanguage: ELanguage.en,
             });
-            const n = await notificationService.buildBaseNotification(
-                user,
-                NotificationType.NEW_MATCH,
-            );
+            const n =
+                await notificationService.buildNewMatchBaseNotification(user);
             expect(n.title).toEqual(`${user.firstName} is nearby! 🔥`);
             expect(n.body).toEqual(`Find. Approach. IRL.`);
         });
@@ -151,10 +151,8 @@ describe("NotificationService", () => {
                 pushToken: testPushTokenChris,
                 preferredLanguage: ELanguage.de,
             });
-            const n = await notificationService.buildBaseNotification(
-                user,
-                NotificationType.NEW_MATCH,
-            );
+            const n =
+                await notificationService.buildNewMatchBaseNotification(user);
 
             expect(n.title).toEqual(`${user.firstName} ist in der Nähe! 🔥`);
             expect(n.body).toEqual(`Finden. Ansprechen. IRL.`);
@@ -166,11 +164,8 @@ describe("NotificationService", () => {
                 preferredLanguage: ELanguage.de,
             });
             const notification =
-                await notificationService.buildBaseNotification(
-                    user,
-                    NotificationType.NEW_MATCH,
-                );
-            await notificationService.sendPushNotification([
+                await notificationService.buildNewMatchBaseNotification(user);
+            await notificationService.sendPushNotifications([
                 {
                     ...notification,
                     to: user.pushToken,
@@ -188,11 +183,8 @@ describe("NotificationService", () => {
                 preferredLanguage: ELanguage.en,
             });
             const notification =
-                await notificationService.buildBaseNotification(
-                    user,
-                    NotificationType.NEW_MATCH,
-                );
-            await notificationService.sendPushNotification([
+                await notificationService.buildNewMatchBaseNotification(user);
+            await notificationService.sendPushNotifications([
                 {
                     ...notification,
                     to: user.pushToken,

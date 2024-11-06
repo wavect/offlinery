@@ -100,7 +100,7 @@ describe("MatchingService", () => {
             await matchingService.checkForEncounters(user);
 
             expect(
-                notificationService.sendPushNotification,
+                notificationService.sendPushNotifications,
             ).not.toHaveBeenCalled();
             expect(
                 encounterService.saveEncountersForUser,

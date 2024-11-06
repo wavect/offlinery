@@ -1,4 +1,7 @@
 import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard"; // Assume this service exists to handle user-related operations
+import { OnlyAdmin } from "@/auth/auth.guard";
+import { GenericApiStatusDTO } from "@/DTOs/generic-api-status.dto";
+import { NewEventDTO } from "@/DTOs/new-event.dto";
 import { StorePushTokenDTO } from "@/DTOs/store-push-token.dto";
 import {
     Body,
@@ -7,8 +10,11 @@ import {
     HttpStatus,
     Param,
     Post,
+    Put,
+    UsePipes,
+    ValidationPipe,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { NotificationService } from "./notification.service";
 
 @ApiTags("Push Notifications")
@@ -46,5 +52,18 @@ export class NotificationController {
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
+    }
+
+    @Put("admin/new-event")
+    @OnlyAdmin()
+    @ApiOperation({ summary: "Send event notifications" })
+    @ApiBody({
+        type: NewEventDTO,
+    })
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async createNewEvent(
+        @Body() eventDTO: NewEventDTO,
+    ): Promise<GenericApiStatusDTO> {
+        return await this.notificationService.createNewEvent(eventDTO);
     }
 }

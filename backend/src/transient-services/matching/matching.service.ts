@@ -10,10 +10,7 @@ import {
 } from "@/types/user.types";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { I18nService } from "nestjs-i18n";
-import {
-    NotificationService,
-    NotificationType,
-} from "../notification/notification.service";
+import { NotificationService } from "../notification/notification.service";
 
 @Injectable()
 export class MatchingService {
@@ -74,9 +71,8 @@ export class MatchingService {
         );
         if (nearbyMatches?.length > 0) {
             const baseNotification =
-                await this.notificationService.buildBaseNotification(
+                await this.notificationService.buildNewMatchBaseNotification(
                     userSendingLocationUpdate,
-                    NotificationType.NEW_MATCH,
                 );
 
             // now save as encounters into DB
@@ -111,18 +107,16 @@ export class MatchingService {
                             data: {
                                 ...baseNotification.data,
                                 encounterId: encounter.id,
+                                navigateToPerson:
+                                    userSendingLocationUpdate.convertToPublicDTO(),
                             },
                         });
                     } else {
                         /** @DEV Sending notification to user itself as he was the one sending the locationUpdate with custom title */
-                        const notificationContent =
-                            await this.notificationService.getNotificationOptionByType(
-                                NotificationType.NEW_MATCH,
-                            );
                         notifications.push({
                             ...baseNotification,
                             title: this.i18n.translate(
-                                notificationContent.title,
+                                "main.notification.newMatch.title",
                                 {
                                     args: {
                                         firstName: user.firstName,
@@ -134,6 +128,7 @@ export class MatchingService {
                             data: {
                                 ...baseNotification.data,
                                 encounterId: encounter.id,
+                                navigateToPerson: user.convertToPublicDTO(),
                             },
                         });
                     }
