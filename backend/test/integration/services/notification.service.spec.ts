@@ -171,6 +171,7 @@ describe("NotificationService", () => {
                     to: user.pushToken,
                     data: {
                         ...notification.data,
+                        navigateToPerson: user.convertToPublicDTO(),
                         encounterId: "1",
                     },
                 },
@@ -190,6 +191,7 @@ describe("NotificationService", () => {
                     to: user.pushToken,
                     data: {
                         ...notification.data,
+                        navigateToPerson: user.convertToPublicDTO(),
                         encounterId: "1",
                     },
                 },
