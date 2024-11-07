@@ -1,4 +1,5 @@
-import { EAppScreens } from "@/DTOs/notifications/notification-navigate-user.dto";
+import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
+import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
 import { UserService } from "@/entities/user/user.service";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { OfflineryNotification } from "@/types/notification-message.types";
@@ -63,6 +64,7 @@ describe("NotificationService", () => {
                             age: 21,
                         },
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
+                        type: ENotificationType.NEW_MATCH,
                     },
                     body: "test message 1",
                 },
@@ -75,6 +77,7 @@ describe("NotificationService", () => {
                             age: 21,
                         },
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
+                        type: ENotificationType.NEW_MATCH,
                     },
                     body: "test message 1",
                 },
@@ -124,6 +127,7 @@ describe("NotificationService", () => {
                             age: 21,
                         },
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
+                        type: ENotificationType.NEW_MATCH,
                     },
                     body: "test message 1",
                 },
@@ -164,6 +168,7 @@ describe("NotificationService", () => {
                             age: 21,
                         },
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
+                        type: ENotificationType.NEW_MATCH,
                     },
                     body: "test message 1",
                 },

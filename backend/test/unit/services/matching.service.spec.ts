@@ -33,7 +33,7 @@ describe("MatchingService", () => {
                 {
                     provide: NotificationService,
                     useValue: {
-                        sendPushNotification: jest.fn(),
+                        sendPushNotifications: jest.fn(),
                     },
                 },
                 {

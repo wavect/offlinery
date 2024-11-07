@@ -1,3 +1,4 @@
+import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
 import { UserReport } from "@/entities/user-report/user-report.entity";
@@ -70,6 +71,7 @@ describe("NotificationService", () => {
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
                         navigateToPerson: mockUser,
                         encounterId: "abc",
+                        type: ENotificationType.NEW_MATCH,
                     },
                 },
             ];
@@ -89,6 +91,7 @@ describe("NotificationService", () => {
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
                         navigateToPerson: mockUser,
                         encounterId: "abc",
+                        type: ENotificationType.NEW_MATCH,
                     },
                 },
             ];
@@ -108,6 +111,7 @@ describe("NotificationService", () => {
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
                         navigateToPerson: mockUser,
                         encounterId: "abc",
+                        type: ENotificationType.NEW_MATCH,
                     },
                 },
             ];

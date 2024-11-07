@@ -1,6 +1,9 @@
+import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
+import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
+import { OfflineryNotification } from "@/types/notification-message.types";
 import {
     EApproachChoice,
     EDateMode,
@@ -720,7 +723,7 @@ describe("Matching Service Integration Tests ", () => {
             /** expect to run through without failure */
             expect(userUpdated).toBeDefined();
         });
-        it("should not send ore than 3 notification per daz to a REAL device after a match nearby was found", async () => {
+        it("should not send more than 3 notification per day to a REAL device after a match nearby was found", async () => {
             const testingMainUser = await userFactory.persistNewTestUser({
                 firstName: "UserApproachingOthers",
                 dateMode: EDateMode.LIVE,
@@ -743,7 +746,7 @@ describe("Matching Service Integration Tests ", () => {
             const notifications =
                 await matchingService.checkForEncounters(testingMainUser);
 
-            expect(notifications).toEqual([
+            const expectedNotifications: OfflineryNotification[] = [
                 {
                     body: "Find. Approach. IRL.",
                     data: {
@@ -756,13 +759,15 @@ describe("Matching Service Integration Tests ", () => {
                             imageURIs: null,
                             trustScore: 1,
                         },
-                        screen: "Main_NavigateToApproach",
+                        screen: EAppScreens.NAVIGATE_TO_APPROACH,
+                        type: ENotificationType.NEW_MATCH,
                     },
                     sound: "default",
                     title: `Tina is nearby! 🔥`,
                     to: testChrisNativeIosPushToken,
                 },
-            ]);
+            ];
+            expect(notifications).toEqual(expectedNotifications);
         });
         it("should not consider users locations for heatmap", async () => {
             await userFactory.persistNewTestUser({
