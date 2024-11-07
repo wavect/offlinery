@@ -768,7 +768,6 @@ describe("Matching Service Integration Tests ", () => {
                     to: testChrisNativeIosPushToken,
                 },
             ];
-            console.log(notifications, expectedNotifications);
             expect(notifications).toEqual(expectedNotifications);
         });
         it("should not consider users locations for heatmap", async () => {
