@@ -739,6 +739,7 @@ describe("Matching Service Integration Tests ", () => {
             await userFactory.persistNewTestUser({
                 pushToken: "PushToken987",
                 firstName: "Tina",
+                approachChoice: EApproachChoice.BE_APPROACHED,
                 location: new PointBuilder().build(0, (maxDistUser - 1) * DPM), // 1 meter less than max
             });
 
@@ -767,6 +768,7 @@ describe("Matching Service Integration Tests ", () => {
                     to: testChrisNativeIosPushToken,
                 },
             ];
+            console.log(notifications, expectedNotifications);
             expect(notifications).toEqual(expectedNotifications);
         });
         it("should not consider users locations for heatmap", async () => {
