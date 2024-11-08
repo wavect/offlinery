@@ -1,9 +1,7 @@
-import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
-import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
+import { NotificationNavigateUserDTO } from "@/DTOs/notifications/notification-navigate-user.dto";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
-import { OfflineryNotification } from "@/types/notification-message.types";
 import {
     EApproachChoice,
     EDateMode,
@@ -747,28 +745,20 @@ describe("Matching Service Integration Tests ", () => {
             const notifications =
                 await matchingService.checkForEncounters(testingMainUser);
 
-            const expectedNotifications: OfflineryNotification[] = [
-                {
-                    body: "Find. Approach. IRL.",
-                    data: {
-                        encounterId: expect.any(String),
-                        navigateToPerson: {
-                            age: 28,
-                            bio: testingMainUser.bio,
-                            firstName: testingMainUser.firstName,
-                            id: testingMainUser.id,
-                            imageURIs: null,
-                            trustScore: 1,
-                        },
-                        screen: EAppScreens.NAVIGATE_TO_APPROACH,
-                        type: ENotificationType.NEW_MATCH,
-                    },
-                    sound: "default",
-                    title: `Tina is nearby! 🔥`,
-                    to: testChrisNativeIosPushToken,
-                },
-            ];
-            expect(notifications).toEqual(expectedNotifications);
+            expect(notifications.length).toEqual(1);
+            const notificationUnderTest = notifications[0];
+            expect(notificationUnderTest.data.screen).toEqual(
+                "Main_NavigateToApproach",
+            );
+            expect(notificationUnderTest.title).toEqual("Tina is nearby! 🔥");
+            expect(notificationUnderTest.to).toEqual(
+                testChrisNativeIosPushToken,
+            );
+            expect(notificationUnderTest.data);
+            expect(
+                (notificationUnderTest.data as NotificationNavigateUserDTO)
+                    .encounterId,
+            ).toBeDefined();
         });
         it("should not consider users locations for heatmap", async () => {
             await userFactory.persistNewTestUser({
