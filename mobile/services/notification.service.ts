@@ -203,13 +203,6 @@ export const reactToNewEncounterNotification = (
         encounterId: notificationData.encounterId,
         age: notificationData.navigateToPerson.age,
     };
-    // Navigate to the specified screen, passing the user object as a prop
-    navigation.navigate(ROUTES.MainTabView, {
-        screen: ROUTES.Main.Encounters,
-        params: {
-            navigateToPerson: encounterProfile,
-        },
-    });
 
     navigation.navigate(ROUTES.MainTabView, {
         screen: ROUTES.Main.Encounters,
