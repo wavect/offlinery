@@ -1,6 +1,6 @@
 import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
-import { GenericApiStatusDTO } from "@/DTOs/generic-api-status.dto";
+import { NewEventResponseDTO } from "@/DTOs/new-event-response.dto";
 import { NewEventDTO } from "@/DTOs/new-event.dto";
 import { StorePushTokenDTO } from "@/DTOs/store-push-token.dto";
 import { User } from "@/entities/user/user.entity";
@@ -9,6 +9,7 @@ import { OBaseNewMatchNotification } from "@/transient-services/matching/matchin
 import { I18nTranslations } from "@/translations/i18n.generated";
 import { OfflineryNotification } from "@/types/notification-message.types";
 import { ELanguage } from "@/types/user.types";
+import { countExpoPushTicketStatuses } from "@/utils/misc.utils";
 import {
     forwardRef,
     Inject,
@@ -39,13 +40,29 @@ export class NotificationService {
         );
     }
 
-    async createNewEvent(newEvent: NewEventDTO): Promise<GenericApiStatusDTO> {
+    async createNewEvent(newEvent: NewEventDTO): Promise<NewEventResponseDTO> {
+        let responseDTO: NewEventResponseDTO = {
+            error: 0,
+            noPushToken: 0,
+            ok: 0,
+            total: 0,
+        };
+
         try {
             const notifications: OfflineryNotification[] = [];
             const users = await this.userService.findAll(); // TODO!!!!
 
             for (const user of users) {
+                if (!user.pushToken) {
+                    this.logger.warn(
+                        `No Push token available for user ${user.id}. Skipping in event.`,
+                    );
+                    responseDTO.total++;
+                    responseDTO.noPushToken++;
+                    continue;
+                }
                 const userLanguage = user.preferredLanguage ?? ELanguage.en;
+                // @dev DTO enforces definition of all languages otherwise we will need to add an check here if this changes
                 const eventTitle: string = newEvent.eventTitle[userLanguage];
                 const eventDescription: string =
                     newEvent.eventDescription[userLanguage];
@@ -62,12 +79,18 @@ export class NotificationService {
                 });
             }
 
-            await this.sendPushNotifications(notifications);
+            const expoPushTickets =
+                await this.sendPushNotifications(notifications);
+
+            responseDTO = {
+                ...responseDTO,
+                ...(await countExpoPushTicketStatuses(expoPushTickets)),
+            };
         } catch (err) {
             throw new InternalServerErrorException(err);
         }
 
-        return { requestSuccessful: true };
+        return responseDTO;
     }
 
     async buildNewMatchBaseNotification(
