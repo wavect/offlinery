@@ -1,6 +1,6 @@
 import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard"; // Assume this service exists to handle user-related operations
 import { OnlyAdmin } from "@/auth/auth.guard";
-import { GenericApiStatusDTO } from "@/DTOs/generic-api-status.dto";
+import { NewEventResponseDTO } from "@/DTOs/new-event-response.dto";
 import { NewEventDTO } from "@/DTOs/new-event.dto";
 import { StorePushTokenDTO } from "@/DTOs/store-push-token.dto";
 import {
@@ -10,7 +10,6 @@ import {
     HttpStatus,
     Param,
     Post,
-    Put,
     UsePipes,
     ValidationPipe,
 } from "@nestjs/common";
@@ -59,7 +58,7 @@ export class NotificationController {
         }
     }
 
-    @Put("admin/new-event")
+    @Post("admin/new-event")
     @OnlyAdmin()
     @ApiExcludeEndpoint()
     @ApiOperation({ summary: "Send event notifications" })
@@ -69,7 +68,7 @@ export class NotificationController {
     @UsePipes(new ValidationPipe({ transform: true }))
     async createNewEvent(
         @Body() eventDTO: NewEventDTO,
-    ): Promise<GenericApiStatusDTO> {
+    ): Promise<NewEventResponseDTO> {
         return await this.notificationService.createNewEvent(eventDTO);
     }
 }

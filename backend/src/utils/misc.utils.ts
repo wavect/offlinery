@@ -1,4 +1,6 @@
-import { TYPED_ENV } from "./env.utils"; // @dev keep relative import here for migrations
+import { ExpoPushTicket } from "expo-server-sdk";
+import { from, lastValueFrom, reduce } from "rxjs"; // @dev keep relative import here for migrations
+import { TYPED_ENV } from "./env.utils";
 
 export const API_VERSION = "1";
 export const IS_DEV_MODE =
@@ -49,4 +51,26 @@ export function parseToAgeRangeString(range: number[]): string {
 export function arraySafeCheck<T>(obj: any): Array<T> {
     if (!obj) return [];
     return obj;
+}
+
+interface StatusCount {
+    ok: number;
+    error: number;
+    total: number;
+}
+export function countExpoPushTicketStatuses(
+    expoPushTickets: ExpoPushTicket[],
+): Promise<StatusCount> {
+    return lastValueFrom(
+        from(expoPushTickets).pipe(
+            reduce(
+                (acc: StatusCount, ticket: ExpoPushTicket) => ({
+                    ok: acc.ok + (ticket.status === "ok" ? 1 : 0),
+                    error: acc.error + (ticket.status === "error" ? 1 : 0),
+                    total: acc.total + 1,
+                }),
+                { ok: 0, error: 0, total: 0 },
+            ),
+        ),
+    );
 }
