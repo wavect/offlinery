@@ -355,5 +355,51 @@ describe("Encounter Service Integration Tests ", () => {
             expect(mainUserAfterLookup.length).toEqual(1);
             expect(otherUserAfterLookup.length).toEqual(1);
         });
+        it("should not create more than 3 encounters for a user per day", async () => {
+            const amountOfUsersInThisTest = 10;
+
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const amountOfPotentialMatches =
+                await userFactory.persistNewTestUserMany(
+                    amountOfUsersInThisTest,
+                    {
+                        dateMode: EDateMode.LIVE,
+                        location: new PointBuilder().build(0, 0),
+                        gender: EGender.WOMAN,
+                        genderDesire: [EGender.MAN],
+                        intentions: [EIntention.RELATIONSHIP],
+                        approachChoice: EApproachChoice.BOTH,
+                    },
+                );
+
+            /*** @DEV update location, check encounter size. Then, update again */
+            await userService.updateLocation(mainUser.id, {
+                latitude: 0,
+                longitude: 0,
+            });
+            expect(amountOfPotentialMatches.length).toEqual(10);
+            expect(
+                (await encounterService.findEncountersByUser(mainUser.id))
+                    .length,
+            ).toEqual(3);
+
+            /*** @DEV update location, check encounter size. Then, update again */
+            await userService.updateLocation(mainUser.id, {
+                latitude: 0,
+                longitude: 0,
+            });
+            expect(
+                (await encounterService.findEncountersByUser(mainUser.id))
+                    .length,
+            ).toEqual(3);
+        });
     });
 });

@@ -14,6 +14,9 @@ export const TOKEN_EXPIRATION_TIME = "60m";
 /** @DEV - Expiration time of each registration token */
 export const REGISTRATION_TOKEN_TIME = "1d";
 
+/** @DEV - Expiration time of each registration token */
+export const MAX_ENCOUNTERS_PER_DAY_FOR_USER = 3;
+
 export function getAgeRangeParsed(ageRangeString: string): number[] {
     if (!ageRangeString) {
         return [];

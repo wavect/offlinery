@@ -2,10 +2,12 @@ import { DateRangeDTO } from "@/DTOs/date-range.dto";
 import { GetLocationOfEncounterResponseDTO } from "@/DTOs/get-location-of-encounter-response.dto";
 import { PushMessageDTO } from "@/DTOs/push-message.dto";
 import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
+import { Encounter } from "@/entities/encounter/encounter.entity";
 import { Message } from "@/entities/messages/message.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { EEncounterStatus } from "@/types/user.types";
+import { MAX_ENCOUNTERS_PER_DAY_FOR_USER } from "@/utils/misc.utils";
 import {
     forwardRef,
     Inject,
@@ -16,7 +18,6 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { Encounter } from "./encounter.entity";
 
 @Injectable()
 export class EncounterService {
@@ -27,6 +28,8 @@ export class EncounterService {
         private encounterRepository: Repository<Encounter>,
         @InjectRepository(Message)
         private messageRepository: Repository<Message>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
         @Inject(forwardRef(() => UserService))
         private readonly userService: UserService,
     ) {}
@@ -141,12 +144,17 @@ export class EncounterService {
             userMatches.map((b) => b.id),
         );
 
+        let userEncounterCount = await this.findCreatedEncountersPerDay(
+            userSendingLocationUpdate.id,
+        );
+
         for (const u of userMatches) {
-            console.log(
-                "checking if encounter exists: ",
-                userSendingLocationUpdate.id,
-                u.id,
-            );
+            if (userEncounterCount >= MAX_ENCOUNTERS_PER_DAY_FOR_USER) {
+                this.logger.debug(
+                    `User ${userSendingLocationUpdate.id} has reached the daily encounter limit (${userEncounterCount}/${MAX_ENCOUNTERS_PER_DAY_FOR_USER}). Will not create encounter.`,
+                );
+                return;
+            }
             // encounter should always be unique for a userId <> userId combination (not enforced on DB level as not possible)
             // @dev If encounter exists already, update the values, otherwise create new one.
             const existingEncounter =
@@ -188,7 +196,6 @@ export class EncounterService {
                 EEncounterStatus.NOT_MET,
             );
             encounter.setUserStatus(u.id, EEncounterStatus.NOT_MET);
-
             const persistedEncounter =
                 await this.encounterRepository.save(encounter);
 
@@ -198,6 +205,8 @@ export class EncounterService {
                 `Created new/Updated encounter for ${u.id} and ${userSendingLocationUpdate.id}.`,
             );
         }
+
+        userEncounterCount++;
 
         return newEncounters;
     }
@@ -326,5 +335,31 @@ export class EncounterService {
             .groupBy("encounter.id, users.id") // Added users.id to GROUP BY
             .having("COUNT(DISTINCT users.id) = 2")
             .getOne();
+    }
+
+    private async findCreatedEncountersPerDay(userId: string): Promise<number> {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        const encounterCount = await this.userRepository
+            .createQueryBuilder("user")
+            .innerJoin("user.encounters", "encounter")
+            .where("user.id = :userId", { userId })
+            .andWhere("encounter.lastDateTimePassedBy >= :today", { today })
+            .andWhere("encounter.lastDateTimePassedBy < :tomorrow", {
+                tomorrow,
+            })
+            .groupBy("user.id")
+            .select("COUNT(encounter.id)", "count")
+            .getRawOne();
+
+        const count = parseInt(encounterCount?.count || "0");
+
+        this.logger.log(`User ${userId} has created ${count} encounters today`);
+
+        return count;
     }
 }

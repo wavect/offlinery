@@ -8,6 +8,7 @@ import { Point } from "geojson";
 import {
     AfterLoad,
     Column,
+    CreateDateColumn,
     Entity,
     Index,
     ManyToMany,
@@ -82,6 +83,9 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
         default: EEncounterStatus.NOT_MET,
     })
     status: EEncounterStatus;
+
+    @CreateDateColumn()
+    created: Date;
 
     @AfterLoad()
     updateStatusAfterLoad() {
