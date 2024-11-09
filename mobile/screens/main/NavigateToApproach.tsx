@@ -46,9 +46,10 @@ const NavigateToApproach = ({
 
     useEffect(() => {
         let intervalId: string | number | NodeJS.Timeout | undefined;
+        let isFirstRun = true;
         const fetchLocations = async () => {
             try {
-                setIsLoading(true);
+                setIsLoading(isFirstRun);
 
                 let { status } =
                     await Location.requestForegroundPermissionsAsync();
@@ -79,6 +80,7 @@ const NavigateToApproach = ({
                     },
                 });
             } finally {
+                isFirstRun = false;
                 setIsLoading(false);
             }
         };

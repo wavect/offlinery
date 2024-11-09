@@ -1,4 +1,6 @@
+import { BaseNotificationADTO } from "@/DTOs/abstract/base-notification.adto";
 import { EmailCodeResponseADTO } from "@/DTOs/abstract/email-code-response.adto";
+import { NotificationNewEventDTO } from "@/DTOs/notifications/notification-new-event.dto";
 import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
@@ -15,7 +17,7 @@ import * as path from "path";
 import { join } from "path";
 import * as process from "process";
 import { AppModule } from "./app.module";
-import { NotificationNavigateUserDTO } from "./DTOs/notification-navigate-user.dto";
+import { NotificationNavigateUserDTO } from "./DTOs/notifications/notification-navigate-user.dto";
 import { TYPED_ENV, validateEnv } from "./utils/env.utils";
 
 async function bootstrap() {
@@ -81,7 +83,12 @@ const setupSwagger = (app: INestApplication) => {
         .build();
     const document = SwaggerModule.createDocument(app, config, {
         deepScanRoutes: true,
-        extraModels: [NotificationNavigateUserDTO, EmailCodeResponseADTO],
+        extraModels: [
+            NotificationNavigateUserDTO,
+            NotificationNewEventDTO,
+            EmailCodeResponseADTO,
+            BaseNotificationADTO,
+        ],
     });
 
     const outputPath = path.resolve(process.cwd(), "swagger.json");

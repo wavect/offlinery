@@ -1,8 +1,6 @@
-import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
 import { EncounterService } from "@/entities/encounter/encounter.service";
 import { User } from "@/entities/user/user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
-import { OBaseNotification } from "@/transient-services/matching/matching.service.types";
 import { I18nTranslations } from "@/translations/i18n.generated";
 import { OfflineryNotification } from "@/types/notification-message.types";
 import {
@@ -65,23 +63,17 @@ export class MatchingService {
         const nearbyMatches = await this.findNearbyMatches(
             userSendingLocationUpdate,
         );
+        const userLanguage =
+            userSendingLocationUpdate.preferredLanguage ?? "en";
 
         this.logger.debug(
             `Found ${nearbyMatches?.length ?? 0} for user ${userSendingLocationUpdate.id}`,
         );
         if (nearbyMatches?.length > 0) {
-            const baseNotification: OBaseNotification = {
-                sound: "default",
-                title: this.i18n.t("main.notification.newMatch.title", {
-                    args: { firstName: userSendingLocationUpdate.firstName },
-                }),
-                body: this.i18n.t("main.notification.newMatch.body"),
-                data: {
-                    screen: EAppScreens.NAVIGATE_TO_APPROACH,
-                    navigateToPerson:
-                        userSendingLocationUpdate.convertToPublicDTO(),
-                },
-            };
+            const baseNotification =
+                await this.notificationService.buildNewMatchBaseNotification(
+                    userSendingLocationUpdate,
+                );
 
             // now save as encounters into DB
             const newEncounters =
@@ -120,24 +112,28 @@ export class MatchingService {
                             data: {
                                 ...baseNotification.data,
                                 encounterId: encounter.id,
+                                navigateToPerson:
+                                    userSendingLocationUpdate.convertToPublicDTO(),
                             },
                         });
                     } else {
-                        // @dev Sending notification to user itself as he was the one sending the locationUpdate
+                        /** @DEV Sending notification to user itself as he was the one sending the locationUpdate with custom title */
                         notifications.push({
                             ...baseNotification,
-                            title: this.i18n.t(
+                            title: this.i18n.translate(
                                 "main.notification.newMatch.title",
                                 {
                                     args: {
                                         firstName: user.firstName,
                                     },
+                                    lang: userLanguage,
                                 },
                             ),
                             to: userSendingLocationUpdate.pushToken,
                             data: {
                                 ...baseNotification.data,
                                 encounterId: encounter.id,
+                                navigateToPerson: user.convertToPublicDTO(),
                             },
                         });
                     }

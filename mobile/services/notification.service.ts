@@ -1,6 +1,12 @@
-import { StorePushTokenDTO } from "@/api/gen/src";
 import { Color } from "@/GlobalStyles";
-import { i18n, TR } from "@/localization/translate.service";
+import {
+    NotificationNavigateUserDTO,
+    NotificationNewEventDTO,
+    StorePushTokenDTO,
+} from "@/api/gen/src";
+import { TR, i18n } from "@/localization/translate.service";
+import { ROUTES } from "@/screens/routes";
+import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
 import * as Sentry from "@sentry/react-native";
 import Constants from "expo-constants";
@@ -9,9 +15,19 @@ import * as Notifications from "expo-notifications";
 import { initializeApp } from "firebase/app";
 import { Platform } from "react-native";
 import {
-    saveValueLocallySecurely,
     SECURE_VALUE,
+    saveValueLocallySecurely,
 } from "./secure-storage.service";
+
+export enum TokenFetchStatus {
+    SUCCESS,
+    ERROR,
+    INVALID_DEVICE_OR_EMULATOR,
+}
+interface NotificationTokenFetchResponse {
+    token: string | null;
+    tokenFetchStatus: TokenFetchStatus;
+}
 
 /** @dev Notifications on iOS are tightly coupled with the OS.
  * On Android we need to EXPLICITLY initialize Firebase to show notifications, etc. */
@@ -53,7 +69,9 @@ const getExpoProjectId = () => {
     return projectId;
 };
 
-export const registerForPushNotificationsAsync = async (userId: string) => {
+export const registerForPushNotificationsAsync = async (
+    userId: string,
+): Promise<NotificationTokenFetchResponse> => {
     if (Platform.OS === "android") {
         await Notifications.setNotificationChannelAsync("default", {
             name: "default",
@@ -74,7 +92,10 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
 
     if (finalStatus !== "granted") {
         alert(i18n.t(TR.permissionNotificationRejected));
-        return;
+        return {
+            token: null,
+            tokenFetchStatus: TokenFetchStatus.ERROR,
+        };
     }
 
     Notifications.setNotificationHandler({
@@ -91,7 +112,10 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
     // Check if physical device or emulator
     let token: string | null;
     if (!Device.isDevice) {
-        return;
+        return {
+            token: null,
+            tokenFetchStatus: TokenFetchStatus.INVALID_DEVICE_OR_EMULATOR,
+        };
     }
     try {
         initializeFirebase();
@@ -108,7 +132,10 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
                 notifications: "getPushToken",
             },
         });
-        return;
+        return {
+            token: null,
+            tokenFetchStatus: TokenFetchStatus.ERROR,
+        };
     }
 
     // Send this token to your backend
@@ -131,6 +158,56 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
         });
         throw error;
     }
+    return {
+        token,
+        tokenFetchStatus: TokenFetchStatus.SUCCESS,
+    };
+};
 
-    return token;
+export const reactToNewEventNotification = (
+    response: Notifications.NotificationResponse,
+    navigation: any,
+) => {
+    const notificationData: NotificationNewEventDTO = response.notification
+        .request.content.data as NotificationNewEventDTO;
+
+    navigation.navigate(ROUTES.MainTabView, {
+        screen: notificationData.screen,
+    });
+};
+
+export const reactToNewEncounterNotification = (
+    response: Notifications.NotificationResponse,
+    navigation: any,
+) => {
+    const notificationData: NotificationNavigateUserDTO = response.notification
+        .request.content.data as NotificationNavigateUserDTO;
+
+    if (!("navigateToPerson" in notificationData)) {
+        Sentry.captureException(
+            new Error("NavigateToPerson missing in notificationData"),
+            {
+                tags: {
+                    notificationService: "newMatchNotification",
+                    notificationData,
+                },
+            },
+        );
+        return;
+    }
+    // TODO: Move As many types as possible into backend for generation (e.g. PublicUser, Encounter, ..)
+    const encounterProfile: IEncounterProfile = {
+        firstName: notificationData.navigateToPerson.firstName,
+        bio: notificationData.navigateToPerson.bio,
+        imageURIs: notificationData.navigateToPerson.imageURIs,
+        encounterId: notificationData.encounterId,
+        age: notificationData.navigateToPerson.age,
+    };
+    // Navigate to the specified screen, passing the user object as a prop
+    navigation.navigate(ROUTES.MainTabView, {
+        screen: notificationData.screen,
+        params: {
+            navigateToPerson: encounterProfile,
+        },
+    });
 };

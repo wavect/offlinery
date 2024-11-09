@@ -287,4 +287,10 @@ export const en = {
     pleaseChangePermission:
         "Please change the permissions in your settings to continue using the app.",
     loadingTextNavigateTo: "Preparing...",
+    noEmailAppError: "No Email App",
+    noEmailAppErrorDescr:
+        "Could not find an email application installed on your device.",
+    error: "Error",
+    emailAppOpenErrorDescr:
+        "There was a problem opening your email application.",
 };

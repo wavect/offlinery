@@ -73,7 +73,7 @@ export interface EncounterPublicDTO {
      * @type {boolean}
      * @memberof EncounterPublicDTO
      */
-    isNearbyRightNow: boolean;
+    isNearbyRightNow: boolean | null;
 }
 
 /**

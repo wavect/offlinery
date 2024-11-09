@@ -288,8 +288,12 @@ export const de: Language = {
     inputInvalid: "Eingabe ist ungültig",
     cancel: "Abbrechen",
     goToSettings: "Gehe zu Einstellungen",
-    permissionRequired: "Zugriff auf Gallerie benötigt",
+    permissionRequired: "Zugriff benötigt",
     pleaseChangePermission:
-        "Bitte ändere die Zugriffsrechte auf deine Bilder um fortzufahren.",
+        "Bitte ändere die Zugriffsrechte in deinen Einstellungen um fortzufahren.",
     loadingTextNavigateTo: "Berechne Route...",
+    noEmailAppError: "Keine E-Mail App",
+    noEmailAppErrorDescr: "Keine E-Mail App auf deinem Gerät gefunden.",
+    error: "Fehler",
+    emailAppOpenErrorDescr: "Wir konnten deine E-Mail App nicht öffnen.",
 };

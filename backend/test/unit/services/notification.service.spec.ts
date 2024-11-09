@@ -1,10 +1,12 @@
-import { EAppScreens } from "@/DTOs/notification-navigate-user.dto";
+import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
+import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
 import { UserService } from "@/entities/user/user.service";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { OfflineryNotification } from "@/types/notification-message.types";
 import { Logger } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { Expo, ExpoPushTicket } from "expo-server-sdk";
+import { I18nService } from "nestjs-i18n";
 import { UserBuilder } from "../../_src/builders/user.builder";
 
 describe("NotificationService", () => {
@@ -35,6 +37,13 @@ describe("NotificationService", () => {
                     provide: UserService,
                     useValue: mockUserService,
                 },
+                {
+                    provide: I18nService,
+                    useValue: {
+                        t: jest.fn(),
+                        translate: jest.fn(),
+                    },
+                },
             ],
         }).compile();
 
@@ -55,6 +64,7 @@ describe("NotificationService", () => {
                             age: 21,
                         },
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
+                        type: ENotificationType.NEW_MATCH,
                     },
                     body: "test message 1",
                 },
@@ -67,6 +77,7 @@ describe("NotificationService", () => {
                             age: 21,
                         },
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
+                        type: ENotificationType.NEW_MATCH,
                     },
                     body: "test message 1",
                 },
@@ -83,7 +94,7 @@ describe("NotificationService", () => {
                 .mockResolvedValueOnce([mockTickets[0]])
                 .mockResolvedValueOnce([mockTickets[1]]);
 
-            const result = await service.sendPushNotification(messages);
+            const result = await service.sendPushNotifications(messages);
 
             expect(mockExpo.chunkPushNotifications).toHaveBeenCalledWith(
                 messages,
@@ -116,6 +127,7 @@ describe("NotificationService", () => {
                             age: 21,
                         },
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
+                        type: ENotificationType.NEW_MATCH,
                     },
                     body: "test message 1",
                 },
@@ -127,7 +139,7 @@ describe("NotificationService", () => {
             const mockError = new Error("Failed to send notification");
             mockExpo.sendPushNotificationsAsync.mockRejectedValue(mockError);
 
-            const result = await service.sendPushNotification(messages);
+            const result = await service.sendPushNotifications(messages);
 
             expect(mockExpo.chunkPushNotifications).toHaveBeenCalledWith(
                 messages,
@@ -156,6 +168,7 @@ describe("NotificationService", () => {
                             age: 21,
                         },
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
+                        type: ENotificationType.NEW_MATCH,
                     },
                     body: "test message 1",
                 },
@@ -166,7 +179,7 @@ describe("NotificationService", () => {
                 throw mockError;
             });
 
-            const result = await service.sendPushNotification(messages);
+            const result = await service.sendPushNotifications(messages);
 
             expect(mockExpo.chunkPushNotifications).toHaveBeenCalledWith(
                 messages,

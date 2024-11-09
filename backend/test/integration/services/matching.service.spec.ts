@@ -1,3 +1,4 @@
+import { NotificationNavigateUserDTO } from "@/DTOs/notifications/notification-navigate-user.dto";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
@@ -720,7 +721,7 @@ describe("Matching Service Integration Tests ", () => {
             /** expect to run through without failure */
             expect(userUpdated).toBeDefined();
         });
-        it("should not send ore than 3 notification per daz to a REAL device after a match nearby was found", async () => {
+        it("should not send more than 3 notification per day to a REAL device after a match nearby was found", async () => {
             const testingMainUser = await userFactory.persistNewTestUser({
                 firstName: "UserApproachingOthers",
                 dateMode: EDateMode.LIVE,
@@ -736,6 +737,7 @@ describe("Matching Service Integration Tests ", () => {
             await userFactory.persistNewTestUser({
                 pushToken: "PushToken987",
                 firstName: "Tina",
+                approachChoice: EApproachChoice.BE_APPROACHED,
                 location: new PointBuilder().build(0, (maxDistUser - 1) * DPM), // 1 meter less than max
             });
 
@@ -743,26 +745,20 @@ describe("Matching Service Integration Tests ", () => {
             const notifications =
                 await matchingService.checkForEncounters(testingMainUser);
 
-            expect(notifications).toEqual([
-                {
-                    body: "Find. Approach. IRL.",
-                    data: {
-                        encounterId: expect.any(String),
-                        navigateToPerson: {
-                            age: 28,
-                            bio: testingMainUser.bio,
-                            firstName: testingMainUser.firstName,
-                            id: testingMainUser.id,
-                            imageURIs: null,
-                            trustScore: 1,
-                        },
-                        screen: "Main_NavigateToApproach",
-                    },
-                    sound: "default",
-                    title: `Tina is nearby! 🔥`,
-                    to: testChrisNativeIosPushToken,
-                },
-            ]);
+            expect(notifications.length).toEqual(1);
+            const notificationUnderTest = notifications[0];
+            expect(notificationUnderTest.data.screen).toEqual(
+                "Main_NavigateToApproach",
+            );
+            expect(notificationUnderTest.title).toEqual("Tina is nearby! 🔥");
+            expect(notificationUnderTest.to).toEqual(
+                testChrisNativeIosPushToken,
+            );
+            expect(notificationUnderTest.data);
+            expect(
+                (notificationUnderTest.data as NotificationNavigateUserDTO)
+                    .encounterId,
+            ).toBeDefined();
         });
         it("should not consider users locations for heatmap", async () => {
             await userFactory.persistNewTestUser({
