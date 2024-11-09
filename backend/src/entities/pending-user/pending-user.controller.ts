@@ -17,7 +17,13 @@ import {
     UsePipes,
     ValidationPipe,
 } from "@nestjs/common";
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+    ApiBody,
+    ApiExcludeEndpoint,
+    ApiOperation,
+    ApiResponse,
+    ApiTags,
+} from "@nestjs/swagger";
 import { PendingUserService } from "./pending-user.service";
 
 @ApiTags("PendingUser")
@@ -90,6 +96,7 @@ export class PendingUserController {
 
     @Put("admin/verification-status")
     @OnlyAdmin()
+    @ApiExcludeEndpoint()
     @ApiOperation({ summary: "Update verification status of user." })
     @ApiBody({
         type: UpdateUserVerificationstatusDTO,

@@ -19,12 +19,9 @@ src/models/CreateUserDTO.ts
 src/models/CreateUserReportDTO.ts
 src/models/EmailCodeResponseADTO.ts
 src/models/EncounterPublicDTO.ts
-src/models/GenericApiStatusDTO.ts
 src/models/GetLocationOfEncounterResponseDTO.ts
 src/models/LocationUpdateDTO.ts
 src/models/MessagePublicDTO.ts
-src/models/MultiLingStringDTO.ts
-src/models/NewEventDTO.ts
 src/models/NotificationNavigateUserDTO.ts
 src/models/NotificationNewEventDTO.ts
 src/models/PushMessageDTO.ts
@@ -42,7 +39,6 @@ src/models/StorePushTokenDTO.ts
 src/models/UpdateEncounterStatusDTO.ts
 src/models/UpdateUserDTO.ts
 src/models/UpdateUserPasswordDTO.ts
-src/models/UpdateUserVerificationstatusDTO.ts
 src/models/UserFeedbackRequestDTO.ts
 src/models/UserPrivateDTO.ts
 src/models/UserPublicDTO.ts

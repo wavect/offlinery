@@ -16,14 +16,12 @@ import type {
     RegistrationForVerificationRequestDTO,
     RegistrationForVerificationResponseDTO,
     SetAcceptedSpecialDataGenderLookingForDTO,
-    UpdateUserVerificationstatusDTO,
     VerifyEmailDTO,
 } from "../models/index";
 import {
     RegistrationForVerificationRequestDTOToJSON,
     RegistrationForVerificationResponseDTOFromJSON,
     SetAcceptedSpecialDataGenderLookingForDTOToJSON,
-    UpdateUserVerificationstatusDTOToJSON,
     VerifyEmailDTOToJSON,
 } from "../models/index";
 import * as runtime from "../runtime";
@@ -31,10 +29,6 @@ import * as runtime from "../runtime";
 // We import this type even if it's unused to avoid additional
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
-export interface PendingUserControllerChangeVerificationStatusRequest {
-    updateUserVerificationstatusDTO: UpdateUserVerificationstatusDTO;
-}
-
 export interface PendingUserControllerRegisterUserForEmailVerificationRequest {
     registrationForVerificationRequestDTO: RegistrationForVerificationRequestDTO;
 }
@@ -54,27 +48,6 @@ export interface PendingUserControllerVerifyEmailRequest {
  * @interface PendingUserApiInterface
  */
 export interface PendingUserApiInterface {
-    /**
-     *
-     * @summary Update verification status of user.
-     * @param {UpdateUserVerificationstatusDTO} updateUserVerificationstatusDTO
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PendingUserApiInterface
-     */
-    pendingUserControllerChangeVerificationStatusRaw(
-        requestParameters: PendingUserControllerChangeVerificationStatusRequest,
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<void>>;
-
-    /**
-     * Update verification status of user.
-     */
-    pendingUserControllerChangeVerificationStatus(
-        requestParameters: PendingUserControllerChangeVerificationStatusRequest,
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<void>;
-
     /**
      *
      * @summary Creates a user with only an email to verify.
@@ -146,55 +119,6 @@ export class PendingUserApi
     extends runtime.BaseAPI
     implements PendingUserApiInterface
 {
-    /**
-     * Update verification status of user.
-     */
-    async pendingUserControllerChangeVerificationStatusRaw(
-        requestParameters: PendingUserControllerChangeVerificationStatusRequest,
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters["updateUserVerificationstatusDTO"] == null) {
-            throw new runtime.RequiredError(
-                "updateUserVerificationstatusDTO",
-                'Required parameter "updateUserVerificationstatusDTO" was null or undefined when calling pendingUserControllerChangeVerificationStatus().',
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters["Content-Type"] = "application/json";
-
-        const response = await this.request(
-            {
-                path: `/pending-user/admin/verification-status`,
-                method: "PUT",
-                headers: headerParameters,
-                query: queryParameters,
-                body: UpdateUserVerificationstatusDTOToJSON(
-                    requestParameters["updateUserVerificationstatusDTO"],
-                ),
-            },
-            initOverrides,
-        );
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * Update verification status of user.
-     */
-    async pendingUserControllerChangeVerificationStatus(
-        requestParameters: PendingUserControllerChangeVerificationStatusRequest,
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<void> {
-        await this.pendingUserControllerChangeVerificationStatusRaw(
-            requestParameters,
-            initOverrides,
-        );
-    }
-
     /**
      * Creates a user with only an email to verify.
      */

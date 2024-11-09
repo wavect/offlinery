@@ -14,7 +14,12 @@ import {
     UsePipes,
     ValidationPipe,
 } from "@nestjs/common";
-import { ApiBody, ApiOperation, ApiTags } from "@nestjs/swagger";
+import {
+    ApiBody,
+    ApiExcludeEndpoint,
+    ApiOperation,
+    ApiTags,
+} from "@nestjs/swagger";
 import { NotificationService } from "./notification.service";
 
 @ApiTags("Push Notifications")
@@ -56,6 +61,7 @@ export class NotificationController {
 
     @Put("admin/new-event")
     @OnlyAdmin()
+    @ApiExcludeEndpoint()
     @ApiOperation({ summary: "Send event notifications" })
     @ApiBody({
         type: NewEventDTO,
