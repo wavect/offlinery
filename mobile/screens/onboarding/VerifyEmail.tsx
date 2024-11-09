@@ -123,8 +123,6 @@ const VerifyEmail = ({
                         sendCodeAutomatically={true}
                         sendCode={sendVerificationCode}
                         onCodeValidChange={(isValid, code) => {
-                            console.log("code: ", code);
-                            console.log("isvalid: ", isValid);
                             setIsCodeValid(isValid ? "valid" : "invalidCode");
                             onChange(code);
                             codeRef.current = code;
