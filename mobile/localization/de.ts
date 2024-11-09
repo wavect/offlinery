@@ -192,7 +192,7 @@ export const de: Language = {
         "Ändere deine Einstellungen oder aktualisiere dein Profil.",
     nonNegotiable: "Must Have's",
     bio: "Bio",
-    defaultBio: "Bitte keine Pick-Up Lines. Ein nettes Hallo reicht völlig.",
+    defaultBio: "Bitte nimm dich selbst nicht zu ernst.",
     bioTooltip: "Dies wird anderen Nutzern beim Ansprechen angezeigt.",
     updateImages: "Bilder updaten",
     updateSafeZones: "Safe Zones updaten",
