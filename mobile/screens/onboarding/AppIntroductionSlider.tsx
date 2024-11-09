@@ -68,8 +68,8 @@ const AppIntroduction: React.FC<AppIntroductionProps> = ({ navigation }) => {
         ),
     ];
 
-    const proceedToWelcomePage = () => {
-        saveDeviceUserHasSeenIntro();
+    const proceedToWelcomePage = async () => {
+        await saveDeviceUserHasSeenIntro();
         navigation.navigate(ROUTES.Welcome);
     };
 

@@ -7,10 +7,10 @@ import { OSplitInput } from "@/components/OSplitInput/OSplitInput";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import {
-    SECURE_VALUE,
-    saveValueLocallySecurely,
-} from "@/services/secure-storage.service";
-import { saveOnboardingState } from "@/services/storage.service";
+    LOCAL_VALUE,
+    saveLocalValue,
+    saveOnboardingState,
+} from "@/services/storage.service";
 import { getLocalLanguageID } from "@/utils/misc.utils";
 import React, { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -64,8 +64,8 @@ const VerifyEmail = ({
 
             if (result.registrationJWToken) {
                 // @dev Registration specific jwt token, not valid for authenticating a user
-                saveValueLocallySecurely(
-                    SECURE_VALUE.JWT_ACCESS_TOKEN,
+                await saveLocalValue(
+                    LOCAL_VALUE.JWT_ACCESS_TOKEN,
                     result.registrationJWToken,
                 );
             }

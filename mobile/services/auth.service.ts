@@ -10,13 +10,10 @@ import {
     mapBlacklistedRegionDTOToMapRegion,
 } from "@/context/UserContext";
 import { ROUTES } from "@/screens/routes";
-import {
-    SECURE_VALUE,
-    saveValueLocallySecurely,
-} from "@/services/secure-storage.service";
+import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
 import { Dispatch } from "react";
 
-export const refreshUserData = (
+export const refreshUserData = async (
     dispatch: Dispatch<IUserAction>,
     user: UserPrivateDTO,
     jwtAccessToken?: string,
@@ -45,24 +42,21 @@ export const refreshUserData = (
     });
 
     if (jwtAccessToken) {
-        saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, jwtAccessToken);
+        await saveLocalValue(LOCAL_VALUE.JWT_ACCESS_TOKEN, jwtAccessToken);
     }
     if (jwtRefreshToken) {
-        saveValueLocallySecurely(
-            SECURE_VALUE.JWT_REFRESH_TOKEN,
-            jwtRefreshToken,
-        );
+        await saveLocalValue(LOCAL_VALUE.JWT_REFRESH_TOKEN, jwtRefreshToken);
     }
 };
 
-export const userAuthenticatedUpdate = (
+export const userAuthenticatedUpdate = async (
     dispatch: Dispatch<IUserAction>,
     navigation: any,
     user: UserPrivateDTO,
     jwtAccessToken: string,
     jwtRefreshToken: string,
 ) => {
-    refreshUserData(dispatch, user, jwtAccessToken, jwtRefreshToken);
+    await refreshUserData(dispatch, user, jwtAccessToken, jwtRefreshToken);
 
     if (
         user.verificationStatus ===

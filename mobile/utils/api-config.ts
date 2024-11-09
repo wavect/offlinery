@@ -1,10 +1,3 @@
-import { Configuration, RequestContext } from "@/api/gen/src/runtime";
-import {
-    SECURE_VALUE,
-    getSecurelyStoredValue,
-    saveValueLocallySecurely,
-} from "@/services/secure-storage.service";
-
 import {
     AuthApi,
     EncounterApi,
@@ -14,6 +7,12 @@ import {
     UserApi,
     UserReportsApi,
 } from "@/api/gen/src";
+import { Configuration, RequestContext } from "@/api/gen/src/runtime";
+import {
+    LOCAL_VALUE,
+    getLocalValue,
+    saveJWTValues,
+} from "@/services/storage.service";
 import { jwtExpiresSoon } from "./misc.utils";
 
 /** @DEV add new ApiClasses here */
@@ -66,9 +65,8 @@ class ApiManager {
     private createConfiguration(): Configuration {
         apiConfigLogger("Middleware intercepted");
 
-        const jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
         return new Configuration({
-            accessToken: jwtToken!,
+            // @dev not setting accesstoken here since will be set by middleware and we cannot use async ops here
             middleware: [
                 {
                     pre: async (request: RequestContext) => {
@@ -94,7 +92,7 @@ class ApiManager {
     }
 
     private async ensureValidToken(): Promise<string> {
-        let jwtToken = getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN);
+        let jwtToken = await getLocalValue(LOCAL_VALUE.JWT_ACCESS_TOKEN);
 
         if (jwtToken && !jwtExpiresSoon(jwtToken)) {
             apiConfigLogger("✓ Valid JWT ");
@@ -115,13 +113,11 @@ class ApiManager {
         await this.refreshPromise;
 
         /** @DEV super important: make sure after the refresh promise was handled, the new token gets returned*/
-        return getSecurelyStoredValue(SECURE_VALUE.JWT_ACCESS_TOKEN)!;
+        return await getLocalValue(LOCAL_VALUE.JWT_ACCESS_TOKEN)!;
     }
 
     private async refreshToken(): Promise<string> {
-        const refreshToken = getSecurelyStoredValue(
-            SECURE_VALUE.JWT_REFRESH_TOKEN,
-        );
+        const refreshToken = await getLocalValue(LOCAL_VALUE.JWT_REFRESH_TOKEN);
 
         if (!refreshToken) {
             throw new Error("No refresh token found.");
@@ -135,13 +131,9 @@ class ApiManager {
                     refreshJwtDTO: { refreshToken },
                 })) as any;
 
-            saveValueLocallySecurely(
-                SECURE_VALUE.JWT_REFRESH_TOKEN,
-                refreshResponse.refreshToken,
-            );
-            saveValueLocallySecurely(
-                SECURE_VALUE.JWT_ACCESS_TOKEN,
+            await saveJWTValues(
                 refreshResponse.accessToken,
+                refreshResponse.refreshToken,
             );
             apiConfigLogger("✓ JWT and Refresh update successful.");
 
@@ -151,8 +143,7 @@ class ApiManager {
             return refreshResponse.accessToken;
         } catch (e) {
             console.error(`- JWT unable to refresh. Logging user out`);
-            saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
-            saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
+            await saveJWTValues("", "");
             throw e;
         }
     }
