@@ -26,6 +26,12 @@ export interface NotificationNavigateUserDTO {
      * @type {string}
      * @memberof NotificationNavigateUserDTO
      */
+    type: NotificationNavigateUserDTOTypeEnum;
+    /**
+     *
+     * @type {string}
+     * @memberof NotificationNavigateUserDTO
+     */
     screen: NotificationNavigateUserDTOScreenEnum;
     /**
      *
@@ -44,8 +50,19 @@ export interface NotificationNavigateUserDTO {
 /**
  * @export
  */
+export const NotificationNavigateUserDTOTypeEnum = {
+    match: "new_match",
+    event: "new_event",
+} as const;
+export type NotificationNavigateUserDTOTypeEnum =
+    (typeof NotificationNavigateUserDTOTypeEnum)[keyof typeof NotificationNavigateUserDTOTypeEnum];
+
+/**
+ * @export
+ */
 export const NotificationNavigateUserDTOScreenEnum = {
-    Main_NavigateToApproach: "Main_NavigateToApproach",
+    NavigateToApproach: "Main_NavigateToApproach",
+    FindPeople: "Main_FindPeople",
 } as const;
 export type NotificationNavigateUserDTOScreenEnum =
     (typeof NotificationNavigateUserDTOScreenEnum)[keyof typeof NotificationNavigateUserDTOScreenEnum];
@@ -56,6 +73,7 @@ export type NotificationNavigateUserDTOScreenEnum =
 export function instanceOfNotificationNavigateUserDTO(
     value: object,
 ): value is NotificationNavigateUserDTO {
+    if (!("type" in value) || value["type"] === undefined) return false;
     if (!("screen" in value) || value["screen"] === undefined) return false;
     if (
         !("navigateToPerson" in value) ||
@@ -81,6 +99,7 @@ export function NotificationNavigateUserDTOFromJSONTyped(
         return json;
     }
     return {
+        type: json["type"],
         screen: json["screen"],
         navigateToPerson: UserPublicDTOFromJSON(json["navigateToPerson"]),
         encounterId: json["encounterId"],
@@ -94,6 +113,7 @@ export function NotificationNavigateUserDTOToJSON(
         return value;
     }
     return {
+        type: value["type"],
         screen: value["screen"],
         navigateToPerson: UserPublicDTOToJSON(value["navigateToPerson"]),
         encounterId: value["encounterId"],

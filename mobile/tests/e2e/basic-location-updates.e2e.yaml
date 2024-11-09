@@ -1,13 +1,13 @@
 appId: io.wavect.offlinery
 ---
 - launchApp
-- assertVisible: "Home Screen"  # Ensure the app has launched correctly
+- assertVisible: "Home Screen" # Ensure the app has launched correctly
 
 # Set the iOS emulator location
 - evalScript:
-    script: |
-      device.setLocation({
-        latitude: 37.7749,
-        longitude: -122.4194,
-        altitude: 0
-      });
+      script: |
+          device.setLocation({
+            latitude: 37.7749,
+            longitude: -122.4194,
+            altitude: 0
+          });

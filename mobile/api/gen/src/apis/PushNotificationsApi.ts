@@ -12,13 +12,25 @@
  * Do not edit the class manually.
  */
 
-import type { StorePushTokenDTO } from "../models/index";
-import { StorePushTokenDTOToJSON } from "../models/index";
+import type {
+    GenericApiStatusDTO,
+    NewEventDTO,
+    StorePushTokenDTO,
+} from "../models/index";
+import {
+    GenericApiStatusDTOFromJSON,
+    NewEventDTOToJSON,
+    StorePushTokenDTOToJSON,
+} from "../models/index";
 import * as runtime from "../runtime";
 
 // We import this type even if it's unused to avoid additional
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
+export interface NotificationControllerCreateNewEventRequest {
+    newEventDTO: NewEventDTO;
+}
+
 export interface NotificationControllerStorePushTokenRequest {
     userId: string;
     storePushTokenDTO: StorePushTokenDTO;
@@ -31,6 +43,27 @@ export interface NotificationControllerStorePushTokenRequest {
  * @interface PushNotificationsApiInterface
  */
 export interface PushNotificationsApiInterface {
+    /**
+     *
+     * @summary Send event notifications
+     * @param {NewEventDTO} newEventDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PushNotificationsApiInterface
+     */
+    notificationControllerCreateNewEventRaw(
+        requestParameters: NotificationControllerCreateNewEventRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<GenericApiStatusDTO>>;
+
+    /**
+     * Send event notifications
+     */
+    notificationControllerCreateNewEvent(
+        requestParameters: NotificationControllerCreateNewEventRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<GenericApiStatusDTO>;
+
     /**
      *
      * @param {string} userId
@@ -59,6 +92,56 @@ export class PushNotificationsApi
     extends runtime.BaseAPI
     implements PushNotificationsApiInterface
 {
+    /**
+     * Send event notifications
+     */
+    async notificationControllerCreateNewEventRaw(
+        requestParameters: NotificationControllerCreateNewEventRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<GenericApiStatusDTO>> {
+        if (requestParameters["newEventDTO"] == null) {
+            throw new runtime.RequiredError(
+                "newEventDTO",
+                'Required parameter "newEventDTO" was null or undefined when calling notificationControllerCreateNewEvent().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        const response = await this.request(
+            {
+                path: `/notification/admin/new-event`,
+                method: "PUT",
+                headers: headerParameters,
+                query: queryParameters,
+                body: NewEventDTOToJSON(requestParameters["newEventDTO"]),
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            GenericApiStatusDTOFromJSON(jsonValue),
+        );
+    }
+
+    /**
+     * Send event notifications
+     */
+    async notificationControllerCreateNewEvent(
+        requestParameters: NotificationControllerCreateNewEventRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<GenericApiStatusDTO> {
+        const response = await this.notificationControllerCreateNewEventRaw(
+            requestParameters,
+            initOverrides,
+        );
+        return await response.value();
+    }
+
     /**
      */
     async notificationControllerStorePushTokenRaw(

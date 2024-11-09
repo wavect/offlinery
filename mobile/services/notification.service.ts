@@ -1,6 +1,12 @@
-import { StorePushTokenDTO } from "@/api/gen/src";
 import { Color } from "@/GlobalStyles";
-import { i18n, TR } from "@/localization/translate.service";
+import {
+    NotificationNavigateUserDTO,
+    NotificationNewEventDTO,
+    StorePushTokenDTO,
+} from "@/api/gen/src";
+import { TR, i18n } from "@/localization/translate.service";
+import { ROUTES } from "@/screens/routes";
+import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
 import * as Sentry from "@sentry/react-native";
 import Constants from "expo-constants";
@@ -9,8 +15,8 @@ import * as Notifications from "expo-notifications";
 import { initializeApp } from "firebase/app";
 import { Platform } from "react-native";
 import {
-    saveValueLocallySecurely,
     SECURE_VALUE,
+    saveValueLocallySecurely,
 } from "./secure-storage.service";
 
 export enum TokenFetchStatus {
@@ -156,4 +162,52 @@ export const registerForPushNotificationsAsync = async (
         token,
         tokenFetchStatus: TokenFetchStatus.SUCCESS,
     };
+};
+
+export const reactToNewEventNotification = (
+    response: Notifications.NotificationResponse,
+    navigation: any,
+) => {
+    const notificationData: NotificationNewEventDTO = response.notification
+        .request.content.data as NotificationNewEventDTO;
+
+    navigation.navigate(ROUTES.MainTabView, {
+        screen: notificationData.screen,
+    });
+};
+
+export const reactToNewEncounterNotification = (
+    response: Notifications.NotificationResponse,
+    navigation: any,
+) => {
+    const notificationData: NotificationNavigateUserDTO = response.notification
+        .request.content.data as NotificationNavigateUserDTO;
+
+    if (!("navigateToPerson" in notificationData)) {
+        Sentry.captureException(
+            new Error("NavigateToPerson missing in notificationData"),
+            {
+                tags: {
+                    notificationService: "newMatchNotification",
+                    notificationData,
+                },
+            },
+        );
+        return;
+    }
+    // TODO: Move As many types as possible into backend for generation (e.g. PublicUser, Encounter, ..)
+    const encounterProfile: IEncounterProfile = {
+        firstName: notificationData.navigateToPerson.firstName,
+        bio: notificationData.navigateToPerson.bio,
+        imageURIs: notificationData.navigateToPerson.imageURIs,
+        encounterId: notificationData.encounterId,
+        age: notificationData.navigateToPerson.age,
+    };
+    // Navigate to the specified screen, passing the user object as a prop
+    navigation.navigate(ROUTES.MainTabView, {
+        screen: notificationData.screen,
+        params: {
+            navigateToPerson: encounterProfile,
+        },
+    });
 };
