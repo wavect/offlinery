@@ -63,12 +63,14 @@ export class MatchingService {
         const nearbyMatches = await this.findNearbyMatches(
             userSendingLocationUpdate,
         );
+
         const userLanguage =
             userSendingLocationUpdate.preferredLanguage ?? "en";
 
         this.logger.debug(
             `Found ${nearbyMatches?.length ?? 0} for user ${userSendingLocationUpdate.id}`,
         );
+
         if (nearbyMatches?.length > 0) {
             const baseNotification =
                 await this.notificationService.buildNewMatchBaseNotification(
@@ -97,18 +99,22 @@ export class MatchingService {
             );
 
             const notifications: OfflineryNotification[] = [];
-            for (const user of nearbyMatches) {
-                const encounter = newEncounters.get(user.id);
+
+            for (const userNearBy of nearbyMatches) {
+                const encounter = newEncounters.get(userNearBy.id);
 
                 // @dev Still sending new notifications if encounter status is MET_INTERESTED (because why not, multiple times to meet)
                 if (encounter.status !== EEncounterStatus.MET_NOT_INTERESTED) {
                     if (
                         userSendingLocationUpdate.approachChoice ===
-                        EApproachChoice.BE_APPROACHED
+                            EApproachChoice.BE_APPROACHED ||
+                        userSendingLocationUpdate.approachChoice ===
+                            EApproachChoice.BOTH
                     ) {
+                        // Notify the other user
                         notifications.push({
                             ...baseNotification,
-                            to: user.pushToken,
+                            to: userNearBy.pushToken,
                             data: {
                                 ...baseNotification.data,
                                 encounterId: encounter.id,
@@ -116,15 +122,22 @@ export class MatchingService {
                                     userSendingLocationUpdate.convertToPublicDTO(),
                             },
                         });
-                    } else {
-                        /** @DEV Sending notification to user itself as he was the one sending the locationUpdate with custom title */
+                    }
+
+                    if (
+                        userSendingLocationUpdate.approachChoice ===
+                            EApproachChoice.APPROACH ||
+                        userSendingLocationUpdate.approachChoice ===
+                            EApproachChoice.BOTH
+                    ) {
+                        // Notify the user who sent the location update
                         notifications.push({
                             ...baseNotification,
                             title: this.i18n.translate(
                                 "main.notification.newMatch.title",
                                 {
                                     args: {
-                                        firstName: user.firstName,
+                                        firstName: userNearBy.firstName,
                                     },
                                     lang: userLanguage,
                                 },
@@ -133,7 +146,8 @@ export class MatchingService {
                             data: {
                                 ...baseNotification.data,
                                 encounterId: encounter.id,
-                                navigateToPerson: user.convertToPublicDTO(),
+                                navigateToPerson:
+                                    userNearBy.convertToPublicDTO(),
                             },
                         });
                     }
