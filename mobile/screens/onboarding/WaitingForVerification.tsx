@@ -44,7 +44,7 @@ const WaitingForVerification = ({
         const updatedUser = await API.user.userControllerGetOwnUserData({
             userId: state.id!,
         });
-        refreshUserData(dispatch, updatedUser);
+        await refreshUserData(dispatch, updatedUser);
 
         if (updatedUser.verificationStatus === "verified") {
             navigation.replace(ROUTES.MainTabView);

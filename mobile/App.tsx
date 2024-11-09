@@ -21,7 +21,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import { Color, FontSize } from "./GlobalStyles";
 import { MainStack } from "./MainStack.navigator";
@@ -80,7 +80,8 @@ const NO_HEADER = { headerShown: false };
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-    const [appIsReady, setAppIsReady] = React.useState(false);
+    const [appIsReady, setAppIsReady] = useState(false);
+    const [hasSeenIntro, setHasSeenIntro] = useState(false);
 
     let [fontsLoaded] = useFonts({
         Montserrat_300Light,
@@ -95,7 +96,7 @@ export default function App() {
         async function prepare() {
             try {
                 // Pre-load any resources here
-                const userHasSeenIntro = await getDeviceUserHasSeenIntro();
+                setHasSeenIntro(await getDeviceUserHasSeenIntro());
                 // Wait for fonts to load
                 await fontsLoaded;
 
@@ -119,8 +120,7 @@ export default function App() {
     }
 
     /** @DEV Custom 4-Slider on App Start is shown to the user if unseen */
-    const userHasSeenIntro = getDeviceUserHasSeenIntro();
-    const initialComponent = userHasSeenIntro
+    const initialComponent = hasSeenIntro
         ? ROUTES.Welcome
         : ROUTES.Onboarding.AppIntroductionSlider;
 

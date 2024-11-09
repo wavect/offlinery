@@ -47,7 +47,7 @@ const Login = ({
 
             if (signInRes.accessToken) {
                 const user = signInRes.user;
-                userAuthenticatedUpdate(
+                await userAuthenticatedUpdate(
                     dispatch,
                     navigation,
                     user,

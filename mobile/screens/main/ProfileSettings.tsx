@@ -274,7 +274,7 @@ const ProfileSettings = ({
         const updatedUser = await API.user.userControllerGetOwnUserData({
             userId: state.id!,
         });
-        refreshUserData(dispatch, updatedUser);
+        await refreshUserData(dispatch, updatedUser);
     };
 
     const handleDeleteAccount = async () => {

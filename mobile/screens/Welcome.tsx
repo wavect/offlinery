@@ -12,14 +12,10 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import { userAuthenticatedUpdate } from "@/services/auth.service";
 import {
-    SECURE_VALUE,
-    getSecurelyStoredValue,
-    saveValueLocallySecurely,
-} from "@/services/secure-storage.service";
-import {
     LOCAL_VALUE,
     deleteOnboardingState,
     getLocalValue,
+    saveJWTValues,
 } from "@/services/storage.service";
 import { stopLocationBackgroundTask } from "@/tasks/location.task";
 import { API } from "@/utils/api-config";
@@ -36,11 +32,12 @@ const Welcome = ({
 }: NativeStackScreenProps<MainStackParamList, typeof ROUTES.Welcome>) => {
     const { dispatch } = useUserContext();
     const [isLoading, setIsLoading] = useState(true);
+    const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
 
     const checkAuthStatus = async () => {
         try {
-            const accessToken = getSecurelyStoredValue(
-                SECURE_VALUE.JWT_ACCESS_TOKEN,
+            const accessToken = await getLocalValue(
+                LOCAL_VALUE.JWT_ACCESS_TOKEN,
             );
             if (!accessToken) {
                 console.log("forcing re-login");
@@ -53,7 +50,7 @@ const Welcome = ({
 
             await deleteOnboardingState();
 
-            userAuthenticatedUpdate(
+            await userAuthenticatedUpdate(
                 dispatch,
                 navigation,
                 resp.user,
@@ -61,21 +58,21 @@ const Welcome = ({
                 resp.refreshToken,
             );
         } catch (error) {
-            saveValueLocallySecurely(SECURE_VALUE.JWT_ACCESS_TOKEN, "");
-            saveValueLocallySecurely(SECURE_VALUE.JWT_REFRESH_TOKEN, "");
+            await saveJWTValues("", "");
             await stopLocationBackgroundTask();
 
             console.log("Forcing user to re-login.");
         }
 
-        return isAuthenticated();
+        return await isAuthenticated();
     };
     useFocusEffect(
         useCallback(() => {
             const checkAuthentication = async () => {
                 try {
-                    if (!isOnboardingInProgress()) {
-                        await checkAuthStatus();
+                    if (!(await isOnboardingInProgress())) {
+                        const isAuthSuccessful = await checkAuthStatus();
+                        setIsUserAuthenticated(isAuthSuccessful ?? false);
                     }
                     await stopLocationBackgroundTask();
                 } catch (error) {
@@ -90,14 +87,14 @@ const Welcome = ({
         }, [navigation]),
     );
 
-    const isOnboardingInProgress = () => {
-        const savedUser = getLocalValue(LOCAL_VALUE.ONBOARDING_USER);
+    const isOnboardingInProgress = async () => {
+        const savedUser = await getLocalValue(LOCAL_VALUE.ONBOARDING_USER);
         return !!savedUser;
     };
 
     const restoreOnboarding = async () => {
-        const savedUser = getLocalValue(LOCAL_VALUE.ONBOARDING_USER);
-        const savedStack = getLocalValue(LOCAL_VALUE.ONBOARDING_SCREEN);
+        const savedUser = await getLocalValue(LOCAL_VALUE.ONBOARDING_USER);
+        const savedStack = await getLocalValue(LOCAL_VALUE.ONBOARDING_SCREEN);
         if (!savedUser || !savedStack) {
             return;
         }
@@ -176,7 +173,7 @@ const Welcome = ({
 
     return (
         <OPageColorContainer isLoading={isLoading}>
-            {!isAuthenticated() && <AuthScreen />}
+            {!isUserAuthenticated && <AuthScreen />}
         </OPageColorContainer>
     );
 };

@@ -6,6 +6,7 @@ import {
 } from "@/api/gen/src";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
+import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
 import * as Sentry from "@sentry/react-native";
@@ -14,10 +15,6 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { initializeApp } from "firebase/app";
 import { Platform } from "react-native";
-import {
-    SECURE_VALUE,
-    saveValueLocallySecurely,
-} from "./secure-storage.service";
 
 export enum TokenFetchStatus {
     SUCCESS,
@@ -148,7 +145,7 @@ export const registerForPushNotificationsAsync = async (
             userId,
             storePushTokenDTO,
         });
-        saveValueLocallySecurely(SECURE_VALUE.EXPO_PUSH_TOKEN, token);
+        await saveLocalValue(LOCAL_VALUE.EXPO_PUSH_TOKEN, token);
     } catch (error) {
         console.error("Failed to send push token to backend:", error);
         Sentry.captureException(error, {

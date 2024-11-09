@@ -15,13 +15,10 @@ import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { refreshUserData } from "@/services/auth.service";
 import {
-    SECURE_VALUE,
-    deleteSessionDataFromStorage,
-    getSecurelyStoredValue,
-} from "@/services/secure-storage.service";
-import {
     LOCAL_VALUE,
     deleteOnboardingState,
+    deleteSessionDataFromStorage,
+    getLocalValue,
     saveLocalValue,
 } from "@/services/storage.service";
 import { LOCATION_TASK_NAME } from "@/tasks/location.task";
@@ -66,8 +63,8 @@ export interface IUserData {
     markedForDeletion: boolean;
 }
 
-export const isAuthenticated = () => {
-    return !!getSecurelyStoredValue(SECURE_VALUE.JWT_REFRESH_TOKEN);
+export const isAuthenticated = async () => {
+    return !!(await getLocalValue(LOCAL_VALUE.JWT_REFRESH_TOKEN));
 };
 
 export interface MapRegion {
@@ -271,7 +268,7 @@ export const registerUser = async (
         await deleteOnboardingState();
 
         // Update the user state
-        refreshUserData(dispatch, user, accessToken, refreshToken);
+        await refreshUserData(dispatch, user, accessToken, refreshToken);
 
         // Navigate to the next screen or update the UI as needed
         onSuccess();
