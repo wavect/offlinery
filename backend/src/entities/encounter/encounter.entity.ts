@@ -8,6 +8,7 @@ import { Point } from "geojson";
 import {
     AfterLoad,
     Column,
+    CreateDateColumn,
     Entity,
     Index,
     ManyToMany,
@@ -83,8 +84,8 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
     })
     status: EEncounterStatus;
 
-    @Column({ type: "timestamptz", nullable: true })
-    createdAt: Date;
+    @CreateDateColumn()
+    created: Date;
 
     @AfterLoad()
     updateStatusAfterLoad() {

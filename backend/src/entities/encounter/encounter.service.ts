@@ -196,7 +196,6 @@ export class EncounterService {
                 EEncounterStatus.NOT_MET,
             );
             encounter.setUserStatus(u.id, EEncounterStatus.NOT_MET);
-            encounter.createdAt = new Date();
             const persistedEncounter =
                 await this.encounterRepository.save(encounter);
 
