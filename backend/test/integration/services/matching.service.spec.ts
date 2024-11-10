@@ -869,5 +869,28 @@ describe("Matching Service Integration Tests ", () => {
 
             expect(notifications).toEqual([]);
         });
+        it("should send notifications to both users, if choice is: both", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const notifications =
+                await matchingService.checkForEncounters(mainUser);
+            expect(notifications.length).toEqual(2);
+        });
     });
 });
