@@ -401,5 +401,56 @@ describe("Encounter Service Integration Tests ", () => {
                     .length,
             ).toEqual(3);
         });
+        it("should create one single encounter for one single approach interaction", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            await userService.updateLocation(otherUser.id, {
+                latitude: 0,
+                longitude: 0,
+            });
+
+            /*** @DEV main user and other user now should have an encounter */
+            expect(
+                (await encounterService.findEncountersByUser(otherUser.id))
+                    .length,
+            ).toEqual(1);
+            expect(
+                (await encounterService.findEncountersByUser(mainUser.id))
+                    .length,
+            ).toEqual(1);
+
+            /** @DEV simulate time passed */
+            await testSleep(5000);
+
+            await userService.updateLocation(otherUser.id, {
+                latitude: 0,
+                longitude: 0,
+            });
+
+            expect(
+                (await encounterService.findEncountersByUser(otherUser.id))
+                    .length,
+            ).toEqual(1);
+            expect(
+                (await encounterService.findEncountersByUser(mainUser.id))
+                    .length,
+            ).toEqual(1);
+        });
     });
 });
