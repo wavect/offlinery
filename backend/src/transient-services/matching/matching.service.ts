@@ -69,6 +69,7 @@ export class MatchingService {
         this.logger.debug(
             `Found ${nearbyMatches?.length ?? 0} for user ${userSendingLocationUpdate.id}`,
         );
+
         if (nearbyMatches?.length > 0) {
             const baseNotification =
                 await this.notificationService.buildNewMatchBaseNotification(
