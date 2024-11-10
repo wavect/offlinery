@@ -22,6 +22,7 @@ import {
     clearDatabase,
     testChrisNativeAndroidPushToken,
     testChrisNativeIosPushToken,
+    testSleep,
 } from "../../_src/utils/utils";
 
 describe("Matching Service Integration Tests ", () => {
@@ -868,6 +869,40 @@ describe("Matching Service Integration Tests ", () => {
                 await matchingService.checkForEncounters(testingMainUser);
 
             expect(notifications).toEqual([]);
+        });
+    });
+
+    describe("should create the correct amount of notifications after matching", function () {
+        it("should create one single notification for one single encounter interaction", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.APPROACH,
+            });
+
+            await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            /** @DEV simulate time passed */
+            await userService.updateLocation(mainUser.id, {
+                latitude: 0,
+                longitude: 0,
+            });
+            await testSleep(150);
+
+            /** @DEV user was notified in the .updateLocation() call, hence no further encounter or notification */
+            const notifications =
+                await matchingService.checkForEncounters(mainUser);
+            expect(notifications.length).toEqual(0);
         });
     });
 });
