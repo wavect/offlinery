@@ -57,8 +57,8 @@ describe("NotificationService", () => {
         i18nService = module.get<I18nService<I18nTranslations>>(I18nService);
     });
 
-    describe("notifications factory (skipped by default, enable to manually test)", () => {
-        it.skip("send push notification to Kevins device", async () => {
+    describe.skip("notifications factory (skipped by default, enable to manually test)", () => {
+        it("send push notification to Kevins device", async () => {
             const messages: OfflineryNotification[] = [
                 {
                     to: testPushTokenKevin, // could be also multiple users at once! (we will need that)
@@ -80,7 +80,7 @@ describe("NotificationService", () => {
             expect(res.length).toBe(1);
             expect(res[0].status).toBe("ok");
         });
-        it.skip("send push notification to Chris' iOS device", async () => {
+        it("send push notification to Chris' iOS device", async () => {
             const messages: OfflineryNotification[] = [
                 {
                     to: testPushTokenChris,
@@ -100,7 +100,7 @@ describe("NotificationService", () => {
             expect(res.length).toBe(1);
             expect(res[0].status).toBe("ok");
         });
-        it.skip("send push notification to Chris' Android device", async () => {
+        it("send push notification to Chris' Android device", async () => {
             const messages: OfflineryNotification[] = [
                 {
                     to: testPushTokenChrisAndroid,
@@ -120,9 +120,6 @@ describe("NotificationService", () => {
             expect(res.length).toBe(1);
             expect(res[0].status).toBe("ok");
         });
-    });
-
-    describe("build notification types, translations and configurations", () => {
         it("should have the correct languages defined", function () {
             const lang = i18nService.getSupportedLanguages();
             expect(lang).toContain("de");

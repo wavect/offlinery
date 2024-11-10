@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-describe.skip("TypeORM Configuration", () => {
+describe("TypeORM Configuration", () => {
     let configService: ConfigService;
 
     beforeEach(async () => {
@@ -38,7 +38,7 @@ describe.skip("TypeORM Configuration", () => {
 
         expect(config).toMatchObject({
             type: "postgres",
-            synchronize: true,
+            synchronize: false,
             autoLoadEntities: true,
             migrationsRun: true,
             logging: ["error", "schema", "warn", "info"],

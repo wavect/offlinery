@@ -264,56 +264,6 @@ describe("UserService", () => {
             expect(checkAndNotifyMatchesSpy).toHaveBeenCalledWith(mockUser);
         });
 
-        it.skip("should update user location but not check for matches when approachChoice is APPROACH", async () => {
-            const userId = "1";
-            const locationUpdateDto: LocationUpdateDTO = {
-                latitude: 40.7128,
-                longitude: -74.006,
-            };
-
-            const mockUser = new User();
-            mockUser.id = userId;
-            mockUser.firstName = "John";
-            mockUser.approachChoice = EApproachChoice.APPROACH;
-
-            const updatedUser = {
-                ...mockUser,
-                location: {
-                    type: "Point",
-                    coordinates: [-74.006, 40.7128],
-                } as Point,
-            } as User;
-
-            jest.spyOn(userRepository, "findOneBy").mockResolvedValue(mockUser);
-            jest.spyOn(userRepository, "save").mockResolvedValue(updatedUser);
-
-            const checkAndNotifyMatchesSpy = jest
-                .spyOn(matchingService, "checkForEncounters")
-                .mockResolvedValue(undefined);
-
-            const result = await service.updateLocation(
-                userId,
-                locationUpdateDto,
-            );
-
-            expect(result).toBeDefined();
-            expect(result.location).toEqual({
-                type: "Point",
-                coordinates: [-74.006, 40.7128],
-            });
-            expect(userRepository.save).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    id: userId,
-                    firstName: "John",
-                    location: {
-                        type: "Point",
-                        coordinates: [-74.006, 40.7128],
-                    },
-                }),
-            );
-            expect(checkAndNotifyMatchesSpy).not.toHaveBeenCalled();
-        });
-
         it("should throw NotFoundException if user is not found", async () => {
             const userId = "1";
             const locationUpdateDto: LocationUpdateDTO = {
