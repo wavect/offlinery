@@ -1,4 +1,5 @@
 import { NotificationNavigateUserDTO } from "@/DTOs/notifications/notification-navigate-user.dto";
+import { EncounterService } from "@/entities/encounter/encounter.service";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
@@ -32,6 +33,7 @@ describe("Matching Service Integration Tests ", () => {
     let testingMainUser: User;
     let userFactory: UserFactory;
     let userService: UserService;
+    let encounterService: EncounterService;
     let encounterFactory: EncounterFactory;
 
     beforeAll(async () => {
@@ -42,6 +44,7 @@ describe("Matching Service Integration Tests ", () => {
 
         userService = module.get(UserService);
         matchingService = module.get(MatchingService);
+        encounterService = module.get(EncounterService);
         userFactory = factories.get("user") as UserFactory;
         encounterFactory = factories.get("encounter") as EncounterFactory;
     });
@@ -892,6 +895,11 @@ describe("Matching Service Integration Tests ", () => {
                 approachChoice: EApproachChoice.BOTH,
             });
 
+            const notificationsBefore =
+                await matchingService.checkForEncounters(mainUser);
+            const userEncountersBefore =
+                await encounterService.findEncountersByUser(mainUser.id);
+
             /** @DEV simulate time passed */
             await userService.updateLocation(mainUser.id, {
                 latitude: 0,
@@ -899,10 +907,15 @@ describe("Matching Service Integration Tests ", () => {
             });
             await testSleep(150);
 
-            /** @DEV user was notified in the .updateLocation() call, hence no further encounter or notification */
-            const notifications =
+            const notificationsAfter =
                 await matchingService.checkForEncounters(mainUser);
-            expect(notifications.length).toEqual(0);
+            const userEncountersAfter =
+                await encounterService.findEncountersByUser(mainUser.id);
+
+            expect(notificationsBefore.length).toEqual(1);
+            expect(userEncountersBefore.length).toEqual(1);
+            expect(notificationsAfter.length).toEqual(0);
+            expect(userEncountersAfter.length).toEqual(1);
         });
     });
 });
