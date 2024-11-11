@@ -27,6 +27,7 @@ const testPushTokenNatalia = "ExponentPushToken[wxGSHGKJcZi6WRLsGXAyB0]";
 const testPushTokenChrisAndroid = "ExponentPushToken[ubhhWpDP1x7ecywnYLmCzg]";
 // Send to Mock Device (send to nowhere)
 export const testPushTokenMockDevice = "ExponentPushToken[mock-device]";
+export const testPushTokenMockDevice2 = "ExponentPushToken[mock-device]";
 
 const mockUser: UserPublicDTO = {
     id: "123456789",
