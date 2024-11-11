@@ -20,7 +20,10 @@ import { EncounterFactory } from "../../_src/factories/encounter.factory";
 import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
 import { clearDatabase, testSleep } from "../../_src/utils/utils";
-import { testPushTokenMockDevice } from "./notification.service.spec";
+import {
+    testPushTokenMockDevice,
+    testPushTokenMockDevice2,
+} from "./notification.service.spec";
 
 describe("Matching Service Integration Tests ", () => {
     let matchingService: MatchingService;
@@ -875,6 +878,7 @@ describe("Matching Service Integration Tests ", () => {
                 genderDesire: [EGender.WOMAN],
                 intentions: [EIntention.RELATIONSHIP],
                 approachChoice: EApproachChoice.BOTH,
+                pushToken: testPushTokenMockDevice,
             });
 
             await userFactory.persistNewTestUser({
@@ -884,10 +888,16 @@ describe("Matching Service Integration Tests ", () => {
                 genderDesire: [EGender.MAN],
                 intentions: [EIntention.RELATIONSHIP],
                 approachChoice: EApproachChoice.BOTH,
+                pushToken: testPushTokenMockDevice2,
             });
 
             const notifications =
                 await matchingService.checkForEncounters(mainUser);
+
+            /** @DEV double check here, two different users receive one notification each */
+            expect(notifications[0].to).toEqual(testPushTokenMockDevice);
+            expect(notifications[1].to).toEqual(testPushTokenMockDevice2);
+
             expect(notifications.length).toEqual(2);
         });
     });
