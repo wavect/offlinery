@@ -918,4 +918,152 @@ describe("Matching Service Integration Tests ", () => {
             expect(userEncountersAfter.length).toEqual(1);
         });
     });
+
+    describe("should test re-sending notifications", function () {
+        it("should not create a notification if status is not_interested, regardless of time", async () => {
+            const date24HrsAgo = new Date(
+                new Date().getTime() - 24 * 60 * 60 * 1000,
+            );
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            await encounterFactory.persistNewTestEncounter(
+                mainUser,
+                otherUser,
+                {
+                    lastDateTimePassedBy: date24HrsAgo,
+                    status: EEncounterStatus.MET_NOT_INTERESTED,
+                },
+            );
+
+            const notifications =
+                await matchingService.checkForEncounters(mainUser);
+
+            expect(notifications.length).toEqual(0);
+        });
+        it("should not create a notification if less than 24 hrs ago and not met", async () => {
+            const date22HrsAgo = new Date(
+                new Date().getTime() - 22 * 60 * 60 * 1000,
+            );
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            await encounterFactory.persistNewTestEncounter(
+                mainUser,
+                otherUser,
+                {
+                    lastDateTimePassedBy: date22HrsAgo,
+                },
+            );
+
+            const notifications =
+                await matchingService.checkForEncounters(mainUser);
+
+            expect(notifications.length).toEqual(0);
+        });
+        it("should create a notification if not met and 24hrs or more ago", async () => {
+            const date26HrsAgo = new Date(
+                new Date().getTime() - 25 * 60 * 60 * 1000,
+            );
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            await encounterFactory.persistNewTestEncounter(
+                mainUser,
+                otherUser,
+                {
+                    lastDateTimePassedBy: date26HrsAgo,
+                    status: EEncounterStatus.NOT_MET,
+                },
+            );
+
+            const notifications =
+                await matchingService.checkForEncounters(mainUser);
+
+            /** @DEV 2 notifications, as users have BOTH defined */
+            expect(notifications.length).toEqual(2);
+        });
+        it("should create a notification if not met and 24hrs ago", async () => {
+            const date24HrsAgo = new Date(
+                new Date().getTime() - 24 * 60 * 60 * 1000,
+            );
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            await encounterFactory.persistNewTestEncounter(
+                mainUser,
+                otherUser,
+                {
+                    lastDateTimePassedBy: date24HrsAgo,
+                    status: EEncounterStatus.NOT_MET,
+                },
+            );
+
+            const notifications =
+                await matchingService.checkForEncounters(mainUser);
+
+            /** @DEV 2 notifications, as users have BOTH defined */
+            expect(notifications.length).toEqual(2);
+        });
+    });
 });
