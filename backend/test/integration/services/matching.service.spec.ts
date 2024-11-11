@@ -19,12 +19,8 @@ import { PointBuilder } from "../../_src/builders/point.builder";
 import { EncounterFactory } from "../../_src/factories/encounter.factory";
 import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
-import {
-    clearDatabase,
-    testChrisNativeAndroidPushToken,
-    testChrisNativeIosPushToken,
-    testSleep,
-} from "../../_src/utils/utils";
+import { clearDatabase, testSleep } from "../../_src/utils/utils";
+import { testPushTokenMockDevice } from "./notification.service.spec";
 
 describe("Matching Service Integration Tests ", () => {
     let matchingService: MatchingService;
@@ -661,7 +657,7 @@ describe("Matching Service Integration Tests ", () => {
             const testingMainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
-                pushToken: testChrisNativeIosPushToken,
+                pushToken: testPushTokenMockDevice,
                 genderDesire: [EGender.WOMAN],
                 gender: EGender.MAN,
                 approachChoice: EApproachChoice.APPROACH,
@@ -695,7 +691,7 @@ describe("Matching Service Integration Tests ", () => {
             const testingMainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
-                pushToken: testChrisNativeAndroidPushToken,
+                pushToken: testPushTokenMockDevice,
                 genderDesire: [EGender.WOMAN],
                 gender: EGender.MAN,
                 approachChoice: EApproachChoice.APPROACH,
@@ -730,7 +726,7 @@ describe("Matching Service Integration Tests ", () => {
                 firstName: "UserApproachingOthers",
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
-                pushToken: testChrisNativeIosPushToken,
+                pushToken: testPushTokenMockDevice,
                 genderDesire: [EGender.WOMAN],
                 gender: EGender.MAN,
                 approachChoice: EApproachChoice.APPROACH,
@@ -755,9 +751,7 @@ describe("Matching Service Integration Tests ", () => {
                 "Main_NavigateToApproach",
             );
             expect(notificationUnderTest.title).toEqual("Tina is nearby! 🔥");
-            expect(notificationUnderTest.to).toEqual(
-                testChrisNativeIosPushToken,
-            );
+            expect(notificationUnderTest.to).toEqual(testPushTokenMockDevice);
             expect(notificationUnderTest.data);
             expect(
                 (notificationUnderTest.data as NotificationNavigateUserDTO)
