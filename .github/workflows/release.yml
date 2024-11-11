@@ -16,6 +16,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 19.x #v20 might have issues for some reason according to Web
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 6.32.9
+
       - name: Benchmark
         id: benchmark
         working-directory: ./backend
@@ -62,16 +72,6 @@ jobs:
         run: |
           docker build -t europe-west6-docker.pkg.dev/offlinery-439317/offlinery-backend/nestjs:${{ env.VERSION }} .
           docker push europe-west6-docker.pkg.dev/offlinery-439317/offlinery-backend/nestjs:${{ env.VERSION }}
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 19.x #v20 might have issues for some reason according to Web
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 6.32.9
 
       - name: Install dependencies
         working-directory: ./mobile
