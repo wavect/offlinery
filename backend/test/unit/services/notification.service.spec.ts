@@ -1,5 +1,8 @@
 import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
+import { NotificationNavigateUserDTO } from "@/DTOs/notifications/notification-navigate-user.dto";
+import { NotificationNewEventDTO } from "@/DTOs/notifications/notification-new-event.dto";
+import { UserPublicDTO } from "@/DTOs/user-public.dto";
 import { UserService } from "@/entities/user/user.service";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { OfflineryNotification } from "@/types/notification-message.types";
@@ -10,7 +13,7 @@ import { I18nService } from "nestjs-i18n";
 import { UserBuilder } from "../../_src/builders/user.builder";
 
 describe("NotificationService", () => {
-    let service: NotificationService;
+    let notificationService: NotificationService;
     let mockUserService: jest.Mocked<UserService>;
     let mockExpo: jest.Mocked<Expo>;
     let mockLogger: jest.Mocked<Logger>;
@@ -47,9 +50,88 @@ describe("NotificationService", () => {
             ],
         }).compile();
 
-        service = module.get<NotificationService>(NotificationService);
-        (service as any).expo = mockExpo;
-        (service as any).logger = mockLogger;
+        notificationService =
+            module.get<NotificationService>(NotificationService);
+        (notificationService as any).expo = mockExpo;
+        (notificationService as any).logger = mockLogger;
+    });
+
+    describe("getValidatedNotifications", () => {
+        it("should filter out notifications with invalid push tokens", () => {
+            const validNotification1: OfflineryNotification = {
+                to: "ExpoPushToken[valid1]",
+                data: {
+                    type: ENotificationType.NEW_EVENT,
+                    screen: EAppScreens.NEW_EVENT,
+                } as NotificationNewEventDTO,
+            };
+
+            const validNotification2: OfflineryNotification = {
+                to: "ExponentPushToken[valid2]",
+                data: {
+                    type: ENotificationType.NEW_MATCH,
+                    screen: EAppScreens.NAVIGATE_TO_APPROACH,
+                    navigateToPerson: {} as UserPublicDTO,
+                    encounterId: "123",
+                } as NotificationNavigateUserDTO,
+            };
+
+            const invalidNotification: OfflineryNotification = {
+                to: "invalid-token",
+                data: {
+                    type: ENotificationType.NEW_EVENT,
+                    screen: EAppScreens.NEW_EVENT,
+                } as NotificationNewEventDTO,
+            };
+
+            const notifications = [
+                validNotification1,
+                invalidNotification,
+                validNotification2,
+            ];
+
+            const result =
+                notificationService.getValidatedNotifications(notifications);
+
+            expect(result).toHaveLength(2);
+            expect(result).toContainEqual(validNotification1);
+            expect(result).toContainEqual(validNotification2);
+            expect(result).not.toContainEqual(invalidNotification);
+        });
+
+        it("should filter out notifications with null or undefined tokens", () => {
+            const validNotification: OfflineryNotification = {
+                to: "ExpoPushToken[valid]",
+                data: {} as NotificationNewEventDTO,
+            };
+
+            const nullTokenNotification: OfflineryNotification = {
+                to: null as unknown as string,
+                data: {} as NotificationNewEventDTO,
+            };
+
+            const undefinedTokenNotification: OfflineryNotification = {
+                to: undefined as unknown as string,
+                data: {} as NotificationNewEventDTO,
+            };
+
+            const notifications = [
+                validNotification,
+                nullTokenNotification,
+                undefinedTokenNotification,
+            ];
+
+            const result =
+                notificationService.getValidatedNotifications(notifications);
+
+            expect(result).toHaveLength(1);
+            expect(result).toContainEqual(validNotification);
+        });
+
+        it("should return empty array for empty input", () => {
+            const result = notificationService.getValidatedNotifications([]);
+            expect(result).toHaveLength(0);
+        });
     });
 
     describe("sendPushNotification", () => {
@@ -94,7 +176,8 @@ describe("NotificationService", () => {
                 .mockResolvedValueOnce([mockTickets[0]])
                 .mockResolvedValueOnce([mockTickets[1]]);
 
-            const result = await service.sendPushNotifications(messages);
+            const result =
+                await notificationService.sendPushNotifications(messages);
 
             expect(mockExpo.chunkPushNotifications).toHaveBeenCalledWith(
                 messages,
@@ -139,7 +222,8 @@ describe("NotificationService", () => {
             const mockError = new Error("Failed to send notification");
             mockExpo.sendPushNotificationsAsync.mockRejectedValue(mockError);
 
-            const result = await service.sendPushNotifications(messages);
+            const result =
+                await notificationService.sendPushNotifications(messages);
 
             expect(mockExpo.chunkPushNotifications).toHaveBeenCalledWith(
                 messages,
@@ -179,7 +263,8 @@ describe("NotificationService", () => {
                 throw mockError;
             });
 
-            const result = await service.sendPushNotifications(messages);
+            const result =
+                await notificationService.sendPushNotifications(messages);
 
             expect(mockExpo.chunkPushNotifications).toHaveBeenCalledWith(
                 messages,
