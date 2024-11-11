@@ -122,9 +122,12 @@ export class NotificationService {
 
     /** @dev The ExpoPushToken remains the same for the user infinitely, except they reinstall the app, etc. */
     async sendPushNotifications(messages: OfflineryNotification[]) {
+        const validatedNotifications = this.getValidatedNotifications(messages);
         const tickets: ExpoPushTicket[] = [];
         try {
-            const chunks = this.expo.chunkPushNotifications(messages);
+            const chunks = this.expo.chunkPushNotifications(
+                validatedNotifications,
+            );
             for (const chunk of chunks) {
                 try {
                     const ticketChunk =
@@ -139,5 +142,32 @@ export class NotificationService {
         }
         this.logger.debug(`Sent ${tickets.length} notifications.`);
         return tickets;
+    }
+
+    /**
+     * Adapt over time, but before we send out notifications, we should be really sure they're as intended
+     * @param notifications
+     */
+    getValidatedNotifications(notifications: OfflineryNotification[]) {
+        return notifications.filter((message) => {
+            if (!message.to || !this.isValidExpoPushToken(message.to)) {
+                this.logger.debug(
+                    `Invalid push token detected,  unable to process: ${message.to}`,
+                );
+                return false;
+            }
+            return true;
+        });
+    }
+
+    private isValidExpoPushToken(token: unknown) {
+        if (typeof token !== "string") {
+            return false;
+        }
+
+        return (
+            token.startsWith("ExponentPushToken[") ||
+            token.startsWith("ExpoPushToken[")
+        );
     }
 }

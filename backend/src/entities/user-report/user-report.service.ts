@@ -33,7 +33,7 @@ export class UserReportService {
         });
 
         /** @DEV - TODO the current architecture allows for more than two entries within one encounter */
-        const userToBeReported = encounter.users.find(
+        const userToBeReported = encounter?.users.find(
             (user) => user.id !== reportingUserId,
         );
 

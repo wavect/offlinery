@@ -137,7 +137,7 @@ describe("PendingUserService", () => {
             expect(result).toHaveProperty("timeout");
         });
 
-        it.skip("should not send a new verification code if one was recently issued", async () => {
+        it("should not send a new verification code if one was recently issued", async () => {
             const email = "recent@example.com";
             const recentPendingUser = new PendingUser();
             recentPendingUser.email = email;
@@ -160,7 +160,7 @@ describe("PendingUserService", () => {
 
             expect(result).toHaveProperty("email", email);
             expect(result).toHaveProperty("timeout");
-            expect(result).toHaveProperty("verificationCodeIssuedAt");
+            expect(result).toHaveProperty("codeIssuedAt");
             expect(mailerService.sendMail).not.toHaveBeenCalled();
         });
     });
