@@ -18,13 +18,15 @@ import { DataSource, DataSourceOptions } from "typeorm";
 import { PointBuilder } from "../../_src/builders/point.builder";
 import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
-import { testChrisNativeIosPushToken } from "../../_src/utils/utils";
 
 // Sends to Kevin's smartphone rn
 const testPushTokenKevin = "ExponentPushToken[MbIGoaN3gTd61gYRRCRz8C]";
 // Send to Chris' smartphone rn
 const testPushTokenChris = "ExponentPushToken[sv2J8DEa84U3iStoXhafI0]";
+const testPushTokenNatalia = "ExponentPushToken[wxGSHGKJcZi6WRLsGXAyB0]";
 const testPushTokenChrisAndroid = "ExponentPushToken[ubhhWpDP1x7ecywnYLmCzg]";
+// Send to Mock Device (send to nowhere)
+export const testPushTokenMockDevice = "ExponentPushToken[mock-device]";
 
 const mockUser: UserPublicDTO = {
     id: "123456789",
@@ -80,12 +82,12 @@ describe("NotificationService", () => {
             expect(res.length).toBe(1);
             expect(res[0].status).toBe("ok");
         });
-        it("send push notification to Chris' iOS device", async () => {
+        it("send push notification to Natalias' iOS device", async () => {
             const messages: OfflineryNotification[] = [
                 {
-                    to: testPushTokenChris,
+                    to: testPushTokenNatalia,
                     sound: "default",
-                    title: "Lisa is nearby! 🔥",
+                    title: "Chris is nearby! 🔥",
                     body: i18nService.t("main.notification.newMatch.body"),
                     data: {
                         screen: EAppScreens.NAVIGATE_TO_APPROACH,
@@ -208,7 +210,7 @@ describe("NotificationService", () => {
             const testingMainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
-                pushToken: testChrisNativeIosPushToken,
+                pushToken: testPushTokenMockDevice,
                 genderDesire: [EGender.WOMAN],
                 gender: EGender.MAN,
                 approachChoice: EApproachChoice.APPROACH,
