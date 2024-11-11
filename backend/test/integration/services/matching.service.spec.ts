@@ -872,7 +872,7 @@ describe("Matching Service Integration Tests ", () => {
     });
 
     describe("should test re-sending notifications", function () {
-        it("should not create a notification if status is not_met, regardless of time", async () => {
+        it("should not create a notification if status is not_interested, regardless of time", async () => {
             const date24HrsAgo = new Date(
                 new Date().getTime() - 24 * 60 * 60 * 1000,
             );
