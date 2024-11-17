@@ -2,6 +2,7 @@ import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard"; // 
 import { OnlyAdmin } from "@/auth/auth.guard";
 import { NewEventResponseDTO } from "@/DTOs/new-event-response.dto";
 import { NewEventDTO } from "@/DTOs/new-event.dto";
+import { NewTestEventDTO } from "@/DTOs/new-test-event.dto";
 import { StorePushTokenDTO } from "@/DTOs/store-push-token.dto";
 import {
     Body,
@@ -70,5 +71,19 @@ export class NotificationController {
         @Body() eventDTO: NewEventDTO,
     ): Promise<NewEventResponseDTO> {
         return await this.notificationService.createNewEvent(eventDTO);
+    }
+
+    @Post("admin/new-test-event")
+    @OnlyAdmin()
+    @ApiExcludeEndpoint()
+    @ApiOperation({ summary: "Send test event notifications" })
+    @ApiBody({
+        type: NewTestEventDTO,
+    })
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async testNewEvent(
+        @Body() eventDTO: NewTestEventDTO,
+    ): Promise<NewEventResponseDTO> {
+        return await this.notificationService.createNewTestEvent(eventDTO);
     }
 }

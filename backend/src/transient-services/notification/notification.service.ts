@@ -2,6 +2,7 @@ import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
 import { NewEventResponseDTO } from "@/DTOs/new-event-response.dto";
 import { NewEventDTO } from "@/DTOs/new-event.dto";
+import { NewTestEventDTO } from "@/DTOs/new-test-event.dto";
 import { StorePushTokenDTO } from "@/DTOs/store-push-token.dto";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
@@ -72,6 +73,46 @@ export class NotificationService {
                     title: eventTitle,
                     body: eventDescription,
                     to: user.pushToken,
+                    data: {
+                        type: ENotificationType.NEW_EVENT,
+                        screen: EAppScreens.NEW_EVENT,
+                    },
+                });
+            }
+
+            const expoPushTickets =
+                await this.sendPushNotifications(notifications);
+
+            responseDTO = {
+                ...responseDTO,
+                ...(await countExpoPushTicketStatuses(expoPushTickets)),
+            };
+        } catch (err) {
+            throw new InternalServerErrorException(err);
+        }
+
+        return responseDTO;
+    }
+
+    async createNewTestEvent(
+        newEvent: NewTestEventDTO,
+    ): Promise<NewEventResponseDTO> {
+        let responseDTO: NewEventResponseDTO = {
+            error: 0,
+            noPushToken: 0,
+            ok: 0,
+            total: 0,
+        };
+
+        try {
+            const notifications: OfflineryNotification[] = [];
+
+            for (const pushToken of newEvent.pushTokens) {
+                notifications.push({
+                    sound: "default" as const,
+                    title: "[TEST EVENT] Please ignore",
+                    body: "[TEST] You can safely ignore this notification.",
+                    to: pushToken,
                     data: {
                         type: ENotificationType.NEW_EVENT,
                         screen: EAppScreens.NEW_EVENT,
