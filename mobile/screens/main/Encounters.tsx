@@ -89,7 +89,6 @@ const Encounters = ({
                     age: otherUser.age,
                     bio: otherUser.bio,
                     imageURIs: otherUser.imageURIs,
-                    isNearbyRightNow: encounter.isNearbyRightNow,
                     status: encounter.status,
                     reported: encounter.reported,
                     lastLocationPassedBy: encounter.lastLocationPassedBy ?? "",
