@@ -6,7 +6,8 @@ export const ROUTES = {
     Login: "Login" as const,
     ResetPassword: "ResetPassword" as const,
     Main: {
-        Encounters: "Main_Encounters" as const,
+        EncountersTab: "Main_Encounters_onTab" as const,
+        EncountersStack: "Main_Encounters_onStack" as const,
         ReportEncounter: "Main_ReportEncounter" as const,
         FindPeople: "Main_FindPeople" as const,
         ProfileSettings: "Main_ProfileSettings" as const,

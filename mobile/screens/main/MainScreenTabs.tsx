@@ -1,5 +1,4 @@
 import { Color, Title } from "@/GlobalStyles";
-import { MainStackParamList } from "@/MainStack.navigator";
 import {
     NotificationNavigateUserDTOTypeEnum,
     NotificationNewEventDTOTypeEnum,
@@ -7,11 +6,7 @@ import {
 import { OGoLiveToggle } from "@/components/OGoLiveToggle/OGoLiveToggle";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
-import {
-    MainScreenTabsParamList,
-    MainTabs,
-} from "@/screens/main/MainScreenTabs.navigator";
+import { MainTabs } from "@/screens/main/MainScreenTabs.navigator";
 import {
     TokenFetchStatus,
     reactToNewEncounterNotification,
@@ -19,28 +14,18 @@ import {
     registerForPushNotificationsAsync,
 } from "@/services/notification.service";
 import { MaterialIcons } from "@expo/vector-icons";
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
 import * as Notifications from "expo-notifications";
-import { Subscription } from "expo-notifications";
 import * as React from "react";
 import { useCallback, useRef, useState } from "react";
 import { Platform } from "react-native";
-import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 import { EncounterScreenStack } from "./EncounterStackNavigator";
 import FindPeople from "./FindPeople";
 import ProfileSettings from "./ProfileSettings";
 
-export const MainScreenTabs = ({
-    navigation,
-}: BottomTabScreenProps<MainScreenTabsParamList, typeof ROUTES.MainTabView> &
-    NativeStackScreenProps<MainStackParamList, typeof ROUTES.MainTabView> &
-    NativeStackScreenProps<
-        EncounterStackParamList,
-        typeof ROUTES.Main.Encounters
-    >) => {
+export const MainScreenTabs = ({ navigation }: any) => {
     const { state, dispatch } = useUserContext();
     const [unreadNotifications, setUnreadNotifications] = useState<
         Notifications.Notification[]
@@ -48,8 +33,16 @@ export const MainScreenTabs = ({
     const [channels, setChannels] = useState<
         Notifications.NotificationChannel[]
     >([]);
-    const notificationListener = useRef<Subscription>();
-    const responseListener = useRef<Subscription>();
+    const notificationListener =
+        useRef<
+            ReturnType<typeof Notifications.addNotificationReceivedListener>
+        >();
+    const responseListener =
+        useRef<
+            ReturnType<
+                typeof Notifications.addNotificationResponseReceivedListener
+            >
+        >();
     const setupPerformed = useRef(false);
 
     // @dev useFocusEffect ensures that the services are only started once the user has been logged in, instead of prompting the user for permissions on the welcome screen due to the App.tsx route import
@@ -252,7 +245,7 @@ export const MainScreenTabs = ({
                 }}
             />
             <MainTabs.Screen
-                name={ROUTES.Main.Encounters}
+                name={ROUTES.Main.EncountersTab}
                 component={EncounterScreenStack}
                 options={{
                     tabBarLabel: i18n.t(TR.encounters),

@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { ReactNode } from "react";
 
 export type EncounterStackParamList = {
-    [ROUTES.Main.Encounters]: undefined;
+    [ROUTES.Main.EncountersStack]: undefined;
     [ROUTES.Main.ReportEncounter]: { personToReport: IEncounterProfile };
     [ROUTES.Main.NavigateToApproach]: { navigateToPerson: IEncounterProfile };
     [ROUTES.Main.ProfileView]: {
