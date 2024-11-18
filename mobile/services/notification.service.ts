@@ -203,7 +203,7 @@ export const reactToNewEncounterNotification = (
 
     // Navigate to the specified screen, passing the user object as a prop
     navigation.navigate(ROUTES.MainTabView, {
-        screen: ROUTES.Main.Encounters,
+        screen: ROUTES.Main.EncountersTab,
         params: {
             screen: notificationData.screen,
             params: {
