@@ -12,7 +12,7 @@ import { MAIN_WEBSITE } from "@/utils/general.constants";
 import { getLocalLanguageID, writeSupportEmail } from "@/utils/misc.utils";
 import { CommonActions } from "@react-navigation/native";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Linking, StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
@@ -50,6 +50,11 @@ const WaitingForVerification = ({
             navigation.replace(ROUTES.MainTabView);
         }
     };
+
+    // Run reloadUserState when the screen is mounted
+    useEffect(() => {
+        reloadUserState();
+    }, []);
 
     const openVerificationCallPDF = async () => {
         await Linking.openURL(
