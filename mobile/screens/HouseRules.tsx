@@ -71,7 +71,7 @@ const HouseRules = ({
     navigation,
 }: NativeStackScreenProps<MainStackParamList, typeof ROUTES.HouseRules>) => {
     const { state } = useUserContext();
-    const forceWaitSeconds = route.params?.forceWaitSeconds ?? 5;
+    const forceWaitSeconds = route.params?.forceWaitSeconds ?? 3;
 
     const rules: Rule[] = getRules(state.approachChoice);
 
