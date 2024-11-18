@@ -177,13 +177,13 @@ export class UserRepository extends Repository<User> {
     }
 
     private withRecentLocationsOnly(): this {
-        const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
+        const sixHoursAgo = new Date(Date.now() - 6 * 60 * 60 * 1000);
         this.queryBuilder.andWhere(
             `
                 user.locationLastTimeUpdated IS NOT NULL 
-                AND user.locationLastTimeUpdated >= :threeHoursAgo
+                AND user.locationLastTimeUpdated >= :sixHoursAgo
             `,
-            { threeHoursAgo },
+            { sixHoursAgo },
         );
         return this;
     }
