@@ -1,19 +1,21 @@
-import { FontFamily } from "@/GlobalStyles";
-import { formatBoldText } from "@/localization/translate.service";
+import { Color, FontFamily } from "@/GlobalStyles";
+import { TR, formatBoldText, i18n } from "@/localization/translate.service";
+import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface IAppIntroductionSliderContentProps {
     img: any;
     title: string;
     description: string;
     conclusion: string;
+    lastPageAction?: () => void;
 }
 
 export const OAppIntroductionSliderContent = (
     props: IAppIntroductionSliderContentProps,
 ) => {
-    const { img, title, description, conclusion } = props;
+    const { img, title, description, conclusion, lastPageAction } = props;
     return (
         <View style={styles.slide}>
             <View style={{ flex: 1 }}>
@@ -46,6 +48,21 @@ export const OAppIntroductionSliderContent = (
             </View>
 
             <View style={styles.bottomAdditionalContainer}>
+                {lastPageAction ? (
+                    <TouchableOpacity
+                        onPress={lastPageAction}
+                        style={[styles.registerNowContainer]}
+                    >
+                        <Text style={styles.registerNowText}>
+                            {i18n.t(TR.letsMeetIRL)}
+                        </Text>
+                        <MaterialIcons
+                            name="chevron-right"
+                            size={32}
+                            color={Color.primary}
+                        />
+                    </TouchableOpacity>
+                ) : null}
                 <View style={styles.divideContainer}>
                     <View style={styles.divider} />
                 </View>
@@ -122,5 +139,22 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
+    },
+    registerNowContainer: {
+        display: "flex",
+        flexDirection: "row",
+        padding: 10,
+        borderRadius: 20,
+        backgroundColor: "white",
+        justifyContent: "center",
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    registerNowText: {
+        fontFamily: FontFamily.montserratSemiBold,
+        color: Color.primary,
+        fontSize: 16,
     },
 });

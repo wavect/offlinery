@@ -152,9 +152,9 @@ importers:
       react-native-screens:
         specifier: 4.1.0
         version: 4.1.0(react-native@0.76.2(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
-      react-native-swiper:
-        specifier: ^1.6.0
-        version: 1.6.0
+      react-native-swiper-flatlist:
+        specifier: ^3.2.5
+        version: 3.2.5(react-native@0.76.2(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))
       react-native-web:
         specifier: ~0.19.13
         version: 0.19.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3985,8 +3985,10 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-swiper@1.6.0:
-    resolution: {integrity: sha512-OnkTTZi+9uZUgy0uz1I9oYDhCU3z36lZn+LFsk9FXPRelxb/KeABzvPs3r3SrHWy1aA67KGtSFj0xNK2QD0NJQ==}
+  react-native-swiper-flatlist@3.2.5:
+    resolution: {integrity: sha512-pP6Yioo//PgxBf1Ac/utPaAMaCTXF0QW/Q55hQofGtE7B5/hL0nb9u4cXEdgGJslx0oBCkir4AJAbbD5FpWnaA==}
+    peerDependencies:
+      react-native: '>=0.59.0'
 
   react-native-web@0.19.13:
     resolution: {integrity: sha512-etv3bN8rJglrRCp/uL4p7l8QvUNUC++QwDbdZ8CB7BvZiMvsxfFIRM1j04vxNldG3uo2puRd6OSWR3ibtmc29A==}
@@ -9492,9 +9494,9 @@ snapshots:
       react-native: 0.76.2(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)
       warn-once: 0.1.1
 
-  react-native-swiper@1.6.0:
+  react-native-swiper-flatlist@3.2.5(react-native@0.76.2(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)):
     dependencies:
-      prop-types: 15.8.1
+      react-native: 0.76.2(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)
 
   react-native-web@0.19.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
