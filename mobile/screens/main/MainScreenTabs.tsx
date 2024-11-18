@@ -135,6 +135,7 @@ export const MainScreenTabs = ({ navigation }: any) => {
                                     navigation.navigate(ROUTES.MainTabView, {
                                         screen: ROUTES.Main.FindPeople, // default
                                     });
+                                    return;
                                 }
 
                                 switch (notificationType) {
