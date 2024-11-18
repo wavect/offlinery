@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     encounterDropdownPicker: {
-        height: 35,
+        height: 45,
         borderColor: Color.lightGray,
         borderWidth: 1,
         borderRadius: 8,

@@ -20,7 +20,6 @@ import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import {
-    Platform,
     RefreshControl,
     ScrollView,
     StyleSheet,
@@ -43,8 +42,6 @@ const Encounters = ({
     const [metStartDateFilter, setMetStartDateFilter] =
         useState<Date>(twoWeeksBefore);
     const [metEndDateFilter, setMetEndDateFilter] = useState<Date>(today);
-    const [showStartDatePicker, setShowStartDatePicker] = useState(false);
-    const [showEndDatePicker, setShowEndDatePicker] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
 
     function sortMessagesByLatest(
@@ -70,6 +67,7 @@ const Encounters = ({
 
     const fetchEncounters = useCallback(async () => {
         try {
+            setRefreshing(true);
             const encounters =
                 await API.encounter.encounterControllerGetEncountersByUser({
                     userId: userState.id!,
@@ -111,6 +109,8 @@ const Encounters = ({
                     encounters: "fetch",
                 },
             });
+        } finally {
+            setRefreshing(false);
         }
     }, [userState.id, dispatch, metStartDateFilter, metEndDateFilter]);
 
@@ -119,20 +119,16 @@ const Encounters = ({
     }, [fetchEncounters, metStartDateFilter, metEndDateFilter]);
 
     const onRefresh = useCallback(async () => {
-        setRefreshing(true);
         await fetchEncounters();
-        setRefreshing(false);
     }, [fetchEncounters]);
 
     const onMetStartDateFilterChange = (event: any, selectedDate?: Date) => {
-        setShowStartDatePicker(Platform.OS === "ios");
         if (selectedDate) {
             setMetStartDateFilter(selectedDate);
         }
     };
 
     const onMetEndDateFilterChange = (event: any, selectedDate?: Date) => {
-        setShowEndDatePicker(Platform.OS === "ios");
         if (selectedDate) {
             setMetEndDateFilter(selectedDate);
         }
@@ -189,6 +185,7 @@ const Encounters = ({
                             value={metStartDateFilter}
                             dateTimeFormatter={EDateTimeFormatters.DATE}
                             androidTextStyle={styles.androidDateButton}
+                            maximumDate={metEndDateFilter}
                         />
                     </View>
                     <View style={styles.dateContainer}>
@@ -202,6 +199,7 @@ const Encounters = ({
                             value={metEndDateFilter}
                             dateTimeFormatter={EDateTimeFormatters.DATE}
                             androidTextStyle={styles.androidDateButton}
+                            minimumDate={metStartDateFilter}
                         />
                     </View>
                 </View>

@@ -1,4 +1,5 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
+import { Encounter } from "@/entities/encounter/encounter.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
@@ -6,6 +7,7 @@ import {
     EApproachChoice,
     EDateMode,
     EEmailVerificationStatus,
+    EEncounterStatus,
     EGender,
     EIntention,
     ELanguage,
@@ -28,6 +30,8 @@ export class DefaultUserSeeder {
         private pendingUserRepo: Repository<PendingUser>,
         @InjectRepository(User)
         private userRepo: Repository<User>,
+        @InjectRepository(Encounter)
+        private encounterRepository: Repository<Encounter>,
     ) {}
 
     createRandomFile() {
@@ -56,7 +60,19 @@ export class DefaultUserSeeder {
     }
 
     async seedDefaultUsers(): Promise<void> {
-        const email = "office@wavect.io";
+        const defaultUsersEmail = [
+            "office@wavect.io",
+            "kevinriedlprivat@gmail.com",
+        ];
+        const users: User[] = [];
+        for (const email of defaultUsersEmail) {
+            users.push(await this.seedDefaultUser(email));
+        }
+        await this.createEncounter(users[0], users[1]);
+        this.logger.debug(`Created all default users and default encounter.`);
+    }
+
+    async seedDefaultUser(email: string): Promise<User> {
         try {
             await this.userService.findUserByEmailOrFail(email); // fails if user does not exist
         } catch (err) {
@@ -101,9 +117,52 @@ export class DefaultUserSeeder {
             const user = await this.userRepo.findOneBy({ email });
             user.verificationStatus = EVerificationStatus.VERIFIED;
             user.ageRangeString = `[${18},${99}]`;
+            user.location = {
+                type: "Point",
+                coordinates: [
+                    11.400375, // Longitude
+                    47.259659, // Latitude
+                ],
+            };
             await this.userRepo.save(user);
 
             this.logger.debug(`Seeded default user.`);
+            return user;
         }
+    }
+
+    private async createEncounter(
+        wavectUser: User,
+        user2: User,
+    ): Promise<void> {
+        const encounter = new Encounter();
+        encounter.users = [wavectUser, user2];
+        encounter.lastDateTimePassedBy = new Date();
+        encounter.lastLocationPassedBy = {
+            type: "Point",
+            coordinates: [
+                11.400375, // Longitude
+                47.259659, // Latitude
+            ],
+        };
+        encounter.userStatuses = {
+            [wavectUser.id]: EEncounterStatus.NOT_MET,
+            [user2.id]: EEncounterStatus.NOT_MET,
+        };
+
+        await this.encounterRepository.save(encounter);
+
+        if (!user2.encounters?.length) {
+            user2.encounters = [];
+        }
+        if (!wavectUser.encounters?.length) {
+            wavectUser.encounters = [];
+        }
+
+        wavectUser.encounters.push(encounter);
+        await this.userRepo.save(wavectUser);
+
+        user2.encounters.push(encounter);
+        await this.userRepo.save(user2);
     }
 }
