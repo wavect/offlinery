@@ -14,11 +14,11 @@ export const EncounterScreenStack = memo(() => {
     return (
         <EncountersProvider>
             <EncounterStack.Navigator
-                initialRouteName={ROUTES.Main.Encounters}
+                initialRouteName={ROUTES.Main.EncountersStack}
                 screenOptions={NO_HEADER}
             >
                 <EncounterStack.Screen
-                    name={ROUTES.Main.Encounters}
+                    name={ROUTES.Main.EncountersStack}
                     component={Encounters}
                     options={NO_HEADER}
                 />

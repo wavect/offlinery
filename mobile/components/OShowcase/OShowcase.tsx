@@ -18,17 +18,16 @@ export const OShowcase = (props: IOShowcaseProps) => {
     return (
         <View style={[styles.container, containerStyle]}>
             <View style={styles.headlineContainer}>
-                {/** @dev MaterialIcons also takes briefly to load, looks weird on the SplashScreen */}
                 {!onlyUseSystemFont && (
                     <MaterialIcons
                         name="wifi-off"
                         size={45}
                         color={Color.white}
+                        style={{ margin: 0, padding: 0 }}
                     />
                 )}
                 <Text
                     style={[styles.headlineText, systemFontStyle]}
-                    adjustsFontSizeToFit={true}
                     numberOfLines={1}
                 >
                     offlinery
@@ -56,14 +55,12 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     headlineText: {
+        marginLeft: 12,
         fontSize: 48,
         lineHeight: 52,
         fontWeight: "600",
         fontFamily: FontFamily.montserratRegular,
-        width: 216,
-        textAlign: "center",
         color: Color.white,
-        marginLeft: 10,
     },
     subtitle: {
         fontSize: 22,
