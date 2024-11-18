@@ -9,6 +9,7 @@ import { ROUTES } from "@/screens/routes";
 import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
 import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
+import { CommonActions } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
@@ -21,6 +22,7 @@ export enum TokenFetchStatus {
     ERROR,
     INVALID_DEVICE_OR_EMULATOR,
 }
+
 interface NotificationTokenFetchResponse {
     token: string | null;
     tokenFetchStatus: TokenFetchStatus;
@@ -201,14 +203,30 @@ export const reactToNewEncounterNotification = (
         age: notificationData.navigateToPerson.age,
     };
 
-    // Navigate to the specified screen, passing the user object as a prop
-    navigation.navigate(ROUTES.MainTabView, {
-        screen: ROUTES.Main.EncountersTab,
-        params: {
-            screen: notificationData.screen,
-            params: {
-                navigateToPerson: encounterProfile,
-            },
-        },
-    });
+    // Navigate to the specified screen, passing the user object as a prop and add encounters view as prior screen to enable back logic
+    navigation.dispatch(
+        CommonActions.reset({
+            index: 1, // This means the second screen (targetScreen) will be active
+            routes: [
+                {
+                    name: ROUTES.MainTabView,
+                    params: {
+                        screen: ROUTES.Main.EncountersTab,
+                    },
+                },
+                {
+                    name: ROUTES.MainTabView,
+                    params: {
+                        screen: ROUTES.Main.EncountersTab,
+                        params: {
+                            screen: notificationData.screen,
+                            params: {
+                                navigateToPerson: encounterProfile,
+                            },
+                        },
+                    },
+                },
+            ],
+        }),
+    );
 };
