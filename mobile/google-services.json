@@ -1,29 +1,29 @@
 {
-    "project_info": {
-        "project_number": "1054045326528",
-        "project_id": "offlinery-60d52",
-        "storage_bucket": "offlinery-60d52.appspot.com"
-    },
-    "client": [
-        {
-            "client_info": {
-                "mobilesdk_app_id": "1:1054045326528:android:7c5f1bbb8663439e21b125",
-                "android_client_info": {
-                    "package_name": "io.wavect.offlinery"
-                }
-            },
-            "oauth_client": [],
-            "api_key": [
-                {
-                    "current_key": "AIzaSyAW8K59k4_FfbMBsZkZdaTe1V2jGeAf4GU"
-                }
-            ],
-            "services": {
-                "appinvite_service": {
-                    "other_platform_oauth_client": []
-                }
-            }
+  "project_info": {
+    "project_number": "1054045326528",
+    "project_id": "offlinery-60d52",
+    "storage_bucket": "offlinery-60d52.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054045326528:android:7c5f1bbb8663439e21b125",
+        "android_client_info": {
+          "package_name": "io.wavect.offlinery"
         }
-    ],
-    "configuration_version": "1"
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAW8K59k4_FfbMBsZkZdaTe1V2jGeAf4GU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
 }
