@@ -1,7 +1,6 @@
 import { BaseEntity } from "@/entities/base.entity";
 import { MultilingualString } from "@/entities/multilingual-string/multilingual-string.entity";
 import { Column, Entity, OneToMany, TableInheritance, Unique } from "typeorm";
-import { v4 as uuidv4 } from "uuid";
 
 @Entity()
 @Unique(["id", "entityType"])
@@ -13,10 +12,6 @@ export abstract class TranslatableEntity extends BaseEntity {
     constructor() {
         super();
         this.entityType = this.constructor.name;
-        if (!this.id) {
-            // @dev already create ID before saving into db, for translation strings to access id
-            this.id = uuidv4();
-        }
     }
 
     protected getTranslations(fieldName: string): MultilingualString[] {
