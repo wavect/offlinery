@@ -57,11 +57,14 @@ export class EventService {
                     responseDTO.noPushToken++;
                     continue;
                 }
-                const userLanguage = user.preferredLanguage ?? ELanguage.en;
-                // @dev DTO enforces definition of all languages otherwise we will need to add an check here if this changes
-                const eventTitle: string = newEvent.eventTitle[userLanguage];
+                const defaultLang = ELanguage.en;
+                const userLanguage = user.preferredLanguage ?? defaultLang;
+                const eventTitle: string =
+                    newEvent.eventTitle[userLanguage] ??
+                    newEvent.eventTitle[defaultLang];
                 const eventDescription: string =
-                    newEvent.eventDescription[userLanguage];
+                    newEvent.eventDescription[userLanguage] ??
+                    newEvent.eventDescription[defaultLang];
 
                 notifications.push({
                     sound: "default" as const,
