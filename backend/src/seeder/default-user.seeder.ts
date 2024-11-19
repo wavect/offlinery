@@ -66,69 +66,72 @@ export class DefaultUserSeeder {
         ];
         const users: User[] = [];
         for (const email of defaultUsersEmail) {
-            users.push(await this.seedDefaultUser(email));
+            try {
+                // @dev fails if user does not exist
+                await this.userService.findUserByEmailOrFail(email); // fails if user does not exist
+            } catch (err) {
+                users.push(await this.seedDefaultUser(email));
+            }
         }
-        await this.createEncounter(users[0], users[1]);
-        this.logger.debug(`Created all default users and default encounter.`);
+        if (users.length >= 2) {
+            await this.createEncounter(users[0], users[1]);
+            this.logger.debug(
+                `Created all default users and default encounter.`,
+            );
+        }
     }
 
     async seedDefaultUser(email: string): Promise<User> {
-        try {
-            await this.userService.findUserByEmailOrFail(email); // fails if user does not exist
-        } catch (err) {
-            const defaultUser: CreateUserDTO = {
-                firstName: "TestUser",
-                wantsEmailUpdates: false,
-                preferredLanguage: ELanguage.en,
-                email,
-                clearPassword: "TeSTmE93!pQ",
-                birthDay: new Date("1990-01-01"),
-                gender: EGender.MAN,
-                genderDesire: [EGender.WOMAN],
-                approachChoice: EApproachChoice.APPROACH,
-                approachFromTime: new Date("2023-01-01 08:00:00"),
-                approachToTime: new Date("2023-01-01 20:00:00"),
-                dateMode: EDateMode.GHOST,
-                bio: "This is a default test user for the application.",
-                blacklistedRegions: [],
-                intentions: [EIntention.RELATIONSHIP],
-            };
+        const defaultUser: CreateUserDTO = {
+            firstName: "TestUser",
+            wantsEmailUpdates: false,
+            preferredLanguage: ELanguage.en,
+            email,
+            clearPassword: "TeSTmE93!pQ",
+            birthDay: new Date("1990-01-01"),
+            gender: EGender.MAN,
+            genderDesire: [EGender.WOMAN],
+            approachChoice: EApproachChoice.APPROACH,
+            approachFromTime: new Date("2023-01-01 08:00:00"),
+            approachToTime: new Date("2023-01-01 20:00:00"),
+            dateMode: EDateMode.GHOST,
+            bio: "This is a default test user for the application.",
+            blacklistedRegions: [],
+            intentions: [EIntention.RELATIONSHIP],
+        };
 
-            const pendingUser = await this.pendingUserRepo.findOneBy({ email });
-            if (pendingUser) {
-                pendingUser.verificationStatus =
-                    EEmailVerificationStatus.VERIFIED;
-                await this.pendingUserRepo.update({ email }, pendingUser);
-            } else {
-                const pendingUser = new PendingUser();
-                pendingUser.email = email;
-                pendingUser.verificationCode = "1";
-                pendingUser.verificationCodeIssuedAt = new Date();
-                pendingUser.verificationStatus =
-                    EEmailVerificationStatus.VERIFIED;
-                await this.pendingUserRepo.save(pendingUser);
-            }
-            this.logger.debug(`Registered pending default user.`);
-
-            await this.userService.createUser(defaultUser, [
-                this.createRandomFile(),
-            ]);
-
-            const user = await this.userRepo.findOneBy({ email });
-            user.verificationStatus = EVerificationStatus.VERIFIED;
-            user.ageRangeString = `[${18},${99}]`;
-            user.location = {
-                type: "Point",
-                coordinates: [
-                    11.400375, // Longitude
-                    47.259659, // Latitude
-                ],
-            };
-            await this.userRepo.save(user);
-
-            this.logger.debug(`Seeded default user.`);
-            return user;
+        const pendingUser = await this.pendingUserRepo.findOneBy({ email });
+        if (pendingUser) {
+            pendingUser.verificationStatus = EEmailVerificationStatus.VERIFIED;
+            await this.pendingUserRepo.update({ email }, pendingUser);
+        } else {
+            const pendingUser = new PendingUser();
+            pendingUser.email = email;
+            pendingUser.verificationCode = "1";
+            pendingUser.verificationCodeIssuedAt = new Date();
+            pendingUser.verificationStatus = EEmailVerificationStatus.VERIFIED;
+            await this.pendingUserRepo.save(pendingUser);
         }
+        this.logger.debug(`Registered pending default user.`);
+
+        await this.userService.createUser(defaultUser, [
+            this.createRandomFile(),
+        ]);
+
+        const user = await this.userRepo.findOneBy({ email });
+        user.verificationStatus = EVerificationStatus.VERIFIED;
+        user.ageRangeString = `[${18},${99}]`;
+        user.location = {
+            type: "Point",
+            coordinates: [
+                11.400375, // Longitude
+                47.259659, // Latitude
+            ],
+        };
+        await this.userRepo.save(user);
+
+        this.logger.debug(`Seeded default user.`);
+        return user;
     }
 
     private async createEncounter(

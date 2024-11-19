@@ -1,4 +1,5 @@
 import { EncounterPublicDTO } from "@/DTOs/encounter-public.dto";
+import { BaseEntity } from "@/entities/base.entity";
 import { Message } from "@/entities/messages/message.entity";
 import { UserReport } from "@/entities/user-report/user-report.entity";
 import { User } from "@/entities/user/user.entity";
@@ -8,16 +9,17 @@ import { Point } from "geojson";
 import {
     AfterLoad,
     Column,
-    CreateDateColumn,
     Entity,
     Index,
     ManyToMany,
     OneToMany,
-    PrimaryGeneratedColumn,
 } from "typeorm";
 
 @Entity()
-export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
+export class Encounter
+    extends BaseEntity
+    implements IEntityToDTOInterface<EncounterPublicDTO>
+{
     public convertToPublicDTO(): EncounterPublicDTO {
         return {
             id: this.id,
@@ -31,9 +33,6 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
             isNearbyRightNow: null,
         };
     }
-
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
 
     @Column({ type: "jsonb", default: {} })
     userStatuses: Record<string, EEncounterStatus>;
@@ -83,9 +82,6 @@ export class Encounter implements IEntityToDTOInterface<EncounterPublicDTO> {
         default: EEncounterStatus.NOT_MET,
     })
     status: EEncounterStatus;
-
-    @CreateDateColumn()
-    created: Date;
 
     @AfterLoad()
     updateStatusAfterLoad() {

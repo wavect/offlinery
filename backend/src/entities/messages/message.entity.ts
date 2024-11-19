@@ -1,11 +1,15 @@
 import { MessagePublicDTO } from "@/DTOs/message-public.dto";
+import { BaseEntity } from "@/entities/base.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { User } from "@/entities/user/user.entity";
 import { IEntityToDTOInterface } from "@/interfaces/IEntityToDTO.interface";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
 
 @Entity()
-export class Message implements IEntityToDTOInterface<MessagePublicDTO> {
+export class Message
+    extends BaseEntity
+    implements IEntityToDTOInterface<MessagePublicDTO>
+{
     public convertToPublicDTO(): MessagePublicDTO {
         return {
             id: this.id,
@@ -14,9 +18,6 @@ export class Message implements IEntityToDTOInterface<MessagePublicDTO> {
             senderUserId: this.sender.id,
         };
     }
-
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
 
     @Column("text")
     content: string;

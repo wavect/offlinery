@@ -1,14 +1,13 @@
 import { UserFeedbackDTO } from "@/DTOs/user-feedback.dto";
+import { BaseEntity } from "@/entities/base.entity";
 import { IEntityToDTOInterface } from "@/interfaces/IEntityToDTO.interface";
-import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity } from "typeorm";
 
 @Entity()
-export class UserFeedback implements IEntityToDTOInterface<UserFeedbackDTO> {
+export class UserFeedback
+    extends BaseEntity
+    implements IEntityToDTOInterface<UserFeedbackDTO>
+{
     convertToPublicDTO(): UserFeedbackDTO {
         return {
             feedbackText: this.feedbackText,
@@ -16,15 +15,9 @@ export class UserFeedback implements IEntityToDTOInterface<UserFeedbackDTO> {
         };
     }
 
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
-
     @Column()
     rating: number;
 
     @Column()
     feedbackText?: string;
-
-    @CreateDateColumn()
-    created: Date;
 }

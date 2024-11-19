@@ -1,15 +1,12 @@
 import { PendingUserPublicDTO } from "@/DTOs/pending-user.dto";
+import { BaseEntity } from "@/entities/base.entity";
 import { IEntityToDTOInterface } from "@/interfaces/IEntityToDTO.interface";
 import { EEmailVerificationStatus } from "@/types/user.types";
-import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity } from "typeorm";
 
 @Entity()
 export class PendingUser
+    extends BaseEntity
     implements IEntityToDTOInterface<PendingUserPublicDTO>
 {
     convertToPublicDTO(): PendingUserPublicDTO {
@@ -19,9 +16,6 @@ export class PendingUser
             verificationStatus: this.verificationStatus,
         };
     }
-
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
 
     @Column({ unique: true })
     email: string;
@@ -38,7 +32,4 @@ export class PendingUser
     /** @dev Sexual orientation needs dedicated prompt (explicit yes/no). */
     @Column({ type: "timestamptz", nullable: true })
     acceptedSpecialDataGenderLookingForAt?: Date;
-
-    @CreateDateColumn()
-    created: Date;
 }

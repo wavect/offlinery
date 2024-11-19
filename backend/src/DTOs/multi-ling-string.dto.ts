@@ -12,5 +12,5 @@ export class MultiLingStringDTO {
             [ELanguage.de]: "Deutscher text",
         },
     })
-    translations: { [key in ELanguage]: string };
+    translations: Partial<Record<ELanguage, string>>;
 }

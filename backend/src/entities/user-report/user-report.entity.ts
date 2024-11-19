@@ -1,19 +1,11 @@
+import { BaseEntity } from "@/entities/base.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { User } from "@/entities/user/user.entity";
 import { EIncidentType } from "@/types/user.types";
-import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne } from "typeorm";
 
 @Entity()
-export class UserReport {
-    @PrimaryGeneratedColumn()
-    id: number;
-
+export class UserReport extends BaseEntity {
     @Column("text")
     incidentDescription: string;
 

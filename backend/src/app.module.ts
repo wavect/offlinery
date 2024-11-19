@@ -9,7 +9,9 @@ import {
 import { ApiUserModule } from "@/entities/api-user/api-user.module";
 import { BlacklistedRegionModule } from "@/entities/blacklisted-region/blacklisted-region.module";
 import { EncounterModule } from "@/entities/encounter/encounter.module";
+import { EventModule } from "@/entities/event/event.module";
 import { MapModule } from "@/entities/map/map.module";
+import { MultilingualStringModule } from "@/entities/multilingual-string/multilingual-string.module";
 import { PendingUserModule } from "@/entities/pending-user/pending-user.module";
 import { UserReportModule } from "@/entities/user-report/user-report.module";
 import { UserModule } from "@/entities/user/user.module";
@@ -54,6 +56,8 @@ import { typeOrmAsyncConfig } from "./typeorm.config";
         MapModule,
         ApiUserModule,
         UserFeedbackModule,
+        EventModule,
+        MultilingualStringModule,
     ],
     controllers: [AppController],
     providers: [
