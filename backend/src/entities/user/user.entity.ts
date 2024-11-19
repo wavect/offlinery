@@ -1,6 +1,7 @@
 import { BlacklistedRegionDTO } from "@/DTOs/blacklisted-region.dto";
 import { UserPrivateDTO } from "@/DTOs/user-private.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
+import { BaseEntity } from "@/entities/base.entity";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { UserReport } from "@/entities/user-report/user-report.entity";
@@ -24,17 +25,18 @@ import {
     BeforeInsert,
     BeforeUpdate,
     Column,
-    CreateDateColumn,
     Entity,
     Index,
     JoinTable,
     ManyToMany,
     OneToMany,
-    PrimaryGeneratedColumn,
 } from "typeorm";
 
 @Entity()
-export class User implements IEntityToDTOInterface<UserPublicDTO> {
+export class User
+    extends BaseEntity
+    implements IEntityToDTOInterface<UserPublicDTO>
+{
     static readonly defaultAgeRange = 7;
     /** @dev Important to not return any sensitive data */
     public convertToPublicDTO(): UserPublicDTO {
@@ -86,9 +88,6 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
         const maxAge = Math.min(age + User.defaultAgeRange, 99); // Ensure max age is 99
         this.ageRangeString = parseToAgeRangeString([minAge, maxAge]);
     }
-
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
 
     @Column({ default: true })
     isActive: boolean;
@@ -229,7 +228,4 @@ export class User implements IEntityToDTOInterface<UserPublicDTO> {
                 ? EVerificationStatus.PENDING
                 : EVerificationStatus.NOT_NEEDED;
     }
-
-    @CreateDateColumn()
-    created: Date;
 }

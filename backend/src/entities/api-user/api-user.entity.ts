@@ -1,20 +1,12 @@
+import { BaseEntity } from "@/entities/base.entity";
 import { Logger } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { randomBytes } from "crypto";
-import {
-    BeforeInsert,
-    Column,
-    CreateDateColumn,
-    Entity,
-    PrimaryGeneratedColumn,
-} from "typeorm";
+import { BeforeInsert, Column, Entity } from "typeorm";
 
 @Entity()
-export class ApiUser {
+export class ApiUser extends BaseEntity {
     private readonly logger = new Logger(ApiUser.name);
-
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
 
     @Column({ default: true })
     isActive: boolean;
@@ -50,7 +42,4 @@ export class ApiUser {
             this.apiSecretTokenSalt,
         );
     }
-
-    @CreateDateColumn()
-    created: Date;
 }

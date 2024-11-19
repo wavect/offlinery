@@ -1,8 +1,4 @@
 import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard"; // Assume this service exists to handle user-related operations
-import { OnlyAdmin } from "@/auth/auth.guard";
-import { NewEventResponseDTO } from "@/DTOs/new-event-response.dto";
-import { NewEventDTO } from "@/DTOs/new-event.dto";
-import { NewTestEventDTO } from "@/DTOs/new-test-event.dto";
 import { StorePushTokenDTO } from "@/DTOs/store-push-token.dto";
 import {
     Body,
@@ -11,15 +7,8 @@ import {
     HttpStatus,
     Param,
     Post,
-    UsePipes,
-    ValidationPipe,
 } from "@nestjs/common";
-import {
-    ApiBody,
-    ApiExcludeEndpoint,
-    ApiOperation,
-    ApiTags,
-} from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { NotificationService } from "./notification.service";
 
 @ApiTags("Push Notifications")
@@ -57,33 +46,5 @@ export class NotificationController {
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
-    }
-
-    @Post("admin/new-event")
-    @OnlyAdmin()
-    @ApiExcludeEndpoint()
-    @ApiOperation({ summary: "Send event notifications" })
-    @ApiBody({
-        type: NewEventDTO,
-    })
-    @UsePipes(new ValidationPipe({ transform: true }))
-    async createNewEvent(
-        @Body() eventDTO: NewEventDTO,
-    ): Promise<NewEventResponseDTO> {
-        return await this.notificationService.createNewEvent(eventDTO);
-    }
-
-    @Post("admin/new-test-event")
-    @OnlyAdmin()
-    @ApiExcludeEndpoint()
-    @ApiOperation({ summary: "Send test event notifications" })
-    @ApiBody({
-        type: NewTestEventDTO,
-    })
-    @UsePipes(new ValidationPipe({ transform: true }))
-    async testNewEvent(
-        @Body() eventDTO: NewTestEventDTO,
-    ): Promise<NewEventResponseDTO> {
-        return await this.notificationService.createNewTestEvent(eventDTO);
     }
 }
