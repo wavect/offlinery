@@ -97,6 +97,16 @@ export class EncounterService {
         const userEncounters = encounters.map((encounter) => {
             const dto = encounter.convertToPublicDTO();
             const otherUser = dto.users.find((u) => u.id !== userId);
+
+            // @dev Override general encounter status and return only the status from the user itself for the frontend.
+            const userEncounterStatus = encounter.userStatuses[userId];
+            if (userEncounterStatus) {
+                dto.status = userEncounterStatus;
+            } else {
+                this.logger.error(
+                    `Encounter status for user ${userId} not found! Returning general status.`,
+                );
+            }
             otherUserIds.push(otherUser.id);
             return dto;
         });
