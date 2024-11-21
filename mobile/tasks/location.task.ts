@@ -206,11 +206,51 @@ const sendLocationNotification = async () => {
     }
 };
 
+async function isBackgroundFetchServiceRestarterRunning(): Promise<boolean> {
+    try {
+        // Check if the task is registered
+        return await TaskManager.isTaskRegisteredAsync(
+            SERVICE_RESTARTER_TASK_NAME,
+        );
+    } catch (error) {
+        console.error("Error checking background task:", error);
+        Sentry.captureException(error, {
+            tags: {
+                backgroundFetchRestarter:
+                    "isBackgroundFetchServiceRestarterRunning",
+            },
+        });
+        return false;
+    }
+}
+
 export const startLocationBackgroundTask = async (
     userId: string | undefined,
 ) => {
     const { status } = await Location.requestBackgroundPermissionsAsync();
     if (status === "granted" && userId) {
+        const isBgFetchRegistered =
+            await isBackgroundFetchServiceRestarterRunning();
+        if (!isBgFetchRegistered) {
+            try {
+                await BackgroundFetch.registerTaskAsync(
+                    SERVICE_RESTARTER_TASK_NAME,
+                    {
+                        minimumInterval: 30 * 60, // 30 minutes
+                        stopOnTerminate: false, // Android only
+                        startOnBoot: true, // Android only
+                    },
+                );
+            } catch (err) {
+                console.log("Background fetch task Register failed:", err);
+                Sentry.captureException(err, {
+                    tags: {
+                        location_service: "registerBackgroundFetchTask",
+                    },
+                });
+            }
+        }
+
         const isRunning =
             await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
         if (!isRunning) {
