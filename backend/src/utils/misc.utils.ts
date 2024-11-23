@@ -13,6 +13,9 @@ export const BE_ENDPOINT = IS_DEV_MODE
 /** @DEV - Expiration time of each user token */
 export const TOKEN_EXPIRATION_TIME = "60m";
 
+/** @DEV - Expiration time in days of each refresh token */
+export const REFRESH_TOKEN_EXPIRATION_TIME = 90;
+
 /** @DEV - Expiration time of each registration token */
 export const REGISTRATION_TOKEN_TIME = "1d";
 
