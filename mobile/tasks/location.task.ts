@@ -4,6 +4,7 @@ import { getLocalValue, LOCAL_VALUE } from "@/services/storage.service";
 import { API } from "@/utils/api-config";
 import { setupSentry } from "@/utils/sentry.utils";
 import * as Sentry from "@sentry/react-native";
+import * as BackgroundFetch from "expo-background-fetch";
 import * as Location from "expo-location";
 import * as Network from "expo-network";
 import * as Notifications from "expo-notifications";
@@ -11,6 +12,8 @@ import * as TaskManager from "expo-task-manager";
 import { Platform } from "react-native";
 
 export const LOCATION_TASK_NAME = "background-location-task";
+/// @dev Restarts the service if it's not running, e.g. when users restarted their device
+export const SERVICE_RESTARTER_TASK_NAME = "service-starter";
 
 interface LocationUpdateDTO {
     latitude: number;
@@ -136,7 +139,37 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     }
 });
 
+TaskManager.defineTask(SERVICE_RESTARTER_TASK_NAME, async () => {
+    try {
+        // @dev is location service running, if not restart from background fetch service
+        const isServiceRunning =
+            await TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME);
+
+        if (!isServiceRunning) {
+            const userId = await getUserId();
+            console.log("User Connected: ", userId);
+            await startLocationBackgroundTask(userId);
+            Sentry.captureMessage(
+                "BackgroundFetch:Service restarter restarted location service as not running.",
+            );
+        }
+
+        return BackgroundFetch.BackgroundFetchResult.NewData;
+    } catch (err) {
+        Sentry.captureException(err, {
+            tags: {
+                task: "serviceRestarter_backgroundFetch",
+            },
+        });
+        return BackgroundFetch.BackgroundFetchResult.Failed;
+    }
+});
+
 export const stopLocationBackgroundTask = async () => {
+    if (await TaskManager.isTaskRegisteredAsync(SERVICE_RESTARTER_TASK_NAME)) {
+        // @dev make sure background fetch does not restart service
+        await TaskManager.unregisterTaskAsync(SERVICE_RESTARTER_TASK_NAME);
+    }
     if (await TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME)) {
         await TaskManager.unregisterTaskAsync(LOCATION_TASK_NAME);
     }
@@ -173,11 +206,51 @@ const sendLocationNotification = async () => {
     }
 };
 
+async function isBackgroundFetchServiceRestarterRunning(): Promise<boolean> {
+    try {
+        // Check if the task is registered
+        return await TaskManager.isTaskRegisteredAsync(
+            SERVICE_RESTARTER_TASK_NAME,
+        );
+    } catch (error) {
+        console.error("Error checking background task:", error);
+        Sentry.captureException(error, {
+            tags: {
+                backgroundFetchRestarter:
+                    "isBackgroundFetchServiceRestarterRunning",
+            },
+        });
+        return false;
+    }
+}
+
 export const startLocationBackgroundTask = async (
     userId: string | undefined,
 ) => {
     const { status } = await Location.requestBackgroundPermissionsAsync();
     if (status === "granted" && userId) {
+        const isBgFetchRegistered =
+            await isBackgroundFetchServiceRestarterRunning();
+        if (!isBgFetchRegistered) {
+            try {
+                await BackgroundFetch.registerTaskAsync(
+                    SERVICE_RESTARTER_TASK_NAME,
+                    {
+                        minimumInterval: 30 * 60, // 30 minutes
+                        stopOnTerminate: false, // Android only
+                        startOnBoot: true, // Android only
+                    },
+                );
+            } catch (err) {
+                console.log("Background fetch task Register failed:", err);
+                Sentry.captureException(err, {
+                    tags: {
+                        location_service: "registerBackgroundFetchTask",
+                    },
+                });
+            }
+        }
+
         const isRunning =
             await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
         if (!isRunning) {
@@ -187,8 +260,8 @@ export const startLocationBackgroundTask = async (
             await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
                 /** @dev BestForNavigation more accurate than High but higher battery consumption (high already 10m) */
                 accuracy: Location.Accuracy.BestForNavigation, // TODO: Maybe we want to track rougher locations continiously and BestForNavigation once people approach each other?
-                timeInterval: 120_000, // 120 seconds
-                distanceInterval: 10, // or 10m
+                timeInterval: 300_000, // 5 minutes
+                distanceInterval: 50, // or 50m
                 // TODO: not necessary probably as showBackgroundLocationIndicator=true but might help if we have problems, allowsBackgroundLocationUpdates: true,
                 // @dev Ensure the task runs even when the app is in the background, still sending updates even if device isn't moving
                 pausesUpdatesAutomatically: false, // TODO: We might be able to set this to true to save battery life, but for now we want to have maximum accuracy
@@ -203,6 +276,9 @@ export const startLocationBackgroundTask = async (
                 },
             });
             await sendLocationNotification();
+            Sentry.captureMessage(
+                "LocationService: Location service started as not running.",
+            );
         } else {
             /** @dev OS specific behavior of calling startLocationUpdatesAsync repeatedly:
              *
