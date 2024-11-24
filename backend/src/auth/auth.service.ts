@@ -3,6 +3,7 @@ import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { TYPED_ENV } from "@/utils/env.utils";
 import {
+    REFRESH_TOKEN_EXPIRATION_TIME,
     REGISTRATION_TOKEN_TIME,
     TOKEN_EXPIRATION_TIME,
 } from "@/utils/misc.utils";
@@ -107,7 +108,9 @@ export class AuthService {
     private async generateRefreshToken(user: User): Promise<string> {
         const refreshToken = uuidv4();
         const expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 14);
+        expirationDate.setDate(
+            expirationDate.getDate() + REFRESH_TOKEN_EXPIRATION_TIME,
+        );
 
         await this.usersService.storeRefreshToken(
             user.id,
