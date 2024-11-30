@@ -261,10 +261,11 @@ export const startLocationBackgroundTask = async (
                 /** @dev BestForNavigation more accurate than High but higher battery consumption (high already 10m) */
                 accuracy: Location.Accuracy.BestForNavigation, // TODO: Maybe we want to track rougher locations continiously and BestForNavigation once people approach each other?
                 timeInterval: 300_000, // 5 minutes
-                distanceInterval: 50, // or 50m
+                distanceInterval: 100, // or 100m
+                deferredUpdatesInterval: 60_000, // 1 minute
                 // TODO: not necessary probably as showBackgroundLocationIndicator=true but might help if we have problems, allowsBackgroundLocationUpdates: true,
                 // @dev Ensure the task runs even when the app is in the background, still sending updates even if device isn't moving
-                pausesUpdatesAutomatically: false, // TODO: We might be able to set this to true to save battery life, but for now we want to have maximum accuracy
+                pausesUpdatesAutomatically: true,
                 showsBackgroundLocationIndicator: true, // @dev Shows a blue bar/blue pill when your app is using location services in the background, iOS only
                 // TODO: distanceFilter, deferredUpdatesDistance, etc.: minimum distance in meters a device must move before an update event is triggered -> later for saving battery life
                 activityType: Location.ActivityType.OtherNavigation, // @dev Best for urban environments, different ways of movement (car, walking, ..)

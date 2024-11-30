@@ -62,7 +62,7 @@
                 "usesNonExemptEncryption": false
             },
             "infoPlist": {
-                "UIBackgroundModes": ["location"],
+                "UIBackgroundModes": ["location", "fetch"],
                 "locationAlwaysPermission": "$(PRODUCT_NAME)  needs your location to show you interesting people nearby when you're using the app.",
                 "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME)  needs your location to show you interesting people nearby when you're using the app.",
                 "NSLocationAlwaysAndWhenInUseUsageDescription": "$(PRODUCT_NAME)  uses your location to notify you about interesting people nearby, even when the app is closed.",
