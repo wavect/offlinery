@@ -3,7 +3,7 @@
         "name": "Offlinery",
         "slug": "offlinery",
         "version": "1.0.2",
-        "newArchEnabled": true,
+        "newArchEnabled": false,
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "userInterfaceStyle": "light",

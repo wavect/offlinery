@@ -286,9 +286,20 @@ export const startLocationBackgroundTask = async (
              * iOS: Will restart service. (the if check avoids that)
              * Android: Existing service NOT stopped, just a configuration update.
              * */
-            console.log(
+            Sentry.captureMessage(
                 `Background location service already running. Not starting again.`,
             );
         }
+    } else {
+        Sentry.captureException(
+            "User denied location permission or userId undefined (unauthenticated)",
+            {
+                tags: {
+                    location_service: "startLocationService",
+                    userId,
+                    status,
+                },
+            },
+        );
     }
 };
