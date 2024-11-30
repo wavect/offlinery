@@ -126,6 +126,13 @@
                     "isAndroidBackgroundLocationEnabled": true
                 }
             ],
+            [
+                "expo-background-fetch",
+                {
+                    "mode": "minimumInterval",
+                    "minimumInterval": 1800
+                }
+            ],
             "expo-localization",
             [
                 "expo-build-properties",
