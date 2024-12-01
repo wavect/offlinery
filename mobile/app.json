@@ -147,16 +147,6 @@
           "photosPermission": "The app accesses your photos to let others know about your appearance."
         }
       ],
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "$(PRODUCT_NAME)  needs your location to show you interesting people nearby when you're using the app.",
-          "locationAlwaysPermission": "$(PRODUCT_NAME)  needs your location to show you interesting people nearby when you're using the app.",
-          "locationWhenInUsePermission": "$(PRODUCT_NAME)  needs your location to show you interesting people nearby when you're using the app.",
-          "isIosBackgroundLocationEnabled": true,
-          "isAndroidBackgroundLocationEnabled": true
-        }
-      ],
       "expo-localization",
       [
         "expo-build-properties",
@@ -180,8 +170,7 @@
           "project": "offlinery-app",
           "organization": "wavect"
         }
-      ],
-      "react-native-background-geolocation"
+      ]
     ],
     "extra": {
       "eas": {

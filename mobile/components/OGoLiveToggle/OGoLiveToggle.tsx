@@ -9,9 +9,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { OBackgroundLocationService } from "@/tasks/location.task";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
-import { showOpenAppSettingsAlert } from "@/utils/misc.utils";
 import * as Sentry from "@sentry/react-native";
-import * as Location from "expo-location";
 import React, { useEffect } from "react";
 import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
 
@@ -59,26 +57,6 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                 state.dateMode === UserPrivateDTODateModeEnum.ghost
                     ? UserPrivateDTODateModeEnum.live
                     : UserPrivateDTODateModeEnum.ghost;
-
-            if (newDateMode === UserPrivateDTODateModeEnum.live) {
-                const foregroundPermissions =
-                    await Location.requestForegroundPermissionsAsync();
-                if (foregroundPermissions.status === "granted") {
-                    const { granted } =
-                        await Location.requestBackgroundPermissionsAsync();
-                    if (!granted) {
-                        showOpenAppSettingsAlert(
-                            i18n.t(TR.permissionToBackgroundLocationDenied),
-                        );
-                        return;
-                    }
-                } else {
-                    showOpenAppSettingsAlert(
-                        i18n.t(TR.permissionToBackgroundLocationDenied),
-                    );
-                    return;
-                }
-            }
 
             const updateUserDTO: UpdateUserDTO = { dateMode: newDateMode };
 

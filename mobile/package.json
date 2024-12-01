@@ -50,7 +50,6 @@
         "expo-image-picker": "~16.0.3",
         "expo-linear-gradient": "~14.0.1",
         "expo-localization": "~16.0.0",
-        "expo-location": "~18.0.2",
         "expo-network": "~7.0.2",
         "expo-notifications": "~0.29.8",
         "expo-splash-screen": "~0.29.13",
