@@ -13,11 +13,12 @@ import { getTimePassedWithText } from "@/utils/date.utils";
 import { getMapProvider } from "@/utils/map-provider";
 import { calculateDistance, getRegionForCoordinates } from "@/utils/map.utils";
 import * as Sentry from "@sentry/react-native";
-import * as Location from "expo-location";
-import { LocationAccuracy } from "expo-location";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Linking, Platform, StyleSheet, Text, View } from "react-native";
+import BackgroundGeolocation, {
+    Location,
+} from "react-native-background-geolocation";
 import MapView, { Marker, Polyline, Region } from "react-native-maps";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
@@ -33,9 +34,7 @@ const NavigateToApproach = ({
     const { state } = useUserContext();
     const [isLoading, setIsLoading] = useState(false);
     const [mapRegion, setMapRegion] = useState<Region | null>(null);
-    const [location, setLocation] = useState<Location.LocationObject | null>(
-        null,
-    );
+    const [location, setLocation] = useState<Location | null>(null);
     const mapRef = React.useRef(null);
     const [distance, setDistance] = useState<number | null>(null);
     const [destination, setDestination] = useState<{
@@ -51,27 +50,52 @@ const NavigateToApproach = ({
             try {
                 setIsLoading(isFirstRun);
 
-                let { status } =
-                    await Location.requestForegroundPermissionsAsync();
-                if (status !== "granted") {
-                    alert(i18n.t(TR.permissionToLocationDenied));
-                    return;
-                }
-                const location = await Location.getCurrentPositionAsync({
-                    accuracy: LocationAccuracy.BestForNavigation,
-                });
-                setLocation(location);
+                await BackgroundGeolocation.requestPermission(
+                    async (status) => {
+                        if (
+                            status !==
+                                BackgroundGeolocation.AUTHORIZATION_STATUS_ALWAYS &&
+                            status !==
+                                BackgroundGeolocation.AUTHORIZATION_STATUS_WHEN_IN_USE
+                        ) {
+                            alert(i18n.t(TR.permissionToLocationDenied));
+                            return;
+                        }
+                        const location =
+                            await BackgroundGeolocation.getCurrentPosition({
+                                desiredAccuracy:
+                                    BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
+                            });
+                        setLocation(location);
 
-                /** @DEV name might be misleading, this is actually the REAL location of the other user, not the location where they met. */
-                const encounterLoc =
-                    await API.encounter.encounterControllerGetLocationOfEncounter(
-                        {
-                            userId: state.id!,
-                            encounterId: navigateToPerson.encounterId,
-                        },
-                    );
+                        /** @DEV name might be misleading, this is actually the REAL location of the other user, not the location where they met. */
+                        const encounterLoc =
+                            await API.encounter.encounterControllerGetLocationOfEncounter(
+                                {
+                                    userId: state.id!,
+                                    encounterId: navigateToPerson.encounterId,
+                                },
+                            );
 
-                setDestination(encounterLoc);
+                        setDestination(encounterLoc);
+                        setIsLoading(false);
+                    },
+                    (status) => {
+                        Sentry.captureException(
+                            new Error(
+                                "Error requesting locationPermissions in NavigateTo",
+                            ),
+                            {
+                                tags: {
+                                    navigateTo: "fetchingLocation:onFailure",
+                                },
+                                extra: { status },
+                            },
+                        );
+                        alert(i18n.t(TR.permissionToLocationDenied));
+                        setIsLoading(false);
+                    },
+                );
             } catch (error) {
                 console.error("Error fetching locations:", error);
                 Sentry.captureException(error, {
@@ -79,9 +103,9 @@ const NavigateToApproach = ({
                         navigateTo: "fetchingLocation",
                     },
                 });
+                setIsLoading(false);
             } finally {
                 isFirstRun = false;
-                setIsLoading(false);
             }
         };
         fetchLocations();
