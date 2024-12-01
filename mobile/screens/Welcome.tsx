@@ -17,7 +17,7 @@ import {
     getLocalValue,
     saveJWTValues,
 } from "@/services/storage.service";
-import { stopLocationBackgroundTask } from "@/tasks/location.task";
+import { OBackgroundLocationService } from "@/tasks/location.task";
 import { API } from "@/utils/api-config";
 import { writeSupportEmail } from "@/utils/misc.utils";
 import { CommonActions, useFocusEffect } from "@react-navigation/native";
@@ -41,7 +41,7 @@ const Welcome = ({
             );
             if (!accessToken) {
                 console.log("forcing re-login");
-                await stopLocationBackgroundTask();
+                await OBackgroundLocationService.getInstance().stop();
                 return;
             }
             const resp = await API.auth.authControllerSignInByJWT({
@@ -59,7 +59,7 @@ const Welcome = ({
             );
         } catch (error) {
             await saveJWTValues("", "");
-            await stopLocationBackgroundTask();
+            await OBackgroundLocationService.getInstance().stop();
 
             console.log("Forcing user to re-login.");
         }
@@ -74,7 +74,6 @@ const Welcome = ({
                         const isAuthSuccessful = await checkAuthStatus();
                         setIsUserAuthenticated(isAuthSuccessful ?? false);
                     }
-                    await stopLocationBackgroundTask();
                 } catch (error) {
                     console.error("Error checking authentication:", error);
                     throw error;
