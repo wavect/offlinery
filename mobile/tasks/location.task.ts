@@ -66,8 +66,23 @@ export class OBackgroundLocationService {
         }
     }
 
-    private saveLocation = async (latitude: number, longitude: number) => {
+    private saveLocation = async (latitude?: number, longitude?: number) => {
         try {
+            if (!latitude || !longitude) {
+                Sentry.captureException(
+                    new Error(
+                        "Latitude or Longitude have not been provided by system.",
+                    ),
+                    {
+                        tags: { location_service: "saveLocation" },
+                        extra: {
+                            latitude,
+                            longitude,
+                        },
+                    },
+                );
+                return;
+            }
             const userId = await this.getUserId();
             const locationUpdateDTO: LocationUpdateDTO = {
                 latitude,
@@ -94,12 +109,17 @@ export class OBackgroundLocationService {
             this.locationSubscription = BackgroundGeolocation.onLocation(
                 async (location) => {
                     Sentry.captureMessage(
-                        `Captured locationUpdate in location service`,
+                        `Captured locationUpdate in location service: ${JSON.stringify(location?.coords)}`,
                     );
                     await this.saveLocation(
-                        location.coords.latitude,
-                        location.coords.longitude,
+                        location?.coords?.latitude,
+                        location?.coords?.longitude,
                     ); // TODO: we might want to include altitude in future too?
+                },
+                async (error) => {
+                    Sentry.captureException(error, {
+                        tags: { location_service: "onLocation:onFailure" },
+                    });
                 },
             );
 
@@ -114,8 +134,8 @@ export class OBackgroundLocationService {
                             BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
                     });
                     await this.saveLocation(
-                        loc.coords.latitude,
-                        loc.coords.longitude,
+                        loc?.coords?.latitude,
+                        loc?.coords?.longitude,
                     );
                 },
             );

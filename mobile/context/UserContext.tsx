@@ -21,7 +21,7 @@ import {
     getLocalValue,
     saveLocalValue,
 } from "@/services/storage.service";
-import { LOCATION_TASK_NAME } from "@/tasks/location.task";
+import { OBackgroundLocationService } from "@/tasks/location.task";
 import { API } from "@/utils/api-config";
 import { getAge } from "@/utils/date.utils";
 import { getValidImgURI, isImagePicker } from "@/utils/media.utils";
@@ -30,8 +30,6 @@ import { CommonActions } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
-import * as Location from "expo-location";
-import * as TaskManager from "expo-task-manager";
 import React, { Dispatch, createContext, useContext, useReducer } from "react";
 import { Platform } from "react-native";
 
@@ -313,13 +311,7 @@ export const logoutUser = async (
     navigation: any,
 ) => {
     try {
-        const taskStatus =
-            await TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME);
-        if (taskStatus) {
-            await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
-            console.log(`${LOCATION_TASK_NAME} has been stopped.`);
-        }
-
+        await OBackgroundLocationService.getInstance().stop();
         await deleteSessionDataFromStorage();
         resetUserData(dispatch);
         navigation.dispatch(
