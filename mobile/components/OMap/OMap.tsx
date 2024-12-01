@@ -13,8 +13,6 @@ import { API } from "@/utils/api-config";
 import { getMapProvider } from "@/utils/map-provider";
 import Slider from "@react-native-community/slider";
 import * as Sentry from "@sentry/react-native";
-import * as Location from "expo-location";
-import { LocationAccuracy } from "expo-location";
 import React, {
     forwardRef,
     useCallback,
@@ -24,6 +22,9 @@ import React, {
     useState,
 } from "react";
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import BackgroundGeolocation, {
+    Location,
+} from "react-native-background-geolocation";
 import MapView, {
     Circle,
     LongPressEvent,
@@ -50,9 +51,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
     const [activeRegionIndex, setActiveRegionIndex] = useState<number | null>(
         null,
     );
-    const [location, setLocation] = useState<Location.LocationObject | null>(
-        null,
-    );
+    const [location, setLocation] = useState<Location | null>(null);
     const [locationsFromOthers, setLocationsFromOthers] = useState<
         WeightedLatLngDTO[]
     >([]);
@@ -74,31 +73,6 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                 // @dev Resets heatmap to incentivize location sharing
                 setLocationsFromOthers([]);
             } else {
-                const { status: fStatus } =
-                    await Location.getForegroundPermissionsAsync();
-                const { status: bStatus } =
-                    await Location.getBackgroundPermissionsAsync();
-
-                if (
-                    fStatus !== Location.PermissionStatus.GRANTED ||
-                    bStatus !== Location.PermissionStatus.GRANTED
-                ) {
-                    setLocationsFromOthers([]);
-
-                    await API.user.userControllerUpdateUser({
-                        userId: state.id!,
-                        updateUserDTO: {
-                            dateMode: "ghost",
-                        },
-                    });
-                    // We dispatch afterwards so in case of a failed request, client + server is still in sync.
-                    dispatch({
-                        type: EACTION_USER.UPDATE_MULTIPLE,
-                        payload: { dateMode: "ghost" },
-                    });
-                    return;
-                }
-
                 const promises: Promise<void>[] = [getUserPosition()];
                 if (showHeatmap) {
                     promises.push(getOtherUsersPositions());
@@ -121,8 +95,8 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
 
     const getUserPosition = async () => {
         try {
-            const location = await Location.getCurrentPositionAsync({
-                accuracy: LocationAccuracy.High,
+            const location = await BackgroundGeolocation.getCurrentPosition({
+                desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
             });
             setLocation(location);
         } catch (error) {
