@@ -86,7 +86,6 @@
       "bundleIdentifier": "io.wavect.offlinery"
     },
     "android": {
-      "versionCode": 3,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCvQCDDpKQW-DlxC44t8edMgC52HvTl4LM"
