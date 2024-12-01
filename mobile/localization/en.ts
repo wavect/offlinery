@@ -87,6 +87,12 @@ export const en = {
         "We retain our right to reject applicants to ensure everyone feels safe and respected.",
     callBookedBtnLbl: "I'll take the call",
     verificationCallQuestions: "What we will ask you",
+    locationPermissionTitleRequest:
+        "Allow Offlinery to this device's location in the background?",
+    locationPermissionMessageRequest:
+        "In order for us to match you with people in the real world, please enable 'Allow all the time permission'",
+    locationPermissionPositiveAction: "Change to Allow all the time",
+    locationServiceOff: "Your location services are off.",
     permissionToLocationDenied:
         "Permission to access location was denied. Nobody can approach you neither can you approach someone via Offlinery without sharing your location.",
     dontApproachHere: "Don't approach me here",

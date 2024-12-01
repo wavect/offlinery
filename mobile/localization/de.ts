@@ -93,6 +93,11 @@ export const de: Language = {
     callBookedBtnLbl: "Ich werde da sein",
     verificationCallQuestions: "Was wir dich fragen",
     verificationNeeded: "Wir müssen dich verifizieren",
+    locationPermissionTitleRequest:
+        "Offlinery erlauben auf den Standort dieses Geräts im Hintergrund zuzugreifen?",
+    locationPermissionMessageRequest:
+        "Um dich mit Menschen in der realen Welt zu matchen, aktiviere bitte die Option 'Immer erlauben'",
+    locationPermissionPositiveAction: "Auf Immer erlauben ändern",
     permissionToLocationDenied:
         "Zugriff auf den Standort wurde verweigert. Ohne deinen Standort wirst du weder angesprochen, noch kannst du jemanden via Offlinery ansprechen.",
     dontApproachHere: "Hier nicht ansprechen",
@@ -223,6 +228,7 @@ export const de: Language = {
     report: "Melden",
     reported: "Gemeldet..",
     navigate: "Navigieren",
+    locationServiceOff: "Dein Location Service ist nicht aktiv.",
     permissionToBackgroundLocationDenied: `Zugriff auf den Standort im Hintergrund wurde verweigert. Ohne deinen Standort wirst du weder angesprochen, noch kannst du jemanden via Offlinery ansprechen. Bitte stelle den Standortzugriff auf "Immer" in den Einstellungen ein.`,
     youAreLive: "Du bist live!",
     ghostModeDescr:

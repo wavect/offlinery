@@ -6,17 +6,12 @@ import {
 } from "@/api/gen/src";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import {
-    LOCATION_TASK_NAME,
-    startLocationBackgroundTask,
-    stopLocationBackgroundTask,
-} from "@/tasks/location.task";
+import { OBackgroundLocationService } from "@/tasks/location.task";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
 import { showOpenAppSettingsAlert } from "@/utils/misc.utils";
 import * as Sentry from "@sentry/react-native";
 import * as Location from "expo-location";
-import * as TaskManager from "expo-task-manager";
 import React, { useEffect } from "react";
 import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
 
@@ -29,27 +24,21 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
 
     useEffect(() => {
         if (state.dateMode !== UserPrivateDTODateModeEnum.live) {
+            OBackgroundLocationService.getInstance().stop();
             return;
         }
 
-        const startLocationTask = async () => {
-            const taskStatus =
-                await TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME);
-            if (!taskStatus) {
-                await configureLocationTracking(state.dateMode);
-            }
-        };
-        startLocationTask();
+        OBackgroundLocationService.getInstance().start();
     }, []);
 
     const configureLocationTracking = async (
         newDateMode: UserPrivateDTODateModeEnum,
     ) => {
         if (newDateMode === UserPrivateDTODateModeEnum.live) {
-            await startLocationBackgroundTask(state.id);
+            await OBackgroundLocationService.getInstance().start();
         } else {
             try {
-                await stopLocationBackgroundTask();
+                await OBackgroundLocationService.getInstance().stop();
             } catch (err) {
                 console.error(err);
                 Sentry.captureException(err, {
