@@ -7,6 +7,7 @@ import { saveDeviceUserHasSeenIntro } from "@/services/storage.service";
 import React, { useRef, useState } from "react";
 import {
     Platform,
+    StatusBar,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -82,6 +83,7 @@ const AppIntroduction: React.FC<AppIntroductionProps> = ({ navigation }) => {
 
     return (
         <OLinearBackground>
+            <StatusBar translucent backgroundColor="transparent" />
             <View style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.pageIndicator}>{currentPage}/4</Text>
