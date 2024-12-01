@@ -67,10 +67,16 @@ const Encounters = ({
 
     const fetchEncounters = useCallback(async () => {
         try {
+            if (!userState.id) {
+                Sentry.captureMessage(
+                    `fetchEncounters: UserId undefined. Not making request. User maybe logging out or so?`,
+                );
+                return;
+            }
             setRefreshing(true);
             const encounters =
                 await API.encounter.encounterControllerGetEncountersByUser({
-                    userId: userState.id!,
+                    userId: userState.id,
                     startDate: metStartDateFilter,
                     endDate: metEndDateFilter,
                 });
