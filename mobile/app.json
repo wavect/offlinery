@@ -77,7 +77,7 @@
           "com.transistorsoft.fetch",
           "com.transistorsoft.customtask"
         ],
-        "locationAlwaysPermission": "Offlinery needs your location to show you interesting people nearby when you're using the app.",
+        "locationAlwaysPermission": "Offlinery needs your location on 'always' to work.",
         "NSLocationWhenInUseUsageDescription": "Offlinery needs your location to show you interesting people nearby when you're using the app.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Offlinery uses your location to notify you about interesting people nearby, even when the app is closed.",
         "NSLocationAlwaysUsageDescription": "Offlinery uses your location to inform you about interesting people nearby at any time.",
