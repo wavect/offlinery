@@ -6,7 +6,6 @@ import { AbstractEntityBuilder } from "./_abstract-entity-builder";
 export class BlacklistedRegionBuilder extends AbstractEntityBuilder<BlacklistedRegion> {
     protected createInitialEntity(): BlacklistedRegion {
         const blacklistedRegion = new BlacklistedRegion();
-        blacklistedRegion.id = 0;
         blacklistedRegion.location = {
             type: "Point",
             coordinates: [0, 0],
@@ -15,7 +14,7 @@ export class BlacklistedRegionBuilder extends AbstractEntityBuilder<BlacklistedR
         return blacklistedRegion;
     }
 
-    withId(id: number): this {
+    withId(id: string): this {
         this.entity.id = id;
         return this;
     }

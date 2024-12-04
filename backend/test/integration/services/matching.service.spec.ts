@@ -216,7 +216,7 @@ describe("Matching Service Integration Tests ", () => {
         });
         it("should only find users with a recent location update", async () => {
             const now = new Date();
-            const fourHoursAgo = new Date(now.getTime() - 4 * 60 * 60 * 1000);
+            const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
             const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
 
             const baseConfiguration = {
@@ -227,30 +227,34 @@ describe("Matching Service Integration Tests ", () => {
 
             const oldUser1 = await userFactory.persistNewTestUser({
                 ...baseConfiguration,
-                locationLastTimeUpdated: fourHoursAgo,
+                firstName: "oldUser1",
+                locationLastTimeUpdated: sixHoursAgo,
             });
 
             const oldUser2 = await userFactory.persistNewTestUser({
                 ...baseConfiguration,
-                locationLastTimeUpdated: new Date(
-                    now.getTime() - 5 * 60 * 60 * 1000,
-                ),
+                firstName: "oldUser2",
+                locationLastTimeUpdated: sixHoursAgo,
             });
 
             const recentUser1 = await userFactory.persistNewTestUser({
                 ...baseConfiguration,
+                firstName: "recent1",
                 locationLastTimeUpdated: twoHoursAgo,
             });
 
             const recentUser2 = await userFactory.persistNewTestUser({
                 ...baseConfiguration,
-                locationLastTimeUpdated: new Date(
-                    now.getTime() - 2 * 60 * 60 * 1000,
-                ),
+                firstName: "recent2",
+                locationLastTimeUpdated: twoHoursAgo,
             });
 
             const matches =
                 await matchingService.findNearbyMatches(testingMainUser);
+
+            console.log(
+                `matches are: ${matches.map((baseConfiguration) => baseConfiguration.firstName)}`,
+            );
 
             expect(matches.length).toBe(2);
             expect(matches.map((m) => m.id)).toEqual(
