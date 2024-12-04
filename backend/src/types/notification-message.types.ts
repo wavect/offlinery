@@ -4,5 +4,6 @@ import { ExpoPushMessage } from "expo-server-sdk";
 
 /** @dev Stricter typed Notification type */
 export type OfflineryNotification = ExpoPushMessage & {
-    data: NotificationNavigateUserDTO | NotificationNewEventDTO;
+    /** @dev get rid of any */
+    data: NotificationNavigateUserDTO | NotificationNewEventDTO | any;
 };

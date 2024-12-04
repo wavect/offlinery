@@ -11,6 +11,5 @@ export class NotificationNewEventDTO extends BaseNotificationADTO {
 
     @ApiProperty({ enum: EAppScreens })
     screen: EAppScreens.NEW_EVENT;
-
     // TODO: We might need to add eventId/Data here once we actually persist those, etc.
 }
