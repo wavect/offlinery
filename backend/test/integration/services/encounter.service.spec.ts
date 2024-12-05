@@ -200,6 +200,22 @@ describe("Encounter Service Integration Tests ", () => {
     });
 
     describe("should correctly manage and create encounters", () => {
+        it("should find the correct amount of encounters", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const encounters = await encounterService.findEncountersByUser(
+                mainUser.id,
+            );
+
+            expect(encounters.length).toEqual(0);
+        });
         it("should create an encounter with choice: APP", async () => {
             const mainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
@@ -386,7 +402,7 @@ describe("Encounter Service Integration Tests ", () => {
                     .length,
             ).toEqual(3);
         });
-        it("should create one single encounter for one single approach interaction", async () => {
+        it("should create one single encounter after a longer priod for one single approach interaction", async () => {
             const mainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
@@ -427,6 +443,188 @@ describe("Encounter Service Integration Tests ", () => {
                 latitude: 0,
                 longitude: 0,
             });
+
+            expect(
+                (await encounterService.findEncountersByUser(otherUser.id))
+                    .length,
+            ).toEqual(1);
+            expect(
+                (await encounterService.findEncountersByUser(mainUser.id))
+                    .length,
+            ).toEqual(1);
+        });
+        it("should create one single encounter for one single approach interaction", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            await userService.updateLocation(otherUser.id, {
+                latitude: 0,
+                longitude: 0,
+            });
+
+            /*** @DEV main user and other user now should have an encounter */
+            expect(
+                (await encounterService.findEncountersByUser(otherUser.id))
+                    .length,
+            ).toEqual(1);
+            expect(
+                (await encounterService.findEncountersByUser(mainUser.id))
+                    .length,
+            ).toEqual(1);
+
+            /** @DEV simulate time passed */
+            await testSleep(500);
+
+            await userService.updateLocation(otherUser.id, {
+                latitude: 0,
+                longitude: 0,
+            });
+
+            expect(
+                (await encounterService.findEncountersByUser(otherUser.id))
+                    .length,
+            ).toEqual(1);
+            expect(
+                (await encounterService.findEncountersByUser(mainUser.id))
+                    .length,
+            ).toEqual(1);
+        });
+        it("should stress test the encounter matching", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            await Promise.all([
+                userService.updateLocation(otherUser.id, {
+                    latitude: 0,
+                    longitude: 0,
+                }),
+                userService.updateLocation(otherUser.id, {
+                    latitude: 0,
+                    longitude: 0,
+                }),
+                userService.updateLocation(otherUser.id, {
+                    latitude: 0,
+                    longitude: 0,
+                }),
+                userService.updateLocation(otherUser.id, {
+                    latitude: 0,
+                    longitude: 0,
+                }),
+            ]);
+
+            expect(
+                (await encounterService.findEncountersByUser(otherUser.id))
+                    .length,
+            ).toEqual(1);
+            expect(
+                (await encounterService.findEncountersByUser(mainUser.id))
+                    .length,
+            ).toEqual(1);
+        });
+        it("should not create multiple encounters for a given pair if both users send location updates", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            for (let i = 0; i < 5; i++) {
+                userService.updateLocation(otherUser.id, {
+                    latitude: 0,
+                    longitude: 0,
+                });
+                userService.updateLocation(mainUser.id, {
+                    latitude: 0,
+                    longitude: 0,
+                });
+            }
+
+            // let the algorithm process it and wait for 5s
+            await testSleep(5000);
+
+            expect(
+                (await encounterService.findEncountersByUser(otherUser.id))
+                    .length,
+            ).toEqual(1);
+            expect(
+                (await encounterService.findEncountersByUser(mainUser.id))
+                    .length,
+            ).toEqual(1);
+        });
+        it("should not create multiple encounters for a given pair if onlz one user send location updates", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            for (let i = 0; i < 5; i++) {
+                userService.updateLocation(otherUser.id, {
+                    latitude: 0,
+                    longitude: 0,
+                });
+                userService.updateLocation(mainUser.id, {
+                    latitude: 0,
+                    longitude: 0,
+                });
+            }
+
+            // let the algorithm process it and wait for 5s
+            await testSleep(5000);
 
             expect(
                 (await encounterService.findEncountersByUser(otherUser.id))

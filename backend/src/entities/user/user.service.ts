@@ -548,7 +548,9 @@ export class UserService {
         userId: string,
         { latitude, longitude }: LocationUpdateDTO,
     ): Promise<User> {
+        // avoid race condition's here
         const user = await this.userRepository.findOneBy({ id: userId });
+
         if (!user) {
             throw new NotFoundException(`User with ID ${userId} not found`);
         }

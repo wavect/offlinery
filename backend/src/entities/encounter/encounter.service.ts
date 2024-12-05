@@ -17,7 +17,7 @@ import {
     PreconditionFailedException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { QueryRunner, Repository } from "typeorm";
 
 @Injectable()
 export class EncounterService {
@@ -136,89 +136,45 @@ export class EncounterService {
     /**
      * @param userSendingLocationUpdate
      * @param userMatches
-     * @param resetNearbyStatusOfOtherEncounters If true all usersThatWantToApproach
      *
      * that are not supplied to this function will be set to isNearbyRightNow=false as they are e.g. not supplied by the matching service. */
     async saveEncountersForUser(
         userSendingLocationUpdate: User,
         userMatches: User[],
-        resetNearbyStatusOfOtherEncounters: boolean,
     ): Promise<Map<string, Encounter>> {
-        this.logger.debug(
-            `Saving encounters for user ${userSendingLocationUpdate.id} with ${userMatches.length} users that want to approach. resetNearbyStatusOfOtherEncounters (${resetNearbyStatusOfOtherEncounters})`,
-        );
         const newEncounters: Map<string, Encounter> = new Map();
+        const queryRunner =
+            this.encounterRepository.manager.connection.createQueryRunner();
 
-        console.log(
-            "got userMatches: ",
-            userMatches.map((b) => b.id),
-        );
-
-        let userEncounterCount = await this.findCreatedEncountersPerDay(
-            userSendingLocationUpdate.id,
-        );
-
-        for (const u of userMatches) {
-            if (userEncounterCount >= MAX_ENCOUNTERS_PER_DAY_FOR_USER) {
-                this.logger.debug(
-                    `User ${userSendingLocationUpdate.id} has reached the daily encounter limit (${userEncounterCount}/${MAX_ENCOUNTERS_PER_DAY_FOR_USER}). Will not create encounter.`,
-                );
-                return;
-            }
-            // encounter should always be unique for a userId <> userId combination (not enforced on DB level as not possible)
-            // @dev If encounter exists already, update the values, otherwise create new one.
-            const existingEncounter =
-                await this.findExistingEncounterBetweenTwoUsers(
-                    userSendingLocationUpdate.id,
-                    u.id,
-                );
-
-            let encounter: Encounter;
-
-            if (existingEncounter) {
-                console.log(
-                    "Reusing existing encounter with ID:",
-                    existingEncounter.id,
-                );
-                encounter = existingEncounter;
-            } else {
-                console.log("Creating new encounter");
-                encounter = new Encounter();
-            }
-
-            // @dev Still sending new notifications if encounter status is MET_INTERESTED (because why not, multiple times to meet)
-            if (encounter.status === EEncounterStatus.MET_NOT_INTERESTED) {
-                newEncounters.set(
-                    u.id,
-                    await this.encounterRepository.save(encounter),
-                );
-                this.logger.debug(
-                    `Skipping encounter update for users ${u.id} and ${userSendingLocationUpdate.id} as encounterStatus is "MET_NOT_INTERESTED".`,
-                );
-                continue;
-            }
-
-            encounter.users = [userSendingLocationUpdate, u];
-            encounter.lastDateTimePassedBy = new Date();
-            encounter.lastLocationPassedBy = userSendingLocationUpdate.location;
-            encounter.setUserStatus(
+        try {
+            let userEncounterCount = await this.findCreatedEncountersPerDay(
                 userSendingLocationUpdate.id,
-                EEncounterStatus.NOT_MET,
             );
-            encounter.setUserStatus(u.id, EEncounterStatus.NOT_MET);
-            const persistedEncounter =
-                await this.encounterRepository.save(encounter);
 
-            newEncounters.set(u.id, persistedEncounter);
+            for (const userMatch of userMatches) {
+                if (userEncounterCount >= MAX_ENCOUNTERS_PER_DAY_FOR_USER) {
+                    this.logger.debug(
+                        `User ${userSendingLocationUpdate.id} has reached the daily encounter limit`,
+                    );
+                    break;
+                }
 
-            this.logger.debug(
-                `Created new/Updated encounter for ${u.id} and ${userSendingLocationUpdate.id}.`,
-            );
+                const encounter = await this.findOrCreateEncounterWithLock(
+                    userSendingLocationUpdate.id,
+                    userMatch.id,
+                    queryRunner,
+                );
+
+                if (encounter.status !== EEncounterStatus.MET_NOT_INTERESTED) {
+                    newEncounters.set(userMatch.id, encounter);
+                    userEncounterCount++;
+                }
+            }
+
+            return newEncounters;
+        } finally {
+            await queryRunner.release();
         }
-
-        userEncounterCount++;
-
-        return newEncounters;
     }
 
     async updateStatus(
@@ -290,6 +246,87 @@ export class EncounterService {
             longitude: otherUser.location.coordinates[0],
             latitude: otherUser.location.coordinates[1],
         };
+    }
+
+    private async findOrCreateEncounterWithLock(
+        user1Id: string,
+        user2Id: string,
+        queryRunner: QueryRunner,
+    ): Promise<Encounter> {
+        await queryRunner.startTransaction();
+
+        try {
+            // Always lock users in a consistent order (by user ID) to prevent deadlocks
+            const [smallerId, largerId] = [user1Id, user2Id].sort();
+
+            // Lock users one at a time in consistent order
+            const user1 = await queryRunner.manager
+                .createQueryBuilder()
+                .select("user")
+                .from(User, "user")
+                .where("user.id = :userId", { userId: smallerId })
+                .setLock("pessimistic_write")
+                .getOne();
+
+            const user2 = await queryRunner.manager
+                .createQueryBuilder()
+                .select("user")
+                .from(User, "user")
+                .where("user.id = :userId", { userId: largerId })
+                .setLock("pessimistic_write")
+                .getOne();
+
+            if (!user1 || !user2) {
+                throw new NotFoundException("One or both users not found");
+            }
+
+            // Get encounters with these users
+            const encounters = await queryRunner.manager
+                .createQueryBuilder(Encounter, "encounter")
+                .innerJoinAndSelect("encounter.users", "users")
+                .where("users.id IN (:...userIds)", {
+                    userIds: [smallerId, largerId],
+                })
+                .setLock("pessimistic_write")
+                .getMany();
+
+            // Find existing encounter with both users
+            const existingEncounter = encounters.find((encounter) => {
+                const userIds = new Set(encounter.users.map((u) => u.id));
+                return userIds.has(smallerId) && userIds.has(largerId);
+            });
+
+            if (existingEncounter) {
+                existingEncounter.lastDateTimePassedBy = new Date();
+                existingEncounter.lastLocationPassedBy =
+                    user1.id === user1Id ? user1.location : user2.location;
+                const savedEncounter = await queryRunner.manager.save(
+                    Encounter,
+                    existingEncounter,
+                );
+                await queryRunner.commitTransaction();
+                return savedEncounter;
+            }
+
+            // Create new encounter
+            const newEncounter = new Encounter();
+            newEncounter.users = [user1, user2];
+            newEncounter.lastDateTimePassedBy = new Date();
+            newEncounter.lastLocationPassedBy =
+                user1.id === user1Id ? user1.location : user2.location;
+            newEncounter.setUserStatus(user1.id, EEncounterStatus.NOT_MET);
+            newEncounter.setUserStatus(user2.id, EEncounterStatus.NOT_MET);
+
+            const savedEncounter = await queryRunner.manager.save(
+                Encounter,
+                newEncounter,
+            );
+            await queryRunner.commitTransaction();
+            return savedEncounter;
+        } catch (error) {
+            await queryRunner.rollbackTransaction();
+            throw error;
+        }
     }
 
     async pushMessage(
