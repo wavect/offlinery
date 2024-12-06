@@ -1,4 +1,4 @@
-import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
+import { JwtStatus, SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { TYPED_ENV } from "@/utils/env.utils";
@@ -12,7 +12,6 @@ import {
     Inject,
     Injectable,
     Logger,
-    NotFoundException,
     UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
@@ -30,32 +29,53 @@ export class AuthService {
     ) {}
 
     async signInWithJWT(accessToken: string): Promise<SignInResponseDTO> {
-        await this.jwtService.verifyAsync(accessToken, {
-            secret: TYPED_ENV.JWT_SECRET,
-        });
-        const decoded = this.jwtService.decode(accessToken);
-        const user: User = await this.usersService.findUserByEmailOrFail(
-            decoded.email,
-        );
-        if (!user) {
-            this.logger.debug(
-                `Sign in with JWT failed as user does not exist: ${decoded.email} (extracted from JWT: ${accessToken})`,
+        try {
+            await this.jwtService.verifyAsync(accessToken, {
+                secret: TYPED_ENV.JWT_SECRET,
+            });
+
+            const decoded = this.jwtService.decode(accessToken);
+            if (!decoded) {
+                return {
+                    status: JwtStatus.JWT_DECODE_ERROR,
+                    accessToken: null,
+                    refreshToken: null,
+                    user: null,
+                };
+            }
+            const user: User = await this.usersService.findUserByEmailOrFail(
+                decoded.email,
             );
-            throw new UnauthorizedException();
+
+            if (!user) {
+                this.logger.debug(
+                    `Sign in with JWT failed as user does not exist: ${decoded.email} (extracted from JWT: ${accessToken})`,
+                );
+                throw new UnauthorizedException();
+            }
+
+            const refreshToken = user.refreshToken;
+            if (!refreshToken) {
+                this.logger.debug(
+                    "User migration: Has a valid JWT but no refresh. Needs new login",
+                );
+                return null;
+            }
+
+            return {
+                status: JwtStatus.VALID,
+                accessToken,
+                refreshToken,
+                user: user.convertToPrivateDTO(),
+            };
+        } catch (error) {
+            return {
+                status: JwtStatus.JWT_INVALID,
+                accessToken: null,
+                refreshToken: null,
+                user: null,
+            };
         }
-        const refreshToken = user.refreshToken;
-        if (!refreshToken) {
-            this.logger.debug(
-                "User migration: Has a valid JWT but no refresh. Needs new login",
-            );
-            return null;
-        }
-        this.logger.debug(`User successfully signed in with JWT: ${user.id}`);
-        return {
-            accessToken,
-            refreshToken,
-            user: user.convertToPrivateDTO(),
-        };
     }
 
     /** @dev Used to protect routes after the email verification and before user registration
@@ -99,6 +119,7 @@ export class AuthService {
         const refreshToken = await this.generateRefreshToken(user);
 
         return {
+            status: JwtStatus.VALID,
             accessToken,
             refreshToken,
             user: user.convertToPrivateDTO(),
@@ -127,7 +148,12 @@ export class AuthService {
             this.logger.debug("Refreshing user jwt token", !!user);
             if (!user) {
                 this.logger.debug(`Cannot refresh token. User not found.`);
-                throw new NotFoundException("Invalid refresh token");
+                return {
+                    status: JwtStatus.JWT_CREATE_ERROR,
+                    accessToken: null,
+                    refreshToken: null,
+                    user: null,
+                };
             }
             const payload = { sub: user.id, email: user.email };
             const newAccessToken = await this.jwtService.signAsync(payload);
@@ -136,12 +162,19 @@ export class AuthService {
             this.logger.debug(`✓ JWT REFRESH DONE`);
 
             return {
+                status: JwtStatus.VALID,
                 accessToken: newAccessToken,
                 refreshToken: newRefreshToken,
                 user: user.convertToPrivateDTO(),
             };
         } catch (e) {
             this.logger.debug("User refreshment failed (jwt refresh) ", e);
+            return {
+                status: JwtStatus.JWT_CREATE_ERROR,
+                accessToken: null,
+                refreshToken: null,
+                user: null,
+            };
         }
     }
 }
