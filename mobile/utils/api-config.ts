@@ -4,6 +4,7 @@ import {
     MapApi,
     PendingUserApi,
     PushNotificationsApi,
+    SignInResponseDTOStatusEnum,
     UserApi,
     UserReportsApi,
 } from "@/api/gen/src";
@@ -131,19 +132,30 @@ class ApiManager {
                     refreshJwtDTO: { refreshToken },
                 })) as any;
 
-            await saveJWTValues(
-                refreshResponse.accessToken,
-                refreshResponse.refreshToken,
-            );
-            apiConfigLogger("✓ JWT and Refresh update successful.");
+            if (refreshResponse.status === SignInResponseDTOStatusEnum.VALID) {
+                await saveJWTValues(
+                    refreshResponse.accessToken,
+                    refreshResponse.refreshToken,
+                );
+                apiConfigLogger("✓ JWT and Refresh update successful.");
 
-            this.config = this.createConfiguration();
-            this.apis = this.initApis();
+                this.config = this.createConfiguration();
+                this.apis = this.initApis();
 
-            return refreshResponse.accessToken;
+                return refreshResponse.accessToken;
+            } else if (
+                refreshResponse.status.includes(
+                    SignInResponseDTOStatusEnum.JWT_DECODE_ERROR,
+                    SignInResponseDTOStatusEnum.JWT_INVALID,
+                )
+            ) {
+                /** @DEV only reset the storage if we receive an JWT invalid code */
+                await saveJWTValues("", "");
+            }
         } catch (e) {
-            console.error(`- JWT unable to refresh. Logging user out`);
-            await saveJWTValues("", "");
+            console.error(
+                `- Refresh failed due to network issue or unknown issue.`,
+            );
             throw e;
         }
     }

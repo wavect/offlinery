@@ -1,4 +1,5 @@
 import { MainStackParamList } from "@/MainStack.navigator";
+import { SignInResponseDTO } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
@@ -15,7 +16,6 @@ import {
     LOCAL_VALUE,
     deleteOnboardingState,
     getLocalValue,
-    saveJWTValues,
 } from "@/services/storage.service";
 import { OBackgroundLocationService } from "@/tasks/location.task";
 import { API } from "@/utils/api-config";
@@ -44,9 +44,10 @@ const Welcome = ({
                 await OBackgroundLocationService.getInstance().stop();
                 return;
             }
-            const resp = await API.auth.authControllerSignInByJWT({
-                signInJwtDTO: { jwtAccessToken: accessToken },
-            });
+            const resp: SignInResponseDTO =
+                await API.auth.authControllerSignInByJWT({
+                    signInJwtDTO: { jwtAccessToken: accessToken },
+                });
 
             await deleteOnboardingState();
 
@@ -58,7 +59,6 @@ const Welcome = ({
                 resp.refreshToken,
             );
         } catch (error) {
-            await saveJWTValues("", "");
             await OBackgroundLocationService.getInstance().stop();
 
             console.log("Forcing user to re-login.");
