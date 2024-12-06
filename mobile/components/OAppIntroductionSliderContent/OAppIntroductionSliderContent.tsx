@@ -2,7 +2,15 @@ import { Color, FontFamily } from "@/GlobalStyles";
 import { TR, formatBoldText, i18n } from "@/localization/translate.service";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+    Dimensions,
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
+const { width, height } = Dimensions.get("window");
 
 interface IAppIntroductionSliderContentProps {
     img: any;
@@ -18,7 +26,7 @@ export const OAppIntroductionSliderContent = (
     const { img, title, description, conclusion, lastPageAction } = props;
     return (
         <View style={styles.slide}>
-            <View style={{ flex: 1 }}>
+            <View style={styles.content}>
                 <View style={styles.imageContainer}>
                     <Image
                         source={img}
@@ -27,55 +35,50 @@ export const OAppIntroductionSliderContent = (
                     />
                 </View>
 
-                <View style={{ flex: 0.4 }}>
+                <View style={styles.textContainer}>
                     <Text
                         style={styles.title}
-                        adjustsFontSizeToFit={true}
                         numberOfLines={2}
+                        adjustsFontSizeToFit={true}
+                        minimumFontScale={0.7}
                     >
                         {title}
                     </Text>
-                    <View>
-                        <Text
-                            style={styles.description}
-                            adjustsFontSizeToFit={true}
-                            numberOfLines={5}
-                        >
-                            {formatBoldText(description)}
-                        </Text>
-                    </View>
+                    <Text
+                        style={styles.description}
+                        numberOfLines={5}
+                        adjustsFontSizeToFit={true}
+                        minimumFontScale={0.4}
+                    >
+                        {formatBoldText(description)}
+                    </Text>
                 </View>
             </View>
 
             <View style={styles.bottomAdditionalContainer}>
-                {lastPageAction ? (
+                {lastPageAction && (
                     <TouchableOpacity
                         onPress={lastPageAction}
-                        style={[styles.registerNowContainer]}
+                        style={styles.registerNowContainer}
                     >
                         <Text style={styles.registerNowText}>
                             {i18n.t(TR.letsMeetIRL)}
                         </Text>
                         <MaterialIcons
                             name="chevron-right"
-                            size={32}
+                            size={24}
                             color={Color.primary}
                         />
                     </TouchableOpacity>
-                ) : null}
+                )}
+
                 <View style={styles.divideContainer}>
                     <View style={styles.divider} />
                 </View>
 
-                <View style={styles.conclusionContainer}>
-                    <Text
-                        style={styles.conclusion}
-                        adjustsFontSizeToFit={true}
-                        numberOfLines={3}
-                    >
-                        {formatBoldText(conclusion)}
-                    </Text>
-                </View>
+                <Text style={styles.conclusion} numberOfLines={3}>
+                    {formatBoldText(conclusion)}
+                </Text>
             </View>
         </View>
     );
@@ -84,77 +87,79 @@ export const OAppIntroductionSliderContent = (
 const styles = StyleSheet.create({
     slide: {
         flex: 1,
-        paddingRight: 24,
-        paddingLeft: 24,
+        paddingHorizontal: width * 0.05,
         justifyContent: "space-between",
     },
+    content: {
+        flex: 1,
+        justifyContent: "space-around",
+    },
     imageContainer: {
-        flex: 0.6,
-        marginTop: 20,
-        marginBottom: 20,
+        flex: 0.5,
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: height * 0.03,
     },
     image: {
         height: "100%",
     },
+    textContainer: {
+        flex: 0.4,
+        alignItems: "center",
+        justifyContent: "center",
+    },
     title: {
         fontFamily: FontFamily.montserratSemiBold,
-        fontSize: 28,
+        fontSize: width * 0.07,
         fontWeight: "bold",
         color: "white",
-        marginBottom: 10,
         textAlign: "center",
-        maxWidth: "95%",
+        marginBottom: height * 0.02,
     },
     description: {
         fontFamily: FontFamily.montserratLight,
-        fontSize: 18,
-        marginLeft: 20,
-        marginRight: 20,
+        fontSize: width * 0.045,
         color: "white",
         textAlign: "center",
-    },
-    conclusion: {
-        fontFamily: FontFamily.montserratLight,
-        fontSize: 18,
-        color: "white",
-        textAlign: "center",
+        marginBottom: height * 0.02,
     },
     bottomAdditionalContainer: {
-        width: "100%",
+        alignItems: "center",
+        marginVertical: height < 600 ? 10 : 20,
     },
     divideContainer: {
-        display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 20,
-        marginBottom: 20,
+        marginVertical: height < 600 ? 10 : 20,
+        width: "100%",
     },
     divider: {
         height: 1,
         backgroundColor: "white",
         width: "50%",
     },
-    conclusionContainer: {
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-    },
     registerNowContainer: {
-        display: "flex",
         flexDirection: "row",
-        padding: 10,
+        padding: height * 0.017,
         borderRadius: 20,
         backgroundColor: "white",
         justifyContent: "center",
         alignItems: "center",
-        shadowColor: "#000",
-        shadowRadius: 3.84,
         elevation: 5,
+        marginBottom: height * 0.02,
+        width: "100%",
+        marginVertical: height < 600 ? 10 : 20,
     },
     registerNowText: {
         fontFamily: FontFamily.montserratSemiBold,
         color: Color.primary,
-        fontSize: 16,
+        fontSize: width * 0.045,
+    },
+    conclusion: {
+        fontFamily: FontFamily.montserratLight,
+        fontSize: width * 0.045,
+        color: "white",
+        textAlign: "center",
+        marginTop: height * 0.04,
     },
 });
