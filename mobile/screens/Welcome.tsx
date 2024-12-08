@@ -1,4 +1,5 @@
 import { MainStackParamList } from "@/MainStack.navigator";
+import { SignInResponseDTOStatusEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageColorContainer } from "@/components/OPageColorContainer/OPageColorContainer";
 import { OTermsDisclaimer } from "@/components/OTermsDisclaimer/OTermsDisclaimer";
@@ -24,6 +25,7 @@ import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
 import { Dimensions, Platform, StyleSheet, View } from "react-native";
+import { logger } from "react-native-reanimated/lib/typescript/logger";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "./routes";
 
@@ -48,6 +50,15 @@ const Welcome = ({
                 signInJwtDTO: { jwtAccessToken: accessToken },
             });
 
+            if (
+                resp.status === SignInResponseDTOStatusEnum.JWT_DECODE_ERROR ||
+                resp.status === SignInResponseDTOStatusEnum.JWT_INVALID
+            ) {
+                /** @DEV only reset storage if invalid jwt received */
+                await saveJWTValues("", "");
+                await OBackgroundLocationService.getInstance().stop();
+            }
+
             await deleteOnboardingState();
 
             await userAuthenticatedUpdate(
@@ -57,11 +68,11 @@ const Welcome = ({
                 resp.accessToken,
                 resp.refreshToken,
             );
-        } catch (error) {
-            await saveJWTValues("", "");
-            await OBackgroundLocationService.getInstance().stop();
-
-            console.log("Forcing user to re-login.");
+        } catch (error: any) {
+            console.log(
+                `Error checking Auth Status, User might be offline or backend not reachable.`,
+            );
+            logger.error(error);
         }
 
         return await isAuthenticated();

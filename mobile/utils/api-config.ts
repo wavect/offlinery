@@ -144,10 +144,10 @@ class ApiManager {
 
                 return refreshResponse.accessToken;
             } else if (
-                refreshResponse.status.includes(
-                    SignInResponseDTOStatusEnum.JWT_DECODE_ERROR,
-                    SignInResponseDTOStatusEnum.JWT_INVALID,
-                )
+                refreshResponse.status ===
+                    SignInResponseDTOStatusEnum.JWT_DECODE_ERROR ||
+                refreshResponse.status ===
+                    SignInResponseDTOStatusEnum.JWT_INVALID
             ) {
                 /** @DEV only reset the storage if we receive an JWT invalid code */
                 await saveJWTValues("", "");
