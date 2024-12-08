@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+export * from "./BaseNotificationADTO";
 export * from "./BlacklistedRegionDTO";
 export * from "./BlacklistedRegionDTOLocation";
 export * from "./CreateUserDTO";

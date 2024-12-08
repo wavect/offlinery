@@ -13,6 +13,7 @@ src/apis/UserFeedbackApi.ts
 src/apis/UserReportsApi.ts
 src/apis/index.ts
 src/index.ts
+src/models/BaseNotificationADTO.ts
 src/models/BlacklistedRegionDTO.ts
 src/models/BlacklistedRegionDTOLocation.ts
 src/models/CreateUserDTO.ts

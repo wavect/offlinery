@@ -39,7 +39,25 @@ export interface SignInResponseDTO {
      * @memberof SignInResponseDTO
      */
     user: UserPrivateDTO;
+    /**
+     *
+     * @type {string}
+     * @memberof SignInResponseDTO
+     */
+    status: SignInResponseDTOStatusEnum;
 }
+
+/**
+ * @export
+ */
+export const SignInResponseDTOStatusEnum = {
+    JWT_INVALID: "JWT_INVALID",
+    JWT_DECODE_ERROR: "JWT_DECODE_ERROR",
+    JWT_CREATE_ERROR: "JWT_CREATE_ERROR",
+    VALID: "VALID",
+} as const;
+export type SignInResponseDTOStatusEnum =
+    (typeof SignInResponseDTOStatusEnum)[keyof typeof SignInResponseDTOStatusEnum];
 
 /**
  * Check if a given object implements the SignInResponseDTO interface.
@@ -52,6 +70,7 @@ export function instanceOfSignInResponseDTO(
     if (!("refreshToken" in value) || value["refreshToken"] === undefined)
         return false;
     if (!("user" in value) || value["user"] === undefined) return false;
+    if (!("status" in value) || value["status"] === undefined) return false;
     return true;
 }
 
@@ -70,6 +89,7 @@ export function SignInResponseDTOFromJSONTyped(
         accessToken: json["accessToken"],
         refreshToken: json["refreshToken"],
         user: UserPrivateDTOFromJSON(json["user"]),
+        status: json["status"],
     };
 }
 
@@ -81,5 +101,6 @@ export function SignInResponseDTOToJSON(value?: SignInResponseDTO | null): any {
         accessToken: value["accessToken"],
         refreshToken: value["refreshToken"],
         user: UserPrivateDTOToJSON(value["user"]),
+        status: value["status"],
     };
 }
