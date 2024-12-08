@@ -1,5 +1,6 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { JwtStatus } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserController } from "@/entities/user/user.controller";
 import { User } from "@/entities/user/user.entity";
@@ -75,6 +76,7 @@ describe("UserController", () => {
             mockUser.firstName = "John";
 
             jest.spyOn(userService, "createUser").mockResolvedValue({
+                status: JwtStatus.VALID,
                 accessToken: "AT",
                 user: {
                     ...new UserBuilder().build(),
