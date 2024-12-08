@@ -549,6 +549,7 @@ export class UserService {
         { latitude, longitude }: LocationUpdateDTO,
     ): Promise<User> {
         const user = await this.userRepository.findOneBy({ id: userId });
+
         if (!user) {
             throw new NotFoundException(`User with ID ${userId} not found`);
         }

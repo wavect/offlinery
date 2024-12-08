@@ -82,7 +82,6 @@ export class MatchingService {
                 await this.encounterService.saveEncountersForUser(
                     userSendingLocationUpdate,
                     nearbyMatches,
-                    true, // reset older encounters
                 );
 
             if (!newEncounters?.size) {
