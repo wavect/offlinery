@@ -37,10 +37,10 @@ const Encounters = ({
     const { state: encounterState, dispatch } = useEncountersContext();
     const { state: userState } = useUserContext();
     const today = new Date();
-    const twoWeeksBefore = new Date();
-    twoWeeksBefore.setDate(today.getDate() - 14);
+    const threeMonthsBefore = new Date();
+    threeMonthsBefore.setDate(today.getDate() - 90);
     const [metStartDateFilter, setMetStartDateFilter] =
-        useState<Date>(twoWeeksBefore);
+        useState<Date>(threeMonthsBefore);
     const [metEndDateFilter, setMetEndDateFilter] = useState<Date>(today);
     const [refreshing, setRefreshing] = useState(false);
 
