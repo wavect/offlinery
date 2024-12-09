@@ -25,7 +25,6 @@ import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import { useCallback, useState } from "react";
 import { Dimensions, Platform, StyleSheet, View } from "react-native";
-import { logger } from "react-native-reanimated/lib/typescript/logger";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "./routes";
 
