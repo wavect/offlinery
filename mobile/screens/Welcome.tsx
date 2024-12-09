@@ -71,7 +71,6 @@ const Welcome = ({
             console.log(
                 `Error checking Auth Status, User might be offline or backend not reachable.`,
             );
-            logger.error(error);
         }
 
         return await isAuthenticated();
