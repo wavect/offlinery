@@ -9,12 +9,13 @@ import { OTextInput } from "@/components/OTextInput/OTextInput";
 import {
     EACTION_USER,
     getPublicProfileFromUserData,
-    registerUser,
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { registerUser } from "@/services/auth.service";
 import { saveOnboardingState } from "@/services/storage.service";
 import { CommonActions } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -57,7 +58,14 @@ const BioLetThemKnow = ({
                     routes: [{ name: ROUTES.MainTabView }],
                 }),
             );
-        const onFailure = (err: any) => console.error(err); // TODO
+        const onFailure = (err: any) => {
+            console.error(err);
+            Sentry.captureException(err, {
+                tags: {
+                    bioLetThemKnow: "onFailure",
+                },
+            });
+        };
         try {
             await registerUser(state, dispatch, onSuccess, onFailure);
         } finally {

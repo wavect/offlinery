@@ -2,9 +2,11 @@ import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
-import { registerUser, useUserContext } from "@/context/UserContext";
+import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { registerUser } from "@/services/auth.service";
 import { CommonActions } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
@@ -32,7 +34,14 @@ const SafetyCheck = ({
                             ],
                         }),
                     );
-                const onFailure = (err: any) => console.error(err); // TODO
+                const onFailure = (err: any) => {
+                    console.error(err);
+                    Sentry.captureException(err, {
+                        tags: {
+                            safetyCheck: "onFailure",
+                        },
+                    });
+                };
                 await registerUser(state, dispatch, onSuccess, onFailure);
             },
         });

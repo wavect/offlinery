@@ -22,6 +22,7 @@ import { OBackgroundLocationService } from "@/tasks/location.task";
 import { API } from "@/utils/api-config";
 import { writeSupportEmail } from "@/utils/misc.utils";
 import { CommonActions, useFocusEffect } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useCallback, useState } from "react";
 import { Dimensions, Platform, StyleSheet, View } from "react-native";
@@ -67,10 +68,15 @@ const Welcome = ({
                 resp.accessToken,
                 resp.refreshToken,
             );
-        } catch (error: any) {
+        } catch (error) {
             console.log(
                 `Error checking Auth Status, User might be offline or backend not reachable.`,
             );
+            Sentry.captureException(error, {
+                tags: {
+                    authStatus: "JWT not checked",
+                },
+            });
         }
 
         return await isAuthenticated();

@@ -13,7 +13,7 @@
  */
 
 import Constants from "expo-constants";
-import { isExpoGoEnvironment } from "../../../utils/misc.utils";
+import { isExpoGoEnvironment } from "../../../utils/expo.utils";
 
 /*export const BASE_PATH = "http://localhost:3000/v1".replace(/\/+$/, "");*/
 

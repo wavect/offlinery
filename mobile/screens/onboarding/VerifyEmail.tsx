@@ -5,13 +5,12 @@ import OErrorMessage from "@/components/OErrorMessage.tsx/OErrorMessage";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OSplitInput } from "@/components/OSplitInput/OSplitInput";
 import { useUserContext } from "@/context/UserContext";
-import { TR, i18n } from "@/localization/translate.service";
+import { TR, getLocalLanguageID, i18n } from "@/localization/translate.service";
 import {
     LOCAL_VALUE,
     saveLocalValue,
     saveOnboardingState,
 } from "@/services/storage.service";
-import { getLocalLanguageID } from "@/utils/misc.utils";
 import React, { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { StyleSheet } from "react-native";

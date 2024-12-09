@@ -1,8 +1,6 @@
 import {
     BlacklistedRegionDTO,
     BlacklistedRegionDTOLocationTypeEnum,
-    CreateUserDTO,
-    UserControllerCreateUserRequest,
     UserPrivateDTOApproachChoiceEnum,
     UserPrivateDTODateModeEnum,
     UserPrivateDTOGenderDesireEnum,
@@ -13,19 +11,15 @@ import {
 } from "@/api/gen/src";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
-import { refreshUserData } from "@/services/auth.service";
 import {
     LOCAL_VALUE,
-    deleteOnboardingState,
     deleteSessionDataFromStorage,
     getLocalValue,
     saveLocalValue,
 } from "@/services/storage.service";
 import { OBackgroundLocationService } from "@/tasks/location.task";
-import { API } from "@/utils/api-config";
 import { getAge } from "@/utils/date.utils";
 import { getValidImgURI, isImagePicker } from "@/utils/media.utils";
-import { getLocalLanguageID } from "@/utils/misc.utils";
 import { CommonActions } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -223,63 +217,6 @@ export const useUserContext = (): IUserContextType => {
         throw new Error("useUserContext must be used within a UserProvider");
     }
     return context;
-};
-
-export const registerUser = async (
-    state: IUserData,
-    dispatch: React.Dispatch<IUserAction>,
-    onSuccess: () => void,
-    onError: (err: any) => void,
-) => {
-    // Prepare the user data
-    const userData: CreateUserDTO = {
-        firstName: state.firstName,
-        clearPassword: state.clearPassword,
-        email: state.email,
-        wantsEmailUpdates: state.wantsEmailUpdates,
-        birthDay: state.birthDay,
-        gender: state.gender!,
-        genderDesire: state.genderDesire!,
-        intentions: state.intentions!,
-        approachChoice: state.approachChoice,
-        blacklistedRegions: state.blacklistedRegions.map((r) =>
-            mapRegionToBlacklistedRegionDTO(r),
-        ),
-        approachFromTime: state.approachFromTime,
-        approachToTime: state.approachToTime,
-        bio: state.bio,
-        dateMode: state.dateMode,
-        preferredLanguage: getLocalLanguageID(),
-    };
-
-    const requestParameters: UserControllerCreateUserRequest = {
-        createUserDTO: userData,
-        images: await getUserImagesForUpload(state.imageURIs),
-    };
-
-    try {
-        const signInResponseDTO =
-            await API.user.userControllerCreateUser(requestParameters);
-        const { user, accessToken, refreshToken } = signInResponseDTO;
-        console.log("User created successfully:", user);
-
-        await deleteOnboardingState();
-
-        // Update the user state
-        await refreshUserData(dispatch, user, accessToken, refreshToken);
-
-        // Navigate to the next screen or update the UI as needed
-        onSuccess();
-    } catch (error: any) {
-        console.error("Error creating user:", error, JSON.stringify(error));
-        onError(error);
-        Sentry.captureException(error, {
-            tags: {
-                userContext: "registration",
-            },
-        });
-        // Handle the error (e.g., show an error message to the user)
-    }
 };
 
 export const getUserImagesForUpload = async (

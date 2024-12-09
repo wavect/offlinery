@@ -1,14 +1,10 @@
-import { CreateUserDTOPreferredLanguageEnum } from "@/api/gen/src";
 import { i18n, TR } from "@/localization/translate.service";
 import { SUPPORT_MAIL } from "@/utils/general.constants";
 import * as Sentry from "@sentry/react-native";
-import Constants from "expo-constants";
 import { jwtDecode } from "jwt-decode";
 import { Alert, Linking, Platform } from "react-native";
 
 export const REFRESH_REMAINING_MINUTE = 1;
-
-export const isExpoGoEnvironment = Constants.appOwnership === "expo";
 
 export const sleep = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -54,13 +50,6 @@ function decodeJWT(token: string) {
         throw error;
     }
 }
-
-export const getLocalLanguageID = (): CreateUserDTOPreferredLanguageEnum => {
-    return (
-        (i18n.locale as CreateUserDTOPreferredLanguageEnum) ??
-        CreateUserDTOPreferredLanguageEnum.en
-    );
-};
 
 export const isNumericRegex = /^\d+$/;
 

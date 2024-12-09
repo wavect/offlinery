@@ -1,4 +1,6 @@
 import {
+    CreateUserDTO,
+    UserControllerCreateUserRequest,
     UserPrivateDTO,
     UserPrivateDTOVerificationStatusEnum,
 } from "@/api/gen/src";
@@ -7,11 +9,20 @@ import {
     IUserAction,
     IUserData,
     MapRegion,
+    getUserImagesForUpload,
     mapBlacklistedRegionDTOToMapRegion,
+    mapRegionToBlacklistedRegionDTO,
 } from "@/context/UserContext";
+import { getLocalLanguageID } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
-import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
-import { Dispatch } from "react";
+import {
+    LOCAL_VALUE,
+    deleteOnboardingState,
+    saveLocalValue,
+} from "@/services/storage.service";
+import { API } from "@/utils/api-config";
+import * as Sentry from "@sentry/react-native";
+import React, { Dispatch } from "react";
 
 export const refreshUserData = async (
     dispatch: Dispatch<IUserAction>,
@@ -46,6 +57,63 @@ export const refreshUserData = async (
     }
     if (jwtRefreshToken) {
         await saveLocalValue(LOCAL_VALUE.JWT_REFRESH_TOKEN, jwtRefreshToken);
+    }
+};
+
+export const registerUser = async (
+    state: IUserData,
+    dispatch: React.Dispatch<IUserAction>,
+    onSuccess: () => void,
+    onError: (err: any) => void,
+) => {
+    // Prepare the user data
+    const userData: CreateUserDTO = {
+        firstName: state.firstName,
+        clearPassword: state.clearPassword,
+        email: state.email,
+        wantsEmailUpdates: state.wantsEmailUpdates,
+        birthDay: state.birthDay,
+        gender: state.gender!,
+        genderDesire: state.genderDesire!,
+        intentions: state.intentions!,
+        approachChoice: state.approachChoice,
+        blacklistedRegions: state.blacklistedRegions.map((r) =>
+            mapRegionToBlacklistedRegionDTO(r),
+        ),
+        approachFromTime: state.approachFromTime,
+        approachToTime: state.approachToTime,
+        bio: state.bio,
+        dateMode: state.dateMode,
+        preferredLanguage: getLocalLanguageID(),
+    };
+
+    const requestParameters: UserControllerCreateUserRequest = {
+        createUserDTO: userData,
+        images: await getUserImagesForUpload(state.imageURIs),
+    };
+
+    try {
+        const signInResponseDTO =
+            await API.user.userControllerCreateUser(requestParameters);
+        const { user, accessToken, refreshToken } = signInResponseDTO;
+        console.log("User created successfully:", user);
+
+        await deleteOnboardingState();
+
+        // Update the user state
+        await refreshUserData(dispatch, user, accessToken, refreshToken);
+
+        // Navigate to the next screen or update the UI as needed
+        onSuccess();
+    } catch (error: any) {
+        console.error("Error creating user:", error, JSON.stringify(error));
+        onError(error);
+        Sentry.captureException(error, {
+            tags: {
+                userContext: "registration",
+            },
+        });
+        // Handle the error (e.g., show an error message to the user)
     }
 };
 
