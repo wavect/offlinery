@@ -2,7 +2,6 @@ import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import {
     EncounterPublicDTOStatusEnum,
     UpdateEncounterStatusDTO,
-    UserPrivateDTOApproachChoiceEnum,
 } from "@/api/gen/src";
 import {
     IOButtonSmallVariant,
@@ -96,111 +95,70 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     <Text
                         style={styles.encounterInfo}
                     >{`${getTimePassedWithText(encounterProfile.lastTimePassedBy)}`}</Text>
-
-                    {showActions && (
-                        <View style={styles.actionContainer}>
-                            <View style={styles.dropdownContainer}>
-                                <Dropdown
-                                    testID={TestData.encounters.inputStatus}
-                                    data={dateStates}
-                                    labelField="label"
-                                    valueField="value"
-                                    value={dateStatus}
-                                    onChange={setDateStatus}
-                                    disable={encounterProfile.reported}
-                                    containerStyle={
-                                        styles.dropdownContainerStyle
-                                    }
-                                    style={[
-                                        styles.encounterDropdownPicker,
-                                        encounterProfile.reported
-                                            ? styles.encounterDropdownPickerDisabled
-                                            : null,
-                                    ]}
-                                    placeholderStyle={
-                                        styles.dropdownPlaceholderStyle
-                                    }
-                                    selectedTextStyle={
-                                        styles.dropdownSelectedTextStyle
-                                    }
-                                    itemTextStyle={styles.dropdownItemTextStyle}
-                                />
-                            </View>
-                            <View style={styles.buttonContainer}>
-                                {dateStatus ===
-                                    EncounterPublicDTOStatusEnum.met_interested && (
-                                    <OButtonSmall
-                                        label={i18n.t(TR.leaveMessageBtnLbl)}
-                                        onPress={() => setModalVisible(true)}
-                                        variant={IOButtonSmallVariant.Primary}
-                                        numberOfLines={1}
-                                        adjustsFontSizeToFit={true}
-                                    />
-                                )}
-                                {dateStatus ===
-                                    EncounterPublicDTOStatusEnum.met_not_interested && (
-                                    <OButtonSmall
-                                        isDisabled={encounterProfile.reported}
-                                        variant={IOButtonSmallVariant.Danger}
-                                        onPress={() =>
-                                            navigation.navigate(
-                                                ROUTES.Main.ReportEncounter,
-                                                {
-                                                    personToReport:
-                                                        encounterProfile,
-                                                },
-                                            )
-                                        }
-                                        label={
-                                            encounterProfile.reported
-                                                ? i18n.t(TR.reported)
-                                                : i18n.t(TR.report)
-                                        }
-                                        numberOfLines={1}
-                                        adjustsFontSizeToFit={true}
-                                    />
-                                )}
-                                {state.approachChoice !==
-                                    UserPrivateDTOApproachChoiceEnum.be_approached &&
-                                    dateStatus ===
-                                        EncounterPublicDTOStatusEnum.not_met &&
-                                    encounterProfile.isNearbyRightNow && (
-                                        <OButtonSmall
-                                            label={i18n.t(TR.navigate)}
-                                            numberOfLines={1}
-                                            variant={
-                                                IOButtonSmallVariant.Primary
-                                            }
-                                            onPress={() =>
-                                                navigation.navigate(
-                                                    ROUTES.HouseRules,
-                                                    {
-                                                        nextPage:
-                                                            ROUTES.Main
-                                                                .NavigateToApproach,
-                                                        propsForNextScreen: {
-                                                            navigateToPerson:
-                                                                encounterProfile,
-                                                        },
-                                                    },
-                                                )
-                                            }
-                                            adjustsFontSizeToFit={true}
-                                        />
-                                    )}
-                            </View>
-                        </View>
-                    )}
                 </View>
-                {showActions && encounterProfile.rating && (
-                    <Text
-                        style={styles.trustScore}
-                        onPress={() => alert(i18n.t(TR.ratingDescr))}
-                    >
-                        {i18n.t(TR.trust)}({encounterProfile.rating})
-                    </Text>
-                )}
             </View>
+
+            {showActions && (
+                <View style={styles.actionContainer}>
+                    <View style={styles.dropdownContainer}>
+                        <Dropdown
+                            testID={TestData.encounters.inputStatus}
+                            data={dateStates}
+                            labelField="label"
+                            valueField="value"
+                            value={dateStatus}
+                            onChange={setDateStatus}
+                            disable={encounterProfile.reported}
+                            containerStyle={styles.dropdownContainerStyle}
+                            style={[
+                                styles.encounterDropdownPicker,
+                                encounterProfile.reported
+                                    ? styles.encounterDropdownPickerDisabled
+                                    : null,
+                            ]}
+                            placeholderStyle={styles.dropdownPlaceholderStyle}
+                            selectedTextStyle={styles.dropdownSelectedTextStyle}
+                            itemTextStyle={styles.dropdownItemTextStyle}
+                        />
+                    </View>
+                    <View style={styles.buttonContainer}>
+                        {dateStatus ===
+                            EncounterPublicDTOStatusEnum.met_interested && (
+                            <OButtonSmall
+                                label={i18n.t(TR.leaveMessageBtnLbl)}
+                                onPress={() => setModalVisible(true)}
+                                variant={IOButtonSmallVariant.Primary}
+                                numberOfLines={1}
+                                adjustsFontSizeToFit={true}
+                            />
+                        )}
+
+                        {dateStatus ===
+                            EncounterPublicDTOStatusEnum.met_not_interested && (
+                            <OButtonSmall
+                                isDisabled={encounterProfile.reported}
+                                variant={IOButtonSmallVariant.Danger}
+                                onPress={() =>
+                                    navigation.navigate(
+                                        ROUTES.Main.ReportEncounter,
+                                        {
+                                            personToReport: encounterProfile,
+                                        },
+                                    )
+                                }
+                                label={
+                                    encounterProfile.reported
+                                        ? i18n.t(TR.reported)
+                                        : i18n.t(TR.report)
+                                }
+                                numberOfLines={1}
+                                adjustsFontSizeToFit={true}
+                            />
+                        )}
+                    </View>
+                </View>
+            )}
+
             {dateStatus === EncounterPublicDTOStatusEnum.met_interested &&
                 encounterProfile.lastReceivedMessage && (
                     <View style={styles.receivedMessageContainer}>
