@@ -77,6 +77,7 @@ export const PhotoContainer = (props: IPhotoContainerProps) => {
                     ...state.imageURIs,
                     [imageIdx]: null,
                 },
+                removeStatus: true,
             },
         });
     };

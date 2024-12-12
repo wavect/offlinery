@@ -53,6 +53,7 @@ export interface IUserData {
     bio: string;
     dateMode: UserPrivateDTODateModeEnum;
     markedForDeletion: boolean;
+    removeStatus?: boolean;
 }
 
 export const isAuthenticated = async () => {
@@ -190,8 +191,27 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
                 // @dev Needed for location service which has no access to userContext
                 saveLocalValue(LOCAL_VALUE.USER_ID, payload.id);
             }
+            if (action.payload.removeStatus) {
+                return { ...state, ...action.payload };
+            } else {
+                const newImageURIs = {
+                    ...state.imageURIs,
+                    ...(payload.imageURIs
+                        ? Object.fromEntries(
+                              Object.entries(payload.imageURIs).filter(
+                                  ([key, value]) =>
+                                      value !== null && value !== {},
+                              ),
+                          )
+                        : {}),
+                };
 
-            return { ...state, ...payload };
+                return {
+                    ...state,
+                    ...payload,
+                    imageURIs: newImageURIs,
+                };
+            }
         default:
             return state;
     }
