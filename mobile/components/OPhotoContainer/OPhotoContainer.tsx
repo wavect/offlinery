@@ -98,7 +98,11 @@ export const PhotoContainer = (props: IPhotoContainerProps) => {
     return (
         <View style={[styles.photoContainer, { width: size, height: size }]}>
             <Pressable style={styles.photoContent} onPress={openMediaLibrary}>
-                {isLoading ? <OLoadingSpinner /> : imageContainerContent}
+                {isLoading ? (
+                    <OLoadingSpinner size={50} />
+                ) : (
+                    imageContainerContent
+                )}
             </Pressable>
             {img && (
                 <Pressable style={styles.removeButton} onPress={removeImage}>
