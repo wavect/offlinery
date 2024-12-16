@@ -82,7 +82,7 @@ export const OLoadingSpinner: React.FC<SpinnerProps> = ({
                     {
                         width: size,
                         height: size,
-                        borderColor: color,
+                        borderTopColor: color,
                         transform: [{ rotate: spin }],
                     },
                     spinnerStyle,
@@ -118,9 +118,9 @@ const styles = StyleSheet.create<SpinnerStyles>({
     },
     spinner: {
         borderWidth: 4,
-        borderRadius: 50,
-        borderTopColor: "transparent",
-        borderRightColor: "transparent",
-        borderLeftColor: "transparent",
+        borderRadius: 25,
+        borderRightColor: "#00000001",
+        borderLeftColor: "#00000001",
+        borderBottomColor: "#00000001",
     },
 });
