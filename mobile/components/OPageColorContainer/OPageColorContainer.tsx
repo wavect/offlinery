@@ -51,7 +51,11 @@ export const OPageColorContainer = (props: IOPageColorContainerProps) => {
     return (
         <View style={styles.container}>
             <OLinearBackground>
-                <StatusBar translucent backgroundColor="transparent" />
+                <StatusBar
+                    barStyle="light-content"
+                    translucent
+                    backgroundColor="transparent"
+                />
                 <KeyboardAvoidingView
                     style={styles.container}
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
