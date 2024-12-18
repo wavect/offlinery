@@ -65,51 +65,69 @@ const ProfileView = ({
             bottomContainerChildren={bottomContainerChildren}
         >
             <View style={styles.carouselContainer}>
-                <Carousel
-                    ref={carouselRef}
-                    loop
-                    width={width - 32}
-                    height={(width - 32) * 0.8}
-                    autoPlay={false}
-                    data={user.imageURIs}
-                    scrollAnimationDuration={1000}
-                    onProgressChange={(_, absoluteProgress) => {
-                        progressValue.value = absoluteProgress;
-                        setCurrentImageIndex(
-                            Math.floor(absoluteProgress) %
-                                user.imageURIs.length,
-                        );
-                    }}
-                    renderItem={({ item, index }) => (
-                        <TouchableOpacity
-                            onPress={() => {
-                                setCurrentImageIndex(index);
-                                setFullScreenVisible(true);
-                            }}
-                        >
-                            <Image
-                                source={{ uri: getValidImgURI(item) }}
-                                style={styles.carouselImage}
-                            />
-                        </TouchableOpacity>
-                    )}
-                />
-                <View style={styles.paginationContainer}>
-                    {user.imageURIs.map((_, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            style={[
-                                styles.paginationDot,
-                                {
-                                    backgroundColor:
-                                        currentImageIndex === index
-                                            ? Color.primaryBright
-                                            : Color.lightGray,
-                                },
-                            ]}
+                {user.imageURIs.length > 1 ? (
+                    <Carousel
+                        ref={carouselRef}
+                        loop
+                        width={width - 32}
+                        height={(width - 32) * 0.8}
+                        autoPlay={false}
+                        data={user.imageURIs}
+                        scrollAnimationDuration={1000}
+                        onProgressChange={(_, absoluteProgress) => {
+                            progressValue.value = absoluteProgress;
+                            setCurrentImageIndex(
+                                Math.floor(absoluteProgress) %
+                                    user.imageURIs.length,
+                            );
+                        }}
+                        renderItem={({ item, index }) => (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setCurrentImageIndex(index);
+                                    setFullScreenVisible(true);
+                                }}
+                            >
+                                <Image
+                                    source={{ uri: getValidImgURI(item) }}
+                                    style={styles.carouselImage}
+                                />
+                            </TouchableOpacity>
+                        )}
+                    />
+                ) : (
+                    <TouchableOpacity
+                        style={styles.touchableContainer}
+                        onPress={() => {
+                            setFullScreenVisible(true);
+                            setCurrentImageIndex(0);
+                        }}
+                    >
+                        <Image
+                            source={{ uri: getValidImgURI(user.imageURIs[0]) }}
+                            style={styles.carouselImage}
+                            resizeMode="cover"
                         />
-                    ))}
-                </View>
+                    </TouchableOpacity>
+                )}
+                {user.imageURIs.length > 1 && (
+                    <View style={styles.paginationContainer}>
+                        {user.imageURIs.map((_, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                style={[
+                                    styles.paginationDot,
+                                    {
+                                        backgroundColor:
+                                            currentImageIndex === index
+                                                ? Color.primaryBright
+                                                : Color.lightGray,
+                                    },
+                                ]}
+                            />
+                        ))}
+                    </View>
+                )}
             </View>
 
             {user.imageURIs.length > 2 && (
@@ -161,6 +179,12 @@ const ProfileView = ({
 };
 
 const styles = StyleSheet.create({
+    touchableContainer: {
+        width: "100%",
+        height: (Dimensions.get("window").width - 32) * 0.8,
+        justifyContent: "center",
+        alignItems: "center",
+    },
     carouselContainer: {
         marginBottom: 20,
         alignItems: "center",
@@ -169,6 +193,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         borderRadius: 10,
+        resizeMode: "cover",
     },
     paginationContainer: {
         flexDirection: "row",
