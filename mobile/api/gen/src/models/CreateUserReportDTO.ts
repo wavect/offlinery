@@ -49,6 +49,7 @@ export interface CreateUserReportDTO {
  */
 export const CreateUserReportDTOIncidentTypeEnum = {
     Disrespectful: "Disrespectful",
+    Child_Sexual_Abuse: "Child Sexual Abuse",
     Sexual_harassment: "Sexual harassment",
     Violent_behavior: "Violent behavior",
     Other: "Other",
