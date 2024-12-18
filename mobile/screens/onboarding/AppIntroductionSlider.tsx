@@ -83,7 +83,11 @@ const AppIntroduction: React.FC<AppIntroductionProps> = ({ navigation }) => {
 
     return (
         <OLinearBackground>
-            <StatusBar translucent backgroundColor="transparent" />
+            <StatusBar
+                barStyle="light-content"
+                translucent
+                backgroundColor="transparent"
+            />
             <View style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.pageIndicator}>{currentPage}/4</Text>
