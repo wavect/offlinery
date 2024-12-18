@@ -204,6 +204,7 @@ export const de: Language = {
     errNoUserProvided: "Fehler: Kein Nutzer angegeben",
     reportIncident: {
         disrespectful: "Respektlos",
+        csae: "Kindesmissbrauch",
         sexualHarassment: "Sexuelle Belästigung",
         violentBehavior: "Gewalttätiges Verhalten",
         other: "Andere",
