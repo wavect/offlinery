@@ -202,6 +202,7 @@ export const en = {
     errNoUserProvided: "Error: No user provided",
     reportIncident: {
         disrespectful: "Disrespectful",
+        csae: "Child abuse",
         sexualHarassment: "Sexual harassment",
         violentBehavior: "Violent behavior",
         other: "Other",

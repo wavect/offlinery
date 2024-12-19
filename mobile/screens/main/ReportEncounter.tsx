@@ -44,6 +44,10 @@ const ReportEncounter = ({
             value: CreateUserReportDTOIncidentTypeEnum.Disrespectful,
         },
         {
+            label: i18n.t(TR.reportIncident.csae),
+            value: CreateUserReportDTOIncidentTypeEnum.Child_Sexual_Abuse,
+        },
+        {
             label: i18n.t(TR.reportIncident.sexualHarassment),
             value: CreateUserReportDTOIncidentTypeEnum.Sexual_harassment,
         },

@@ -40,6 +40,7 @@ export enum EEmailVerificationStatus {
 
 export enum EIncidentType {
     Disrespectful = "Disrespectful",
+    CSAE = "Child Sexual Abuse",
     SexualHarassment = "Sexual harassment",
     Violent = "Violent behavior",
     Other = "Other",
