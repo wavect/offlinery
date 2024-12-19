@@ -60,6 +60,7 @@ const ProfileView = ({
         route?.params?.bottomContainerChildren;
 
     useEffect(() => {
+        // @dev overrides tab nav title
         navigation.getParent()?.setOptions({
             headerTitle: `${user.firstName}, ${user.age}`,
         })
