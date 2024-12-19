@@ -178,6 +178,7 @@ export const getPublicProfileFromUserData = (
         bio: state.bio,
         age: getAge(state.birthDay),
         imageURIs: getSavedImageURIs(state),
+        intentions: state.intentions ?? [],
     };
 };
 

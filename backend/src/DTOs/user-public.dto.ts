@@ -1,3 +1,4 @@
+import { EIntention } from "@/types/user.types";
 import { ApiProperty } from "@nestjs/swagger";
 
 // TODO: The public DTO might need to be further trimmed for GDPR
@@ -23,6 +24,13 @@ export class UserPublicDTO {
 
     @ApiProperty({ description: "The user's bio" })
     bio: string;
+
+    @ApiProperty({
+        enum: EIntention,
+        isArray: true,
+        description: "The user's intentions",
+    })
+    intentions: EIntention[];
 
     @ApiProperty({ description: "The user's trust score" })
     trustScore?: number;

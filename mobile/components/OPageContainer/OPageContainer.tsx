@@ -8,9 +8,9 @@ import {
     Platform,
     RefreshControl,
     ScrollView,
-    StatusBar,
-    Text,
-    View,
+    StatusBar, StyleProp,
+    Text, TextStyle,
+    View, ViewStyle,
 } from "react-native";
 import styles from "./OPageContainer.styles";
 
@@ -23,12 +23,14 @@ interface IOPageContainerProps {
     children: ReactNode;
     bottomContainerChildren?: ReactNode;
     doNotUseScrollView?: boolean;
+    subtitleStyle?: StyleProp<TextStyle>,
+    containerStyle?: StyleProp<ViewStyle>,
     fullpageIcon?: IconName;
     refreshFunc?: () => Promise<void>;
 }
 
 export const OPageContainer = (props: IOPageContainerProps) => {
-    const { doNotUseScrollView, refreshFunc } = props;
+    const { doNotUseScrollView, refreshFunc, subtitleStyle, containerStyle } = props;
 
     if (doNotUseScrollView && refreshFunc) {
         throw new Error(
@@ -52,7 +54,7 @@ export const OPageContainer = (props: IOPageContainerProps) => {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, containerStyle]}>
             <StatusBar
                 barStyle="dark-content"
                 translucent={true}
@@ -81,7 +83,7 @@ export const OPageContainer = (props: IOPageContainerProps) => {
             >
                 {props.title && <Text style={Title}>{props.title}</Text>}
                 {props.subtitle && (
-                    <Text style={Subtitle}>{props.subtitle}</Text>
+                    <Text style={[Subtitle, subtitleStyle]}>{props.subtitle}</Text>
                 )}
                 {props.children}
             </MainViewContainer>

@@ -125,8 +125,11 @@ export const en = {
     men: "Men",
     more: "More",
     casual: "Casual",
+    casualDescription: "Open to something more casual. Please note that this is not an open invitation - stay respectful.",
     relationship: "Relationship",
+    relationshipDescription: "Open to something serious such as a long-term relationship.",
     friendship: "Friendship",
+    friendshipDescription: "Open to making new friends.",
     iAmA: "I am a",
     genderMoreComingSoon:
         "We will be adding this option as soon as possible. You will have the option later on to change this to something you truly identify with.",

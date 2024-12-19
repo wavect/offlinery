@@ -49,12 +49,29 @@ export interface UserPublicDTO {
      */
     bio: string;
     /**
+     * The user's intentions
+     * @type {Array<string>}
+     * @memberof UserPublicDTO
+     */
+    intentions: Array<UserPublicDTOIntentionsEnum>;
+    /**
      * The user's trust score
      * @type {number}
      * @memberof UserPublicDTO
      */
     trustScore?: number;
 }
+
+/**
+ * @export
+ */
+export const UserPublicDTOIntentionsEnum = {
+    friendship: "friendship",
+    casual: "casual",
+    relationship: "relationship",
+} as const;
+export type UserPublicDTOIntentionsEnum =
+    (typeof UserPublicDTOIntentionsEnum)[keyof typeof UserPublicDTOIntentionsEnum];
 
 /**
  * Check if a given object implements the UserPublicDTO interface.
@@ -67,6 +84,8 @@ export function instanceOfUserPublicDTO(value: object): value is UserPublicDTO {
     if (!("imageURIs" in value) || value["imageURIs"] === undefined)
         return false;
     if (!("bio" in value) || value["bio"] === undefined) return false;
+    if (!("intentions" in value) || value["intentions"] === undefined)
+        return false;
     return true;
 }
 
@@ -87,6 +106,7 @@ export function UserPublicDTOFromJSONTyped(
         age: json["age"],
         imageURIs: json["imageURIs"],
         bio: json["bio"],
+        intentions: json["intentions"],
         trustScore: json["trustScore"] == null ? undefined : json["trustScore"],
     };
 }
@@ -101,6 +121,7 @@ export function UserPublicDTOToJSON(value?: UserPublicDTO | null): any {
         age: value["age"],
         imageURIs: value["imageURIs"],
         bio: value["bio"],
+        intentions: value["intentions"],
         trustScore: value["trustScore"],
     };
 }

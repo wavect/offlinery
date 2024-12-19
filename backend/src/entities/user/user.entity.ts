@@ -47,6 +47,7 @@ export class User
             /** @dev Don't contain any baseUri, assuming images are hosted on same backend for now. */
             imageURIs: this.imageURIs,
             bio: this.bio,
+            intentions: this.intentions,
             trustScore: this.trustScore,
         };
     }
@@ -59,7 +60,6 @@ export class User
             birthDay: this.birthDay,
             gender: this.gender,
             genderDesire: this.genderDesire,
-            intentions: this.intentions,
             ageRange: getAgeRangeParsedForPrivateDto(this.ageRangeString),
             wantsEmailUpdates: this.wantsEmailUpdates,
             blacklistedRegions: arraySafeCheck<BlacklistedRegionDTO>(
