@@ -187,6 +187,7 @@ export const de: Language = {
     findPeople: "Finden",
     encounters: "Begegnungen",
     settings: "Einstellungen",
+    yourProfile: "Dein Profil",
     settingsError: "Konnte Einstellungen nicht speichern.",
     settingsSuccess: "Einstellungen gespeichert.",
     destination: "Ziel",

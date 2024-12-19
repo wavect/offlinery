@@ -5,7 +5,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
 import { getValidImgURI } from "@/utils/media.utils";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Dimensions,
     FlatList,
@@ -22,6 +22,7 @@ import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 const ProfileView = ({
     route,
+    navigation,
 }: NativeStackScreenProps<
     EncounterStackParamList,
     typeof ROUTES.Main.ProfileView
@@ -58,12 +59,16 @@ const ProfileView = ({
     const bottomContainerChildren: React.ReactNode =
         route?.params?.bottomContainerChildren;
 
+    useEffect(() => {
+        navigation.getParent()?.setOptions({
+            headerTitle: `${user.firstName}, ${user.age}`,
+        })
+    }) // empty dep array to run it only once
+
     return (
         <OPageContainer
-            title={`${user.firstName}, ${user.age}`}
             subtitle={user.bio}
-            bottomContainerChildren={bottomContainerChildren}
-        >
+            bottomContainerChildren={bottomContainerChildren}>
             <View style={styles.carouselContainer}>
                 {user.imageURIs.length > 1 ? (
                     <Carousel
@@ -89,7 +94,7 @@ const ProfileView = ({
                                 }}
                             >
                                 <Image
-                                    source={{ uri: getValidImgURI(item) }}
+                                    source={{ uri: item }}
                                     style={styles.carouselImage}
                                 />
                             </TouchableOpacity>
@@ -166,7 +171,7 @@ const ProfileView = ({
                         defaultIndex={currentImageIndex}
                         renderItem={({ item }) => (
                             <Image
-                                source={{ uri: getValidImgURI(item) }}
+                                source={{ uri: item }}
                                 style={styles.fullScreenImage}
                                 resizeMode="contain"
                             />

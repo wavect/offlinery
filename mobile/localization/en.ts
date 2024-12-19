@@ -186,6 +186,7 @@ export const en = {
     findPeople: "Find people",
     encounters: "Encounters",
     settings: "Settings",
+    yourProfile: "Your profile",
     settingsError: "Settings couldn't be saved.",
     settingsSuccess: "Settings updated.",
     destination: "Destination",
