@@ -87,8 +87,8 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
             setMapRegion({
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
+                latitudeDelta: 0.003,
+                longitudeDelta: 0.003,
             });
         }
     }, [location]);
@@ -252,7 +252,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                     zoomControlEnabled={true}
                     zoomEnabled={true}
                     zoomTapEnabled={true}
-                    maxZoomLevel={13}
+                    maxZoomLevel={20}
                     minZoomLevel={8}
                     onPress={handleMapPress}
                     onLongPress={
