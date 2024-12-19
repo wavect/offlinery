@@ -19,7 +19,8 @@ import { OLabel } from "@/components/OLabel/OLabel";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import {
-    EACTION_USER, getPublicProfileFromUserData,
+    EACTION_USER,
+    getPublicProfileFromUserData,
     getUserImagesForUpload,
     logoutUser,
     mapRegionToBlacklistedRegionDTO,
@@ -45,8 +46,8 @@ import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
 const ProfileSettings = ({
-                             navigation,
-                         }: BottomTabScreenProps<MainScreenTabsParamList, typeof ROUTES.MainTabView> &
+    navigation,
+}: BottomTabScreenProps<MainScreenTabsParamList, typeof ROUTES.MainTabView> &
     NativeStackScreenProps<MainStackParamList, typeof ROUTES.MainTabView>) => {
     const { state, dispatch } = useUserContext();
     const [isLoading, setLoading] = useState(false);
@@ -212,34 +213,34 @@ const ProfileSettings = ({
     };
 
     const genderItems: { label: string; value: UserPrivateDTOGenderEnum }[] = [
-        { label: i18n.t(TR.woman), value: "woman" },
-        { label: i18n.t(TR.man), value: "man" },
+        { label: i18n.t(TR.woman), value: UserPrivateDTOGenderEnum.woman },
+        { label: i18n.t(TR.man), value: UserPrivateDTOGenderEnum.man },
     ];
 
     const genderLookingForItems: {
         label: string;
         value: UserPrivateDTOGenderDesireEnum;
     }[] = [
-        { label: i18n.t(TR.women), value: "woman" },
-        { label: i18n.t(TR.men), value: "man" },
+        { label: i18n.t(TR.women), value: UserPrivateDTOGenderDesireEnum.woman },
+        { label: i18n.t(TR.men), value: UserPrivateDTOGenderDesireEnum.man },
     ];
 
     const intentionItems: {
         label: string;
         value: UserPrivateDTOIntentionsEnum;
     }[] = [
-        { label: i18n.t(TR.casual), value: "casual" },
-        { label: i18n.t(TR.relationship), value: "relationship" },
-        { label: i18n.t(TR.friendship), value: "friendship" },
+        { label: i18n.t(TR.casual), value: UserPrivateDTOIntentionsEnum.casual },
+        { label: i18n.t(TR.relationship), value: UserPrivateDTOIntentionsEnum.relationship },
+        { label: i18n.t(TR.friendship), value: UserPrivateDTOIntentionsEnum.friendship },
     ];
 
     const approachOptions: {
         label: string;
         value: UpdateUserDTOApproachChoiceEnum;
     }[] = [
-        { label: i18n.t(TR.approach), value: "approach" },
-        { label: i18n.t(TR.beApproached), value: "be_approached" },
-        { label: i18n.t(TR.both), value: "both" },
+        { label: i18n.t(TR.approach), value: UpdateUserDTOApproachChoiceEnum.approach },
+        { label: i18n.t(TR.beApproached), value: UpdateUserDTOApproachChoiceEnum.be_approached },
+        { label: i18n.t(TR.both), value: UpdateUserDTOApproachChoiceEnum.both },
     ];
 
     const SettingsButton = (props: {
@@ -343,88 +344,88 @@ const ProfileSettings = ({
 
                 {state.approachChoice !==
                     UserPrivateDTOApproachChoiceEnum.approach && (
-                        <View style={styles.timePickerContainer}>
-                            <Text style={[styles.label, { marginBottom: 8 }]}>
-                                {i18n.t(TR.approachMeBetween)}
-                            </Text>
-                            <View style={styles.timePickerRow}>
-                                <View style={styles.timePicker}>
-                                    <Text>{i18n.t(TR.from)}</Text>
-                                    <Controller
-                                        control={control}
-                                        rules={{
-                                            required: true,
-                                            validate: (value) =>
-                                                value < state.approachToTime,
-                                        }}
-                                        name="approachFromTime"
-                                        render={({
-                                                     field: { onChange, onBlur, value },
-                                                 }) => (
-                                            <ODateTimePicker
-                                                value={value}
-                                                mode="time"
-                                                is24Hour={true}
-                                                display="default"
-                                                onChange={(event, selectedTime) => {
-                                                    onChange(selectedTime);
-                                                    setApproachFromTime(
-                                                        selectedTime,
-                                                    );
-                                                }}
-                                                dateTimeFormatter={
-                                                    EDateTimeFormatters.TIME
-                                                }
-                                                androidTextStyle={
-                                                    styles.androidDateTimeValue
-                                                }
-                                            />
-                                        )}
-                                    />
-                                </View>
-                                <View style={styles.timePicker}>
-                                    <Text>{i18n.t(TR.until)}</Text>
-                                    <Controller
-                                        control={control}
-                                        rules={{
-                                            required: true,
-                                            validate: (value) =>
-                                                value > state.approachFromTime,
-                                        }}
-                                        name="approachToTime"
-                                        render={({
-                                                     field: { onChange, value },
-                                                 }) => (
-                                            <ODateTimePicker
-                                                value={value}
-                                                mode="time"
-                                                is24Hour={true}
-                                                display="default"
-                                                onChange={(event, selectedTime) => {
-                                                    onChange(selectedTime);
-                                                    setApproachToTime(selectedTime);
-                                                }}
-                                                dateTimeFormatter={
-                                                    EDateTimeFormatters.TIME
-                                                }
-                                                androidTextStyle={
-                                                    styles.androidDateTimeValue
-                                                }
-                                            />
-                                        )}
-                                    />
-                                </View>
+                    <View style={styles.timePickerContainer}>
+                        <Text style={[styles.label, { marginBottom: 8 }]}>
+                            {i18n.t(TR.approachMeBetween)}
+                        </Text>
+                        <View style={styles.timePickerRow}>
+                            <View style={styles.timePicker}>
+                                <Text>{i18n.t(TR.from)}</Text>
+                                <Controller
+                                    control={control}
+                                    rules={{
+                                        required: true,
+                                        validate: (value) =>
+                                            value < state.approachToTime,
+                                    }}
+                                    name="approachFromTime"
+                                    render={({
+                                        field: { onChange, onBlur, value },
+                                    }) => (
+                                        <ODateTimePicker
+                                            value={value}
+                                            mode="time"
+                                            is24Hour={true}
+                                            display="default"
+                                            onChange={(event, selectedTime) => {
+                                                onChange(selectedTime);
+                                                setApproachFromTime(
+                                                    selectedTime,
+                                                );
+                                            }}
+                                            dateTimeFormatter={
+                                                EDateTimeFormatters.TIME
+                                            }
+                                            androidTextStyle={
+                                                styles.androidDateTimeValue
+                                            }
+                                        />
+                                    )}
+                                />
                             </View>
-                            <OErrorMessage
-                                errorMessage={i18n.t(TR.inputInvalid)}
-                                style={styles.errorMessage}
-                                show={
-                                    errors.approachFromTime !== undefined ||
-                                    errors.approachToTime !== undefined
-                                }
-                            />
+                            <View style={styles.timePicker}>
+                                <Text>{i18n.t(TR.until)}</Text>
+                                <Controller
+                                    control={control}
+                                    rules={{
+                                        required: true,
+                                        validate: (value) =>
+                                            value > state.approachFromTime,
+                                    }}
+                                    name="approachToTime"
+                                    render={({
+                                        field: { onChange, value },
+                                    }) => (
+                                        <ODateTimePicker
+                                            value={value}
+                                            mode="time"
+                                            is24Hour={true}
+                                            display="default"
+                                            onChange={(event, selectedTime) => {
+                                                onChange(selectedTime);
+                                                setApproachToTime(selectedTime);
+                                            }}
+                                            dateTimeFormatter={
+                                                EDateTimeFormatters.TIME
+                                            }
+                                            androidTextStyle={
+                                                styles.androidDateTimeValue
+                                            }
+                                        />
+                                    )}
+                                />
+                            </View>
                         </View>
-                    )}
+                        <OErrorMessage
+                            errorMessage={i18n.t(TR.inputInvalid)}
+                            style={styles.errorMessage}
+                            show={
+                                errors.approachFromTime !== undefined ||
+                                errors.approachToTime !== undefined
+                            }
+                        />
+                    </View>
+                )}
 
                 <View style={styles.inputContainer}>
                     <View style={styles.labelContainer}>
@@ -749,31 +750,38 @@ const ProfileSettings = ({
                     <SettingsButton
                         testID={TestData.settings.buttonYourProfile}
                         style={{ width: "48%", height: 80 }}
-                        onPress={() => navigation.dispatch(
-                            CommonActions.reset({
-                                index: 1, // This means the second screen (targetScreen) will be active
-                                routes: [
-                                    {
-                                        name: ROUTES.MainTabView,
-                                        params: {
-                                            screen: ROUTES.Main.ProfileSettings,
-                                        },
-                                    },
-                                    {
-                                        name: ROUTES.MainTabView,
-                                        params: {
-                                            screen: ROUTES.Main.EncountersTab,
+                        onPress={() =>
+                            navigation.dispatch(
+                                CommonActions.reset({
+                                    index: 1, // This means the second screen (targetScreen) will be active
+                                    routes: [
+                                        {
+                                            name: ROUTES.MainTabView,
                                             params: {
-                                                screen: ROUTES.Main.ProfileView,
+                                                screen: ROUTES.Main
+                                                    .ProfileSettings,
+                                            },
+                                        },
+                                        {
+                                            name: ROUTES.MainTabView,
+                                            params: {
+                                                screen: ROUTES.Main
+                                                    .EncountersTab,
                                                 params: {
-                                                    user: getPublicProfileFromUserData(state),
+                                                    screen: ROUTES.Main
+                                                        .ProfileView,
+                                                    params: {
+                                                        user: getPublicProfileFromUserData(
+                                                            state,
+                                                        ),
+                                                    },
                                                 },
                                             },
                                         },
-                                    },
-                                ],
-                            }),
-                        )}
+                                    ],
+                                }),
+                            )
+                        }
                         icon="person"
                         text={i18n.t(TR.yourProfile)}
                     />

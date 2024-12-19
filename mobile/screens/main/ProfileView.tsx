@@ -1,4 +1,4 @@
-import { Color } from "@/GlobalStyles";
+import { Color, Subtitle } from "@/GlobalStyles";
 import { UserPublicDTO } from "@/api/gen/src";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { TR, i18n } from "@/localization/translate.service";
@@ -19,6 +19,7 @@ import {
 import { useSharedValue } from "react-native-reanimated";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
+import OBadge from "@/components/OBadge/OBadge";
 
 const ProfileView = ({
     route,
@@ -63,13 +64,18 @@ const ProfileView = ({
         // @dev overrides tab nav title
         navigation.getParent()?.setOptions({
             headerTitle: `${user.firstName}, ${user.age}`,
-        })
-    }) // empty dep array to run it only once
+        });
+    }); // empty dep array to run it only once
 
     return (
         <OPageContainer
-            subtitle={user.bio}
+            containerStyle={{paddingTop: 4}}
             bottomContainerChildren={bottomContainerChildren}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                {user.intentions?.map(i => <OBadge key={i} intention={i} />)}
+            </View>
+            <Text style={Subtitle}>{user.bio}</Text>
+
             <View style={styles.carouselContainer}>
                 {user.imageURIs.length > 1 ? (
                     <Carousel
