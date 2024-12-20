@@ -164,6 +164,8 @@ export class EncounterService {
                 );
 
                 if (encounter.status !== EEncounterStatus.MET_NOT_INTERESTED) {
+                    // @dev Only update streak if either not_met or interested
+                    encounter.crossedPathStreak++;
                     newEncounters.set(userMatch.id, encounter);
                     userEncounterCount++;
                 }

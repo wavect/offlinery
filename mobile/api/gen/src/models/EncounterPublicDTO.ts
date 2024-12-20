@@ -74,6 +74,12 @@ export interface EncounterPublicDTO {
      * @memberof EncounterPublicDTO
      */
     isNearbyRightNow: boolean | null;
+    /**
+     * How often have users crossed paths while encounterState was not_met or met_interested
+     * @type {number}
+     * @memberof EncounterPublicDTO
+     */
+    crossedPathStreak: number;
 }
 
 /**
@@ -108,6 +114,11 @@ export function instanceOfEncounterPublicDTO(
         value["isNearbyRightNow"] === undefined
     )
         return false;
+    if (
+        !("crossedPathStreak" in value) ||
+        value["crossedPathStreak"] === undefined
+    )
+        return false;
     return true;
 }
 
@@ -139,6 +150,7 @@ export function EncounterPublicDTOFromJSONTyped(
                       MessagePublicDTOFromJSON,
                   ),
         isNearbyRightNow: json["isNearbyRightNow"],
+        crossedPathStreak: json["crossedPathStreak"],
     };
 }
 
@@ -160,5 +172,6 @@ export function EncounterPublicDTOToJSON(
                 ? null
                 : (value["messages"] as Array<any>).map(MessagePublicDTOToJSON),
         isNearbyRightNow: value["isNearbyRightNow"],
+        crossedPathStreak: value["crossedPathStreak"],
     };
 }

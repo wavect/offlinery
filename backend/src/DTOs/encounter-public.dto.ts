@@ -47,4 +47,10 @@ export class EncounterPublicDTO {
 
     @ApiProperty({ default: null })
     isNearbyRightNow: boolean | null;
+
+    @ApiProperty({
+        description:
+            "How often have users crossed paths while encounterState was not_met or met_interested",
+    })
+    crossedPathStreak: number;
 }

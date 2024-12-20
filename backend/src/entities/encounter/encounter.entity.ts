@@ -30,7 +30,8 @@ export class Encounter
             users: this.users?.map((u) => u.convertToPublicDTO()) ?? [],
             /** @DEV MAKE DEFAULT [] not check here*/
             messages: this.messages?.map((m) => m.convertToPublicDTO()) ?? [],
-            isNearbyRightNow: null,
+            isNearbyRightNow: null, // @dev filled on query/runtime through service
+            crossedPathStreak: this.crossedPathStreak,
         };
     }
 
@@ -82,6 +83,9 @@ export class Encounter
         default: EEncounterStatus.NOT_MET,
     })
     status: EEncounterStatus;
+
+    @Column({ default: 0, nullable: false })
+    crossedPathStreak: number;
 
     @AfterLoad()
     updateStatusAfterLoad() {
