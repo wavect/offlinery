@@ -201,6 +201,7 @@ export const reactToNewEncounterNotification = (
         imageURIs: notificationData.navigateToPerson.imageURIs,
         encounterId: notificationData.encounterId,
         age: notificationData.navigateToPerson.age,
+        intentions: notificationData.navigateToPerson.intentions,
     };
 
     // Navigate to the specified screen, passing the user object as a prop and add encounters view as prior screen to enable back logic

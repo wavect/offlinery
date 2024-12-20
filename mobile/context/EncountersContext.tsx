@@ -38,6 +38,7 @@ export const getPublicProfileFromEncounter = (
         bio: state.bio,
         age: state.age,
         imageURIs: state.imageURIs,
+        intentions: state.intentions,
     };
 };
 

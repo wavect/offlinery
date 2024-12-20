@@ -1,5 +1,5 @@
 // TODO: Can we get rid of this type?
-import { EncounterPublicDTOStatusEnum, MessagePublicDTO } from "@/api/gen/src";
+import { EncounterPublicDTOStatusEnum, MessagePublicDTO, UserPublicDTOIntentionsEnum } from "@/api/gen/src";
 
 export interface IEncounterProfile {
     encounterId: string;
@@ -8,6 +8,8 @@ export interface IEncounterProfile {
     bio: string;
     imageURIs: string[];
     rating?: number;
+    intentions: UserPublicDTOIntentionsEnum[];
+    crossedPathStreak?: number;
 
     isNearbyRightNow?: boolean;
     status?: EncounterPublicDTOStatusEnum;
