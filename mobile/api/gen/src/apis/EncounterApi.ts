@@ -14,12 +14,14 @@
 
 import type {
     EncounterPublicDTO,
+    GenericStatusDTO,
     GetLocationOfEncounterResponseDTO,
     PushMessageDTO,
     UpdateEncounterStatusDTO,
 } from "../models/index";
 import {
     EncounterPublicDTOFromJSON,
+    GenericStatusDTOFromJSON,
     GetLocationOfEncounterResponseDTOFromJSON,
     PushMessageDTOToJSON,
     UpdateEncounterStatusDTOToJSON,
@@ -114,7 +116,7 @@ export interface EncounterApiInterface {
     encounterControllerPushMessageRaw(
         requestParameters: EncounterControllerPushMessageRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<EncounterPublicDTO>>;
+    ): Promise<runtime.ApiResponse<GenericStatusDTO>>;
 
     /**
      * Push a new message to the encounter
@@ -122,7 +124,7 @@ export interface EncounterApiInterface {
     encounterControllerPushMessage(
         requestParameters: EncounterControllerPushMessageRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<EncounterPublicDTO>;
+    ): Promise<GenericStatusDTO>;
 
     /**
      *
@@ -136,7 +138,7 @@ export interface EncounterApiInterface {
     encounterControllerUpdateStatusRaw(
         requestParameters: EncounterControllerUpdateStatusRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<EncounterPublicDTO>>;
+    ): Promise<runtime.ApiResponse<GenericStatusDTO>>;
 
     /**
      * Update encounter status
@@ -144,7 +146,7 @@ export interface EncounterApiInterface {
     encounterControllerUpdateStatus(
         requestParameters: EncounterControllerUpdateStatusRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<EncounterPublicDTO>;
+    ): Promise<GenericStatusDTO>;
 }
 
 /**
@@ -301,7 +303,7 @@ export class EncounterApi
     async encounterControllerPushMessageRaw(
         requestParameters: EncounterControllerPushMessageRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<EncounterPublicDTO>> {
+    ): Promise<runtime.ApiResponse<GenericStatusDTO>> {
         if (requestParameters["userId"] == null) {
             throw new runtime.RequiredError(
                 "userId",
@@ -337,7 +339,7 @@ export class EncounterApi
         );
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
-            EncounterPublicDTOFromJSON(jsonValue),
+            GenericStatusDTOFromJSON(jsonValue),
         );
     }
 
@@ -347,7 +349,7 @@ export class EncounterApi
     async encounterControllerPushMessage(
         requestParameters: EncounterControllerPushMessageRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<EncounterPublicDTO> {
+    ): Promise<GenericStatusDTO> {
         const response = await this.encounterControllerPushMessageRaw(
             requestParameters,
             initOverrides,
@@ -361,7 +363,7 @@ export class EncounterApi
     async encounterControllerUpdateStatusRaw(
         requestParameters: EncounterControllerUpdateStatusRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<EncounterPublicDTO>> {
+    ): Promise<runtime.ApiResponse<GenericStatusDTO>> {
         if (requestParameters["userId"] == null) {
             throw new runtime.RequiredError(
                 "userId",
@@ -399,7 +401,7 @@ export class EncounterApi
         );
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
-            EncounterPublicDTOFromJSON(jsonValue),
+            GenericStatusDTOFromJSON(jsonValue),
         );
     }
 
@@ -409,7 +411,7 @@ export class EncounterApi
     async encounterControllerUpdateStatus(
         requestParameters: EncounterControllerUpdateStatusRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<EncounterPublicDTO> {
+    ): Promise<GenericStatusDTO> {
         const response = await this.encounterControllerUpdateStatusRaw(
             requestParameters,
             initOverrides,

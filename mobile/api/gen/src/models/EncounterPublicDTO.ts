@@ -57,11 +57,11 @@ export interface EncounterPublicDTO {
      */
     reported: boolean;
     /**
-     * Users that were nearby
-     * @type {Array<UserPublicDTO>}
+     * Other Users that was nearby
+     * @type {UserPublicDTO}
      * @memberof EncounterPublicDTO
      */
-    users: Array<UserPublicDTO>;
+    otherUser: UserPublicDTO;
     /**
      * User messages
      * @type {Array<MessagePublicDTO>}
@@ -101,7 +101,8 @@ export function instanceOfEncounterPublicDTO(
     )
         return false;
     if (!("reported" in value) || value["reported"] === undefined) return false;
-    if (!("users" in value) || value["users"] === undefined) return false;
+    if (!("otherUser" in value) || value["otherUser"] === undefined)
+        return false;
     if (!("messages" in value) || value["messages"] === undefined) return false;
     if (
         !("isNearbyRightNow" in value) ||
@@ -131,7 +132,7 @@ export function EncounterPublicDTOFromJSONTyped(
                 ? undefined
                 : json["lastLocationPassedBy"],
         reported: json["reported"],
-        users: (json["users"] as Array<any>).map(UserPublicDTOFromJSON),
+        otherUser: UserPublicDTOFromJSON(json["otherUser"]),
         messages:
             json["messages"] == null
                 ? null
@@ -154,7 +155,7 @@ export function EncounterPublicDTOToJSON(
         lastDateTimePassedBy: value["lastDateTimePassedBy"],
         lastLocationPassedBy: value["lastLocationPassedBy"],
         reported: value["reported"],
-        users: (value["users"] as Array<any>).map(UserPublicDTOToJSON),
+        otherUser: UserPublicDTOToJSON(value["otherUser"]),
         messages:
             value["messages"] == null
                 ? null

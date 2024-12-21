@@ -1,5 +1,4 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { EncounterPublicDTO, MessagePublicDTO } from "@/api/gen/src";
 import {
     EDateTimeFormatters,
     ODateTimePicker,
@@ -13,7 +12,6 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { ROUTES } from "@/screens/routes";
-import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as Sentry from "@sentry/react-native";
@@ -44,27 +42,6 @@ const Encounters = ({
     const [metEndDateFilter, setMetEndDateFilter] = useState<Date>(today);
     const [refreshing, setRefreshing] = useState(false);
 
-    function sortMessagesByLatest(
-        messages: MessagePublicDTO[],
-    ): MessagePublicDTO[] {
-        return messages.sort(
-            (a, b) =>
-                new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime(),
-        );
-    }
-
-    function findLatestReceivedMessage(
-        messages: MessagePublicDTO[] | null,
-        otherUserId: string,
-    ): MessagePublicDTO | undefined {
-        if (!messages || !messages.length) {
-            return;
-        }
-        return sortMessagesByLatest(messages).find(
-            (m) => m.senderUserId === otherUserId,
-        );
-    }
-
     const fetchEncounters = useCallback(async () => {
         try {
             if (!userState.id) {
@@ -81,32 +58,9 @@ const Encounters = ({
                     endDate: metEndDateFilter,
                 });
 
-            const mappedEncounters: IEncounterProfile[] = [];
-
-            encounters.forEach((encounter: EncounterPublicDTO) => {
-                const otherUser = encounter.users.filter(
-                    (u) => u.id !== userState.id,
-                )[0];
-                mappedEncounters.push({
-                    encounterId: encounter.id,
-                    firstName: otherUser.firstName,
-                    age: otherUser.age,
-                    bio: otherUser.bio,
-                    imageURIs: otherUser.imageURIs,
-                    status: encounter.status,
-                    reported: encounter.reported,
-                    lastLocationPassedBy: encounter.lastLocationPassedBy ?? "",
-                    lastTimePassedBy: encounter.lastDateTimePassedBy,
-                    rating: otherUser.trustScore,
-                    lastReceivedMessage: findLatestReceivedMessage(
-                        encounter.messages,
-                        otherUser.id,
-                    ),
-                });
-            });
             dispatch({
                 type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
-                payload: mappedEncounters,
+                payload: encounters,
             });
         } catch (error) {
             console.error(error);

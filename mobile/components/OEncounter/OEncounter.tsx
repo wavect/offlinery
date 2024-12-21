@@ -1,6 +1,8 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import {
+    EncounterPublicDTO,
     EncounterPublicDTOStatusEnum,
+    MessagePublicDTO,
     UpdateEncounterStatusDTO,
 } from "@/api/gen/src";
 import {
@@ -17,7 +19,6 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { TestData } from "@/tests/src/accessors";
-import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
 import { getTimePassedWithText } from "@/utils/date.utils";
 import { getValidImgURI } from "@/utils/media.utils";
@@ -28,9 +29,29 @@ import { Dropdown } from "react-native-element-dropdown";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface ISingleEncounterProps {
-    encounterProfile: IEncounterProfile;
+    encounterProfile: EncounterPublicDTO;
     showActions: boolean;
     navigation: any;
+}
+
+function sortMessagesByLatest(
+    messages: MessagePublicDTO[],
+): MessagePublicDTO[] {
+    return messages.sort(
+        (a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime(),
+    );
+}
+
+function findLatestReceivedMessage(
+    messages: MessagePublicDTO[] | null,
+    otherUserId: string,
+): MessagePublicDTO | undefined {
+    if (!messages || !messages.length) {
+        return;
+    }
+    return sortMessagesByLatest(messages).find(
+        (m) => m.senderUserId === otherUserId,
+    );
 }
 
 const OEncounter = (props: ISingleEncounterProps) => {
@@ -45,7 +66,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
         value: EncounterPublicDTOStatusEnum;
     }) => {
         const updateEncounterStatusDTO: UpdateEncounterStatusDTO = {
-            encounterId: encounterProfile.encounterId,
+            encounterId: encounterProfile.id,
             status: item.value,
         };
 
@@ -58,13 +79,17 @@ const OEncounter = (props: ISingleEncounterProps) => {
             type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,
             payload: [
                 {
-                    encounterId: encounterProfile.encounterId,
+                    id: encounterProfile.id,
                     status: item.value,
                 },
             ],
         });
     };
     const dateStatus = encounterProfile.status;
+    const lastMessage = findLatestReceivedMessage(
+        encounterProfile.messages,
+        encounterProfile.otherUser.id,
+    );
 
     return (
         <View style={styles.encounterContainer}>
@@ -80,7 +105,9 @@ const OEncounter = (props: ISingleEncounterProps) => {
                         style={styles.profileImage}
                         contentFit="cover"
                         source={{
-                            uri: getValidImgURI(encounterProfile.imageURIs[0]),
+                            uri: getValidImgURI(
+                                encounterProfile.otherUser.imageURIs[0],
+                            ),
                         }}
                     />
                 </TouchableOpacity>
@@ -90,11 +117,11 @@ const OEncounter = (props: ISingleEncounterProps) => {
                         numberOfLines={1}
                         adjustsFontSizeToFit={true}
                     >
-                        {`${encounterProfile.firstName}, ${encounterProfile.age}`}
+                        {`${encounterProfile.otherUser.firstName}, ${encounterProfile.otherUser.age}`}
                     </Text>
                     <Text
                         style={styles.encounterInfo}
-                    >{`${getTimePassedWithText(encounterProfile.lastTimePassedBy)}`}</Text>
+                    >{`${getTimePassedWithText(encounterProfile.lastDateTimePassedBy)}`}</Text>
                 </View>
             </View>
 
@@ -160,13 +187,13 @@ const OEncounter = (props: ISingleEncounterProps) => {
             )}
 
             {dateStatus === EncounterPublicDTOStatusEnum.met_interested &&
-                encounterProfile.lastReceivedMessage && (
+                lastMessage && (
                     <View style={styles.receivedMessageContainer}>
                         <Text style={styles.receivedMessageTitle}>
                             {i18n.t(TR.receivedMessage)}:
                         </Text>
                         <Text style={styles.receivedMessageText}>
-                            {encounterProfile.lastReceivedMessage.content}
+                            {lastMessage.content}
                         </Text>
                     </View>
                 )}
@@ -174,7 +201,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
                 userId={state.id!}
-                encounterId={encounterProfile.encounterId}
+                encounterId={encounterProfile.id}
             />
         </View>
     );
