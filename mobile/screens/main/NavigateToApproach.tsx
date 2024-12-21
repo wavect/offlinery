@@ -140,7 +140,7 @@ const NavigateToApproach = ({
         }
     }, [location, destination]);
 
-    const openMapsApp = () => {
+    const openMapsApp = async () => {
         const scheme = Platform.select({
             ios: "maps:0,0?q=",
             android: "geo:0,0?q=",
@@ -152,7 +152,7 @@ const NavigateToApproach = ({
             android: `${scheme}${latLng}(${label})`,
         });
 
-        Linking.openURL(url!);
+        await Linking.openURL(url!);
     };
 
     return (
