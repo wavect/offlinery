@@ -45,7 +45,7 @@ export const MainScreenTabs = ({ navigation }: any) => {
         >();
     const setupPerformed = useRef(false);
 
-    // @dev useFocusEffect ensures that the services are only started once the user has been logged in, instead of prompting the user for permissions on the welcome screen due to the App.tsx route import
+    // @dev useFocusEffect ensures that the services are only started once the user has been logged in, instead of prompting the user for permissions on the welcome screen due to the AppRoot.tsx route import
     useFocusEffect(
         useCallback(() => {
             const setupNotifications = async () => {
