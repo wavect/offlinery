@@ -4,7 +4,7 @@ import { View } from "react-native";
 import OAgeRangeSlider from "./OAgeRangeSlider";
 
 const meta: Meta<typeof OAgeRangeSlider> = {
-    title: "Components/AgeRangeSlider",
+    title: "Components/OAgeRangeSlider",
     component: OAgeRangeSlider,
     argTypes: {
         onChange: { action: "range changed" },
