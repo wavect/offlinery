@@ -1,28 +1,13 @@
 import {
-    EncounterPublicDTO,
-    EncounterPublicDTOStatusEnum,
-    UserPrivateDTOApproachChoiceEnum,
-    UserPrivateDTODateModeEnum,
-    UserPrivateDTOVerificationStatusEnum,
-} from "@/api/gen/src";
-import {
-    EACTION_ENCOUNTERS,
-    EncountersContext,
-} from "@/context/EncountersContext";
-import { IUserData, UserContext } from "@/context/UserContext";
+    StoryBookContextWrapper,
+    storybookMockBaseEncounter,
+} from "@/.storybook/state.mocks";
+import { EncounterPublicDTOStatusEnum } from "@/api/gen/src";
+import { EACTION_ENCOUNTERS } from "@/context/EncountersContext";
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { View } from "react-native";
 import OEncounter from "./OEncounter";
-
-// Create mock dispatch functions
-const mockEncountersDispatch = (action: any) => {
-    console.log("Encounters Dispatch called with:", action);
-};
-
-const mockUserDispatch = (action: any) => {
-    console.log("User Dispatch called with:", action);
-};
 
 // Mock API function
 const mockUpdateStatus = async () => {
@@ -37,44 +22,6 @@ const mockAPI = {
     },
 };
 
-// Mock user state
-const mockUserState: IUserData = {
-    id: "current-user-123",
-    wantsEmailUpdates: false,
-    email: "test@example.com",
-    firstName: "Test User",
-    clearPassword: "",
-    birthDay: new Date(1990, 1, 1),
-    imageURIs: {},
-    verificationStatus: UserPrivateDTOVerificationStatusEnum.not_needed,
-    approachChoice: UserPrivateDTOApproachChoiceEnum.both,
-    blacklistedRegions: [],
-    approachFromTime: new Date(),
-    approachToTime: new Date(),
-    bio: "Test bio",
-    dateMode: UserPrivateDTODateModeEnum.ghost,
-    markedForDeletion: false,
-};
-
-// Combined context wrapper component
-const ContextWrapper = ({ children }: { children: React.ReactNode }) => (
-    <UserContext.Provider
-        value={{
-            state: mockUserState,
-            dispatch: mockUserDispatch,
-        }}
-    >
-        <EncountersContext.Provider
-            value={{
-                state: { encounters: [] },
-                dispatch: mockEncountersDispatch,
-            }}
-        >
-            {children}
-        </EncountersContext.Provider>
-    </UserContext.Provider>
-);
-
 const meta: Meta<typeof OEncounter> = {
     title: "Components/OEncounter",
     component: OEncounter,
@@ -87,9 +34,9 @@ const meta: Meta<typeof OEncounter> = {
     decorators: [
         (Story) => (
             <View style={{ padding: 20, backgroundColor: "#fff" }}>
-                <ContextWrapper>
+                <StoryBookContextWrapper>
                     <Story />
-                </ContextWrapper>
+                </StoryBookContextWrapper>
             </View>
         ),
     ],
@@ -101,26 +48,6 @@ const meta: Meta<typeof OEncounter> = {
 export default meta;
 type Story = StoryObj<typeof OEncounter>;
 
-const baseEncounter: EncounterPublicDTO = {
-    id: "123",
-    status: EncounterPublicDTOStatusEnum.not_met,
-    lastDateTimePassedBy: new Date().toISOString(),
-    lastLocationPassedBy: "Central Park",
-    reported: false,
-    isNearbyRightNow: false,
-    otherUser: {
-        id: "456",
-        firstName: "Jane",
-        age: 25,
-        imageURIs: [
-            "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg",
-        ],
-        intentions: [],
-        bio: "No pick up lines please.",
-    },
-    messages: null,
-};
-
 // Helper function to handle status changes
 const createPlayFunction = (status: EncounterPublicDTOStatusEnum) => {
     return async ({ canvasElement }: { canvasElement: HTMLElement }) => {
@@ -129,7 +56,7 @@ const createPlayFunction = (status: EncounterPublicDTOStatusEnum) => {
             type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,
             payload: [
                 {
-                    id: baseEncounter.id,
+                    id: storybookMockBaseEncounter.id,
                     status,
                 },
             ],
@@ -139,7 +66,7 @@ const createPlayFunction = (status: EncounterPublicDTOStatusEnum) => {
 
 export const Default: Story = {
     args: {
-        encounterProfile: baseEncounter,
+        encounterProfile: storybookMockBaseEncounter,
     },
     play: createPlayFunction(EncounterPublicDTOStatusEnum.met_interested),
 };
@@ -147,7 +74,7 @@ export const Default: Story = {
 export const WithMessage: Story = {
     args: {
         encounterProfile: {
-            ...baseEncounter,
+            ...storybookMockBaseEncounter,
             status: EncounterPublicDTOStatusEnum.met_interested,
             messages: [
                 {
@@ -164,7 +91,7 @@ export const WithMessage: Story = {
 export const Reported: Story = {
     args: {
         encounterProfile: {
-            ...baseEncounter,
+            ...storybookMockBaseEncounter,
             status: EncounterPublicDTOStatusEnum.met_not_interested,
             reported: true,
         },
@@ -174,7 +101,7 @@ export const Reported: Story = {
 export const NearbyRightNow: Story = {
     args: {
         encounterProfile: {
-            ...baseEncounter,
+            ...storybookMockBaseEncounter,
             isNearbyRightNow: true,
         },
     },
@@ -182,7 +109,7 @@ export const NearbyRightNow: Story = {
 
 export const NoActions: Story = {
     args: {
-        encounterProfile: baseEncounter,
+        encounterProfile: storybookMockBaseEncounter,
         showActions: false,
     },
 };
@@ -190,7 +117,7 @@ export const NoActions: Story = {
 export const MetInterested: Story = {
     args: {
         encounterProfile: {
-            ...baseEncounter,
+            ...storybookMockBaseEncounter,
             status: EncounterPublicDTOStatusEnum.met_interested,
         },
     },
@@ -200,7 +127,7 @@ export const MetInterested: Story = {
 export const MetNotInterested: Story = {
     args: {
         encounterProfile: {
-            ...baseEncounter,
+            ...storybookMockBaseEncounter,
             status: EncounterPublicDTOStatusEnum.met_not_interested,
         },
     },
@@ -210,9 +137,9 @@ export const MetNotInterested: Story = {
 export const LongNames: Story = {
     args: {
         encounterProfile: {
-            ...baseEncounter,
+            ...storybookMockBaseEncounter,
             otherUser: {
-                ...baseEncounter.otherUser,
+                ...storybookMockBaseEncounter.otherUser,
                 firstName: "Alexandrina Victoria Augusta Louise",
             },
         },
@@ -222,7 +149,7 @@ export const LongNames: Story = {
 export const WithMultipleMessages: Story = {
     args: {
         encounterProfile: {
-            ...baseEncounter,
+            ...storybookMockBaseEncounter,
             status: EncounterPublicDTOStatusEnum.met_interested,
             messages: [
                 {
@@ -245,7 +172,7 @@ export const WithMultipleMessages: Story = {
 export const EmptyLocationNoMessages: Story = {
     args: {
         encounterProfile: {
-            ...baseEncounter,
+            ...storybookMockBaseEncounter,
             lastLocationPassedBy: null,
             messages: [],
         },
