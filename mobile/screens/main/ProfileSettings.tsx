@@ -221,7 +221,10 @@ const ProfileSettings = ({
         label: string;
         value: UserPrivateDTOGenderDesireEnum;
     }[] = [
-        { label: i18n.t(TR.women), value: UserPrivateDTOGenderDesireEnum.woman },
+        {
+            label: i18n.t(TR.women),
+            value: UserPrivateDTOGenderDesireEnum.woman,
+        },
         { label: i18n.t(TR.men), value: UserPrivateDTOGenderDesireEnum.man },
     ];
 
@@ -229,17 +232,32 @@ const ProfileSettings = ({
         label: string;
         value: UserPrivateDTOIntentionsEnum;
     }[] = [
-        { label: i18n.t(TR.casual), value: UserPrivateDTOIntentionsEnum.casual },
-        { label: i18n.t(TR.relationship), value: UserPrivateDTOIntentionsEnum.relationship },
-        { label: i18n.t(TR.friendship), value: UserPrivateDTOIntentionsEnum.friendship },
+        {
+            label: i18n.t(TR.casual),
+            value: UserPrivateDTOIntentionsEnum.casual,
+        },
+        {
+            label: i18n.t(TR.relationship),
+            value: UserPrivateDTOIntentionsEnum.relationship,
+        },
+        {
+            label: i18n.t(TR.friendship),
+            value: UserPrivateDTOIntentionsEnum.friendship,
+        },
     ];
 
     const approachOptions: {
         label: string;
         value: UpdateUserDTOApproachChoiceEnum;
     }[] = [
-        { label: i18n.t(TR.approach), value: UpdateUserDTOApproachChoiceEnum.approach },
-        { label: i18n.t(TR.beApproached), value: UpdateUserDTOApproachChoiceEnum.be_approached },
+        {
+            label: i18n.t(TR.approach),
+            value: UpdateUserDTOApproachChoiceEnum.approach,
+        },
+        {
+            label: i18n.t(TR.beApproached),
+            value: UpdateUserDTOApproachChoiceEnum.be_approached,
+        },
         { label: i18n.t(TR.both), value: UpdateUserDTOApproachChoiceEnum.both },
     ];
 
