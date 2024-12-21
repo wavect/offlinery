@@ -98,9 +98,9 @@ const userReducer = (
     }
 };
 
-const EncountersContext = createContext<IEncountersContextType | undefined>(
-    undefined,
-);
+export const EncountersContext = createContext<
+    IEncountersContextType | undefined
+>(undefined);
 
 export const EncountersProvider: React.FC<{ children: React.ReactNode }> = ({
     children,

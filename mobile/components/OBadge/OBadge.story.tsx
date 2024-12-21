@@ -1,23 +1,8 @@
 import { UserPublicDTOIntentionsEnum } from "@/api/gen/src";
-import { View } from "react-native";
-import OBadge from "./OBadge";
-
-// Mock translations directly
-const mockTranslations = {
-    casual: "Casual",
-    friendship: "Friendship",
-    relationship: "Relationship",
-    casualDescription: "Looking for casual connections",
-    friendshipDescription: "Interested in making friends",
-    relationshipDescription: "Seeking a serious relationship",
-};
-
-// Override the actual i18n import
-import { i18n } from "@/localization/translate.service";
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-// @ts-ignore - Overriding for storybook
-i18n.t = (key: keyof typeof mockTranslations) => mockTranslations[key] || key;
+import { View } from "react-native";
+import OBadge from "./OBadge";
 
 const meta = {
     title: "Components/OBadge",
