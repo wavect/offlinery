@@ -69,7 +69,7 @@ const ReportEncounter = ({
                 incidentDescription: incidentDescription!,
                 keepReporterInTheLoop: keepMeInTheLoop,
                 incidentType: incidentType!,
-                encounterId: personToReport.encounterId,
+                encounterId: personToReport.id,
             };
 
             await API.userReport.userReportControllerCreate({
@@ -81,7 +81,7 @@ const ReportEncounter = ({
                 type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,
                 payload: [
                     {
-                        encounterId: personToReport.encounterId,
+                        encounterId: personToReport.id,
                         reported: true,
                     },
                 ],

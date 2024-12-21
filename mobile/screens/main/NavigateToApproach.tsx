@@ -1,4 +1,5 @@
 import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { EncounterPublicDTO } from "@/api/gen/src";
 import { OLoadingSpinner } from "@/components/OLoadingCircle/OLoadingCircle";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
@@ -7,7 +8,6 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
-import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
 import { getTimePassedWithText } from "@/utils/date.utils";
 import { getMapProvider } from "@/utils/map-provider";
@@ -29,7 +29,7 @@ const NavigateToApproach = ({
     EncounterStackParamList,
     typeof ROUTES.Main.NavigateToApproach
 >) => {
-    const navigateToPerson: IEncounterProfile = route.params.navigateToPerson;
+    const navigateToPerson: EncounterPublicDTO = route.params.navigateToPerson;
 
     const { state } = useUserContext();
     const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +73,7 @@ const NavigateToApproach = ({
                             await API.encounter.encounterControllerGetLocationOfEncounter(
                                 {
                                     userId: state.id!,
-                                    encounterId: navigateToPerson.encounterId,
+                                    encounterId: navigateToPerson.id,
                                 },
                             );
 
@@ -117,7 +117,7 @@ const NavigateToApproach = ({
                 clearInterval(intervalId);
             }
         };
-    }, [state.id, navigateToPerson.encounterId]);
+    }, [state.id, navigateToPerson.id]);
 
     useEffect(() => {
         if (location && destination) {
@@ -203,7 +203,7 @@ const NavigateToApproach = ({
                     {destination && (
                         <Marker
                             coordinate={destination}
-                            title={navigateToPerson.firstName}
+                            title={navigateToPerson.otherUser.firstName}
                         />
                     )}
                     {location && destination && (

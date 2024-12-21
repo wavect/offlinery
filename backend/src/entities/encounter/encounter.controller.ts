@@ -1,5 +1,6 @@
 import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
 import { EncounterPublicDTO } from "@/DTOs/encounter-public.dto";
+import { GenericStatusDTO } from "@/DTOs/generic-status.dto";
 import { GetLocationOfEncounterResponseDTO } from "@/DTOs/get-location-of-encounter-response.dto";
 import { PushMessageDTO } from "@/DTOs/push-message.dto";
 import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
@@ -70,19 +71,22 @@ export class EncounterController {
     @ApiBody({ type: UpdateEncounterStatusDTO })
     @ApiResponse({
         status: 200,
-        type: EncounterPublicDTO,
+        type: GenericStatusDTO,
         description: "Encounter status updated successfully.",
     })
     @ApiResponse({ status: 404, description: "Encounter not found." })
     async updateStatus(
         @Param(USER_ID_PARAM) userId: string,
         @Body() updateStatusDTO: UpdateEncounterStatusDTO,
-    ): Promise<EncounterPublicDTO> {
+    ): Promise<GenericStatusDTO> {
         const updatedEncounter = await this.encounterService.updateStatus(
             userId,
             updateStatusDTO,
         );
-        return updatedEncounter.convertToPublicDTO();
+        return {
+            success: !!updatedEncounter,
+            info: "Tried to update encounter status.",
+        };
     }
 
     @Post(`:${USER_ID_PARAM}/message`)
@@ -92,19 +96,22 @@ export class EncounterController {
     @ApiBody({ type: PushMessageDTO })
     @ApiResponse({
         status: 201,
-        type: EncounterPublicDTO,
+        type: GenericStatusDTO,
         description: "Message added successfully.",
     })
     @ApiResponse({ status: 404, description: "Encounter not found." })
     async pushMessage(
         @Param(USER_ID_PARAM) userId: string,
         @Body() pushMessageDTO: PushMessageDTO,
-    ): Promise<EncounterPublicDTO> {
+    ): Promise<GenericStatusDTO> {
         const updatedEncounter = await this.encounterService.pushMessage(
             userId,
             pushMessageDTO,
         );
-        return updatedEncounter.convertToPublicDTO();
+        return {
+            success: !!updatedEncounter,
+            info: "Tried to save message to other user.",
+        };
     }
 
     @Get(

@@ -93,8 +93,7 @@ export class EncounterService {
 
         const otherUserIds = [];
         const userEncounters = encounters.map((encounter) => {
-            const dto = encounter.convertToPublicDTO();
-            const otherUser = dto.users.find((u) => u.id !== userId);
+            const dto = encounter.convertToPublicDTO(user);
 
             // @dev Override general encounter status and return only the status from the user itself for the frontend.
             const userEncounterStatus = encounter.userStatuses[userId];
@@ -105,7 +104,7 @@ export class EncounterService {
                     `Encounter status for user ${userId} not found! Returning general status.`,
                 );
             }
-            otherUserIds.push(otherUser.id);
+            otherUserIds.push(dto.otherUser.id);
             return dto;
         });
 
@@ -118,8 +117,7 @@ export class EncounterService {
         );
 
         userEncounters.forEach((encounter) => {
-            const otherUser = encounter.users.find((u) => u.id !== userId);
-            encounter.isNearbyRightNow = nearbyUsers.has(otherUser.id)
+            encounter.isNearbyRightNow = nearbyUsers.has(encounter.otherUser.id)
                 ? true
                 : null;
         });

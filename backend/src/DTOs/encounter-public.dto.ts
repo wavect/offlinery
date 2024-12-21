@@ -33,10 +33,10 @@ export class EncounterPublicDTO {
     reported: boolean;
 
     @ApiProperty({
-        type: [UserPublicDTO],
-        description: "Users that were nearby",
+        type: UserPublicDTO,
+        description: "Other Users that was nearby",
     })
-    users: UserPublicDTO[];
+    otherUser: UserPublicDTO;
 
     @ApiProperty({
         type: [MessagePublicDTO],

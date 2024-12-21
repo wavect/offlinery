@@ -7,7 +7,6 @@ import {
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
-import { IEncounterProfile } from "@/types/PublicProfile.types";
 import { API } from "@/utils/api-config";
 import { CommonActions } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
@@ -194,14 +193,6 @@ export const reactToNewEncounterNotification = (
         );
         return;
     }
-    // TODO: Move As many types as possible into backend for generation (e.g. PublicUser, Encounter, ..)
-    const encounterProfile: IEncounterProfile = {
-        firstName: notificationData.navigateToPerson.firstName,
-        bio: notificationData.navigateToPerson.bio,
-        imageURIs: notificationData.navigateToPerson.imageURIs,
-        encounterId: notificationData.encounterId,
-        age: notificationData.navigateToPerson.age,
-    };
 
     // Navigate to the specified screen, passing the user object as a prop and add encounters view as prior screen to enable back logic
     navigation.dispatch(
@@ -221,7 +212,8 @@ export const reactToNewEncounterNotification = (
                         params: {
                             screen: notificationData.screen,
                             params: {
-                                navigateToPerson: encounterProfile,
+                                navigateToPerson:
+                                    notificationData.navigateToPerson,
                             },
                         },
                     },
