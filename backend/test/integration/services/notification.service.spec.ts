@@ -10,6 +10,7 @@ import {
     EApproachChoice,
     EDateMode,
     EGender,
+    EIntention,
     ELanguage,
 } from "@/types/user.types";
 import { getAge } from "@/utils/date.utils";
@@ -29,12 +30,18 @@ const testPushTokenChrisAndroid = "ExponentPushToken[ubhhWpDP1x7ecywnYLmCzg]";
 export const testPushTokenMockDevice = "ExponentPushToken[mock-device]";
 export const testPushTokenMockDevice2 = "ExponentPushToken[mock-device]";
 
+/** @DEV todo split up for each test, otherwise changes to this object fails all tests */
 const mockUser: UserPublicDTO = {
     id: "123456789",
     firstName: "John",
     age: getAge(new Date("1990-01-01")),
     imageURIs: ["image1.jpg", "image2.jpg", "image3.jpg"],
     bio: "Hi, I am John. Nice to meet you!",
+    intentions: [
+        EIntention.CASUAL,
+        EIntention.RELATIONSHIP,
+        EIntention.FRIENDSHIP,
+    ],
 };
 
 describe("NotificationService", () => {
