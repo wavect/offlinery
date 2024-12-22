@@ -6,6 +6,7 @@ import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface OBadgeProps {
     intention: UserPublicDTOIntentionsEnum;
+    hideLabel?: boolean;
 }
 
 const intentionConfig = {
@@ -29,7 +30,7 @@ const intentionConfig = {
     },
 };
 
-const OBadge = ({ intention }: OBadgeProps) => {
+const OBadge = ({ intention, hideLabel }: OBadgeProps) => {
     const [showModal, setShowModal] = useState(false);
     const { icon, backgroundColor, description, label } =
         intentionConfig[intention];
@@ -38,10 +39,14 @@ const OBadge = ({ intention }: OBadgeProps) => {
         <>
             <TouchableOpacity
                 onPress={() => setShowModal(true)}
-                style={[styles.badge, { backgroundColor }]}
+                style={[
+                    styles.badge,
+                    { backgroundColor },
+                    hideLabel ? { paddingLeft: 12, paddingRight: 12 } : null,
+                ]}
             >
                 <MaterialIcons name={icon as any} size={16} color="white" />
-                <Text style={styles.label}>{label}</Text>
+                {!hideLabel && <Text style={styles.label}>{label}</Text>}
             </TouchableOpacity>
 
             <Modal

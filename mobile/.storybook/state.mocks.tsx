@@ -6,6 +6,7 @@ import {
     UserPrivateDTOApproachChoiceEnum,
     UserPrivateDTODateModeEnum,
     UserPrivateDTOVerificationStatusEnum,
+    UserPublicDTOIntentionsEnum,
 } from "../api/gen/src";
 import { EncountersContext } from "../context/EncountersContext";
 import { IUserData, UserContext } from "../context/UserContext";
@@ -42,7 +43,11 @@ export const storybookMockBaseEncounter: EncounterPublicDTO = {
         imageURIs: [
             "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg",
         ],
-        intentions: [],
+        intentions: [
+            UserPublicDTOIntentionsEnum.casual,
+            UserPublicDTOIntentionsEnum.relationship,
+            UserPublicDTOIntentionsEnum.friendship,
+        ],
         bio: "No pick up lines please.",
     },
     messages: null,

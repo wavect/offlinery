@@ -4,7 +4,9 @@ import {
     EncounterPublicDTOStatusEnum,
     MessagePublicDTO,
     UpdateEncounterStatusDTO,
+    UserPrivateDTOApproachChoiceEnum,
 } from "@/api/gen/src";
+import { OBadgesOfUser } from "@/components/OBadge/OBadgesOfUser";
 import {
     IOButtonSmallVariant,
     OButtonSmall,
@@ -22,6 +24,7 @@ import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
 import { getTimePassedWithText } from "@/utils/date.utils";
 import { getValidImgURI } from "@/utils/media.utils";
+import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
@@ -119,9 +122,15 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     >
                         {`${encounterProfile.otherUser.firstName}, ${encounterProfile.otherUser.age}`}
                     </Text>
-                    <Text
-                        style={styles.encounterInfo}
-                    >{`${getTimePassedWithText(encounterProfile.lastDateTimePassedBy)}`}</Text>
+                    <OBadgesOfUser
+                        intentions={encounterProfile.otherUser.intentions}
+                        hideLabel={true}
+                    />
+                    <Text style={styles.encounterInfo}>
+                        <MaterialIcons name="schedule" />
+                        &nbsp;
+                        {`${getTimePassedWithText(encounterProfile.lastDateTimePassedBy)}`}
+                    </Text>
                 </View>
             </View>
 
@@ -182,6 +191,28 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                 adjustsFontSizeToFit={true}
                             />
                         )}
+                        {state.approachChoice !==
+                            UserPrivateDTOApproachChoiceEnum.be_approached &&
+                            dateStatus !==
+                                EncounterPublicDTOStatusEnum.met_not_interested &&
+                            encounterProfile.isNearbyRightNow && (
+                                <OButtonSmall
+                                    label={i18n.t(TR.navigate)}
+                                    numberOfLines={1}
+                                    variant={IOButtonSmallVariant.Black}
+                                    onPress={() =>
+                                        navigation.navigate(ROUTES.HouseRules, {
+                                            nextPage:
+                                                ROUTES.Main.NavigateToApproach,
+                                            propsForNextScreen: {
+                                                navigateToPerson:
+                                                    encounterProfile,
+                                            },
+                                        })
+                                    }
+                                    adjustsFontSizeToFit={true}
+                                />
+                            )}
                     </View>
                 </View>
             )}
@@ -238,7 +269,7 @@ const styles = StyleSheet.create({
     },
     encounterInfo: {
         fontFamily: FontFamily.montserratRegular,
-        marginBottom: 10,
+        marginTop: 10,
     },
     actionContainer: {
         flexDirection: "row",
@@ -255,7 +286,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     encounterDropdownPicker: {
-        height: 45,
+        height: 35,
         borderColor: Color.lightGray,
         borderWidth: 1,
         borderRadius: 8,
