@@ -1,6 +1,6 @@
 import { Color, Subtitle } from "@/GlobalStyles";
 import { UserPublicDTO } from "@/api/gen/src";
-import OBadge from "@/components/OBadge/OBadge";
+import { OBadgesOfUser } from "@/components/OBadge/OBadgesOfUser";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
@@ -72,9 +72,7 @@ const ProfileView = ({
             containerStyle={{ paddingTop: 4 }}
             bottomContainerChildren={bottomContainerChildren}
         >
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-                {user.intentions?.map((i) => <OBadge key={i} intention={i} />)}
-            </View>
+            <OBadgesOfUser intentions={user.intentions} />
             <Text style={Subtitle}>{user.bio}</Text>
 
             <View style={styles.carouselContainer}>

@@ -234,7 +234,7 @@ export const de: Language = {
     trust: "Vertrauen",
     report: "Melden",
     reported: "Gemeldet..",
-    navigate: "Navigieren",
+    navigate: "Finden",
     locationServiceOff: "Dein Location Service ist nicht aktiv.",
     permissionToBackgroundLocationDenied: `Zugriff auf den Standort im Hintergrund wurde verweigert. Ohne deinen Standort wirst du weder angesprochen, noch kannst du jemanden via Offlinery ansprechen. Bitte stelle den Standortzugriff auf "Immer" in den Einstellungen ein.`,
     youAreLive: "Du bist live!",
