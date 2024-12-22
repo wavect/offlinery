@@ -306,4 +306,9 @@ export const en = {
     error: "Error",
     emailAppOpenErrorDescr:
         "There was a problem opening your email application.",
+    isNearby: "Nearby",
+    strikeNearbyRightNowExplanation:
+        "This user is just around the corner! They are already nearby. Depending on your settings you might be approached or can shoot your shot.",
+    strikeExplanation:
+        "You have crossed paths with this user for that many times. The more strikes you two have, the more likely you have lots of stuff in common!",
 };

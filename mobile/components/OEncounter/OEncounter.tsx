@@ -12,6 +12,7 @@ import {
     OButtonSmall,
 } from "@/components/OButtonSmall/OButtonSmall";
 import { dateStateConfig } from "@/components/OEncounter/OEncounter.config";
+import { OEncounterStrike } from "@/components/OEncounterStrike/OEncounterStrike";
 import OMessageModal from "@/components/OMessageModal/OMessageModal";
 import {
     EACTION_ENCOUNTERS,
@@ -115,17 +116,26 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     />
                 </TouchableOpacity>
                 <View style={styles.encounterDetails}>
-                    <Text
-                        style={styles.nameAge}
-                        numberOfLines={1}
-                        adjustsFontSizeToFit={true}
-                    >
-                        {`${encounterProfile.otherUser.firstName}, ${encounterProfile.otherUser.age}`}
-                    </Text>
-                    <OBadgesOfUser
-                        intentions={encounterProfile.otherUser.intentions}
-                        hideLabel={true}
-                    />
+                    <View style={styles.metadataContainer}>
+                        <Text
+                            style={styles.nameAge}
+                            numberOfLines={1}
+                            adjustsFontSizeToFit={true}
+                        >
+                            {`${encounterProfile.otherUser.firstName}, ${encounterProfile.otherUser.age}`}
+                        </Text>
+                        <OBadgesOfUser
+                            intentions={encounterProfile.otherUser.intentions}
+                            hideLabel={true}
+                        />
+                        <View style={styles.strikeWrapper}>
+                            <OEncounterStrike
+                                isNearbyRightNow={
+                                    encounterProfile.isNearbyRightNow || false
+                                }
+                            />
+                        </View>
+                    </View>
                     <Text style={styles.encounterInfo}>
                         <MaterialIcons name="schedule" />
                         &nbsp;
@@ -241,6 +251,16 @@ const OEncounter = (props: ISingleEncounterProps) => {
 const styles = StyleSheet.create({
     button: {
         marginLeft: 5,
+    },
+    metadataContainer: {
+        position: "relative",
+        width: "100%",
+    },
+    strikeWrapper: {
+        position: "absolute",
+        right: 0,
+        top: 2,
+        zIndex: 1,
     },
     encounterContainer: {
         marginBottom: 20,

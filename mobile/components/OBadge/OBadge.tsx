@@ -1,8 +1,9 @@
 import { UserPublicDTOIntentionsEnum } from "@/api/gen/src";
+import { OModal } from "@/components/OModal/OModal";
 import { i18n, TR } from "@/localization/translate.service";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 interface OBadgeProps {
     intention: UserPublicDTOIntentionsEnum;
@@ -49,22 +50,11 @@ const OBadge = ({ intention, hideLabel }: OBadgeProps) => {
                 {!hideLabel && <Text style={styles.label}>{label}</Text>}
             </TouchableOpacity>
 
-            <Modal
-                transparent={true}
-                visible={showModal}
-                onRequestClose={() => setShowModal(false)}
-                animationType="fade"
-            >
-                <TouchableOpacity
-                    style={styles.modalOverlay}
-                    activeOpacity={1}
-                    onPress={() => setShowModal(false)}
-                >
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalText}>{description}</Text>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
+            <OModal
+                setShowModal={setShowModal}
+                showModal={showModal}
+                text={description}
+            />
         </>
     );
 };
@@ -82,23 +72,6 @@ const styles = StyleSheet.create({
     label: {
         color: "white",
         fontSize: 14,
-    },
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    modalContent: {
-        backgroundColor: "white",
-        padding: 20,
-        borderRadius: 8,
-        width: "80%",
-        maxWidth: 300,
-    },
-    modalText: {
-        fontSize: 16,
-        textAlign: "center",
     },
 });
 

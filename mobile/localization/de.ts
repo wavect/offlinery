@@ -309,4 +309,9 @@ export const de: Language = {
     noEmailAppErrorDescr: "Keine E-Mail App auf deinem Gerät gefunden.",
     error: "Fehler",
     emailAppOpenErrorDescr: "Wir konnten deine E-Mail App nicht öffnen.",
+    isNearby: "In der Nähe",
+    strikeNearbyRightNowExplanation:
+        "Dieser User ist gerade in deiner Nähe! Abhängig von deinen Einstellungen könntest du angesprochen werden oder die Person selbst ansprechen.",
+    strikeExplanation:
+        "So oft bist du diesem Nutzer schon begegnet. Je mehr Strikes ihr beide habt, desto wahrscheinlicher habt ihr viele Gemeinsamkeiten.",
 };
