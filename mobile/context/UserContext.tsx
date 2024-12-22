@@ -218,7 +218,9 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
     }
 };
 
-const UserContext = createContext<IUserContextType | undefined>(undefined);
+export const UserContext = createContext<IUserContextType | undefined>(
+    undefined,
+);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
