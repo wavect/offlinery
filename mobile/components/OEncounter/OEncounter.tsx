@@ -130,6 +130,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                         />
                         <View style={styles.strikeWrapper}>
                             <OEncounterStrike
+                                amountStrikes={encounterProfile.amountStrikes}
                                 isNearbyRightNow={
                                     encounterProfile.isNearbyRightNow || false
                                 }
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
     strikeWrapper: {
         position: "absolute",
         right: 0,
-        top: 2,
+        top: 0,
         zIndex: 1,
     },
     encounterContainer: {

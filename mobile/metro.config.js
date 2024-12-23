@@ -6,6 +6,6 @@ const config = getSentryExpoConfig(__dirname);
 module.exports = withStorybook(config, {
     websockets: {
         port: 7007,
-        host: 'localhost',
+        host: "localhost",
     },
 });
