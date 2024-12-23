@@ -636,4 +636,32 @@ describe("Encounter Service Integration Tests ", () => {
             ).toEqual(1);
         });
     });
+
+    describe("should handle strike logic accordingly", function () {
+        it("initial encounter should have an strikeAmount of 1", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const res = await encounterService.saveEncountersForUser(mainUser, [
+                otherUser,
+            ]);
+
+            expect(res.get(otherUser.id).streakCount).toEqual(1);
+        });
+    });
 });

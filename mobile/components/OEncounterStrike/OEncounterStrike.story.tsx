@@ -7,7 +7,7 @@ const meta: Meta<typeof OEncounterStrike> = {
     title: "Components/OEncounterStrike",
     component: OEncounterStrike,
     argTypes: {
-        amountStrikes: {
+        streakCounter: {
             control: { type: "number", min: 1, max: 10, step: 1 },
             description: "Number of flame elements to display",
         },
@@ -17,7 +17,7 @@ const meta: Meta<typeof OEncounterStrike> = {
         },
     },
     args: {
-        amountStrikes: 3,
+        streakCounter: 3,
         isNearbyRightNow: true,
     },
     decorators: [
@@ -45,7 +45,7 @@ const meta: Meta<typeof OEncounterStrike> = {
       
       \`\`\`tsx
       <OEncounterStrike 
-        amountStrikes={3} 
+        streakCounter={3} 
         isNearbyRightNow={true} 
       />
       \`\`\`
@@ -65,14 +65,14 @@ type Story = StoryObj<typeof OEncounterStrike>;
 
 export const Default: Story = {
     args: {
-        amountStrikes: 3,
+        streakCounter: 3,
         isNearbyRightNow: false,
     },
 };
 
 export const SingleFlame: Story = {
     args: {
-        amountStrikes: 1,
+        streakCounter: 1,
         isNearbyRightNow: true,
     },
 };
@@ -80,27 +80,27 @@ export const SingleFlame: Story = {
 export const NoStreakNearby: Story = {
     args: {
         isNearbyRightNow: true,
-        amountStrikes: undefined,
+        streakCounter: undefined,
     },
 };
 
 export const NoStreakNotNearby: Story = {
     args: {
         isNearbyRightNow: false,
-        amountStrikes: undefined,
+        streakCounter: undefined,
     },
 };
 
 export const ManyFlames: Story = {
     args: {
-        amountStrikes: 5,
+        streakCounter: 5,
         isNearbyRightNow: true,
     },
 };
 
 export const InactiveFlames: Story = {
     args: {
-        amountStrikes: 3,
+        streakCounter: 3,
         isNearbyRightNow: false,
     },
 };
@@ -121,22 +121,22 @@ export const FlameShowcase: Story = {
             >
                 <View>
                     <Story
-                        args={{ amountStrikes: 1, isNearbyRightNow: true }}
+                        args={{ streakCounter: 1, isNearbyRightNow: true }}
                     />
                 </View>
                 <View>
                     <Story
-                        args={{ amountStrikes: 2, isNearbyRightNow: true }}
+                        args={{ streakCounter: 2, isNearbyRightNow: true }}
                     />
                 </View>
                 <View>
                     <Story
-                        args={{ amountStrikes: 3, isNearbyRightNow: false }}
+                        args={{ streakCounter: 3, isNearbyRightNow: false }}
                     />
                 </View>
                 <View>
                     <Story
-                        args={{ amountStrikes: 4, isNearbyRightNow: true }}
+                        args={{ streakCounter: 4, isNearbyRightNow: true }}
                     />
                 </View>
             </View>
