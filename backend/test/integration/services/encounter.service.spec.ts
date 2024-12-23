@@ -636,4 +636,86 @@ describe("Encounter Service Integration Tests ", () => {
             ).toEqual(1);
         });
     });
+
+    describe("should manage location handling correctly", () => {
+        it("should throw if no encounter was found", async () => {
+            try {
+                await encounterService.getLocationOfEncounter(
+                    "00000000-0000-0000-0000-000000000000",
+                    "00000000-0000-0000-0000-000000000000",
+                );
+            } catch (e) {
+                expect(e.response.error).toEqual("Not Found");
+                expect(e.response.statusCode).toEqual(404);
+                expect(e.toString()).toContain("not found");
+            }
+        });
+    });
+    it("should retrieve location if actually nearby", async () => {
+        const mainUser = await userFactory.persistNewTestUser({
+            dateMode: EDateMode.LIVE,
+            location: new PointBuilder().build(0, 0),
+            gender: EGender.MAN,
+            genderDesire: [EGender.WOMAN],
+            intentions: [EIntention.RELATIONSHIP],
+            approachChoice: EApproachChoice.BOTH,
+        });
+
+        const otherUser = await userFactory.persistNewTestUser({
+            dateMode: EDateMode.LIVE,
+            location: new PointBuilder().build(5, 5),
+            gender: EGender.MAN,
+            genderDesire: [EGender.WOMAN],
+            intentions: [EIntention.RELATIONSHIP],
+            approachChoice: EApproachChoice.BOTH,
+        });
+
+        const encounter = await encounterFactory.persistNewTestEncounter(
+            mainUser,
+            otherUser,
+        );
+
+        try {
+            await encounterService.getLocationOfEncounter(
+                mainUser.id,
+                encounter.id,
+            );
+        } catch (e) {
+            expect(e.toString()).toContain("is not nearby right now");
+        }
+    });
+
+    it("should find and return the last location", async () => {
+        const mainUser = await userFactory.persistNewTestUser({
+            dateMode: EDateMode.LIVE,
+            location: new PointBuilder().build(0, 0),
+            gender: EGender.MAN,
+            genderDesire: [EGender.WOMAN],
+            intentions: [EIntention.RELATIONSHIP],
+            approachChoice: EApproachChoice.BOTH,
+        });
+
+        const otherUser = await userFactory.persistNewTestUser({
+            dateMode: EDateMode.LIVE,
+            location: new PointBuilder().build(0, 0),
+            gender: EGender.MAN,
+            genderDesire: [EGender.WOMAN],
+            intentions: [EIntention.RELATIONSHIP],
+            approachChoice: EApproachChoice.BOTH,
+        });
+
+        const encounter = await encounterFactory.persistNewTestEncounter(
+            mainUser,
+            otherUser,
+        );
+
+        const location = await encounterService.getLocationOfEncounter(
+            mainUser.id,
+            encounter.id,
+        );
+
+        expect(location.latitude).toEqual(0);
+        expect(location.latitude).toEqual(0);
+        expect(location.lastTimeLocationUpdated).toBeDefined();
+    });
 });
