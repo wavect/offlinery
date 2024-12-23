@@ -9,7 +9,7 @@ const Splash = () => {
         <OLinearBackground>
             <View style={styles.layoutContainer}>
                 <OShowcase
-                    subtitle={i18n.t(TR.datingAppsAreBroken)}
+                    subtitle={i18n.t(TR.connectInRealLife)}
                     onlyUseSystemFont={true}
                 />
             </View>

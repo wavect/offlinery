@@ -1,7 +1,7 @@
 // @dev Other languages have to be typed as Language!
 
 export const en = {
-    bgLocationServiceTitle: "Real Life Dating ON",
+    bgLocationServiceTitle: "Offlinery ON",
     bgLocationServiceBody: "Letting others know about you.",
     createAccount: "Create Account",
     signIn: "Sign in",
@@ -9,7 +9,7 @@ export const en = {
     signingIn: "Signing in..",
     contactSupport: "Something not working?",
     gettingReadyToAmazeYou: "Getting ready to amaze you..",
-    datingAppsAreBroken: "Dating apps are Broken",
+    connectInRealLife: "Connect in real life.",
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
     termsDisclaimer: {
         p1: "By tapping 'Create account' or 'Sign in', you agree to our ",

@@ -81,7 +81,7 @@ const ReportEncounter = ({
                 type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,
                 payload: [
                     {
-                        encounterId: personToReport.id,
+                        id: personToReport.id,
                         reported: true,
                     },
                 ],
