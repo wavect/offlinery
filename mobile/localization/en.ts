@@ -270,24 +270,29 @@ export const en = {
     appIntroductionBack: "Back",
     appIntroductionNext: "Next",
     appIntroductionGetStarted: "Get Started",
-    page1Title: "Meet In Real Life",
-    page1Description:
+    pageAppForAllTitle: "What is Offlinery?",
+    pageAppForAllDescription:
+        "You can use this app for <b>dating</b>, finding <b>new friends</b> and casually <b>re-connecting with old friends</b> in the real world.",
+    pageAppForAllConclusion: "What you use this app for is up to you.",
+    pageOfflineTitle: "Meet In Real Life",
+    pageOfflineDescription:
         "Everything happens <b>offline</b>. No long chats. No swiping. Let's build genuine connections again.",
-    page1Conclusion:
+    pageOfflineConclusion:
         "<b>Get approached</b> or <b>approach</b> people as we used to.",
-    page2Title: "Safely",
-    page2Description:
+    pageSafetyTitle: "Safely",
+    pageSafetyDescription:
         "People that approach need to pass a <b>strict screening</b>. We do track users' trustworthiness and continuously add new safety features",
-    page2Conclusion: "We have <b>0 tolerance</b> for disrespectful behavior.",
-    page3Title: "What we NEED",
-    page3Description:
-        "For this to work Offlinery always need to know where you are. You can easily pause tracking and configure when and how you want to meet people.",
-    page3Conclusion:
+    pageSafetyConclusion:
+        "We have <b>0 tolerance</b> for disrespectful behavior.",
+    pageLocationTitle: "What we need",
+    pageLocationDescription:
+        "We need to know where you are to let you know when someone is nearby. You can easily <b>pause</b> this and configure when and how you want to meet people.",
+    pageLocationConclusion:
         "Please click on '<b>Allow Always</b>' whenever Offlinery asks you for your location.",
-    page4Title: "Data & Your Safety",
-    page4Description:
+    pageDataTitle: "Data & Your Safety",
+    pageDataDescription:
         "This app is <b>GDPR compliant</b>. Offlinery has been designed from the ground up to make <b>everyone feel safe</b>.",
-    page4Conclusion:
+    pageDataConclusion:
         "This app won't work if you don't <b>feel safe at all times</b>.",
     letsMeetIRL: "Meet IRL",
     dropdownSelectChoicePlaceholder: "Select an option",
