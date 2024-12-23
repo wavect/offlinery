@@ -275,24 +275,29 @@ export const de: Language = {
     appIntroductionBack: "Zurück",
     appIntroductionNext: "Weiter",
     appIntroductionGetStarted: "Loslegen",
-    page1Title: "Triff dich im echten Leben",
-    page1Description:
+    pageAppForAllTitle: "Was ist Offlinery?",
+    pageAppForAllDescription:
+        "Triff Menschen im realen Leben. Egal ob zum <b>Daten</b>, zum Finden <b>neuer Freunde</b> oder um <b>alten Freunden</b> über den Weg zu laufen.",
+    pageAppForAllConclusion: "Wie du die App nutzt, ist deine Sache.",
+    pageOfflineTitle: "Triff dich im echten Leben",
+    pageOfflineDescription:
         "Alles passiert <b>offline</b>. Es gibt keine langen Chats und kein Swipen.",
-    page1Conclusion:
-        "<b>Werde angesprochen</b> oder <b>sprich an</b> so wie vor Dating Apps.",
-    page2Title: "Auf sichere Weise",
-    page2Description:
+    pageOfflineConclusion:
+        "<b>Werde angesprochen</b> oder <b>sprich an</b> so wie früher.",
+    pageSafetyTitle: "Auf sichere Weise",
+    pageSafetyDescription:
         "Ansprechende werden von uns in einem <b>persönlichen Verifizierungsanruf</b> auf ihre Vertrauenswürdigkeit überprüft.",
-    page2Conclusion: "Wir haben <b>0 Toleranz</b> für respektloses Verhalten.",
-    page3Title: "Eine Bitte",
-    page3Description:
-        "Damit die App funktioniert muss Offlinery <b>immer</b> wissen wo du bist. Du kannst das Tracking <b>jederzeit pausieren</b> und festlegen, wann und wie du Leute treffen möchtest.",
-    page3Conclusion:
+    pageSafetyConclusion:
+        "Wir haben <b>0 Toleranz</b> gegenüber respektlosem Verhalten.",
+    pageLocationTitle: "Eine Bitte",
+    pageLocationDescription:
+        "Wir müssen wissen wo du bist, damit wir dich benachrichtigen können, wenn du einem User über den Weg läufst. Du behälst die volle Kontrolle über das <b>Wann</b> und <b>Wo</b>.",
+    pageLocationConclusion:
         "Klicke auf '<b>immer erlauben</b>' wenn dich Offlinery nach deinem Standort fragt.",
-    page4Title: "Daten & Sicherheit",
-    page4Description:
+    pageDataTitle: "Daten & Sicherheit",
+    pageDataDescription:
         "Diese App ist <b>DSGVO-konform</b>. Offlinery wurde von Grund auf so konzipiert, dass sich jeder <b>wohl fühlt</b>.",
-    page4Conclusion:
+    pageDataConclusion:
         "Diese App funktioniert nur, wenn du dich zu <b>jederzeit sicher fühlst</b>.",
     letsMeetIRL: "In echt treffen",
     dropdownSelectChoicePlaceholder: "Bitte wähle",

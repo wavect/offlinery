@@ -10,29 +10,31 @@ interface OBadgeProps {
     hideLabel?: boolean;
 }
 
-const intentionConfig = {
-    [UserPublicDTOIntentionsEnum.casual]: {
-        icon: "sentiment-very-satisfied",
-        label: i18n.t(TR.casual),
-        backgroundColor: "#36797d",
-        description: i18n.t(TR.casualDescription),
-    },
-    [UserPublicDTOIntentionsEnum.friendship]: {
-        icon: "diversity-3",
-        label: i18n.t(TR.friendship),
-        backgroundColor: "#38538c",
-        description: i18n.t(TR.friendshipDescription),
-    },
-    [UserPublicDTOIntentionsEnum.relationship]: {
-        icon: "favorite",
-        label: i18n.t(TR.relationship),
-        backgroundColor: "#833467",
-        description: i18n.t(TR.relationshipDescription),
-    },
-};
-
 const OBadge = ({ intention, hideLabel }: OBadgeProps) => {
     const [showModal, setShowModal] = useState(false);
+
+    // @dev Here to be re-rendered for storybook localization
+    const intentionConfig = {
+        [UserPublicDTOIntentionsEnum.casual]: {
+            icon: "sentiment-very-satisfied",
+            label: i18n.t(TR.casual),
+            backgroundColor: "#36797d",
+            description: i18n.t(TR.casualDescription),
+        },
+        [UserPublicDTOIntentionsEnum.friendship]: {
+            icon: "diversity-3",
+            label: i18n.t(TR.friendship),
+            backgroundColor: "#38538c",
+            description: i18n.t(TR.friendshipDescription),
+        },
+        [UserPublicDTOIntentionsEnum.relationship]: {
+            icon: "favorite",
+            label: i18n.t(TR.relationship),
+            backgroundColor: "#833467",
+            description: i18n.t(TR.relationshipDescription),
+        },
+    };
+
     const { icon, backgroundColor, description, label } =
         intentionConfig[intention];
 

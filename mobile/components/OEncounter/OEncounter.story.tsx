@@ -3,24 +3,10 @@ import {
     storybookMockBaseEncounter,
 } from "@/.storybook/state.mocks";
 import { EncounterPublicDTOStatusEnum } from "@/api/gen/src";
-import { EACTION_ENCOUNTERS } from "@/context/EncountersContext";
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { View } from "react-native";
 import OEncounter from "./OEncounter";
-
-// Mock API function
-const mockUpdateStatus = async () => {
-    console.log("Status update called");
-    return Promise.resolve();
-};
-
-// Mock API module
-const mockAPI = {
-    encounter: {
-        encounterControllerUpdateStatus: mockUpdateStatus,
-    },
-};
 
 const meta: Meta<typeof OEncounter> = {
     title: "Components/OEncounter",
@@ -48,27 +34,10 @@ const meta: Meta<typeof OEncounter> = {
 export default meta;
 type Story = StoryObj<typeof OEncounter>;
 
-// Helper function to handle status changes
-const createPlayFunction = (status: EncounterPublicDTOStatusEnum) => {
-    return async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-        console.log("Status would be updated to:", status);
-        console.log("Action that would be dispatched:", {
-            type: EACTION_ENCOUNTERS.UPDATE_MULTIPLE,
-            payload: [
-                {
-                    id: storybookMockBaseEncounter.id,
-                    status,
-                },
-            ],
-        });
-    };
-};
-
 export const Default: Story = {
     args: {
         encounterProfile: storybookMockBaseEncounter,
     },
-    play: createPlayFunction(EncounterPublicDTOStatusEnum.met_interested),
 };
 
 export const WithMessage: Story = {
@@ -107,6 +76,42 @@ export const NearbyRightNow: Story = {
     },
 };
 
+export const Strike1: Story = {
+    args: {
+        encounterProfile: {
+            ...storybookMockBaseEncounter,
+            amountStrikes: 1,
+        },
+    },
+};
+
+export const Strike2: Story = {
+    args: {
+        encounterProfile: {
+            ...storybookMockBaseEncounter,
+            amountStrikes: 2,
+        },
+    },
+};
+
+export const Strike10: Story = {
+    args: {
+        encounterProfile: {
+            ...storybookMockBaseEncounter,
+            amountStrikes: 10,
+        },
+    },
+};
+
+export const Strike100: Story = {
+    args: {
+        encounterProfile: {
+            ...storybookMockBaseEncounter,
+            amountStrikes: 100,
+        },
+    },
+};
+
 export const NoActions: Story = {
     args: {
         encounterProfile: storybookMockBaseEncounter,
@@ -121,7 +126,6 @@ export const MetInterested: Story = {
             status: EncounterPublicDTOStatusEnum.met_interested,
         },
     },
-    play: createPlayFunction(EncounterPublicDTOStatusEnum.met_not_interested),
 };
 
 export const MetNotInterested: Story = {
@@ -131,7 +135,6 @@ export const MetNotInterested: Story = {
             status: EncounterPublicDTOStatusEnum.met_not_interested,
         },
     },
-    play: createPlayFunction(EncounterPublicDTOStatusEnum.met_interested),
 };
 
 export const LongNames: Story = {

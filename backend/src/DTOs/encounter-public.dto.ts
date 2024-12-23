@@ -47,4 +47,7 @@ export class EncounterPublicDTO {
 
     @ApiProperty({ default: null })
     isNearbyRightNow: boolean | null;
+
+    @ApiProperty({ default: 1 })
+    amountStrikes: number;
 }
