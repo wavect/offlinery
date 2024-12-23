@@ -9,10 +9,12 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import { TOURKEY } from "@/services/tourguide.service";
+import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
+import { MOCK_HEATMAP_LOCATIONS, TOURKEY } from "@/services/tourguide.service";
 import { API } from "@/utils/api-config";
 import { getMapProvider } from "@/utils/map-provider";
 import Slider from "@react-native-community/slider";
+import { useIsFocused } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
 import React, {
     forwardRef,
@@ -48,6 +50,7 @@ interface OMapProps {
 const DEFAULT_RADIUS_SIZE = 1000;
 
 export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
+    const [forceRerender, triggerForceRerender] = useState<number>(0);
     const { saveChangesToBackend, showHeatmap, showBlacklistedRegions } = props;
     const { state, dispatch } = useUserContext();
     const [activeRegionIndex, setActiveRegionIndex] = useState<number | null>(
@@ -82,7 +85,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                 await Promise.all(promises);
             }
         })();
-    }, [state.dateMode]);
+    }, [state.dateMode, forceRerender]);
 
     useEffect(() => {
         if (location) {
@@ -241,137 +244,172 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         }
     }, [activeRegionIndex]);
 
-    const { getCurrentStep, eventEmitter } = useTourGuideController(
+    const { eventEmitter, stop: stopTourGuide } = useTourGuideController(
         TOURKEY.FIND,
     );
 
-    const handleTourOnStart = (e: any) => {
-        // @dev load example data for tutorial
-        setLocationsFromOthers([
-            { latitude: mapRegion.latitude, longitude: mapRegion.longitude },
-        ]);
+    const handleTourOnStop = async (e: any) => {
+        // @dev Clear mocked states, force re-render
+        await saveLocalValue(LOCAL_VALUE.HAS_DONE_FIND_WALKTHROUGH, "true");
+        triggerForceRerender(forceRerender + 1);
     };
-
-    const handleTourOnStop = (e: any) => console.error(e);
-    const handleTourOnStepChange = (e: any) => console.warn(JSON.stringify(e));
+    const handleTourOnStepChange = (e: any) => {
+        if (e?.order === 2) {
+            setLocationsFromOthers(MOCK_HEATMAP_LOCATIONS(mapRegion));
+            return;
+        } else if (e?.order === 3) {
+            // @dev add example blacklisted region if none added yet
+            if (!state.blacklistedRegions.length) {
+                setBlacklistedRegions([
+                    ...state.blacklistedRegions,
+                    {
+                        latitude: mapRegion.latitude * 0.9999,
+                        longitude: mapRegion.longitude * 0.9999,
+                        radius: DEFAULT_RADIUS_SIZE,
+                    },
+                ]);
+            }
+            setActiveRegionIndex(0);
+        }
+    };
     useEffect(() => {
-        eventEmitter?.on("start", handleTourOnStart);
+        if (!eventEmitter) return;
         eventEmitter?.on("stop", handleTourOnStop);
         eventEmitter?.on("stepChange", handleTourOnStepChange);
 
         return () => {
-            eventEmitter?.off("start", handleTourOnStart);
             eventEmitter?.off("stop", handleTourOnStop);
             eventEmitter?.off("stepChange", handleTourOnStepChange);
         };
-    }, []);
+        // @dev Keep mapRegion in dependency to mock heatmap along current mapRegion
+    }, [eventEmitter, mapRegion]);
+
+    const isFocused = useIsFocused();
+    useEffect(() => {
+        if (!isFocused) {
+            stopTourGuide();
+        }
+    }, [isFocused]);
 
     return (
         <TouchableWithoutFeedback onPress={handleMapPress}>
-            <View style={styles.container}>
-                <TourGuideZone
-                    zone={2}
-                    tourKey={TOURKEY.FIND}
-                    text={i18n.t(TR.tourHeatMap)}
-                    shape="rectangle_and_keep"
-                >
-                    <MapView
-                        ref={mapRef}
-                        style={styles.map}
-                        region={mapRegion}
-                        initialRegion={mapRegion}
-                        showsMyLocationButton={true}
-                        showsUserLocation={true}
-                        zoomControlEnabled={true}
-                        zoomEnabled={true}
-                        zoomTapEnabled={true}
-                        maxZoomLevel={13}
-                        minZoomLevel={8}
-                        onPress={handleMapPress}
-                        onLongPress={
-                            showBlacklistedRegions
-                                ? handleMapLongPress
-                                : undefined
-                        }
-                        provider={getMapProvider()}
+            <TourGuideZone
+                zone={3}
+                tourKey={TOURKEY.FIND}
+                text={i18n.t(TR.tourSafeZones)}
+                shape="rectangle"
+            >
+                <View style={styles.container}>
+                    <TourGuideZone
+                        zone={2}
+                        tourKey={TOURKEY.FIND}
+                        text={i18n.t(TR.tourHeatMap)}
+                        shape="rectangle"
                     >
-                        <OHeatMap
-                            showMap={showHeatmap}
-                            locations={locationsFromOthers}
-                        />
+                        <MapView
+                            ref={mapRef}
+                            style={styles.map}
+                            region={mapRegion}
+                            initialRegion={mapRegion}
+                            showsMyLocationButton={true}
+                            showsUserLocation={true}
+                            zoomControlEnabled={true}
+                            zoomEnabled={true}
+                            zoomTapEnabled={true}
+                            maxZoomLevel={13}
+                            minZoomLevel={8}
+                            onPress={handleMapPress}
+                            onLongPress={
+                                showBlacklistedRegions
+                                    ? handleMapLongPress
+                                    : undefined
+                            }
+                            provider={getMapProvider()}
+                        >
+                            <OHeatMap
+                                showMap={showHeatmap}
+                                locations={locationsFromOthers}
+                            />
 
-                        {showBlacklistedRegions &&
-                            state.blacklistedRegions.map((region, index) => (
-                                <React.Fragment key={`region-${index}`}>
-                                    <Circle
-                                        center={region}
-                                        radius={region?.radius}
-                                        fillColor={
-                                            index === activeRegionIndex
-                                                ? "rgba(255, 0, 0, 0.4)"
-                                                : "rgba(255, 0, 0, 0.2)"
-                                        }
-                                        strokeColor={
-                                            index === activeRegionIndex
-                                                ? "rgba(255, 0, 0, 0.8)"
-                                                : "rgba(255, 0, 0, 0.5)"
-                                        }
-                                    />
-                                    <Marker
-                                        coordinate={region}
-                                        title={i18n.t(TR.youAreUndercover)}
-                                        description={i18n.t(
-                                            TR.nobodyWillSeeYou,
-                                        )}
-                                        draggable={true}
-                                        onDragStart={() =>
-                                            handleRegionDragStart(index)
-                                        }
-                                        onDragEnd={handleRegionDragEnd}
-                                        onPress={() => handleRegionPress(index)}
-                                        tracksViewChanges={false}
-                                    />
-                                </React.Fragment>
-                            ))}
-                    </MapView>
-                </TourGuideZone>
-                {showBlacklistedRegions && activeRegionIndex !== null && (
-                    <OFloatingActionButton
-                        size="xs"
-                        style={styles.fab}
-                        icon="delete-outline"
-                        action={() => handleRemoveRegion(activeRegionIndex)}
-                        color={Color.red}
-                    />
-                )}
-                {showBlacklistedRegions && (
-                    <View style={styles.instructions}>
-                        <Text style={[Subtitle, styles.instructionText]}>
-                            {i18n.t(TR.longPressMapSafeZoneInstruction)}
-                        </Text>
-                    </View>
-                )}
-                {showBlacklistedRegions && activeRegionIndex !== null && (
-                    <View style={styles.sliderContainer}>
-                        <Text style={[Subtitle, styles.sliderText]}>
-                            {i18n.t(TR.adjustRegionRadius)} (
-                            {Math.round(
-                                state.blacklistedRegions[activeRegionIndex]
-                                    ?.radius,
-                            )}
-                            m)
-                        </Text>
-                        <Slider
-                            style={styles.slider}
-                            minimumValue={100}
-                            maximumValue={2000}
-                            step={10}
-                            value={tempSliderValue}
-                            onValueChange={handleRadiusChange}
+                            {showBlacklistedRegions &&
+                                state.blacklistedRegions.map(
+                                    (region, index) => (
+                                        <React.Fragment key={`region-${index}`}>
+                                            <Circle
+                                                center={region}
+                                                radius={region?.radius}
+                                                fillColor={
+                                                    index === activeRegionIndex
+                                                        ? "rgba(255, 0, 0, 0.4)"
+                                                        : "rgba(255, 0, 0, 0.2)"
+                                                }
+                                                strokeColor={
+                                                    index === activeRegionIndex
+                                                        ? "rgba(255, 0, 0, 0.8)"
+                                                        : "rgba(255, 0, 0, 0.5)"
+                                                }
+                                            />
+                                            <Marker
+                                                coordinate={region}
+                                                title={i18n.t(
+                                                    TR.youAreUndercover,
+                                                )}
+                                                description={i18n.t(
+                                                    TR.nobodyWillSeeYou,
+                                                )}
+                                                draggable={true}
+                                                onDragStart={() =>
+                                                    handleRegionDragStart(index)
+                                                }
+                                                onDragEnd={handleRegionDragEnd}
+                                                onPress={() =>
+                                                    handleRegionPress(index)
+                                                }
+                                                tracksViewChanges={false}
+                                            />
+                                        </React.Fragment>
+                                    ),
+                                )}
+                        </MapView>
+                    </TourGuideZone>
+                    {showBlacklistedRegions && activeRegionIndex !== null && (
+                        <OFloatingActionButton
+                            size="xs"
+                            style={styles.fab}
+                            icon="delete-outline"
+                            action={() => handleRemoveRegion(activeRegionIndex)}
+                            color={Color.red}
                         />
-                    </View>
-                )}
-            </View>
+                    )}
+                    {showBlacklistedRegions && (
+                        <View style={styles.instructions}>
+                            <Text style={[Subtitle, styles.instructionText]}>
+                                {i18n.t(TR.longPressMapSafeZoneInstruction)}
+                            </Text>
+                        </View>
+                    )}
+                    {showBlacklistedRegions && activeRegionIndex !== null && (
+                        <View style={styles.sliderContainer}>
+                            <Text style={[Subtitle, styles.sliderText]}>
+                                {i18n.t(TR.adjustRegionRadius)} (
+                                {Math.round(
+                                    state.blacklistedRegions[activeRegionIndex]
+                                        ?.radius,
+                                )}
+                                m)
+                            </Text>
+                            <Slider
+                                style={styles.slider}
+                                minimumValue={100}
+                                maximumValue={2000}
+                                step={10}
+                                value={tempSliderValue}
+                                onValueChange={handleRadiusChange}
+                            />
+                        </View>
+                    )}
+                </View>
+            </TourGuideZone>
         </TouchableWithoutFeedback>
     );
 });

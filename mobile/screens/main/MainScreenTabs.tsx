@@ -13,6 +13,7 @@ import {
     reactToNewEventNotification,
     registerForPushNotificationsAsync,
 } from "@/services/notification.service";
+import { LOCAL_VALUE, getLocalValue } from "@/services/storage.service";
 import { TOURKEY } from "@/services/tourguide.service";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
@@ -215,13 +216,17 @@ export const MainScreenTabs = ({ navigation }: any) => {
         }, [state.id, state.dateMode]),
     );
 
-    const { canStart, start, stop, eventEmitter, tourKey } =
-        useTourGuideController(TOURKEY.FIND);
+    const { canStart, start, tourKey } = useTourGuideController(TOURKEY.FIND);
 
     useEffect(() => {
-        if (canStart) {
-            start();
-        }
+        getLocalValue(LOCAL_VALUE.HAS_DONE_FIND_WALKTHROUGH).then(
+            (hasDoneWalkthrough) => {
+                if (hasDoneWalkthrough?.toLowerCase().trim() === "true") return;
+                if (canStart) {
+                    start();
+                }
+            },
+        );
     }, [canStart]);
 
     return (
@@ -240,7 +245,7 @@ export const MainScreenTabs = ({ navigation }: any) => {
                         zone={1}
                         tourKey={tourKey}
                         text={i18n.t(TR.tourToggle)}
-                        shape="rectangle_and_keep"
+                        shape="rectangle"
                     >
                         <OGoLiveToggle style={{ marginRight: 10 }} />
                     </TourGuideZone>

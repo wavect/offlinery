@@ -322,11 +322,27 @@ export const de: Language = {
     tourToggle:
         "Aktiviere diesen Toggle, um im echten Leben angesprochen zu werden oder anzusprechen.",
     tourHeatMap:
-        "Die Heatmap zeigt dir wohin du gehen kannst, um deine Chancen zu verbessern Jemanden passend zu deinen Einstellungen zu treffen.",
+        "Die Heatmap zeigt dir wohin du gehen kannst, um deine Chancen zu verbessern Jemanden passend zu deinen Einstellungen zu treffen. Die Heatmap zeigt wo sich viele User in den letzten 6 Stunden aufgehalten haben.",
     tourSafeZones:
-        "Es gibt Orte an denen man sich meist nicht wohl fühlt jemanden zu treffen. Diese kannst du hier eintragen, wie zum Beispiel deine Arbeit, dein Fitnessstudio oder deine Nachbarschaft.",
+        "Es gibt Orte an denen man sich meist nicht wohl fühlt jemanden zu treffen. Drücke für 2 Sekunden auf die Map um Sicherheitszonen zu erstellen, wie zum Beispiel deine Arbeit, dein Fitnessstudio oder deine Nachbarschaft.",
     tourPrevious: "Zurück",
     tourNext: "Weiter",
     tourSkip: "Überspringen",
     tourFinish: "Fertig",
+    tourEncounters:
+        "Hier findest du User denen du in der echten Welt über den Weg gelaufen bist.",
+    tourEncounterInterested:
+        "Lass uns wissen wenn du einem User über den Weg gelaufen bist und du diesen wieder sehen möchtest.",
+    tourEncounterMessage:
+        "Offlinery hat keine Chats. Du kannst dem User trotzdem eine simple Nachricht schicken, um Nummern auszutauschen.",
+    tourEncounterNotInterested:
+        "Bist du nicht interessiert dann wähle diese Option. Dieser kann dich dann nicht mehr über Offlinery treffen. Wenn angebracht, kannst du den User auch melden.",
+    tourEncounterIntentions:
+        "Hier siehst du was dieser User sucht. Klick auf ein Badge für mehr Infos.",
+    tourEncounterStrike:
+        "Wie oft du diesem User schon über den Weg gelaufen bist.",
+    tourEncounterNearbyNow:
+        "Dieser User ist jetzt gerade in deiner Nähe! Abhängig von deinen Einstellungen kannst du ansprechen oder wirst eventuell angesprochen.",
+    nobodyWasNearby: "Noch Niemanden getroffen..",
+    nobodyWasNearbySubtitle: "(Tipp: Misch dich unter die Menge)",
 };

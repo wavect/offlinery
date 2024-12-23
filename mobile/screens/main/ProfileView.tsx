@@ -76,7 +76,7 @@ const ProfileView = ({
             <Text style={Subtitle}>{user.bio}</Text>
 
             <View style={styles.carouselContainer}>
-                {user.imageURIs.length > 1 ? (
+                {user.imageURIs?.length > 1 ? (
                     <Carousel
                         ref={carouselRef}
                         loop
