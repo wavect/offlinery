@@ -1,7 +1,7 @@
 import { Language } from "./translate.service";
 
 export const de: Language = {
-    bgLocationServiceTitle: "Real Life Dating EIN",
+    bgLocationServiceTitle: "Offlinery EIN",
     bgLocationServiceBody: "Bereit dich zu beeindrucken..",
     createAccount: "Registrieren",
     signIn: "Anmelden",
@@ -9,7 +9,7 @@ export const de: Language = {
     signingIn: "Einen Moment..",
     contactSupport: "Funktioniert etwas nicht?",
     gettingReadyToAmazeYou: "Bereit, dich zu beeindrucken..",
-    datingAppsAreBroken: "Dating apps are Broken",
+    connectInRealLife: "Connect in real life.",
     stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
     verificationCodeResend: "Neuer Code",
     verificationCodeInvalid: "Ungültiger Verifizierungscode",
@@ -245,7 +245,7 @@ export const de: Language = {
     youAreLiveApproachDescr:
         "Du erhältst Benachrichtigungen, wenn jemand Interessantes in der Nähe ist!",
     youAreLiveBeApproachedDescr:
-        "Personen, die dich interessant finden könnten, erhalten Benachrichtigungen, wenn du in der Nähe bist!",
+        "Personen, die du interessant finden könntest, werden informiert wenn du in der Nähe bist!",
     live: "Live",
     ghostMode: "Geistmodus",
     saving: "Speichern..",

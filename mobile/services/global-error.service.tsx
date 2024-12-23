@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import * as Sentry from "@sentry/react-native";
 import React, { ReactNode, useEffect, useState } from "react";
 import {
     Animated,
@@ -92,6 +93,17 @@ const GlobalErrorHandler: React.FC<GlobalErrorHandlerProps> = ({
         ErrorUtils.setGlobalHandler((error, isFatal) => {
             console.error("Global error caught:", error, isFatal);
             handleError(error, error.stack);
+
+            try {
+                Sentry.captureException(error, {
+                    tags: {
+                        globalErrorHandler: "captured",
+                        error,
+                    },
+                });
+            } catch (err) {
+                console.error(err);
+            }
         });
 
         return () => {
