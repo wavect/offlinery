@@ -11,7 +11,6 @@ import {
     IOButtonSmallVariant,
     OButtonSmall,
 } from "@/components/OButtonSmall/OButtonSmall";
-import { dateStateConfig } from "@/components/OEncounter/OEncounter.config";
 import { OEncounterStrike } from "@/components/OEncounterStrike/OEncounterStrike";
 import OMessageModal from "@/components/OMessageModal/OMessageModal";
 import {
@@ -59,10 +58,28 @@ function findLatestReceivedMessage(
 }
 
 const OEncounter = (props: ISingleEncounterProps) => {
+    // @dev Here to be re-rendered for storybook localization
+    const dateStateConfig = [
+        {
+            label: i18n.t(TR.encounterInterest.notMet),
+            value: EncounterPublicDTOStatusEnum.not_met,
+            testID: "dropdown-option-not-met",
+        },
+        {
+            label: i18n.t(TR.encounterInterest.metNotInterested),
+            value: EncounterPublicDTOStatusEnum.met_not_interested,
+            testID: "dropdown-option-met-not-interested",
+        },
+        {
+            label: i18n.t(TR.encounterInterest.metInterested),
+            value: EncounterPublicDTOStatusEnum.met_interested,
+            testID: "dropdown-option-met-interested",
+        },
+    ];
+
     const { dispatch } = useEncountersContext();
     const { state } = useUserContext();
     const { encounterProfile, showActions, navigation } = props;
-    const [dateStates] = useState(dateStateConfig);
     const [modalVisible, setModalVisible] = useState(false);
 
     const setDateStatus = async (item: {
@@ -150,7 +167,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     <View style={styles.dropdownContainer}>
                         <Dropdown
                             testID={TestData.encounters.inputStatus}
-                            data={dateStates}
+                            data={dateStateConfig}
                             labelField="label"
                             valueField="value"
                             value={dateStatus}
