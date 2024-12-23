@@ -6,10 +6,15 @@ import {
     UserPrivateDTOApproachChoiceEnum,
     UserPrivateDTODateModeEnum,
     UserPrivateDTOVerificationStatusEnum,
+    UserPublicDTO,
     UserPublicDTOIntentionsEnum,
 } from "../api/gen/src";
 import { EncountersContext } from "../context/EncountersContext";
 import { IUserData, UserContext } from "../context/UserContext";
+
+const workingImageUris = [
+    "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg",
+];
 
 export const storybookMockUserData: IUserData = {
     id: "current-user-123",
@@ -29,6 +34,19 @@ export const storybookMockUserData: IUserData = {
     markedForDeletion: false,
 };
 
+export const storybookMockUserPublic: UserPublicDTO = {
+    id: "12",
+    firstName: "Lisa",
+    age: 28,
+    bio: "Software engineer who loves hiking and photography",
+    imageURIs: workingImageUris,
+    intentions: [
+        UserPublicDTOIntentionsEnum.casual,
+        UserPublicDTOIntentionsEnum.relationship,
+        UserPublicDTOIntentionsEnum.friendship,
+    ],
+};
+
 export const storybookMockBaseEncounter: EncounterPublicDTO = {
     id: "123",
     status: EncounterPublicDTOStatusEnum.not_met,
@@ -40,9 +58,7 @@ export const storybookMockBaseEncounter: EncounterPublicDTO = {
         id: "456",
         firstName: "Jane",
         age: 25,
-        imageURIs: [
-            "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg",
-        ],
+        imageURIs: workingImageUris,
         intentions: [
             UserPublicDTOIntentionsEnum.casual,
             UserPublicDTOIntentionsEnum.relationship,
