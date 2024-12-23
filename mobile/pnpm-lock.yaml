@@ -167,6 +167,9 @@ importers:
       react-native-webview:
         specifier: 13.12.5
         version: 13.12.5(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.25.4(@babel/core@7.26.0))(@react-native-community/cli-server-api@13.6.9(encoding@0.1.13))(@types/react@18.3.12)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)
+      rn-tourguide:
+        specifier: ^3.3.2
+        version: 3.3.2(react@18.3.1)
     devDependencies:
       '@babel/core':
         specifier: ^7.26.0
@@ -2928,6 +2931,12 @@ packages:
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
 
+  d3-array@1.2.4:
+    resolution: {integrity: sha512-KHW6M86R+FUPYGb3R5XiYjXPq7VzwxZ22buHhAEVG5ztoEcZZMLov530mmccaqA1GghZArjQV46fuc8kUqhhHw==}
+
+  d3-polygon@1.0.6:
+    resolution: {integrity: sha512-k+RF7WvI08PC8reEoXa/w2nSg5AUMTi+peBD9cmFc+0ixHfbs4QmxxkarVal1IkVkgxVuk9JSHhJURHiyHKAuQ==}
+
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
     peerDependencies:
@@ -3069,6 +3078,9 @@ packages:
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
+
+  earcut@2.2.4:
+    resolution: {integrity: sha512-/pjZsA1b4RPHbeWZQn66SWS8nZZWLQQ23oE3Eam7aroEFGEvwKAsJfZ9ytiEMycfzXWpca4FA9QIOehf7PocBQ==}
 
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
@@ -3524,6 +3536,9 @@ packages:
     resolution: {integrity: sha512-xUBkkpIDfDZHAebnDEX65FCVitJUctab82KFmtP5SY4cGly1vbuYNe6Muyp0NLXrgmBChVdoC2T+3/RUHi4Mww==}
     engines: {node: '>=0.4.0'}
 
+  flubber@0.4.2:
+    resolution: {integrity: sha512-79RkJe3rA4nvRCVc2uXjj7U/BAUq84TS3KHn6c0Hr9K64vhj83ZNLUziNx4pJoBumSPhOl5VjH+Z0uhi+eE8Uw==}
+
   focus-lock@0.6.8:
     resolution: {integrity: sha512-vkHTluRCoq9FcsrldC0ulQHiyBYgVJB2CX53I8r0nTC6KnEij7Of0jpBspjt3/CuNb6fyoj3aOh9J2HgQUM0og==}
 
@@ -3754,6 +3769,11 @@ packages:
 
   hoist-non-react-statics@2.5.5:
     resolution: {integrity: sha512-rqcy4pJo55FTTLWt+bU8ukscqHeE/e9KWvsOW2b/a3afxQZhwkQdT1rPPCJ0rYXdj4vNcasY8zHTH+jF/qStxw==}
+
+  hoist-non-react-statics@3.0.1:
+    resolution: {integrity: sha512-1kXwPsOi0OGQIZNVMPvgWJ9tSnGMiMfJdihqEzrPEXlHOBh9AAHXX/QYmAJTXztnz/K+PQ8ryCb4eGaN6HlGbQ==}
+    peerDependencies:
+      react: '>=14.x'
 
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
@@ -4250,6 +4270,9 @@ packages:
   lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
 
+  lodash.clamp@4.0.3:
+    resolution: {integrity: sha512-HvzRFWjtcguTW7yd8NJBshuNaCa8aqNFtnswdT7f/cMd/1YKy5Zzoq4W/Oxvnx9l7aeY258uSdDfM793+eLsVg==}
+
   lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
 
@@ -4341,6 +4364,9 @@ packages:
 
   mdurl@1.0.1:
     resolution: {integrity: sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==}
+
+  memoize-one@5.1.1:
+    resolution: {integrity: sha512-HKeeBpWvqiVJD57ZUAsJNm71eHTykffzcLZVYWiVfQeI1rJtuEaS7hQiEpWfVVk18donPwJEcFKIkCmPJNOhHA==}
 
   memoize-one@5.2.1:
     resolution: {integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==}
@@ -4502,6 +4528,9 @@ packages:
   minizlib@2.1.2:
     resolution: {integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==}
     engines: {node: '>= 8'}
+
+  mitt@1.1.3:
+    resolution: {integrity: sha512-mUDCnVNsAi+eD6qA0HkRkwYczbLHJ49z17BGe2PYRhZL4wpZUFZGJHU7/5tmvohoma+Hdn0Vh/oJTiPEmgSruA==}
 
   mixin-object@2.0.1:
     resolution: {integrity: sha512-ALGF1Jt9ouehcaXaHhn6t1yGWRqGaHkPFndtFVHfZXOvkIZ/yoGaSi0AHVTafb3ZBGg4dr/bDwnaEKqCXzchMA==}
@@ -5323,6 +5352,9 @@ packages:
     deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
+  rn-tourguide@3.3.2:
+    resolution: {integrity: sha512-+oIUCMiStswCxeIcPHsZ7PFWVWSt+r2VnQfarY2t5CZIWnjidwYjLu7MjS/P7uRbtf5q+PFJzEoSBPgn8TVS4A==}
+
   rtl-detect@1.1.2:
     resolution: {integrity: sha512-PGMBq03+TTG/p/cRB7HCLKJ1MgDIi07+QU1faSjiYRfmY5UsAttV9Hs08jDAHVwcOwmVLcSJkpwyfXszVjWfIQ==}
 
@@ -5656,6 +5688,12 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  svg-path-properties@0.2.2:
+    resolution: {integrity: sha512-GmrB+b6woz6CCdQe6w1GHs/1lt25l7SR5hmhF8jRdarpv/OgjLyuQygLu1makJapixeb1aQhP/Oa1iKi93o/aQ==}
+
+  svgpath@2.6.0:
+    resolution: {integrity: sha512-OIWR6bKzXvdXYyO4DK/UWa1VA1JeKq8E+0ug2DG98Y/vOmMpfZNj+TIG988HjfYSqtcy/hFOtZq/n/j5GSESNg==}
+
   symbol-observable@1.2.0:
     resolution: {integrity: sha512-e900nM8RRtGhlV36KGEU9k65K3mPb1WV70OdjfxlG2EAuM1noi/E/BaW/uMhL7bPEssK8QV57vN3esixjUvcXQ==}
     engines: {node: '>=0.10.0'}
@@ -5755,6 +5793,10 @@ packages:
   toidentifier@1.0.1:
     resolution: {integrity: sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==}
     engines: {node: '>=0.6'}
+
+  topojson-client@3.1.0:
+    resolution: {integrity: sha512-605uxS6bcYxGXw9qi62XyrV6Q3xwbndjachmNxu8HWTtVPxZfEJN9fd/SZS1Q54Sn2y0TMyMxFj/cJINqGHrKw==}
+    hasBin: true
 
   tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
@@ -7150,6 +7192,18 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@emotion/core@10.3.1(react@18.3.1)':
+    dependencies:
+      '@babel/runtime': 7.25.6
+      '@emotion/cache': 10.0.29
+      '@emotion/css': 10.0.27
+      '@emotion/serialize': 0.11.16
+      '@emotion/sheet': 0.9.4
+      '@emotion/utils': 0.11.3
+      react: 18.3.1
+    transitivePeerDependencies:
+      - supports-color
+
   '@emotion/css@10.0.27':
     dependencies:
       '@emotion/serialize': 0.11.16
@@ -7176,19 +7230,19 @@ snapshots:
 
   '@emotion/sheet@0.9.4': {}
 
-  '@emotion/styled-base@10.3.0(@emotion/core@10.3.1(react@16.14.0))(react@16.14.0)':
+  '@emotion/styled-base@10.3.0(@emotion/core@10.3.1(react@18.3.1))(react@16.14.0)':
     dependencies:
       '@babel/runtime': 7.25.6
-      '@emotion/core': 10.3.1(react@16.14.0)
+      '@emotion/core': 10.3.1(react@18.3.1)
       '@emotion/is-prop-valid': 0.8.8
       '@emotion/serialize': 0.11.16
       '@emotion/utils': 0.11.3
       react: 16.14.0
 
-  '@emotion/styled@10.3.0(@emotion/core@10.3.1(react@16.14.0))(react@16.14.0)':
+  '@emotion/styled@10.3.0(@emotion/core@10.3.1(react@18.3.1))(react@16.14.0)':
     dependencies:
-      '@emotion/core': 10.3.1(react@16.14.0)
-      '@emotion/styled-base': 10.3.0(@emotion/core@10.3.1(react@16.14.0))(react@16.14.0)
+      '@emotion/core': 10.3.1(react@18.3.1)
+      '@emotion/styled-base': 10.3.0(@emotion/core@10.3.1(react@18.3.1))(react@16.14.0)
       babel-plugin-emotion: 10.2.2
       react: 16.14.0
     transitivePeerDependencies:
@@ -8935,12 +8989,12 @@ snapshots:
   '@storybook/theming@5.1.9(react-dom@18.3.1(react@18.3.1))(react@16.14.0)':
     dependencies:
       '@emotion/core': 10.3.1(react@16.14.0)
-      '@emotion/styled': 10.3.0(@emotion/core@10.3.1(react@16.14.0))(react@16.14.0)
+      '@emotion/styled': 10.3.0(@emotion/core@10.3.1(react@18.3.1))(react@16.14.0)
       '@storybook/client-logger': 5.1.9
       common-tags: 1.8.2
       core-js: 3.39.0
       deep-object-diff: 1.1.9
-      emotion-theming: 10.3.0(@emotion/core@10.3.1(react@16.14.0))(react@16.14.0)
+      emotion-theming: 10.3.0(@emotion/core@10.3.1(react@18.3.1))(react@16.14.0)
       global: 4.4.0
       memoizerific: 1.11.3
       polished: 3.7.2
@@ -9880,6 +9934,10 @@ snapshots:
 
   csstype@3.1.3: {}
 
+  d3-array@1.2.4: {}
+
+  d3-polygon@1.0.6: {}
+
   debug@2.6.9:
     dependencies:
       ms: 2.0.0
@@ -10002,6 +10060,8 @@ snapshots:
       es-errors: 1.3.0
       gopd: 1.2.0
 
+  earcut@2.2.4: {}
+
   eastasianwidth@0.2.0: {}
 
   ee-first@1.1.1: {}
@@ -10016,10 +10076,10 @@ snapshots:
 
   emojis-list@3.0.0: {}
 
-  emotion-theming@10.3.0(@emotion/core@10.3.1(react@16.14.0))(react@16.14.0):
+  emotion-theming@10.3.0(@emotion/core@10.3.1(react@18.3.1))(react@16.14.0):
     dependencies:
       '@babel/runtime': 7.25.6
-      '@emotion/core': 10.3.1(react@16.14.0)
+      '@emotion/core': 10.3.1(react@18.3.1)
       '@emotion/weak-memoize': 0.2.5
       hoist-non-react-statics: 3.3.2
       react: 16.14.0
@@ -10572,6 +10632,15 @@ snapshots:
 
   flow-parser@0.245.0: {}
 
+  flubber@0.4.2:
+    dependencies:
+      d3-array: 1.2.4
+      d3-polygon: 1.0.6
+      earcut: 2.2.4
+      svg-path-properties: 0.2.2
+      svgpath: 2.6.0
+      topojson-client: 3.1.0
+
   focus-lock@0.6.8: {}
 
   fontfaceobserver@2.3.0: {}
@@ -10809,6 +10878,11 @@ snapshots:
   highlight.js@9.12.0: {}
 
   hoist-non-react-statics@2.5.5: {}
+
+  hoist-non-react-statics@3.0.1(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-is: 16.13.1
 
   hoist-non-react-statics@3.3.2:
     dependencies:
@@ -11297,6 +11371,8 @@ snapshots:
 
   lodash.camelcase@4.3.0: {}
 
+  lodash.clamp@4.0.3: {}
+
   lodash.debounce@4.0.8: {}
 
   lodash.memoize@4.1.2: {}
@@ -11386,6 +11462,8 @@ snapshots:
   mdn-data@2.0.14: {}
 
   mdurl@1.0.1: {}
+
+  memoize-one@5.1.1: {}
 
   memoize-one@5.2.1: {}
 
@@ -11646,6 +11724,8 @@ snapshots:
     dependencies:
       minipass: 3.3.6
       yallist: 4.0.0
+
+  mitt@1.1.3: {}
 
   mixin-object@2.0.1:
     dependencies:
@@ -12537,6 +12617,16 @@ snapshots:
     dependencies:
       glob: 7.2.3
 
+  rn-tourguide@3.3.2(react@18.3.1):
+    dependencies:
+      flubber: 0.4.2
+      hoist-non-react-statics: 3.0.1(react@18.3.1)
+      lodash.clamp: 4.0.3
+      memoize-one: 5.1.1
+      mitt: 1.1.3
+    transitivePeerDependencies:
+      - react
+
   rtl-detect@1.1.2: {}
 
   run-parallel@1.2.0:
@@ -12910,6 +13000,10 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
+  svg-path-properties@0.2.2: {}
+
+  svgpath@2.6.0: {}
+
   symbol-observable@1.2.0: {}
 
   tapable@2.2.1: {}
@@ -13013,6 +13107,10 @@ snapshots:
       is-number: 7.0.0
 
   toidentifier@1.0.1: {}
+
+  topojson-client@3.1.0:
+    dependencies:
+      commander: 2.20.3
 
   tr46@0.0.3: {}
 

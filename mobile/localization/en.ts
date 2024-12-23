@@ -316,4 +316,13 @@ export const en = {
         "This user is just around the corner! They are already nearby. Depending on your settings you might be approached or can shoot your shot.",
     strikeExplanation:
         "You have crossed paths with this user for that many times. The more strikes you two have, the more likely you have lots of stuff in common!",
+    tourToggle: "Switch this on to be approached or to approach in real life.",
+    tourHeatMap:
+        "This heatmap shows you where to go to increase your odds of meeting someone who matches your preferences.",
+    tourSafeZones:
+        "There are usually areas you don't feel comfortable meeting someone. Here you could create safe zones for work, your gym or your neighbourhood for example.",
+    tourPrevious: "Previous",
+    tourNext: "Next",
+    tourSkip: "Skip",
+    tourFinish: "Finish",
 };

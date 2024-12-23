@@ -319,4 +319,14 @@ export const de: Language = {
         "Dieser User ist gerade in deiner Nähe! Abhängig von deinen Einstellungen könntest du angesprochen werden oder die Person selbst ansprechen.",
     strikeExplanation:
         "So oft bist du diesem Nutzer schon begegnet. Je mehr Strikes ihr beide habt, desto wahrscheinlicher habt ihr viele Gemeinsamkeiten.",
+    tourToggle:
+        "Aktiviere diesen Toggle, um im echten Leben angesprochen zu werden oder anzusprechen.",
+    tourHeatMap:
+        "Die Heatmap zeigt dir wohin du gehen kannst, um deine Chancen zu verbessern Jemanden passend zu deinen Einstellungen zu treffen.",
+    tourSafeZones:
+        "Es gibt Orte an denen man sich meist nicht wohl fühlt jemanden zu treffen. Diese kannst du hier eintragen, wie zum Beispiel deine Arbeit, dein Fitnessstudio oder deine Nachbarschaft.",
+    tourPrevious: "Zurück",
+    tourNext: "Weiter",
+    tourSkip: "Überspringen",
+    tourFinish: "Fertig",
 };

@@ -9,6 +9,7 @@ import {
     useUserContext,
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
+import { TOURKEY } from "@/services/tourguide.service";
 import { API } from "@/utils/api-config";
 import { getMapProvider } from "@/utils/map-provider";
 import Slider from "@react-native-community/slider";
@@ -32,6 +33,7 @@ import MapView, {
     MarkerDragStartEndEvent,
     Region,
 } from "react-native-maps";
+import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 
 export interface OMapRefType {
     getOtherUsersPositions: () => Promise<void>;
@@ -239,64 +241,100 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         }
     }, [activeRegionIndex]);
 
+    const { getCurrentStep, eventEmitter } = useTourGuideController(
+        TOURKEY.FIND,
+    );
+
+    const handleTourOnStart = (e: any) => {
+        // @dev load example data for tutorial
+        setLocationsFromOthers([
+            { latitude: mapRegion.latitude, longitude: mapRegion.longitude },
+        ]);
+    };
+
+    const handleTourOnStop = (e: any) => console.error(e);
+    const handleTourOnStepChange = (e: any) => console.warn(JSON.stringify(e));
+    useEffect(() => {
+        eventEmitter?.on("start", handleTourOnStart);
+        eventEmitter?.on("stop", handleTourOnStop);
+        eventEmitter?.on("stepChange", handleTourOnStepChange);
+
+        return () => {
+            eventEmitter?.off("start", handleTourOnStart);
+            eventEmitter?.off("stop", handleTourOnStop);
+            eventEmitter?.off("stepChange", handleTourOnStepChange);
+        };
+    }, []);
+
     return (
         <TouchableWithoutFeedback onPress={handleMapPress}>
             <View style={styles.container}>
-                <MapView
-                    ref={mapRef}
-                    style={styles.map}
-                    region={mapRegion}
-                    initialRegion={mapRegion}
-                    showsMyLocationButton={true}
-                    showsUserLocation={true}
-                    zoomControlEnabled={true}
-                    zoomEnabled={true}
-                    zoomTapEnabled={true}
-                    maxZoomLevel={13}
-                    minZoomLevel={8}
-                    onPress={handleMapPress}
-                    onLongPress={
-                        showBlacklistedRegions ? handleMapLongPress : undefined
-                    }
-                    provider={getMapProvider()}
+                <TourGuideZone
+                    zone={2}
+                    tourKey={TOURKEY.FIND}
+                    text={i18n.t(TR.tourHeatMap)}
+                    shape="rectangle_and_keep"
                 >
-                    <OHeatMap
-                        showMap={showHeatmap}
-                        locations={locationsFromOthers}
-                    />
+                    <MapView
+                        ref={mapRef}
+                        style={styles.map}
+                        region={mapRegion}
+                        initialRegion={mapRegion}
+                        showsMyLocationButton={true}
+                        showsUserLocation={true}
+                        zoomControlEnabled={true}
+                        zoomEnabled={true}
+                        zoomTapEnabled={true}
+                        maxZoomLevel={13}
+                        minZoomLevel={8}
+                        onPress={handleMapPress}
+                        onLongPress={
+                            showBlacklistedRegions
+                                ? handleMapLongPress
+                                : undefined
+                        }
+                        provider={getMapProvider()}
+                    >
+                        <OHeatMap
+                            showMap={showHeatmap}
+                            locations={locationsFromOthers}
+                        />
 
-                    {showBlacklistedRegions &&
-                        state.blacklistedRegions.map((region, index) => (
-                            <React.Fragment key={`region-${index}`}>
-                                <Circle
-                                    center={region}
-                                    radius={region?.radius}
-                                    fillColor={
-                                        index === activeRegionIndex
-                                            ? "rgba(255, 0, 0, 0.4)"
-                                            : "rgba(255, 0, 0, 0.2)"
-                                    }
-                                    strokeColor={
-                                        index === activeRegionIndex
-                                            ? "rgba(255, 0, 0, 0.8)"
-                                            : "rgba(255, 0, 0, 0.5)"
-                                    }
-                                />
-                                <Marker
-                                    coordinate={region}
-                                    title={i18n.t(TR.youAreUndercover)}
-                                    description={i18n.t(TR.nobodyWillSeeYou)}
-                                    draggable={true}
-                                    onDragStart={() =>
-                                        handleRegionDragStart(index)
-                                    }
-                                    onDragEnd={handleRegionDragEnd}
-                                    onPress={() => handleRegionPress(index)}
-                                    tracksViewChanges={false}
-                                />
-                            </React.Fragment>
-                        ))}
-                </MapView>
+                        {showBlacklistedRegions &&
+                            state.blacklistedRegions.map((region, index) => (
+                                <React.Fragment key={`region-${index}`}>
+                                    <Circle
+                                        center={region}
+                                        radius={region?.radius}
+                                        fillColor={
+                                            index === activeRegionIndex
+                                                ? "rgba(255, 0, 0, 0.4)"
+                                                : "rgba(255, 0, 0, 0.2)"
+                                        }
+                                        strokeColor={
+                                            index === activeRegionIndex
+                                                ? "rgba(255, 0, 0, 0.8)"
+                                                : "rgba(255, 0, 0, 0.5)"
+                                        }
+                                    />
+                                    <Marker
+                                        coordinate={region}
+                                        title={i18n.t(TR.youAreUndercover)}
+                                        description={i18n.t(
+                                            TR.nobodyWillSeeYou,
+                                        )}
+                                        draggable={true}
+                                        onDragStart={() =>
+                                            handleRegionDragStart(index)
+                                        }
+                                        onDragEnd={handleRegionDragEnd}
+                                        onPress={() => handleRegionPress(index)}
+                                        tracksViewChanges={false}
+                                    />
+                                </React.Fragment>
+                            ))}
+                    </MapView>
+                </TourGuideZone>
                 {showBlacklistedRegions && activeRegionIndex !== null && (
                     <OFloatingActionButton
                         size="xs"

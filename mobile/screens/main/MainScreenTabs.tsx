@@ -13,13 +13,15 @@ import {
     reactToNewEventNotification,
     registerForPushNotificationsAsync,
 } from "@/services/notification.service";
+import { TOURKEY } from "@/services/tourguide.service";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
 import * as Notifications from "expo-notifications";
 import * as React from "react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
+import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 import { ROUTES } from "../routes";
 import { EncounterScreenStack } from "./EncounterStackNavigator";
 import FindPeople from "./FindPeople";
@@ -213,6 +215,15 @@ export const MainScreenTabs = ({ navigation }: any) => {
         }, [state.id, state.dateMode]),
     );
 
+    const { canStart, start, stop, eventEmitter, tourKey } =
+        useTourGuideController(TOURKEY.FIND);
+
+    useEffect(() => {
+        if (canStart) {
+            start();
+        }
+    }, [canStart]);
+
     return (
         <MainTabs.Navigator
             screenOptions={() => ({
@@ -225,7 +236,14 @@ export const MainScreenTabs = ({ navigation }: any) => {
                 tabBarActiveBackgroundColor: Color.primary,
                 headerShadowVisible: false,
                 headerRight: () => (
-                    <OGoLiveToggle style={{ marginRight: 10 }} />
+                    <TourGuideZone
+                        zone={1}
+                        tourKey={tourKey}
+                        text={i18n.t(TR.tourToggle)}
+                        shape="rectangle_and_keep"
+                    >
+                        <OGoLiveToggle style={{ marginRight: 10 }} />
+                    </TourGuideZone>
                 ),
             })}
         >
