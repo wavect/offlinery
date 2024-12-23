@@ -638,7 +638,7 @@ describe("Encounter Service Integration Tests ", () => {
     });
 
     describe("should handle strike logic accordingly", function () {
-        it("initial encounter should have an strikeAmount of 1", async () => {
+        it("initial encounter should have an streakCount of 1", async () => {
             const mainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
@@ -662,6 +662,46 @@ describe("Encounter Service Integration Tests ", () => {
             ]);
 
             expect(res.get(otherUser.id).streakCount).toEqual(1);
+        });
+
+        it("should increase streak counter if met again", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const res = await encounterService.saveEncountersForUser(mainUser, [
+                otherUser,
+            ]);
+
+            expect(res.get(otherUser.id).streakCount).toEqual(1);
+
+            const res2 = await encounterService.saveEncountersForUser(
+                mainUser,
+                [otherUser],
+            );
+
+            expect(res2.get(otherUser.id).streakCount).toEqual(2);
+
+            const res3 = await encounterService.saveEncountersForUser(
+                mainUser,
+                [otherUser],
+            );
+
+            expect(res3.get(otherUser.id).streakCount).toEqual(3);
         });
     });
 });
