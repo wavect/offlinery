@@ -4,6 +4,11 @@ import {
     NotificationNewEventDTOTypeEnum,
 } from "@/api/gen/src";
 import { OGoLiveToggle } from "@/components/OGoLiveToggle/OGoLiveToggle";
+import { OPageHeader } from "@/components/OPageHeader/OPageHeader";
+import {
+    EACTION_ENCOUNTERS,
+    useEncountersContext,
+} from "@/context/EncountersContext";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainTabs } from "@/screens/main/MainScreenTabs.navigator";
@@ -14,7 +19,7 @@ import {
     registerForPushNotificationsAsync,
 } from "@/services/notification.service";
 import { LOCAL_VALUE, getLocalValue } from "@/services/storage.service";
-import { TOURKEY } from "@/services/tourguide.service";
+import { MOCK_ENCOUNTER, TOURKEY } from "@/services/tourguide.service";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
@@ -216,18 +221,33 @@ export const MainScreenTabs = ({ navigation }: any) => {
         }, [state.id, state.dateMode]),
     );
 
-    const { canStart, start, tourKey } = useTourGuideController(TOURKEY.FIND);
+    const {
+        canStart: canStartTourFind,
+        start: startTourFind,
+        tourKey,
+    } = useTourGuideController(TOURKEY.FIND);
+    const { canStart: canStartTourEncounter, start: startTourEncounter } =
+        useTourGuideController(TOURKEY.ENCOUNTERS);
+
+    const { dispatch: dispatchEncounters } = useEncountersContext();
 
     useEffect(() => {
         getLocalValue(LOCAL_VALUE.HAS_DONE_FIND_WALKTHROUGH).then(
             (hasDoneWalkthrough) => {
                 if (hasDoneWalkthrough?.toLowerCase().trim() === "true") return;
-                if (canStart) {
-                    start();
+                if (canStartTourFind) {
+                    startTourFind();
                 }
             },
         );
-    }, [canStart]);
+    }, [canStartTourFind]);
+
+    useEffect(() => {
+        // only called when clicked
+        if (canStartTourEncounter) {
+            startTourEncounter();
+        }
+    }, [canStartTourEncounter]);
 
     return (
         <MainTabs.Navigator
@@ -257,7 +277,16 @@ export const MainScreenTabs = ({ navigation }: any) => {
                 component={FindPeople}
                 options={{
                     tabBarLabel: i18n.t(TR.findPeople),
-                    headerTitle: i18n.t(TR.findPeople),
+                    headerLeft: () => (
+                        <OPageHeader
+                            title={i18n.t(TR.findPeople)}
+                            onHelpPress={() => {
+                                requestAnimationFrame(() => {
+                                    startTourFind();
+                                });
+                            }}
+                        />
+                    ),
                     tabBarIcon: ({ color, size }) => (
                         <MaterialIcons
                             name="location-history"
@@ -273,7 +302,17 @@ export const MainScreenTabs = ({ navigation }: any) => {
                 component={EncounterScreenStack}
                 options={{
                     tabBarLabel: i18n.t(TR.encounters),
-                    headerTitle: i18n.t(TR.encounters),
+                    headerLeft: () => (
+                        <OPageHeader
+                            title={i18n.t(TR.encounters)}
+                            onHelpPress={() => {
+                                dispatchEncounters({
+                                    type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
+                                    payload: [MOCK_ENCOUNTER(null)],
+                                });
+                            }}
+                        />
+                    ),
                     // tabBarBadge:
                     // unreadNotifications.length === 0
                     //     ? undefined
