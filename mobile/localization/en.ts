@@ -316,7 +316,8 @@ export const en = {
         "This user is just around the corner! They are already nearby. Depending on your settings you might be approached or can shoot your shot.",
     strikeExplanation:
         "You have crossed paths with this user for that many times. The more strikes you two have, the more likely you have lots of stuff in common!",
-    tourToggle: "Switch this on to be approached or to approach in real life.",
+    tourToggle:
+        "Switch this on to be approached or to approach in real life. There is nothing else to do, it just takes time.",
     tourHeatMap:
         "This heatmap shows you where to go to increase your odds of meeting someone who matches your preferences. Within the last 6 hours lots of users have been around there.",
     tourSafeZones:
@@ -326,7 +327,7 @@ export const en = {
     tourSkip: "Skip",
     tourFinish: "Finish",
     tourEncounters:
-        "Here you'll find people you crossed paths with in the real world.",
+        "Here you'll find people you crossed paths with in the real world. The approaching party will receive a notification.",
     tourEncounterInterested:
         "Let us know if you've met this user and are interested to meet them again.",
     tourEncounterMessage:

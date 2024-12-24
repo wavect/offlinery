@@ -320,7 +320,7 @@ export const de: Language = {
     strikeExplanation:
         "So oft bist du diesem Nutzer schon begegnet. Je mehr Strikes ihr beide habt, desto wahrscheinlicher habt ihr viele Gemeinsamkeiten.",
     tourToggle:
-        "Aktiviere diesen Toggle, um im echten Leben angesprochen zu werden oder anzusprechen.",
+        "Aktiviere diesen Toggle, um im echten Leben angesprochen zu werden oder anzusprechen. Du musst Nichts weiter machen, du musst nur warten.",
     tourHeatMap:
         "Die Heatmap zeigt dir wohin du gehen kannst, um deine Chancen zu verbessern Jemanden passend zu deinen Einstellungen zu treffen. Die Heatmap zeigt wo sich viele User in den letzten 6 Stunden aufgehalten haben.",
     tourSafeZones:
@@ -330,7 +330,7 @@ export const de: Language = {
     tourSkip: "Überspringen",
     tourFinish: "Fertig",
     tourEncounters:
-        "Hier findest du User denen du in der echten Welt über den Weg gelaufen bist.",
+        "Hier findest du User denen du in der echten Welt über den Weg gelaufen bist. Der ansprechende User erhält eine Benachrichtigung.",
     tourEncounterInterested:
         "Lass uns wissen wenn du einem User über den Weg gelaufen bist und du diesen wieder sehen möchtest.",
     tourEncounterMessage:
