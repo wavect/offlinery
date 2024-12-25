@@ -1,4 +1,5 @@
 import { BorderRadius, Color, FontSize, Subtitle } from "@/GlobalStyles";
+import { OBlacklistedRegion } from "@/components/OBlacklistedRegion/OBlacklistedRegion";
 import { OFloatingActionButton } from "@/components/OFloatingActionButton/OFloatingActionButton";
 import { OHeatMap } from "@/components/OHeatMap/OHeatMap";
 import {
@@ -18,13 +19,7 @@ import { useIsFocused } from "@react-navigation/native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 import BackgroundGeolocation from "react-native-background-geolocation";
-import MapView, {
-    Circle,
-    LongPressEvent,
-    Marker,
-    MarkerDragStartEndEvent,
-    Region,
-} from "react-native-maps";
+import MapView, { LongPressEvent, Region } from "react-native-maps";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 
 interface OMapProps {
@@ -77,24 +72,19 @@ export const OMap = (props: OMapProps) => {
         [dispatch],
     );
 
-    const handleMapLongPress = useCallback(
-        (event: LongPressEvent) => {
-            const { coordinate } = event.nativeEvent;
-            const { latitude, longitude } = coordinate;
-            setBlacklistedRegions([
-                ...state.blacklistedRegions,
-                { latitude, longitude, radius: DEFAULT_RADIUS_SIZE },
-            ]);
-        },
-        [state.blacklistedRegions, setBlacklistedRegions],
-    );
+    const handleMapLongPress = (event: LongPressEvent) => {
+        const { coordinate } = event.nativeEvent;
+        const { latitude, longitude } = coordinate;
+        setBlacklistedRegions([
+            ...state.blacklistedRegions,
+            { latitude, longitude, radius: DEFAULT_RADIUS_SIZE },
+        ]);
+    };
 
-    const handleRegionPress = useCallback((index: number) => {
+    const handleRegionPress = useCallback((region: MapRegion) => {
+        const index = state.blacklistedRegions.findIndex((r) => r === region);
         setActiveRegionIndex(index);
-        const mapRegion = state.blacklistedRegions.find(
-            (blacklistedRegin, ind) => ind === index,
-        );
-        setTempSliderValue(mapRegion?.radius ?? DEFAULT_RADIUS_SIZE);
+        setTempSliderValue(region?.radius ?? DEFAULT_RADIUS_SIZE);
     }, []);
 
     const handleRemoveRegion = useCallback(
@@ -107,23 +97,6 @@ export const OMap = (props: OMapProps) => {
         },
         [state.blacklistedRegions, setBlacklistedRegions],
     );
-
-    const handleRegionDragStart = useCallback((index: number) => {
-        setDraggingIndex(index);
-    }, []);
-
-    const handleRegionDragEnd = (event: MarkerDragStartEndEvent) => {
-        if (draggingIndex !== null) {
-            const { latitude, longitude } = event.nativeEvent.coordinate;
-            const newRegions = state.blacklistedRegions.map((region, index) =>
-                index === draggingIndex
-                    ? { ...region, latitude, longitude }
-                    : region,
-            );
-            setBlacklistedRegions(newRegions);
-        }
-        setDraggingIndex(null);
-    };
 
     const handleRadiusChange = (value: number) => {
         if (activeRegionIndex !== null) {
@@ -266,40 +239,16 @@ export const OMap = (props: OMapProps) => {
                             {showBlacklistedRegions &&
                                 state.blacklistedRegions.map(
                                     (region, index) => (
-                                        <React.Fragment key={`region-${index}`}>
-                                            <Circle
-                                                center={region}
-                                                radius={region?.radius}
-                                                fillColor={
-                                                    index === activeRegionIndex
-                                                        ? "rgba(255, 0, 0, 0.4)"
-                                                        : "rgba(255, 0, 0, 0.2)"
-                                                }
-                                                strokeColor={
-                                                    index === activeRegionIndex
-                                                        ? "rgba(255, 0, 0, 0.8)"
-                                                        : "rgba(255, 0, 0, 0.5)"
-                                                }
-                                            />
-                                            <Marker
-                                                coordinate={region}
-                                                title={i18n.t(
-                                                    TR.youAreUndercover,
-                                                )}
-                                                description={i18n.t(
-                                                    TR.nobodyWillSeeYou,
-                                                )}
-                                                draggable={true}
-                                                onDragStart={() =>
-                                                    handleRegionDragStart(index)
-                                                }
-                                                onDragEnd={handleRegionDragEnd}
-                                                onPress={() =>
-                                                    handleRegionPress(index)
-                                                }
-                                                tracksViewChanges={false}
-                                            />
-                                        </React.Fragment>
+                                        <OBlacklistedRegion
+                                            key={`region-${index}`}
+                                            handleRegionPress={
+                                                handleRegionPress
+                                            }
+                                            region={region}
+                                            isSelected={
+                                                index === activeRegionIndex
+                                            }
+                                        />
                                     ),
                                 )}
                         </MapView>
