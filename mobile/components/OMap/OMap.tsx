@@ -7,6 +7,7 @@ import {
     mapRegionToBlacklistedRegionDTO,
     useUserContext,
 } from "@/context/UserContext";
+import { useUserLocation } from "@/hooks/useUserLocation";
 import { TR, i18n } from "@/localization/translate.service";
 import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
 import { TOURKEY } from "@/services/tourguide.service";
@@ -14,12 +15,9 @@ import { API } from "@/utils/api-config";
 import { getMapProvider } from "@/utils/map-provider";
 import Slider from "@react-native-community/slider";
 import { useIsFocused } from "@react-navigation/native";
-import * as Sentry from "@sentry/react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
-import BackgroundGeolocation, {
-    Location,
-} from "react-native-background-geolocation";
+import BackgroundGeolocation from "react-native-background-geolocation";
 import MapView, {
     Circle,
     LongPressEvent,
@@ -41,10 +39,12 @@ export const OMap = (props: OMapProps) => {
     const [forceRerender, triggerForceRerender] = useState<number>(0);
     const { saveChangesToBackend, showHeatmap, showBlacklistedRegions } = props;
     const { state, dispatch } = useUserContext();
+    const location = useUserLocation(
+        BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
+    );
     const [activeRegionIndex, setActiveRegionIndex] = useState<number | null>(
         null,
     );
-    const [location, setLocation] = useState<Location | null>(null);
     const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
     const prevBlacklistedRegionsRef = useRef<MapRegion[]>([]);
     const [mapRegion, setMapRegion] = useState<Region>({
@@ -57,12 +57,6 @@ export const OMap = (props: OMapProps) => {
     const [tempSliderValue, setTempSliderValue] = useState(0);
 
     useEffect(() => {
-        (async () => {
-            await getUserPosition();
-        })();
-    }, []);
-
-    useEffect(() => {
         if (location) {
             setMapRegion({
                 latitude: location.coords.latitude,
@@ -72,22 +66,6 @@ export const OMap = (props: OMapProps) => {
             });
         }
     }, [location]);
-
-    const getUserPosition = async () => {
-        try {
-            const location = await BackgroundGeolocation.getCurrentPosition({
-                desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
-            });
-            setLocation(location);
-        } catch (error) {
-            console.error("Unable to get user location.", error);
-            Sentry.captureException(error, {
-                tags: {
-                    map: "location",
-                },
-            });
-        }
-    };
 
     const setBlacklistedRegions = useCallback(
         (blacklistedRegions: MapRegion[]) => {
