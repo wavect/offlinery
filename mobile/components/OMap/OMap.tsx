@@ -1,5 +1,5 @@
 import { BorderRadius, Color, FontSize, Subtitle } from "@/GlobalStyles";
-import { UserPrivateDTODateModeEnum, WeightedLatLngDTO } from "@/api/gen/src";
+import { OBlacklistedRegion } from "@/components/OBlacklistedRegion/OBlacklistedRegion";
 import { OFloatingActionButton } from "@/components/OFloatingActionButton/OFloatingActionButton";
 import { OHeatMap } from "@/components/OHeatMap/OHeatMap";
 import {
@@ -8,38 +8,26 @@ import {
     mapRegionToBlacklistedRegionDTO,
     useUserContext,
 } from "@/context/UserContext";
+import { useUserLocation } from "@/hooks/useUserLocation";
 import { TR, i18n } from "@/localization/translate.service";
 import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
-import { MOCK_HEATMAP_LOCATIONS, TOURKEY } from "@/services/tourguide.service";
+import { TOURKEY } from "@/services/tourguide.service";
 import { API } from "@/utils/api-config";
 import { getMapProvider } from "@/utils/map-provider";
 import Slider from "@react-native-community/slider";
 import { useIsFocused } from "@react-navigation/native";
-import * as Sentry from "@sentry/react-native";
+import debounce from "lodash.debounce";
 import React, {
-    forwardRef,
     useCallback,
     useEffect,
-    useImperativeHandle,
+    useMemo,
     useRef,
     useState,
 } from "react";
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
-import BackgroundGeolocation, {
-    Location,
-} from "react-native-background-geolocation";
-import MapView, {
-    Circle,
-    LongPressEvent,
-    Marker,
-    MarkerDragStartEndEvent,
-    Region,
-} from "react-native-maps";
+import BackgroundGeolocation from "react-native-background-geolocation";
+import MapView, { LongPressEvent, Region } from "react-native-maps";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
-
-export interface OMapRefType {
-    getOtherUsersPositions: () => Promise<void>;
-}
 
 interface OMapProps {
     saveChangesToBackend: boolean;
@@ -49,19 +37,16 @@ interface OMapProps {
 
 const DEFAULT_RADIUS_SIZE = 1000;
 
-export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
+export const OMap = (props: OMapProps) => {
     const [forceRerender, triggerForceRerender] = useState<number>(0);
     const { saveChangesToBackend, showHeatmap, showBlacklistedRegions } = props;
     const { state, dispatch } = useUserContext();
+    const location = useUserLocation(
+        BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
+    );
     const [activeRegionIndex, setActiveRegionIndex] = useState<number | null>(
         null,
     );
-    const [location, setLocation] = useState<Location | null>(null);
-    const [locationsFromOthers, setLocationsFromOthers] = useState<
-        WeightedLatLngDTO[]
-    >([]);
-    const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
-    const mapRef = useRef<MapView | null>(null);
     const prevBlacklistedRegionsRef = useRef<MapRegion[]>([]);
     const [mapRegion, setMapRegion] = useState<Region>({
         latitude: 47.257832302,
@@ -71,21 +56,6 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
     });
     /** @DEV use a temp value here, so we do not update and re-use the same value (lagging) */
     const [tempSliderValue, setTempSliderValue] = useState(0);
-
-    useEffect(() => {
-        (async () => {
-            if (state.dateMode === UserPrivateDTODateModeEnum.ghost) {
-                // @dev Resets heatmap to incentivize location sharing
-                setLocationsFromOthers([]);
-            } else {
-                const promises: Promise<void>[] = [getUserPosition()];
-                if (showHeatmap) {
-                    promises.push(getOtherUsersPositions());
-                }
-                await Promise.all(promises);
-            }
-        })();
-    }, [state.dateMode, forceRerender]);
 
     useEffect(() => {
         if (location) {
@@ -98,42 +68,6 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         }
     }, [location]);
 
-    const getUserPosition = async () => {
-        try {
-            const location = await BackgroundGeolocation.getCurrentPosition({
-                desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
-            });
-            setLocation(location);
-        } catch (error) {
-            console.error("Unable to get user location.", error);
-            Sentry.captureException(error, {
-                tags: {
-                    map: "location",
-                },
-            });
-        }
-    };
-
-    const getOtherUsersPositions = async () => {
-        try {
-            const positions = await API.map.mapControllerGetUserLocations({
-                userId: state.id!,
-            });
-            setLocationsFromOthers(positions);
-        } catch (error) {
-            console.error("Unable to get position from other users ", error);
-            Sentry.captureException(error, {
-                tags: {
-                    map: "heatmap",
-                },
-            });
-        }
-    };
-
-    useImperativeHandle(ref, () => ({
-        getOtherUsersPositions,
-    }));
-
     const setBlacklistedRegions = useCallback(
         (blacklistedRegions: MapRegion[]) => {
             dispatch({
@@ -141,56 +75,33 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                 payload: { blacklistedRegions },
             });
         },
-        [dispatch],
+        [],
     );
 
-    const handleMapLongPress = useCallback(
-        (event: LongPressEvent) => {
-            const { coordinate } = event.nativeEvent;
-            const { latitude, longitude } = coordinate;
-            setBlacklistedRegions([
-                ...state.blacklistedRegions,
-                { latitude, longitude, radius: DEFAULT_RADIUS_SIZE },
-            ]);
-        },
-        [state.blacklistedRegions, setBlacklistedRegions],
-    );
+    const handleMapLongPress = (event: LongPressEvent) => {
+        const { coordinate } = event.nativeEvent;
+        const { latitude, longitude } = coordinate;
+
+        setBlacklistedRegions([
+            ...state.blacklistedRegions,
+            { latitude, longitude, radius: DEFAULT_RADIUS_SIZE },
+        ]);
+        setActiveRegionIndex(state.blacklistedRegions.length);
+    };
 
     const handleRegionPress = useCallback((index: number) => {
+        const region = state.blacklistedRegions.find((r, i) => i === index);
         setActiveRegionIndex(index);
-        const mapRegion = state.blacklistedRegions.find(
-            (blacklistedRegin, ind) => ind === index,
+        setTempSliderValue(region?.radius ?? DEFAULT_RADIUS_SIZE);
+    }, []);
+
+    const handleRemoveRegion = useCallback(() => {
+        const newRegions = state.blacklistedRegions.filter(
+            (_, i) => i !== activeRegionIndex,
         );
-        setTempSliderValue(mapRegion?.radius ?? DEFAULT_RADIUS_SIZE);
-    }, []);
-
-    const handleRemoveRegion = useCallback(
-        (index: number) => {
-            const newRegions = state.blacklistedRegions.filter(
-                (_, i) => i !== index,
-            );
-            setBlacklistedRegions(newRegions);
-            setActiveRegionIndex(null);
-        },
-        [state.blacklistedRegions, setBlacklistedRegions],
-    );
-
-    const handleRegionDragStart = useCallback((index: number) => {
-        setDraggingIndex(index);
-    }, []);
-
-    const handleRegionDragEnd = (event: MarkerDragStartEndEvent) => {
-        if (draggingIndex !== null) {
-            const { latitude, longitude } = event.nativeEvent.coordinate;
-            const newRegions = state.blacklistedRegions.map((region, index) =>
-                index === draggingIndex
-                    ? { ...region, latitude, longitude }
-                    : region,
-            );
-            setBlacklistedRegions(newRegions);
-        }
-        setDraggingIndex(null);
-    };
+        setBlacklistedRegions(newRegions);
+        setActiveRegionIndex(null);
+    }, [state.blacklistedRegions, activeRegionIndex]);
 
     const handleRadiusChange = (value: number) => {
         if (activeRegionIndex !== null) {
@@ -204,38 +115,29 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
     };
 
     useEffect(() => {
-        // @dev During onboarding we don't want to save these onChange etc.
-        if (saveChangesToBackend) {
-            const prevRegions = prevBlacklistedRegionsRef.current;
-            const currentRegions = state.blacklistedRegions;
+        if (!saveChangesToBackend) return;
 
-            // Check if the regions have actually changed
-            const hasChanged =
-                JSON.stringify(prevRegions) !== JSON.stringify(currentRegions);
-
-            if (hasChanged) {
-                // @dev timer = debounce
-                const timer = setTimeout(async () => {
-                    try {
-                        await API.user.userControllerUpdateUser({
-                            userId: state.id!,
-                            updateUserDTO: {
-                                blacklistedRegions: currentRegions.map((r) =>
-                                    mapRegionToBlacklistedRegionDTO(r),
-                                ),
-                            },
-                        });
-                        // Update the ref after successful update
-                        prevBlacklistedRegionsRef.current = currentRegions;
-                    } catch (error) {
-                        // TODO We might want to show an error somehow, maybe we just throw the error for the global error handler for now
-                        throw error;
-                    }
-                }, 1000);
-
-                return () => clearTimeout(timer);
+        const debouncedSave = debounce(async (regions) => {
+            try {
+                await API.user.userControllerUpdateUser({
+                    userId: state.id!,
+                    updateUserDTO: {
+                        blacklistedRegions: regions.map(
+                            mapRegionToBlacklistedRegionDTO,
+                        ),
+                    },
+                });
+            } catch (error) {
+                throw error;
             }
+        }, 1000);
+
+        if (state.blacklistedRegions !== prevBlacklistedRegionsRef.current) {
+            debouncedSave(state.blacklistedRegions);
+            prevBlacklistedRegionsRef.current = state.blacklistedRegions;
         }
+
+        return () => debouncedSave.cancel();
     }, [state.blacklistedRegions, state.id]);
 
     const handleMapPress = useCallback(() => {
@@ -254,10 +156,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         triggerForceRerender(forceRerender + 1);
     };
     const handleTourOnStepChange = (e: any) => {
-        if (e?.order === 2) {
-            setLocationsFromOthers(MOCK_HEATMAP_LOCATIONS(mapRegion));
-            return;
-        } else if (e?.order === 3) {
+        if (e?.order === 3) {
             // @dev add example blacklisted region if none added yet
             if (!state.blacklistedRegions.length) {
                 setBlacklistedRegions([
@@ -291,6 +190,22 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         }
     }, [isFocused]);
 
+    const renderedBlacklistedRegions = useMemo(
+        () => (
+            <>
+                {state.blacklistedRegions.map((region, index) => (
+                    <OBlacklistedRegion
+                        key={`region-${index}`}
+                        handleRegionPress={() => handleRegionPress(index)}
+                        region={region}
+                        isSelected={index === activeRegionIndex}
+                    />
+                ))}
+            </>
+        ),
+        [state.blacklistedRegions, activeRegionIndex, handleRegionPress],
+    );
+
     return (
         <TouchableWithoutFeedback onPress={handleMapPress}>
             <TourGuideZone
@@ -307,7 +222,6 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                         shape="rectangle"
                     >
                         <MapView
-                            ref={mapRef}
                             style={styles.map}
                             region={mapRegion}
                             initialRegion={mapRegion}
@@ -328,48 +242,14 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                         >
                             <OHeatMap
                                 showMap={showHeatmap}
-                                locations={locationsFromOthers}
+                                currentMapRegion={mapRegion}
+                                userId={state.id}
+                                datingMode={state.dateMode}
+                                forceRerender={forceRerender}
                             />
 
                             {showBlacklistedRegions &&
-                                state.blacklistedRegions.map(
-                                    (region, index) => (
-                                        <React.Fragment key={`region-${index}`}>
-                                            <Circle
-                                                center={region}
-                                                radius={region?.radius}
-                                                fillColor={
-                                                    index === activeRegionIndex
-                                                        ? "rgba(255, 0, 0, 0.4)"
-                                                        : "rgba(255, 0, 0, 0.2)"
-                                                }
-                                                strokeColor={
-                                                    index === activeRegionIndex
-                                                        ? "rgba(255, 0, 0, 0.8)"
-                                                        : "rgba(255, 0, 0, 0.5)"
-                                                }
-                                            />
-                                            <Marker
-                                                coordinate={region}
-                                                title={i18n.t(
-                                                    TR.youAreUndercover,
-                                                )}
-                                                description={i18n.t(
-                                                    TR.nobodyWillSeeYou,
-                                                )}
-                                                draggable={true}
-                                                onDragStart={() =>
-                                                    handleRegionDragStart(index)
-                                                }
-                                                onDragEnd={handleRegionDragEnd}
-                                                onPress={() =>
-                                                    handleRegionPress(index)
-                                                }
-                                                tracksViewChanges={false}
-                                            />
-                                        </React.Fragment>
-                                    ),
-                                )}
+                                renderedBlacklistedRegions}
                         </MapView>
                     </TourGuideZone>
                     {showBlacklistedRegions && activeRegionIndex !== null && (
@@ -377,7 +257,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                             size="xs"
                             style={styles.fab}
                             icon="delete-outline"
-                            action={() => handleRemoveRegion(activeRegionIndex)}
+                            action={() => handleRemoveRegion()}
                             color={Color.red}
                         />
                     )}
@@ -412,7 +292,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
             </TourGuideZone>
         </TouchableWithoutFeedback>
     );
-});
+};
 
 const styles = StyleSheet.create({
     container: {
