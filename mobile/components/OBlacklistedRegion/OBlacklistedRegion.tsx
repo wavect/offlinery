@@ -34,7 +34,6 @@ export const OBlacklistedRegion = (props: IOBlacklistedRegionProps) => {
         }
         setDragging(false);
     };
-    console.warn("IS SEL", isSelected);
 
     return (
         <>

@@ -16,7 +16,14 @@ import { API } from "@/utils/api-config";
 import { getMapProvider } from "@/utils/map-provider";
 import Slider from "@react-native-community/slider";
 import { useIsFocused } from "@react-navigation/native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import debounce from "lodash.debounce";
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 import BackgroundGeolocation from "react-native-background-geolocation";
 import MapView, { LongPressEvent, Region } from "react-native-maps";
@@ -40,7 +47,6 @@ export const OMap = (props: OMapProps) => {
     const [activeRegionIndex, setActiveRegionIndex] = useState<number | null>(
         null,
     );
-    const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
     const prevBlacklistedRegionsRef = useRef<MapRegion[]>([]);
     const [mapRegion, setMapRegion] = useState<Region>({
         latitude: 47.257832302,
@@ -69,7 +75,7 @@ export const OMap = (props: OMapProps) => {
                 payload: { blacklistedRegions },
             });
         },
-        [dispatch],
+        [],
     );
 
     const handleMapLongPress = (event: LongPressEvent) => {
@@ -80,6 +86,7 @@ export const OMap = (props: OMapProps) => {
             ...state.blacklistedRegions,
             { latitude, longitude, radius: DEFAULT_RADIUS_SIZE },
         ]);
+        setActiveRegionIndex(state.blacklistedRegions.length);
     };
 
     const handleRegionPress = useCallback((index: number) => {
@@ -90,7 +97,7 @@ export const OMap = (props: OMapProps) => {
 
     const handleRemoveRegion = useCallback(() => {
         const newRegions = state.blacklistedRegions.filter(
-            (currRegion, i) => i !== activeRegionIndex,
+            (_, i) => i !== activeRegionIndex,
         );
         setBlacklistedRegions(newRegions);
         setActiveRegionIndex(null);
@@ -108,38 +115,29 @@ export const OMap = (props: OMapProps) => {
     };
 
     useEffect(() => {
-        // @dev During onboarding we don't want to save these onChange etc.
-        if (saveChangesToBackend) {
-            const prevRegions = prevBlacklistedRegionsRef.current;
-            const currentRegions = state.blacklistedRegions;
+        if (!saveChangesToBackend) return;
 
-            // Check if the regions have actually changed
-            const hasChanged =
-                JSON.stringify(prevRegions) !== JSON.stringify(currentRegions);
-
-            if (hasChanged) {
-                // @dev timer = debounce
-                const timer = setTimeout(async () => {
-                    try {
-                        await API.user.userControllerUpdateUser({
-                            userId: state.id!,
-                            updateUserDTO: {
-                                blacklistedRegions: currentRegions.map((r) =>
-                                    mapRegionToBlacklistedRegionDTO(r),
-                                ),
-                            },
-                        });
-                        // Update the ref after successful update
-                        prevBlacklistedRegionsRef.current = currentRegions;
-                    } catch (error) {
-                        // TODO We might want to show an error somehow, maybe we just throw the error for the global error handler for now
-                        throw error;
-                    }
-                }, 1000);
-
-                return () => clearTimeout(timer);
+        const debouncedSave = debounce(async (regions) => {
+            try {
+                await API.user.userControllerUpdateUser({
+                    userId: state.id!,
+                    updateUserDTO: {
+                        blacklistedRegions: regions.map(
+                            mapRegionToBlacklistedRegionDTO,
+                        ),
+                    },
+                });
+            } catch (error) {
+                throw error;
             }
+        }, 1000);
+
+        if (state.blacklistedRegions !== prevBlacklistedRegionsRef.current) {
+            debouncedSave(state.blacklistedRegions);
+            prevBlacklistedRegionsRef.current = state.blacklistedRegions;
         }
+
+        return () => debouncedSave.cancel();
     }, [state.blacklistedRegions, state.id]);
 
     const handleMapPress = useCallback(() => {
@@ -192,6 +190,22 @@ export const OMap = (props: OMapProps) => {
         }
     }, [isFocused]);
 
+    const renderedBlacklistedRegions = useMemo(
+        () => (
+            <>
+                {state.blacklistedRegions.map((region, index) => (
+                    <OBlacklistedRegion
+                        key={`region-${index}`}
+                        handleRegionPress={() => handleRegionPress(index)}
+                        region={region}
+                        isSelected={index === activeRegionIndex}
+                    />
+                ))}
+            </>
+        ),
+        [state.blacklistedRegions, activeRegionIndex, handleRegionPress],
+    );
+
     return (
         <TouchableWithoutFeedback onPress={handleMapPress}>
             <TourGuideZone
@@ -235,20 +249,7 @@ export const OMap = (props: OMapProps) => {
                             />
 
                             {showBlacklistedRegions &&
-                                state.blacklistedRegions.map(
-                                    (region, index) => (
-                                        <OBlacklistedRegion
-                                            key={`region-${index}`}
-                                            handleRegionPress={() =>
-                                                handleRegionPress(index)
-                                            }
-                                            region={region}
-                                            isSelected={
-                                                index === activeRegionIndex
-                                            }
-                                        />
-                                    ),
-                                )}
+                                renderedBlacklistedRegions}
                         </MapView>
                     </TourGuideZone>
                     {showBlacklistedRegions && activeRegionIndex !== null && (
