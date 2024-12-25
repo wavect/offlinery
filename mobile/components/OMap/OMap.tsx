@@ -1,5 +1,4 @@
 import { BorderRadius, Color, FontSize, Subtitle } from "@/GlobalStyles";
-import { UserPrivateDTODateModeEnum, WeightedLatLngDTO } from "@/api/gen/src";
 import { OFloatingActionButton } from "@/components/OFloatingActionButton/OFloatingActionButton";
 import { OHeatMap } from "@/components/OHeatMap/OHeatMap";
 import {
@@ -10,20 +9,13 @@ import {
 } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
-import { MOCK_HEATMAP_LOCATIONS, TOURKEY } from "@/services/tourguide.service";
+import { TOURKEY } from "@/services/tourguide.service";
 import { API } from "@/utils/api-config";
 import { getMapProvider } from "@/utils/map-provider";
 import Slider from "@react-native-community/slider";
 import { useIsFocused } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
-import React, {
-    forwardRef,
-    useCallback,
-    useEffect,
-    useImperativeHandle,
-    useRef,
-    useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 import BackgroundGeolocation, {
     Location,
@@ -37,10 +29,6 @@ import MapView, {
 } from "react-native-maps";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 
-export interface OMapRefType {
-    getOtherUsersPositions: () => Promise<void>;
-}
-
 interface OMapProps {
     saveChangesToBackend: boolean;
     showHeatmap: boolean;
@@ -49,7 +37,7 @@ interface OMapProps {
 
 const DEFAULT_RADIUS_SIZE = 1000;
 
-export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
+export const OMap = (props: OMapProps) => {
     const [forceRerender, triggerForceRerender] = useState<number>(0);
     const { saveChangesToBackend, showHeatmap, showBlacklistedRegions } = props;
     const { state, dispatch } = useUserContext();
@@ -57,11 +45,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         null,
     );
     const [location, setLocation] = useState<Location | null>(null);
-    const [locationsFromOthers, setLocationsFromOthers] = useState<
-        WeightedLatLngDTO[]
-    >([]);
     const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
-    const mapRef = useRef<MapView | null>(null);
     const prevBlacklistedRegionsRef = useRef<MapRegion[]>([]);
     const [mapRegion, setMapRegion] = useState<Region>({
         latitude: 47.257832302,
@@ -74,18 +58,9 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
 
     useEffect(() => {
         (async () => {
-            if (state.dateMode === UserPrivateDTODateModeEnum.ghost) {
-                // @dev Resets heatmap to incentivize location sharing
-                setLocationsFromOthers([]);
-            } else {
-                const promises: Promise<void>[] = [getUserPosition()];
-                if (showHeatmap) {
-                    promises.push(getOtherUsersPositions());
-                }
-                await Promise.all(promises);
-            }
+            await getUserPosition();
         })();
-    }, [state.dateMode, forceRerender]);
+    }, []);
 
     useEffect(() => {
         if (location) {
@@ -113,26 +88,6 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
             });
         }
     };
-
-    const getOtherUsersPositions = async () => {
-        try {
-            const positions = await API.map.mapControllerGetUserLocations({
-                userId: state.id!,
-            });
-            setLocationsFromOthers(positions);
-        } catch (error) {
-            console.error("Unable to get position from other users ", error);
-            Sentry.captureException(error, {
-                tags: {
-                    map: "heatmap",
-                },
-            });
-        }
-    };
-
-    useImperativeHandle(ref, () => ({
-        getOtherUsersPositions,
-    }));
 
     const setBlacklistedRegions = useCallback(
         (blacklistedRegions: MapRegion[]) => {
@@ -254,10 +209,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
         triggerForceRerender(forceRerender + 1);
     };
     const handleTourOnStepChange = (e: any) => {
-        if (e?.order === 2) {
-            setLocationsFromOthers(MOCK_HEATMAP_LOCATIONS(mapRegion));
-            return;
-        } else if (e?.order === 3) {
+        if (e?.order === 3) {
             // @dev add example blacklisted region if none added yet
             if (!state.blacklistedRegions.length) {
                 setBlacklistedRegions([
@@ -307,7 +259,6 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                         shape="rectangle"
                     >
                         <MapView
-                            ref={mapRef}
                             style={styles.map}
                             region={mapRegion}
                             initialRegion={mapRegion}
@@ -328,7 +279,10 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
                         >
                             <OHeatMap
                                 showMap={showHeatmap}
-                                locations={locationsFromOthers}
+                                currentMapRegion={mapRegion}
+                                userId={state.id}
+                                datingMode={state.dateMode}
+                                forceRerender={forceRerender}
                             />
 
                             {showBlacklistedRegions &&
@@ -412,7 +366,7 @@ export const OMap = forwardRef<OMapRefType | null, OMapProps>((props, ref) => {
             </TourGuideZone>
         </TouchableWithoutFeedback>
     );
-});
+};
 
 const styles = StyleSheet.create({
     container: {
