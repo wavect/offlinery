@@ -316,4 +316,29 @@ export const en = {
         "This user is just around the corner! They are already nearby. Depending on your settings you might be approached or can shoot your shot.",
     strikeExplanation:
         "You have crossed paths with this user for that many times. The more strikes you two have, the more likely you have lots of stuff in common!",
+    tourToggle:
+        "Switch this on to be approached or to approach in real life. There is nothing else to do, it just takes time.",
+    tourHeatMap:
+        "This heatmap shows you where to go to increase your odds of meeting someone who matches your preferences. Within the last 6 hours lots of users have been around there.",
+    tourSafeZones:
+        "There are usually areas you don't feel comfortable meeting someone. Press for 2 seconds on the map to create safe zones for work, your gym or your neighbourhood for example.",
+    tourPrevious: "Previous",
+    tourNext: "Next",
+    tourSkip: "Skip",
+    tourFinish: "Finish",
+    tourEncounters:
+        "Here you'll find people you crossed paths with in the real world. The approaching party will receive a notification.",
+    tourEncounterInterested:
+        "Let us know if you've met this user and are interested to meet them again.",
+    tourEncounterMessage:
+        "Offlinery has no chats, but you can leave a simple message if you forgot to drop your number.",
+    tourEncounterNotInterested:
+        "Please select this option if you've met and are not interested. You won't meet this user via Offlinery again. If appropriate you can also report this user.",
+    tourEncounterIntentions:
+        "Here you see what this user is looking for right now. Click on it for more details.",
+    tourEncounterStrike: "How often you have crossed paths with this user.",
+    tourEncounterNearbyNow:
+        "This user is nearby right now. Depending on your settings you can approach or might get approached.",
+    nobodyWasNearby: "Nobody was nearby..",
+    nobodyWasNearbySubtitle: "(hint: mingle with the crowd)",
 };

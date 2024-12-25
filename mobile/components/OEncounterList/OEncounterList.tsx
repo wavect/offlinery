@@ -5,8 +5,15 @@ import {
     useEncountersContext,
 } from "@/context/EncountersContext";
 import { useUserContext } from "@/context/UserContext";
+import { TR, i18n } from "@/localization/translate.service";
+import {
+    LOCAL_VALUE,
+    getLocalValue,
+    saveLocalValue,
+} from "@/services/storage.service";
+import { MOCK_ENCOUNTER, TOURKEY } from "@/services/tourguide.service";
 import { API } from "@/utils/api-config";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
@@ -17,6 +24,7 @@ import {
     Text,
     View,
 } from "react-native";
+import { useTourGuideController } from "rn-tourguide";
 
 interface IOEncounterListProps {
     metStartDateFilter: Date;
@@ -70,6 +78,55 @@ export const OEncounterList = (props: IOEncounterListProps) => {
         await fetchEncounters();
     }, [fetchEncounters]);
 
+    const handleTourOnStop = async () => {
+        await saveLocalValue(
+            LOCAL_VALUE.HAS_DONE_ENCOUNTER_WALKTHROUGH,
+            "true",
+        );
+        await fetchEncounters(); // @dev clear mocked encounters
+    };
+
+    const {
+        canStart,
+        start,
+        stop: stopTourGuide,
+        eventEmitter,
+    } = useTourGuideController(TOURKEY.ENCOUNTERS);
+
+    useEffect(() => {
+        if (!eventEmitter) return;
+        eventEmitter?.on("stop", handleTourOnStop);
+
+        return () => {
+            eventEmitter?.off("stop", handleTourOnStop);
+        };
+        // @dev Keep mapRegion in dependency to mock heatmap along current mapRegion
+    }, [eventEmitter, refreshing]);
+
+    const isFocused = useIsFocused();
+    useEffect(() => {
+        if (!isFocused) {
+            stopTourGuide();
+        }
+    }, [isFocused]);
+
+    useEffect(() => {
+        getLocalValue(LOCAL_VALUE.HAS_DONE_ENCOUNTER_WALKTHROUGH).then(
+            (hasDoneWalkthrough) => {
+                if (hasDoneWalkthrough?.toLowerCase().trim() === "true") return;
+                if (!refreshing) {
+                    dispatch({
+                        type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
+                        payload: [MOCK_ENCOUNTER(null)],
+                    });
+                    if (canStart) {
+                        start();
+                    }
+                }
+            },
+        );
+    }, [canStart, refreshing]);
+
     return (
         <ScrollView
             style={styles.encountersList}
@@ -93,10 +150,10 @@ export const OEncounterList = (props: IOEncounterListProps) => {
             ) : (
                 <View style={styles.noEncountersContainer}>
                     <Text style={styles.noEncountersTextLg}>
-                        Nobody was nearby..
+                        {i18n.t(TR.nobodyWasNearby)}
                     </Text>
                     <Text style={styles.noEncountersTextSm}>
-                        (hint: mingle with the crowd)
+                        {i18n.t(TR.nobodyWasNearbySubtitle)}
                     </Text>
                 </View>
             )}

@@ -21,6 +21,8 @@ const storage = getStorageLib();
 
 export enum LOCAL_VALUE {
     USER_ID = "user_id",
+    HAS_DONE_FIND_WALKTHROUGH = "has_done_find_walkthrough",
+    HAS_DONE_ENCOUNTER_WALKTHROUGH = "has_done_encounter_walkthrough",
     HAS_SEEN_INTRO = "has_seen_intro",
     ONBOARDING_SCREEN = "onboarding_screen",
     ONBOARDING_USER = "onboarding_user",
