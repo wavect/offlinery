@@ -75,28 +75,26 @@ export const OMap = (props: OMapProps) => {
     const handleMapLongPress = (event: LongPressEvent) => {
         const { coordinate } = event.nativeEvent;
         const { latitude, longitude } = coordinate;
+
         setBlacklistedRegions([
             ...state.blacklistedRegions,
             { latitude, longitude, radius: DEFAULT_RADIUS_SIZE },
         ]);
     };
 
-    const handleRegionPress = useCallback((region: MapRegion) => {
-        const index = state.blacklistedRegions.findIndex((r) => r === region);
+    const handleRegionPress = useCallback((index: number) => {
+        const region = state.blacklistedRegions.find((r, i) => i === index);
         setActiveRegionIndex(index);
         setTempSliderValue(region?.radius ?? DEFAULT_RADIUS_SIZE);
     }, []);
 
-    const handleRemoveRegion = useCallback(
-        (index: number) => {
-            const newRegions = state.blacklistedRegions.filter(
-                (_, i) => i !== index,
-            );
-            setBlacklistedRegions(newRegions);
-            setActiveRegionIndex(null);
-        },
-        [state.blacklistedRegions, setBlacklistedRegions],
-    );
+    const handleRemoveRegion = useCallback(() => {
+        const newRegions = state.blacklistedRegions.filter(
+            (currRegion, i) => i !== activeRegionIndex,
+        );
+        setBlacklistedRegions(newRegions);
+        setActiveRegionIndex(null);
+    }, [state.blacklistedRegions, activeRegionIndex]);
 
     const handleRadiusChange = (value: number) => {
         if (activeRegionIndex !== null) {
@@ -241,8 +239,8 @@ export const OMap = (props: OMapProps) => {
                                     (region, index) => (
                                         <OBlacklistedRegion
                                             key={`region-${index}`}
-                                            handleRegionPress={
-                                                handleRegionPress
+                                            handleRegionPress={() =>
+                                                handleRegionPress(index)
                                             }
                                             region={region}
                                             isSelected={
@@ -258,7 +256,7 @@ export const OMap = (props: OMapProps) => {
                             size="xs"
                             style={styles.fab}
                             icon="delete-outline"
-                            action={() => handleRemoveRegion(activeRegionIndex)}
+                            action={() => handleRemoveRegion()}
                             color={Color.red}
                         />
                     )}

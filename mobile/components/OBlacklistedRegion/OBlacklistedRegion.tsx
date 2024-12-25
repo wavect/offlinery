@@ -6,7 +6,7 @@ import { Circle, Marker, MarkerDragStartEndEvent } from "react-native-maps";
 interface IOBlacklistedRegionProps {
     isSelected: boolean;
     region: MapRegion;
-    handleRegionPress: (region: MapRegion) => void;
+    handleRegionPress: () => void;
 }
 
 export const OBlacklistedRegion = (props: IOBlacklistedRegionProps) => {
@@ -34,6 +34,7 @@ export const OBlacklistedRegion = (props: IOBlacklistedRegionProps) => {
         }
         setDragging(false);
     };
+    console.warn("IS SEL", isSelected);
 
     return (
         <>
@@ -54,7 +55,7 @@ export const OBlacklistedRegion = (props: IOBlacklistedRegionProps) => {
                 draggable={true}
                 onDragStart={handleRegionDragStart}
                 onDragEnd={handleRegionDragEnd}
-                onPress={() => handleRegionPress(region)}
+                onPress={handleRegionPress}
                 tracksViewChanges={false}
             />
         </>
