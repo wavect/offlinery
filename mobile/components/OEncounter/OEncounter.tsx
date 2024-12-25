@@ -147,7 +147,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                         />
                         <View style={styles.strikeWrapper}>
                             <OEncounterStrike
-                                amountStrikes={encounterProfile.amountStrikes}
+                                streakCounter={encounterProfile.streakCounter}
                                 isNearbyRightNow={
                                     encounterProfile.isNearbyRightNow || false
                                 }

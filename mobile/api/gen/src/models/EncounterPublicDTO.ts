@@ -79,7 +79,7 @@ export interface EncounterPublicDTO {
      * @type {number}
      * @memberof EncounterPublicDTO
      */
-    amountStrikes: number;
+    streakCount: number;
 }
 
 /**
@@ -115,7 +115,7 @@ export function instanceOfEncounterPublicDTO(
         value["isNearbyRightNow"] === undefined
     )
         return false;
-    if (!("amountStrikes" in value) || value["amountStrikes"] === undefined)
+    if (!("streakCount" in value) || value["streakCount"] === undefined)
         return false;
     return true;
 }
@@ -148,7 +148,7 @@ export function EncounterPublicDTOFromJSONTyped(
                       MessagePublicDTOFromJSON,
                   ),
         isNearbyRightNow: json["isNearbyRightNow"],
-        amountStrikes: json["amountStrikes"],
+        streakCount: json["streakCount"],
     };
 }
 
@@ -170,6 +170,6 @@ export function EncounterPublicDTOToJSON(
                 ? null
                 : (value["messages"] as Array<any>).map(MessagePublicDTOToJSON),
         isNearbyRightNow: value["isNearbyRightNow"],
-        amountStrikes: value["amountStrikes"],
+        streakCount: value["streakCount"],
     };
 }

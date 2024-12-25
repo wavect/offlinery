@@ -80,7 +80,7 @@ export const Strike1: Story = {
     args: {
         encounterProfile: {
             ...storybookMockBaseEncounter,
-            amountStrikes: 1,
+            streakCounter: 1,
         },
     },
 };
@@ -89,7 +89,7 @@ export const Strike2: Story = {
     args: {
         encounterProfile: {
             ...storybookMockBaseEncounter,
-            amountStrikes: 2,
+            streakCounter: 2,
         },
     },
 };
@@ -98,7 +98,7 @@ export const Strike10: Story = {
     args: {
         encounterProfile: {
             ...storybookMockBaseEncounter,
-            amountStrikes: 10,
+            streakCounter: 10,
         },
     },
 };
@@ -107,7 +107,7 @@ export const Strike100: Story = {
     args: {
         encounterProfile: {
             ...storybookMockBaseEncounter,
-            amountStrikes: 100,
+            streakCounter: 100,
         },
     },
 };
