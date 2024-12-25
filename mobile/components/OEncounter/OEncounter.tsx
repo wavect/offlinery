@@ -167,7 +167,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
         }
     };
 
-    const { tourKey, eventEmitter } = useTourGuideController(
+    const { tourKey, eventEmitter, stop } = useTourGuideController(
         TOURKEY.ENCOUNTERS,
     );
 
