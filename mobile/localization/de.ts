@@ -10,7 +10,7 @@ export const de: Language = {
     contactSupport: "Funktioniert etwas nicht?",
     gettingReadyToAmazeYou: "Bereit, dich zu beeindrucken..",
     connectInRealLife: "Connect in real life.",
-    stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
+    likeOldDays: "So wie früher.",
     verificationCodeResend: "Neuer Code",
     verificationCodeInvalid: "Ungültiger Verifizierungscode",
     invalidEmailOrExists: "Email ungültig oder existiert bereits.",

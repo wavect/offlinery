@@ -10,7 +10,7 @@ export const en = {
     contactSupport: "Something not working?",
     gettingReadyToAmazeYou: "Getting ready to amaze you..",
     connectInRealLife: "Connect in real life.",
-    stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
+    likeOldDays: "Like the old days.",
     termsDisclaimer: {
         p1: "By tapping 'Create account' or 'Sign in', you agree to our ",
         terms: "Terms",
