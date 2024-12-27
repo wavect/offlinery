@@ -44,30 +44,36 @@ export class EncounterService {
             .leftJoinAndSelect("encounter.userReports", "userReports")
             .leftJoinAndSelect("encounter.messages", "messages")
             .leftJoinAndSelect("messages.sender", "sender")
+            .leftJoinAndSelect("encounter.users", "allUsers")
             /** @DEV CHANGE! */
             .where(
                 ':userId IN (SELECT "userId" FROM user_encounters_encounter WHERE "encounterId" = encounter.id)',
                 { userId },
             )
-            .andWhere("userReports.id IS NULL")
-            .leftJoinAndSelect("encounter.users", "allUsers");
+            .andWhere("userReports.id IS NULL");
 
         if (dateRange?.startDate && dateRange?.endDate) {
             query = query.andWhere(
-                "encounter.updated BETWEEN :startDate AND :endDate",
+                "encounter.lastDateTimePassedBy BETWEEN :startDate AND :endDate",
                 {
                     startDate: dateRange.startDate,
                     endDate: dateRange.endDate,
                 },
             );
         } else if (dateRange?.startDate) {
-            query = query.andWhere("encounter.updated >= :startDate", {
-                startDate: dateRange.startDate,
-            });
+            query = query.andWhere(
+                "encounter.lastDateTimePassedBy >= :startDate",
+                {
+                    startDate: dateRange.startDate,
+                },
+            );
         } else if (dateRange?.endDate) {
-            query = query.andWhere("encounter.updated <= :endDate", {
-                endDate: dateRange.endDate,
-            });
+            query = query.andWhere(
+                "encounter.lastDateTimePassedBy <= :endDate",
+                {
+                    endDate: dateRange.endDate,
+                },
+            );
         }
 
         // do not fail if none found
