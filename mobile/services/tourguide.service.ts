@@ -63,7 +63,7 @@ export const MOCK_ENCOUNTER = (
 ): EncounterPublicDTO => {
     return {
         id: "0",
-        amountStrikes: 1,
+        amountStreaks: 1,
         isNearbyRightNow: false,
         messages: [],
         reported: false,

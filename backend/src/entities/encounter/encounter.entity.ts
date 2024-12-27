@@ -34,12 +34,12 @@ export class Encounter
             /** @DEV MAKE DEFAULT [] not check here*/
             messages: this.messages?.map((m) => m.convertToPublicDTO()) ?? [],
             isNearbyRightNow: null,
-            streakCount: this.streakCount,
+            amountStreaks: this.amountStreaks,
         };
     }
 
     @Column({ default: 1 })
-    streakCount: number;
+    amountStreaks: number;
 
     @Column({ type: "jsonb", default: {} })
     userStatuses: Record<string, EEncounterStatus>;

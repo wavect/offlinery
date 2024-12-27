@@ -67,7 +67,7 @@ export const storybookMockBaseEncounter: EncounterPublicDTO = {
         bio: "No pick up lines please.",
     },
     messages: null,
-    streakCounter: 1,
+    amountStreaks: 1,
 };
 
 // Create mock dispatch functions

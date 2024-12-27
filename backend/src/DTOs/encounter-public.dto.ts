@@ -49,5 +49,5 @@ export class EncounterPublicDTO {
     isNearbyRightNow: boolean | null;
 
     @ApiProperty({ default: 1 })
-    streakCount: number;
+    amountStreaks: number;
 }

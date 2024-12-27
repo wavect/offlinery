@@ -249,8 +249,8 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                         {encounterProfile.status !==
                                             EncounterPublicDTOStatusEnum.met_not_interested && (
                                             <OEncounterStrike
-                                                streakCounter={
-                                                    encounterProfile.streakCount
+                                                amountStreaks={
+                                                    encounterProfile.amountStreaks
                                                 }
                                                 isNearbyRightNow={
                                                     encounterProfile.isNearbyRightNow ||

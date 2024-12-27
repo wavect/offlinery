@@ -6,8 +6,8 @@ Install `Expo Go` on your smart phone. This allows you to conveniently run your 
 
 Also available in production (for app stores etc.)
 
-- Email: `office@wavect.io`
-- Password: `TeSTmE93!pQ`
+-   Email: `office@wavect.io`
+-   Password: `TeSTmE93!pQ`
 
 ## New packages
 
@@ -34,6 +34,7 @@ Make sure the `BASE_PATH` in `api/gen/`is set properly.
 The production backend is deployed on the free tier on render.com once you push to `main`.
 
 ## Release
+
 NOTE: EAS Builds might not work anymore as of 26 December 2024 as EAS worker instances don't have enough RAM (freemium)
 
 1. Run `npx expo-doctor`

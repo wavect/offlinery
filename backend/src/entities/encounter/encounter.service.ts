@@ -296,7 +296,7 @@ export class EncounterService {
                 existingEncounter.lastDateTimePassedBy = new Date();
                 existingEncounter.lastLocationPassedBy =
                     user1.id === user1Id ? user1.location : user2.location;
-                existingEncounter.streakCount++;
+                existingEncounter.amountStreaks++;
 
                 const savedEncounter = await queryRunner.manager.save(
                     Encounter,

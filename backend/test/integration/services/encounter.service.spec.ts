@@ -638,7 +638,7 @@ describe("Encounter Service Integration Tests ", () => {
     });
 
     describe("should handle strike logic accordingly", function () {
-        it("initial encounter should have an streakCount of 1", async () => {
+        it("initial encounter should have an amountStreaks of 1", async () => {
             const mainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
@@ -661,7 +661,7 @@ describe("Encounter Service Integration Tests ", () => {
                 otherUser,
             ]);
 
-            expect(res.get(otherUser.id).streakCount).toEqual(1);
+            expect(res.get(otherUser.id).amountStreaks).toEqual(1);
         });
 
         it("should increase streak counter if met again", async () => {
@@ -687,21 +687,21 @@ describe("Encounter Service Integration Tests ", () => {
                 otherUser,
             ]);
 
-            expect(res.get(otherUser.id).streakCount).toEqual(1);
+            expect(res.get(otherUser.id).amountStreaks).toEqual(1);
 
             const res2 = await encounterService.saveEncountersForUser(
                 mainUser,
                 [otherUser],
             );
 
-            expect(res2.get(otherUser.id).streakCount).toEqual(2);
+            expect(res2.get(otherUser.id).amountStreaks).toEqual(2);
 
             const res3 = await encounterService.saveEncountersForUser(
                 mainUser,
                 [otherUser],
             );
 
-            expect(res3.get(otherUser.id).streakCount).toEqual(3);
+            expect(res3.get(otherUser.id).amountStreaks).toEqual(3);
         });
     });
 

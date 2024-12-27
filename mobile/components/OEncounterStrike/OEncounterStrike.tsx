@@ -12,15 +12,15 @@ import {
 } from "react-native";
 
 interface OEncounterStrikeProps {
-    streakCounter?: number;
+    amountStreaks?: number;
     isNearbyRightNow: boolean;
 }
 
 export const OEncounterStrike: React.FC<OEncounterStrikeProps> = ({
-    streakCounter,
+    amountStreaks,
     isNearbyRightNow,
 }) => {
-    if (!streakCounter && !isNearbyRightNow) return;
+    if (!amountStreaks && !isNearbyRightNow) return;
 
     const [showModal, setShowModal] = useState(false);
     // Animation values
@@ -100,7 +100,7 @@ export const OEncounterStrike: React.FC<OEncounterStrikeProps> = ({
                         >
                             {isNearbyRightNow
                                 ? i18n.t(TR.isNearby)
-                                : streakCounter}
+                                : amountStreaks}
                         </Text>
                     </Animated.View>
                 </View>
