@@ -5,20 +5,22 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface IOPagerHeaderProps {
     title: string;
-    onHelpPress: () => void;
+    onHelpPress?: () => void;
 }
 
 export const OPageHeader = ({ title, onHelpPress }: IOPagerHeaderProps) => {
     return (
         <View style={styles.container}>
             <Text style={Title}>{title}</Text>
-            <TouchableOpacity onPress={onHelpPress}>
-                <MaterialIcons
-                    name="help-outline"
-                    size={20}
-                    style={styles.icon}
-                />
-            </TouchableOpacity>
+            {onHelpPress && (
+                <TouchableOpacity onPress={onHelpPress}>
+                    <MaterialIcons
+                        name="help-outline"
+                        size={20}
+                        style={styles.icon}
+                    />
+                </TouchableOpacity>
+            )}
         </View>
     );
 };

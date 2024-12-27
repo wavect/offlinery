@@ -2,6 +2,7 @@ import { Color, Subtitle } from "@/GlobalStyles";
 import { UserPublicDTO } from "@/api/gen/src";
 import { OBadgesOfUser } from "@/components/OBadge/OBadgesOfUser";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import { OPageHeader } from "@/components/OPageHeader/OPageHeader";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
@@ -63,7 +64,9 @@ const ProfileView = ({
     useEffect(() => {
         // @dev overrides tab nav title
         navigation.getParent()?.setOptions({
-            headerTitle: `${user.firstName}, ${user.age}`,
+            headerLeft: () => (
+                <OPageHeader title={`${user.firstName}, ${user.age}`} />
+            ),
         });
     }); // empty dep array to run it only once
 
