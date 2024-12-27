@@ -130,6 +130,9 @@ export const en = {
     relationship: "Relationship",
     relationshipDescription:
         "Open to something serious such as a long-term relationship.",
+    reconnectFriends: "Reconnect with friends",
+    reconnectFriendsDescription:
+        "Cross paths with more of your friends (<b>coming soon</b>).",
     friendship: "Friendship",
     friendshipDescription: "Open to making new friends.",
     iAmA: "I am a",

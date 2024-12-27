@@ -159,6 +159,7 @@ export const UserPrivateDTOIntentionsEnum = {
     friendship: "friendship",
     casual: "casual",
     relationship: "relationship",
+    reconnect_friends: "reconnect_friends",
 } as const;
 export type UserPrivateDTOIntentionsEnum =
     (typeof UserPrivateDTOIntentionsEnum)[keyof typeof UserPrivateDTOIntentionsEnum];

@@ -7,6 +7,7 @@ export enum EIntention {
     FRIENDSHIP = "friendship",
     CASUAL = "casual",
     RELATIONSHIP = "relationship",
+    RECONNECT_FRIENDS = "reconnect_friends",
 }
 
 export enum EDateMode {

@@ -130,6 +130,9 @@ export const de: Language = {
     casual: "Casual",
     casualDescription:
         "Offen für was Lockeres. Bitte beachte, dass dies keine offene Einladung ist - bleib respektvoll und taste dich langsam voran.",
+    reconnectFriends: "Mit Freunden reconnecten",
+    reconnectFriendsDescription:
+        "Laufe mehr deiner Freunde zufällig über den Weg (<b>bald verfügbar</b>).",
     friendship: "Freundschaft",
     friendshipDescription: "Offen für neue platonische Freundschaften.",
     relationship: "Beziehung",
