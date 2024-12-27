@@ -3,9 +3,4 @@ const withStorybook = require("@storybook/react-native/metro/withStorybook");
 
 const config = getSentryExpoConfig(__dirname);
 
-module.exports = withStorybook(config, {
-    websockets: {
-        port: 7007,
-        host: "localhost",
-    },
-});
+module.exports = withStorybook(config);
