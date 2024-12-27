@@ -98,6 +98,8 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
             default: 50,
         });
 
+        // @dev Android crashes even with empty array.
+        if (!locationsFromOthers?.length) return;
         return (
             <Heatmap
                 testID={TestData.encounters.heatMapComponent}
