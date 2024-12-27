@@ -54,7 +54,7 @@ export const OMap = (props: OMapProps) => {
         longitudeDelta: 0.0421,
     });
     /** @DEV use a temp value here, so we do not update and re-use the same value (lagging) */
-    const [tempSliderValue, setTempSliderValue] = useState(0);
+    const [tempSliderValue, setTempSliderValue] = useState(DEFAULT_RADIUS_SIZE);
 
     useEffect(() => {
         if (location) {
