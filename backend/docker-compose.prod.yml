@@ -84,6 +84,7 @@ services:
 
   backend:
     image: europe-west6-docker.pkg.dev/offlinery-439317/offlinery-backend/nestjs:${BACKEND_DOCKER_TAG:-latest}
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
