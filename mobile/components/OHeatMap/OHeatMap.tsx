@@ -14,16 +14,11 @@ interface OHeatMapProps {
     userId?: string;
     datingMode: UserPrivateDTODateModeEnum;
     currentMapRegion: Region;
-    forceRerender?: number;
 }
 
 export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
-    ({ showMap, datingMode, userId, forceRerender, currentMapRegion }) => {
-        if (
-            !showMap ||
-            isExpoGoEnvironment ||
-            datingMode !== UserPrivateDTODateModeEnum.live
-        ) {
+    ({ showMap, datingMode, userId, currentMapRegion }) => {
+        if (!showMap || isExpoGoEnvironment) {
             return <></>;
         }
         const [locationsFromOthers, setLocationsFromOthers] = useState<
@@ -34,7 +29,7 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
             if (datingMode === UserPrivateDTODateModeEnum.live) {
                 getOtherUsersPositions();
             }
-        }, [forceRerender, datingMode, userId]);
+        }, [datingMode, userId]);
 
         const { eventEmitter } = useTourGuideController(TOURKEY.FIND);
 
@@ -47,12 +42,18 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
             }
         };
 
+        const handleTourOnStop = () => {
+            setLocationsFromOthers([]);
+        };
+
         useEffect(() => {
             if (!eventEmitter) return;
             eventEmitter?.on("stepChange", handleTourOnStepChange);
+            eventEmitter?.on("stop", handleTourOnStop);
 
             return () => {
                 eventEmitter?.off("stepChange", handleTourOnStepChange);
+                eventEmitter?.off("stop", handleTourOnStop);
             };
             // @dev Keep mapRegion in dependency to mock heatmap along current mapRegion
         }, [eventEmitter, currentMapRegion]);
@@ -68,7 +69,9 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
                             tags: { heatMap: "getOtherUsersPositions" },
                         },
                     );
-                    return;
+                    throw new Error(
+                        "Cannot load heatmap data as no userId defined.",
+                    );
                 }
                 const positions = await API.map.mapControllerGetUserLocations({
                     userId,
@@ -84,6 +87,7 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
                         map: "heatmap",
                     },
                 });
+                setLocationsFromOthers([]);
             }
         };
 

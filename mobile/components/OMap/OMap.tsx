@@ -38,7 +38,6 @@ interface OMapProps {
 const DEFAULT_RADIUS_SIZE = 1000;
 
 export const OMap = (props: OMapProps) => {
-    const [forceRerender, triggerForceRerender] = useState<number>(0);
     const { saveChangesToBackend, showHeatmap, showBlacklistedRegions } = props;
     const { state, dispatch } = useUserContext();
     const location = useUserLocation(
@@ -151,9 +150,8 @@ export const OMap = (props: OMapProps) => {
     );
 
     const handleTourOnStop = async (e: any) => {
-        // @dev Clear mocked states, force re-render
+        // @dev Save that tutorial done, to not show again except user clicked help btn
         await saveLocalValue(LOCAL_VALUE.HAS_DONE_FIND_WALKTHROUGH, "true");
-        triggerForceRerender(forceRerender + 1);
     };
     const handleTourOnStepChange = (e: any) => {
         if (e?.order === 3) {
@@ -245,7 +243,6 @@ export const OMap = (props: OMapProps) => {
                                 currentMapRegion={mapRegion}
                                 userId={state.id}
                                 datingMode={state.dateMode}
-                                forceRerender={forceRerender}
                             />
 
                             {showBlacklistedRegions &&
