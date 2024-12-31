@@ -6,13 +6,15 @@ import {
     useEncountersContext,
 } from "@/context/EncountersContext";
 import { useNotifications } from "@/hooks/useNotifications";
-import { useSetupTourGuides } from "@/hooks/useSetupTourGuides";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainTabs } from "@/screens/main/MainScreenTabs.navigator";
-import { MOCK_ENCOUNTER } from "@/services/tourguide.service";
+import { LOCAL_VALUE, getLocalValue } from "@/services/storage.service";
+import { MOCK_ENCOUNTER, TOURKEY } from "@/services/tourguide.service";
 import { MaterialIcons } from "@expo/vector-icons";
+import * as Sentry from "@sentry/react-native";
 import * as React from "react";
-import { TourGuideZone } from "rn-tourguide";
+import { useEffect, useState } from "react";
+import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 import { ROUTES } from "../routes";
 import { EncounterScreenStack } from "./EncounterStackNavigator";
 import FindPeople from "./FindPeople";
@@ -22,7 +24,32 @@ export const MainScreenTabs = ({ navigation }: any) => {
     useNotifications(navigation);
 
     const { dispatch: dispatchEncounters } = useEncountersContext();
-    const { tourKeyFind, startTourFind } = useSetupTourGuides();
+    const { tourKey: tourKeyFind, start: startTourFind } =
+        useTourGuideController(TOURKEY.FIND);
+
+    // @dev true by default to not unnecessarily distract user
+    const [hasDoneFindWalkthrough, setHasDoneFindWalkthrough] = useState(true);
+    const [hasDoneEncounterWalkthrough, setHasDoneEncounterWalkthrough] =
+        useState(true);
+    useEffect(() => {
+        const getValues = [
+            getLocalValue(LOCAL_VALUE.HAS_DONE_FIND_WALKTHROUGH),
+            getLocalValue(LOCAL_VALUE.HAS_DONE_ENCOUNTER_WALKTHROUGH),
+        ];
+
+        Promise.all(getValues)
+            .then((vals: boolean[]) => {
+                setHasDoneFindWalkthrough(vals[0]);
+                setHasDoneEncounterWalkthrough(vals[1]);
+            })
+            .catch((err) => {
+                Sentry.captureException(err, {
+                    tags: {
+                        mainScreenTabs: "getLocalValue:hasDoneWalkthrough",
+                    },
+                });
+            });
+    }, []);
 
     return (
         <MainTabs.Navigator
@@ -55,6 +82,7 @@ export const MainScreenTabs = ({ navigation }: any) => {
                     headerLeft: () => (
                         <OPageHeader
                             title={i18n.t(TR.findPeople)}
+                            highlightHelpBtn={!hasDoneFindWalkthrough}
                             onHelpPress={() => {
                                 requestAnimationFrame(() => {
                                     startTourFind();
@@ -80,6 +108,7 @@ export const MainScreenTabs = ({ navigation }: any) => {
                     headerLeft: () => (
                         <OPageHeader
                             title={i18n.t(TR.encounters)}
+                            highlightHelpBtn={!hasDoneEncounterWalkthrough}
                             onHelpPress={() => {
                                 dispatchEncounters({
                                     type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
