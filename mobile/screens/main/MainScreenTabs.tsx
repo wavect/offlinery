@@ -9,7 +9,7 @@ import { useNotifications } from "@/hooks/useNotifications";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainTabs } from "@/screens/main/MainScreenTabs.navigator";
 import { LOCAL_VALUE, getLocalValue } from "@/services/storage.service";
-import { MOCK_ENCOUNTER, TOURKEY } from "@/services/tourguide.service";
+import { TOURKEY } from "@/services/tourguide.service";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Sentry from "@sentry/react-native";
 import * as React from "react";
@@ -23,14 +23,19 @@ import ProfileSettings from "./ProfileSettings";
 export const MainScreenTabs = ({ navigation }: any) => {
     useNotifications(navigation);
 
-    const { dispatch: dispatchEncounters } = useEncountersContext();
+    const { state: encounterState, dispatch: dispatchEncounters } =
+        useEncountersContext();
     const { tourKey: tourKeyFind, start: startTourFind } =
         useTourGuideController(TOURKEY.FIND);
+    const { start: startTourEncounters } = useTourGuideController(
+        TOURKEY.ENCOUNTERS,
+    );
 
     // @dev true by default to not unnecessarily distract user
     const [hasDoneFindWalkthrough, setHasDoneFindWalkthrough] = useState(true);
     const [hasDoneEncounterWalkthrough, setHasDoneEncounterWalkthrough] =
         useState(true);
+
     useEffect(() => {
         const getValues = [
             getLocalValue(LOCAL_VALUE.HAS_DONE_FIND_WALKTHROUGH),
@@ -111,8 +116,8 @@ export const MainScreenTabs = ({ navigation }: any) => {
                             highlightHelpBtn={!hasDoneEncounterWalkthrough}
                             onHelpPress={() => {
                                 dispatchEncounters({
-                                    type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
-                                    payload: [MOCK_ENCOUNTER(null)],
+                                    type: EACTION_ENCOUNTERS.SET_IS_WALKTHROUGH_RUNNING,
+                                    payload: true,
                                 });
                             }}
                         />

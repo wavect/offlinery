@@ -3,6 +3,7 @@ import React, { Dispatch, createContext, useContext, useReducer } from "react";
 
 export interface IEncounters {
     encounters: EncounterPublicDTO[];
+    isWalkthroughRunning: boolean;
 }
 
 /** @dev Partial Encounter BUT id is mandatory since the update logic needs it as we are saving an array */
@@ -13,6 +14,7 @@ export type PartialEncounterProfile = {
 export enum EACTION_ENCOUNTERS {
     UPDATE_MULTIPLE = "UPDATE_MULTIPLE",
     PUSH_MULTIPLE = "PUSH_MULTIPLE",
+    SET_IS_WALKTHROUGH_RUNNING = "SET_IS_WALKTHROUGH_RUNNING",
 }
 
 interface IEncountersContextType {
@@ -22,11 +24,12 @@ interface IEncountersContextType {
 
 export interface IEncountersAction {
     type: EACTION_ENCOUNTERS;
-    payload: PartialEncounterProfile[];
+    payload: PartialEncounterProfile[] | boolean;
 }
 
 const initialState: IEncounters = {
     encounters: [],
+    isWalkthroughRunning: false,
 };
 
 export const getPublicProfileFromEncounter = (
@@ -46,6 +49,12 @@ const userReducer = (
     action: IEncountersAction,
 ): IEncounters => {
     switch (action.type) {
+        case EACTION_ENCOUNTERS.SET_IS_WALKTHROUGH_RUNNING:
+            return {
+                ...state,
+                isWalkthroughRunning: action.payload as boolean,
+            };
+
         case EACTION_ENCOUNTERS.PUSH_MULTIPLE:
             const fetchedEncounters = action.payload as EncounterPublicDTO[];
             /** @DEV TODO */
@@ -57,7 +66,7 @@ const userReducer = (
 
         case EACTION_ENCOUNTERS.UPDATE_MULTIPLE:
             const payload: PartialEncounterProfile[] =
-                action.payload satisfies PartialEncounterProfile[];
+                action.payload as PartialEncounterProfile[];
 
             const currentEncounters = state.encounters;
 

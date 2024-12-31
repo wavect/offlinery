@@ -20,14 +20,14 @@ import {
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
-import { MOCK_ENCOUNTER, TOURKEY } from "@/services/tourguide.service";
+import { TOURKEY } from "@/services/tourguide.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
 import { getTimePassedWithText } from "@/utils/date.utils";
 import { getValidImgURI } from "@/utils/media.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -114,72 +114,9 @@ const OEncounter = (props: ISingleEncounterProps) => {
         encounterProfile.otherUser.id,
     );
 
-    const handleTourOnStepChange = (e: any) => {
-        if (e?.order === 2) {
-            dispatch({
-                type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
-                payload: [MOCK_ENCOUNTER({ status: "met_interested" })],
-            });
-        } else if (e?.order === 3) {
-            dispatch({
-                type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
-                payload: [
-                    MOCK_ENCOUNTER({
-                        status: "met_interested",
-                        messages: [
-                            {
-                                id: "44",
-                                content:
-                                    "Forgot to drop my number :), +43 xxxxxxx",
-                                senderUserId: "abc",
-                                sentAt: new Date().toISOString(),
-                            },
-                        ],
-                    }),
-                ],
-            });
-        } else if (e?.order === 4) {
-            dispatch({
-                type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
-                payload: [MOCK_ENCOUNTER({ status: "met_not_interested" })],
-            });
-        } else if (e?.order === 5) {
-            dispatch({
-                type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
-                payload: [MOCK_ENCOUNTER({ status: "not_met" })],
-            });
-        } else if (e?.order === 6) {
-            // @dev revert to order4 state "previous" button would otherwise keep the 7th state.
-            dispatch({
-                type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
-                payload: [MOCK_ENCOUNTER({ status: "not_met" })],
-            });
-        } else if (e?.order === 7) {
-            dispatch({
-                type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
-                payload: [
-                    MOCK_ENCOUNTER({
-                        status: "met_interested",
-                        isNearbyRightNow: true,
-                    }),
-                ],
-            });
-        }
-    };
-
-    const { tourKey, eventEmitter, stop } = useTourGuideController(
+    const { tourKey, stop: stopTour } = useTourGuideController(
         TOURKEY.ENCOUNTERS,
     );
-
-    useEffect(() => {
-        if (!eventEmitter) return;
-        eventEmitter?.on("stepChange", handleTourOnStepChange);
-
-        return () => {
-            eventEmitter?.off("stepChange", handleTourOnStepChange);
-        };
-        // @dev Keep mapRegion in dependency to mock heatmap along current mapRegion
-    }, [eventEmitter]);
 
     return (
         <TourGuideZone
@@ -192,7 +129,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                 <View style={styles.mainContent}>
                     <TouchableOpacity
                         onPress={() => {
-                            stop(); // @dev Stop tourguide when screen changes.
+                            stopTour(); // @dev Stop tourguide when screen changes.
                             navigation.navigate(ROUTES.Main.ProfileView, {
                                 user: encounterProfile.otherUser,
                             });

@@ -6,12 +6,8 @@ import {
 } from "@/context/EncountersContext";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
-import {
-    LOCAL_VALUE,
-    getLocalValue,
-    saveLocalValue,
-} from "@/services/storage.service";
-import { MOCK_ENCOUNTER, TOURKEY } from "@/services/tourguide.service";
+import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
+import { TOURKEY } from "@/services/tourguide.service";
 import { API } from "@/utils/api-config";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
@@ -25,6 +21,7 @@ import {
     View,
 } from "react-native";
 import { useTourGuideController } from "rn-tourguide";
+import { OTourEncounter } from "../OTourEncounter/OTourEncounter";
 
 interface IOEncounterListProps {
     metStartDateFilter: Date;
@@ -83,15 +80,15 @@ export const OEncounterList = (props: IOEncounterListProps) => {
             LOCAL_VALUE.HAS_DONE_ENCOUNTER_WALKTHROUGH,
             "true",
         );
-        await fetchEncounters(); // @dev clear mocked encounters
+        dispatch({
+            type: EACTION_ENCOUNTERS.SET_IS_WALKTHROUGH_RUNNING,
+            payload: false,
+        });
     };
 
-    const {
-        canStart,
-        start,
-        stop: stopTourGuide,
-        eventEmitter,
-    } = useTourGuideController(TOURKEY.ENCOUNTERS);
+    const { stop: stopTourGuide, eventEmitter } = useTourGuideController(
+        TOURKEY.ENCOUNTERS,
+    );
 
     useEffect(() => {
         if (!eventEmitter) return;
@@ -100,7 +97,6 @@ export const OEncounterList = (props: IOEncounterListProps) => {
         return () => {
             eventEmitter?.off("stop", handleTourOnStop);
         };
-        // @dev Keep mapRegion in dependency to mock heatmap along current mapRegion
     }, [eventEmitter, refreshing]);
 
     const isFocused = useIsFocused();
@@ -110,35 +106,11 @@ export const OEncounterList = (props: IOEncounterListProps) => {
         }
     }, [isFocused]);
 
-    useEffect(() => {
-        getLocalValue(LOCAL_VALUE.HAS_DONE_ENCOUNTER_WALKTHROUGH).then(
-            (hasDoneWalkthrough) => {
-                if (hasDoneWalkthrough?.toLowerCase().trim() === "true") return;
-                if (!refreshing) {
-                    dispatch({
-                        type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
-                        payload: [MOCK_ENCOUNTER(null)],
-                    });
-                    if (canStart) {
-                        start();
-                    }
-                }
-            },
-        );
-    }, [canStart, refreshing]);
-
-    return (
-        <ScrollView
-            style={styles.encountersList}
-            refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-            contentContainerStyle={
-                encounterState.encounters.length === 0 &&
-                styles.emptyListContainer
-            }
-        >
-            {encounterState.encounters.length > 0 ? (
+    const getEncounterList = () => {
+        if (encounterState.isWalkthroughRunning) {
+            return <OTourEncounter />;
+        } else {
+            return encounterState.encounters.length > 0 ? (
                 encounterState.encounters.map((encounter, idx) => (
                     <OEncounter
                         key={idx}
@@ -156,7 +128,22 @@ export const OEncounterList = (props: IOEncounterListProps) => {
                         {i18n.t(TR.nobodyWasNearbySubtitle)}
                     </Text>
                 </View>
-            )}
+            );
+        }
+    };
+
+    return (
+        <ScrollView
+            style={styles.encountersList}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            contentContainerStyle={
+                encounterState.encounters.length === 0 &&
+                styles.emptyListContainer
+            }
+        >
+            {getEncounterList()}
         </ScrollView>
     );
 };
