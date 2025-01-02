@@ -14,6 +14,7 @@ import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import {
+    ActivityIndicator,
     RefreshControl,
     ScrollView,
     StyleSheet,
@@ -33,7 +34,7 @@ export const OEncounterList = (props: IOEncounterListProps) => {
     const navigation = useNavigation();
     const { state: encounterState, dispatch } = useEncountersContext();
     const { state: userState } = useUserContext();
-    const [refreshing, setRefreshing] = useState(false);
+    const [refreshing, setRefreshing] = useState(true);
 
     const fetchEncounters = useCallback(async () => {
         try {
@@ -143,7 +144,13 @@ export const OEncounterList = (props: IOEncounterListProps) => {
                 styles.emptyListContainer
             }
         >
-            {getEncounterList()}
+            {refreshing && encounterState.encounters.length === 0 ? (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color={Color.gray} />
+                </View>
+            ) : (
+                getEncounterList()
+            )}
         </ScrollView>
     );
 };
@@ -179,5 +186,10 @@ const styles = StyleSheet.create({
         flex: 1,
         height: "100%",
         minHeight: 400,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
     },
 });
