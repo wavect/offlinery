@@ -228,7 +228,7 @@ export const OMap = (props: OMapProps) => {
                             zoomControlEnabled={true}
                             zoomEnabled={true}
                             zoomTapEnabled={true}
-                            maxZoomLevel={13}
+                            maxZoomLevel={15}
                             minZoomLevel={8}
                             onPress={handleMapPress}
                             onLongPress={
