@@ -75,7 +75,7 @@ export const OPageColorContainer = (props: IOPageColorContainerProps) => {
                     >
                         <OSafeAreaContainer containerStyle={styles.content}>
                             <OShowcase
-                                subtitle={i18n.t(TR.stopSwipingMeetIrl)}
+                                subtitle={i18n.t(TR.likeOldDays)}
                                 containerStyle={styles.showCaseStyle}
                             />
                             {isLoading ? <LoadingScreen /> : children}

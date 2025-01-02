@@ -13,6 +13,7 @@ export const TestData = {
         buttonUpdateSafeZones: "update-safe-zones",
         buttonChangePassword: "button-change-password",
         buttonHouseRules: "button-house-rules",
+        buttonYourProfile: "button-your-profile",
         buttonSafe: "button-save",
         buttonDangerLogout: "button-logout",
         buttonDangerDeleteAccount: "button-danger-delete-account",

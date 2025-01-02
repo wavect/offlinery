@@ -19,6 +19,7 @@ import {
 } from "@/services/storage.service";
 import { OBackgroundLocationService } from "@/tasks/location.task";
 import { getAge } from "@/utils/date.utils";
+import { IS_DEVELOPMENT_BUILD } from "@/utils/env.utils";
 import { getValidImgURI, isImagePicker } from "@/utils/media.utils";
 import { CommonActions } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
@@ -126,15 +127,9 @@ DEFAULT_TO_TIME.setHours(19, 0, 0, 0);
 export const initialUserState: IUserData = {
     id: undefined,
     wantsEmailUpdates: false,
-    email:
-        process.env.EXPO_PUBLIC_ENVIRONMENT?.trim() === "development"
-            ? "office@wavect.io"
-            : "",
+    email: IS_DEVELOPMENT_BUILD ? "office@wavect.io" : "",
     firstName: "",
-    clearPassword:
-        process.env.EXPO_PUBLIC_ENVIRONMENT?.trim() === "development"
-            ? "TeSTmE93!pQ"
-            : "",
+    clearPassword: IS_DEVELOPMENT_BUILD ? "TeSTmE93!pQ" : "",
     birthDay: new Date(2000, 1, 1),
     gender: undefined,
     genderDesire: undefined,
@@ -178,6 +173,7 @@ export const getPublicProfileFromUserData = (
         bio: state.bio,
         age: getAge(state.birthDay),
         imageURIs: getSavedImageURIs(state),
+        intentions: state.intentions ?? [],
     };
 };
 
@@ -217,7 +213,9 @@ const userReducer = (state: IUserData, action: IUserAction): IUserData => {
     }
 };
 
-const UserContext = createContext<IUserContextType | undefined>(undefined);
+export const UserContext = createContext<IUserContextType | undefined>(
+    undefined,
+);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     children,

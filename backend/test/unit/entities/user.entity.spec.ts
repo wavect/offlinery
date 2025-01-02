@@ -43,6 +43,7 @@ describe("User Entity", () => {
                 imageURIs: ["image1.jpg", "image2.jpg"],
                 bio: "Hello, I am John",
                 trustScore: 85,
+                intentions: [EIntention.RELATIONSHIP],
             });
         });
     });

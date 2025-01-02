@@ -44,30 +44,36 @@ export class EncounterService {
             .leftJoinAndSelect("encounter.userReports", "userReports")
             .leftJoinAndSelect("encounter.messages", "messages")
             .leftJoinAndSelect("messages.sender", "sender")
+            .leftJoinAndSelect("encounter.users", "allUsers")
             /** @DEV CHANGE! */
             .where(
                 ':userId IN (SELECT "userId" FROM user_encounters_encounter WHERE "encounterId" = encounter.id)',
                 { userId },
             )
-            .andWhere("userReports.id IS NULL")
-            .leftJoinAndSelect("encounter.users", "allUsers");
+            .andWhere("userReports.id IS NULL");
 
         if (dateRange?.startDate && dateRange?.endDate) {
             query = query.andWhere(
-                "encounter.updated BETWEEN :startDate AND :endDate",
+                "encounter.lastDateTimePassedBy BETWEEN :startDate AND :endDate",
                 {
                     startDate: dateRange.startDate,
                     endDate: dateRange.endDate,
                 },
             );
         } else if (dateRange?.startDate) {
-            query = query.andWhere("encounter.updated >= :startDate", {
-                startDate: dateRange.startDate,
-            });
+            query = query.andWhere(
+                "encounter.lastDateTimePassedBy >= :startDate",
+                {
+                    startDate: dateRange.startDate,
+                },
+            );
         } else if (dateRange?.endDate) {
-            query = query.andWhere("encounter.updated <= :endDate", {
-                endDate: dateRange.endDate,
-            });
+            query = query.andWhere(
+                "encounter.lastDateTimePassedBy <= :endDate",
+                {
+                    endDate: dateRange.endDate,
+                },
+            );
         }
 
         // do not fail if none found
@@ -93,8 +99,7 @@ export class EncounterService {
 
         const otherUserIds = [];
         const userEncounters = encounters.map((encounter) => {
-            const dto = encounter.convertToPublicDTO();
-            const otherUser = dto.users.find((u) => u.id !== userId);
+            const dto = encounter.convertToPublicDTO(user);
 
             // @dev Override general encounter status and return only the status from the user itself for the frontend.
             const userEncounterStatus = encounter.userStatuses[userId];
@@ -105,7 +110,7 @@ export class EncounterService {
                     `Encounter status for user ${userId} not found! Returning general status.`,
                 );
             }
-            otherUserIds.push(otherUser.id);
+            otherUserIds.push(dto.otherUser.id);
             return dto;
         });
 
@@ -118,8 +123,7 @@ export class EncounterService {
         );
 
         userEncounters.forEach((encounter) => {
-            const otherUser = encounter.users.find((u) => u.id !== userId);
-            encounter.isNearbyRightNow = nearbyUsers.has(otherUser.id)
+            encounter.isNearbyRightNow = nearbyUsers.has(encounter.otherUser.id)
                 ? true
                 : null;
         });
@@ -298,6 +302,8 @@ export class EncounterService {
                 existingEncounter.lastDateTimePassedBy = new Date();
                 existingEncounter.lastLocationPassedBy =
                     user1.id === user1Id ? user1.location : user2.location;
+                existingEncounter.amountStreaks++;
+
                 const savedEncounter = await queryRunner.manager.save(
                     Encounter,
                     existingEncounter,

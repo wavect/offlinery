@@ -11,7 +11,11 @@ export const getValidImgURI = (
     // otherwise we need to fetch it from the server.
     if (isImagePicker(img)) {
         return img.uri;
-    } else if (img.includes("file:") || img.trimStart().startsWith("/")) {
+    } else if (
+        img.includes("file:") ||
+        img.trimStart().startsWith("/") ||
+        img.trimStart().startsWith("https://")
+    ) {
         return img; // keep local file uri
     }
     return `${BASE_PATH.replace("/v1", "")}/img/${img}`;

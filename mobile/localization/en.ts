@@ -1,7 +1,7 @@
 // @dev Other languages have to be typed as Language!
 
 export const en = {
-    bgLocationServiceTitle: "Real Life Dating ON",
+    bgLocationServiceTitle: "Offlinery ON",
     bgLocationServiceBody: "Letting others know about you.",
     createAccount: "Create Account",
     signIn: "Sign in",
@@ -9,8 +9,8 @@ export const en = {
     signingIn: "Signing in..",
     contactSupport: "Something not working?",
     gettingReadyToAmazeYou: "Getting ready to amaze you..",
-    datingAppsAreBroken: "Dating apps are Broken",
-    stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
+    connectInRealLife: "Connect in real life.",
+    likeOldDays: "Like the old days.",
     termsDisclaimer: {
         p1: "By tapping 'Create account' or 'Sign in', you agree to our ",
         terms: "Terms",
@@ -125,8 +125,16 @@ export const en = {
     men: "Men",
     more: "More",
     casual: "Casual",
+    casualDescription:
+        "Open to something more casual. Please note that this is not an open invitation - stay respectful.",
     relationship: "Relationship",
+    relationshipDescription:
+        "Open to something serious such as a long-term relationship.",
+    reconnectFriends: "Reconnect with friends",
+    reconnectFriendsDescription:
+        "Cross paths with more of your friends (<b>coming soon</b>).",
     friendship: "Friendship",
+    friendshipDescription: "Open to making new friends.",
     iAmA: "I am a",
     genderMoreComingSoon:
         "We will be adding this option as soon as possible. You will have the option later on to change this to something you truly identify with.",
@@ -186,6 +194,7 @@ export const en = {
     findPeople: "Find people",
     encounters: "Encounters",
     settings: "Settings",
+    yourProfile: "Your profile",
     settingsError: "Settings couldn't be saved.",
     settingsSuccess: "Settings updated.",
     destination: "Destination",
@@ -202,6 +211,7 @@ export const en = {
     errNoUserProvided: "Error: No user provided",
     reportIncident: {
         disrespectful: "Disrespectful",
+        csae: "Child abuse",
         sexualHarassment: "Sexual harassment",
         violentBehavior: "Violent behavior",
         other: "Other",
@@ -224,7 +234,7 @@ export const en = {
     trust: "Trust",
     report: "Report",
     reported: "Reported..",
-    navigate: "Navigate",
+    navigate: "Find",
     permissionToBackgroundLocationDenied: `Permission to access background location was denied. Nobody can approach you neither can you approach someone via Offlinery without sharing your location. Please change your location access to "always" in your app settings.`,
     youAreLive: "You are live!",
     ghostModeDescr:
@@ -263,24 +273,29 @@ export const en = {
     appIntroductionBack: "Back",
     appIntroductionNext: "Next",
     appIntroductionGetStarted: "Get Started",
-    page1Title: "Meet In Real Life",
-    page1Description:
+    pageAppForAllTitle: "What is Offlinery?",
+    pageAppForAllDescription:
+        "You can use this app for <b>dating</b>, finding <b>new friends</b> and casually <b>re-connecting with old friends</b> in the real world.",
+    pageAppForAllConclusion: "What you use this app for is up to you.",
+    pageOfflineTitle: "Meet In Real Life",
+    pageOfflineDescription:
         "Everything happens <b>offline</b>. No long chats. No swiping. Let's build genuine connections again.",
-    page1Conclusion:
+    pageOfflineConclusion:
         "<b>Get approached</b> or <b>approach</b> people as we used to.",
-    page2Title: "Safely",
-    page2Description:
+    pageSafetyTitle: "Safely",
+    pageSafetyDescription:
         "People that approach need to pass a <b>strict screening</b>. We do track users' trustworthiness and continuously add new safety features",
-    page2Conclusion: "We have <b>0 tolerance</b> for disrespectful behavior.",
-    page3Title: "What we NEED",
-    page3Description:
-        "For this to work Offlinery always need to know where you are. You can easily pause tracking and configure when and how you want to meet people.",
-    page3Conclusion:
+    pageSafetyConclusion:
+        "We have <b>0 tolerance</b> for disrespectful behavior.",
+    pageLocationTitle: "What we need",
+    pageLocationDescription:
+        "We need to know where you are to let you know when someone is nearby. You can easily <b>pause</b> this and configure when and how you want to meet people.",
+    pageLocationConclusion:
         "Please click on '<b>Allow Always</b>' whenever Offlinery asks you for your location.",
-    page4Title: "Data & Your Safety",
-    page4Description:
+    pageDataTitle: "Data & Your Safety",
+    pageDataDescription:
         "This app is <b>GDPR compliant</b>. Offlinery has been designed from the ground up to make <b>everyone feel safe</b>.",
-    page4Conclusion:
+    pageDataConclusion:
         "This app won't work if you don't <b>feel safe at all times</b>.",
     letsMeetIRL: "Meet IRL",
     dropdownSelectChoicePlaceholder: "Select an option",
@@ -299,4 +314,34 @@ export const en = {
     error: "Error",
     emailAppOpenErrorDescr:
         "There was a problem opening your email application.",
+    isNearby: "Nearby",
+    strikeNearbyRightNowExplanation:
+        "This user is just around the corner! They are already nearby. Depending on your settings you might be approached or can shoot your shot.",
+    strikeExplanation:
+        "You have crossed paths with this user for that many times. The more strikes you two have, the more likely you have lots of stuff in common!",
+    tourToggle:
+        "Switch this on to be approached or to approach in real life. There is nothing else to do, it just takes time.",
+    tourHeatMap:
+        "This heatmap shows you where to go to increase your odds of meeting someone who matches your preferences. Within the last 6 hours lots of users have been around there.",
+    tourSafeZones:
+        "There are usually areas you don't feel comfortable meeting someone. Press for 2 seconds on the map to create safe zones for work, your gym or your neighbourhood for example.",
+    tourPrevious: "Previous",
+    tourNext: "Next",
+    tourSkip: "Skip",
+    tourFinish: "Finish",
+    tourEncounters:
+        "Here you'll find people you crossed paths with in the real world. The approaching party will receive a notification.",
+    tourEncounterInterested:
+        "Let us know if you've met this user and are interested to meet them again.",
+    tourEncounterMessage:
+        "Offlinery has no chats, but you can leave a simple message if you forgot to drop your number.",
+    tourEncounterNotInterested:
+        "Please select this option if you've met and are not interested. You won't meet this user via Offlinery again. If appropriate you can also report this user.",
+    tourEncounterIntentions:
+        "Here you see what this user is looking for right now. Click on it for more details.",
+    tourEncounterStrike: "How often you have crossed paths with this user.",
+    tourEncounterNearbyNow:
+        "This user is nearby right now. Depending on your settings you can approach or might get approached.",
+    nobodyWasNearby: "Nobody was nearby..",
+    nobodyWasNearbySubtitle: "(hint: mingle with the crowd)",
 };

@@ -1,20 +1,95 @@
-import { WeightedLatLngDTO } from "@/api/gen/src";
+import { UserPrivateDTODateModeEnum, WeightedLatLngDTO } from "@/api/gen/src";
+import { MOCK_HEATMAP_LOCATIONS, TOURKEY } from "@/services/tourguide.service";
 import { TestData } from "@/tests/src/accessors";
-import { isExpoGoEnvironment } from "@/utils/misc.utils";
-import React from "react";
+import { API } from "@/utils/api-config";
+import { isExpoGoEnvironment } from "@/utils/expo.utils";
+import * as Sentry from "@sentry/react-native";
+import React, { useEffect, useState } from "react";
 import { Platform } from "react-native";
-import { Heatmap } from "react-native-maps";
+import { Heatmap, Region } from "react-native-maps";
+import { useTourGuideController } from "rn-tourguide";
 
 interface OHeatMapProps {
     showMap: boolean;
-    locations: WeightedLatLngDTO[];
+    userId?: string;
+    datingMode: UserPrivateDTODateModeEnum;
+    currentMapRegion: Region;
 }
 
 export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
-    ({ showMap, locations }) => {
-        if (!showMap || isExpoGoEnvironment || !locations?.length) {
+    ({ showMap, datingMode, userId, currentMapRegion }) => {
+        if (!showMap || isExpoGoEnvironment) {
             return <></>;
         }
+        const [locationsFromOthers, setLocationsFromOthers] = useState<
+            WeightedLatLngDTO[]
+        >([]);
+
+        useEffect(() => {
+            if (datingMode === UserPrivateDTODateModeEnum.live) {
+                getOtherUsersPositions();
+            }
+        }, [datingMode, userId]);
+
+        const { eventEmitter } = useTourGuideController(TOURKEY.FIND);
+
+        const handleTourOnStepChange = (e: any) => {
+            if (e?.order === 2) {
+                setLocationsFromOthers(
+                    MOCK_HEATMAP_LOCATIONS(currentMapRegion),
+                );
+                return;
+            }
+        };
+
+        const handleTourOnStop = () => {
+            setLocationsFromOthers([]);
+        };
+
+        useEffect(() => {
+            if (!eventEmitter) return;
+            eventEmitter?.on("stepChange", handleTourOnStepChange);
+            eventEmitter?.on("stop", handleTourOnStop);
+
+            return () => {
+                eventEmitter?.off("stepChange", handleTourOnStepChange);
+                eventEmitter?.off("stop", handleTourOnStop);
+            };
+            // @dev Keep mapRegion in dependency to mock heatmap along current mapRegion
+        }, [eventEmitter, currentMapRegion]);
+
+        const getOtherUsersPositions = async () => {
+            try {
+                if (!userId) {
+                    Sentry.captureException(
+                        new Error(
+                            "Undefined user id in getOtherUsersPosition (Heatmap)",
+                        ),
+                        {
+                            tags: { heatMap: "getOtherUsersPositions" },
+                        },
+                    );
+                    throw new Error(
+                        "Cannot load heatmap data as no userId defined.",
+                    );
+                }
+                const positions = await API.map.mapControllerGetUserLocations({
+                    userId,
+                });
+                setLocationsFromOthers(positions);
+            } catch (error) {
+                console.error(
+                    "Unable to get position from other users ",
+                    error,
+                );
+                Sentry.captureException(error, {
+                    tags: {
+                        map: "heatmap",
+                    },
+                });
+                setLocationsFromOthers([]);
+            }
+        };
 
         // Use platform-specific radius
         const heatmapRadius = Platform.select({
@@ -23,10 +98,12 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
             default: 50,
         });
 
+        // @dev Android crashes even with empty array.
+        if (!locationsFromOthers?.length) return;
         return (
             <Heatmap
                 testID={TestData.encounters.heatMapComponent}
-                points={locations}
+                points={locationsFromOthers}
                 opacity={0.6}
                 radius={heatmapRadius}
                 gradient={{

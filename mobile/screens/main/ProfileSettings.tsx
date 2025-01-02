@@ -20,6 +20,7 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OTextInput } from "@/components/OTextInput/OTextInput";
 import {
     EACTION_USER,
+    getPublicProfileFromUserData,
     getUserImagesForUpload,
     logoutUser,
     mapRegionToBlacklistedRegionDTO,
@@ -212,34 +213,52 @@ const ProfileSettings = ({
     };
 
     const genderItems: { label: string; value: UserPrivateDTOGenderEnum }[] = [
-        { label: i18n.t(TR.woman), value: "woman" },
-        { label: i18n.t(TR.man), value: "man" },
+        { label: i18n.t(TR.woman), value: UserPrivateDTOGenderEnum.woman },
+        { label: i18n.t(TR.man), value: UserPrivateDTOGenderEnum.man },
     ];
 
     const genderLookingForItems: {
         label: string;
         value: UserPrivateDTOGenderDesireEnum;
     }[] = [
-        { label: i18n.t(TR.women), value: "woman" },
-        { label: i18n.t(TR.men), value: "man" },
+        {
+            label: i18n.t(TR.women),
+            value: UserPrivateDTOGenderDesireEnum.woman,
+        },
+        { label: i18n.t(TR.men), value: UserPrivateDTOGenderDesireEnum.man },
     ];
 
     const intentionItems: {
         label: string;
         value: UserPrivateDTOIntentionsEnum;
     }[] = [
-        { label: i18n.t(TR.casual), value: "casual" },
-        { label: i18n.t(TR.relationship), value: "relationship" },
-        { label: i18n.t(TR.friendship), value: "friendship" },
+        {
+            label: i18n.t(TR.casual),
+            value: UserPrivateDTOIntentionsEnum.casual,
+        },
+        {
+            label: i18n.t(TR.relationship),
+            value: UserPrivateDTOIntentionsEnum.relationship,
+        },
+        {
+            label: i18n.t(TR.friendship),
+            value: UserPrivateDTOIntentionsEnum.friendship,
+        },
     ];
 
     const approachOptions: {
         label: string;
         value: UpdateUserDTOApproachChoiceEnum;
     }[] = [
-        { label: i18n.t(TR.approach), value: "approach" },
-        { label: i18n.t(TR.beApproached), value: "be_approached" },
-        { label: i18n.t(TR.both), value: "both" },
+        {
+            label: i18n.t(TR.approach),
+            value: UpdateUserDTOApproachChoiceEnum.approach,
+        },
+        {
+            label: i18n.t(TR.beApproached),
+            value: UpdateUserDTOApproachChoiceEnum.be_approached,
+        },
+        { label: i18n.t(TR.both), value: UpdateUserDTOApproachChoiceEnum.both },
     ];
 
     const SettingsButton = (props: {
@@ -736,7 +755,7 @@ const ProfileSettings = ({
                 <View style={styles.settingsButtonsContainer}>
                     <SettingsButton
                         testID={TestData.settings.buttonHouseRules}
-                        style={{ width: "100%", height: 75 }}
+                        style={{ width: "48%", height: 80 }}
                         onPress={() =>
                             navigation.navigate(ROUTES.HouseRules, {
                                 forceWaitSeconds: 0,
@@ -745,6 +764,44 @@ const ProfileSettings = ({
                         }
                         icon="rule"
                         text={i18n.t(TR.houseRules.mainTitle)}
+                    />
+                    <SettingsButton
+                        testID={TestData.settings.buttonYourProfile}
+                        style={{ width: "48%", height: 80 }}
+                        onPress={() =>
+                            navigation.dispatch(
+                                CommonActions.reset({
+                                    index: 1, // This means the second screen (targetScreen) will be active
+                                    routes: [
+                                        {
+                                            name: ROUTES.MainTabView,
+                                            params: {
+                                                screen: ROUTES.Main
+                                                    .ProfileSettings,
+                                            },
+                                        },
+                                        {
+                                            name: ROUTES.MainTabView,
+                                            params: {
+                                                screen: ROUTES.Main
+                                                    .EncountersTab,
+                                                params: {
+                                                    screen: ROUTES.Main
+                                                        .ProfileView,
+                                                    params: {
+                                                        user: getPublicProfileFromUserData(
+                                                            state,
+                                                        ),
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    ],
+                                }),
+                            )
+                        }
+                        icon="person"
+                        text={i18n.t(TR.yourProfile)}
                     />
                 </View>
 

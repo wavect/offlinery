@@ -160,6 +160,7 @@ export const UpdateUserDTOIntentionsEnum = {
     friendship: "friendship",
     casual: "casual",
     relationship: "relationship",
+    reconnect_friends: "reconnect_friends",
 } as const;
 export type UpdateUserDTOIntentionsEnum =
     (typeof UpdateUserDTOIntentionsEnum)[keyof typeof UpdateUserDTOIntentionsEnum];

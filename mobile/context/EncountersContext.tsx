@@ -1,19 +1,20 @@
-import { UserPublicDTO } from "@/api/gen/src";
-import { IEncounterProfile } from "@/types/PublicProfile.types";
+import { EncounterPublicDTO, UserPublicDTO } from "@/api/gen/src";
 import React, { Dispatch, createContext, useContext, useReducer } from "react";
 
 export interface IEncounters {
-    encounters: IEncounterProfile[];
+    encounters: EncounterPublicDTO[];
+    isWalkthroughRunning: boolean;
 }
 
-/** @dev Partial Encounter BUT encounterID is mandatory since the update logic needs it as we are saving an array */
+/** @dev Partial Encounter BUT id is mandatory since the update logic needs it as we are saving an array */
 export type PartialEncounterProfile = {
-    encounterId: string;
-} & Partial<Omit<IEncounterProfile, "encounterId">>;
+    id: string;
+} & Partial<EncounterPublicDTO>;
 
 export enum EACTION_ENCOUNTERS {
     UPDATE_MULTIPLE = "UPDATE_MULTIPLE",
     PUSH_MULTIPLE = "PUSH_MULTIPLE",
+    SET_IS_WALKTHROUGH_RUNNING = "SET_IS_WALKTHROUGH_RUNNING",
 }
 
 interface IEncountersContextType {
@@ -23,21 +24,23 @@ interface IEncountersContextType {
 
 export interface IEncountersAction {
     type: EACTION_ENCOUNTERS;
-    payload: PartialEncounterProfile[];
+    payload: PartialEncounterProfile[] | boolean;
 }
 
 const initialState: IEncounters = {
     encounters: [],
+    isWalkthroughRunning: false,
 };
 
 export const getPublicProfileFromEncounter = (
-    state: IEncounterProfile,
+    state: EncounterPublicDTO,
 ): Omit<UserPublicDTO, "id"> => {
     return {
-        firstName: state.firstName,
-        bio: state.bio,
-        age: state.age,
-        imageURIs: state.imageURIs,
+        firstName: state.otherUser.firstName,
+        bio: state.otherUser.bio,
+        age: state.otherUser.age,
+        imageURIs: state.otherUser.imageURIs,
+        intentions: state.otherUser.intentions,
     };
 };
 
@@ -46,8 +49,14 @@ const userReducer = (
     action: IEncountersAction,
 ): IEncounters => {
     switch (action.type) {
+        case EACTION_ENCOUNTERS.SET_IS_WALKTHROUGH_RUNNING:
+            return {
+                ...state,
+                isWalkthroughRunning: action.payload as boolean,
+            };
+
         case EACTION_ENCOUNTERS.PUSH_MULTIPLE:
-            const fetchedEncounters = action.payload as IEncounterProfile[];
+            const fetchedEncounters = action.payload as EncounterPublicDTO[];
             /** @DEV TODO */
             // saveEncountersLocally(fetchedEncounters);
             return {
@@ -57,15 +66,15 @@ const userReducer = (
 
         case EACTION_ENCOUNTERS.UPDATE_MULTIPLE:
             const payload: PartialEncounterProfile[] =
-                action.payload satisfies PartialEncounterProfile[];
+                action.payload as PartialEncounterProfile[];
 
             const currentEncounters = state.encounters;
 
             // Update existing encounters and collect new ones
-            const updatedEncounters: IEncounterProfile[] =
+            const updatedEncounters: EncounterPublicDTO[] =
                 currentEncounters.map((encounter) => {
                     const partialEncounter = payload.find(
-                        (e) => e.encounterId === encounter.encounterId,
+                        (e) => e.id === encounter.id,
                     );
                     return partialEncounter
                         ? { ...encounter, ...partialEncounter }
@@ -77,13 +86,12 @@ const userReducer = (
                 (payloadEncounter) =>
                     !currentEncounters.some(
                         (stateEncounter) =>
-                            stateEncounter.encounterId ===
-                            payloadEncounter.encounterId,
+                            stateEncounter.id === payloadEncounter.id,
                     ),
-            ) as IEncounterProfile[]; // NOTE: Just assuming that we fully define new encounters correctly, might need to be reevaluated!
+            ) as EncounterPublicDTO[]; // NOTE: Just assuming that we fully define new encounters correctly, might need to be reevaluated!
 
             // Combine updated and new encounters
-            const allEncounters: IEncounterProfile[] = [
+            const allEncounters: EncounterPublicDTO[] = [
                 ...updatedEncounters,
                 ...newEncounters,
             ];
@@ -99,9 +107,9 @@ const userReducer = (
     }
 };
 
-const EncountersContext = createContext<IEncountersContextType | undefined>(
-    undefined,
-);
+export const EncountersContext = createContext<
+    IEncountersContextType | undefined
+>(undefined);
 
 export const EncountersProvider: React.FC<{ children: React.ReactNode }> = ({
     children,

@@ -7,6 +7,7 @@ export * from "./CreateUserDTO";
 export * from "./CreateUserReportDTO";
 export * from "./EmailCodeResponseADTO";
 export * from "./EncounterPublicDTO";
+export * from "./GenericStatusDTO";
 export * from "./GetLocationOfEncounterResponseDTO";
 export * from "./LocationUpdateDTO";
 export * from "./MessagePublicDTO";

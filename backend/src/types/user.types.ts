@@ -7,6 +7,7 @@ export enum EIntention {
     FRIENDSHIP = "friendship",
     CASUAL = "casual",
     RELATIONSHIP = "relationship",
+    RECONNECT_FRIENDS = "reconnect_friends",
 }
 
 export enum EDateMode {
@@ -40,6 +41,7 @@ export enum EEmailVerificationStatus {
 
 export enum EIncidentType {
     Disrespectful = "Disrespectful",
+    CSAE = "Child Sexual Abuse",
     SexualHarassment = "Sexual harassment",
     Violent = "Violent behavior",
     Other = "Other",

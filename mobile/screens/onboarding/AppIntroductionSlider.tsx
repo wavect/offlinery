@@ -53,28 +53,34 @@ const AppIntroduction: React.FC<AppIntroductionProps> = ({ navigation }) => {
 
     const swiperComponents = [
         getSwiperComponent(
-            require("@/assets/introduction-slider/first.png"),
-            TR.page1Title,
-            TR.page1Description,
-            TR.page1Conclusion,
+            require("@/assets/introduction-slider/appForAll.png"),
+            TR.pageAppForAllTitle,
+            TR.pageAppForAllDescription,
+            TR.pageAppForAllConclusion,
         ),
         getSwiperComponent(
-            require("@/assets/introduction-slider/second.png"),
-            TR.page2Title,
-            TR.page2Description,
-            TR.page2Conclusion,
+            require("@/assets/introduction-slider/offline.png"),
+            TR.pageOfflineTitle,
+            TR.pageOfflineDescription,
+            TR.pageOfflineConclusion,
         ),
         getSwiperComponent(
-            require("@/assets/introduction-slider/third.png"),
-            TR.page3Title,
-            TR.page3Description,
-            TR.page3Conclusion,
+            require("@/assets/introduction-slider/safety.png"),
+            TR.pageSafetyTitle,
+            TR.pageSafetyDescription,
+            TR.pageSafetyConclusion,
         ),
         getSwiperComponent(
-            require("@/assets/introduction-slider/fourth.png"),
-            TR.page4Title,
-            TR.page4Description,
-            TR.page4Conclusion,
+            require("@/assets/introduction-slider/location.png"),
+            TR.pageLocationTitle,
+            TR.pageLocationDescription,
+            TR.pageLocationConclusion,
+        ),
+        getSwiperComponent(
+            require("@/assets/introduction-slider/data.png"),
+            TR.pageDataTitle,
+            TR.pageDataDescription,
+            TR.pageDataConclusion,
             proceedToWelcomePage,
         ),
     ];
@@ -90,7 +96,9 @@ const AppIntroduction: React.FC<AppIntroductionProps> = ({ navigation }) => {
             />
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <Text style={styles.pageIndicator}>{currentPage}/4</Text>
+                    <Text style={styles.pageIndicator}>
+                        {currentPage}/{swiperComponents.length}
+                    </Text>
                     <TouchableOpacity
                         onPress={proceedToWelcomePage}
                         style={[

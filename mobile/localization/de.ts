@@ -1,7 +1,7 @@
 import { Language } from "./translate.service";
 
 export const de: Language = {
-    bgLocationServiceTitle: "Real Life Dating EIN",
+    bgLocationServiceTitle: "Offlinery EIN",
     bgLocationServiceBody: "Bereit dich zu beeindrucken..",
     createAccount: "Registrieren",
     signIn: "Anmelden",
@@ -9,8 +9,8 @@ export const de: Language = {
     signingIn: "Einen Moment..",
     contactSupport: "Funktioniert etwas nicht?",
     gettingReadyToAmazeYou: "Bereit, dich zu beeindrucken..",
-    datingAppsAreBroken: "Dating apps are Broken",
-    stopSwipingMeetIrl: "Stop Swiping. Meet IRL.",
+    connectInRealLife: "Connect in real life.",
+    likeOldDays: "So wie früher.",
     verificationCodeResend: "Neuer Code",
     verificationCodeInvalid: "Ungültiger Verifizierungscode",
     invalidEmailOrExists: "Email ungültig oder existiert bereits.",
@@ -128,8 +128,16 @@ export const de: Language = {
     more: "Mehr",
     iAmA: "Ich bin ein(e)",
     casual: "Casual",
+    casualDescription:
+        "Offen für was Lockeres. Bitte beachte, dass dies keine offene Einladung ist - bleib respektvoll und taste dich langsam voran.",
+    reconnectFriends: "Mit Freunden reconnecten",
+    reconnectFriendsDescription:
+        "Laufe mehr deiner Freunde zufällig über den Weg (<b>bald verfügbar</b>).",
     friendship: "Freundschaft",
+    friendshipDescription: "Offen für neue platonische Freundschaften.",
     relationship: "Beziehung",
+    relationshipDescription:
+        "Offen für eine langfristige Beziehung oder eine LebenspartnerIn.",
     iWantA: "Ich will eine",
     genderMoreComingSoon: "Diese Option kommt so schnell wie möglich!",
     ageRange: "Altersgruppe",
@@ -187,6 +195,7 @@ export const de: Language = {
     findPeople: "Finden",
     encounters: "Begegnungen",
     settings: "Einstellungen",
+    yourProfile: "Dein Profil",
     settingsError: "Konnte Einstellungen nicht speichern.",
     settingsSuccess: "Einstellungen gespeichert.",
     destination: "Ziel",
@@ -204,6 +213,7 @@ export const de: Language = {
     errNoUserProvided: "Fehler: Kein Nutzer angegeben",
     reportIncident: {
         disrespectful: "Respektlos",
+        csae: "Kindesmissbrauch",
         sexualHarassment: "Sexuelle Belästigung",
         violentBehavior: "Gewalttätiges Verhalten",
         other: "Andere",
@@ -227,7 +237,7 @@ export const de: Language = {
     trust: "Vertrauen",
     report: "Melden",
     reported: "Gemeldet..",
-    navigate: "Navigieren",
+    navigate: "Finden",
     locationServiceOff: "Dein Location Service ist nicht aktiv.",
     permissionToBackgroundLocationDenied: `Zugriff auf den Standort im Hintergrund wurde verweigert. Ohne deinen Standort wirst du weder angesprochen, noch kannst du jemanden via Offlinery ansprechen. Bitte stelle den Standortzugriff auf "Immer" in den Einstellungen ein.`,
     youAreLive: "Du bist live!",
@@ -238,7 +248,7 @@ export const de: Language = {
     youAreLiveApproachDescr:
         "Du erhältst Benachrichtigungen, wenn jemand Interessantes in der Nähe ist!",
     youAreLiveBeApproachedDescr:
-        "Personen, die dich interessant finden könnten, erhalten Benachrichtigungen, wenn du in der Nähe bist!",
+        "Personen, die du interessant finden könntest, werden informiert wenn du in der Nähe bist!",
     live: "Live",
     ghostMode: "Geistmodus",
     saving: "Speichern..",
@@ -268,24 +278,29 @@ export const de: Language = {
     appIntroductionBack: "Zurück",
     appIntroductionNext: "Weiter",
     appIntroductionGetStarted: "Loslegen",
-    page1Title: "Triff dich im echten Leben",
-    page1Description:
+    pageAppForAllTitle: "Was ist Offlinery?",
+    pageAppForAllDescription:
+        "Triff Menschen im realen Leben. Egal ob zum <b>Daten</b>, zum Finden <b>neuer Freunde</b> oder um <b>alten Freunden</b> über den Weg zu laufen.",
+    pageAppForAllConclusion: "Wie du die App nutzt, ist deine Sache.",
+    pageOfflineTitle: "Triff dich im echten Leben",
+    pageOfflineDescription:
         "Alles passiert <b>offline</b>. Es gibt keine langen Chats und kein Swipen.",
-    page1Conclusion:
-        "<b>Werde angesprochen</b> oder <b>sprich an</b> so wie vor Dating Apps.",
-    page2Title: "Auf sichere Weise",
-    page2Description:
+    pageOfflineConclusion:
+        "<b>Werde angesprochen</b> oder <b>sprich an</b> so wie früher.",
+    pageSafetyTitle: "Auf sichere Weise",
+    pageSafetyDescription:
         "Ansprechende werden von uns in einem <b>persönlichen Verifizierungsanruf</b> auf ihre Vertrauenswürdigkeit überprüft.",
-    page2Conclusion: "Wir haben <b>0 Toleranz</b> für respektloses Verhalten.",
-    page3Title: "Eine Bitte",
-    page3Description:
-        "Damit die App funktioniert muss Offlinery <b>immer</b> wissen wo du bist. Du kannst das Tracking <b>jederzeit pausieren</b> und festlegen, wann und wie du Leute treffen möchtest.",
-    page3Conclusion:
+    pageSafetyConclusion:
+        "Wir haben <b>0 Toleranz</b> gegenüber respektlosem Verhalten.",
+    pageLocationTitle: "Eine Bitte",
+    pageLocationDescription:
+        "Wir müssen wissen wo du bist, damit wir dich benachrichtigen können, wenn du einem User über den Weg läufst. Du behälst die volle Kontrolle über das <b>Wann</b> und <b>Wo</b>.",
+    pageLocationConclusion:
         "Klicke auf '<b>immer erlauben</b>' wenn dich Offlinery nach deinem Standort fragt.",
-    page4Title: "Daten & Sicherheit",
-    page4Description:
+    pageDataTitle: "Daten & Sicherheit",
+    pageDataDescription:
         "Diese App ist <b>DSGVO-konform</b>. Offlinery wurde von Grund auf so konzipiert, dass sich jeder <b>wohl fühlt</b>.",
-    page4Conclusion:
+    pageDataConclusion:
         "Diese App funktioniert nur, wenn du dich zu <b>jederzeit sicher fühlst</b>.",
     letsMeetIRL: "In echt treffen",
     dropdownSelectChoicePlaceholder: "Bitte wähle",
@@ -302,4 +317,35 @@ export const de: Language = {
     noEmailAppErrorDescr: "Keine E-Mail App auf deinem Gerät gefunden.",
     error: "Fehler",
     emailAppOpenErrorDescr: "Wir konnten deine E-Mail App nicht öffnen.",
+    isNearby: "In der Nähe",
+    strikeNearbyRightNowExplanation:
+        "Dieser User ist gerade in deiner Nähe! Abhängig von deinen Einstellungen könntest du angesprochen werden oder die Person selbst ansprechen.",
+    strikeExplanation:
+        "So oft bist du diesem Nutzer schon begegnet. Je mehr Strikes ihr beide habt, desto wahrscheinlicher habt ihr viele Gemeinsamkeiten.",
+    tourToggle:
+        "Aktiviere diesen Toggle, um im echten Leben angesprochen zu werden oder anzusprechen. Du musst Nichts weiter machen, du musst nur warten.",
+    tourHeatMap:
+        "Die Heatmap zeigt dir wohin du gehen kannst, um deine Chancen zu verbessern Jemanden passend zu deinen Einstellungen zu treffen. Die Heatmap zeigt wo sich viele User in den letzten 6 Stunden aufgehalten haben.",
+    tourSafeZones:
+        "Es gibt Orte an denen man sich meist nicht wohl fühlt jemanden zu treffen. Drücke für 2 Sekunden auf die Map um Sicherheitszonen zu erstellen, wie zum Beispiel deine Arbeit, dein Fitnessstudio oder deine Nachbarschaft.",
+    tourPrevious: "Zurück",
+    tourNext: "Weiter",
+    tourSkip: "Überspringen",
+    tourFinish: "Fertig",
+    tourEncounters:
+        "Hier findest du User denen du in der echten Welt über den Weg gelaufen bist. Der ansprechende User erhält eine Benachrichtigung.",
+    tourEncounterInterested:
+        "Lass uns wissen wenn du einem User über den Weg gelaufen bist und du diesen wieder sehen möchtest.",
+    tourEncounterMessage:
+        "Offlinery hat keine Chats. Du kannst dem User trotzdem eine simple Nachricht schicken, um Nummern auszutauschen.",
+    tourEncounterNotInterested:
+        "Bist du nicht interessiert dann wähle diese Option. Dieser kann dich dann nicht mehr über Offlinery treffen. Wenn angebracht, kannst du den User auch melden.",
+    tourEncounterIntentions:
+        "Hier siehst du was dieser User sucht. Klick auf ein Badge für mehr Infos.",
+    tourEncounterStrike:
+        "Wie oft du diesem User schon über den Weg gelaufen bist.",
+    tourEncounterNearbyNow:
+        "Dieser User ist jetzt gerade in deiner Nähe! Abhängig von deinen Einstellungen kannst du ansprechen oder wirst eventuell angesprochen.",
+    nobodyWasNearby: "Noch Niemanden getroffen..",
+    nobodyWasNearbySubtitle: "(Tipp: Misch dich unter die Menge)",
 };

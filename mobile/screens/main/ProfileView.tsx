@@ -1,11 +1,13 @@
-import { Color } from "@/GlobalStyles";
+import { Color, Subtitle } from "@/GlobalStyles";
 import { UserPublicDTO } from "@/api/gen/src";
+import { OBadgesOfUser } from "@/components/OBadge/OBadgesOfUser";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import { OPageHeader } from "@/components/OPageHeader/OPageHeader";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
 import { getValidImgURI } from "@/utils/media.utils";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Dimensions,
     FlatList,
@@ -22,6 +24,7 @@ import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 const ProfileView = ({
     route,
+    navigation,
 }: NativeStackScreenProps<
     EncounterStackParamList,
     typeof ROUTES.Main.ProfileView
@@ -58,14 +61,25 @@ const ProfileView = ({
     const bottomContainerChildren: React.ReactNode =
         route?.params?.bottomContainerChildren;
 
+    useEffect(() => {
+        // @dev overrides tab nav title
+        navigation.getParent()?.setOptions({
+            headerLeft: () => (
+                <OPageHeader title={`${user.firstName}, ${user.age}`} />
+            ),
+        });
+    }); // empty dep array to run it only once
+
     return (
         <OPageContainer
-            title={`${user.firstName}, ${user.age}`}
-            subtitle={user.bio}
+            containerStyle={{ paddingTop: 4 }}
             bottomContainerChildren={bottomContainerChildren}
         >
+            <OBadgesOfUser intentions={user.intentions} />
+            <Text style={Subtitle}>{user.bio}</Text>
+
             <View style={styles.carouselContainer}>
-                {user.imageURIs.length > 1 ? (
+                {user.imageURIs?.length > 1 ? (
                     <Carousel
                         ref={carouselRef}
                         loop
@@ -89,7 +103,7 @@ const ProfileView = ({
                                 }}
                             >
                                 <Image
-                                    source={{ uri: getValidImgURI(item) }}
+                                    source={{ uri: item }}
                                     style={styles.carouselImage}
                                 />
                             </TouchableOpacity>
@@ -166,7 +180,7 @@ const ProfileView = ({
                         defaultIndex={currentImageIndex}
                         renderItem={({ item }) => (
                             <Image
-                                source={{ uri: getValidImgURI(item) }}
+                                source={{ uri: item }}
                                 style={styles.fullScreenImage}
                                 resizeMode="contain"
                             />

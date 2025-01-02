@@ -3,7 +3,7 @@ import { BaseEntity } from "@/entities/base.entity";
 import { Message } from "@/entities/messages/message.entity";
 import { UserReport } from "@/entities/user-report/user-report.entity";
 import { User } from "@/entities/user/user.entity";
-import { IEntityToDTOInterface } from "@/interfaces/IEntityToDTO.interface";
+import { IEntityToDTOWithArgumentInterface } from "@/interfaces/IEntityToDTOWithArgument.interface";
 import { EEncounterStatus } from "@/types/user.types";
 import { Point } from "geojson";
 import {
@@ -18,21 +18,28 @@ import {
 @Entity()
 export class Encounter
     extends BaseEntity
-    implements IEntityToDTOInterface<EncounterPublicDTO>
+    implements IEntityToDTOWithArgumentInterface<User, EncounterPublicDTO>
 {
-    public convertToPublicDTO(): EncounterPublicDTO {
+    public convertToPublicDTO(user: User): EncounterPublicDTO {
         return {
             id: this.id,
             status: this.status,
             lastDateTimePassedBy: this.lastDateTimePassedBy,
             lastLocationPassedBy: undefined, // TODO, derive a rough human readable string (translation??) that can be shown locally, or just give random radius point or so and let users open map or so?
             reported: this.userReports?.length > 0,
-            users: this.users?.map((u) => u.convertToPublicDTO()) ?? [],
+            /** @dev Find other user to yourself */
+            otherUser: this.users
+                ?.find((u) => u.id !== user.id)
+                ?.convertToPublicDTO(),
             /** @DEV MAKE DEFAULT [] not check here*/
             messages: this.messages?.map((m) => m.convertToPublicDTO()) ?? [],
             isNearbyRightNow: null,
+            amountStreaks: this.amountStreaks,
         };
     }
+
+    @Column({ default: 1 })
+    amountStreaks: number;
 
     @Column({ type: "jsonb", default: {} })
     userStatuses: Record<string, EEncounterStatus>;

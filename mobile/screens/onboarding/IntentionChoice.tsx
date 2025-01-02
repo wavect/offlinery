@@ -1,12 +1,13 @@
+import { Subtitle } from "@/GlobalStyles";
 import { MainStackParamList } from "@/MainStack.navigator";
 import { UserPrivateDTOIntentionsEnum } from "@/api/gen/src";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
-import { TR, i18n } from "@/localization/translate.service";
+import { TR, formatBoldText, i18n } from "@/localization/translate.service";
 import { saveOnboardingState } from "@/services/storage.service";
 import * as React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "../routes";
 
@@ -82,6 +83,21 @@ const IntentionChoice = ({
                     variant="dark"
                     onPress={() => toggleIntention("friendship")}
                 />
+            </View>
+
+            <View style={styles.optionContainer}>
+                <OButtonWide
+                    text={i18n.t(TR.reconnectFriends)}
+                    filled={isSelected(
+                        UserPrivateDTOIntentionsEnum.reconnect_friends,
+                    )}
+                    variant="dark"
+                    disabled={true}
+                    onPress={() => toggleIntention("reconnect_friends")}
+                />
+                <Text style={[Subtitle, styles.subtitle]}>
+                    {formatBoldText(i18n.t(TR.reconnectFriendsDescription))}
+                </Text>
             </View>
         </OPageContainer>
     );

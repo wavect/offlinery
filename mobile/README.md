@@ -35,6 +35,8 @@ The production backend is deployed on the free tier on render.com once you push 
 
 ## Release
 
+NOTE: EAS Builds might not work anymore as of 26 December 2024 as EAS worker instances don't have enough RAM (freemium)
+
 1. Run `npx expo-doctor`
 2. Build with EAS: `eas build --platform android|ios|all --local` (use local ideally as it is free)
 3. Submit to App stores `eas submit`
