@@ -61,8 +61,8 @@ export const OMap = (props: OMapProps) => {
             setMapRegion({
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
+                latitudeDelta: 0.003,
+                longitudeDelta: 0.003,
             });
         }
     }, [location]);
@@ -228,7 +228,7 @@ export const OMap = (props: OMapProps) => {
                             zoomControlEnabled={true}
                             zoomEnabled={true}
                             zoomTapEnabled={true}
-                            maxZoomLevel={13}
+                            maxZoomLevel={15}
                             minZoomLevel={8}
                             onPress={handleMapPress}
                             onLongPress={
