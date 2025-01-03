@@ -1,7 +1,7 @@
 import { TR, i18n } from "@/localization/translate.service";
 import * as Sentry from "@sentry/react-native";
 import React, { FC, useRef, useState } from "react";
-import { DimensionValue } from "react-native";
+import { DimensionValue, Platform } from "react-native";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
 import {
     CalendlyEvent,
@@ -47,10 +47,11 @@ const OCalendlyInline: FC<Props> = ({
     const [webViewHeight, setWebViewHeight] = useState<DimensionValue>();
     const webViewRef = useRef<WebView>(null);
 
-    // @dev This one might be more native/cleaner, but doesn't work for the Calendly events (except of PageHeight somehow)
+    // @dev On Android the pageHeight event for whatever triggers constant reloads.
     const injectedJavaScript = `
     (function() {
       window.addEventListener('message', function(e) {
+      if ('${Platform.OS}' === 'android' && e.data.event === '${CalendlyEvent.PAGE_HEIGHT}') return;
         window.ReactNativeWebView.postMessage(JSON.stringify(e.data));
       });
       true;
@@ -103,38 +104,49 @@ const OCalendlyInline: FC<Props> = ({
      * The full blown html including head, etc. is necessary to have a responsive view otherwise desktop is loaded.
      * @ref https://github.com/tcampb/react-calendly/issues/190#issuecomment-2364364463
      */
-    return (
-        <>
-            {isLoading && <LoadingSpinner />}
-            <WebView
-                ref={webViewRef}
-                style={[styles.webView, { height: webViewHeight }]}
-                source={{
-                    html: `
+    const webViewHtml = `
       <!DOCTYPE html>
       <html lang="en">
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+          <meta http-equiv="x-dns-prefetch-control" content="on">
+          <link rel="dns-prefetch" href="https://calendly.com">
           <style>
             body, html {
               margin: 0;
               padding: 0;
               height: 100%;
               overflow: hidden;
+              background-color: transparent;
             }
             iframe {
               border: none;
               width: 100%;
               height: 100%;
+              position: fixed;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
             }
           </style>
-          <title></title>
         </head>
         <body>
-          <iframe src="${src}" width="100%" height="100%"></iframe>
+          <iframe src="${src}" width="100%" height="100%" frameborder="0" allowtransparency="true"></iframe>
         </body>
       </html>
-    `,
+    `;
+
+    return (
+        <>
+            {isLoading && <LoadingSpinner />}
+            <WebView
+                ref={webViewRef}
+                userAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36"
+                style={[styles.webView, { height: webViewHeight }]}
+                source={{
+                    html: webViewHtml,
+                    baseUrl: "https://calendly.com",
                 }}
                 originWhitelist={["*"]}
                 onLoadEnd={() => setIsLoading(false)}
@@ -144,13 +156,31 @@ const OCalendlyInline: FC<Props> = ({
                 domStorageEnabled={true}
                 startInLoadingState={true}
                 scalesPageToFit={true}
+                mixedContentMode="compatibility"
+                bounces={false}
+                webviewDebuggingEnabled={__DEV__}
+                allowsBackForwardNavigationGestures={true}
+                androidLayerType={
+                    Platform.OS === "android" ? "hardware" : undefined
+                }
+                cacheEnabled={true}
+                incognito={false}
+                thirdPartyCookiesEnabled={true}
+                sharedCookiesEnabled={true}
+                cacheMode="LOAD_CACHE_ELSE_NETWORK"
                 onError={(syntheticEvent) => {
                     const { nativeEvent } = syntheticEvent;
-                    console.error("WebView error: ", nativeEvent);
+                    console.warn("WebView error: ", nativeEvent);
+                    Sentry.captureException(nativeEvent, {
+                        tags: { calendlyInline: "onError" },
+                    });
                 }}
                 onHttpError={(syntheticEvent) => {
                     const { nativeEvent } = syntheticEvent;
-                    console.error("WebView HTTP error: ", nativeEvent);
+                    console.warn("WebView HTTP error: ", nativeEvent);
+                    Sentry.captureException(nativeEvent, {
+                        tags: { calendlyInline: "onHttpError" },
+                    });
                 }}
                 title={iframeTitle || i18n.t(TR.calendlySchedulingPageDefault)}
             />
