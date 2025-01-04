@@ -4,21 +4,17 @@ import {
     ActivityIndicator,
     Image,
     ImageProps,
-    StyleProp,
     StyleSheet,
     View,
-    ViewStyle,
 } from "react-native";
 
-interface OImageWithLoaderProps extends ImageProps {
-    containerStyle?: StyleProp<ViewStyle>;
-}
+interface OImageWithLoaderProps extends ImageProps {}
 
 export const OImageWithLoader = (props: OImageWithLoaderProps) => {
     const [isLoading, setIsLoading] = useState(false);
 
     return (
-        <View style={[styles.container, props.containerStyle]}>
+        <View style={[styles.container, props.style]}>
             <Image
                 {...props}
                 style={[styles.image, props.style]}

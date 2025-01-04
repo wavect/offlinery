@@ -13,7 +13,6 @@ import React, { useEffect, useRef, useState } from "react";
 import {
     Dimensions,
     FlatList,
-    Image,
     Modal,
     StyleSheet,
     Text,
@@ -128,7 +127,7 @@ const ProfileView = ({
                             setCurrentImageIndex(0);
                         }}
                     >
-                        <Image
+                        <OImageWithLoader
                             source={{ uri: getValidImgURI(user.imageURIs[0]) }}
                             style={styles.carouselImage}
                             resizeMode="cover"
@@ -190,7 +189,7 @@ const ProfileView = ({
                         scrollAnimationDuration={1000}
                         defaultIndex={currentImageIndex}
                         renderItem={({ item }) => (
-                            <Image
+                            <OImageWithLoader
                                 source={{ uri: item }}
                                 style={styles.fullScreenImage}
                                 resizeMode="contain"
