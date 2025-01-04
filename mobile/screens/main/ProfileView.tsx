@@ -1,6 +1,7 @@
 import { Color, Subtitle } from "@/GlobalStyles";
 import { UserPublicDTO } from "@/api/gen/src";
 import { OBadgesOfUser } from "@/components/OBadge/OBadgesOfUser";
+import { OImageWithLoader } from "@/components/OImageWithLoader/OImageWithLoader";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OPageHeader } from "@/components/OPageHeader/OPageHeader";
 import { OPageHeaderEncounters } from "@/components/OPageHeader/OPageHeaderEncounters/OPageHeaderEncounters";
@@ -53,7 +54,10 @@ const ProfileView = ({
                 }}
                 style={styles.previewImageContainer}
             >
-                <Image source={{ uri: item }} style={styles.previewImage} />
+                <OImageWithLoader
+                    source={{ uri: item }}
+                    style={styles.previewImage}
+                />
             </TouchableOpacity>
         );
     };
@@ -109,7 +113,7 @@ const ProfileView = ({
                                     setFullScreenVisible(true);
                                 }}
                             >
-                                <Image
+                                <OImageWithLoader
                                     source={{ uri: item }}
                                     style={styles.carouselImage}
                                 />
