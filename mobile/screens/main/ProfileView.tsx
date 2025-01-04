@@ -3,6 +3,7 @@ import { UserPublicDTO } from "@/api/gen/src";
 import { OBadgesOfUser } from "@/components/OBadge/OBadgesOfUser";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OPageHeader } from "@/components/OPageHeader/OPageHeader";
+import { OPageHeaderEncounters } from "@/components/OPageHeader/OPageHeaderEncounters/OPageHeaderEncounters";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
@@ -63,11 +64,17 @@ const ProfileView = ({
 
     useEffect(() => {
         // @dev overrides tab nav title
-        navigation.getParent()?.setOptions({
+        const parent = navigation.getParent();
+        parent?.setOptions({
             headerLeft: () => (
                 <OPageHeader title={`${user.firstName}, ${user.age}`} />
             ),
         });
+        return () => {
+            parent?.setOptions({
+                headerLeft: () => <OPageHeaderEncounters />,
+            });
+        };
     }); // empty dep array to run it only once
 
     return (

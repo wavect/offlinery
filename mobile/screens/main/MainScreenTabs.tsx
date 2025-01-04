@@ -1,10 +1,7 @@
 import { Color, Title } from "@/GlobalStyles";
 import { OGoLiveToggle } from "@/components/OGoLiveToggle/OGoLiveToggle";
 import { OPageHeader } from "@/components/OPageHeader/OPageHeader";
-import {
-    EACTION_ENCOUNTERS,
-    useEncountersContext,
-} from "@/context/EncountersContext";
+import { OPageHeaderEncounters } from "@/components/OPageHeader/OPageHeaderEncounters/OPageHeaderEncounters";
 import { useNotifications } from "@/hooks/useNotifications";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainTabs } from "@/screens/main/MainScreenTabs.navigator";
@@ -23,29 +20,16 @@ import ProfileSettings from "./ProfileSettings";
 export const MainScreenTabs = ({ navigation }: any) => {
     useNotifications(navigation);
 
-    const { state: encounterState, dispatch: dispatchEncounters } =
-        useEncountersContext();
     const { tourKey: tourKeyFind, start: startTourFind } =
         useTourGuideController(TOURKEY.FIND);
-    const { start: startTourEncounters } = useTourGuideController(
-        TOURKEY.ENCOUNTERS,
-    );
 
     // @dev true by default to not unnecessarily distract user
     const [hasDoneFindWalkthrough, setHasDoneFindWalkthrough] = useState(true);
-    const [hasDoneEncounterWalkthrough, setHasDoneEncounterWalkthrough] =
-        useState(true);
 
     useEffect(() => {
-        const getValues = [
-            getLocalValue(LOCAL_VALUE.HAS_DONE_FIND_WALKTHROUGH),
-            getLocalValue(LOCAL_VALUE.HAS_DONE_ENCOUNTER_WALKTHROUGH),
-        ];
-
-        Promise.all(getValues)
-            .then((vals: boolean[]) => {
-                setHasDoneFindWalkthrough(vals[0]);
-                setHasDoneEncounterWalkthrough(vals[1]);
+        getLocalValue(LOCAL_VALUE.HAS_DONE_FIND_WALKTHROUGH)
+            .then((value: boolean) => {
+                setHasDoneFindWalkthrough(value);
             })
             .catch((err) => {
                 Sentry.captureException(err, {
@@ -110,18 +94,7 @@ export const MainScreenTabs = ({ navigation }: any) => {
                 component={EncounterScreenStack}
                 options={{
                     tabBarLabel: i18n.t(TR.encounters),
-                    headerLeft: () => (
-                        <OPageHeader
-                            title={i18n.t(TR.encounters)}
-                            highlightHelpBtn={!hasDoneEncounterWalkthrough}
-                            onHelpPress={() => {
-                                dispatchEncounters({
-                                    type: EACTION_ENCOUNTERS.SET_IS_WALKTHROUGH_RUNNING,
-                                    payload: true,
-                                });
-                            }}
-                        />
-                    ),
+                    headerLeft: () => <OPageHeaderEncounters />,
                     // tabBarBadge:
                     // unreadNotifications.length === 0
                     //     ? undefined
