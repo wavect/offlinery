@@ -154,9 +154,7 @@ export default function App() {
                                 }}
                             >
                                 <MainStack.Navigator
-                                    initialRouteName={
-                                        ROUTES.Onboarding.SafetyCheck
-                                    }
+                                    initialRouteName={initialComponent}
                                     screenOptions={NO_HEADER}
                                 >
                                     <MainStack.Screen

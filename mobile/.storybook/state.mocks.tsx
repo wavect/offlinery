@@ -24,7 +24,7 @@ export const storybookMockUserData: IUserData = {
     clearPassword: "",
     birthDay: new Date(1990, 1, 1),
     imageURIs: {},
-    verificationStatus: UserPrivateDTOVerificationStatusEnum.not_needed,
+    verificationStatus: UserPrivateDTOVerificationStatusEnum.verified,
     approachChoice: UserPrivateDTOApproachChoiceEnum.both,
     blacklistedRegions: [],
     approachFromTime: new Date(),
@@ -93,7 +93,7 @@ export const StoryBookContextWrapper = ({
     >
         <EncountersContext.Provider
             value={{
-                state: { encounters: [] },
+                state: { encounters: [], isWalkthroughRunning: false },
                 dispatch: mockEncountersDispatch,
             }}
         >

@@ -80,7 +80,6 @@ const WaitingForVerification = ({
             type: EACTION_USER.UPDATE_MULTIPLE,
             payload: {
                 approachChoice: "be_approached",
-                verificationStatus: "not_needed",
             },
         });
 

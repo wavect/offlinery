@@ -38,7 +38,6 @@ export interface UpdateUserVerificationstatusDTO {
 export const UpdateUserVerificationstatusDTONewVerificationStatusEnum = {
     verified: "verified",
     pending: "pending",
-    not_needed: "not_needed",
 } as const;
 export type UpdateUserVerificationstatusDTONewVerificationStatusEnum =
     (typeof UpdateUserVerificationstatusDTONewVerificationStatusEnum)[keyof typeof UpdateUserVerificationstatusDTONewVerificationStatusEnum];

@@ -143,7 +143,7 @@ export const initialUserState: IUserData = {
         "4": undefined,
         "5": undefined,
     },
-    verificationStatus: UserPrivateDTOVerificationStatusEnum.not_needed,
+    verificationStatus: UserPrivateDTOVerificationStatusEnum.pending,
     approachChoice: UserPrivateDTOApproachChoiceEnum.both,
     blacklistedRegions: [],
     approachFromTime: DEFAULT_FROM_TIME,

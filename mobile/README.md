@@ -42,5 +42,6 @@ NOTE: EAS Builds might not work anymore as of 26 December 2024 as EAS worker ins
 3. Submit to App stores `eas submit --path ... --platform ios --profile production`
 
 ## Debugging
-To debug WebView issues on Android you can use this command: 
+
+To debug WebView issues on Android you can use this command:
 `adb logcat | grep -i chromium`

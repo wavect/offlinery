@@ -27,43 +27,25 @@ const ApproachChoice = ({
     ) => {
         dispatch({
             type: EACTION_USER.UPDATE_MULTIPLE,
-            payload: { approachChoice },
+            payload: {
+                approachChoice,
+                verificationStatus:
+                    UserPrivateDTOVerificationStatusEnum.pending,
+            },
         });
 
         switch (approachChoice) {
             case UserPrivateDTOApproachChoiceEnum.approach: // fall through
-                dispatch({
-                    type: EACTION_USER.UPDATE_MULTIPLE,
-                    payload: {
-                        verificationStatus:
-                            UserPrivateDTOVerificationStatusEnum.pending,
-                    },
-                });
                 navigation.navigate(ROUTES.HouseRules, {
                     nextPage: ROUTES.Onboarding.SafetyCheck,
                 });
                 break;
             case UserPrivateDTOApproachChoiceEnum.be_approached:
-                dispatch({
-                    type: EACTION_USER.UPDATE_MULTIPLE,
-                    payload: {
-                        verificationStatus:
-                            UserPrivateDTOVerificationStatusEnum.not_needed,
-                    },
-                });
                 navigation.navigate(ROUTES.HouseRules, {
                     nextPage: ROUTES.Onboarding.DontApproachMeHere,
                 });
                 break;
             case UserPrivateDTOApproachChoiceEnum.both:
-                // @dev both flows need to be completed, checked on last screen
-                dispatch({
-                    type: EACTION_USER.UPDATE_MULTIPLE,
-                    payload: {
-                        verificationStatus:
-                            UserPrivateDTOVerificationStatusEnum.pending,
-                    },
-                });
                 navigation.navigate(ROUTES.HouseRules, {
                     nextPage: ROUTES.Onboarding.DontApproachMeHere,
                 });

@@ -29,8 +29,6 @@ export enum ELanguage {
 export enum EVerificationStatus {
     VERIFIED = "verified",
     PENDING = "pending",
-    /** @dev Not needed if not approaching right now (e.g. women) */
-    NOT_NEEDED = "not_needed",
 }
 
 /** @dev Dedicated Enum for email verification for separation of concerns */

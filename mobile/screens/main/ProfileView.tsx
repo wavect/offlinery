@@ -76,7 +76,7 @@ const ProfileView = ({
             bottomContainerChildren={bottomContainerChildren}
         >
             <OBadgesOfUser intentions={user.intentions} />
-            <Text style={Subtitle}>{user.bio}</Text>
+            <Text style={[Subtitle, { marginTop: 6 }]}>{user.bio}</Text>
 
             <View style={styles.carouselContainer}>
                 {user.imageURIs?.length > 1 ? (
