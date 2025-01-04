@@ -13,7 +13,6 @@ import React, { useEffect, useRef, useState } from "react";
 import {
     Dimensions,
     FlatList,
-    Modal,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -32,10 +31,8 @@ const ProfileView = ({
 >) => {
     const progressValue = useSharedValue<number>(0);
     const width = Dimensions.get("window").width;
-    const [fullScreenVisible, setFullScreenVisible] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const carouselRef = useRef<ICarouselInstance>(null);
-    const fullScreenCarouselRef = useRef<ICarouselInstance>(null); // Ref for full-screen carousel
 
     const renderPreviewImage = ({
         item,
@@ -49,7 +46,6 @@ const ProfileView = ({
                 onPress={() => {
                     setCurrentImageIndex(index);
                     carouselRef.current?.scrollTo({ index: index });
-                    setFullScreenVisible(true);
                 }}
                 style={styles.previewImageContainer}
             >
@@ -109,7 +105,6 @@ const ProfileView = ({
                             <TouchableOpacity
                                 onPress={() => {
                                     setCurrentImageIndex(index);
-                                    setFullScreenVisible(true);
                                 }}
                             >
                                 <OImageWithLoader
@@ -123,7 +118,6 @@ const ProfileView = ({
                     <TouchableOpacity
                         style={styles.touchableContainer}
                         onPress={() => {
-                            setFullScreenVisible(true);
                             setCurrentImageIndex(0);
                         }}
                     >
@@ -164,40 +158,6 @@ const ProfileView = ({
                     style={styles.previewList}
                 />
             )}
-
-            <Modal
-                animationType="fade"
-                transparent={false}
-                visible={fullScreenVisible}
-                onRequestClose={() => setFullScreenVisible(false)}
-            >
-                <View style={styles.fullScreenContainer}>
-                    <TouchableOpacity
-                        style={styles.closeButton}
-                        onPress={() => setFullScreenVisible(false)}
-                    >
-                        <View style={styles.closeButtonInner}>
-                            <Text style={styles.closeButtonText}>×</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <Carousel
-                        ref={fullScreenCarouselRef}
-                        loop={false}
-                        width={Dimensions.get("window").width}
-                        height={Dimensions.get("window").height}
-                        data={user.imageURIs}
-                        scrollAnimationDuration={1000}
-                        defaultIndex={currentImageIndex}
-                        renderItem={({ item }) => (
-                            <OImageWithLoader
-                                source={{ uri: item }}
-                                style={styles.fullScreenImage}
-                                resizeMode="contain"
-                            />
-                        )}
-                    />
-                </View>
-            </Modal>
         </OPageContainer>
     );
 };

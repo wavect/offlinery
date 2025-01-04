@@ -1,5 +1,5 @@
 import { Color } from "@/GlobalStyles";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
     ActivityIndicator,
     Image,
@@ -8,18 +8,33 @@ import {
     View,
 } from "react-native";
 
-interface OImageWithLoaderProps extends ImageProps {}
+interface OImageWithLoaderProps extends ImageProps {
+    fallbackSource?: ImageProps["source"];
+}
 
 export const OImageWithLoader = (props: OImageWithLoaderProps) => {
     const [isLoading, setIsLoading] = useState(false);
+
+    const handleLoadStart = useCallback(() => {
+        setIsLoading(true);
+    }, []);
+
+    const handleLoadEnd = useCallback(() => {
+        setIsLoading(false);
+    }, []);
+
+    const handleError = useCallback(() => {
+        setIsLoading(false);
+    }, []);
 
     return (
         <View style={[styles.container, props.style]}>
             <Image
                 {...props}
                 style={[styles.image, props.style]}
-                onLoadStart={() => setIsLoading(true)}
-                onLoadEnd={() => setIsLoading(false)}
+                onLoadStart={handleLoadStart}
+                onLoadEnd={handleLoadEnd}
+                onError={handleError}
             />
             {isLoading && (
                 <View style={styles.loaderContainer}>
