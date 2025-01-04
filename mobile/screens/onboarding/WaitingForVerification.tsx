@@ -132,8 +132,12 @@ const WaitingForVerification = ({
                             onPress={() =>
                                 navigation.dispatch(
                                     CommonActions.reset({
-                                        index: 0,
+                                        index: 1,
                                         routes: [
+                                            {
+                                                name: ROUTES.Onboarding
+                                                    .WaitingVerification,
+                                            },
                                             {
                                                 name: ROUTES.Onboarding
                                                     .BookSafetyCall,
