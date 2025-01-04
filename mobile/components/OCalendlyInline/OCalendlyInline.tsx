@@ -1,7 +1,7 @@
 import { TR, i18n } from "@/localization/translate.service";
 import * as Sentry from "@sentry/react-native";
 import React, { FC, useRef, useState } from "react";
-import { DimensionValue, Platform } from "react-native";
+import { DimensionValue, Platform, View } from "react-native";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
 import {
     CalendlyEvent,
@@ -138,12 +138,12 @@ const OCalendlyInline: FC<Props> = ({
     `;
 
     return (
-        <>
+        <View style={styles.container}>
             {isLoading && <LoadingSpinner />}
             <WebView
                 ref={webViewRef}
                 userAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36"
-                style={[styles.webView, { height: webViewHeight }]}
+                style={styles.webView}
                 source={{
                     html: webViewHtml,
                     baseUrl: "https://calendly.com",
@@ -184,7 +184,7 @@ const OCalendlyInline: FC<Props> = ({
                 }}
                 title={iframeTitle || i18n.t(TR.calendlySchedulingPageDefault)}
             />
-        </>
+        </View>
     );
 };
 

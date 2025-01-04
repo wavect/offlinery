@@ -13,10 +13,9 @@
  */
 
 import Constants from "expo-constants";
-import { IS_DEVELOPMENT_BUILD } from "../../../utils/env.utils";
 
 export const BASE_PATH = (
-    (IS_DEVELOPMENT_BUILD
+    (false
         ? `http://${Constants.expoConfig?.hostUri?.split(":").shift()?.concat(":3000")}`
         : "https://api.offlinery.io") + "/v1"
 ).replace(/\/+$/, "");
