@@ -82,6 +82,14 @@
                     "apiKey": "AIzaSyCvQCDDpKQW-DlxC44t8edMgC52HvTl4LM"
                 }
             },
+            "splash": {
+                "image": "./assets/mipmap-hdpi/android_splash.png",
+                "mdpi": "./assets/mipmap-mdpi/android_splash.png",
+                "hdpi": "./assets/mipmap-hdpi/android_splash.png",
+                "xhdpi": "./assets/mipmap-xhdpi/android_splash.png",
+                "xxhdpi": "./assets/mipmap-xxhdpi/android_splash.png",
+                "xxxhdpi": "./assets/mipmap-xxxhdpi/android_splash.png"
+            },
             "googleServicesFile": "./google-services.json",
             "permissions": [
                 "android.permission.CAMERA",
