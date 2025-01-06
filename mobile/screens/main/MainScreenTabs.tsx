@@ -19,10 +19,9 @@ import ProfileSettings from "./ProfileSettings";
 
 export const MainScreenTabs = ({ navigation }: any) => {
     useNotifications(navigation);
-    const [tourEncounterInitialized, setTourEnvounterInitialized] =
+    const [tourEncounterInitialized, setTourEncounterInitialized] =
         useState(false);
-    const { state: encounterState, dispatch: dispatchEncounters } =
-        useEncountersContext();
+
     const {
         eventEmitter: eventEmitterFind,
         canStart: canStartTourFind,
@@ -38,11 +37,11 @@ export const MainScreenTabs = ({ navigation }: any) => {
 
     useEffect(() => {
         const handleStop = () => {
-            setTourEnvounterInitialized(false);
+            setTourEncounterInitialized(false);
         };
 
         const handleSkip = () => {
-            setTourEnvounterInitialized(false);
+            setTourEncounterInitialized(false);
         };
 
         if (eventEmitterFind || eventEmitterEncounters) {
@@ -72,19 +71,14 @@ export const MainScreenTabs = ({ navigation }: any) => {
 
     // @dev true by default to not unnecessarily distract user
     const [hasDoneFindWalkthrough, setHasDoneFindWalkthrough] = useState(true);
-    const [hasDoneEncounterWalkthrough, setHasDoneEncounterWalkthrough] =
-        useState(true);
     useEffect(() => {
         if (canStartTourEncounters && !tourEncounterInitialized) {
             requestAnimationFrame(() => {
                 startTourEncounters();
-                setTourEnvounterInitialized(true);
+                setTourEncounterInitialized(true);
             });
         }
     }, [canStartTourEncounters, startTourEncounters, tourEncounterInitialized]);
-
-    // @dev true by default to not unnecessarily distract user
-    const [hasDoneFindWalkthrough, setHasDoneFindWalkthrough] = useState(true);
 
     useEffect(() => {
         getLocalValue(LOCAL_VALUE.HAS_DONE_FIND_WALKTHROUGH)
