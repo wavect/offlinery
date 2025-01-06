@@ -22,19 +22,69 @@ import ProfileSettings from "./ProfileSettings";
 
 export const MainScreenTabs = ({ navigation }: any) => {
     useNotifications(navigation);
-
+    const [tourEncounterInitialized, setTourEnvounterInitialized] =
+        useState(false);
     const { state: encounterState, dispatch: dispatchEncounters } =
         useEncountersContext();
-    const { tourKey: tourKeyFind, start: startTourFind } =
-        useTourGuideController(TOURKEY.FIND);
-    const { start: startTourEncounters } = useTourGuideController(
-        TOURKEY.ENCOUNTERS,
-    );
+    const {
+        eventEmitter: eventEmitterFind,
+        canStart: canStartTourFind,
+        tourKey: tourKeyFind,
+        start: startTourFind,
+    } = useTourGuideController(TOURKEY.FIND);
+
+    const {
+        eventEmitter: eventEmitterEncounters,
+        canStart: canStartTourEncounters,
+        start: startTourEncounters,
+    } = useTourGuideController(TOURKEY.ENCOUNTERS);
+
+    useEffect(() => {
+        const handleStop = () => {
+            setTourEnvounterInitialized(false);
+        };
+
+        const handleSkip = () => {
+            setTourEnvounterInitialized(false);
+        };
+
+        if (eventEmitterFind || eventEmitterEncounters) {
+            if (eventEmitterFind) {
+                eventEmitterFind.on("stop", handleStop);
+                eventEmitterFind.on("skip", handleSkip);
+            }
+
+            if (eventEmitterEncounters) {
+                eventEmitterEncounters.on("stop", handleStop);
+                eventEmitterEncounters.on("skip", handleSkip);
+            }
+
+            // Cleanup listeners
+            return () => {
+                if (eventEmitterFind) {
+                    eventEmitterFind.off("stop", handleStop);
+                    eventEmitterFind.off("skip", handleSkip);
+                }
+                if (eventEmitterEncounters) {
+                    eventEmitterEncounters.off("stop", handleStop);
+                    eventEmitterEncounters.off("skip", handleSkip);
+                }
+            };
+        }
+    }, [eventEmitterFind, eventEmitterEncounters]);
 
     // @dev true by default to not unnecessarily distract user
     const [hasDoneFindWalkthrough, setHasDoneFindWalkthrough] = useState(true);
     const [hasDoneEncounterWalkthrough, setHasDoneEncounterWalkthrough] =
         useState(true);
+    useEffect(() => {
+        if (canStartTourEncounters && !tourEncounterInitialized) {
+            requestAnimationFrame(() => {
+                startTourEncounters();
+                setTourEnvounterInitialized(true);
+            });
+        }
+    }, [canStartTourEncounters, startTourEncounters, tourEncounterInitialized]);
 
     useEffect(() => {
         const getValues = [
