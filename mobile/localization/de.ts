@@ -289,7 +289,7 @@ export const de: Language = {
         "<b>Werde angesprochen</b> oder <b>sprich an</b> so wie früher.",
     pageSafetyTitle: "Auf sichere Weise",
     pageSafetyDescription:
-        "Ansprechende werden von uns in einem <b>persönlichen Verifizierungsanruf</b> auf ihre Vertrauenswürdigkeit überprüft.",
+        "Ansprechende werden von uns in einem <b>persönlichen Verifizierungsanruf</b> auf ihre emotionale Intelligenz überprüft.",
     pageSafetyConclusion:
         "Wir haben <b>0 Toleranz</b> gegenüber respektlosem Verhalten.",
     pageLocationTitle: "Eine Bitte",

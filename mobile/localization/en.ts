@@ -284,7 +284,7 @@ export const en = {
         "<b>Get approached</b> or <b>approach</b> people as we used to.",
     pageSafetyTitle: "Safely",
     pageSafetyDescription:
-        "People that approach need to pass a <b>strict screening</b>. We do track users' trustworthiness and continuously add new safety features",
+        "People that approach need to pass a <b>strict screening</b> testing their emotional intelligence. We continuously add new safety features",
     pageSafetyConclusion:
         "We have <b>0 tolerance</b> for disrespectful behavior.",
     pageLocationTitle: "What we need",
