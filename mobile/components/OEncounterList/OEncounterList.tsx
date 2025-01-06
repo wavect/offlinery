@@ -140,6 +140,7 @@ export const OEncounterList = (props: IOEncounterListProps) => {
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             contentContainerStyle={
+                !encounterState.isWalkthroughRunning &&
                 encounterState.encounters.length === 0 &&
                 styles.emptyListContainer
             }
