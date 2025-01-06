@@ -39,6 +39,11 @@ export const OImageWithLoader = (props: OImageWithLoaderProps) => {
 
     return (
         <View style={[styles.container, props.style]}>
+            {isLoading && (
+                <View style={styles.loaderContainer}>
+                    <ActivityIndicator size="large" color={Color.primary} />
+                </View>
+            )}
             <Image
                 {...props}
                 style={[styles.image, props.style]}
@@ -46,11 +51,6 @@ export const OImageWithLoader = (props: OImageWithLoaderProps) => {
                 onLoadEnd={handleLoadEnd}
                 onError={handleError}
             />
-            {isLoading && (
-                <View style={styles.loaderContainer}>
-                    <ActivityIndicator size="large" color={Color.primary} />
-                </View>
-            )}
         </View>
     );
 };
