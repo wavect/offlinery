@@ -7,6 +7,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import {
     TokenFetchStatus,
+    reactToAccountApprovedNotification,
     reactToNewEncounterNotification,
     reactToNewEventNotification,
     registerForPushNotificationsAsync,
@@ -135,13 +136,19 @@ export const useNotifications = ({ navigation }: IUseNotificationProps) => {
                                 }
 
                                 switch (notificationType) {
-                                    case NotificationNewEventDTOTypeEnum.event:
+                                    case NotificationNewEventDTOTypeEnum.new_event:
                                         reactToNewEventNotification(
                                             response,
                                             navigation,
                                         );
                                         break;
-                                    case NotificationNavigateUserDTOTypeEnum.match:
+                                    case NotificationNewEventDTOTypeEnum.account_approved:
+                                        reactToAccountApprovedNotification(
+                                            response,
+                                            navigation,
+                                        );
+                                        break;
+                                    case NotificationNavigateUserDTOTypeEnum.new_match:
                                         // @dev Remove notification from array to update the "unread notification" bubble in the tab
                                         const filteredNotifications =
                                             unreadNotifications.filter(
@@ -178,7 +185,7 @@ export const useNotifications = ({ navigation }: IUseNotificationProps) => {
                                                 },
                                             },
                                         );
-                                        navigation.navigate(
+                                        navigation?.navigate(
                                             ROUTES.MainTabView,
                                             {
                                                 screen: ROUTES.Main.FindPeople, // default

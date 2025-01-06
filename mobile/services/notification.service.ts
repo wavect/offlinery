@@ -1,5 +1,6 @@
 import { Color } from "@/GlobalStyles";
 import {
+    NotificationAccountApprovedDTO,
     NotificationNavigateUserDTO,
     NotificationNewEventDTO,
     StorePushTokenDTO,
@@ -162,6 +163,18 @@ export const registerForPushNotificationsAsync = async (
     };
 };
 
+export const reactToAccountApprovedNotification = (
+    response: Notifications.NotificationResponse,
+    navigation: any,
+) => {
+    const notificationData: NotificationAccountApprovedDTO = response
+        .notification.request.content.data as NotificationAccountApprovedDTO;
+
+    navigation?.navigate(ROUTES.MainTabView, {
+        screen: notificationData.screen,
+    });
+};
+
 export const reactToNewEventNotification = (
     response: Notifications.NotificationResponse,
     navigation: any,
@@ -169,7 +182,7 @@ export const reactToNewEventNotification = (
     const notificationData: NotificationNewEventDTO = response.notification
         .request.content.data as NotificationNewEventDTO;
 
-    navigation.navigate(ROUTES.MainTabView, {
+    navigation?.navigate(ROUTES.MainTabView, {
         screen: notificationData.screen,
     });
 };

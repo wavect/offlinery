@@ -3,6 +3,10 @@
     "newMatch": {
       "title": "{firstName} is nearby! 🔥",
       "body": "Find. Approach. IRL."
+    },
+    "accountApproved": {
+      "title": "You are verified!",
+      "body": "Congrats, you passed our screening."
     }
   },
   "email": {

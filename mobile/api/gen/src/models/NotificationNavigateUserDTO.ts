@@ -51,8 +51,9 @@ export interface NotificationNavigateUserDTO {
  * @export
  */
 export const NotificationNavigateUserDTOTypeEnum = {
-    match: "new_match",
-    event: "new_event",
+    new_match: "new_match",
+    new_event: "new_event",
+    account_approved: "account_approved",
 } as const;
 export type NotificationNavigateUserDTOTypeEnum =
     (typeof NotificationNavigateUserDTOTypeEnum)[keyof typeof NotificationNavigateUserDTOTypeEnum];
@@ -63,6 +64,7 @@ export type NotificationNavigateUserDTOTypeEnum =
 export const NotificationNavigateUserDTOScreenEnum = {
     NavigateToApproach: "Main_NavigateToApproach",
     FindPeople: "Main_FindPeople",
+    FindPeople2: "Main_FindPeople",
 } as const;
 export type NotificationNavigateUserDTOScreenEnum =
     (typeof NotificationNavigateUserDTOScreenEnum)[keyof typeof NotificationNavigateUserDTOScreenEnum];

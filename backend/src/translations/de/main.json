@@ -3,6 +3,10 @@
     "newMatch": {
       "title": "{firstName} ist in der Nähe! 🔥",
       "body": "Finden. Ansprechen. IRL."
+    },
+    "accountApproved": {
+      "title": "Du bist verifiziert!",
+      "body": "Gratulation, du wurdest freigeschalten.."
     }
   },
   "email": {

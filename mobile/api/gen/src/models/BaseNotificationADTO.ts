@@ -36,8 +36,9 @@ export interface BaseNotificationADTO {
  * @export
  */
 export const BaseNotificationADTOTypeEnum = {
-    match: "new_match",
-    event: "new_event",
+    new_match: "new_match",
+    new_event: "new_event",
+    account_approved: "account_approved",
 } as const;
 export type BaseNotificationADTOTypeEnum =
     (typeof BaseNotificationADTOTypeEnum)[keyof typeof BaseNotificationADTOTypeEnum];
@@ -48,6 +49,7 @@ export type BaseNotificationADTOTypeEnum =
 export const BaseNotificationADTOScreenEnum = {
     NavigateToApproach: "Main_NavigateToApproach",
     FindPeople: "Main_FindPeople",
+    FindPeople2: "Main_FindPeople",
 } as const;
 export type BaseNotificationADTOScreenEnum =
     (typeof BaseNotificationADTOScreenEnum)[keyof typeof BaseNotificationADTOScreenEnum];

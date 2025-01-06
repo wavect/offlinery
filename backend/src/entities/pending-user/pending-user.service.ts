@@ -1,4 +1,7 @@
 import { AuthService } from "@/auth/auth.service";
+import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
+import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
+import { NotificationAccountApprovedDTO } from "@/DTOs/notifications/notification-account-approved";
 import {
     RegistrationForVerificationRequestDTO,
     RegistrationForVerificationResponseDTO,
@@ -6,6 +9,7 @@ import {
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
 import { MailchimpService } from "@/transient-services/mailchimp/mailchimp.service";
+import { NotificationService } from "@/transient-services/notification/notification.service";
 import {
     EEmailVerificationStatus,
     ELanguage,
@@ -42,6 +46,7 @@ export class PendingUserService {
         private readonly i18n: I18nService,
         private authService: AuthService,
         private mailchimpService: MailchimpService,
+        private notificationService: NotificationService,
     ) {}
 
     public async registerPendingUser(
@@ -206,6 +211,33 @@ export class PendingUserService {
         user.verificationStatus = newStatus;
         if (newStatus === EVerificationStatus.VERIFIED) {
             await this.sendAccountVerificationSuccessfulMail(user);
+            if (user.pushToken) {
+                /// @dev Also send push notification
+                const notificationData: NotificationAccountApprovedDTO = {
+                    type: ENotificationType.ACCOUNT_APPROVED,
+                    screen: EAppScreens.ACCOUNT_VERIFIED,
+                };
+                const lang = user.preferredLanguage ?? ELanguage.en;
+                await this.notificationService.sendPushNotifications([
+                    {
+                        sound: "default" as const,
+                        title: this.i18n.translate(
+                            "main.notification.accountApproved.title",
+                            {
+                                lang,
+                            },
+                        ),
+                        body: this.i18n.translate(
+                            "main.notification.accountApproved.body",
+                            {
+                                lang,
+                            },
+                        ),
+                        to: user.pushToken,
+                        data: notificationData,
+                    },
+                ]);
+            }
         }
         await this.userRepo.save(user);
         this.logger.debug(

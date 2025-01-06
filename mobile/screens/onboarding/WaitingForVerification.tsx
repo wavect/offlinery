@@ -7,10 +7,12 @@ import { OTroubleMessage } from "@/components/OTroubleMessage/OTroubleMessage";
 import { EACTION_USER, useUserContext } from "@/context/UserContext";
 import { TR, getLocalLanguageID, i18n } from "@/localization/translate.service";
 import { refreshUserData } from "@/services/auth.service";
+import { registerForPushNotificationsAsync } from "@/services/notification.service";
 import { API } from "@/utils/api-config";
 import { MAIN_WEBSITE } from "@/utils/general.constants";
 import { writeSupportEmail } from "@/utils/misc.utils";
 import { CommonActions } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Linking, StyleSheet, Text, View } from "react-native";
@@ -28,7 +30,18 @@ const WaitingForVerification = ({
     const [isLoading, setIsLoading] = useState(false);
     const [dotIndex, setDotIndex] = useState(0);
 
-    React.useEffect(() => {
+    useEffect(() => {
+        // @dev Save notification push token here already so that we can let user know about verification status here too.
+        if (state.id) {
+            registerForPushNotificationsAsync(state.id).catch((err) => {
+                Sentry.captureException(err, {
+                    tags: { waitingForVerification: "notificationPushToken" },
+                });
+            });
+        }
+    }, [state.id]);
+
+    useEffect(() => {
         const interval = setInterval(() => {
             setDotIndex((prevIndex) => (prevIndex + 1) % 4); // 0, 1, 2, 3
         }, 500);

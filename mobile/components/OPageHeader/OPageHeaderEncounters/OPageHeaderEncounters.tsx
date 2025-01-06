@@ -3,8 +3,8 @@ import {
     EACTION_ENCOUNTERS,
     useEncountersContext,
 } from "@/context/EncountersContext";
-import { i18n, TR } from "@/localization/translate.service";
-import { getLocalValue, LOCAL_VALUE } from "@/services/storage.service";
+import { TR, i18n } from "@/localization/translate.service";
+import { LOCAL_VALUE, getLocalValue } from "@/services/storage.service";
 import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useEffect, useState } from "react";
