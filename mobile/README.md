@@ -39,4 +39,9 @@ NOTE: EAS Builds might not work anymore as of 26 December 2024 as EAS worker ins
 
 1. Run `npx expo-doctor`
 2. Build with EAS: `eas build --platform android|ios|all --local` (use local ideally as it is free)
-3. Submit to App stores `eas submit`
+3. Submit to App stores `eas submit --path ... --platform ios --profile production`
+
+## Debugging
+
+To debug WebView issues on Android you can use this command:
+`adb logcat | grep -i chromium`

@@ -2,6 +2,7 @@ import {
     CreateUserDTO,
     UserControllerCreateUserRequest,
     UserPrivateDTO,
+    UserPrivateDTOApproachChoiceEnum,
     UserPrivateDTOVerificationStatusEnum,
 } from "@/api/gen/src";
 import {
@@ -127,9 +128,9 @@ export const userAuthenticatedUpdate = async (
     await refreshUserData(dispatch, user, jwtAccessToken, jwtRefreshToken);
 
     if (
-        user.verificationStatus ===
-            UserPrivateDTOVerificationStatusEnum.pending &&
-        user.approachChoice !== "be_approached"
+        user.verificationStatus !==
+            UserPrivateDTOVerificationStatusEnum.verified &&
+        user.approachChoice !== UserPrivateDTOApproachChoiceEnum.be_approached
     ) {
         navigation.replace(ROUTES.Onboarding.WaitingVerification);
     } else {

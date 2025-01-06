@@ -1,8 +1,10 @@
 import { Color, Subtitle } from "@/GlobalStyles";
 import { UserPublicDTO } from "@/api/gen/src";
 import { OBadgesOfUser } from "@/components/OBadge/OBadgesOfUser";
+import { OImageWithLoader } from "@/components/OImageWithLoader/OImageWithLoader";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OPageHeader } from "@/components/OPageHeader/OPageHeader";
+import { OPageHeaderEncounters } from "@/components/OPageHeader/OPageHeaderEncounters/OPageHeaderEncounters";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
@@ -11,8 +13,6 @@ import React, { useEffect, useRef, useState } from "react";
 import {
     Dimensions,
     FlatList,
-    Image,
-    Modal,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -31,10 +31,8 @@ const ProfileView = ({
 >) => {
     const progressValue = useSharedValue<number>(0);
     const width = Dimensions.get("window").width;
-    const [fullScreenVisible, setFullScreenVisible] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const carouselRef = useRef<ICarouselInstance>(null);
-    const fullScreenCarouselRef = useRef<ICarouselInstance>(null); // Ref for full-screen carousel
 
     const renderPreviewImage = ({
         item,
@@ -48,11 +46,13 @@ const ProfileView = ({
                 onPress={() => {
                     setCurrentImageIndex(index);
                     carouselRef.current?.scrollTo({ index: index });
-                    setFullScreenVisible(true);
                 }}
                 style={styles.previewImageContainer}
             >
-                <Image source={{ uri: item }} style={styles.previewImage} />
+                <OImageWithLoader
+                    source={{ uri: item }}
+                    style={styles.previewImage}
+                />
             </TouchableOpacity>
         );
     };
@@ -63,11 +63,17 @@ const ProfileView = ({
 
     useEffect(() => {
         // @dev overrides tab nav title
-        navigation.getParent()?.setOptions({
+        const parent = navigation.getParent();
+        parent?.setOptions({
             headerLeft: () => (
                 <OPageHeader title={`${user.firstName}, ${user.age}`} />
             ),
         });
+        return () => {
+            parent?.setOptions({
+                headerLeft: () => <OPageHeaderEncounters />,
+            });
+        };
     }); // empty dep array to run it only once
 
     return (
@@ -76,7 +82,7 @@ const ProfileView = ({
             bottomContainerChildren={bottomContainerChildren}
         >
             <OBadgesOfUser intentions={user.intentions} />
-            <Text style={Subtitle}>{user.bio}</Text>
+            <Text style={[Subtitle, { marginTop: 6 }]}>{user.bio}</Text>
 
             <View style={styles.carouselContainer}>
                 {user.imageURIs?.length > 1 ? (
@@ -99,10 +105,9 @@ const ProfileView = ({
                             <TouchableOpacity
                                 onPress={() => {
                                     setCurrentImageIndex(index);
-                                    setFullScreenVisible(true);
                                 }}
                             >
-                                <Image
+                                <OImageWithLoader
                                     source={{ uri: item }}
                                     style={styles.carouselImage}
                                 />
@@ -113,11 +118,10 @@ const ProfileView = ({
                     <TouchableOpacity
                         style={styles.touchableContainer}
                         onPress={() => {
-                            setFullScreenVisible(true);
                             setCurrentImageIndex(0);
                         }}
                     >
-                        <Image
+                        <OImageWithLoader
                             source={{ uri: getValidImgURI(user.imageURIs[0]) }}
                             style={styles.carouselImage}
                             resizeMode="cover"
@@ -154,40 +158,6 @@ const ProfileView = ({
                     style={styles.previewList}
                 />
             )}
-
-            <Modal
-                animationType="fade"
-                transparent={false}
-                visible={fullScreenVisible}
-                onRequestClose={() => setFullScreenVisible(false)}
-            >
-                <View style={styles.fullScreenContainer}>
-                    <TouchableOpacity
-                        style={styles.closeButton}
-                        onPress={() => setFullScreenVisible(false)}
-                    >
-                        <View style={styles.closeButtonInner}>
-                            <Text style={styles.closeButtonText}>×</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <Carousel
-                        ref={fullScreenCarouselRef}
-                        loop={false}
-                        width={Dimensions.get("window").width}
-                        height={Dimensions.get("window").height}
-                        data={user.imageURIs}
-                        scrollAnimationDuration={1000}
-                        defaultIndex={currentImageIndex}
-                        renderItem={({ item }) => (
-                            <Image
-                                source={{ uri: item }}
-                                style={styles.fullScreenImage}
-                                resizeMode="contain"
-                            />
-                        )}
-                    />
-                </View>
-            </Modal>
         </OPageContainer>
     );
 };

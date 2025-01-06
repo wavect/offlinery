@@ -14,7 +14,8 @@ export const getValidImgURI = (
     } else if (
         img.includes("file:") ||
         img.trimStart().startsWith("/") ||
-        img.trimStart().startsWith("https://")
+        img.trimStart().startsWith("https://") ||
+        img.trimStart().startsWith("http://")
     ) {
         return img; // keep local file uri
     }

@@ -47,17 +47,19 @@ const BookSafetyCall = ({
         <OPageContainer
             subtitle={i18n.t(TR.retainRightToRejectApplicants)}
             bottomContainerChildren={
-                <View style={styles.callBookBtnContainer}>
-                    <OButtonWide
-                        text={i18n.t(TR.callBookedBtnLbl)}
-                        filled={true}
-                        disabled={!hasBookedCall}
-                        variant="dark"
-                        onPress={onCallBooked}
-                        isLoading={isLoading}
-                        loadingBtnText={i18n.t(TR.registering)}
-                    />
-                </View>
+                hasBookedCall && (
+                    <View style={styles.callBookBtnContainer}>
+                        <OButtonWide
+                            text={i18n.t(TR.callBookedBtnLbl)}
+                            filled={true}
+                            disabled={!hasBookedCall}
+                            variant="dark"
+                            onPress={onCallBooked}
+                            isLoading={isLoading}
+                            loadingBtnText={i18n.t(TR.registering)}
+                        />
+                    </View>
+                )
             }
         >
             <OCalendlyInline

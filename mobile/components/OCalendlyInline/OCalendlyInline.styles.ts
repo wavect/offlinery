@@ -3,6 +3,10 @@ import { Dimensions, StyleSheet } from "react-native";
 const { height } = Dimensions.get("window"); // Get the window dimensions
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        width: "100%",
+    },
     calendlyInlineWidget: {
         fontSize: 16,
         lineHeight: 19.2,
@@ -14,6 +18,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         minHeight: 600,
+        flex: 1,
     },
     calendlyInlineWidgetAll: {
         fontSize: 16,

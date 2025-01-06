@@ -12,6 +12,7 @@ import {
     OButtonSmall,
 } from "@/components/OButtonSmall/OButtonSmall";
 import { OEncounterStrike } from "@/components/OEncounterStrike/OEncounterStrike";
+import { OImageWithLoader } from "@/components/OImageWithLoader/OImageWithLoader";
 import OMessageModal from "@/components/OMessageModal/OMessageModal";
 import {
     EACTION_ENCOUNTERS,
@@ -28,7 +29,7 @@ import { getValidImgURI } from "@/utils/media.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
@@ -135,9 +136,9 @@ const OEncounter = (props: ISingleEncounterProps) => {
                             });
                         }}
                     >
-                        <Image
+                        <OImageWithLoader
                             style={styles.profileImage}
-                            contentFit="cover"
+                            resizeMode="cover"
                             source={{
                                 uri: getValidImgURI(
                                     encounterProfile.otherUser.imageURIs[0],

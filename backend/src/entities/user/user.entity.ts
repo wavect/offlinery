@@ -223,9 +223,6 @@ export class User
 
     @BeforeInsert()
     beforeInsert() {
-        this.verificationStatus =
-            this.approachChoice === EApproachChoice.APPROACH
-                ? EVerificationStatus.PENDING
-                : EVerificationStatus.NOT_NEEDED;
+        this.verificationStatus = EVerificationStatus.PENDING;
     }
 }

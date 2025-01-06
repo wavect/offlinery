@@ -80,7 +80,6 @@ const WaitingForVerification = ({
             type: EACTION_USER.UPDATE_MULTIPLE,
             payload: {
                 approachChoice: "be_approached",
-                verificationStatus: "not_needed",
             },
         });
 
@@ -133,8 +132,12 @@ const WaitingForVerification = ({
                             onPress={() =>
                                 navigation.dispatch(
                                     CommonActions.reset({
-                                        index: 0,
+                                        index: 1,
                                         routes: [
+                                            {
+                                                name: ROUTES.Onboarding
+                                                    .WaitingVerification,
+                                            },
                                             {
                                                 name: ROUTES.Onboarding
                                                     .BookSafetyCall,

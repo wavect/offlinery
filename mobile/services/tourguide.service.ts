@@ -3,6 +3,7 @@ import {
     UserPublicDTOIntentionsEnum,
     WeightedLatLngDTO,
 } from "@/api/gen/src";
+import { Image } from "react-native";
 
 export enum TOURKEY {
     FIND = "find",
@@ -73,7 +74,8 @@ export const MOCK_ENCOUNTER = (
             age: 27,
             firstName: "Lisa",
             imageURIs: [
-                "https://blog.offlinery.io/blogs/get-approached-as-women-e588a97a.jpg",
+                Image.resolveAssetSource(require("../assets/lisa-example.jpg"))
+                    .uri,
             ],
             intentions: [
                 UserPublicDTOIntentionsEnum.friendship,

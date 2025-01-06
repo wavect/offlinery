@@ -180,7 +180,6 @@ export type UserPrivateDTODateModeEnum =
 export const UserPrivateDTOVerificationStatusEnum = {
     verified: "verified",
     pending: "pending",
-    not_needed: "not_needed",
 } as const;
 export type UserPrivateDTOVerificationStatusEnum =
     (typeof UserPrivateDTOVerificationStatusEnum)[keyof typeof UserPrivateDTOVerificationStatusEnum];
