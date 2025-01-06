@@ -109,7 +109,7 @@ export const OEncounterList = (props: IOEncounterListProps) => {
 
     const getEncounterList = () => {
         if (encounterState.isWalkthroughRunning) {
-            return <OTourEncounter />;
+            return <OTourEncounter navigation={navigation} />;
         } else {
             return encounterState.encounters.length > 0 ? (
                 encounterState.encounters.map((encounter, idx) => (

@@ -1,9 +1,12 @@
 import { Color } from "@/GlobalStyles";
+import * as Sentry from "@sentry/react-native";
 import React, { useCallback, useState } from "react";
 import {
     ActivityIndicator,
     Image,
+    ImageErrorEventData,
     ImageProps,
+    NativeSyntheticEvent,
     StyleSheet,
     View,
 } from "react-native";
@@ -13,19 +16,26 @@ interface OImageWithLoaderProps extends ImageProps {
 }
 
 export const OImageWithLoader = (props: OImageWithLoaderProps) => {
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const handleLoadStart = useCallback(() => {
+    const handleLoadStart = () => {
         setIsLoading(true);
-    }, []);
+    };
 
-    const handleLoadEnd = useCallback(() => {
+    const handleLoadEnd = () => {
         setIsLoading(false);
-    }, []);
+    };
 
-    const handleError = useCallback(() => {
-        setIsLoading(false);
-    }, []);
+    const handleError = useCallback(
+        (err: NativeSyntheticEvent<ImageErrorEventData>) => {
+            Sentry.captureException(err, {
+                tags: {
+                    imageWithLoader: "handleError",
+                },
+            });
+        },
+        [],
+    );
 
     return (
         <View style={[styles.container, props.style]}>
