@@ -7,7 +7,11 @@ import {
 } from "@/api/gen/src";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
-import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
+import {
+    LOCAL_VALUE,
+    getLocalValue,
+    saveLocalValue,
+} from "@/services/storage.service";
 import { API } from "@/utils/api-config";
 import { CommonActions } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
@@ -21,6 +25,7 @@ export enum TokenFetchStatus {
     SUCCESS,
     ERROR,
     INVALID_DEVICE_OR_EMULATOR,
+    ALREADY_SAVED,
 }
 
 interface NotificationTokenFetchResponse {
@@ -71,6 +76,19 @@ const getExpoProjectId = () => {
 export const registerForPushNotificationsAsync = async (
     userId: string,
 ): Promise<NotificationTokenFetchResponse> => {
+    const existingPushToken: string = await getLocalValue(
+        LOCAL_VALUE.EXPO_PUSH_TOKEN,
+    );
+    if (existingPushToken) {
+        console.log(
+            "Not saving/requesting new push token as already one locally available and saved on the backend.",
+        );
+        return {
+            token: existingPushToken,
+            tokenFetchStatus: TokenFetchStatus.ALREADY_SAVED,
+        };
+    }
+
     if (Platform.OS === "android") {
         await Notifications.setNotificationChannelAsync("default", {
             name: "default",
