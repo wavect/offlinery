@@ -11,9 +11,7 @@ import {
     View,
 } from "react-native";
 
-interface OImageWithLoaderProps extends ImageProps {
-    fallbackSource?: ImageProps["source"];
-}
+interface OImageWithLoaderProps extends ImageProps {}
 
 export const OImageWithLoader = (props: OImageWithLoaderProps) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -28,7 +26,7 @@ export const OImageWithLoader = (props: OImageWithLoaderProps) => {
 
     const handleError = useCallback(
         (err: NativeSyntheticEvent<ImageErrorEventData>) => {
-            Sentry.captureException(err, {
+            Sentry.captureException(err.nativeEvent, {
                 tags: {
                     imageWithLoader: "handleError",
                 },
