@@ -2,6 +2,7 @@ import { Color, Subtitle } from "@/GlobalStyles";
 import { UserPublicDTO } from "@/api/gen/src";
 import { OBadgesOfUser } from "@/components/OBadge/OBadgesOfUser";
 import { OImageWithLoader } from "@/components/OImageWithLoader/OImageWithLoader";
+import { OLoadingSpinner } from "@/components/OLoadingCircle/OLoadingCircle";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OPageHeader } from "@/components/OPageHeader/OPageHeader";
 import { OPageHeaderEncounters } from "@/components/OPageHeader/OPageHeaderEncounters/OPageHeaderEncounters";
@@ -9,7 +10,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
 import { ROUTES } from "@/screens/routes";
 import { getValidImgURI } from "@/utils/media.utils";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
     Dimensions,
     FlatList,
@@ -18,7 +19,6 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import { useSharedValue } from "react-native-reanimated";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
@@ -29,10 +29,19 @@ const ProfileView = ({
     EncounterStackParamList,
     typeof ROUTES.Main.ProfileView
 >) => {
-    const progressValue = useSharedValue<number>(0);
     const width = Dimensions.get("window").width;
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const carouselRef = useRef<ICarouselInstance>(null);
+    const [isMounted, setIsMounted] = useState(false);
+
+    const handleProgressChange = useCallback(
+        (_: number, absoluteProgress: number) => {
+            const index =
+                Math.floor(absoluteProgress) % (user?.imageURIs?.length || 1);
+            setCurrentImageIndex(index);
+        },
+        [],
+    );
 
     const renderPreviewImage = ({
         item,
@@ -56,25 +65,37 @@ const ProfileView = ({
             </TouchableOpacity>
         );
     };
+
     const user: UserPublicDTO | undefined = route?.params?.user;
     if (!user) return <Text>{i18n.t(TR.errNoUserProvided)}</Text>;
     const bottomContainerChildren: React.ReactNode =
         route?.params?.bottomContainerChildren;
 
     useEffect(() => {
-        // @dev overrides tab nav title
+        setIsMounted(true);
         const parent = navigation.getParent();
-        parent?.setOptions({
-            headerLeft: () => (
-                <OPageHeader title={`${user.firstName}, ${user.age}`} />
-            ),
-        });
-        return () => {
-            parent?.setOptions({
-                headerLeft: () => <OPageHeaderEncounters />,
+
+        if (parent) {
+            parent.setOptions({
+                headerLeft: () => (
+                    <OPageHeader title={`${user.firstName}, ${user.age}`} />
+                ),
             });
+        }
+
+        return () => {
+            setIsMounted(false);
+            if (parent) {
+                parent.setOptions({
+                    headerLeft: () => <OPageHeaderEncounters />,
+                });
+            }
         };
-    }); // empty dep array to run it only once
+    }, [navigation, user.firstName, user.age]);
+
+    if (!isMounted) {
+        return <OLoadingSpinner />;
+    }
 
     return (
         <OPageContainer
@@ -94,13 +115,7 @@ const ProfileView = ({
                         autoPlay={false}
                         data={user.imageURIs}
                         scrollAnimationDuration={1000}
-                        onProgressChange={(_, absoluteProgress) => {
-                            progressValue.value = absoluteProgress;
-                            setCurrentImageIndex(
-                                Math.floor(absoluteProgress) %
-                                    user.imageURIs.length,
-                            );
-                        }}
+                        onProgressChange={handleProgressChange}
                         renderItem={({ item, index }) => (
                             <TouchableOpacity
                                 onPress={() => {
@@ -204,34 +219,6 @@ const styles = StyleSheet.create({
         height: "100%",
         borderRadius: 5,
     },
-    fullScreenContainer: {
-        flex: 1,
-        backgroundColor: "black",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    fullScreenImage: {
-        width: "100%",
-        height: "100%",
-    },
-    closeButton: {
-        position: "absolute",
-        top: 40,
-        right: 20,
-        zIndex: 1,
-    },
-    closeButtonInner: {
-        width: 40,
-        height: 40,
-        borderRadius: 30,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    closeButtonText: {
-        color: "white",
-        fontSize: 35,
-        fontWeight: "bold",
-    },
 });
+
 export default ProfileView;

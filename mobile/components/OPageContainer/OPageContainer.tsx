@@ -58,7 +58,13 @@ export const OPageContainer = (props: IOPageContainerProps) => {
     };
 
     return (
-        <View style={[styles.container, containerStyle]}>
+        <View
+            style={[
+                styles.container,
+                containerStyle,
+                Platform.OS === "android" ? { paddingTop: 0 } : undefined,
+            ]}
+        >
             <StatusBar
                 barStyle="dark-content"
                 translucent={true}
