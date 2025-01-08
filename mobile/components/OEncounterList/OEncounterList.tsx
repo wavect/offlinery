@@ -34,46 +34,56 @@ export const OEncounterList = (props: IOEncounterListProps) => {
     const navigation = useNavigation();
     const { state: encounterState, dispatch } = useEncountersContext();
     const { state: userState } = useUserContext();
-    const [refreshing, setRefreshing] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
 
-    const fetchEncounters = useCallback(async () => {
-        try {
-            if (!userState.id) {
-                Sentry.captureMessage(
-                    `fetchEncounters: UserId undefined. Not making request. User maybe logging out or so?`,
-                );
-                return;
-            }
-            setRefreshing(true);
-            const encounters =
-                await API.encounter.encounterControllerGetEncountersByUser({
-                    userId: userState.id,
-                    startDate: metStartDateFilter,
-                    endDate: metEndDateFilter,
+    const fetchEncounters = useCallback(
+        async (isInitialLoad = false) => {
+            try {
+                if (!userState.id) {
+                    Sentry.captureMessage(
+                        `fetchEncounters: UserId undefined. Not making request. User maybe logging out or so?`,
+                    );
+                    return;
+                }
+                if (isInitialLoad) {
+                    setRefreshing(false);
+                    setInitialLoading(true);
+                } else {
+                    setRefreshing(true);
+                }
+                const encounters =
+                    await API.encounter.encounterControllerGetEncountersByUser({
+                        userId: userState.id,
+                        startDate: metStartDateFilter,
+                        endDate: metEndDateFilter,
+                    });
+
+                dispatch({
+                    type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
+                    payload: encounters,
                 });
-
-            dispatch({
-                type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
-                payload: encounters,
-            });
-        } catch (error) {
-            console.error(error);
-            Sentry.captureException(error, {
-                tags: {
-                    encounters: "fetch",
-                },
-            });
-        } finally {
-            setRefreshing(false);
-        }
-    }, [userState.id, dispatch, metStartDateFilter, metEndDateFilter]);
+            } catch (error) {
+                console.error(error);
+                Sentry.captureException(error, {
+                    tags: {
+                        encounters: "fetch",
+                    },
+                });
+            } finally {
+                setRefreshing(false);
+                setInitialLoading(false);
+            }
+        },
+        [userState.id, dispatch, metStartDateFilter, metEndDateFilter],
+    );
 
     useEffect(() => {
-        fetchEncounters();
+        fetchEncounters(true);
     }, [fetchEncounters, metStartDateFilter, metEndDateFilter]);
 
     const onRefresh = useCallback(async () => {
-        await fetchEncounters();
+        await fetchEncounters(false);
     }, [fetchEncounters]);
 
     const handleTourOnStop = async () => {
@@ -133,7 +143,11 @@ export const OEncounterList = (props: IOEncounterListProps) => {
         }
     };
 
-    return (
+    return initialLoading ? (
+        <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={Color.gray} />
+        </View>
+    ) : (
         <ScrollView
             style={styles.encountersList}
             refreshControl={
@@ -145,13 +159,7 @@ export const OEncounterList = (props: IOEncounterListProps) => {
                 styles.emptyListContainer
             }
         >
-            {refreshing && encounterState.encounters.length === 0 ? (
-                <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color={Color.gray} />
-                </View>
-            ) : (
-                getEncounterList()
-            )}
+            {getEncounterList()}
         </ScrollView>
     );
 };
