@@ -143,6 +143,7 @@ export default function App() {
                     <UserProvider>
                         <EncountersProvider>
                             <TourGuideProvider
+                                androidStatusBarVisible={true}
                                 {...{
                                     labels: {
                                         previous: i18n.t(TR.tourPrevious),

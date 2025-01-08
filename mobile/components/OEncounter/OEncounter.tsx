@@ -29,7 +29,7 @@ import { getValidImgURI } from "@/utils/media.utils";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
@@ -385,6 +385,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: Color.lightGray,
         paddingBottom: 10,
+        marginTop: Platform.OS === "android" ? 10 : 0,
     },
     mainContent: {
         flexDirection: "row",
