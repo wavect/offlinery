@@ -185,7 +185,7 @@ export const useNotifications = ({ navigation }: IUseNotificationProps) => {
                                                 },
                                             },
                                         );
-                                        navigation?.navigate(
+                                        navigation.navigate(
                                             ROUTES.MainTabView,
                                             {
                                                 screen: ROUTES.Main.FindPeople, // default

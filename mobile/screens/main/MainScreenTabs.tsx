@@ -18,7 +18,7 @@ import FindPeople from "./FindPeople";
 import ProfileSettings from "./ProfileSettings";
 
 export const MainScreenTabs = ({ navigation }: any) => {
-    useNotifications(navigation);
+    useNotifications({ navigation });
 
     const { tourKey: tourKeyFind, start: startTourFind } =
         useTourGuideController(TOURKEY.FIND);
