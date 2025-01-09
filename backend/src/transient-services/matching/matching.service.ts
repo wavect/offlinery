@@ -1,6 +1,7 @@
 import { EncounterService } from "@/entities/encounter/encounter.service";
 import { User } from "@/entities/user/user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
+import { ClusteringService } from "@/transient-services/clustering/cluster.service";
 import { I18nTranslations } from "@/translations/i18n.generated";
 import { OfflineryNotification } from "@/types/notification-message.types";
 import {
@@ -23,6 +24,7 @@ export class MatchingService {
         private notificationService: NotificationService,
         @Inject(forwardRef(() => EncounterService))
         private encounterService: EncounterService,
+        private clusterService: ClusteringService,
     ) {}
 
     /**
@@ -36,6 +38,14 @@ export class MatchingService {
         return this.userRepository.getPotentialMatchesForHeatMap(
             userToBeApproached,
         );
+    }
+
+    public async getHeatMapClusteredPoints(userToBeApproached: User) {
+        const matches = await this.findHeatmapMatches(userToBeApproached);
+        const realPoints = matches
+            .filter((match: User) => !!match.location)
+            .map((m) => m.location);
+        return this.clusterService.getClusteredPoints(realPoints);
     }
 
     /**
