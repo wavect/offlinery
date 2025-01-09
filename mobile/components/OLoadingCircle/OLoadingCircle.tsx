@@ -1,3 +1,4 @@
+import { Color } from "@/GlobalStyles";
 import React, { useCallback, useEffect } from "react";
 import {
     Animated,
@@ -28,11 +29,10 @@ interface SpinnerStyles {
 
 const DEFAULT_DURATION = 1000;
 const DEFAULT_SIZE = 40;
-const DEFAULT_COLOR = "#0000ff";
 
 export const OLoadingSpinner: React.FC<SpinnerProps> = ({
     size = DEFAULT_SIZE,
-    color = DEFAULT_COLOR,
+    color = Color.primary,
     text,
     duration = DEFAULT_DURATION,
     textStyle,
@@ -42,6 +42,10 @@ export const OLoadingSpinner: React.FC<SpinnerProps> = ({
 }) => {
     // Initialize animation value
     const spinValue = React.useRef(new Animated.Value(0)).current;
+
+    // Calculate border width and radius based on size
+    const borderWidth = Math.max(2, Math.floor(size * 0.1)); // 10% of size, minimum 2
+    const borderRadius = size / 2; // Half of size to create perfect circle
 
     // Animation setup
     const startSpinning = useCallback(() => {
@@ -82,6 +86,8 @@ export const OLoadingSpinner: React.FC<SpinnerProps> = ({
                     {
                         width: size,
                         height: size,
+                        borderWidth,
+                        borderRadius,
                         borderTopColor: color,
                         transform: [{ rotate: spin }],
                     },
@@ -117,8 +123,6 @@ const styles = StyleSheet.create<SpinnerStyles>({
         backgroundColor: "transparent",
     },
     spinner: {
-        borderWidth: 4,
-        borderRadius: 25,
         borderRightColor: "#00000001",
         borderLeftColor: "#00000001",
         borderBottomColor: "#00000001",

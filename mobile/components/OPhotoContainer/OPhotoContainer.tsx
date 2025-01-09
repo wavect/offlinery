@@ -24,6 +24,8 @@ interface IPhotoContainerProps {
     requestMediaLibPermission: () => Promise<ImagePicker.MediaLibraryPermissionResponse>;
 }
 
+/** @dev This component is mostly used for the user's own images and uploading new ones.
+ * To display a regular image either use <Image/> directly or use our <ImageWithLoader /> component.*/
 export const PhotoContainer = (props: IPhotoContainerProps) => {
     const {
         dispatch,

@@ -33,14 +33,15 @@ const ProfileView = ({
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const carouselRef = useRef<ICarouselInstance>(null);
     const [isMounted, setIsMounted] = useState(false);
+    const [validImageURIs, setValidImageURIs] = useState<string[]>([]);
 
     const handleProgressChange = useCallback(
         (_: number, absoluteProgress: number) => {
             const index =
-                Math.floor(absoluteProgress) % (user?.imageURIs?.length || 1);
+                Math.floor(absoluteProgress) % (validImageURIs.length || 1);
             setCurrentImageIndex(index);
         },
-        [],
+        [validImageURIs.length],
     );
 
     const renderPreviewImage = ({
@@ -75,6 +76,12 @@ const ProfileView = ({
         setIsMounted(true);
         const parent = navigation.getParent();
 
+        // Validate and filter image URIs
+        if (user.imageURIs) {
+            const validURIs = user.imageURIs.map(getValidImgURI);
+            setValidImageURIs(validURIs);
+        }
+
         if (parent) {
             parent.setOptions({
                 headerLeft: () => (
@@ -91,11 +98,39 @@ const ProfileView = ({
                 });
             }
         };
-    }, [navigation, user.firstName, user.age]);
+    }, [navigation, user.firstName, user.age, user.imageURIs]);
 
     if (!isMounted) {
         return <OLoadingSpinner />;
     }
+
+    const renderCarouselItem = ({
+        item,
+        index,
+    }: {
+        item: string;
+        index: number;
+    }) => {
+        return (
+            <TouchableOpacity
+                onPress={() => {
+                    setCurrentImageIndex(index);
+                }}
+                style={styles.touchableContainer}
+            >
+                <OImageWithLoader
+                    source={{ uri: item }}
+                    style={styles.carouselImage}
+                    onError={(error) => {
+                        console.warn(
+                            `Image loading error for URI ${item}:`,
+                            error,
+                        );
+                    }}
+                />
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <OPageContainer
@@ -106,46 +141,31 @@ const ProfileView = ({
             <Text style={[Subtitle, { marginTop: 6 }]}>{user.bio}</Text>
 
             <View style={styles.carouselContainer}>
-                {user.imageURIs?.length > 1 ? (
+                {validImageURIs.length > 1 ? (
                     <Carousel
                         ref={carouselRef}
                         loop
                         width={width - 32}
                         height={(width - 32) * 0.8}
                         autoPlay={false}
-                        data={user.imageURIs}
+                        data={validImageURIs}
                         scrollAnimationDuration={1000}
                         onProgressChange={handleProgressChange}
-                        renderItem={({ item, index }) => (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setCurrentImageIndex(index);
-                                }}
-                            >
-                                <OImageWithLoader
-                                    source={{ uri: item }}
-                                    style={styles.carouselImage}
-                                />
-                            </TouchableOpacity>
-                        )}
+                        renderItem={renderCarouselItem}
                     />
+                ) : validImageURIs.length === 1 ? (
+                    renderCarouselItem({ item: validImageURIs[0], index: 0 })
                 ) : (
-                    <TouchableOpacity
-                        style={styles.touchableContainer}
-                        onPress={() => {
-                            setCurrentImageIndex(0);
-                        }}
-                    >
+                    <View style={styles.touchableContainer}>
                         <OImageWithLoader
-                            source={{ uri: getValidImgURI(user.imageURIs[0]) }}
                             style={styles.carouselImage}
                             resizeMode="cover"
                         />
-                    </TouchableOpacity>
+                    </View>
                 )}
-                {user.imageURIs.length > 1 && (
+                {validImageURIs.length > 1 && (
                     <View style={styles.paginationContainer}>
-                        {user.imageURIs.map((_, index) => (
+                        {validImageURIs.map((_, index) => (
                             <TouchableOpacity
                                 key={index}
                                 style={[
@@ -163,9 +183,9 @@ const ProfileView = ({
                 )}
             </View>
 
-            {user.imageURIs.length > 2 && (
+            {validImageURIs.length > 2 && (
                 <FlatList
-                    data={user.imageURIs}
+                    data={validImageURIs}
                     renderItem={renderPreviewImage}
                     keyExtractor={(item, index) => index.toString()}
                     horizontal={false}

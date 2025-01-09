@@ -1,24 +1,26 @@
-import { Color } from "@/GlobalStyles";
+import { OLoadingSpinner } from "@/components/OLoadingCircle/OLoadingCircle";
+import { ImageLoadError } from "@/utils/svg-inline.registry";
 import * as Sentry from "@sentry/react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-    ActivityIndicator,
     Image,
     ImageErrorEventData,
     ImageProps,
+    ImageURISource,
     NativeSyntheticEvent,
+    Platform,
     StyleSheet,
     View,
 } from "react-native";
 
-interface OImageWithLoaderProps extends ImageProps {}
+interface OImageWithLoaderProps extends ImageProps {
+    showLoadingIndicator?: boolean;
+    source?: ImageURISource;
+}
 
 export const OImageWithLoader = (props: OImageWithLoaderProps) => {
     const [isLoading, setIsLoading] = useState(true);
-
-    const handleLoadStart = () => {
-        setIsLoading(true);
-    };
+    const [hasError, setHasError] = useState(false);
 
     const handleLoadEnd = () => {
         setIsLoading(false);
@@ -31,24 +33,43 @@ export const OImageWithLoader = (props: OImageWithLoaderProps) => {
                     imageWithLoader: "handleError",
                 },
             });
+            setIsLoading(false);
+            setHasError(true);
         },
         [],
     );
 
+    // Pre-load the image on iOS
+    useEffect(() => {
+        if (
+            Platform.OS === "ios" &&
+            typeof props.source === "object" &&
+            props.source?.uri
+        ) {
+            Image.prefetch(props.source?.uri).catch(() => {
+                setIsLoading(false);
+                setHasError(true);
+            });
+        }
+    }, [props.source]);
+
     return (
         <View style={[styles.container, props.style]}>
+            {hasError ? (
+                <ImageLoadError />
+            ) : (
+                <Image
+                    {...props}
+                    style={[styles.image, props.style]}
+                    onLoadEnd={handleLoadEnd}
+                    onError={handleError}
+                />
+            )}
             {isLoading && (
                 <View style={styles.loaderContainer}>
-                    <ActivityIndicator size="large" color={Color.primary} />
+                    <OLoadingSpinner />
                 </View>
             )}
-            <Image
-                {...props}
-                style={[styles.image, props.style]}
-                onLoadStart={handleLoadStart}
-                onLoadEnd={handleLoadEnd}
-                onError={handleError}
-            />
         </View>
     );
 };
