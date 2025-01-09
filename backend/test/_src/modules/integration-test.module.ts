@@ -13,7 +13,6 @@ import { UserReportModule } from "@/entities/user-report/user-report.module";
 import { User } from "@/entities/user/user.entity";
 import { UserModule } from "@/entities/user/user.module";
 import { UserRepository } from "@/entities/user/user.repository";
-import { ClusteringModule } from "@/transient-services/clustering/clustering.module";
 import { MatchingModule } from "@/transient-services/matching/matching.module";
 import { TYPED_ENV } from "@/utils/env.utils";
 import { MailerModule } from "@nestjs-modules/mailer";
@@ -44,6 +43,9 @@ class MockAuthModule {}
 @Module({})
 class MockMatchingModule {}
 
+@Module({})
+class MockClusteringModule {}
+
 export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
     const module: TestingModule = await Test.createTestingModule({
         imports: [
@@ -73,7 +75,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
             MockAuthModule,
             UserReportModule,
             MapModule,
-            ClusteringModule,
+            MockClusteringModule,
             MockMatchingModule,
             UserFeedbackModule,
             PendingUserModule,
