@@ -1,6 +1,7 @@
 import { EncounterService } from "@/entities/encounter/encounter.service";
 import { User } from "@/entities/user/user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
+import { ClusteringService } from "@/transient-services/clustering/cluster.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { EDateMode } from "@/types/user.types";
@@ -41,6 +42,10 @@ describe("MatchingService", () => {
                     useValue: {
                         saveEncountersForUser: jest.fn(),
                     },
+                },
+                {
+                    provide: ClusteringService,
+                    useValue: {},
                 },
             ],
         }).compile();

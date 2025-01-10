@@ -1,4 +1,5 @@
 import { i18nLngModule } from "@/app.module.configuration";
+import { AuthModule } from "@/auth/auth.module";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { EncounterModule } from "@/entities/encounter/encounter.module";
@@ -18,7 +19,7 @@ import { MatchingModule } from "@/transient-services/matching/matching.module";
 import { TYPED_ENV } from "@/utils/env.utils";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
-import { forwardRef, Module } from "@nestjs/common";
+import { forwardRef } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken, TypeOrmModule } from "@nestjs/typeorm";
 import { join } from "path";
@@ -36,16 +37,6 @@ interface TestModuleSetup {
     dataSource: DataSource;
     factories: FactoryPair;
 }
-
-// Create mock modules to break circular dependencies
-@Module({})
-class MockAuthModule {}
-
-@Module({})
-class MockMatchingModule {}
-
-@Module({})
-class MockClusteringModule {}
 
 export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
     const module: TestingModule = await Test.createTestingModule({
@@ -73,14 +64,13 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
                 migrationsRun: true,
             }),
             UserModule,
-            MockAuthModule,
             UserReportModule,
             MapModule,
-            MockClusteringModule,
-            MockMatchingModule,
             UserFeedbackModule,
             PendingUserModule,
             EncounterModule,
+            ClusteringModule,
+            forwardRef(() => AuthModule),
             forwardRef(() => MatchingModule),
             forwardRef(() => ClusteringModule),
             MailerModule.forRoot({
