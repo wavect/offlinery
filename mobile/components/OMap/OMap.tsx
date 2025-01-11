@@ -24,10 +24,18 @@ import React, {
     useRef,
     useState,
 } from "react";
-import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import {
+    Dimensions,
+    StyleSheet,
+    Text,
+    TouchableWithoutFeedback,
+    View,
+} from "react-native";
 import BackgroundGeolocation from "react-native-background-geolocation";
 import MapView, { LongPressEvent, Region } from "react-native-maps";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
+import OCard from "../OCard/OCard";
 
 interface OMapProps {
     saveChangesToBackend: boolean;
@@ -35,7 +43,7 @@ interface OMapProps {
     showBlacklistedRegions: boolean;
 }
 
-const DEFAULT_RADIUS_SIZE = 1000;
+const DEFAULT_RADIUS_SIZE = 250;
 
 export const OMap = (props: OMapProps) => {
     const { saveChangesToBackend, showHeatmap, showBlacklistedRegions } = props;
@@ -210,15 +218,17 @@ export const OMap = (props: OMapProps) => {
                 zone={3}
                 tourKey={TOURKEY.FIND}
                 text={i18n.t(TR.tourSafeZones)}
+                tooltipBottomOffset={-200}
                 shape="rectangle"
             >
-                <View style={styles.container}>
-                    <TourGuideZone
-                        zone={2}
-                        tourKey={TOURKEY.FIND}
-                        text={i18n.t(TR.tourHeatMap)}
-                        shape="rectangle"
-                    >
+                <TourGuideZone
+                    zone={2}
+                    tourKey={TOURKEY.FIND}
+                    text={i18n.t(TR.tourHeatMap)}
+                    tooltipBottomOffset={-200}
+                    shape="rectangle"
+                >
+                    <View style={styles.container}>
                         <MapView
                             style={styles.map}
                             region={mapRegion}
@@ -248,33 +258,33 @@ export const OMap = (props: OMapProps) => {
                             {showBlacklistedRegions &&
                                 renderedBlacklistedRegions}
                         </MapView>
-                    </TourGuideZone>
-                    {showBlacklistedRegions && activeRegionIndex !== null && (
-                        <OFloatingActionButton
-                            size="xs"
-                            style={styles.fab}
-                            icon="delete-outline"
-                            action={() => handleRemoveRegion()}
-                            color={Color.red}
-                        />
-                    )}
-                    {showBlacklistedRegions && (
-                        <View style={styles.instructions}>
-                            <Text style={[Subtitle, styles.instructionText]}>
-                                {i18n.t(TR.longPressMapSafeZoneInstruction)}
-                            </Text>
-                        </View>
-                    )}
-                    {showBlacklistedRegions && activeRegionIndex !== null && (
-                        <View style={styles.sliderContainer}>
-                            <Text style={[Subtitle, styles.sliderText]}>
-                                {i18n.t(TR.adjustRegionRadius)} (
-                                {Math.round(
-                                    state.blacklistedRegions[activeRegionIndex]
-                                        ?.radius,
-                                )}
-                                m)
-                            </Text>
+                    </View>
+                </TourGuideZone>
+
+                {showBlacklistedRegions && activeRegionIndex !== null && (
+                    <SafeAreaView
+                        edges={["bottom", "right", "left"]}
+                        style={styles.overlay}
+                    >
+                        <OCard style={styles.controlsCard}>
+                            <View style={styles.controlsHeader}>
+                                <Text style={[Subtitle, styles.sliderText]}>
+                                    {i18n.t(TR.adjustRegionRadius)} (
+                                    {Math.round(
+                                        state.blacklistedRegions[
+                                            activeRegionIndex
+                                        ]?.radius,
+                                    )}
+                                    m)
+                                </Text>
+                                <OFloatingActionButton
+                                    size="xs"
+                                    icon="delete-outline"
+                                    position="right"
+                                    action={handleRemoveRegion}
+                                    color={Color.red}
+                                />
+                            </View>
                             <Slider
                                 style={styles.slider}
                                 minimumValue={100}
@@ -283,29 +293,25 @@ export const OMap = (props: OMapProps) => {
                                 value={tempSliderValue}
                                 onValueChange={handleRadiusChange}
                             />
-                        </View>
-                    )}
-                </View>
+                        </OCard>
+                    </SafeAreaView>
+                )}
             </TourGuideZone>
         </TouchableWithoutFeedback>
     );
 };
 
+const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        position: "relative",
-    },
-    fab: {
-        position: "absolute",
-        top: 10,
-        left: 10,
-        zIndex: 1000,
-    },
     map: {
-        width: "100%",
         minHeight: 400,
         borderRadius: BorderRadius.br_5xs,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width,
+        height,
+        backgroundColor: Color.white,
     },
     instructions: {
         marginTop: 20,
@@ -314,18 +320,39 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         fontSize: FontSize.size_sm,
     },
-    sliderContainer: {
-        marginTop: 20,
+    controlsCard: {
+        position: "absolute",
+        bottom: 20,
+        left: 20,
+        right: 20,
+        padding: 16,
+    },
+    controlsHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 10,
     },
     sliderText: {
         fontSize: FontSize.size_md,
-        marginBottom: 5,
+        flex: 1,
+        marginRight: 16,
     },
     slider: {
         width: "100%",
     },
-    sliderValue: {
-        color: Color.white,
-        textAlign: "center",
+    overlay: {
+        position: "absolute",
+        top: height / 1.5,
+        left: 0,
+        right: 0,
+        zIndex: 1,
+    },
+    container: {
+        flex: 1,
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        minHeight: height * 0.75,
     },
 });

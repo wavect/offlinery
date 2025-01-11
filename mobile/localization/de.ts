@@ -105,8 +105,6 @@ export const de: Language = {
         "An welchen Orten möchtest du nicht angesprochen werden? Dein Fitnessstudio, Arbeitsplatz?",
     youAreUndercover: "Du bist undercover",
     nobodyWillSeeYou: "Niemand wird dich hier sehen.",
-    longPressMapSafeZoneInstruction:
-        "Lange tippen, um eine Sicherheitszone hinzuzufügen. Tippe auf eine Region, um deinen Radius anzupassen.",
     adjustRegionRadius: "Regionradius anpassen",
     whatIsYourEmail: "Was ist deine E-Mail?",
     whatIsYourEmailDescr:
@@ -181,7 +179,9 @@ export const de: Language = {
     weMetFrom: "Wir haben uns getroffen von",
     toThisDate: "bis zu diesem Datum",
     beNearTheseHotspotsToMeet:
-        "In der Nähe dieser Hotspots zu sein erhöht deine Chancen, deine bessere Hälfte zu treffen.",
+        "In der Nähe dieser Hotspots zu sein erhöht deine Chancen, Jemanden zu treffen.",
+    safeZonesToHide:
+        "Länger auf die Map klicken, um Zonen zu erstellen an denen du niemanden treffen möchtest.",
     wasSeenNear: "nahe", // OF-233 adapt to geofencing
     reportPerson: "Person melden",
     meetIRL: "Im echten Leben treffen",
@@ -325,9 +325,9 @@ export const de: Language = {
     tourToggle:
         "Aktiviere diesen Toggle, um im echten Leben angesprochen zu werden oder anzusprechen. Du musst Nichts weiter machen, du musst nur warten.",
     tourHeatMap:
-        "Die Heatmap zeigt dir wohin du gehen kannst, um deine Chancen zu verbessern Jemanden passend zu deinen Einstellungen zu treffen. Die Heatmap zeigt wo sich viele User in den letzten 6 Stunden aufgehalten haben.",
+        "Die Heatmap zeigt dir wohin du gehen kannst, um deine Chancen zu erhöhen Jemand passenden zu treffen.",
     tourSafeZones:
-        "Es gibt Orte an denen man sich meist nicht wohl fühlt jemanden zu treffen. Drücke für 2 Sekunden auf die Map um Sicherheitszonen zu erstellen, wie zum Beispiel deine Arbeit, dein Fitnessstudio oder deine Nachbarschaft.",
+        "Es gibt Orte an denen man sich meist nicht wohl fühlt Jemanden zu treffen. Drücke für 2 Sekunden auf die Map um Sicherheitszonen zu erstellen, wie zum Beispiel deine Arbeit oder Nachbarschaft.",
     tourPrevious: "Zurück",
     tourNext: "Weiter",
     tourSkip: "Überspringen",
