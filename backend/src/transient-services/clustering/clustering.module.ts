@@ -1,10 +1,9 @@
 import { EncounterModule } from "@/entities/encounter/encounter.module";
 import { ClusteringService } from "@/transient-services/clustering/cluster.service";
-import { Module } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { forwardRef, Module } from "@nestjs/common";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([]), EncounterModule],
+    imports: [forwardRef(() => EncounterModule)],
     providers: [ClusteringService],
     controllers: [],
     exports: [ClusteringService],
