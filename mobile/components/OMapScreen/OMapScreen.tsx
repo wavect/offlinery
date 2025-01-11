@@ -2,7 +2,7 @@ import { Color, FontSize } from "@/GlobalStyles";
 import OCard from "@/components/OCard/OCard";
 import { OMap } from "@/components/OMap/OMap";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 interface IOMapScreenProps {
@@ -23,7 +23,12 @@ const OMapScreen = ({
     bottomChildren,
 }: IOMapScreenProps) => {
     return (
-        <View style={styles.container}>
+        <View
+            style={[
+                styles.container,
+                Platform.OS === "android" ? { marginTop: -15 } : undefined,
+            ]}
+        >
             <SafeAreaView edges={["right", "left"]} style={styles.overlay}>
                 <OMap
                     saveChangesToBackend={saveChangesToBackend}
@@ -37,7 +42,14 @@ const OMapScreen = ({
                     edges={["top", "right", "left"]}
                     style={styles.overlay}
                 >
-                    <View style={styles.topContent}>
+                    <View
+                        style={[
+                            styles.topContent,
+                            Platform.OS === "android"
+                                ? { marginTop: 6 }
+                                : undefined,
+                        ]}
+                    >
                         <OCard dismissable={true}>
                             <Text style={styles.subtitle}>{subtitle}</Text>
                         </OCard>
@@ -73,7 +85,6 @@ const styles = StyleSheet.create({
     },
     topContent: {
         marginHorizontal: 16,
-        marginTop: 2,
     },
     subtitle: {
         fontSize: FontSize.size_sm,
