@@ -26,10 +26,8 @@ export type Language = typeof en;
 export const TR = createDeepKeyMirror(en);
 
 export const getLocalLanguageID = (): CreateUserDTOPreferredLanguageEnum => {
-    return (
-        (i18n.locale as CreateUserDTOPreferredLanguageEnum) ??
-        CreateUserDTOPreferredLanguageEnum.en
-    );
+    const locale = i18n.locale as CreateUserDTOPreferredLanguageEnum;
+    return locale in languages ? locale : CreateUserDTOPreferredLanguageEnum.en;
 };
 
 /** @dev Creates a key mirror, key=value, e.g. createValue: "createValue", etc. to reference in code */
