@@ -216,21 +216,21 @@ export const OMap = (props: OMapProps) => {
     return (
         <View style={styles.container}>
             <TouchableWithoutFeedback onPress={handleMapPress}>
-                <View style={styles.mapContainer}>
+                <TourGuideZone
+                    zone={3}
+                    tourKey={TOURKEY.FIND}
+                    text={i18n.t(TR.tourSafeZones)}
+                    tooltipBottomOffset={-200}
+                    shape="rectangle"
+                >
                     <TourGuideZone
-                        zone={3}
+                        zone={2}
                         tourKey={TOURKEY.FIND}
-                        text={i18n.t(TR.tourSafeZones)}
+                        text={i18n.t(TR.tourHeatMap)}
                         tooltipBottomOffset={-200}
                         shape="rectangle"
                     >
-                        <TourGuideZone
-                            zone={2}
-                            tourKey={TOURKEY.FIND}
-                            text={i18n.t(TR.tourHeatMap)}
-                            tooltipBottomOffset={-200}
-                            shape="rectangle"
-                        >
+                        <View style={styles.mapContainer}>
                             <MapView
                                 style={styles.map}
                                 region={mapRegion}
@@ -260,9 +260,9 @@ export const OMap = (props: OMapProps) => {
                                 {showBlacklistedRegions &&
                                     renderedBlacklistedRegions}
                             </MapView>
-                        </TourGuideZone>
+                        </View>
                     </TourGuideZone>
-                </View>
+                </TourGuideZone>
             </TouchableWithoutFeedback>
 
             {showBlacklistedRegions && activeRegionIndex !== null && (
@@ -338,13 +338,13 @@ const styles = StyleSheet.create({
         flex: 1,
         width: "100%",
         height: "100%",
-        position: "relative",
-        minHeight: height * 0.75,
     },
     mapContainer: {
         flex: 1,
         width: "100%",
         height: "100%",
+        position: "relative",
+        minHeight: height * 0.75,
     },
     map: {
         minHeight: 400,
