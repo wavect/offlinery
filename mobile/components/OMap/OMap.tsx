@@ -212,95 +212,90 @@ export const OMap = (props: OMapProps) => {
         [state.blacklistedRegions, activeRegionIndex, handleRegionPress],
     );
 
-    console.log(showBlacklistedRegions && activeRegionIndex !== null);
-
     return (
         <TouchableWithoutFeedback onPress={handleMapPress}>
             <TourGuideZone
                 zone={3}
                 tourKey={TOURKEY.FIND}
                 text={i18n.t(TR.tourSafeZones)}
+                tooltipBottomOffset={-200}
                 shape="rectangle"
-                style={styles.tourGuideContainer}
             >
-                <View style={styles.container}>
-                    <TourGuideZone
-                        zone={2}
-                        tourKey={TOURKEY.FIND}
-                        text={i18n.t(TR.tourHeatMap)}
-                        shape="rectangle"
-                        maskOffset={1000}
-                        style={styles.tourGuideContainer}
-                    >
-                        <View style={styles.mapContainer}>
-                            <MapView
-                                style={styles.map}
-                                region={mapRegion}
-                                initialRegion={mapRegion}
-                                showsMyLocationButton={true}
-                                showsUserLocation={true}
-                                zoomControlEnabled={true}
-                                zoomEnabled={true}
-                                zoomTapEnabled={true}
-                                maxZoomLevel={15}
-                                minZoomLevel={8}
-                                onPress={handleMapPress}
-                                onLongPress={
-                                    showBlacklistedRegions
-                                        ? handleMapLongPress
-                                        : undefined
-                                }
-                                provider={getMapProvider()}
-                            >
-                                <OHeatMap
-                                    showMap={showHeatmap}
-                                    currentMapRegion={mapRegion}
-                                    userId={state.id}
-                                    datingMode={state.dateMode}
-                                />
-
-                                {showBlacklistedRegions &&
-                                    renderedBlacklistedRegions}
-                            </MapView>
-                        </View>
-                    </TourGuideZone>
-
-                    {showBlacklistedRegions && activeRegionIndex !== null && (
-                        <SafeAreaView
-                            edges={["bottom", "right", "left"]}
-                            style={styles.overlay}
+                <TourGuideZone
+                    zone={2}
+                    tourKey={TOURKEY.FIND}
+                    text={i18n.t(TR.tourHeatMap)}
+                    tooltipBottomOffset={-200}
+                    shape="rectangle"
+                >
+                    <View style={styles.container}>
+                        <MapView
+                            style={styles.map}
+                            region={mapRegion}
+                            initialRegion={mapRegion}
+                            showsMyLocationButton={true}
+                            showsUserLocation={true}
+                            zoomControlEnabled={true}
+                            zoomEnabled={true}
+                            zoomTapEnabled={true}
+                            maxZoomLevel={15}
+                            minZoomLevel={8}
+                            onPress={handleMapPress}
+                            onLongPress={
+                                showBlacklistedRegions
+                                    ? handleMapLongPress
+                                    : undefined
+                            }
+                            provider={getMapProvider()}
                         >
-                            <OCard style={styles.controlsCard}>
-                                <View style={styles.controlsHeader}>
-                                    <Text style={[Subtitle, styles.sliderText]}>
-                                        {i18n.t(TR.adjustRegionRadius)} (
-                                        {Math.round(
-                                            state.blacklistedRegions[
-                                                activeRegionIndex
-                                            ]?.radius,
-                                        )}
-                                        m)
-                                    </Text>
-                                    <OFloatingActionButton
-                                        size="xs"
-                                        icon="delete-outline"
-                                        position="right"
-                                        action={handleRemoveRegion}
-                                        color={Color.red}
-                                    />
-                                </View>
-                                <Slider
-                                    style={styles.slider}
-                                    minimumValue={100}
-                                    maximumValue={2000}
-                                    step={10}
-                                    value={tempSliderValue}
-                                    onValueChange={handleRadiusChange}
+                            <OHeatMap
+                                showMap={showHeatmap}
+                                currentMapRegion={mapRegion}
+                                userId={state.id}
+                                datingMode={state.dateMode}
+                            />
+
+                            {showBlacklistedRegions &&
+                                renderedBlacklistedRegions}
+                        </MapView>
+                    </View>
+                </TourGuideZone>
+
+                {showBlacklistedRegions && activeRegionIndex !== null && (
+                    <SafeAreaView
+                        edges={["bottom", "right", "left"]}
+                        style={styles.overlay}
+                    >
+                        <OCard style={styles.controlsCard}>
+                            <View style={styles.controlsHeader}>
+                                <Text style={[Subtitle, styles.sliderText]}>
+                                    {i18n.t(TR.adjustRegionRadius)} (
+                                    {Math.round(
+                                        state.blacklistedRegions[
+                                            activeRegionIndex
+                                        ]?.radius,
+                                    )}
+                                    m)
+                                </Text>
+                                <OFloatingActionButton
+                                    size="xs"
+                                    icon="delete-outline"
+                                    position="right"
+                                    action={handleRemoveRegion}
+                                    color={Color.red}
                                 />
-                            </OCard>
-                        </SafeAreaView>
-                    )}
-                </View>
+                            </View>
+                            <Slider
+                                style={styles.slider}
+                                minimumValue={100}
+                                maximumValue={2000}
+                                step={10}
+                                value={tempSliderValue}
+                                onValueChange={handleRadiusChange}
+                            />
+                        </OCard>
+                    </SafeAreaView>
+                )}
             </TourGuideZone>
         </TouchableWithoutFeedback>
     );
@@ -308,10 +303,6 @@ export const OMap = (props: OMapProps) => {
 
 const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        position: "relative",
-    },
     map: {
         minHeight: 400,
         borderRadius: BorderRadius.br_5xs,
@@ -357,14 +348,11 @@ const styles = StyleSheet.create({
         right: 0,
         zIndex: 1,
     },
-    tourGuideContainer: {
+    container: {
         flex: 1,
         width: "100%",
         height: "100%",
-    },
-    mapContainer: {
-        flex: 1,
-        width: "100%",
-        height: "100%",
+        position: "relative",
+        minHeight: height * 0.75,
     },
 });

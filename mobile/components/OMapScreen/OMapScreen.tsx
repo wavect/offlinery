@@ -24,11 +24,13 @@ const OMapScreen = ({
 }: IOMapScreenProps) => {
     return (
         <View style={styles.container}>
-            <OMap
-                saveChangesToBackend={saveChangesToBackend}
-                showHeatmap={showHeatmap}
-                showBlacklistedRegions={showBlacklistedRegions}
-            />
+            <SafeAreaView edges={["right", "left"]} style={styles.overlay}>
+                <OMap
+                    saveChangesToBackend={saveChangesToBackend}
+                    showHeatmap={showHeatmap}
+                    showBlacklistedRegions={showBlacklistedRegions}
+                />
+            </SafeAreaView>
 
             {subtitle && (
                 <SafeAreaView
