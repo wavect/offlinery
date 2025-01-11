@@ -43,7 +43,7 @@ interface OMapProps {
     showBlacklistedRegions: boolean;
 }
 
-const DEFAULT_RADIUS_SIZE = 1000;
+const DEFAULT_RADIUS_SIZE = 250;
 
 export const OMap = (props: OMapProps) => {
     const { saveChangesToBackend, showHeatmap, showBlacklistedRegions } = props;
