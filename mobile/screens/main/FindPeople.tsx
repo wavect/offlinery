@@ -1,5 +1,4 @@
-import { OMap } from "@/components/OMap/OMap";
-import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import OMapScreen from "@/components/OMapScreen/OMapScreen";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { ROUTES } from "@/screens/routes";
@@ -13,13 +12,13 @@ const FindPeople = (
     >,
 ) => {
     return (
-        <OPageContainer subtitle={i18n.t(TR.beNearTheseHotspotsToMeet)}>
-            <OMap
-                saveChangesToBackend={true}
-                showHeatmap={true}
-                showBlacklistedRegions={true}
-            />
-        </OPageContainer>
+        <OMapScreen
+            subtitle={i18n.t(TR.beNearTheseHotspotsToMeet)}
+            subtitle2={i18n.t(TR.safeZonesToHide)}
+            showHeatmap={true}
+            showBlacklistedRegions={true}
+            saveChangesToBackend={true}
+        />
     );
 };
 

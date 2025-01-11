@@ -15,7 +15,7 @@ interface OFloatingActionButtonProps {
     action: () => void;
     color: string;
     style?: ViewStyle;
-    position?: "bottomRight" | "bottomLeft" | "topRight" | "topLeft";
+    position?: "bottomRight" | "bottomLeft" | "topRight" | "topLeft" | "right";
     size: "md" | "xs";
 }
 
@@ -31,6 +31,10 @@ export const OFloatingActionButton: React.FC<OFloatingActionButtonProps> = ({
 }) => {
     const getPositionStyle = (): ViewStyle => {
         switch (position) {
+            case "right":
+                return {
+                    right: width * positionDistance,
+                };
             case "bottomRight":
                 return {
                     bottom: height * positionDistance,

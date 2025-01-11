@@ -100,8 +100,6 @@ export const en = {
         "What are spots you don't want to be approached at? Your gym, workplace?",
     youAreUndercover: "You're undercover",
     nobodyWillSeeYou: "Nobody will see you here.",
-    longPressMapSafeZoneInstruction:
-        "Long press on the map to add a circular region. Tap a region to select it and adjust its radius.",
     adjustRegionRadius: "Adjust Region Radius",
     whatIsYourEmail: "What's your email?",
     whatIsYourEmailDescr:
@@ -181,7 +179,9 @@ export const en = {
     weMetFrom: "We met from",
     toThisDate: "to this date",
     beNearTheseHotspotsToMeet:
-        "Being near these hotspots increases your odds of meeting your soulmate.",
+        "Being near these hotspots increases your odds of meeting someone.",
+    safeZonesToHide:
+        "Long press on the map to create areas you don't want to meet people.",
     wasSeenNear: " near ", // OF-233 adapt to geofencing
     reportPerson: "Report person",
     meetIRL: "Meet in IRL",
@@ -322,9 +322,9 @@ export const en = {
     tourToggle:
         "Switch this on to be approached or to approach in real life. There is nothing else to do, it just takes time.",
     tourHeatMap:
-        "This heatmap shows you where to go to increase your odds of meeting someone who matches your preferences. Within the last 6 hours lots of users have been around there.",
+        "This heatmap shows you where to go to increase your odds of meeting someone who matches your preferences.",
     tourSafeZones:
-        "There are usually areas you don't feel comfortable meeting someone. Press for 2 seconds on the map to create safe zones for work, your gym or your neighbourhood for example.",
+        "There are usually areas you don't feel comfortable meeting someone. Long press on the map to create safe zones for work or your neighbourhood for example.",
     tourPrevious: "Previous",
     tourNext: "Next",
     tourSkip: "Skip",

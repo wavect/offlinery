@@ -3,8 +3,7 @@ import { NativeStackScreenProps } from "react-native-screens/native-stack";
 
 import { MainStackParamList } from "@/MainStack.navigator";
 import { OButtonWide } from "@/components/OButtonWide/OButtonWide";
-import { OMap } from "@/components/OMap/OMap";
-import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import OMapScreen from "@/components/OMapScreen/OMapScreen";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { saveOnboardingState } from "@/services/storage.service";
@@ -25,9 +24,12 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
     }, []);
 
     return (
-        <OPageContainer
+        <OMapScreen
             subtitle={i18n.t(TR.whatAreSpotsToNotApproachYou)}
-            bottomContainerChildren={
+            showHeatmap={false}
+            showBlacklistedRegions={true}
+            saveChangesToBackend={false}
+            bottomChildren={
                 <OButtonWide
                     text={i18n.t(TR.continue)}
                     filled={true}
@@ -37,13 +39,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
                     }
                 />
             }
-        >
-            <OMap
-                saveChangesToBackend={false}
-                showHeatmap={false}
-                showBlacklistedRegions={true}
-            />
-        </OPageContainer>
+        />
     );
 };
 
