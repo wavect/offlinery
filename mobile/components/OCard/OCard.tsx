@@ -42,6 +42,7 @@ const OCard = ({
 
     return (
         <Animated.View
+            pointerEvents="box-none"
             style={[
                 styles.card,
                 style,
