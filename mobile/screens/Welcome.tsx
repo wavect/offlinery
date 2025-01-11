@@ -18,7 +18,6 @@ import {
     getLocalValue,
     saveJWTValues,
 } from "@/services/storage.service";
-import { OBackgroundLocationService } from "@/tasks/location.task";
 import { API } from "@/utils/api-config";
 import { writeSupportEmail } from "@/utils/misc.utils";
 import { CommonActions, useFocusEffect } from "@react-navigation/native";
@@ -43,7 +42,6 @@ const Welcome = ({
             );
             if (!accessToken) {
                 console.log("forcing re-login");
-                await OBackgroundLocationService.getInstance().stop();
                 return;
             }
             const resp = await API.auth.authControllerSignInByJWT({
@@ -56,7 +54,6 @@ const Welcome = ({
             ) {
                 /** @DEV only reset storage if invalid jwt received */
                 await saveJWTValues("", "");
-                await OBackgroundLocationService.getInstance().stop();
             }
 
             await deleteOnboardingState();
