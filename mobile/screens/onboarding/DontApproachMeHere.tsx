@@ -27,6 +27,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
         <OMapScreen
             subtitle={i18n.t(TR.whatAreSpotsToNotApproachYou)}
             showHeatmap={false}
+            showMapStatus={false}
             showBlacklistedRegions={true}
             saveChangesToBackend={false}
             bottomChildren={

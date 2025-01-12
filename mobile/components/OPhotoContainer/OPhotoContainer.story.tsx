@@ -160,7 +160,7 @@ export const WithPermissionDenied: Story = {
         ...Empty.args,
         mediaStatus: {
             ...mockMediaStatus,
-            status: "denied",
+            status: PermissionStatus.DENIED,
             granted: false,
         },
     },

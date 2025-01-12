@@ -1,6 +1,6 @@
 import { Color, FontSize } from "@/GlobalStyles";
 import OCard from "@/components/OCard/OCard";
-import { OMap } from "@/components/OMap/OMap";
+import { OMap } from "@/components/OMapScreen/OMap/OMap";
 import React from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,6 +11,7 @@ interface IOMapScreenProps {
     saveChangesToBackend: boolean;
     showHeatmap: boolean;
     showBlacklistedRegions: boolean;
+    showMapStatus: boolean;
     bottomChildren?: React.ReactNode;
 }
 
@@ -18,6 +19,7 @@ const OMapScreen = ({
     subtitle,
     subtitle2,
     showHeatmap,
+    showMapStatus,
     showBlacklistedRegions,
     saveChangesToBackend,
     bottomChildren,
@@ -33,6 +35,7 @@ const OMapScreen = ({
                 <OMap
                     saveChangesToBackend={saveChangesToBackend}
                     showHeatmap={showHeatmap}
+                    showMapStatus={showMapStatus}
                     showBlacklistedRegions={showBlacklistedRegions}
                 />
             </SafeAreaView>

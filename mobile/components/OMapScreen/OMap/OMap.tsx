@@ -1,7 +1,12 @@
-import { BorderRadius, Color, FontSize, Subtitle } from "@/GlobalStyles";
+import { BorderRadius, Color, FontSize } from "@/GlobalStyles";
+import { UserPrivateDTODateModeEnum } from "@/api/gen/src";
 import { OBlacklistedRegion } from "@/components/OBlacklistedRegion/OBlacklistedRegion";
-import { OFloatingActionButton } from "@/components/OFloatingActionButton/OFloatingActionButton";
-import { OHeatMap } from "@/components/OHeatMap/OHeatMap";
+import { OHeatMap } from "@/components/OMapScreen/OHeatMap/OHeatMap";
+import {
+    EMapStatus,
+    OMapStatus,
+} from "@/components/OMapScreen/OMapStatus/OMapStatus";
+import { OSafeZoneSliderCard } from "@/components/OMapScreen/OSafeZoneSliderCard/OSafeZoneSliderCard";
 import {
     EACTION_USER,
     MapRegion,
@@ -14,7 +19,6 @@ import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
 import { TOURKEY } from "@/services/tourguide.service";
 import { API } from "@/utils/api-config";
 import { getMapProvider } from "@/utils/map-provider";
-import Slider from "@react-native-community/slider";
 import { useIsFocused } from "@react-navigation/native";
 import debounce from "lodash.debounce";
 import React, {
@@ -28,33 +32,34 @@ import {
     Dimensions,
     Platform,
     StyleSheet,
-    Text,
     TouchableWithoutFeedback,
     View,
 } from "react-native";
 import BackgroundGeolocation from "react-native-background-geolocation";
 import MapView, { LongPressEvent, Region } from "react-native-maps";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
-import OCard from "../OCard/OCard";
 
 interface OMapProps {
     saveChangesToBackend: boolean;
     showHeatmap: boolean;
     showBlacklistedRegions: boolean;
+    showMapStatus: boolean;
 }
 
 const DEFAULT_RADIUS_SIZE = 250;
 
 export const OMap = (props: OMapProps) => {
+    const [mapStatus, setMapStatus] = useState<EMapStatus | null>(null);
     const { saveChangesToBackend, showHeatmap, showBlacklistedRegions } = props;
     const { state, dispatch } = useUserContext();
     const location = useUserLocation(
         BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
     );
+    const isSavingRef = useRef(false);
     const [activeRegionIndex, setActiveRegionIndex] = useState<number | null>(
         null,
     );
+    const isHeatmapLoadingRef = useRef(false);
     const prevBlacklistedRegionsRef = useRef<MapRegion[]>([]);
     const [mapRegion, setMapRegion] = useState<Region>({
         latitude: 47.257832302,
@@ -64,6 +69,35 @@ export const OMap = (props: OMapProps) => {
     });
     /** @DEV use a temp value here, so we do not update and re-use the same value (lagging) */
     const [tempSliderValue, setTempSliderValue] = useState(DEFAULT_RADIUS_SIZE);
+
+    useEffect(() => {
+        if (state.dateMode === UserPrivateDTODateModeEnum.live) {
+            setMapStatus(EMapStatus.LIVE);
+        } else {
+            setMapStatus(EMapStatus.GHOST);
+        }
+    }, [state.dateMode]);
+
+    const onLoadingStateChange = useCallback(
+        (isLoading: boolean) => {
+            if (!props.showMapStatus) return;
+            isHeatmapLoadingRef.current = isLoading;
+
+            if (isLoading) {
+                setMapStatus(EMapStatus.LOADING_HEATMAP);
+            } else {
+                // Only change status back if we're not in the middle of saving
+                if (!isSavingRef.current) {
+                    setMapStatus(
+                        state.dateMode === UserPrivateDTODateModeEnum.live
+                            ? EMapStatus.LIVE
+                            : EMapStatus.GHOST,
+                    );
+                }
+            }
+        },
+        [state.dateMode, props.showMapStatus],
+    );
 
     useEffect(() => {
         if (location) {
@@ -127,6 +161,12 @@ export const OMap = (props: OMapProps) => {
 
         const debouncedSave = debounce(async (regions) => {
             try {
+                // Only set saving status if we weren't already saving
+                if (!isSavingRef.current) {
+                    isSavingRef.current = true;
+                    setMapStatus(EMapStatus.SAVING_SAFEZONES);
+                }
+
                 await API.user.userControllerUpdateUser({
                     userId: state.id!,
                     updateUserDTO: {
@@ -135,7 +175,28 @@ export const OMap = (props: OMapProps) => {
                         ),
                     },
                 });
+
+                // Reset saving flag and restore appropriate status
+                isSavingRef.current = false;
+                // Only restore base status if heatmap isn't loading
+                if (!isHeatmapLoadingRef.current) {
+                    setMapStatus(
+                        state.dateMode === UserPrivateDTODateModeEnum.live
+                            ? EMapStatus.LIVE
+                            : EMapStatus.GHOST,
+                    );
+                }
             } catch (error) {
+                // Reset saving flag and restore appropriate status on error
+                isSavingRef.current = false;
+                // Only restore base status if heatmap isn't loading
+                if (!isHeatmapLoadingRef.current) {
+                    setMapStatus(
+                        state.dateMode === UserPrivateDTODateModeEnum.live
+                            ? EMapStatus.LIVE
+                            : EMapStatus.GHOST,
+                    );
+                }
                 throw error;
             }
         }, 1000);
@@ -145,8 +206,19 @@ export const OMap = (props: OMapProps) => {
             prevBlacklistedRegionsRef.current = state.blacklistedRegions;
         }
 
-        return () => debouncedSave.cancel();
-    }, [state.blacklistedRegions, state.id]);
+        return () => {
+            debouncedSave.cancel();
+            // Ensure we reset the saving flag if the component unmounts while saving
+            if (isSavingRef.current) {
+                isSavingRef.current = false;
+            }
+        };
+    }, [
+        state.blacklistedRegions,
+        state.id,
+        state.dateMode,
+        props.showMapStatus,
+    ]);
 
     const handleMapPress = useCallback(() => {
         if (activeRegionIndex !== null) {
@@ -252,6 +324,7 @@ export const OMap = (props: OMapProps) => {
                             >
                                 <OHeatMap
                                     showMap={showHeatmap}
+                                    onLoadingStateChange={onLoadingStateChange}
                                     currentMapRegion={mapRegion}
                                     userId={state.id}
                                     datingMode={state.dateMode}
@@ -265,68 +338,19 @@ export const OMap = (props: OMapProps) => {
                 </TourGuideZone>
             </TouchableWithoutFeedback>
 
-            {showBlacklistedRegions && activeRegionIndex !== null && (
-                <View
-                    style={styles.sliderOverlayContainer}
-                    pointerEvents="box-none"
-                >
-                    <SafeAreaView
-                        edges={["bottom", "right", "left"]}
-                        style={styles.sliderSafeArea}
-                        pointerEvents="box-none"
-                    >
-                        <View
-                            style={styles.sliderWrapper}
-                            pointerEvents="box-none"
-                        >
-                            <OCard
-                                style={[
-                                    styles.controlsCard,
-                                    Platform.OS === "android" &&
-                                        styles.androidControlsCard,
-                                ]}
-                            >
-                                <View pointerEvents="auto">
-                                    <OFloatingActionButton
-                                        size="xs"
-                                        icon="delete-outline"
-                                        position="right"
-                                        action={handleRemoveRegion}
-                                        color={Color.red}
-                                    />
-                                </View>
-                                <View style={styles.controlsHeader}>
-                                    <Text style={[Subtitle, styles.sliderText]}>
-                                        {i18n.t(TR.adjustRegionRadius)} (
-                                        {Math.round(
-                                            state.blacklistedRegions[
-                                                activeRegionIndex
-                                            ]?.radius,
-                                        )}
-                                        m)
-                                    </Text>
-                                </View>
-                                <View
-                                    style={styles.sliderContainer}
-                                    pointerEvents="auto"
-                                >
-                                    <Slider
-                                        style={[
-                                            styles.slider,
-                                            Platform.OS === "android" &&
-                                                styles.androidSlider,
-                                        ]}
-                                        minimumValue={100}
-                                        maximumValue={2000}
-                                        step={10}
-                                        value={tempSliderValue}
-                                        onValueChange={handleRadiusChange}
-                                    />
-                                </View>
-                            </OCard>
-                        </View>
-                    </SafeAreaView>
+            {props.showMapStatus && mapStatus && (
+                <View style={styles.mapStatusContainer}>
+                    <OMapStatus status={mapStatus} />
                 </View>
+            )}
+
+            {showBlacklistedRegions && activeRegionIndex !== null && (
+                <OSafeZoneSliderCard
+                    handleRadiusChange={handleRadiusChange}
+                    handleRemoveRegion={handleRemoveRegion}
+                    activeRegionIndex={activeRegionIndex}
+                    sliderValue={tempSliderValue}
+                />
             )}
         </View>
     );
@@ -338,6 +362,12 @@ const styles = StyleSheet.create({
         flex: 1,
         width: "100%",
         height: "100%",
+    },
+    mapStatusContainer: {
+        position: "absolute",
+        left: 4,
+        bottom: Platform.OS === "ios" ? -10 : 4,
+        zIndex: 1,
     },
     mapContainer: {
         flex: 1,

@@ -14,10 +14,17 @@ interface OHeatMapProps {
     userId?: string;
     datingMode: UserPrivateDTODateModeEnum;
     currentMapRegion: Region;
+    onLoadingStateChange: (isLoading: boolean) => void;
 }
 
 export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
-    ({ showMap, datingMode, userId, currentMapRegion }) => {
+    ({
+        showMap,
+        datingMode,
+        userId,
+        currentMapRegion,
+        onLoadingStateChange,
+    }) => {
         if (!showMap || isExpoGoEnvironment) {
             return <></>;
         }
@@ -60,6 +67,7 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
 
         const getOtherUsersPositions = async () => {
             try {
+                onLoadingStateChange(true);
                 if (!userId) {
                     Sentry.captureException(
                         new Error(
@@ -76,6 +84,7 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
                 const positions = await API.map.mapControllerGetUserLocations({
                     userId,
                 });
+
                 setLocationsFromOthers(positions);
             } catch (error) {
                 console.error(
@@ -88,6 +97,8 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
                     },
                 });
                 setLocationsFromOthers([]);
+            } finally {
+                onLoadingStateChange(false);
             }
         };
 

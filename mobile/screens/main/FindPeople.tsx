@@ -16,6 +16,7 @@ const FindPeople = (
             subtitle={i18n.t(TR.beNearTheseHotspotsToMeet)}
             subtitle2={i18n.t(TR.safeZonesToHide)}
             showHeatmap={true}
+            showMapStatus={true}
             showBlacklistedRegions={true}
             saveChangesToBackend={true}
         />
