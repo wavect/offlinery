@@ -221,6 +221,14 @@ export class User
     @Column({ nullable: true, unique: true })
     deletionToken: string;
 
+    /** @dev Used to check when the date mode was changed the last time. */
+    @Column({ type: "timestamptz", nullable: true })
+    lastDateModeChange: Date;
+
+    /** @dev Used to make sure appropriate reminders are sent. */
+    @Column({ type: "timestamptz", nullable: true })
+    lastDateModeReminderSent: Date;
+
     @BeforeInsert()
     beforeInsert() {
         this.verificationStatus = EVerificationStatus.PENDING;

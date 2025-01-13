@@ -7,6 +7,10 @@
     "accountApproved": {
       "title": "You are verified!",
       "body": "Congrats, you passed our screening."
+    },
+    "ghostmodeReminder": {
+      "title": "Nobody can find you, {firstName}!",
+      "body": "Switch from ghost mode to live, to cross paths with people in real life."
     }
   },
   "email": {
@@ -54,12 +58,28 @@
       "securityNote": "For the security of your account, never share this code with anyone.",
       "contactSupport": "If you have any questions or concerns, please contact our support team at support@offlinery.io.",
       "footer": "This is an automated message. Please do not reply to this email."
+    },
+    "ghostmode-reminder": {
+      "subject": "Ghost Mode Reminder (Offlinery)",
+      "header": "You're Invisible!",
+      "greeting": "Hi {{firstName}}",
+      "timeInGhost": "You've been in Ghost Mode for {{intervalHour}}.",
+      "impact": "While Ghost Mode helps protect your privacy, it also means you can't meet new people or be discovered by others who might be interested in meeting you.",
+      "suggestion": "Switch to Live Mode to start meeting people in your area again!",
+      "footer": "You received this email because you enabled Ghost Mode in your settings. You can change this anytime."
     }
   },
   "view": {
     "account-deletion-confirmation": {
       "subject": "Account Deleted Successfully",
       "message": "Your account has been permanently deleted. All your personal data has been removed from our systems. We're sorry to see you go and hope you've enjoyed using our service."
+    }
+  },
+  "cron": {
+    "intervalHours": {
+      "h24": "24 hours",
+      "h72": "3 days",
+      "h336": "2 weeks"
     }
   }
 }

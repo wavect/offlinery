@@ -7,6 +7,10 @@
     "accountApproved": {
       "title": "Du bist verifiziert!",
       "body": "Gratulation, du wurdest freigeschalten.."
+    },
+    "ghostmodeReminder": {
+      "title": "Niemand kann dich finden, {firstName}!",
+      "body": "Wechsle vom Geistmodus zu Live um Menschen über den Weg zu laufen."
     }
   },
   "email": {
@@ -54,12 +58,28 @@
       "securityNote": "Aus Sicherheitsgründen teile diesen Code niemals mit anderen.",
       "contactSupport": "Bei Fragen oder Bedenken wende dich bitte an unser Support-Team unter office@offlinery.io.",
       "footer": "Dies ist eine automatisch generierte Nachricht. Bitte antworte nicht auf diese E-Mail."
+    },
+    "ghostmode-reminder": {
+      "subject": "Ghost-Modus Erinnerung (Offlinery)",
+      "header": "Du bist unsichtbar!",
+      "greeting": "Hi {{firstName}}",
+      "timeInGhost": "Du bist seit {{intervalHour}} im Ghost-Modus.",
+      "impact": "Der Ghost-Modus schützt zwar deine Privatsphäre, bedeutet aber auch, dass du keine neuen Menschen treffen oder von anderen interessierten Personen entdeckt werden kannst.",
+      "suggestion": "Wechsle in den Live-Modus, um wieder Menschen in deiner Umgebung kennenzulernen!",
+      "footer": "Du erhältst diese E-Mail, weil du den Ghost-Modus in deinen Einstellungen aktiviert hast. Du kannst dies jederzeit ändern."
     }
   },
   "view": {
     "account-deletion-confirmation": {
       "subject": "Konto erfolgreich gelöscht",
       "message": "Dein Konto wurde dauerhaft gelöscht. All deine persönlichen Daten wurden aus unseren Systemen entfernt. Schade, dass du gehst, und wir hoffen, dass du bei uns dennoch eine schöne Zeit hattest."
+    }
+  },
+  "cron": {
+    "intervalHours": {
+      "h24": "24 Stunden",
+      "h72": "3 Tagen",
+      "h336": "2 Wochen"
     }
   }
 }
