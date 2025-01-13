@@ -75,7 +75,7 @@ describe("GhostModeReminderCronJob", () => {
                     useValue: {
                         sendPushNotifications: jest
                             .fn()
-                            .mockResolvedValue(true),
+                            .mockResolvedValue([{ status: "ok", id: "1" }]), // Mock array return
                     },
                 },
                 {
