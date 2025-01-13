@@ -62,10 +62,10 @@
     "ghostmode-reminder": {
       "subject": "Ghost-Modus Erinnerung (Offlinery)",
       "header": "Du bist unsichtbar!",
-      "greeting": "Hi {{firstName}}",
-      "timeInGhost": "Du bist seit {{intervalHour}} im Ghost-Modus.",
+      "greeting": "Hi {firstName}",
+      "timeInGhost": "Du bist seit {intervalHour} im Ghost-Modus.",
       "impact": "Der Ghost-Modus schützt zwar deine Privatsphäre, bedeutet aber auch, dass du keine neuen Menschen treffen oder von anderen interessierten Personen entdeckt werden kannst.",
-      "suggestion": "Wechsle in den Live-Modus, um wieder Menschen in deiner Umgebung kennenzulernen!",
+      "suggestion": "Wechsle in den Live-Modus innerhalb der Offlinery App, um wieder Menschen in deiner Umgebung kennenzulernen!",
       "footer": "Du erhältst diese E-Mail, weil du den Ghost-Modus in deinen Einstellungen aktiviert hast. Du kannst dies jederzeit ändern."
     }
   },

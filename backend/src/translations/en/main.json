@@ -62,10 +62,10 @@
     "ghostmode-reminder": {
       "subject": "Ghost Mode Reminder (Offlinery)",
       "header": "You're Invisible!",
-      "greeting": "Hi {{firstName}}",
-      "timeInGhost": "You've been in Ghost Mode for {{intervalHour}}.",
+      "greeting": "Hi {firstName}",
+      "timeInGhost": "You've been in Ghost Mode for {intervalHour}.",
       "impact": "While Ghost Mode helps protect your privacy, it also means you can't meet new people or be discovered by others who might be interested in meeting you.",
-      "suggestion": "Switch to Live Mode to start meeting people in your area again!",
+      "suggestion": "Switch to Live Mode within Offlinery to start meeting people in your area again!",
       "footer": "You received this email because you enabled Ghost Mode in your settings. You can change this anytime."
     }
   },

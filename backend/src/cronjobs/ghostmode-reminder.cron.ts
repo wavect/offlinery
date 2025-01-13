@@ -103,6 +103,7 @@ export class GhostModeReminderCronJob {
                 await Promise.all(
                     users.map(async (user) => {
                         try {
+                            // TODO: Let users configure this in settings
                             await this.sendEmail(user, intervalHour);
                             if (user.pushToken) {
                                 notificationTicketsToSend.push({
@@ -157,8 +158,11 @@ export class GhostModeReminderCronJob {
                 `Ghostmode reminders sent for ${intervalHour.hours}h.`,
             );
         }
-        await this.notificationService.sendPushNotifications(
+        const tickets = await this.notificationService.sendPushNotifications(
             notificationTicketsToSend,
+        );
+        this.logger.debug(
+            `Sent ${tickets.length} push notifications, status codes: ${JSON.stringify(tickets.map((t) => t.status))}`,
         );
         this.logger.debug(`All ghostmode reminders sent for all intervals.`);
     }
