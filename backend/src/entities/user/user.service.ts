@@ -281,6 +281,11 @@ export class UserService {
             user.ageRangeString = parseToAgeRangeString(updateUserDto.ageRange);
         }
 
+        if (updateUserDto.dateMode) {
+            // @dev already set through Object.assign.
+            user.lastDateModeChange = new Date();
+        }
+
         return await this.userRepository.save(user);
     }
 

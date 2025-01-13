@@ -15,68 +15,68 @@
 /**
  *
  * @export
- * @interface NotificationAccountApprovedDTO
+ * @interface NotificationGhostReminderDTO
  */
-export interface NotificationAccountApprovedDTO {
+export interface NotificationGhostReminderDTO {
     /**
      *
      * @type {string}
-     * @memberof NotificationAccountApprovedDTO
+     * @memberof NotificationGhostReminderDTO
      */
-    type: NotificationAccountApprovedDTOTypeEnum;
+    type: NotificationGhostReminderDTOTypeEnum;
     /**
      *
      * @type {string}
-     * @memberof NotificationAccountApprovedDTO
+     * @memberof NotificationGhostReminderDTO
      */
-    screen: NotificationAccountApprovedDTOScreenEnum;
+    screen: NotificationGhostReminderDTOScreenEnum;
 }
 
 /**
  * @export
  */
-export const NotificationAccountApprovedDTOTypeEnum = {
+export const NotificationGhostReminderDTOTypeEnum = {
     new_match: "new_match",
     new_event: "new_event",
     account_approved: "account_approved",
     ghostmode_reminder: "ghostmode_reminder",
 } as const;
-export type NotificationAccountApprovedDTOTypeEnum =
-    (typeof NotificationAccountApprovedDTOTypeEnum)[keyof typeof NotificationAccountApprovedDTOTypeEnum];
+export type NotificationGhostReminderDTOTypeEnum =
+    (typeof NotificationGhostReminderDTOTypeEnum)[keyof typeof NotificationGhostReminderDTOTypeEnum];
 
 /**
  * @export
  */
-export const NotificationAccountApprovedDTOScreenEnum = {
+export const NotificationGhostReminderDTOScreenEnum = {
     NavigateToApproach: "Main_NavigateToApproach",
     FindPeople: "Main_FindPeople",
     FindPeople2: "Main_FindPeople",
     FindPeople3: "Main_FindPeople",
 } as const;
-export type NotificationAccountApprovedDTOScreenEnum =
-    (typeof NotificationAccountApprovedDTOScreenEnum)[keyof typeof NotificationAccountApprovedDTOScreenEnum];
+export type NotificationGhostReminderDTOScreenEnum =
+    (typeof NotificationGhostReminderDTOScreenEnum)[keyof typeof NotificationGhostReminderDTOScreenEnum];
 
 /**
- * Check if a given object implements the NotificationAccountApprovedDTO interface.
+ * Check if a given object implements the NotificationGhostReminderDTO interface.
  */
-export function instanceOfNotificationAccountApprovedDTO(
+export function instanceOfNotificationGhostReminderDTO(
     value: object,
-): value is NotificationAccountApprovedDTO {
+): value is NotificationGhostReminderDTO {
     if (!("type" in value) || value["type"] === undefined) return false;
     if (!("screen" in value) || value["screen"] === undefined) return false;
     return true;
 }
 
-export function NotificationAccountApprovedDTOFromJSON(
+export function NotificationGhostReminderDTOFromJSON(
     json: any,
-): NotificationAccountApprovedDTO {
-    return NotificationAccountApprovedDTOFromJSONTyped(json, false);
+): NotificationGhostReminderDTO {
+    return NotificationGhostReminderDTOFromJSONTyped(json, false);
 }
 
-export function NotificationAccountApprovedDTOFromJSONTyped(
+export function NotificationGhostReminderDTOFromJSONTyped(
     json: any,
     ignoreDiscriminator: boolean,
-): NotificationAccountApprovedDTO {
+): NotificationGhostReminderDTO {
     if (json == null) {
         return json;
     }
@@ -86,8 +86,8 @@ export function NotificationAccountApprovedDTOFromJSONTyped(
     };
 }
 
-export function NotificationAccountApprovedDTOToJSON(
-    value?: NotificationAccountApprovedDTO | null,
+export function NotificationGhostReminderDTOToJSON(
+    value?: NotificationGhostReminderDTO | null,
 ): any {
     if (value == null) {
         return value;
