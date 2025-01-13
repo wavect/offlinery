@@ -8,6 +8,7 @@ import { ROUTES } from "@/screens/routes";
 import {
     TokenFetchStatus,
     reactToAccountApprovedNotification,
+    reactToGhostModeReminderNotification,
     reactToNewEncounterNotification,
     reactToNewEventNotification,
     registerForPushNotificationsAsync,
@@ -144,6 +145,12 @@ export const useNotifications = ({ navigation }: IUseNotificationProps) => {
                                         break;
                                     case NotificationNewEventDTOTypeEnum.account_approved:
                                         reactToAccountApprovedNotification(
+                                            response,
+                                            navigation,
+                                        );
+                                        break;
+                                    case NotificationNewEventDTOTypeEnum.ghostmode_reminder:
+                                        reactToGhostModeReminderNotification(
                                             response,
                                             navigation,
                                         );

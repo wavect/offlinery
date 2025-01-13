@@ -1,5 +1,6 @@
 import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
+import { NotificationGhostReminderDTO } from "@/DTOs/notifications/notification-ghostreminder.dto";
 import { User } from "@/entities/user/user.entity";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { OfflineryNotification } from "@/types/notification-message.types";
@@ -106,6 +107,10 @@ export class GhostModeReminderCronJob {
                             // TODO: Let users configure this in settings
                             await this.sendEmail(user, intervalHour);
                             if (user.pushToken) {
+                                const data: NotificationGhostReminderDTO = {
+                                    type: ENotificationType.GHOSTMODE_REMINDER,
+                                    screen: EAppScreens.GHOSTMODE_REMINDER,
+                                };
                                 notificationTicketsToSend.push({
                                     sound: "default" as const,
                                     title: this.i18n.t(
@@ -128,10 +133,7 @@ export class GhostModeReminderCronJob {
                                         },
                                     ),
                                     to: user.pushToken,
-                                    data: {
-                                        type: ENotificationType.GHOSTMODE_REMINDER,
-                                        screen: EAppScreens.GHOSTMODE_REMINDER,
-                                    },
+                                    data,
                                 });
                             } else {
                                 this.logger.warn(

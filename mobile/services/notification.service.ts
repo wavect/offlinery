@@ -1,6 +1,7 @@
 import { Color } from "@/GlobalStyles";
 import {
     NotificationAccountApprovedDTO,
+    NotificationGhostReminderDTO,
     NotificationNavigateUserDTO,
     NotificationNewEventDTO,
     StorePushTokenDTO,
@@ -187,6 +188,18 @@ export const reactToAccountApprovedNotification = (
 ) => {
     const notificationData: NotificationAccountApprovedDTO = response
         .notification.request.content.data as NotificationAccountApprovedDTO;
+
+    navigation.navigate(ROUTES.MainTabView, {
+        screen: notificationData.screen,
+    });
+};
+
+export const reactToGhostModeReminderNotification = (
+    response: Notifications.NotificationResponse,
+    navigation: any,
+) => {
+    const notificationData: NotificationGhostReminderDTO = response.notification
+        .request.content.data as NotificationGhostReminderDTO;
 
     navigation.navigate(ROUTES.MainTabView, {
         screen: notificationData.screen,

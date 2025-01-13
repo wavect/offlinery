@@ -25,6 +25,7 @@ src/models/GetLocationOfEncounterResponseDTO.ts
 src/models/LocationUpdateDTO.ts
 src/models/MessagePublicDTO.ts
 src/models/NotificationAccountApprovedDTO.ts
+src/models/NotificationGhostReminderDTO.ts
 src/models/NotificationNavigateUserDTO.ts
 src/models/NotificationNewEventDTO.ts
 src/models/PushMessageDTO.ts

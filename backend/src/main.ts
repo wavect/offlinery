@@ -1,6 +1,7 @@
 import { BaseNotificationADTO } from "@/DTOs/abstract/base-notification.adto";
 import { EmailCodeResponseADTO } from "@/DTOs/abstract/email-code-response.adto";
 import { NotificationAccountApprovedDTO } from "@/DTOs/notifications/notification-account-approved";
+import { NotificationGhostReminderDTO } from "@/DTOs/notifications/notification-ghostreminder.dto";
 import { NotificationNewEventDTO } from "@/DTOs/notifications/notification-new-event.dto";
 import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
@@ -87,6 +88,7 @@ const setupSwagger = (app: INestApplication) => {
         extraModels: [
             NotificationNavigateUserDTO,
             NotificationAccountApprovedDTO,
+            NotificationGhostReminderDTO,
             NotificationNewEventDTO,
             EmailCodeResponseADTO,
             BaseNotificationADTO,

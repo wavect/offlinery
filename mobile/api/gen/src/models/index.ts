@@ -12,6 +12,7 @@ export * from "./GetLocationOfEncounterResponseDTO";
 export * from "./LocationUpdateDTO";
 export * from "./MessagePublicDTO";
 export * from "./NotificationAccountApprovedDTO";
+export * from "./NotificationGhostReminderDTO";
 export * from "./NotificationNavigateUserDTO";
 export * from "./NotificationNewEventDTO";
 export * from "./PushMessageDTO";
