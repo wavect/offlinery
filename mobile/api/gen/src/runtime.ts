@@ -13,11 +13,14 @@
  */
 
 import Constants from "expo-constants";
-import { IS_DEVELOPMENT_BUILD } from "../../../utils/env.utils";
+import { IS_DEVELOPMENT_BUILD, USE_EMULATOR } from "../../../utils/env.utils";
 
+const DEV_BASE_URI = USE_EMULATOR
+    ? "10.0.2.2"
+    : Constants.expoConfig?.hostUri?.split(":").shift();
 export const BASE_PATH = (
     (IS_DEVELOPMENT_BUILD
-        ? `http://${Constants.expoConfig?.hostUri?.split(":").shift()?.concat(":3000")}`
+        ? `http://${DEV_BASE_URI?.concat(":3000")}`
         : "https://api.offlinery.io") + "/v1"
 ).replace(/\/+$/, "");
 
