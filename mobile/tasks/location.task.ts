@@ -130,19 +130,27 @@ export class OBackgroundLocationService {
             );
 
             this.heartbeatSubscription = BackgroundGeolocation.onHeartbeat(
-                async (event) => {
+                (event) => {
                     Sentry.captureMessage(
                         `Captured heartbeat in location service`,
                     );
-                    const loc = await BackgroundGeolocation.getCurrentPosition({
+                    BackgroundGeolocation.getCurrentPosition({
                         samples: 1,
                         desiredAccuracy:
                             BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
+                    })?.then((loc) => {
+                        this.saveLocation(
+                            loc?.coords?.latitude,
+                            loc?.coords?.longitude,
+                        ).catch((error) => {
+                            Sentry.captureException(error, {
+                                tags: {
+                                    location_service:
+                                        "heartBeatSaveLocation:fail",
+                                },
+                            });
+                        });
                     });
-                    await this.saveLocation(
-                        loc?.coords?.latitude,
-                        loc?.coords?.longitude,
-                    );
                 },
             );
 
@@ -172,6 +180,7 @@ export class OBackgroundLocationService {
                 autoSync: false, // TODO: makes sense in future? sync each location to server as it arrives
                 locationUpdateInterval: 5 * 60 * 1000, // 5 minutes
                 fastestLocationUpdateInterval: 3 * 60 * 1000, // 3 minutes
+                locationTimeout: 180, // @dev extend timeout due to errors within 60s default range
                 activityType:
                     BackgroundGeolocation.ACTIVITY_TYPE_OTHER_NAVIGATION,
                 preventSuspend: true, // @dev https://transistorsoft.github.io/react-native-background-geolocation/interfaces/config.html#preventsuspend
@@ -180,7 +189,7 @@ export class OBackgroundLocationService {
                     title: i18n.t(TR.bgLocationServiceTitle),
                     text: i18n.t(TR.bgLocationServiceBody),
                     color: Color.primary,
-                    smallIcon: "location_icon", // TODO: working?
+                    smallIcon: "location_icon",
                 },
             });
         } catch (error) {
