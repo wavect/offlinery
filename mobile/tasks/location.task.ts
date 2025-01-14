@@ -107,16 +107,22 @@ export class OBackgroundLocationService {
             }
 
             this.locationSubscription = BackgroundGeolocation.onLocation(
-                async (location) => {
+                (location) => {
                     Sentry.captureMessage(
                         `Captured locationUpdate in location service: ${JSON.stringify(location?.coords)}`,
                     );
-                    await this.saveLocation(
+
+                    // TODO: we might want to include altitude in future too?
+                    this.saveLocation(
                         location?.coords?.latitude,
                         location?.coords?.longitude,
-                    ); // TODO: we might want to include altitude in future too?
+                    ).catch((error) => {
+                        Sentry.captureException(error, {
+                            tags: { location_service: "saveLocation:fail" },
+                        });
+                    });
                 },
-                async (error) => {
+                (error) => {
                     Sentry.captureException(error, {
                         tags: { location_service: "onLocation:onFailure" },
                     });
