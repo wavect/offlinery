@@ -12,6 +12,7 @@
         "start:prod": "expo start --no-dev --minify",
         "start:tunnel": "expo start --tunnel",
         "android": "npx concurrently \"EXPO_PUBLIC_ENVIRONMENT=development expo run:android\" \"npx react-native log-android\"",
+        "android:emulator": "EXPO_PUBLIC_USE_EMULATOR=true pnpm android",
         "ios": "EXPO_PUBLIC_ENVIRONMENT=development expo run:ios",
         "ios:device": "EXPO_PUBLIC_ENVIRONMENT=development expo run:ios --device",
         "ios:dev": "EXPO_PUBLIC_ENVIRONMENT=development expo run:ios",

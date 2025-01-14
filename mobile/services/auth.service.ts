@@ -99,13 +99,22 @@ export const registerUser = async (
         const { user, accessToken, refreshToken } = signInResponseDTO;
         console.log("User created successfully:", user);
 
-        await deleteOnboardingState();
-
-        // Update the user state
-        await refreshUserData(dispatch, user, accessToken, refreshToken);
-
         // Navigate to the next screen or update the UI as needed
         onSuccess();
+
+        try {
+            await deleteOnboardingState();
+
+            // Update the user state
+            await refreshUserData(dispatch, user, accessToken, refreshToken);
+        } catch (err) {
+            console.error("User registration postWork only failed: ", err);
+            Sentry.captureException(err, {
+                tags: {
+                    userContext: "registration:postWork",
+                },
+            });
+        }
     } catch (error: any) {
         console.error("Error creating user:", error, JSON.stringify(error));
         onError(error);
