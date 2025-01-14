@@ -77,11 +77,15 @@ export class GhostModeReminderCronJob {
                 const users = await this.userRepository
                     .createQueryBuilder("user")
                     .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
-                    .andWhere("user.lastDateModeChange <= :timestamp", {
-                        timestamp: new Date(
-                            now.getTime() - intervalHour.hours * 60 * 60 * 1000,
-                        ),
-                    })
+                    .andWhere(
+                        "user.lastDateModeChange IS NULL OR user.lastDateModeChange <= :timestamp",
+                        {
+                            timestamp: new Date(
+                                now.getTime() -
+                                    intervalHour.hours * 60 * 60 * 1000,
+                            ),
+                        },
+                    )
                     .andWhere(
                         "user.lastDateModeReminderSent IS NULL OR user.lastDateModeReminderSent < :reminderTimestamp",
                         {
