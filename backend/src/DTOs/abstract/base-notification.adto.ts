@@ -6,6 +6,7 @@ export enum ENotificationType {
     NEW_EVENT = "new_event",
     ACCOUNT_APPROVED = "account_approved",
     GHOSTMODE_REMINDER = "ghostmode_reminder",
+    SAFETYCALL_REMINDER = "safetycall_reminder",
 }
 
 export abstract class BaseNotificationADTO implements Record<string, unknown> {

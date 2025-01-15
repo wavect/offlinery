@@ -8,7 +8,7 @@
       "title": "You are verified!",
       "body": "Congrats, you passed our screening."
     },
-    "ghostmodeReminder": {
+    "ghostmode-reminder": {
       "title": "Nobody can find you, {firstName}!",
       "body": "Switch from ghost mode to live, to cross paths with people in real life."
     }
@@ -67,6 +67,17 @@
       "impact": "While Ghost Mode helps protect your privacy, it also means you can't meet new people or be discovered by others who might be interested in meeting you.",
       "suggestion": "Switch to Live Mode within Offlinery to start meeting people in your area again!",
       "footer": "You received this email because you enabled Ghost Mode in your settings. You can change this anytime."
+    },
+    "verificationcall-reminder": {
+      "subject": "Book Your Quick Safety Call - Offlinery",
+      "header": "Time for Your Safety Call! 🎉",
+      "greeting": "Hey {firstName}",
+      "reminderMessage": "Just a friendly reminder to schedule your quick safety call with us! This is an important step to unlock the full potential of approaching people through Offlinery.",
+      "importanceMessage": "In this casual 15-minute chat, we'll do a quick emotional intelligence check to make sure everyone in our community feels safe and comfortable. Once approved, you'll be ready to make real-life connections!",
+      "bookCallButton": "Schedule Your Call",
+      "timeEstimate": "It's super quick - just 15 minutes of your time! ⏰",
+      "closingMessage": "Not interested in approaching others? No problem! You can skip this call and still be approached by others - just change this setting in the app. Want to become active later? You can always come back and complete the safety call when you're ready.",
+      "footer": "This is an automated message from your friends at Offlinery."
     }
   },
   "view": {

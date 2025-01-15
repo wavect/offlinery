@@ -6,4 +6,5 @@ export enum EAppScreens {
     NEW_EVENT = "Main_FindPeople", // TODO: This might be a dedicated screen in future
     ACCOUNT_VERIFIED = "Main_FindPeople",
     GHOSTMODE_REMINDER = "Main_FindPeople",
+    SAFETYCALL_REMINDER = "Main_FindPeople",
 }
