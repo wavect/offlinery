@@ -214,9 +214,89 @@ describe("Matching Service Integration Tests ", () => {
                 expect.arrayContaining([userId.id, userId2.id]),
             );
         });
+        it("should only find users that are the right gender and intentions", async () => {
+            const userId = await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP, EIntention.CASUAL],
+            });
+            const userId2 = await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [
+                    EIntention.RELATIONSHIP,
+                    EIntention.FRIENDSHIP,
+                    EIntention.RECONNECT_FRIENDS,
+                ],
+            });
+            await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [
+                    EIntention.FRIENDSHIP,
+                    EIntention.RECONNECT_FRIENDS,
+                    EIntention.CASUAL,
+                ],
+            });
+
+            const matches = Array.from(
+                (
+                    await matchingService.findNearbyMatches(testingMainUser)
+                ).values(),
+            );
+
+            expect(matches.length).toBe(2);
+            expect(matches.map((m) => m.id)).toEqual(
+                expect.arrayContaining([userId.id, userId2.id]),
+            );
+        });
+
+        it("should only find users that are the right gender and intentions 2", async () => {
+            await clearDatabase(testingDataSource);
+
+            const birthDay = new Date("1996-09-21");
+            const testingMainUser2 = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                genderDesire: [EGender.WOMAN],
+                gender: EGender.MAN,
+                intentions: [
+                    EIntention.RELATIONSHIP,
+                    EIntention.CASUAL,
+                    EIntention.FRIENDSHIP,
+                ],
+                approachChoice: EApproachChoice.APPROACH,
+                birthDay,
+                ageRangeString: `[${getAge(birthDay) - User.defaultAgeRange},${getAge(birthDay) + User.defaultAgeRange}]`,
+            });
+
+            const userId2 = await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP, EIntention.FRIENDSHIP],
+            });
+
+            const userId3 = await userFactory.persistNewTestUser({
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP, EIntention.CASUAL],
+            });
+
+            const matches = Array.from(
+                (
+                    await matchingService.findNearbyMatches(testingMainUser2)
+                ).values(),
+            );
+
+            expect(matches.length).toBe(2);
+            expect(matches.map((m) => m.id)).toEqual(
+                expect.arrayContaining([userId2.id, userId3.id]),
+            );
+        });
+
         it("should only find users with a recent location update", async () => {
             const now = new Date();
-            const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
+            const sixHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
             const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
 
             const baseConfiguration = {
