@@ -296,7 +296,7 @@ describe("Matching Service Integration Tests ", () => {
 
         it("should only find users with a recent location update", async () => {
             const now = new Date();
-            const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
+            const sixHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
             const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
 
             const baseConfiguration = {

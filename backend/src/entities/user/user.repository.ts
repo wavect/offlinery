@@ -41,7 +41,6 @@ export class UserRepository extends Repository<User> {
                 getAgeRangeParsed(userToBeApproached.ageRangeString),
             )
             .filterRecentEncounters()
-            .relatedToUser(userToBeApproached.id)
             .withDateModeLiveMode();
 
         return this;
@@ -230,14 +229,6 @@ export class UserRepository extends Repository<User> {
                 twentyFourHoursAgo: new Date(Date.now() - 24 * 60 * 60 * 1000),
                 notMetStatus: EEncounterStatus.NOT_MET,
             },
-        );
-        return this;
-    }
-
-    private relatedToUser(userToBeApproachedId: string): this {
-        this.queryBuilder.andWhere(
-            "(encounterUser.id = :userToBeApproachedId OR encounterUser.id IS NULL)",
-            { userToBeApproachedId },
         );
         return this;
     }
