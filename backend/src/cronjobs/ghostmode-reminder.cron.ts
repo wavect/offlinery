@@ -57,24 +57,27 @@ export class GhostModeReminderCronJob {
     async checkGhostModeUsers(): Promise<void> {
         this.logger.debug(`Starting checkGhostModeUsers cron job..`);
         const now = new Date();
-        const chunks = 100; // Process users in chunks to prevent memory overload
+        const chunks = 100;
 
-        // Track different reminder intervals
+        // Track different reminder intervals - ordered from largest to smallest
         const intervalHours: IntervalHour[] = [
-            { hours: 24, translationKey: "main.cron.intervalHours.h24" },
-            { hours: 72, translationKey: "main.cron.intervalHours.h72" },
-            { hours: 336, translationKey: "main.cron.intervalHours.h336" }, // 14 days * 24 hours
+            { hours: 336, translationKey: "main.cron.intervalHours.h336" }, // 14 days
+            { hours: 72, translationKey: "main.cron.intervalHours.h72" }, // 3 days
+            { hours: 24, translationKey: "main.cron.intervalHours.h24" }, // 1 day
         ];
 
         const notificationTicketsToSend: OfflineryNotification[] = [];
-        for (const intervalHour of intervalHours) {
+
+        // Process intervals from largest to smallest
+        for (let i = 0; i < intervalHours.length; i++) {
+            const intervalHour = intervalHours[i];
             let skip = 0;
             this.logger.debug(
                 `Checking users for interval ${intervalHour.hours}h.`,
             );
 
             while (true) {
-                const users = await this.userRepository
+                const queryBuilder = this.userRepository
                     .createQueryBuilder("user")
                     .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
                     .andWhere(
@@ -94,7 +97,23 @@ export class GhostModeReminderCronJob {
                                     intervalHour.hours * 60 * 60 * 1000,
                             ),
                         },
-                    )
+                    );
+
+                // Exclude users who qualify for larger intervals
+                for (let j = 0; j < i; j++) {
+                    const largerInterval = intervalHours[j];
+                    queryBuilder.andWhere(
+                        "user.lastDateModeChange > :largerTimestamp" + j,
+                        {
+                            ["largerTimestamp" + j]: new Date(
+                                now.getTime() -
+                                    largerInterval.hours * 60 * 60 * 1000,
+                            ),
+                        },
+                    );
+                }
+
+                const users = await queryBuilder
                     .take(chunks)
                     .skip(skip)
                     .getMany();
@@ -108,7 +127,6 @@ export class GhostModeReminderCronJob {
                 await Promise.all(
                     users.map(async (user) => {
                         try {
-                            // TODO: Let users configure this in settings
                             await this.sendEmail(user, intervalHour);
                             if (user.pushToken) {
                                 const data: NotificationGhostReminderDTO = {
