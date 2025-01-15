@@ -59,12 +59,12 @@ export class GhostModeReminderCronJob {
     async checkGhostModeUsers(): Promise<void> {
         this.logger.debug(`Starting checkGhostModeUsers cron job..`);
         const now = new Date();
-        const chunks = 100;
+        const chunks = 100; // Process users in chunks to prevent memory overload
 
         const intervalHours: IntervalHour[] = [
             { hours: 24, translationKey: "main.cron.intervalHours.h24" },
             { hours: 72, translationKey: "main.cron.intervalHours.h72" },
-            { hours: 336, translationKey: "main.cron.intervalHours.h336" },
+            { hours: 336, translationKey: "main.cron.intervalHours.h336" }, // 14 days * 24 hours
         ];
 
         const notificationTicketsToSend: OfflineryNotification[] = [];
@@ -111,6 +111,7 @@ export class GhostModeReminderCronJob {
                 await Promise.all(
                     users.map(async (user) => {
                         try {
+                            // TODO: Let users configure this in settings
                             await this.sendEmail(user, intervalHour);
                             if (user.pushToken) {
                                 const data: NotificationGhostReminderDTO = {
@@ -141,6 +142,10 @@ export class GhostModeReminderCronJob {
                                     to: user.pushToken,
                                     data,
                                 });
+                            } else {
+                                this.logger.warn(
+                                    `Cannot send push notification for user ${user.id} to remind about ghost mode since no pushToken. But should have sent email.`,
+                                );
                             }
 
                             await this.userRepository.update(user.id, {
@@ -157,6 +162,9 @@ export class GhostModeReminderCronJob {
 
                 skip += chunks;
             }
+            this.logger.debug(
+                `Ghostmode reminders sent for ${intervalHour.hours}h.`,
+            );
         }
 
         const tickets = await this.notificationService.sendPushNotifications(
