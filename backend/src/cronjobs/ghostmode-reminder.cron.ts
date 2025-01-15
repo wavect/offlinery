@@ -43,7 +43,9 @@ export class GhostModeReminderCronJob {
             template: "ghostmode-reminder",
             context: {
                 firstName: user.firstName,
-                intervalHour: this.i18n.t(intervalHour.translationKey),
+                intervalHour: this.i18n.t(intervalHour.translationKey, {
+                    lang,
+                }),
                 t: (key: string, params?: Record<string, any>) =>
                     this.i18n.translate(
                         `main.email.ghostmode-reminder.${key}`,
