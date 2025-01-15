@@ -108,10 +108,6 @@ export class OBackgroundLocationService {
 
             this.locationSubscription = BackgroundGeolocation.onLocation(
                 (location) => {
-                    Sentry.captureMessage(
-                        `Captured locationUpdate in location service: ${JSON.stringify(location?.coords)}`,
-                    );
-
                     // TODO: we might want to include altitude in future too?
                     this.saveLocation(
                         location?.coords?.latitude,
@@ -131,9 +127,6 @@ export class OBackgroundLocationService {
 
             this.heartbeatSubscription = BackgroundGeolocation.onHeartbeat(
                 (event) => {
-                    Sentry.captureMessage(
-                        `Captured heartbeat in location service`,
-                    );
                     BackgroundGeolocation.getCurrentPosition({
                         samples: 1,
                         desiredAccuracy:
