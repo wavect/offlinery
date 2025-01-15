@@ -34,6 +34,7 @@ export class GhostModeReminderCronJob {
         intervalHour: IntervalHour,
     ): Promise<void> {
         const lang = user.preferredLanguage ?? ELanguage.en;
+
         await this.mailService.sendMail({
             to: user.email,
             subject: await this.i18n.translate(
@@ -62,9 +63,9 @@ export class GhostModeReminderCronJob {
         const chunks = 100; // Process users in chunks to prevent memory overload
 
         const intervalHours: IntervalHour[] = [
-            { hours: 24, translationKey: "main.cron.intervalHours.h24" },
-            { hours: 72, translationKey: "main.cron.intervalHours.h72" },
             { hours: 336, translationKey: "main.cron.intervalHours.h336" }, // 14 days * 24 hours
+            { hours: 72, translationKey: "main.cron.intervalHours.h72" },
+            { hours: 24, translationKey: "main.cron.intervalHours.h24" },
         ];
 
         const notificationTicketsToSend: OfflineryNotification[] = [];
@@ -84,7 +85,8 @@ export class GhostModeReminderCronJob {
                     .createQueryBuilder("user")
                     .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
                     .andWhere(
-                        "user.lastDateModeChange IS NULL OR user.lastDateModeChange <= :currentInterval",
+                        "((user.lastDateModeChange IS NOT NULL AND user.lastDateModeChange <= :currentInterval) OR " +
+                            "(user.lastDateModeChange IS NULL AND user.updated <= :currentInterval))",
                         {
                             currentInterval: new Date(
                                 now.getTime() -
@@ -98,7 +100,11 @@ export class GhostModeReminderCronJob {
                         {
                             previousInterval: new Date(
                                 now.getTime() -
-                                    previousInterval * 60 * 60 * 1000,
+                                    (intervalHour.hours -
+                                        (previousInterval ? 12 : 0)) *
+                                        60 *
+                                        60 *
+                                        1000,
                             ),
                         },
                     )
@@ -154,6 +160,12 @@ export class GhostModeReminderCronJob {
 
                             await this.userRepository.update(user.id, {
                                 lastDateModeReminderSent: now,
+                                lastDateModeChange:
+                                    user.lastDateModeChange ??
+                                    new Date(
+                                        now.getTime() -
+                                            intervalHour.hours * 60 * 60 * 1000,
+                                    ), // @dev set to now, to kickstart the flow
                             });
                         } catch (error) {
                             this.logger.error(
