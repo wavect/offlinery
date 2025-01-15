@@ -182,7 +182,9 @@ export class OBackgroundLocationService {
                     title: i18n.t(TR.bgLocationServiceTitle),
                     text: i18n.t(TR.bgLocationServiceBody),
                     color: Color.primary,
-                    smallIcon: "location_icon",
+                    // @dev user feedback to be otherwise very annoying.
+                    sticky: true,
+                    priority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
                 },
             });
         } catch (error) {
