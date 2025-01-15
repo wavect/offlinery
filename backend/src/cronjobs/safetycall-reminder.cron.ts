@@ -31,7 +31,7 @@ export class SafetyCallReminderCronJob extends BaseCronJob {
         super(ECronJobType.SAFETYCALL_REMINDER, mailService, i18n);
     }
 
-    @Cron(CronExpression.EVERY_DAY_AT_7PM)
+    @Cron(CronExpression.EVERY_MINUTE)
     async checkSafetyCallVerificationPending(): Promise<void> {
         this.logger.debug(`Starting verification reminder cron job..`);
         const now = new Date();
@@ -101,16 +101,16 @@ export class SafetyCallReminderCronJob extends BaseCronJob {
             .where("user.verificationStatus = :status", {
                 status: EVerificationStatus.PENDING,
             })
-            .andWhere("user.approachChoice != :approach", {
+            .andWhere("(user.approachChoice != :approach)", {
                 approach: EApproachChoice.BE_APPROACHED,
             })
-            .andWhere("user.created <= :currentInterval", {
+            .andWhere("(user.created <= :currentInterval)", {
                 currentInterval: new Date(
                     now.getTime() - currentIntervalHours * 60 * 60 * 1000,
                 ),
             })
             .andWhere(
-                nextIntervalHours ? "user.created > :nextInterval" : "1=1",
+                nextIntervalHours ? "(user.created > :nextInterval)" : "(1=1)",
                 nextIntervalHours
                     ? {
                           nextInterval: new Date(
@@ -121,8 +121,7 @@ export class SafetyCallReminderCronJob extends BaseCronJob {
                     : {},
             )
             .andWhere(
-                "(user.lastVerificationReminderSent IS NULL OR " +
-                    "user.lastVerificationReminderSent <= :previousInterval)",
+                "(user.lastSafetyCallVerificationReminderSent IS NULL OR user.lastSafetyCallVerificationReminderSent <= :previousInterval)",
                 {
                     previousInterval: new Date(
                         now.getTime() - currentIntervalHours * 60 * 60 * 1000,
