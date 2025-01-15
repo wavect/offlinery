@@ -127,6 +127,7 @@ export class GhostModeReminderCronJob {
                 await Promise.all(
                     users.map(async (user) => {
                         try {
+                            // TODO: Let users configure this in settings
                             await this.sendEmail(user, intervalHour);
                             if (user.pushToken) {
                                 const data: NotificationGhostReminderDTO = {
