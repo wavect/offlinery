@@ -83,11 +83,15 @@ export class GhostModeReminderCronJob {
                 const users = await this.userRepository
                     .createQueryBuilder("user")
                     .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
-                    .andWhere("user.lastDateModeChange <= :currentInterval", {
-                        currentInterval: new Date(
-                            now.getTime() - intervalHour.hours * 60 * 60 * 1000,
-                        ),
-                    })
+                    .andWhere(
+                        "user.lastDateModeChange IS NULL OR user.lastDateModeChange <= :currentInterval",
+                        {
+                            currentInterval: new Date(
+                                now.getTime() -
+                                    intervalHour.hours * 60 * 60 * 1000,
+                            ),
+                        },
+                    )
                     // Only get users who haven't been reminded yet or were last reminded before the previous interval
                     .andWhere(
                         "(user.lastDateModeReminderSent IS NULL OR user.lastDateModeReminderSent <= :previousInterval)",
