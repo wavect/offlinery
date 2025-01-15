@@ -57,27 +57,24 @@ export class GhostModeReminderCronJob {
     async checkGhostModeUsers(): Promise<void> {
         this.logger.debug(`Starting checkGhostModeUsers cron job..`);
         const now = new Date();
-        const chunks = 100;
+        const chunks = 100; // Process users in chunks to prevent memory overload
 
-        // Track different reminder intervals - ordered from largest to smallest
+        // Track different reminder intervals
         const intervalHours: IntervalHour[] = [
-            { hours: 336, translationKey: "main.cron.intervalHours.h336" }, // 14 days
-            { hours: 72, translationKey: "main.cron.intervalHours.h72" }, // 3 days
-            { hours: 24, translationKey: "main.cron.intervalHours.h24" }, // 1 day
+            { hours: 24, translationKey: "main.cron.intervalHours.h24" },
+            { hours: 72, translationKey: "main.cron.intervalHours.h72" },
+            { hours: 336, translationKey: "main.cron.intervalHours.h336" }, // 14 days * 24 hours
         ];
 
         const notificationTicketsToSend: OfflineryNotification[] = [];
-
-        // Process intervals from largest to smallest
-        for (let i = 0; i < intervalHours.length; i++) {
-            const intervalHour = intervalHours[i];
+        for (const intervalHour of intervalHours) {
             let skip = 0;
             this.logger.debug(
                 `Checking users for interval ${intervalHour.hours}h.`,
             );
 
             while (true) {
-                const queryBuilder = this.userRepository
+                const users = await this.userRepository
                     .createQueryBuilder("user")
                     .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
                     .andWhere(
@@ -97,23 +94,7 @@ export class GhostModeReminderCronJob {
                                     intervalHour.hours * 60 * 60 * 1000,
                             ),
                         },
-                    );
-
-                // Exclude users who qualify for larger intervals
-                for (let j = 0; j < i; j++) {
-                    const largerInterval = intervalHours[j];
-                    queryBuilder.andWhere(
-                        "user.lastDateModeChange > :largerTimestamp" + j,
-                        {
-                            ["largerTimestamp" + j]: new Date(
-                                now.getTime() -
-                                    largerInterval.hours * 60 * 60 * 1000,
-                            ),
-                        },
-                    );
-                }
-
-                const users = await queryBuilder
+                    )
                     .take(chunks)
                     .skip(skip)
                     .getMany();
