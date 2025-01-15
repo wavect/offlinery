@@ -40,6 +40,7 @@ export const NotificationNewEventDTOTypeEnum = {
     new_event: "new_event",
     account_approved: "account_approved",
     ghostmode_reminder: "ghostmode_reminder",
+    safetycall_reminder: "safetycall_reminder",
 } as const;
 export type NotificationNewEventDTOTypeEnum =
     (typeof NotificationNewEventDTOTypeEnum)[keyof typeof NotificationNewEventDTOTypeEnum];
@@ -52,6 +53,7 @@ export const NotificationNewEventDTOScreenEnum = {
     FindPeople: "Main_FindPeople",
     FindPeople2: "Main_FindPeople",
     FindPeople3: "Main_FindPeople",
+    FindPeople4: "Main_FindPeople",
 } as const;
 export type NotificationNewEventDTOScreenEnum =
     (typeof NotificationNewEventDTOScreenEnum)[keyof typeof NotificationNewEventDTOScreenEnum];
