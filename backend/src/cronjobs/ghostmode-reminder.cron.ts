@@ -43,7 +43,9 @@ export class GhostModeReminderCronJob {
             template: "ghostmode-reminder",
             context: {
                 firstName: user.firstName,
-                intervalHour: this.i18n.t(intervalHour.translationKey),
+                intervalHour: this.i18n.t(intervalHour.translationKey, {
+                    lang,
+                }),
                 t: (key: string, params?: Record<string, any>) =>
                     this.i18n.translate(
                         `main.email.ghostmode-reminder.${key}`,
@@ -59,7 +61,6 @@ export class GhostModeReminderCronJob {
         const now = new Date();
         const chunks = 100; // Process users in chunks to prevent memory overload
 
-        // Track different reminder intervals
         const intervalHours: IntervalHour[] = [
             { hours: 24, translationKey: "main.cron.intervalHours.h24" },
             { hours: 72, translationKey: "main.cron.intervalHours.h72" },
@@ -67,8 +68,13 @@ export class GhostModeReminderCronJob {
         ];
 
         const notificationTicketsToSend: OfflineryNotification[] = [];
-        for (const intervalHour of intervalHours) {
+
+        // Process one interval at a time, from shortest to longest
+        for (let i = 0; i < intervalHours.length; i++) {
+            const intervalHour = intervalHours[i];
+            const previousInterval = i > 0 ? intervalHours[i - 1].hours : 0;
             let skip = 0;
+
             this.logger.debug(
                 `Checking users for interval ${intervalHour.hours}h.`,
             );
@@ -78,20 +84,21 @@ export class GhostModeReminderCronJob {
                     .createQueryBuilder("user")
                     .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
                     .andWhere(
-                        "user.lastDateModeChange IS NULL OR user.lastDateModeChange <= :timestamp",
+                        "user.lastDateModeChange IS NULL OR user.lastDateModeChange <= :currentInterval",
                         {
-                            timestamp: new Date(
+                            currentInterval: new Date(
                                 now.getTime() -
                                     intervalHour.hours * 60 * 60 * 1000,
                             ),
                         },
                     )
+                    // Only get users who haven't been reminded yet or were last reminded before the previous interval
                     .andWhere(
-                        "user.lastDateModeReminderSent IS NULL OR user.lastDateModeReminderSent < :reminderTimestamp",
+                        "(user.lastDateModeReminderSent IS NULL OR user.lastDateModeReminderSent <= :previousInterval)",
                         {
-                            reminderTimestamp: new Date(
+                            previousInterval: new Date(
                                 now.getTime() -
-                                    intervalHour.hours * 60 * 60 * 1000,
+                                    previousInterval * 60 * 60 * 1000,
                             ),
                         },
                     )
@@ -99,12 +106,12 @@ export class GhostModeReminderCronJob {
                     .skip(skip)
                     .getMany();
 
-                this.logger.debug(
-                    `Found ${users.length} users that are to be reminded for interval ${intervalHour.hours}h.`,
-                );
                 if (users.length === 0) break;
 
-                // Process users in parallel but with concurrency control
+                this.logger.debug(
+                    `Found ${users.length} users to remind for interval ${intervalHour.hours}h.`,
+                );
+
                 await Promise.all(
                     users.map(async (user) => {
                         try {
@@ -145,7 +152,6 @@ export class GhostModeReminderCronJob {
                                 );
                             }
 
-                            // Update last reminder timestamp
                             await this.userRepository.update(user.id, {
                                 lastDateModeReminderSent: now,
                             });
@@ -164,6 +170,7 @@ export class GhostModeReminderCronJob {
                 `Ghostmode reminders sent for ${intervalHour.hours}h.`,
             );
         }
+
         const tickets = await this.notificationService.sendPushNotifications(
             notificationTicketsToSend,
         );
