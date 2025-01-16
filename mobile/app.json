@@ -121,7 +121,7 @@
             [
                 "expo-notifications",
                 {
-                    "icon": "@drawable/ic_notification_icon_monochrome",
+                    "icon": "./assets/notification/ic_notification_icon_monochrome.png",
                     "color": "#459da1",
                     "androidMode": "default",
                     "androidCollapsedTitle": "Updates from Offlinery"
