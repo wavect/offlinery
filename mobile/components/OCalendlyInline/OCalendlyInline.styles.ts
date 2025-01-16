@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         width: "100%",
+        backgroundColor: "transparent",
     },
     calendlyInlineWidget: {
         fontSize: 16,
@@ -17,8 +18,9 @@ const styles = StyleSheet.create({
     webView: {
         width: "100%",
         height: "100%",
-        minHeight: 600,
         flex: 1,
+        paddingBottom: 100,
+        backgroundColor: "transparent",
     },
     calendlyInlineWidgetAll: {
         fontSize: 16,
