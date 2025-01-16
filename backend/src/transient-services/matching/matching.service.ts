@@ -1,3 +1,4 @@
+import { NotificationNavigateUserDTO } from "@/DTOs/notifications/notification-navigate-user.dto";
 import { EncounterService } from "@/entities/encounter/encounter.service";
 import { User } from "@/entities/user/user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
@@ -120,16 +121,17 @@ export class MatchingService {
                         userSendingLocationUpdate.approachChoice ===
                             EApproachChoice.BOTH
                     ) {
+                        const data: NotificationNavigateUserDTO = {
+                            ...(baseNotification.data as any), // TODO: fix this type (type derivation issue, but content should be ok)
+                            encounterId: encounter.id,
+                            navigateToPerson:
+                                userSendingLocationUpdate.convertToPublicDTO(),
+                        };
                         // Notify the other user
                         notifications.push({
                             ...baseNotification,
                             to: userNearBy.pushToken,
-                            data: {
-                                ...baseNotification.data,
-                                encounterId: encounter.id,
-                                navigateToPerson:
-                                    userSendingLocationUpdate.convertToPublicDTO(),
-                            },
+                            data,
                         });
                     }
 
