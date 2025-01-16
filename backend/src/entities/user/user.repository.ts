@@ -2,7 +2,6 @@ import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-reg
 import {
     EApproachChoice,
     EDateMode,
-    EEncounterStatus,
     EGender,
     EIntention,
     EVerificationStatus,
@@ -224,10 +223,9 @@ export class UserRepository extends Repository<User> {
 
     private filterRecentEncounters(): this {
         this.queryBuilder.andWhere(
-            "(encounter.id IS NULL OR (encounter.lastDateTimePassedBy < :twentyFourHoursAgo AND encounter.status = :notMetStatus))",
+            "(encounter.id IS NULL OR encounter.lastDateTimePassedBy < :twentyFourHoursAgo)",
             {
                 twentyFourHoursAgo: new Date(Date.now() - 24 * 60 * 60 * 1000),
-                notMetStatus: EEncounterStatus.NOT_MET,
             },
         );
         return this;

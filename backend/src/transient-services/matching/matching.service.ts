@@ -104,10 +104,6 @@ export class MatchingService {
                 `Saved ${newEncounters.size} new encounters for user ${userSendingLocationUpdate.id}`,
             );
 
-            console.log(
-                `Saved ${newEncounters.size} new encounters for user ${userSendingLocationUpdate.id}`,
-            );
-
             const notifications: OfflineryNotification[] = [];
 
             for (const userNearBy of nearbyMatches) {
