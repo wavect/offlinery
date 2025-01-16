@@ -1,7 +1,7 @@
 import { TR, i18n } from "@/localization/translate.service";
 import * as Sentry from "@sentry/react-native";
 import React, { FC, useRef, useState } from "react";
-import { DimensionValue, Dimensions, Platform, View } from "react-native";
+import { Dimensions, Platform, View } from "react-native";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
 import {
     CalendlyEvent,
@@ -44,7 +44,6 @@ const OCalendlyInline: FC<Props> = ({
     onPageHeight,
 }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [webViewHeight, setWebViewHeight] = useState<DimensionValue>();
     const webViewRef = useRef<WebView>(null);
     const { height: windowHeight } = Dimensions.get("window");
 
@@ -77,9 +76,9 @@ const OCalendlyInline: FC<Props> = ({
                     onProfilePageViewed?.(data.payload);
                     break;
                 case CalendlyEvent.PAGE_HEIGHT:
-                    setWebViewHeight(
+                    /*setWebViewHeight(
                         parseInt(data.payload.height.replace("px", "")),
-                    );
+                    );*/
                     onPageHeight?.(data.payload);
                     break;
             }

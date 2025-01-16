@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         flex: 1,
-        paddingBottom: 100,
+        paddingBottom: 100, // @dev Needed for iOS. Has seemingly no effect on Android.
         backgroundColor: "transparent",
     },
     calendlyInlineWidgetAll: {
