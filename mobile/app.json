@@ -77,6 +77,10 @@
             "appleTeamId": "YR7NVL6UM8"
         },
         "android": {
+            "adaptiveIcon": {
+                "backgroundImage": "./assets/notification/adaptive-icon-background.png",
+                "foregroundImage": "./assets/notification/adaptive-icon-foreground.png"
+            },
             "config": {
                 "googleMaps": {
                     "apiKey": "AIzaSyCvQCDDpKQW-DlxC44t8edMgC52HvTl4LM"
@@ -117,7 +121,7 @@
             [
                 "expo-notifications",
                 {
-                    "icon": "./assets/icon.png",
+                    "icon": "@drawable/ic_notification_icon_monochrome",
                     "color": "#459da1",
                     "androidMode": "default",
                     "androidCollapsedTitle": "Updates from Offlinery"
