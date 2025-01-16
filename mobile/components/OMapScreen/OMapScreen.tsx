@@ -2,7 +2,7 @@ import { Color, FontSize } from "@/GlobalStyles";
 import OCard from "@/components/OCard/OCard";
 import { OMap } from "@/components/OMapScreen/OMap/OMap";
 import React from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { Platform, StatusBar, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 interface IOMapScreenProps {
@@ -25,13 +25,14 @@ const OMapScreen = ({
     bottomChildren,
 }: IOMapScreenProps) => {
     return (
-        <View
-            style={[
-                styles.container,
-                Platform.OS === "android" ? { marginTop: -15 } : undefined,
-            ]}
-        >
-            <SafeAreaView edges={["right", "left"]} style={styles.overlay}>
+        <View style={styles.container}>
+            <StatusBar
+                translucent
+                backgroundColor="transparent"
+                barStyle="dark-content"
+            />
+
+            <SafeAreaView style={styles.overlay} edges={["right", "left"]}>
                 <OMap
                     saveChangesToBackend={saveChangesToBackend}
                     showHeatmap={showHeatmap}
@@ -42,22 +43,18 @@ const OMapScreen = ({
 
             {subtitle && (
                 <SafeAreaView
+                    style={[styles.topContentContainer]}
                     edges={["top", "right", "left"]}
-                    style={styles.overlay}
                 >
-                    <View
-                        style={[
-                            styles.topContent,
-                            Platform.OS === "android"
-                                ? { marginTop: 6 }
-                                : undefined,
-                        ]}
-                    >
+                    <View style={styles.topContent}>
                         <OCard dismissable={true}>
                             <Text style={styles.subtitle}>{subtitle}</Text>
                         </OCard>
                         {subtitle2 && (
-                            <OCard dismissable={true} style={{ marginTop: 6 }}>
+                            <OCard
+                                dismissable={true}
+                                style={styles.subtitleCard}
+                            >
                                 <Text style={styles.subtitle}>{subtitle2}</Text>
                             </OCard>
                         )}
@@ -66,7 +63,7 @@ const OMapScreen = ({
             )}
 
             {bottomChildren && (
-                <SafeAreaView edges={["bottom"]} style={styles.bottomContainer}>
+                <SafeAreaView style={styles.bottomContainer} edges={["bottom"]}>
                     <OCard style={styles.bottomCard}>{bottomChildren}</OCard>
                 </SafeAreaView>
             )}
@@ -80,8 +77,11 @@ const styles = StyleSheet.create({
         backgroundColor: Color.white,
     },
     overlay: {
+        flex: 1,
+    },
+    topContentContainer: {
         position: "absolute",
-        top: 0,
+        top: Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0,
         left: 0,
         right: 0,
         zIndex: 1,
@@ -92,6 +92,9 @@ const styles = StyleSheet.create({
     subtitle: {
         fontSize: FontSize.size_sm,
         color: "#666666",
+    },
+    subtitleCard: {
+        marginTop: 6,
     },
     bottomContainer: {
         position: "absolute",
@@ -104,8 +107,6 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(255, 255, 255, 0.95)",
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16,
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
         marginBottom: 0,
     },
 });
