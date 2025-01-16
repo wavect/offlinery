@@ -299,19 +299,10 @@ export class EncounterService {
             });
 
             if (existingEncounter) {
-                const twentyFourHoursAgo = new Date(
-                    Date.now() - 24 * 60 * 60 * 1000,
-                );
-                if (
-                    existingEncounter.lastDateTimePassedBy > twentyFourHoursAgo
-                ) {
-                    // @dev only 1 streak per 24h
-                    existingEncounter.amountStreaks++;
-                }
-
                 existingEncounter.lastDateTimePassedBy = new Date();
                 existingEncounter.lastLocationPassedBy =
                     user1.id === user1Id ? user1.location : user2.location;
+                existingEncounter.amountStreaks++;
 
                 const savedEncounter = await queryRunner.manager.save(
                     Encounter,
