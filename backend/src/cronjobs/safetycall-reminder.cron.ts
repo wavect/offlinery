@@ -28,13 +28,26 @@ export class SafetyCallReminderCronJob extends BaseCronJob {
         protected readonly i18n: I18nService,
         protected readonly calendlyService: CalendlyService,
     ) {
-        super(ECronJobType.SAFETYCALL_REMINDER, mailService, i18n);
+        super(
+            notificationService,
+            ECronJobType.SAFETYCALL_REMINDER,
+            mailService,
+            i18n,
+        );
     }
 
     @Cron(CronExpression.EVERY_DAY_AT_7PM)
-    async checkSafetyCallVerificationPending(): Promise<void> {
-        this.logger.debug(`Starting verification reminder cron job..`);
+    async executeSafetyCallReminderJob(): Promise<void> {
+        this.logger.debug("Starting verification reminder cron job..");
+        const usersToRemind = await this.findUsersNeedingReminders();
+        await this.processUsersReminders(usersToRemind);
+        this.logger.debug("Safety call verification reminder job completed.");
+    }
+
+    // This method contains the testable logic
+    async findUsersNeedingReminders(): Promise<User[]> {
         const now = new Date();
+        const usersToRemind: User[] = [];
 
         // Process one interval at a time, from longest to shortest
         for (let i = 0; i < DEFAULT_INTERVAL_HOURS.length; i++) {
@@ -69,25 +82,56 @@ export class SafetyCallReminderCronJob extends BaseCronJob {
                     );
 
                 // Filter users who need reminders
-                const usersToRemind = users.filter((user) =>
+                const batchUsersToRemind = users.filter((user) =>
                     emailsWithoutCalls.has(user.email.toLowerCase()),
                 );
 
                 this.logger.debug(
-                    `${usersToRemind.length} users have no scheduled calls and will receive reminders.`,
+                    `${batchUsersToRemind.length} users have no scheduled calls and will receive reminders.`,
                 );
 
-                // Process reminders in parallel
-                await Promise.all(
-                    usersToRemind.map((user) =>
-                        this.processUserReminder(user, now, currentInterval),
-                    ),
-                );
-
+                usersToRemind.push(...batchUsersToRemind);
                 skip += this.BATCH_SIZE;
             }
         }
-        this.logger.debug(`Safety call verification reminder job completed.`);
+
+        return usersToRemind;
+    }
+
+    // This method handles the execution
+    private async processUsersReminders(users: User[]): Promise<void> {
+        const now = new Date();
+        await Promise.all(
+            users.map(async (user) => {
+                const interval = this.findIntervalForUser(user, now);
+                if (interval) {
+                    await this.processUserReminder(user, now, interval);
+                }
+            }),
+        );
+    }
+
+    private findIntervalForUser(user: User, now: Date): IntervalHour | null {
+        const userCreatedTime = user.created.getTime();
+        const currentTime = now.getTime();
+
+        for (let i = 0; i < DEFAULT_INTERVAL_HOURS.length; i++) {
+            const currentInterval = DEFAULT_INTERVAL_HOURS[i];
+            const nextInterval = DEFAULT_INTERVAL_HOURS[i + 1]?.hours ?? 0;
+
+            const currentIntervalTime =
+                currentTime - currentInterval.hours * 60 * 60 * 1000;
+            const nextIntervalTime =
+                currentTime - nextInterval * 60 * 60 * 1000;
+
+            if (
+                userCreatedTime <= currentIntervalTime &&
+                (nextInterval === 0 || userCreatedTime > nextIntervalTime)
+            ) {
+                return currentInterval;
+            }
+        }
+        return null;
     }
 
     private async getUserBatch(
