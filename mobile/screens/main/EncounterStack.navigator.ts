@@ -6,7 +6,10 @@ import { ReactNode } from "react";
 export type EncounterStackParamList = {
     [ROUTES.Main.EncountersStack]: undefined;
     [ROUTES.Main.ReportEncounter]: { personToReport: EncounterPublicDTO };
-    [ROUTES.Main.NavigateToApproach]: { navigateToPerson: EncounterPublicDTO };
+    [ROUTES.Main.NavigateToApproach]: {
+        navigateToPerson: UserPublicDTO;
+        encounterId: string;
+    };
     [ROUTES.Main.ProfileView]: {
         user: UserPublicDTO;
         bottomContainerChildren?: ReactNode;

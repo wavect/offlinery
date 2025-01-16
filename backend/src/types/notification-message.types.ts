@@ -5,12 +5,11 @@ import { NotificationNewEventDTO } from "@/DTOs/notifications/notification-new-e
 import { ExpoPushMessage } from "expo-server-sdk";
 
 /** @dev Stricter typed Notification type */
-export type OfflineryNotification = ExpoPushMessage & {
+export type OfflineryNotification = Omit<ExpoPushMessage, "data"> & {
     /** @dev get rid of any */
     data:
         | NotificationNavigateUserDTO
         | NotificationNewEventDTO
         | NotificationAccountApprovedDTO
-        | NotificationGhostReminderDTO
-        | any;
+        | NotificationGhostReminderDTO;
 };

@@ -1,9 +1,7 @@
 import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
-import { EncounterPublicDTO } from "@/api/gen/src";
 import { OLoadingSpinner } from "@/components/OLoadingCircle/OLoadingCircle";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
-import { getPublicProfileFromEncounter } from "@/context/EncountersContext";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { EncounterStackParamList } from "@/screens/main/EncounterStack.navigator";
@@ -29,7 +27,7 @@ const NavigateToApproach = ({
     EncounterStackParamList,
     typeof ROUTES.Main.NavigateToApproach
 >) => {
-    const navigateToPerson: EncounterPublicDTO = route.params.navigateToPerson;
+    const { navigateToPerson, encounterId } = route.params;
 
     const { state } = useUserContext();
     const [isLoading, setIsLoading] = useState(false);
@@ -42,60 +40,42 @@ const NavigateToApproach = ({
         longitude: number;
         latitude: number;
     } | null>(null);
+    // Add mounted ref to prevent state updates after unmount, otherwise back btn not working
+    const isMounted = React.useRef(true);
+
+    useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
 
     useEffect(() => {
         let intervalId: string | number | NodeJS.Timeout | undefined;
         let isFirstRun = true;
         const fetchLocations = async () => {
+            if (!isMounted.current) return;
             try {
                 setIsLoading(isFirstRun);
 
-                await BackgroundGeolocation.requestPermission(
-                    async (status) => {
-                        if (
-                            status !==
-                                BackgroundGeolocation.AUTHORIZATION_STATUS_ALWAYS &&
-                            status !==
-                                BackgroundGeolocation.AUTHORIZATION_STATUS_WHEN_IN_USE
-                        ) {
-                            alert(i18n.t(TR.permissionToLocationDenied));
-                            return;
-                        }
-                        const location =
-                            await BackgroundGeolocation.getCurrentPosition({
-                                desiredAccuracy:
-                                    BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
-                            });
-                        setLocation(location);
-
-                        /** @DEV name might be misleading, this is actually the REAL location of the other user, not the location where they met. */
-                        const encounterLoc =
-                            await API.encounter.encounterControllerGetLocationOfEncounter(
-                                {
-                                    userId: state.id!,
-                                    encounterId: navigateToPerson.id,
-                                },
-                            );
-
-                        setDestination(encounterLoc);
-                        setIsLoading(false);
-                    },
-                    (status) => {
-                        Sentry.captureException(
-                            new Error(
-                                "Error requesting locationPermissions in NavigateTo",
-                            ),
-                            {
-                                tags: {
-                                    navigateTo: "fetchingLocation:onFailure",
-                                },
-                                extra: { status },
-                            },
-                        );
-                        alert(i18n.t(TR.permissionToLocationDenied));
-                        setIsLoading(false);
+                const location = await BackgroundGeolocation.getCurrentPosition(
+                    {
+                        desiredAccuracy:
+                            BackgroundGeolocation.DESIRED_ACCURACY_NAVIGATION,
                     },
                 );
+                setLocation(location);
+
+                /** @DEV name might be misleading, this is actually the REAL location of the other user, not the location where they met. */
+                const encounterLoc =
+                    await API.encounter.encounterControllerGetLocationOfEncounter(
+                        {
+                            userId: state.id!,
+                            encounterId,
+                        },
+                    );
+
+                setDestination(encounterLoc);
+                setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching locations:", error);
                 Sentry.captureException(error, {
@@ -160,7 +140,7 @@ const NavigateToApproach = ({
             <OTeaserProfilePreview
                 prefixText={i18n.t(TR.findWithSpace)}
                 navigation={navigation}
-                publicProfile={getPublicProfileFromEncounter(navigateToPerson)}
+                publicProfile={navigateToPerson}
                 showOpenProfileButton={true}
                 // TODO navigate to disabled for now
                 // secondButton={{
@@ -203,7 +183,7 @@ const NavigateToApproach = ({
                     {destination && (
                         <Marker
                             coordinate={destination}
-                            title={navigateToPerson.otherUser.firstName}
+                            title={navigateToPerson.firstName}
                         />
                     )}
                     {location && destination && (

@@ -1,13 +1,15 @@
 import { CreateUserReportDTO } from "@/DTOs/create-user-report.dto";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { User } from "@/entities/user/user.entity";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { UserReport } from "./user-report.entity";
 
 @Injectable()
 export class UserReportService {
+    private readonly logger = new Logger(UserReportService.name);
+
     constructor(
         @InjectRepository(UserReport)
         private userReportRepository: Repository<UserReport>,
@@ -21,6 +23,9 @@ export class UserReportService {
         reportingUserId: string,
         createUserReportDto: CreateUserReportDTO,
     ): Promise<boolean> {
+        this.logger.debug(
+            `User ${reportingUserId} has reported ${createUserReportDto.encounterId} encounter for ${createUserReportDto.incidentType}`,
+        );
         const reportingUser = await this.userRepository.findOneBy({
             id: reportingUserId,
         });
