@@ -2,6 +2,7 @@ import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-reg
 import {
     EApproachChoice,
     EDateMode,
+    EEncounterStatus,
     EGender,
     EIntention,
     EVerificationStatus,
@@ -39,6 +40,7 @@ export class UserRepository extends Repository<User> {
             .withinAgeRange(
                 getAgeRangeParsed(userToBeApproached.ageRangeString),
             )
+            .filterNotInterested()
             .filterRecentEncounters()
             .withDateModeLiveMode();
 
@@ -218,6 +220,16 @@ export class UserRepository extends Repository<User> {
             { minAge, maxAge },
         );
 
+        return this;
+    }
+
+    private filterNotInterested(): this {
+        this.queryBuilder.andWhere(
+            "(encounter.status != :notInterestedStatus)",
+            {
+                notInterestedStatus: EEncounterStatus.MET_NOT_INTERESTED,
+            },
+        );
         return this;
     }
 
