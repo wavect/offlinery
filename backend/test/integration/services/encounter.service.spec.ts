@@ -132,6 +132,7 @@ describe("Encounter Service Integration Tests ", () => {
                 firstName: "User1",
                 gender: EGender.WOMAN,
                 genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
                 location: new PointBuilder().build(0, 0),
                 approachChoice: EApproachChoice.BE_APPROACHED,
             });
@@ -151,7 +152,11 @@ describe("Encounter Service Integration Tests ", () => {
                 userNearby.id,
             );
 
-            expect(userEncounters.length).toEqual(1);
+            const otherUserEncounter =
+                await encounterService.findEncountersByUser(mainUser.id);
+
+            expect(otherUserEncounter.length).toEqual(1); // fails with 0
+            expect(userEncounters.length).toEqual(1); // fails with 0
             expect(
                 !!userEncounters[0].users.find((u) => u.id === mainUser.id),
             ).toBeTruthy();
@@ -453,6 +458,7 @@ describe("Encounter Service Integration Tests ", () => {
                     .length,
             ).toEqual(1);
         });
+
         it("should create one single encounter for one single approach interaction", async () => {
             const mainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
@@ -570,8 +576,12 @@ describe("Encounter Service Integration Tests ", () => {
                 approachChoice: EApproachChoice.BOTH,
             });
 
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 15; i++) {
                 userService.updateLocation(otherUser.id, {
+                    latitude: 0,
+                    longitude: 0,
+                });
+                userService.updateLocation(mainUser.id, {
                     latitude: 0,
                     longitude: 0,
                 });
@@ -593,7 +603,7 @@ describe("Encounter Service Integration Tests ", () => {
                     .length,
             ).toEqual(1);
         });
-        it("should not create multiple encounters for a given pair if onlz one user send location updates", async () => {
+        it("should not create multiple encounters for a given pair if only one user send location updates", async () => {
             const mainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
@@ -663,7 +673,6 @@ describe("Encounter Service Integration Tests ", () => {
 
             expect(res.get(otherUser.id).amountStreaks).toEqual(1);
         });
-
         it("should increase streak counter if met again", async () => {
             const mainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,

@@ -255,6 +255,7 @@ export class EncounterService {
         user2Id: string,
         queryRunner: QueryRunner,
     ): Promise<Encounter> {
+        console.log("---> inside Locker");
         await queryRunner.startTransaction();
 
         try {

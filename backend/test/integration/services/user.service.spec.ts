@@ -2,15 +2,22 @@ import { EncounterService } from "@/entities/encounter/encounter.service";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
 import { UserService } from "@/entities/user/user.service";
-import { EEmailVerificationStatus, EGender } from "@/types/user.types";
+import {
+    EApproachChoice,
+    EDateMode,
+    EEmailVerificationStatus,
+    EGender,
+    EIntention,
+} from "@/types/user.types";
 import { NotFoundException } from "@nestjs/common";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { PointBuilder } from "../../_src/builders/point.builder";
 import { UserBuilder } from "../../_src/builders/user.builder";
 import { EncounterFactory } from "../../_src/factories/encounter.factory";
 import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
-import { generateRandomString } from "../../_src/utils/utils";
+import { clearDatabase, generateRandomString } from "../../_src/utils/utils";
 
 describe("UserService", () => {
     let userRepository: UserRepository;
@@ -19,15 +26,23 @@ describe("UserService", () => {
     let userFactory: UserFactory;
     let encounterFactory: EncounterFactory;
     let pendingUserRepository: Repository<PendingUser>;
+    let testingDataSource;
 
     beforeAll(async () => {
-        const { module, factories } = await getIntegrationTestModule();
+        const { module, dataSource, factories } =
+            await getIntegrationTestModule();
+        testingDataSource = dataSource;
+
         userRepository = module.get<UserRepository>(UserRepository);
         userService = module.get<UserService>(UserService);
         pendingUserRepository = module.get(getRepositoryToken(PendingUser));
         encounterService = module.get<EncounterService>(EncounterService);
         userFactory = factories.get("user") as UserFactory;
         encounterFactory = factories.get("encounter") as EncounterFactory;
+    });
+
+    beforeEach(async () => {
+        await clearDatabase(testingDataSource);
     });
 
     describe("basic user operations", () => {
@@ -273,5 +288,68 @@ describe("UserService", () => {
             });
             expect(userLookupFailing).toEqual(null);
         }, 10000);
+    });
+
+    describe("encounter lookup", function () {
+        it("should not find matches if 2 people already met", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            /*** @DEV main user and other user now should have an encounter */
+            expect(
+                (await encounterService.findEncountersByUser(mainUser.id))
+                    .length,
+            ).toEqual(0);
+
+            expect(
+                (
+                    await userRepository.getPotentialMatchesForNotifications(
+                        mainUser,
+                    )
+                ).length,
+            ).toEqual(1);
+
+            /** @DEV updating the location should create an encounter now */
+            await userService.updateLocation(mainUser.id, {
+                latitude: 0,
+                longitude: 0,
+            });
+
+            /*** @DEV main user and other user now should have an encounter */
+            expect(
+                (await encounterService.findEncountersByUser(mainUser.id))
+                    .length,
+            ).toEqual(1);
+
+            /** @DEV user is now moving again, checking if other users are nearby... */
+            await userService.updateLocation(mainUser.id, {
+                latitude: 0,
+                longitude: 0,
+            });
+
+            /*** @DEV any new lookup, should not lead to returning a "new match" */
+            expect(
+                (
+                    await userRepository.getPotentialMatchesForNotifications(
+                        mainUser,
+                    )
+                ).length,
+            ).toEqual(0);
+        });
     });
 });

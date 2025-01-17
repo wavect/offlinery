@@ -41,6 +41,7 @@ export class UserRepository extends Repository<User> {
                 getAgeRangeParsed(userToBeApproached.ageRangeString),
             )
             .filterNotInterested()
+            .ifEncounterOnlyShowMine(userToBeApproached.id)
             .filterRecentEncounters()
             .withDateModeLiveMode();
 
@@ -225,7 +226,7 @@ export class UserRepository extends Repository<User> {
 
     private filterNotInterested(): this {
         this.queryBuilder.andWhere(
-            "(encounter.status != :notInterestedStatus)",
+            "(encounter.id IS NULL OR encounter.status != :notInterestedStatus)",
             {
                 notInterestedStatus: EEncounterStatus.MET_NOT_INTERESTED,
             },
@@ -239,6 +240,14 @@ export class UserRepository extends Repository<User> {
             {
                 twentyFourHoursAgo: new Date(Date.now() - 24 * 60 * 60 * 1000),
             },
+        );
+        return this;
+    }
+
+    private ifEncounterOnlyShowMine(userToBeApproachedId: string): this {
+        this.queryBuilder.andWhere(
+            "(encounter.id IS NULL OR encounterUser.id = :userToBeApproachedId)",
+            { userToBeApproachedId },
         );
         return this;
     }
