@@ -180,6 +180,8 @@ export const de: Language = {
         "Menschen, die du vielleicht getroffen hast. Bewerte sie, melde sie oder bleibe in Kontakt.",
     weMetFrom: "Wir haben uns getroffen von",
     toThisDate: "bis zu diesem Datum",
+    turnOnLiveMode:
+        "Aktiviere den Switch im rechten oberen Eck, um Leute in echt zu treffen.",
     beNearTheseHotspotsToMeet:
         "In der Nähe dieser Hotspots zu sein erhöht deine Chancen, Jemanden zu treffen.",
     safeZonesToHide:
