@@ -92,12 +92,6 @@ const OCalendlyInline: FC<Props> = ({
         }
     };
 
-    const getWebViewHeight = () => {
-        const baseHeight = windowHeight * 0.9; // 90% of window height
-        // Add extra padding for iOS to account for safe areas
-        return Platform.OS === "ios" ? baseHeight - 20 : baseHeight;
-    };
-
     const src = formatCalendlyUrl({
         url,
         pageSettings,
