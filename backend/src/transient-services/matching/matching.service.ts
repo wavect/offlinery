@@ -96,7 +96,7 @@ export class MatchingService {
                 );
 
             if (!newEncounters?.size) {
-                this.logger.debug(`Reached daily encounter limit for user`);
+                this.logger.log(`Reached daily encounter limit for user`);
                 return [];
             }
 

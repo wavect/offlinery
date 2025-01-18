@@ -12,7 +12,7 @@ import { API } from "@/utils/api-config";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
 import * as React from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
     ActivityIndicator,
     RefreshControl,
@@ -34,8 +34,10 @@ export const OEncounterList = (props: IOEncounterListProps) => {
     const navigation = useNavigation();
     const { state: encounterState, dispatch } = useEncountersContext();
     const { state: userState } = useUserContext();
-    const [refreshing, setRefreshing] = useState(false);
-    const [initialLoading, setInitialLoading] = useState(true);
+    const [loadingState, setLoadingState] = useState({
+        refreshing: false,
+        initialLoading: true,
+    });
 
     const fetchEncounters = useCallback(
         async (isInitialLoad = false) => {
@@ -46,12 +48,11 @@ export const OEncounterList = (props: IOEncounterListProps) => {
                     );
                     return;
                 }
-                if (isInitialLoad) {
-                    setRefreshing(false);
-                    setInitialLoading(true);
-                } else {
-                    setRefreshing(true);
-                }
+                setLoadingState((prev) => ({
+                    refreshing: !isInitialLoad,
+                    initialLoading: isInitialLoad ? true : prev.initialLoading,
+                }));
+
                 const encounters =
                     await API.encounter.encounterControllerGetEncountersByUser({
                         userId: userState.id,
@@ -71,16 +72,23 @@ export const OEncounterList = (props: IOEncounterListProps) => {
                     },
                 });
             } finally {
-                setRefreshing(false);
-                setInitialLoading(false);
+                setLoadingState({
+                    refreshing: false,
+                    initialLoading: false,
+                });
             }
         },
         [userState.id, dispatch, metStartDateFilter, metEndDateFilter],
     );
 
     useEffect(() => {
-        fetchEncounters(true);
-    }, [fetchEncounters, metStartDateFilter, metEndDateFilter]);
+        let mounted = true;
+        if (mounted) fetchEncounters(true);
+
+        return () => {
+            mounted = false;
+        };
+    }, [metStartDateFilter, metEndDateFilter]);
 
     const onRefresh = useCallback(async () => {
         await fetchEncounters(false);
@@ -108,7 +116,7 @@ export const OEncounterList = (props: IOEncounterListProps) => {
         return () => {
             eventEmitter?.off("stop", handleTourOnStop);
         };
-    }, [eventEmitter, refreshing]);
+    }, [eventEmitter]);
 
     const isFocused = useIsFocused();
     useEffect(() => {
@@ -117,7 +125,7 @@ export const OEncounterList = (props: IOEncounterListProps) => {
         }
     }, [isFocused]);
 
-    const getEncounterList = () => {
+    const encounterList = useMemo(() => {
         if (encounterState.isWalkthroughRunning) {
             return <OTourEncounter navigation={navigation} />;
         } else {
@@ -141,9 +149,13 @@ export const OEncounterList = (props: IOEncounterListProps) => {
                 </View>
             );
         }
-    };
+    }, [
+        encounterState.encounters,
+        encounterState.isWalkthroughRunning,
+        navigation,
+    ]);
 
-    return initialLoading ? (
+    return loadingState.initialLoading ? (
         <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={Color.gray} />
         </View>
@@ -151,7 +163,10 @@ export const OEncounterList = (props: IOEncounterListProps) => {
         <ScrollView
             style={styles.encountersList}
             refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                <RefreshControl
+                    refreshing={loadingState.refreshing}
+                    onRefresh={onRefresh}
+                />
             }
             contentContainerStyle={
                 !encounterState.isWalkthroughRunning &&
@@ -159,7 +174,7 @@ export const OEncounterList = (props: IOEncounterListProps) => {
                 styles.emptyListContainer
             }
         >
-            {getEncounterList()}
+            {encounterList}
         </ScrollView>
     );
 };
