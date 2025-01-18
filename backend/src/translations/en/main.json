@@ -76,7 +76,8 @@
       "importanceMessage": "In this casual 15-minute chat, we'll do a quick emotional intelligence check to make sure everyone in our community feels safe and comfortable. Once approved, you'll be ready to make real-life connections!",
       "bookCallButton": "Schedule Your Call",
       "timeEstimate": "It's super quick - just 15 minutes of your time! ⏰",
-      "closingMessage": "Not interested in approaching others? No problem! You can skip this call and still be approached by others - just change this setting in the app. Want to become active later? You can always come back and complete the safety call when you're ready.",
+      "closingMessage": "Not interested in approaching others? No problem! You can skip this call and still be approached by others - just change this setting in the app.",
+      "beApproachAlternative": "Want to become active later? You can always come back and complete the safety call when you're ready.",
       "footer": "This is an automated message from your friends at Offlinery."
     }
   },
