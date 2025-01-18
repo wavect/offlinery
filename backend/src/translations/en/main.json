@@ -68,7 +68,7 @@
       "suggestion": "Switch to Live Mode within Offlinery to start meeting people in your area again!",
       "footer": "You received this email because you enabled Ghost Mode in your settings. You can change this anytime."
     },
-    "verificationcall-reminder": {
+    "safety-call-booked-reminder": {
       "subject": "Book Your Quick Safety Call - Offlinery",
       "header": "Time for Your Safety Call! 🎉",
       "greeting": "Hey {firstName}",

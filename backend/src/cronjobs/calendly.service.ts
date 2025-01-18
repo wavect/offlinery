@@ -28,7 +28,7 @@ export class CalendlyService {
 
     private readonly API_KEY = TYPED_ENV.CALENDLY_ACCESS_TOKEN;
     private readonly USER_URI = `https://api.calendly.com/users/${TYPED_ENV.CALENDLY_USER_ID}`;
-    private readonly BASE_URL = "https://api.calendly.com/v2";
+    private readonly BASE_URL = "https://api.calendly.com";
 
     private async getScheduledEvents(
         minStartTime: string,
@@ -58,8 +58,6 @@ export class CalendlyService {
                 return [];
             }
 
-            this.logger.debug("WORKEND");
-            return [];
             const data = (await response.json()) as CalendlyResponse;
             return data.collection;
         } catch (error) {
