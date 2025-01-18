@@ -56,7 +56,8 @@ export const en = {
     },
     noAccessToMediaLib: "No access to media library.",
     addPhotos: "Add photos",
-    clickToUploadImages: "Click to upload images.",
+    clickToUploadImages:
+        "Make sure to use images of yourself alone, people cannot find you in real life if they do not recognize you.",
     continue: "Continue",
     iWantTo: "I want to",
     approach: "Approach someone",

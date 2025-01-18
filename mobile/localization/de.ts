@@ -62,7 +62,8 @@ export const de: Language = {
     },
     noAccessToMediaLib: "Kein Zugriff auf die Mediathek.",
     addPhotos: "Fotos hinzufügen",
-    clickToUploadImages: "Klicken, um Bilder hochzuladen.",
+    clickToUploadImages:
+        "Lade Bilder von dir hoch, auf denen du klar erkennbar bist. Ansonsten erkennt dich niemand im realen Leben.",
     continue: "Weiter",
     iWantTo: "Ich möchte",
     approach: "Ansprechen",

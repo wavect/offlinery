@@ -225,9 +225,13 @@ export class User
     @Column({ type: "timestamptz", nullable: true })
     lastDateModeChange: Date;
 
-    /** @dev Used to make sure appropriate reminders are sent. */
+    /** @dev Used to make sure appropriate reminders are sent when user is in ghost mode. */
     @Column({ type: "timestamptz", nullable: true })
     lastDateModeReminderSent: Date;
+
+    /** @dev Used to remind user to book a safety call in several intervals. */
+    @Column({ type: "timestamptz", nullable: true })
+    lastSafetyCallVerificationReminderSent: Date;
 
     @BeforeInsert()
     beforeInsert() {

@@ -1,11 +1,5 @@
 import { Color } from "@/GlobalStyles";
-import {
-    NotificationAccountApprovedDTO,
-    NotificationGhostReminderDTO,
-    NotificationNavigateUserDTO,
-    NotificationNewEventDTO,
-    StorePushTokenDTO,
-} from "@/api/gen/src";
+import { NotificationNavigateUserDTO, StorePushTokenDTO } from "@/api/gen/src";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import {
@@ -180,42 +174,6 @@ export const registerForPushNotificationsAsync = async (
         token,
         tokenFetchStatus: TokenFetchStatus.SUCCESS,
     };
-};
-
-export const reactToAccountApprovedNotification = (
-    response: Notifications.NotificationResponse,
-    navigation: any,
-) => {
-    const notificationData: NotificationAccountApprovedDTO = response
-        .notification.request.content.data as NotificationAccountApprovedDTO;
-
-    navigation.navigate(ROUTES.MainTabView, {
-        screen: notificationData.screen,
-    });
-};
-
-export const reactToGhostModeReminderNotification = (
-    response: Notifications.NotificationResponse,
-    navigation: any,
-) => {
-    const notificationData: NotificationGhostReminderDTO = response.notification
-        .request.content.data as NotificationGhostReminderDTO;
-
-    navigation.navigate(ROUTES.MainTabView, {
-        screen: notificationData.screen,
-    });
-};
-
-export const reactToNewEventNotification = (
-    response: Notifications.NotificationResponse,
-    navigation: any,
-) => {
-    const notificationData: NotificationNewEventDTO = response.notification
-        .request.content.data as NotificationNewEventDTO;
-
-    navigation.navigate(ROUTES.MainTabView, {
-        screen: notificationData.screen,
-    });
 };
 
 export const reactToNewEncounterNotification = (

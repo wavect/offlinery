@@ -1,26 +1,20 @@
-import {
-    NotificationNavigateUserDTOTypeEnum,
-    NotificationNewEventDTOTypeEnum,
-} from "@/api/gen/src";
+import { NotificationNavigateUserDTOTypeEnum } from "@/api/gen/src";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import {
     TokenFetchStatus,
-    reactToAccountApprovedNotification,
-    reactToGhostModeReminderNotification,
     reactToNewEncounterNotification,
-    reactToNewEventNotification,
     registerForPushNotificationsAsync,
 } from "@/services/notification.service";
-import { NavigationProp, useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
 import * as Notifications from "expo-notifications";
 import { useCallback, useRef, useState } from "react";
 import { Platform } from "react-native";
 
 interface IUseNotificationProps {
-    navigation: NavigationProp<any>;
+    navigation: any;
 }
 
 export const useNotifications = ({ navigation }: IUseNotificationProps) => {
@@ -114,22 +108,6 @@ export const useNotifications = ({ navigation }: IUseNotificationProps) => {
                                         ?.type; // @dev defined through backend side abstract class
 
                                 if (!notificationType) {
-                                    Sentry.captureException(
-                                        new Error(
-                                            "No notification type found in notification.",
-                                        ),
-                                        {
-                                            tags: {
-                                                notificationService:
-                                                    "MainScreenTabs:invalid notification",
-                                                notification: JSON.stringify(
-                                                    response.notification
-                                                        .request.content
-                                                        ?.data ?? {},
-                                                ),
-                                            },
-                                        },
-                                    );
                                     navigation.navigate(ROUTES.MainTabView, {
                                         screen: ROUTES.Main.FindPeople, // default
                                     });
@@ -137,24 +115,6 @@ export const useNotifications = ({ navigation }: IUseNotificationProps) => {
                                 }
 
                                 switch (notificationType) {
-                                    case NotificationNewEventDTOTypeEnum.new_event:
-                                        reactToNewEventNotification(
-                                            response,
-                                            navigation,
-                                        );
-                                        break;
-                                    case NotificationNewEventDTOTypeEnum.account_approved:
-                                        reactToAccountApprovedNotification(
-                                            response,
-                                            navigation,
-                                        );
-                                        break;
-                                    case NotificationNewEventDTOTypeEnum.ghostmode_reminder:
-                                        reactToGhostModeReminderNotification(
-                                            response,
-                                            navigation,
-                                        );
-                                        break;
                                     case NotificationNavigateUserDTOTypeEnum.new_match:
                                         // @dev Remove notification from array to update the "unread notification" bubble in the tab
                                         const filteredNotifications =
@@ -173,25 +133,7 @@ export const useNotifications = ({ navigation }: IUseNotificationProps) => {
                                         );
                                         break;
                                     default:
-                                        Sentry.captureException(
-                                            new Error(
-                                                "Received unknown notification type - app version cannot handle it yet.",
-                                            ),
-                                            {
-                                                tags: {
-                                                    notificationService:
-                                                        "MainScreenTabs: unsupported notification type",
-                                                    notificationType,
-                                                    notification:
-                                                        JSON.stringify(
-                                                            response
-                                                                .notification
-                                                                .request.content
-                                                                ?.data ?? {},
-                                                        ),
-                                                },
-                                            },
-                                        );
+                                        // @dev other notifications have this default behavior, if we want a different behavior just add above.
                                         navigation.navigate(
                                             ROUTES.MainTabView,
                                             {

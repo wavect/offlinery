@@ -1,10 +1,15 @@
+import { BaseCronJob } from "@/cronjobs/base.cron";
+import {
+    DEFAULT_INTERVAL_HOURS,
+    ECronJobType,
+} from "@/cronjobs/cronjobs.types";
 import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
 import { NotificationGhostReminderDTO } from "@/DTOs/notifications/notification-ghostreminder.dto";
 import { User } from "@/entities/user/user.entity";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { OfflineryNotification } from "@/types/notification-message.types";
-import { EDateMode, ELanguage } from "@/types/user.types";
+import { EDateMode } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, Logger } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
@@ -12,48 +17,18 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
 
-type IntervalHour = {
-    translationKey: string;
-    hours: number;
-};
-
 @Injectable()
-export class GhostModeReminderCronJob {
+export class GhostModeReminderCronJob extends BaseCronJob {
     private readonly logger = new Logger(GhostModeReminderCronJob.name);
 
     constructor(
         @InjectRepository(User)
-        private userRepository: Repository<User>,
-        private notificationService: NotificationService,
-        private mailService: MailerService,
-        private readonly i18n: I18nService,
-    ) {}
-
-    private async sendEmail(
-        user: User,
-        intervalHour: IntervalHour,
-    ): Promise<void> {
-        const lang = user.preferredLanguage ?? ELanguage.en;
-
-        await this.mailService.sendMail({
-            to: user.email,
-            subject: await this.i18n.translate(
-                "main.email.ghostmode-reminder.subject",
-                { lang },
-            ),
-            template: "ghostmode-reminder",
-            context: {
-                firstName: user.firstName,
-                intervalHour: this.i18n.t(intervalHour.translationKey, {
-                    lang,
-                }),
-                t: (key: string, params?: Record<string, any>) =>
-                    this.i18n.translate(
-                        `main.email.ghostmode-reminder.${key}`,
-                        { lang, args: { ...(params?.hash ?? params) } },
-                    ),
-            },
-        });
+        protected userRepository: Repository<User>,
+        protected readonly notificationService: NotificationService,
+        protected readonly mailService: MailerService,
+        protected readonly i18n: I18nService,
+    ) {
+        super(ECronJobType.GHOST_MODE_REMINDER, mailService, i18n);
     }
 
     @Cron(CronExpression.EVERY_DAY_AT_NOON)
@@ -62,18 +37,15 @@ export class GhostModeReminderCronJob {
         const now = new Date();
         const chunks = 100; // Process users in chunks to prevent memory overload
 
-        const intervalHours: IntervalHour[] = [
-            { hours: 336, translationKey: "main.cron.intervalHours.h336" }, // 14 days * 24 hours
-            { hours: 72, translationKey: "main.cron.intervalHours.h72" },
-            { hours: 24, translationKey: "main.cron.intervalHours.h24" },
-        ];
-
         const notificationTicketsToSend: OfflineryNotification[] = [];
 
-        // Process one interval at a time, from shortest to longest
-        for (let i = 0; i < intervalHours.length; i++) {
-            const intervalHour = intervalHours[i];
-            const previousInterval = i > 0 ? intervalHours[i - 1].hours : 0;
+        // Process one interval at a time, from longest to shortest
+        for (let i = 0; i < DEFAULT_INTERVAL_HOURS.length; i++) {
+            const intervalHour = DEFAULT_INTERVAL_HOURS[i];
+            const previousInterval =
+                i > 0
+                    ? DEFAULT_INTERVAL_HOURS[i - 1].hours
+                    : intervalHour.hours;
             let skip = 0;
 
             this.logger.debug(
@@ -100,11 +72,7 @@ export class GhostModeReminderCronJob {
                         {
                             previousInterval: new Date(
                                 now.getTime() -
-                                    (intervalHour.hours -
-                                        (previousInterval ? 12 : 0)) *
-                                        60 *
-                                        60 *
-                                        1000,
+                                    previousInterval * 60 * 60 * 1000,
                             ),
                         },
                     )
@@ -128,30 +96,9 @@ export class GhostModeReminderCronJob {
                                     type: ENotificationType.GHOSTMODE_REMINDER,
                                     screen: EAppScreens.GHOSTMODE_REMINDER,
                                 };
-                                notificationTicketsToSend.push({
-                                    sound: "default" as const,
-                                    title: this.i18n.t(
-                                        "main.notification.ghostmodeReminder.title",
-                                        {
-                                            args: {
-                                                firstName: user.firstName,
-                                            },
-                                            lang:
-                                                user.preferredLanguage ??
-                                                ELanguage.en,
-                                        },
-                                    ),
-                                    body: this.i18n.t(
-                                        "main.notification.ghostmodeReminder.body",
-                                        {
-                                            lang:
-                                                user.preferredLanguage ??
-                                                ELanguage.en,
-                                        },
-                                    ),
-                                    to: user.pushToken,
-                                    data,
-                                });
+                                notificationTicketsToSend.push(
+                                    this.buildNotification(user, data),
+                                );
                             } else {
                                 this.logger.warn(
                                     `Cannot send push notification for user ${user.id} to remind about ghost mode since no pushToken. But should have sent email.`,
