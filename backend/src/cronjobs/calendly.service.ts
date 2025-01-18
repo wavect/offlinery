@@ -27,35 +27,39 @@ export class CalendlyService {
     private readonly logger = new Logger(CalendlyService.name);
 
     private readonly API_KEY = TYPED_ENV.CALENDLY_ACCESS_TOKEN;
-    private readonly ORGANIZATION_URI = `https://api.calendly.com/organizations/${TYPED_ENV.CALENDLY_ORGANIZATION_ID}`;
+    private readonly USER_URI = `https://api.calendly.com/users/${TYPED_ENV.CALENDLY_USER_ID}`;
     private readonly BASE_URL = "https://api.calendly.com/v2";
 
     private async getScheduledEvents(
         minStartTime: string,
     ): Promise<CalendlyEvent[]> {
         try {
-            const response = await fetch(
+            const url =
                 `${this.BASE_URL}/scheduled_events?` +
-                    new URLSearchParams({
-                        organization: this.ORGANIZATION_URI,
-                        min_start_time: minStartTime,
-                        status: "active",
-                    }),
-                {
-                    headers: {
-                        Authorization: `Bearer ${this.API_KEY}`,
-                        "Content-Type": "application/json",
-                    },
+                new URLSearchParams({
+                    user: this.USER_URI,
+                    min_start_time: minStartTime,
+                    status: "active",
+                    count: "100", // @dev 100 is max.
+                });
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${this.API_KEY}`,
+                    "Content-Type": "application/json",
                 },
-            );
+            });
 
             if (!response.ok) {
+                const errorData = await response.json();
                 this.logger.error(
-                    `Could not fetch scheduledEvents from Calendly Api.`,
+                    `Could not fetch scheduledEvents from Calendly Api, status: ${response.status}, url: ${url}, error: ${JSON.stringify(errorData)}`,
                 );
                 return [];
             }
 
+            this.logger.debug("WORKEND");
+            return [];
             const data = (await response.json()) as CalendlyResponse;
             return data.collection;
         } catch (error) {
@@ -94,12 +98,16 @@ export class CalendlyService {
                     .forEach((email) => emailsWithCalls.add(email));
             });
 
+            this.logger.debug(
+                `Made Calendly api call, upcoming safety calls with: ${normalizedEmails.toString()}`,
+            );
+
             // Return emails that don't have any safety calls
             return new Set(
                 normalizedEmails.filter((email) => !emailsWithCalls.has(email)),
             );
         } catch (error) {
-            console.error(
+            this.logger.error(
                 `Error checking multiple Calendly events: ${error.message}`,
             );
             return new Set();

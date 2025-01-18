@@ -26,7 +26,7 @@ const envSchema = z.object({
     INFLUXDB_BUCKET: z.string().optional(),
     NODE_ENV: z.string().default("development"), // @dev supplied in Dockerfile
     CALENDLY_ACCESS_TOKEN: z.string(),
-    CALENDLY_ORGANIZATION_ID: z.string(),
+    CALENDLY_USER_ID: z.string(),
 });
 
 // Type for the validated environment

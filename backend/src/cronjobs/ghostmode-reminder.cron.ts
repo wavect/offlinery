@@ -43,7 +43,9 @@ export class GhostModeReminderCronJob extends BaseCronJob {
         for (let i = 0; i < DEFAULT_INTERVAL_HOURS.length; i++) {
             const intervalHour = DEFAULT_INTERVAL_HOURS[i];
             const previousInterval =
-                i > 0 ? DEFAULT_INTERVAL_HOURS[i - 1].hours : 0;
+                i > 0
+                    ? DEFAULT_INTERVAL_HOURS[i - 1].hours
+                    : intervalHour.hours;
             let skip = 0;
 
             this.logger.debug(
@@ -70,11 +72,7 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                         {
                             previousInterval: new Date(
                                 now.getTime() -
-                                    (intervalHour.hours -
-                                        (previousInterval ? 12 : 0)) *
-                                        60 *
-                                        60 *
-                                        1000,
+                                    previousInterval * 60 * 60 * 1000,
                             ),
                         },
                     )
