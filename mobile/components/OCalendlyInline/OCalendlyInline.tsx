@@ -1,7 +1,7 @@
 import { TR, i18n } from "@/localization/translate.service";
 import * as Sentry from "@sentry/react-native";
 import React, { FC, useRef, useState } from "react";
-import { DimensionValue, Platform, View } from "react-native";
+import { Dimensions, Platform, View } from "react-native";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
 import {
     CalendlyEvent,
@@ -44,8 +44,8 @@ const OCalendlyInline: FC<Props> = ({
     onPageHeight,
 }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [webViewHeight, setWebViewHeight] = useState<DimensionValue>();
     const webViewRef = useRef<WebView>(null);
+    const { height: windowHeight } = Dimensions.get("window");
 
     // @dev On Android the pageHeight event for whatever triggers constant reloads.
     const injectedJavaScript = `
@@ -76,9 +76,9 @@ const OCalendlyInline: FC<Props> = ({
                     onProfilePageViewed?.(data.payload);
                     break;
                 case CalendlyEvent.PAGE_HEIGHT:
-                    setWebViewHeight(
+                    /*setWebViewHeight(
                         parseInt(data.payload.height.replace("px", "")),
-                    );
+                    );*/
                     onPageHeight?.(data.payload);
                     break;
             }
@@ -116,32 +116,56 @@ const OCalendlyInline: FC<Props> = ({
               margin: 0;
               padding: 0;
               height: 100%;
-              overflow: hidden;
+              min-height: 100%;
               background-color: transparent;
+              overflow: hidden;
+              position: relative;
+            }
+            .iframe-container {
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              -webkit-overflow-scrolling: touch;
+              overflow-y: scroll;
+              width: 100%;
+              height: 100%;
             }
             iframe {
               border: none;
               width: 100%;
               height: 100%;
-              position: fixed;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
+              min-height: 100%;
+              position: relative;
+              display: block;
             }
           </style>
         </head>
         <body>
-          <iframe src="${src}" width="100%" height="100%" frameborder="0" allowtransparency="true"></iframe>
+          <div class="iframe-container">
+            <iframe 
+              src="${src}" 
+              frameborder="0" 
+              allowtransparency="true"
+              style="min-height: 100vh; height: auto;"
+            ></iframe>
+          </div>
         </body>
       </html>
     `;
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { height: windowHeight * 0.9 }]}>
             {isLoading && <LoadingSpinner />}
             <WebView
                 ref={webViewRef}
+                scrollEnabled={true}
+                nestedScrollEnabled={true}
+                showsVerticalScrollIndicator={true}
+                contentMode="mobile"
+                automaticallyAdjustsScrollIndicatorInsets={true}
+                overScrollMode={"content"}
                 userAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36"
                 style={styles.webView}
                 source={{

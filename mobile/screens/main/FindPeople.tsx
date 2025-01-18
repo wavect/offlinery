@@ -1,4 +1,6 @@
+import { UserPrivateDTODateModeEnum } from "@/api/gen/src";
 import OMapScreen from "@/components/OMapScreen/OMapScreen";
+import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { ROUTES } from "@/screens/routes";
@@ -11,9 +13,14 @@ const FindPeople = (
         typeof ROUTES.MainTabView
     >,
 ) => {
+    const { state } = useUserContext();
     return (
         <OMapScreen
-            subtitle={i18n.t(TR.beNearTheseHotspotsToMeet)}
+            subtitle={
+                state.dateMode === UserPrivateDTODateModeEnum.live
+                    ? i18n.t(TR.beNearTheseHotspotsToMeet)
+                    : i18n.t(TR.turnOnLiveMode)
+            }
             subtitle2={i18n.t(TR.safeZonesToHide)}
             showHeatmap={true}
             showMapStatus={true}

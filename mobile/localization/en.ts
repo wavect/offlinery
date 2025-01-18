@@ -181,6 +181,8 @@ export const en = {
         "People you might have met. Rate them, Report them or stay in touch.",
     weMetFrom: "We met from",
     toThisDate: "to this date",
+    turnOnLiveMode:
+        "Turn on the switch on the top-right corner to meet people in real life.",
     beNearTheseHotspotsToMeet:
         "Being near these hotspots increases your odds of meeting someone.",
     safeZonesToHide:

@@ -195,7 +195,6 @@ export const reactToNewEncounterNotification = (
         );
         return;
     }
-
     // Navigate to the specified screen, passing the user object as a prop and add encounters view as prior screen to enable back logic
     navigation.dispatch(
         CommonActions.reset({
@@ -216,6 +215,7 @@ export const reactToNewEncounterNotification = (
                             params: {
                                 navigateToPerson:
                                     notificationData.navigateToPerson,
+                                encounterId: notificationData.encounterId,
                             },
                         },
                     },

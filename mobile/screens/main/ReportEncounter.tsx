@@ -38,7 +38,7 @@ const ReportEncounter = ({
     const [keepMeInTheLoop, setKeepMeInTheLoop] = useState<boolean>(false);
     const [incidentType, setIncidentType] =
         useState<CreateUserReportDTOIncidentTypeEnum | null>(null);
-    const [incidents, setIncidents] = useState([
+    const [incidents] = useState([
         {
             label: i18n.t(TR.reportIncident.disrespectful),
             value: CreateUserReportDTOIncidentTypeEnum.Disrespectful,
