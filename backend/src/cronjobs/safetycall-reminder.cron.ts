@@ -74,7 +74,7 @@ export class SafetyCallReminderCronJob extends BaseCronJob {
                 );
 
                 this.logger.debug(
-                    `${usersToRemind.length} users have no scheduled calls and will receive reminders.`,
+                    `${usersToRemind.length} users have no scheduled calls and will receive reminders: ${usersToRemind.map((u) => u.email)}`,
                 );
 
                 // Process reminders in parallel
