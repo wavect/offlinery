@@ -68,7 +68,7 @@
       "suggestion": "Wechsle in den Live-Modus innerhalb der Offlinery App, um wieder Menschen in deiner Umgebung kennenzulernen!",
       "footer": "Du erhältst diese E-Mail, weil du den Ghost-Modus in deinen Einstellungen aktiviert hast. Du kannst dies jederzeit ändern."
     },
-    "verificationcall-reminder": {
+    "safety-call-booked-reminder": {
       "title": "Vereinbare deinen kurzen Safety Call - Offlinery",
       "header": "Zeit für deinen Safety Call! 🎉",
       "greeting": "Hi {firstName}",
@@ -76,7 +76,8 @@
       "importanceMessage": "In diesem entspannten 15-minütigen Gespräch machen wir einen kurzen Check deiner emotionalen Intelligenz, damit sich alle in unserer Community sicher und wohl fühlen. Nach der Freischaltung kannst du direkt loslegen, Menschen in der realen Welt anzusprechen!",
       "bookCallButton": "Call buchen",
       "timeEstimate": "Es geht super schnell - in 15 Minuten sind wir durch! ⏰",
-      "closingMessage": "Du möchtest selbst keine anderen Personen ansprechen? Kein Problem! Du kannst diesen Call überspringen und trotzdem von Anderen angesprochen werden - ändere einfach diese Einstellung in der App. Möchtest du später aktiv werden? Du kannst den Safety Call jederzeit nachholen, wenn du bereit bist.",
+      "closingMessage": "Du möchtest selbst keine anderen Personen ansprechen? Kein Problem! Du kannst diesen Call überspringen und trotzdem von Anderen angesprochen werden - ändere einfach diese Einstellung in der App.",
+      "beApproachAlternative": "Möchtest du später aktiv werden? Du kannst den Safety Call jederzeit nachholen, wenn du bereit bist.",
       "footer": "Dies ist eine automatische Nachricht von Offlinery."
     }
   },

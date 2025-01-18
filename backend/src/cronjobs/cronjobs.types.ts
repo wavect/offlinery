@@ -13,5 +13,5 @@ export const DEFAULT_INTERVAL_HOURS: IntervalHour[] = [
 /** @dev String value used for translation keys */
 export enum ECronJobType {
     GHOST_MODE_REMINDER = "ghostmode-reminder",
-    SAFETYCALL_REMINDER = "verificationcall-reminder",
+    SAFETY_CALL_REMINDER = "safety-call-booked-reminder",
 }

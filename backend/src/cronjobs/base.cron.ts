@@ -50,6 +50,8 @@ export abstract class BaseCronJob {
                 intervalHour: this.i18n.t(intervalHour.translationKey, {
                     lang,
                 }),
+                languageId: lang,
+                email: user.email,
                 t: (key: string, params?: Record<string, any>) =>
                     this.i18n.translate(
                         `main.email.${this.cronJobType}.${key}`,

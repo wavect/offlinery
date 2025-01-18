@@ -10,6 +10,7 @@ import { NotificationService } from "@/transient-services/notification/notificat
 import { EApproachChoice, EVerificationStatus } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, Logger } from "@nestjs/common";
+import { Cron, CronExpression } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
 import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
@@ -27,10 +28,10 @@ export class SafetyCallReminderCronJob extends BaseCronJob {
         protected readonly i18n: I18nService,
         protected readonly calendlyService: CalendlyService,
     ) {
-        super(ECronJobType.SAFETYCALL_REMINDER, mailService, i18n);
+        super(ECronJobType.SAFETY_CALL_REMINDER, mailService, i18n);
     }
 
-    //@Cron(CronExpression.EVERY_MINUTE)
+    @Cron(CronExpression.EVERY_DAY_AT_7PM)
     async checkSafetyCallVerificationPending(): Promise<void> {
         this.logger.debug(`Starting verification reminder cron job..`);
         const now = new Date();
@@ -144,8 +145,7 @@ export class SafetyCallReminderCronJob extends BaseCronJob {
             });
         } catch (error) {
             this.logger.error(
-                `Failed to process user ${user.id} in verification reminder:`,
-                error,
+                `Failed to process user ${user.id} in safety-call reminder: ${error.message}`,
             );
         }
     }
