@@ -69,7 +69,7 @@
       "footer": "Du erhältst diese E-Mail, weil du den Ghost-Modus in deinen Einstellungen aktiviert hast. Du kannst dies jederzeit ändern."
     },
     "safety-call-booked-reminder": {
-      "title": "Vereinbare deinen kurzen Safety Call - Offlinery",
+      "subject": "Vereinbare deinen kurzen Safety Call - Offlinery",
       "header": "Zeit für deinen Safety Call! 🎉",
       "greeting": "Hi {firstName}",
       "reminderMessage": "Hier ist eine freundliche Erinnerung, deinen kurzen Safety Call mit uns zu planen! Dies ist ein wichtiger Schritt, um das volle Potential von Offlinery nutzen zu können.",
