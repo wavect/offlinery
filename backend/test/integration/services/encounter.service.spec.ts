@@ -794,8 +794,8 @@ describe("Encounter Service Integration Tests ", () => {
         });
     });
 
-    describe("should manage user location updates and notifications created", function () {
-        it("should return the correct user, with correct notifications and expoPushTickets after location update", async () => {
+    describe("should manage user location updates and sending notifications", function () {
+        it("should notify the right person if user that approaches sends the update", async () => {
             const userThatApproaches = await userFactory.persistNewTestUser({
                 firstName: "Chris",
                 dateMode: EDateMode.LIVE,
@@ -832,7 +832,7 @@ describe("Encounter Service Integration Tests ", () => {
             expect(expoPushTickets.length).toEqual(1);
             expect(expoPushTickets[0].status).toEqual("ok");
         });
-        it("should return the correct user, with correct notifications and expoPushTickets after location update", async () => {
+        it("should notify the right person if user to be approached sends the update if", async () => {
             const userThatApproaches = await userFactory.persistNewTestUser({
                 firstName: "Chris",
                 dateMode: EDateMode.LIVE,
@@ -869,6 +869,45 @@ describe("Encounter Service Integration Tests ", () => {
             expect(notifications[0].to).toEqual(userThatApproaches.pushToken);
             expect(expoPushTickets.length).toEqual(1);
             expect(expoPushTickets[0].status).toEqual("ok");
+        });
+        it("should notify the right person if users are both on BOTH", async () => {
+            const userThatApproaches = await userFactory.persistNewTestUser({
+                firstName: "Chris",
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                pushToken: "ExponentPushToken[oQc_VGDj-r06r7d8hDF_2q]",
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const userBeingApproached = await userFactory.persistNewTestUser({
+                firstName: "Lisa",
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                pushToken: "ExponentPushToken[oQc_VGDj-r06r7d8hDF_2q]",
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const { updatedUser, notifications, expoPushTickets } =
+                await userService.updateLocation(userBeingApproached.id, {
+                    latitude: 0,
+                    longitude: 0,
+                });
+
+            expect(updatedUser).toBeDefined();
+            expect(notifications.length).toEqual(2);
+            expect(notifications[0].title).toContain(
+                userBeingApproached.firstName,
+            );
+            expect(notifications[0].to).toEqual(userThatApproaches.pushToken);
+            expect(expoPushTickets.length).toEqual(2);
+            expect(expoPushTickets[0].status).toEqual("ok");
+            expect(expoPushTickets[1].status).toEqual("ok");
         });
     });
 });

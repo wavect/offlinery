@@ -59,7 +59,10 @@ export class NotificationService {
 
     /** @dev The ExpoPushToken remains the same for the user infinitely, except they reinstall the app, etc. */
     async sendPushNotifications(messages: OfflineryNotification[]) {
-        console.log("Preparing to send push notifications, got: ", messages);
+        this.logger.debug(
+            "Preparing to send push notifications, received base notifications: ",
+            messages,
+        );
         const validatedNotifications = this.getValidatedNotifications(messages);
         const tickets: ExpoPushTicket[] = [];
         try {
@@ -75,6 +78,14 @@ export class NotificationService {
                     this.logger.error(error);
                 }
             }
+
+            this.logger.debug(
+                `Shoud have processed ${messages.length} notifications.`,
+            );
+            this.logger.debug(
+                `Processed ${tickets.length} notifications with outcome`,
+                tickets.map((b) => b.status),
+            );
         } catch (error) {
             this.logger.error(error);
         }
