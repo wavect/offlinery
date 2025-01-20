@@ -2,6 +2,9 @@ import { BaseCronJob } from "@/cronjobs/base.cron";
 import {
     DEFAULT_INTERVAL_HOURS,
     ECronJobType,
+    getIntervalDateTime,
+    getPreviousInterval,
+    IntervalHour,
 } from "@/cronjobs/cronjobs.types";
 import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
@@ -9,7 +12,11 @@ import { NotificationGhostReminderDTO } from "@/DTOs/notifications/notification-
 import { User } from "@/entities/user/user.entity";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { OfflineryNotification } from "@/types/notification-message.types";
-import { EDateMode } from "@/types/user.types";
+import {
+    EApproachChoice,
+    EDateMode,
+    EVerificationStatus,
+} from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, Logger } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
@@ -34,46 +41,58 @@ export class GhostModeReminderCronJob extends BaseCronJob {
     @Cron(CronExpression.EVERY_DAY_AT_NOON)
     async checkGhostModeUsers(): Promise<void> {
         this.logger.debug(`Starting checkGhostModeUsers cron job..`);
-        const now = new Date();
         const chunks = 100; // Process users in chunks to prevent memory overload
+        const now = new Date();
 
         const notificationTicketsToSend: OfflineryNotification[] = [];
 
         // Process one interval at a time, from longest to shortest
         for (let i = 0; i < DEFAULT_INTERVAL_HOURS.length; i++) {
             const intervalHour = DEFAULT_INTERVAL_HOURS[i];
-            const previousInterval =
-                i > 0
-                    ? DEFAULT_INTERVAL_HOURS[i - 1].hours
-                    : intervalHour.hours;
             let skip = 0;
 
             this.logger.debug(
                 `Checking users for interval ${intervalHour.hours}h.`,
             );
+            const previousInterval: IntervalHour | null =
+                getPreviousInterval(intervalHour);
 
             while (true) {
                 const users = await this.userRepository
                     .createQueryBuilder("user")
                     .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
+                    /** Only get active users basically: (verified AND not beApproached) OR (beApproached) */
+                    .andWhere(
+                        "((user.verificationStatus = :verificationStatusVerified AND user.approachChoice <> :beApproached) OR user.approachChoice = :beApproached)",
+                        {
+                            beApproached: EApproachChoice.BE_APPROACHED,
+                            verificationStatusVerified:
+                                EVerificationStatus.VERIFIED,
+                        },
+                    )
                     .andWhere(
                         "((user.lastDateModeChange IS NOT NULL AND user.lastDateModeChange <= :currentInterval) OR " +
                             "(user.lastDateModeChange IS NULL AND user.updated <= :currentInterval))",
                         {
-                            currentInterval: new Date(
-                                now.getTime() -
-                                    intervalHour.hours * 60 * 60 * 1000,
-                            ),
+                            currentInterval: getIntervalDateTime(intervalHour),
                         },
                     )
                     // Only get users who haven't been reminded yet or were last reminded before the previous interval
                     .andWhere(
-                        "(user.lastDateModeReminderSent IS NULL OR user.lastDateModeReminderSent <= :previousInterval)",
+                        `(user.lastDateModeReminderSent IS NULL${previousInterval && " OR user.lastDateModeReminderSent <= :currentInterval"})`,
                         {
-                            previousInterval: new Date(
+                            /**
+                             * 24h interval: 24-0 -> now - 24h
+                             * 48h interval: 72-24 -> now - 48h
+                             * 2 weeks interval: 336-72 -> now - 264h
+                             * */
+                            currentInterval:
                                 now.getTime() -
-                                    previousInterval * 60 * 60 * 1000,
-                            ),
+                                (intervalHour.hours -
+                                    (previousInterval?.hours ?? 0)) *
+                                    60 *
+                                    60 *
+                                    1000,
                         },
                     )
                     .take(chunks)
@@ -110,9 +129,8 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                                 lastDateModeChange:
                                     user.lastDateModeChange ??
                                     new Date(
-                                        now.getTime() -
-                                            intervalHour.hours * 60 * 60 * 1000,
-                                    ), // @dev set to now, to kickstart the flow
+                                        now.getTime() - 25 * 60 * 60 * 1000,
+                                    ), // @dev set to 25h prior, to kickstart the flow
                             });
                         } catch (error) {
                             this.logger.error(
