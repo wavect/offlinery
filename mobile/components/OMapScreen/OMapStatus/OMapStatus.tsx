@@ -2,7 +2,7 @@ import { Color, FontFamily } from "@/GlobalStyles";
 import { TR, i18n } from "@/localization/translate.service";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useRef } from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
+import { Animated, Platform, StyleSheet, Text, View } from "react-native";
 
 export enum EMapStatus {
     LOADING_HEATMAP = "loading_heatmap",
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: "center",
         marginLeft: 6,
+        marginBottom: Platform.OS === "ios" ? 16 : 0,
     },
     label: {
         marginLeft: 6,
