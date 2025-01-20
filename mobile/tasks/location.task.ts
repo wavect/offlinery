@@ -97,13 +97,19 @@ export class OBackgroundLocationService {
         }
     };
 
-    public async initialize(): Promise<void> {
+    public async initialize(): Promise<boolean> {
         try {
-            if (this.locationSubscription && this.heartbeatSubscription) {
+            const { enabled: enabledPre } =
+                await BackgroundGeolocation.getState();
+            if (
+                enabledPre &&
+                this.locationSubscription &&
+                this.heartbeatSubscription
+            ) {
                 console.log(
                     `Someone tried to re-initialize the location service. Aborted.`,
                 );
-                return;
+                return true;
             }
 
             this.locationSubscription = BackgroundGeolocation.onLocation(
@@ -187,17 +193,22 @@ export class OBackgroundLocationService {
                     priority: BackgroundGeolocation.NOTIFICATION_PRIORITY_MIN,
                 },
             });
+            return enabled;
         } catch (error) {
             Sentry.captureException(error, {
                 tags: { location_service: "initialization" },
             });
         }
+        return false;
     }
 
     public async start(): Promise<void> {
         try {
-            await this.initialize();
-            await BackgroundGeolocation.start();
+            const enabled = await this.initialize();
+            if (!enabled) {
+                // @dev if for whatever reason not running, restart.
+                await BackgroundGeolocation.start();
+            }
             // @dev change to background location always (show dialog to user)
             await BackgroundGeolocation.setConfig({
                 locationAuthorizationRequest: "Always",
