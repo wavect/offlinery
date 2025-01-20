@@ -105,7 +105,7 @@ export const de: Language = {
         "Zugriff auf den Standort wurde verweigert. Ohne deinen Standort wirst du weder angesprochen, noch kannst du jemanden via Offlinery ansprechen.",
     dontApproachHere: "Hier nicht ansprechen",
     whatAreSpotsToNotApproachYou:
-        "An welchen Orten möchtest du nicht angesprochen werden? Dein Fitnessstudio, Arbeitsplatz?",
+        "An welchen Orten möchtest du nicht angesprochen werden? Dein Fitnessstudio, Arbeitsplatz? (2-Sekunden drücken)",
     youAreUndercover: "Du bist undercover",
     nobodyWillSeeYou: "Niemand wird dich hier sehen.",
     adjustRegionRadius: "Regionradius anpassen",

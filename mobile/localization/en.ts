@@ -100,7 +100,7 @@ export const en = {
         "Permission to access location was denied. Nobody can approach you neither can you approach someone via Offlinery without sharing your location.",
     dontApproachHere: "Don't approach me here",
     whatAreSpotsToNotApproachYou:
-        "What are spots you don't want to be approached at? Your gym, workplace?",
+        "What are spots you don't want to be approached at? Your gym, workplace? (press 2 seconds)",
     youAreUndercover: "You're undercover",
     nobodyWillSeeYou: "Nobody will see you here.",
     adjustRegionRadius: "Adjust Region Radius",
