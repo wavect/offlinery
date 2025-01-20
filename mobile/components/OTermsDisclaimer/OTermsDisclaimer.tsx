@@ -1,6 +1,6 @@
 import { Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { TR, i18n } from "@/localization/translate.service";
-import { GDPR_URL } from "@/utils/general.constants";
+import { AGB_URL, GDPR_URL } from "@/utils/general.constants";
 import { A } from "@expo/html-elements";
 import * as React from "react";
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
@@ -14,7 +14,7 @@ export const OTermsDisclaimer = (props: IOTermsDisclaimerProps) => {
         <View style={[styles.termsContainerOuter, props.style]}>
             <Text style={styles.termsText}>
                 {i18n.t(TR.termsDisclaimer.p1)}
-                <A href={GDPR_URL} style={styles.termsLink}>
+                <A href={AGB_URL} style={styles.termsLink}>
                     {i18n.t(TR.termsDisclaimer.terms)}
                 </A>
                 {i18n.t(TR.termsDisclaimer.p2)}
