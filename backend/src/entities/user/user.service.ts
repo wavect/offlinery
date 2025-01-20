@@ -559,12 +559,12 @@ export class UserService {
         expoPushTickets: ExpoPushTicket[];
     }> {
         const user = await this.userRepository.findOneBy({ id: userId });
-        this.logger.debug(
-            `${user.firstName} (${user.id}) sent a location update.`,
-        );
         if (!user) {
             throw new NotFoundException(`User with ID ${userId} not found`);
         }
+        this.logger.debug(
+            `${user.firstName} (${user.id}) sent a location update.`,
+        );
         user.location = { type: "Point", coordinates: [longitude, latitude] };
         user.locationLastTimeUpdated = new Date();
         const updatedUser = await this.userRepository.save(user);
