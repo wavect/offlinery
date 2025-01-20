@@ -71,19 +71,6 @@ const getExpoProjectId = () => {
 export const registerForPushNotificationsAsync = async (
     userId: string,
 ): Promise<NotificationTokenFetchResponse> => {
-    const existingPushToken: string = await getLocalValue(
-        LOCAL_VALUE.EXPO_PUSH_TOKEN,
-    );
-    if (existingPushToken) {
-        console.log(
-            "Not saving/requesting new push token as already one locally available and saved on the backend.",
-        );
-        return {
-            token: existingPushToken,
-            tokenFetchStatus: TokenFetchStatus.ALREADY_SAVED,
-        };
-    }
-
     if (Platform.OS === "android") {
         await Notifications.setNotificationChannelAsync("default", {
             name: "default",
@@ -117,6 +104,19 @@ export const registerForPushNotificationsAsync = async (
             shouldSetBadge: true,
         }),
     });
+
+    const existingPushToken: string = await getLocalValue(
+        LOCAL_VALUE.EXPO_PUSH_TOKEN,
+    );
+    if (existingPushToken) {
+        console.log(
+            "Not saving/requesting new push token as already one locally available and saved on the backend.",
+        );
+        return {
+            token: existingPushToken,
+            tokenFetchStatus: TokenFetchStatus.ALREADY_SAVED,
+        };
+    }
 
     // Learn more about projectId:
     // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
