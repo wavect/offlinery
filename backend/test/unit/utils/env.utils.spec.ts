@@ -9,18 +9,10 @@ jest.mock("dotenv", () => ({
 
 describe("Environment Validation", () => {
     const originalEnv = process.env;
+    let baseEnvs;
 
     beforeEach(() => {
-        jest.resetModules();
-        process.env = { ...originalEnv };
-    });
-
-    afterAll(() => {
-        process.env = originalEnv;
-    });
-
-    it("should validate correct environment variables", () => {
-        process.env = {
+        baseEnvs = {
             DB_HOST: "localhost",
             DB_PORT: "5432",
             DB_USER: "user",
@@ -35,7 +27,19 @@ describe("Environment Validation", () => {
             MAILCHIMP_SERVER_PREFIX: "abc",
             MAILCHIMP_API_KEY: "xyz",
             MAILCHIMP_AUDIENCE_ID: "123",
+            CALENDLY_ACCESS_TOKEN: "-",
+            CALENDLY_USER_ID: "-",
         };
+        jest.resetModules();
+        process.env = { ...originalEnv };
+    });
+
+    afterAll(() => {
+        process.env = originalEnv;
+    });
+
+    it("should validate correct environment variables", () => {
+        process.env = baseEnvs;
 
         const { validateEnv } = require("../../../src/utils/env.utils");
         const result = validateEnv();
@@ -65,22 +69,7 @@ describe("Environment Validation", () => {
     });
 
     it("should return the same object on subsequent calls", () => {
-        process.env = {
-            DB_HOST: "localhost",
-            DB_PORT: "5432",
-            DB_USER: "user",
-            DB_PASSWORD: "password",
-            DB_DATABASE: "database",
-            JWT_SECRET: "secret",
-            EMAIL_HOST: "smtp.example.com",
-            EMAIL_USERNAME: "user@example.com",
-            EMAIL_PASSWORD: "emailpassword",
-            BE_PORT: "3000",
-            JWT_SECRET_REGISTRATION: "12345",
-            MAILCHIMP_SERVER_PREFIX: "abc",
-            MAILCHIMP_API_KEY: "xyz",
-            MAILCHIMP_AUDIENCE_ID: "123",
-        };
+        process.env = baseEnvs;
 
         const { validateEnv } = require("../../../src/utils/env.utils");
         const result1 = validateEnv();
@@ -90,22 +79,7 @@ describe("Environment Validation", () => {
     });
 
     it("should export TYPED_ENV with correct values", () => {
-        process.env = {
-            DB_HOST: "localhost",
-            DB_PORT: "5432",
-            DB_USER: "user",
-            DB_PASSWORD: "password",
-            DB_DATABASE: "database",
-            JWT_SECRET: "secret",
-            EMAIL_HOST: "smtp.example.com",
-            EMAIL_USERNAME: "user@example.com",
-            EMAIL_PASSWORD: "emailpassword",
-            BE_PORT: "3000",
-            JWT_SECRET_REGISTRATION: "12345",
-            MAILCHIMP_SERVER_PREFIX: "abc",
-            MAILCHIMP_API_KEY: "xyz",
-            MAILCHIMP_AUDIENCE_ID: "123",
-        };
+        process.env = baseEnvs;
 
         const { TYPED_ENV } = require("../../../src/utils/env.utils");
         expect(TYPED_ENV).toEqual({
@@ -124,6 +98,8 @@ describe("Environment Validation", () => {
             MAILCHIMP_API_KEY: "xyz",
             MAILCHIMP_AUDIENCE_ID: "123",
             NODE_ENV: "development",
+            CALENDLY_ACCESS_TOKEN: "-",
+            CALENDLY_USER_ID: "-",
         });
     });
 });
