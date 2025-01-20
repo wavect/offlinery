@@ -202,6 +202,72 @@ describe("Encounter Service Integration Tests ", () => {
 
             expect(userEncounters.length).toEqual(2);
         });
+        it("should retrieve location if actually nearby", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(5, 5),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const encounter = await encounterFactory.persistNewTestEncounter(
+                mainUser,
+                otherUser,
+            );
+
+            try {
+                await encounterService.getLocationOfEncounter(
+                    mainUser.id,
+                    encounter.id,
+                );
+            } catch (e) {
+                expect(e.toString()).toContain("is not nearby right now");
+            }
+        });
+        it("should find and return the last location", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const encounter = await encounterFactory.persistNewTestEncounter(
+                mainUser,
+                otherUser,
+            );
+
+            const location = await encounterService.getLocationOfEncounter(
+                mainUser.id,
+                encounter.id,
+            );
+
+            expect(location.latitude).toEqual(0);
+            expect(location.latitude).toEqual(0);
+            expect(location.lastTimeLocationUpdated).toBeDefined();
+        });
     });
 
     describe("should correctly manage and create encounters", () => {
@@ -458,7 +524,6 @@ describe("Encounter Service Integration Tests ", () => {
                     .length,
             ).toEqual(1);
         });
-
         it("should create one single encounter for one single approach interaction", async () => {
             const mainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
@@ -647,7 +712,7 @@ describe("Encounter Service Integration Tests ", () => {
         });
     });
 
-    describe("should handle strike logic accordingly", function () {
+    describe("should handle streak logic accordingly", function () {
         it("initial encounter should have an amountStreaks of 1", async () => {
             const mainUser = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
@@ -728,71 +793,82 @@ describe("Encounter Service Integration Tests ", () => {
             }
         });
     });
-    it("should retrieve location if actually nearby", async () => {
-        const mainUser = await userFactory.persistNewTestUser({
-            dateMode: EDateMode.LIVE,
-            location: new PointBuilder().build(0, 0),
-            gender: EGender.MAN,
-            genderDesire: [EGender.WOMAN],
-            intentions: [EIntention.RELATIONSHIP],
-            approachChoice: EApproachChoice.BOTH,
-        });
 
-        const otherUser = await userFactory.persistNewTestUser({
-            dateMode: EDateMode.LIVE,
-            location: new PointBuilder().build(5, 5),
-            gender: EGender.MAN,
-            genderDesire: [EGender.WOMAN],
-            intentions: [EIntention.RELATIONSHIP],
-            approachChoice: EApproachChoice.BOTH,
-        });
+    describe("should manage user location updates and notifications created", function () {
+        it("should return the correct user, with correct notifications and expoPushTickets after location update", async () => {
+            const userThatApproaches = await userFactory.persistNewTestUser({
+                firstName: "Chris",
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                pushToken: "ExponentPushToken[oQc_VGDj-r06r7d8hDF_2q]",
+                approachChoice: EApproachChoice.APPROACH,
+            });
+            const userBeingApproached = await userFactory.persistNewTestUser({
+                firstName: "Lisa",
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                pushToken: "ExpoPushToken[be-approached-user]",
+                approachChoice: EApproachChoice.BE_APPROACHED,
+            });
 
-        const encounter = await encounterFactory.persistNewTestEncounter(
-            mainUser,
-            otherUser,
-        );
+            const { updatedUser, notifications, expoPushTickets } =
+                await userService.updateLocation(userThatApproaches.id, {
+                    latitude: 0,
+                    longitude: 0,
+                });
 
-        try {
-            await encounterService.getLocationOfEncounter(
-                mainUser.id,
-                encounter.id,
+            expect(updatedUser).toBeDefined();
+            expect(notifications.length).toEqual(1);
+            expect(notifications[0].title).toContain(
+                userBeingApproached.firstName,
             );
-        } catch (e) {
-            expect(e.toString()).toContain("is not nearby right now");
-        }
-    });
-
-    it("should find and return the last location", async () => {
-        const mainUser = await userFactory.persistNewTestUser({
-            dateMode: EDateMode.LIVE,
-            location: new PointBuilder().build(0, 0),
-            gender: EGender.MAN,
-            genderDesire: [EGender.WOMAN],
-            intentions: [EIntention.RELATIONSHIP],
-            approachChoice: EApproachChoice.BOTH,
+            expect(notifications[0].to).toEqual(userThatApproaches.pushToken);
+            expect(expoPushTickets.length).toEqual(1);
+            expect(expoPushTickets[0].status).toEqual("ok");
         });
+        it("should return the correct user, with correct notifications and expoPushTickets after location update", async () => {
+            const userThatApproaches = await userFactory.persistNewTestUser({
+                firstName: "Chris",
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                pushToken: "ExponentPushToken[oQc_VGDj-r06r7d8hDF_2q]",
+                approachChoice: EApproachChoice.APPROACH,
+            });
 
-        const otherUser = await userFactory.persistNewTestUser({
-            dateMode: EDateMode.LIVE,
-            location: new PointBuilder().build(0, 0),
-            gender: EGender.MAN,
-            genderDesire: [EGender.WOMAN],
-            intentions: [EIntention.RELATIONSHIP],
-            approachChoice: EApproachChoice.BOTH,
+            const userBeingApproached = await userFactory.persistNewTestUser({
+                firstName: "Lisa",
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                pushToken: "ExpoPushToken[be-approached-user]",
+                approachChoice: EApproachChoice.BE_APPROACHED,
+            });
+
+            const { updatedUser, notifications, expoPushTickets } =
+                await userService.updateLocation(userBeingApproached.id, {
+                    latitude: 0,
+                    longitude: 0,
+                });
+
+            expect(updatedUser).toBeDefined();
+            expect(notifications.length).toEqual(1);
+            expect(notifications[0].title).toContain(
+                userBeingApproached.firstName,
+            );
+            expect(notifications[0].to).toEqual(userThatApproaches.pushToken);
+            expect(expoPushTickets.length).toEqual(1);
+            expect(expoPushTickets[0].status).toEqual("ok");
         });
-
-        const encounter = await encounterFactory.persistNewTestEncounter(
-            mainUser,
-            otherUser,
-        );
-
-        const location = await encounterService.getLocationOfEncounter(
-            mainUser.id,
-            encounter.id,
-        );
-
-        expect(location.latitude).toEqual(0);
-        expect(location.latitude).toEqual(0);
-        expect(location.lastTimeLocationUpdated).toBeDefined();
     });
 });

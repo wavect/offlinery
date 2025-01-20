@@ -59,6 +59,7 @@ export class NotificationService {
 
     /** @dev The ExpoPushToken remains the same for the user infinitely, except they reinstall the app, etc. */
     async sendPushNotifications(messages: OfflineryNotification[]) {
+        console.log("Preparing to send push notifications, got: ", messages);
         const validatedNotifications = this.getValidatedNotifications(messages);
         const tickets: ExpoPushTicket[] = [];
         try {
@@ -87,24 +88,30 @@ export class NotificationService {
      */
     getValidatedNotifications(notifications: OfflineryNotification[]) {
         return notifications.filter((message) => {
-            if (!message.to || !this.isValidExpoPushToken(message.to)) {
+            if (!message.to) {
                 this.logger.debug(
-                    `Invalid push token detected,  unable to process: ${message.to}`,
+                    `Missing token (message.to is ${message.to})`,
                 );
                 return false;
             }
+
+            if (typeof message.to !== "string" || !message.to) {
+                this.logger.debug(
+                    `Invalid token type: ${typeof message.to} or empty`,
+                );
+                return false;
+            }
+
+            const isValidStructure =
+                message.to.startsWith("ExponentPushToken[") ||
+                message.to.startsWith("ExpoPushToken[");
+
+            if (!isValidStructure) {
+                this.logger.debug(`Invalid token structure: ${message.to}`);
+                return false;
+            }
+
             return true;
         });
-    }
-
-    private isValidExpoPushToken(token: unknown) {
-        if (typeof token !== "string") {
-            return false;
-        }
-
-        return (
-            token.startsWith("ExponentPushToken[") ||
-            token.startsWith("ExpoPushToken[")
-        );
     }
 }
