@@ -59,7 +59,7 @@ describe("NotificationService", () => {
     describe("getValidatedNotifications", () => {
         it("should filter out notifications with invalid push tokens", () => {
             const validNotification1: OfflineryNotification = {
-                to: "ExpoPushToken[valid1]",
+                to: "ExpoPushToken[",
                 data: {
                     type: ENotificationType.NEW_EVENT,
                     screen: EAppScreens.NEW_EVENT,
@@ -67,7 +67,7 @@ describe("NotificationService", () => {
             };
 
             const validNotification2: OfflineryNotification = {
-                to: "ExponentPushToken[valid2]",
+                to: "ExponentPushToken[",
                 data: {
                     type: ENotificationType.NEW_MATCH,
                     screen: EAppScreens.NAVIGATE_TO_APPROACH,
@@ -77,7 +77,7 @@ describe("NotificationService", () => {
             };
 
             const invalidNotification: OfflineryNotification = {
-                to: "invalid-token",
+                to: "invalidToken",
                 data: {
                     type: ENotificationType.NEW_EVENT,
                     screen: EAppScreens.NEW_EVENT,

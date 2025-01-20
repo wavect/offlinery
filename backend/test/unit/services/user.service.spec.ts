@@ -176,7 +176,7 @@ describe("UserService", () => {
             mockUser.firstName = "John";
             mockUser.approachChoice = EApproachChoice.BE_APPROACHED;
 
-            const updatedUser = {
+            const user = {
                 ...mockUser,
                 location: {
                     type: "Point",
@@ -185,19 +185,19 @@ describe("UserService", () => {
             } as User;
 
             jest.spyOn(userRepository, "findOneBy").mockResolvedValue(mockUser);
-            jest.spyOn(userRepository, "save").mockResolvedValue(updatedUser);
+            jest.spyOn(userRepository, "save").mockResolvedValue(user);
 
             const checkAndNotifyMatchesSpy = jest
                 .spyOn(matchingService, "checkForEncounters")
                 .mockResolvedValue(undefined);
 
-            const result = await service.updateLocation(
+            const { updatedUser } = await service.updateLocation(
                 userId,
                 locationUpdateDto,
             );
 
-            expect(result).toBeDefined();
-            expect(result.location).toEqual({
+            expect(updatedUser).toBeDefined();
+            expect(updatedUser.location).toEqual({
                 type: "Point",
                 coordinates: [-74.006, 40.7128],
             });
@@ -226,7 +226,7 @@ describe("UserService", () => {
             mockUser.firstName = "John";
             mockUser.approachChoice = EApproachChoice.BOTH;
 
-            const updatedUser = {
+            const user = {
                 ...mockUser,
                 location: {
                     type: "Point",
@@ -235,19 +235,19 @@ describe("UserService", () => {
             } as User;
 
             jest.spyOn(userRepository, "findOneBy").mockResolvedValue(mockUser);
-            jest.spyOn(userRepository, "save").mockResolvedValue(updatedUser);
+            jest.spyOn(userRepository, "save").mockResolvedValue(user);
 
             const checkAndNotifyMatchesSpy = jest
                 .spyOn(matchingService, "checkForEncounters")
                 .mockResolvedValue(undefined);
 
-            const result = await service.updateLocation(
+            const { updatedUser } = await service.updateLocation(
                 userId,
                 locationUpdateDto,
             );
 
-            expect(result).toBeDefined();
-            expect(result.location).toEqual({
+            expect(updatedUser).toBeDefined();
+            expect(updatedUser.location).toEqual({
                 type: "Point",
                 coordinates: [-74.006, 40.7128],
             });

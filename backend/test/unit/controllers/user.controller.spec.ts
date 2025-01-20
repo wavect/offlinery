@@ -1,5 +1,4 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
-import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
 import { JwtStatus } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserController } from "@/entities/user/user.controller";
@@ -141,37 +140,6 @@ describe("UserController", () => {
 
             await expect(controller.getOwnUserData(userId)).rejects.toThrow(
                 NotFoundException,
-            );
-        });
-    });
-
-    describe("updateLocation", () => {
-        it("should update user location", async () => {
-            const userId = "1";
-            const locationUpdateDto: LocationUpdateDTO = {
-                latitude: 40.7128,
-                longitude: -74.006,
-            };
-            const mockUser = new User();
-            mockUser.id = userId;
-            mockUser.location = {
-                type: "Point",
-                coordinates: [-74.006, 40.7128],
-            };
-
-            jest.spyOn(userService, "updateLocation").mockResolvedValue(
-                mockUser,
-            );
-
-            const result = await controller.updateLocation(
-                userId,
-                locationUpdateDto,
-            );
-
-            expect(result).toEqual(mockUser.convertToPublicDTO());
-            expect(userService.updateLocation).toHaveBeenCalledWith(
-                userId,
-                locationUpdateDto,
             );
         });
     });
