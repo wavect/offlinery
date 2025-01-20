@@ -107,5 +107,6 @@ export const deleteSessionDataFromStorage = async () => {
     return await deleteLocalValues([
         LOCAL_VALUE.JWT_ACCESS_TOKEN,
         LOCAL_VALUE.JWT_REFRESH_TOKEN,
+        LOCAL_VALUE.EXPO_PUSH_TOKEN,
     ]);
 };
