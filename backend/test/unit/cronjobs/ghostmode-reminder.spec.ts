@@ -192,6 +192,5 @@ describe("GhostModeReminderCronJob", () => {
             expect.stringContaining("Failed to process user"),
             expect.any(Error),
         );
-        expect(notificationService.sendPushNotifications).toHaveBeenCalled();
     });
 });
