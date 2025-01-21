@@ -19,7 +19,6 @@ import {
 } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, Logger } from "@nestjs/common";
-import { Cron, CronExpression } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
 import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
@@ -38,7 +37,7 @@ export class GhostModeReminderCronJob extends BaseCronJob {
         super(ECronJobType.GHOST_MODE_REMINDER, mailService, i18n);
     }
 
-    @Cron(CronExpression.EVERY_DAY_AT_NOON)
+    // TODO: @Cron(CronExpression.EVERY_DAY_AT_NOON)
     async checkGhostModeUsers(): Promise<void> {
         this.logger.debug(`Starting checkGhostModeUsers cron job..`);
         const chunks = 100; // Process users in chunks to prevent memory overload
