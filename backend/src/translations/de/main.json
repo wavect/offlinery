@@ -8,6 +8,10 @@
       "title": "Du bist verifiziert!",
       "body": "Gratulation, du wurdest freigeschalten.."
     },
+    "accountDenied": {
+      "title": "Wir brauchen mehr Informationen",
+      "body": "Wir haben dir bezüglich deiner Verifizierung eine E-Mail geschickt."
+    },
     "ghostmode-reminder": {
       "title": "Niemand kann dich finden, {firstName}!",
       "body": "Wechsle vom Geistmodus zu Live um Menschen über den Weg zu laufen."
@@ -27,7 +31,7 @@
       "securityWarning": "Wenn du diese Löschung nicht beantragt hast, kontaktiere bitte umgehend unser Support-Team, um dein Konto zu sichern.",
       "footer": "Dies ist eine automatisierte Nachricht. Bitte antworte nicht auf diese E-Mail."
     },
-    "verification-successful": {
+    "account-verification-verified": {
       "subject": "Offlinery: Dein Konto wurde verifiziert",
       "title": "Offlinery: Konto verifiziert",
       "header": "Alles ist bereit!",
@@ -36,6 +40,19 @@
       "nextSteps": "Was kommt als Nächstes? Ab jetzt kannst du andere User in der echten Welt ansprechen beziehungsweise wirst von ihnen angesprochen.",
       "disclaimer": "Wenn du dich nicht bei Offlinery angemeldet hast, keine Sorge. Du kannst diese E-Mail einfach ignorieren.",
       "footer": "Dies ist eine automatisierte Nachricht. Bitte antworte nicht auf diese E-Mail."
+    },
+    "account-verification-denied": {
+      "subject": "Offlinery: Der letzte Schritt zur Verifizierung",
+      "title": "Vervollständige deine Offlinery-Verifizierung",
+      "header": "Bereit für ein kleines Abenteuer?",
+      "greeting": "Hey {firstName}!",
+      "taskIntro": "Wir haben eine spannende Challenge für dich, die dir hilft zu wachsen und uns zeigt, dass du bereit für echte Offline-Verbindungen bist.",
+      "taskDescription": "Deine Mission: Mach 3 {oppositeGender}, die du nicht kennst, ein ehrliches, herzliches Kompliment - und geh dann einfach weiter. Ohne Hintergedanken, verbreite einfach etwas Freude!",
+      "callExplanation": "Danach würden wir gerne von deinen Erfahrungen hören! Was hast du gelernt? Was würdest du anders machen? Deine Erkenntnisse sind super wertvoll für uns.",
+      "verificationNote": "Wenn unser Gespräch gut läuft (und davon sind wir überzeugt!), heißen wir dich mit Freude bei Offlinery willkommen.",
+      "bookCallButton": "Erfahrungs-Chat buchen",
+      "reminder": "Denk dran: Erfülle deine Mission vor dem Gespräch! 🎯",
+      "footer": "Dies ist eine automatische Nachricht. Bitte antworte nicht auf diese E-Mail."
     },
     "email-verification": {
       "subject": "Willkommen bei Offlinery! Bestätige deine E-Mail",
