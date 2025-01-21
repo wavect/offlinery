@@ -10,11 +10,11 @@
       "title": "{firstName} ist in der Nähe! 🔥",
       "body": "Finden. Ansprechen. IRL."
     },
-    "accountApproved": {
+    "account_approved": {
       "title": "Du bist verifiziert!",
       "body": "Gratulation, du wurdest freigeschalten.."
     },
-    "accountDenied": {
+    "account_denied": {
       "title": "Wir brauchen mehr Informationen",
       "body": "Wir haben dir bezüglich deiner Verifizierung eine E-Mail geschickt."
     },
