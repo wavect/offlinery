@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="{{language}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t 'title'}}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #2ecc71;
+            font-size: 28px;
+            margin: 0;
+        }
+        .content {
+            font-size: 16px;
+        }
+        .task-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #2ecc71;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .cta-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .button {
+            display: inline-block;
+            background-color: #2ecc71;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #27ae60;
+        }
+        .emphasis {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+        .footer {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            margin-top: 30px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>{{t 'header'}}</h2>
+    </div>
+    <div class="content">
+        <p>{{t 'greeting' firstName=firstName}}</p>
+        <p>{{t 'taskIntro'}}</p>
+
+        <div class="task-box">
+            <p>{{t 'taskDescription' oppositeGender=oppositeGender}}</p>
+        </div>
+
+        <p>{{t 'callExplanation'}}</p>
+        <p>{{t 'verificationNote'}}</p>
+
+        <div class="cta-container">
+            <a href="https://calendly.com/wavect/safety-call-{{languageId}}?name={{firstName}}&email={{email}}" class="button">
+            {{t 'bookCallButton'}}
+            </a>
+        </div>
+
+        <p class="emphasis">{{t 'reminder'}}</p>
+    </div>
+    <div class="footer">
+        <p>{{t 'footer'}}</p>
+    </div>
+</div>
+</body>
+</html>
