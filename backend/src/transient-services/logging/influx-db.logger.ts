@@ -1,6 +1,6 @@
 import { TYPED_ENV } from "@/utils/env.utils";
 import { IS_DEV_MODE } from "@/utils/misc.utils";
-import { InfluxDB, Point, WriteApi } from "@influxdata/influxdb-client";
+import { InfluxDB, Point } from "@influxdata/influxdb-client";
 import { ConsoleLogger, Injectable, LoggerService } from "@nestjs/common";
 
 export const PROVIDER_TOKEN_LOGGER = "Logger";
@@ -8,61 +8,89 @@ export const PROVIDER_TOKEN_LOGGER = "Logger";
 @Injectable()
 export class InfluxLogger extends ConsoleLogger implements LoggerService {
     private readonly influx: InfluxDB;
-    private readonly writeApi: WriteApi;
+    private readonly org: string;
+    private readonly bucket: string;
+    private readonly writeApi: any;
     private readonly isProduction: boolean;
-    private flushInterval: NodeJS.Timeout;
 
     constructor() {
         super();
+        // Load configuration from environment variables
+        const url = TYPED_ENV.INFLUXDB_URL || "http://localhost:8086";
+        const token = TYPED_ENV.INFLUXDB_TOKEN;
+        this.org = TYPED_ENV.INFLUXDB_ORG || "offlinery";
+        this.bucket = TYPED_ENV.INFLUXDB_BUCKET || "logs";
         this.isProduction = !IS_DEV_MODE;
 
-        if (this.isProduction) {
-            this.influx = new InfluxDB({
-                url: TYPED_ENV.INFLUXDB_URL || "http://localhost:8086",
-                token: TYPED_ENV.INFLUXDB_TOKEN,
-            });
-
-            this.writeApi = this.influx.getWriteApi(
-                TYPED_ENV.INFLUXDB_ORG || "offlinery",
-                TYPED_ENV.INFLUXDB_BUCKET || "logs",
-                "ms",
+        if (!this.isProduction) {
+            super.warn(
+                "Not saving logs into InfluxDB as backend not set to production!",
             );
-
-            this.flushInterval = setInterval(() => this.flush(), 10000);
+            return;
         }
-    }
 
-    private normalizeContext(context: any): string {
-        if (!context) return "default";
-        if (typeof context === "object") {
-            return JSON.stringify(context).substring(0, 249);
-        }
-        return String(context).substring(0, 249);
+        // Initialize InfluxDB client
+        this.influx = new InfluxDB({ url, token });
+        this.writeApi = this.influx.getWriteApi(this.org, this.bucket, "ms");
     }
 
     private writeLog(
         level: string,
-        message: any,
-        context?: any,
+        message: string,
+        context?: string,
         trace?: string,
     ) {
-        if (!this.isProduction) return;
+        if (this.isProduction) {
+            try {
+                const actualContext = context || this.context || "global";
+                const point = new Point("log")
+                    .tag("level", level)
+                    .tag("context", actualContext)
+                    .tag("message", message.substring(0, 249)) // InfluxDB tags have a length limit, but are indexable
+                    .stringField("context", actualContext)
+                    .stringField("message", message);
 
-        try {
-            const point = new Point("log")
-                .tag("level", level)
-                .tag("context", this.normalizeContext(context || this.context))
-                .stringField("message", this.stringify(message))
-                .timestamp(new Date());
+                if (trace) {
+                    point.stringField("trace", trace);
+                }
 
-            if (trace) {
-                point.stringField("trace", trace);
+                // Add timestamp
+                point.timestamp(new Date());
+
+                // Write to InfluxDB
+                this.writeApi.writePoint(point);
+                this.writeApi.flush().catch((err: Error) => {
+                    super.error("Error writing to InfluxDB:", err);
+                });
+            } catch (err) {
+                super.error(`InfluxDB Logger could not save log to influxDB.`);
             }
-
-            this.writeApi.writePoint(point);
-        } catch (err) {
-            super.error("Failed to write to InfluxDB", err);
         }
+    }
+
+    log(message: any, context?: string) {
+        this.writeLog("info", this.stringify(message), context);
+        super.log(`[${context}] ${message}`); // Keep console logging for development
+    }
+
+    error(message: any, trace?: string, context?: string) {
+        this.writeLog("error", this.stringify(message), context, trace);
+        super.error(`[${context}] ${message}`, trace); // Keep console logging for development
+    }
+
+    warn(message: any, context?: string) {
+        this.writeLog("warn", this.stringify(message), context);
+        super.warn(`[${context}] ${message}`); // Keep console logging for development
+    }
+
+    debug(message: any, context?: string) {
+        this.writeLog("debug", this.stringify(message), context);
+        super.debug(`[${context}] ${message}`); // Keep console logging for development
+    }
+
+    verbose(message: any, context?: string) {
+        this.writeLog("verbose", this.stringify(message), context);
+        super.verbose(`[${context}] ${message}`); // Keep console logging for development
     }
 
     private stringify(message: any): string {
@@ -72,48 +100,13 @@ export class InfluxLogger extends ConsoleLogger implements LoggerService {
         return String(message);
     }
 
-    private async flush(): Promise<void> {
+    // Cleanup method to ensure all logs are written before app shutdown
+    async onApplicationShutdown() {
         try {
             await this.writeApi.flush();
+            await this.writeApi.close();
         } catch (err) {
-            super.error("Flush failed:", err);
-        }
-    }
-
-    log(message: any, context?: string) {
-        this.writeLog("info", message, context);
-        super.log(message, context);
-    }
-
-    error(message: any, trace?: string, context?: string) {
-        this.writeLog("error", message, context, trace);
-        super.error(message, trace, context);
-    }
-
-    warn(message: any, context?: string) {
-        this.writeLog("warn", message, context);
-        super.warn(message, context);
-    }
-
-    debug(message: any, context?: string) {
-        this.writeLog("debug", message, context);
-        super.debug(message, context);
-    }
-
-    verbose(message: any, context?: string) {
-        this.writeLog("verbose", message, context);
-        super.verbose(message, context);
-    }
-
-    async onApplicationShutdown() {
-        if (this.isProduction) {
-            clearInterval(this.flushInterval);
-            try {
-                await this.flush();
-                await this.writeApi.close();
-            } catch (err) {
-                console.error("Error closing InfluxDB:", err);
-            }
+            console.error("Error closing InfluxDB connection:", err);
         }
     }
 }

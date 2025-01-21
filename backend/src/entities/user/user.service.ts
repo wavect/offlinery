@@ -583,8 +583,7 @@ export class UserService {
             await this.matchingService.checkForEncounters(user);
 
         this.logger.debug(
-            `Received base notifications to be sent: `,
-            notifications,
+            `Received base notifications to be sent: ${JSON.stringify(notifications)}`,
         );
 
         const expoPushTickets =
