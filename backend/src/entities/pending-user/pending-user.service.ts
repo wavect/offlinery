@@ -276,6 +276,12 @@ export class PendingUserService {
             template: `account-verification-${status}`,
             context: {
                 firstName: user.firstName,
+                oppositeGender: await this.i18n.translate(
+                    `main.general.gender.${user.genderDesire[0]}_pl`,
+                    { lang },
+                ),
+                email: user.email,
+                languageId: lang,
                 t: (key: string, params?: Record<string, any>) =>
                     this.i18n.translate(
                         `main.email.account-verification-${status}.${key}`,

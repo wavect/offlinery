@@ -1,4 +1,10 @@
 {
+  "general": {
+    "gender": {
+      "man_pl": "men",
+      "woman_pl": "women"
+    }
+  },
   "notification": {
     "newMatch": {
       "title": "{firstName} is nearby! 🔥",
