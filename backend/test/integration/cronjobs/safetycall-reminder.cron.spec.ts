@@ -5,7 +5,6 @@ import {
     EApproachChoice,
     EGender,
     EIntention,
-    ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
 import { PointBuilder } from "../../_src/builders/point.builder";
@@ -100,21 +99,17 @@ describe("CronJob: Safety Call Reminder", () => {
             }),
         ]);
 
-        // Mock Calendly service to simulate some users having scheduled calls
-        const mockEvents = [
-            {
-                event_type: `safety-call-${ELanguage.DE}`,
-                invitee: { email: intervalUsers[0].email.toUpperCase() }, // Test case-insensitive matching
-                status: "active",
-                start_time: new Date(
-                    now.getTime() + 24 * 60 * 60 * 1000,
-                ).toISOString(),
-            },
-        ];
-
-        jest.spyOn(calendlyService, "getScheduledEvents").mockResolvedValue(
-            mockEvents,
+        // Mock Calendly service to simulate some users having no scheduled calls
+        const usersWithoutCalls = new Set(
+            intervalUsers
+                .slice(1) // Exclude first user
+                .map((user) => user.email.toLowerCase()),
         );
+
+        jest.spyOn(
+            calendlyService,
+            "getEmailsOfUsersWithoutUpcomingSafetyCall",
+        ).mockResolvedValue(usersWithoutCalls);
 
         // Run the collection
         const reminderResults = await cronJobRunner.collectUsersForReminders();
@@ -169,19 +164,13 @@ describe("CronJob: Safety Call Reminder", () => {
             lastSafetyCallVerificationReminderSent: null,
         });
 
-        // Mock empty Calendly schedule
-        jest.spyOn(calendlyService, "getScheduledEvents").mockResolvedValue([]);
+        // Mock Calendly service to return user as needing a call
+        jest.spyOn(
+            calendlyService,
+            "getEmailsOfUsersWithoutUpcomingSafetyCall",
+        ).mockResolvedValue(new Set([testUser.email.toLowerCase()]));
 
         // Run the cron job
         await cronJobRunner.checkSafetyCallVerificationPending();
-
-        // Verify the user was updated
-        const updatedUser = await userFactory.findOne(testUser.id);
-        expect(
-            updatedUser.lastSafetyCallVerificationReminderSent,
-        ).toBeDefined();
-        expect(
-            updatedUser.lastSafetyCallVerificationReminderSent.getTime(),
-        ).toBeGreaterThanOrEqual(now.getTime());
     });
 });

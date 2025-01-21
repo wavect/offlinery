@@ -50,6 +50,8 @@ services:
       POSTGRES_DB: test_offlinery
       POSTGRES_USER: test_user
       POSTGRES_PASSWORD: test_password
+      TZ: 'UTC'
+      POSTGRES_INITDB_ARGS: '--timezone=UTC'
     ports:
       - '5433:5432'
     networks:

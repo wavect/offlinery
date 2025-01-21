@@ -47,34 +47,35 @@ export class GhostModeReminderCronJob extends BaseCronJob {
     async checkGhostModeUsers(): Promise<void> {
         this.logger.debug(`Starting checkGhostModeUsers cron job..`);
         const now = new Date();
-
         // Find who needs to be notified
-        const targets = await this.findGhostModeTargets(now);
+        const targetSet = await this.findGhostModeTargets(now);
         // Send the notifications
-        await this.sendGhostModeReminders(targets, now);
-
+        await this.sendGhostModeReminders(targetSet);
         this.logger.debug(`All ghostmode reminders sent for all intervals.`);
     }
 
     public async findGhostModeTargets(
-        now: Date = new Date(),
-    ): Promise<GhostModeTarget[]> {
-        const targets: GhostModeTarget[] = [];
+        now: Date,
+    ): Promise<Set<GhostModeTarget>> {
+        const targetSet = new Set<GhostModeTarget>();
         const chunks = 100;
 
         for (const intervalHour of DEFAULT_INTERVAL_HOURS) {
             this.logger.debug(
                 `Checking users for interval ${intervalHour.hours}h.`,
             );
+
             const previousInterval = getPreviousInterval(intervalHour);
             let skip = 0;
 
             while (true) {
                 // Calculate the reminder threshold date properly
-                const reminderThreshold = new Date(now);
-                reminderThreshold.setHours(
-                    reminderThreshold.getHours() -
-                        (intervalHour.hours - (previousInterval?.hours ?? 0)),
+                const reminderThreshold = new Date(
+                    now.getTime() -
+                        (intervalHour.hours - (previousInterval?.hours ?? 0)) *
+                            60 *
+                            60 *
+                            1000,
                 );
 
                 const users = await this.userRepository
@@ -109,27 +110,32 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                     .skip(skip)
                     .getMany();
 
+                console.log(`Run ${intervalHour.hours} users`, users);
+
                 if (users.length === 0) break;
 
-                users.forEach((user) => {
-                    targets.push({ user, intervalHour });
-                });
+                for (const user of users) {
+                    targetSet.add({ user, intervalHour });
+                    // Update user reminder status
+                    await this.userRepository.update(user.id, {
+                        lastDateModeReminderSent: now,
+                    });
+                }
 
                 skip += chunks;
             }
         }
 
-        return targets;
+        return targetSet;
     }
 
     public async sendGhostModeReminders(
-        targets: GhostModeTarget[],
-        now: Date,
+        targets: Set<GhostModeTarget>,
     ): Promise<void> {
         const notificationTicketsToSend: OfflineryNotification[] = [];
 
         await Promise.all(
-            targets.map(async ({ user, intervalHour }) => {
+            Array.from(targets).map(async ({ user, intervalHour }) => {
                 try {
                     // Send email
                     await this.sendEmail(user, intervalHour);
@@ -140,6 +146,7 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                             type: ENotificationType.GHOSTMODE_REMINDER,
                             screen: EAppScreens.GHOSTMODE_REMINDER,
                         };
+
                         notificationTicketsToSend.push(
                             this.buildNotification(user, data),
                         );
@@ -148,14 +155,6 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                             `Cannot send push notification for user ${user.id} to remind about ghost mode since no pushToken. But should have sent email.`,
                         );
                     }
-
-                    // Update user reminder status
-                    await this.userRepository.update(user.id, {
-                        lastDateModeReminderSent: now,
-                        lastDateModeChange:
-                            user.lastDateModeChange ??
-                            new Date(now.getTime() - 25 * 60 * 60 * 1000),
-                    });
                 } catch (error) {
                     this.logger.error(
                         `Failed to process user ${user.id} in cronjob ghostmode-reminder:`,
@@ -171,6 +170,7 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                 await this.notificationService.sendPushNotifications(
                     notificationTicketsToSend,
                 );
+
             this.logger.debug(
                 `Sent ${tickets.length} push notifications, status codes: ${JSON.stringify(tickets.map((t) => t.status))}`,
             );
