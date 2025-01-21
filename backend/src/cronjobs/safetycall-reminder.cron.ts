@@ -10,9 +10,15 @@ import { NotificationService } from "@/transient-services/notification/notificat
 import { EApproachChoice, EVerificationStatus } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, Logger } from "@nestjs/common";
+import { Cron, CronExpression } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
 import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
+
+interface ReminderResult {
+    usersToUpdate: { id: string; lastReminderSent: Date }[];
+    emailsToSend: { user: User; interval: IntervalHour }[];
+}
 
 @Injectable()
 export class SafetyCallReminderCronJob extends BaseCronJob {
@@ -30,10 +36,19 @@ export class SafetyCallReminderCronJob extends BaseCronJob {
         super(ECronJobType.SAFETY_CALL_REMINDER, mailService, i18n);
     }
 
-    //@Cron(CronExpression.EVERY_DAY_AT_7PM)
+    @Cron(CronExpression.EVERY_DAY_AT_7PM)
     async checkSafetyCallVerificationPending(): Promise<void> {
         this.logger.debug(`Starting verification reminder cron job..`);
+        const reminderResults = await this.collectUsersForReminders();
+        await this.sendReminders(reminderResults);
+    }
+
+    public async collectUsersForReminders(): Promise<ReminderResult> {
         const now = new Date();
+        const result: ReminderResult = {
+            usersToUpdate: [],
+            emailsToSend: [],
+        };
 
         // Process one interval at a time, from longest to shortest
         for (let i = 0; i < DEFAULT_INTERVAL_HOURS.length; i++) {
@@ -76,17 +91,64 @@ export class SafetyCallReminderCronJob extends BaseCronJob {
                     `${usersToRemind.length} users have no scheduled calls and will receive reminders: ${usersToRemind.map((u) => u.email)}`,
                 );
 
-                // Process reminders in parallel
-                await Promise.all(
-                    usersToRemind.map((user) =>
-                        this.processUserReminder(user, now, currentInterval),
-                    ),
-                );
+                // Collect users for updates and emails
+                usersToRemind.forEach((user) => {
+                    result.usersToUpdate.push({
+                        id: user.id,
+                        lastReminderSent: now,
+                    });
+                    result.emailsToSend.push({
+                        user,
+                        interval: currentInterval,
+                    });
+                });
 
                 skip += this.BATCH_SIZE;
             }
         }
-        this.logger.debug(`Safety call verification reminder job completed.`);
+
+        this.logger.debug(`Collection of users for reminders completed.`);
+        return result;
+    }
+
+    private async sendReminders(
+        reminderResults: ReminderResult,
+    ): Promise<void> {
+        try {
+            // Update all users in bulk
+            if (reminderResults.usersToUpdate.length > 0) {
+                await Promise.all(
+                    reminderResults.usersToUpdate.map((update) =>
+                        this.userRepository.update(update.id, {
+                            lastSafetyCallVerificationReminderSent:
+                                update.lastReminderSent,
+                        }),
+                    ),
+                );
+            }
+
+            // Send all emails
+            if (reminderResults.emailsToSend.length > 0) {
+                await Promise.all(
+                    reminderResults.emailsToSend.map(({ user, interval }) =>
+                        this.sendEmail(user, interval).catch((error) => {
+                            this.logger.error(
+                                `Failed to send email to user ${user.id}: ${error.message}`,
+                            );
+                        }),
+                    ),
+                );
+            }
+
+            this.logger.debug(
+                `Successfully processed ${reminderResults.usersToUpdate.length} reminders.`,
+            );
+        } catch (error) {
+            this.logger.error(
+                `Error processing reminders batch: ${error.message}`,
+            );
+            throw error;
+        }
     }
 
     private async getUserBatch(
@@ -130,22 +192,5 @@ export class SafetyCallReminderCronJob extends BaseCronJob {
             .take(this.BATCH_SIZE)
             .skip(skip)
             .getMany();
-    }
-
-    private async processUserReminder(
-        user: User,
-        now: Date,
-        currentInterval: IntervalHour,
-    ): Promise<void> {
-        try {
-            await this.sendEmail(user, currentInterval);
-            await this.userRepository.update(user.id, {
-                lastSafetyCallVerificationReminderSent: now,
-            });
-        } catch (error) {
-            this.logger.error(
-                `Failed to process user ${user.id} in safety-call reminder: ${error.message}`,
-            );
-        }
     }
 }
