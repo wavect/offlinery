@@ -86,9 +86,12 @@ export class GhostModeReminderCronJob extends BaseCronJob {
     }
 
     private determineOfflineType(lastDateModeChange: Date): TimeSpan {
-        const hoursOffline = differenceInHours(new Date(), lastDateModeChange);
-        if (hoursOffline >= 336) return TimeSpan.TWO_WEEKS;
-        if (hoursOffline >= 72) return TimeSpan.THREE_DAYS;
+        const hoursGhostMode = differenceInHours(
+            new Date(),
+            lastDateModeChange,
+        );
+        if (hoursGhostMode >= 336) return TimeSpan.TWO_WEEKS;
+        if (hoursGhostMode >= 72) return TimeSpan.THREE_DAYS;
         return TimeSpan.ONE_DAY;
     }
 
