@@ -25,7 +25,7 @@ describe("CronJob: GhostMode Reminder", () => {
         userRepository = module.get<Repository<User>>(getRepositoryToken(User));
     });
 
-    describe("OfflineUsersService", () => {
+    describe("Ghost Mode Reminder: Happy Path Tests", function () {
         it("should identify users for ONE_DAY reminder correctly", async () => {
             const user = await userFactory.persistNewTestUser({
                 ...baseUser,
@@ -36,16 +36,6 @@ describe("CronJob: GhostMode Reminder", () => {
             const result = await service.findOfflineUsers();
             expect(result[0].type).toEqual(TimeSpan.ONE_DAY);
             expect(result[0].user.id).toEqual(user.id);
-        });
-        it("should not remind ONE_DAY users if already reminded within 24h", async () => {
-            await userFactory.persistNewTestUser({
-                ...baseUser,
-                lastDateModeChange: goBackInTimeFor(25, "hours"),
-                lastDateModeReminderSent: goBackInTimeFor(23, "hours"),
-            });
-
-            const result = await service.findOfflineUsers();
-            expect(result.length).toEqual(0);
         });
         it("should identify users for THREE_DAYS reminder correctly", async () => {
             const user = await userFactory.persistNewTestUser({
@@ -69,6 +59,19 @@ describe("CronJob: GhostMode Reminder", () => {
             expect(result[0].type).toEqual(TimeSpan.TWO_WEEKS);
             expect(result[0].user.id).toEqual(user.id);
         });
+    });
+
+    describe("Ghost Mode: Border Cases", () => {
+        it("should not remind 24h users if already reminded within 24h", async () => {
+            await userFactory.persistNewTestUser({
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(25, "hours"),
+                lastDateModeReminderSent: goBackInTimeFor(23, "hours"),
+            });
+
+            const result = await service.findOfflineUsers();
+            expect(result.length).toEqual(0);
+        });
         it("should not include users in multiple buckets", async () => {
             const user = await userFactory.persistNewTestUser({
                 ...baseUser,
@@ -79,6 +82,9 @@ describe("CronJob: GhostMode Reminder", () => {
             const result = await service.findOfflineUsers();
             expect(result[0].type).toEqual(TimeSpan.TWO_WEEKS);
             expect(result[0].user.id).toEqual(user.id);
+
+            const afterResult = await service.findOfflineUsers();
+            expect(afterResult).toEqual([]);
         });
         it("should correctly handle multiple users in different time buckets", async () => {
             // ONE_DAY users
@@ -225,6 +231,9 @@ describe("CronJob: GhostMode Reminder", () => {
             expect(types.filter((t) => t === "THREE_DAYS")).toHaveLength(1);
             expect(types.filter((t) => t === "TWO_WEEKS")).toHaveLength(1);
         });
+    });
+
+    describe("Ghost Mode: Special Tests, Progression", function () {
         it("should handle progression through reminder stages", async () => {
             // Create a user that will progress through all stages
             const user = await userFactory.persistNewTestUser({
