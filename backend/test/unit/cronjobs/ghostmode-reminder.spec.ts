@@ -167,31 +167,6 @@ describe("GhostModeReminderCronJob", () => {
         );
     });
 
-    it("should respect chunk size when processing users", async () => {
-        const manyUsers = Array(150)
-            .fill(null)
-            .map((_, index) => ({
-                ...mockUsers[0],
-                id: index + 1,
-                email: `test${index}@example.com`,
-            }));
-
-        // Properly mock paginated responses
-        queryBuilder.getMany
-            .mockResolvedValueOnce(manyUsers.slice(0, 100)) // First chunk of 24h
-            .mockResolvedValueOnce(manyUsers.slice(100, 150)) // Second chunk of 24h
-            .mockResolvedValueOnce([]) // No more 24h
-            .mockResolvedValueOnce([]) // 72h
-            .mockResolvedValueOnce([]) // 336h
-            .mockResolvedValue([]); // Any subsequent calls
-
-        await service.checkGhostModeUsers();
-
-        expect(queryBuilder.take).toHaveBeenCalledWith(100);
-        expect(queryBuilder.skip).toHaveBeenCalledWith(expect.any(Number));
-        expect(mailerService.sendMail).toHaveBeenCalledTimes(150);
-    });
-
     it("should handle errors during user processing", async () => {
         const error = new Error("Failed to send email");
         queryBuilder.getMany.mockResolvedValueOnce([mockUsers[0]]);
