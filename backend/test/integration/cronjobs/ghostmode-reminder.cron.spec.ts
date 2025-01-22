@@ -1,4 +1,4 @@
-import { goBackInTimeFor } from "@/cronjobs/cronjobs.types";
+import { goBackInTimeFor, TimeSpan } from "@/cronjobs/cronjobs.types";
 import { GhostModeReminderCronJob } from "@/cronjobs/ghostmode-reminder.cron";
 import { User } from "@/entities/user/user.entity";
 import { EApproachChoice, EDateMode } from "@/types/user.types";
@@ -34,23 +34,18 @@ describe("CronJob: GhostMode Reminder", () => {
             });
 
             const result = await service.findOfflineUsers();
-            expect(result).toContainEqual({
-                id: user.id,
-                type: "ONE_DAY",
-            });
+            expect(result[0].type).toEqual(TimeSpan.ONE_DAY);
+            expect(result[0].user.id).toEqual(user.id);
         });
         it("should not remind ONE_DAY users if already reminded within 24h", async () => {
-            const user = await userFactory.persistNewTestUser({
+            await userFactory.persistNewTestUser({
                 ...baseUser,
                 lastDateModeChange: goBackInTimeFor(25, "hours"),
                 lastDateModeReminderSent: goBackInTimeFor(23, "hours"),
             });
 
             const result = await service.findOfflineUsers();
-            expect(result).not.toContainEqual({
-                id: user.id,
-                type: "ONE_DAY",
-            });
+            expect(result.length).toEqual(0);
         });
         it("should identify users for THREE_DAYS reminder correctly", async () => {
             const user = await userFactory.persistNewTestUser({
@@ -60,10 +55,8 @@ describe("CronJob: GhostMode Reminder", () => {
             });
 
             const result = await service.findOfflineUsers();
-            expect(result).toContainEqual({
-                id: user.id,
-                type: "THREE_DAYS",
-            });
+            expect(result[0].type).toEqual(TimeSpan.THREE_DAYS);
+            expect(result[0].user.id).toEqual(user.id);
         });
         it("should identify users for TWO_WEEKS reminder correctly", async () => {
             const user = await userFactory.persistNewTestUser({
@@ -73,21 +66,19 @@ describe("CronJob: GhostMode Reminder", () => {
             });
 
             const result = await service.findOfflineUsers();
-            expect(result).toContainEqual({
-                id: user.id,
-                type: "TWO_WEEKS",
-            });
+            expect(result[0].type).toEqual(TimeSpan.TWO_WEEKS);
+            expect(result[0].user.id).toEqual(user.id);
         });
         it("should not include users in multiple buckets", async () => {
-            await userFactory.persistNewTestUser({
+            const user = await userFactory.persistNewTestUser({
                 ...baseUser,
                 lastDateModeChange: goBackInTimeFor(337, "hours"),
                 lastDateModeReminderSent: goBackInTimeFor(265, "hours"),
             });
 
             const result = await service.findOfflineUsers();
-            expect(result).toHaveLength(1);
-            expect(result[0].type).toEqual("TWO_WEEKS");
+            expect(result[0].type).toEqual(TimeSpan.TWO_WEEKS);
+            expect(result[0].user.id).toEqual(user.id);
         });
         it("should correctly handle multiple users in different time buckets", async () => {
             // ONE_DAY users

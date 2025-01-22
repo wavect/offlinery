@@ -16,9 +16,15 @@ export const DEFAULT_INTERVAL_HOURS: IntervalHour[] = [
     { hours: 336, translationKey: "main.cron.intervalHours.h336" },
 ];
 
+export enum TimeSpan {
+    ONE_DAY = "ONE_DAY",
+    THREE_DAYS = "THREE_DAYS",
+    TWO_WEEKS = "TWO_WEEKS",
+}
+
 export interface OfflineUserSince {
     user: User;
-    type: "ONE_DAY" | "THREE_DAYS" | "TWO_WEEKS";
+    type: TimeSpan;
 }
 
 export const goBackInTimeFor = (

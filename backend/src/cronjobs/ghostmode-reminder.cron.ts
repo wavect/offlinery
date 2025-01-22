@@ -6,6 +6,7 @@ import {
     goBackInTimeFor,
     IntervalHour,
     OfflineUserSince,
+    TimeSpan,
 } from "@/cronjobs/cronjobs.types";
 import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
@@ -84,13 +85,11 @@ export class GhostModeReminderCronJob extends BaseCronJob {
         }));
     }
 
-    private determineOfflineType(
-        lastDateModeChange: Date,
-    ): "TWO_WEEKS" | "THREE_DAYS" | "ONE_DAY" {
+    private determineOfflineType(lastDateModeChange: Date): TimeSpan {
         const hoursOffline = differenceInHours(new Date(), lastDateModeChange);
-        if (hoursOffline >= 336) return "TWO_WEEKS";
-        if (hoursOffline >= 72) return "THREE_DAYS";
-        return "ONE_DAY";
+        if (hoursOffline >= 336) return TimeSpan.TWO_WEEKS;
+        if (hoursOffline >= 72) return TimeSpan.THREE_DAYS;
+        return TimeSpan.ONE_DAY;
     }
 
     private ghostModeAdapter(input: OfflineUserSince[]): Set<GhostModeTarget> {
@@ -98,9 +97,9 @@ export class GhostModeReminderCronJob extends BaseCronJob {
             OfflineUserSince["type"],
             IntervalHour
         >([
-            ["ONE_DAY", DEFAULT_INTERVAL_HOURS[0]],
-            ["THREE_DAYS", DEFAULT_INTERVAL_HOURS[1]],
-            ["TWO_WEEKS", DEFAULT_INTERVAL_HOURS[2]],
+            [TimeSpan.ONE_DAY, DEFAULT_INTERVAL_HOURS[0]],
+            [TimeSpan.THREE_DAYS, DEFAULT_INTERVAL_HOURS[1]],
+            [TimeSpan.TWO_WEEKS, DEFAULT_INTERVAL_HOURS[2]],
         ]);
 
         return new Set(
