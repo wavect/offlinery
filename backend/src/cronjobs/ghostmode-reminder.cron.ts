@@ -49,6 +49,14 @@ export class GhostModeReminderCronJob extends BaseCronJob {
     public async findOfflineUsers(): Promise<OfflineUserSince[]> {
         const users = await this.userRepository
             .createQueryBuilder("user")
+            .select([
+                "user.id",
+                "user.email",
+                "user.pushToken",
+                "user.preferredLanguage",
+                "user.firstName",
+                "user.lastDateModeChange",
+            ])
             .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
             .andWhere("user.lastDateModeChange < :dayAgo", {
                 dayAgo: goBackInTimeFor(24, "hours"),

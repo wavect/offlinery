@@ -1,7 +1,7 @@
 import { User } from "@/entities/user/user.entity";
 
 export interface GhostModeTarget {
-    user: User;
+    user: ReceivableUser;
     intervalHour: IntervalHour;
 }
 
@@ -16,6 +16,11 @@ export const DEFAULT_INTERVAL_HOURS: IntervalHour[] = [
     { hours: 336, translationKey: "main.cron.intervalHours.h336" },
 ];
 
+export type ReceivableUser = Pick<
+    User,
+    "email" | "pushToken" | "preferredLanguage" | "firstName" | "id"
+>;
+
 export enum TimeSpan {
     ONE_DAY = "ONE_DAY",
     THREE_DAYS = "THREE_DAYS",
@@ -23,7 +28,7 @@ export enum TimeSpan {
 }
 
 export interface OfflineUserSince {
-    user: User;
+    user: ReceivableUser;
     type: TimeSpan;
 }
 
