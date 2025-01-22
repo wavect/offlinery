@@ -408,6 +408,7 @@ const ProfileSettings = ({
                                     rules={{
                                         required: true,
                                         validate: (value) =>
+                                            state?.approachFromTime &&
                                             value > state.approachFromTime,
                                     }}
                                     name="approachToTime"

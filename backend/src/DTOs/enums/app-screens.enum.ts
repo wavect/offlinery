@@ -7,4 +7,5 @@ export enum EAppScreens {
     ACCOUNT_VERIFIED = "Main_FindPeople",
     GHOSTMODE_REMINDER = "Main_FindPeople",
     SAFETYCALL_REMINDER = "Main_FindPeople",
+    ACCOUNT_DENIED = "Main_FindPeople",
 }
