@@ -2,9 +2,10 @@ import { BaseCronJob } from "@/cronjobs/base.cron";
 import {
     DEFAULT_INTERVAL_HOURS,
     ECronJobType,
-    getIntervalDateTime,
-    getPreviousInterval,
+    GhostModeTarget,
+    goBackInTimeFor,
     IntervalHour,
+    OfflineUserSince,
 } from "@/cronjobs/cronjobs.types";
 import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
@@ -12,22 +13,14 @@ import { NotificationGhostReminderDTO } from "@/DTOs/notifications/notification-
 import { User } from "@/entities/user/user.entity";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { OfflineryNotification } from "@/types/notification-message.types";
-import {
-    EApproachChoice,
-    EDateMode,
-    EVerificationStatus,
-} from "@/types/user.types";
+import { EDateMode } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, Logger } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
+import { differenceInHours } from "date-fns";
 import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
-
-interface GhostModeTarget {
-    user: User;
-    intervalHour: IntervalHour;
-}
 
 @Injectable()
 export class GhostModeReminderCronJob extends BaseCronJob {
@@ -46,87 +39,76 @@ export class GhostModeReminderCronJob extends BaseCronJob {
     @Cron(CronExpression.EVERY_DAY_AT_NOON)
     async checkGhostModeUsers(): Promise<void> {
         this.logger.debug(`Starting checkGhostModeUsers cron job..`);
-        const now = new Date();
-        // Find who needs to be notified
-        const targetSet = await this.findGhostModeTargets(now);
-        // Send the notifications
-        await this.sendGhostModeReminders(targetSet);
-        this.logger.debug(`All ghostmode reminders sent for all intervals.`);
+        const usersToNotify = await this.findOfflineUsers();
+        const ghostModeAdapted = this.ghostModeAdapter(usersToNotify);
+        await this.sendGhostModeReminders(ghostModeAdapted);
+        this.logger.debug(`All Ghostmode reminders sent for all intervals.`);
     }
 
-    public async findGhostModeTargets(
-        now: Date,
-    ): Promise<Set<GhostModeTarget>> {
-        const targetSet = new Set<GhostModeTarget>();
-        const chunks = 100;
+    public async findOfflineUsers(): Promise<OfflineUserSince[]> {
+        const users = await this.userRepository
+            .createQueryBuilder("user")
+            .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
+            .andWhere("user.lastDateModeChange < :dayAgo", {
+                dayAgo: goBackInTimeFor(24, "hours"),
+            })
+            .andWhere(
+                "(user.lastDateModeReminderSent IS NULL OR " +
+                    "CASE " +
+                    "WHEN user.lastDateModeChange < :twoWeeksAgo THEN user.lastDateModeReminderSent < :twoWeeksMinTime " +
+                    "WHEN user.lastDateModeChange < :threeDaysAgo THEN user.lastDateModeReminderSent < :threeDaysMinTime " +
+                    "ELSE user.lastDateModeReminderSent < :oneDayMinTime " +
+                    "END)",
+                {
+                    twoWeeksAgo: goBackInTimeFor(336, "hours"),
+                    threeDaysAgo: goBackInTimeFor(72, "hours"),
+                    twoWeeksMinTime: goBackInTimeFor(336 - 72, "hours"),
+                    threeDaysMinTime: goBackInTimeFor(72 - 24, "hours"),
+                    oneDayMinTime: goBackInTimeFor(24, "hours"),
+                },
+            )
+            .getMany();
 
-        for (const intervalHour of DEFAULT_INTERVAL_HOURS) {
-            this.logger.debug(
-                `Checking users for interval ${intervalHour.hours}h.`,
-            );
+        await Promise.all(
+            users.map((user) =>
+                this.userRepository.update(
+                    { id: user.id },
+                    { lastDateModeReminderSent: new Date() },
+                ),
+            ),
+        );
 
-            const previousInterval = getPreviousInterval(intervalHour);
-            let skip = 0;
+        return users.map((user) => ({
+            user: user,
+            type: this.determineOfflineType(user.lastDateModeChange),
+        }));
+    }
 
-            while (true) {
-                // Calculate the reminder threshold date properly
-                const reminderThreshold = new Date(
-                    now.getTime() -
-                        (intervalHour.hours - (previousInterval?.hours ?? 0)) *
-                            60 *
-                            60 *
-                            1000,
-                );
+    private determineOfflineType(
+        lastDateModeChange: Date,
+    ): "TWO_WEEKS" | "THREE_DAYS" | "ONE_DAY" {
+        const hoursOffline = differenceInHours(new Date(), lastDateModeChange);
+        if (hoursOffline >= 336) return "TWO_WEEKS";
+        if (hoursOffline >= 72) return "THREE_DAYS";
+        return "ONE_DAY";
+    }
 
-                const users = await this.userRepository
-                    .createQueryBuilder("user")
-                    .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
-                    .andWhere(
-                        "((user.verificationStatus = :verificationStatusVerified AND user.approachChoice <> :beApproached) OR user.approachChoice = :beApproached)",
-                        {
-                            beApproached: EApproachChoice.BE_APPROACHED,
-                            verificationStatusVerified:
-                                EVerificationStatus.VERIFIED,
-                        },
-                    )
-                    .andWhere(
-                        "((user.lastDateModeChange IS NOT NULL AND user.lastDateModeChange <= :currentInterval) OR " +
-                            "(user.lastDateModeChange IS NULL AND user.updated <= :currentInterval))",
-                        {
-                            currentInterval: getIntervalDateTime(intervalHour),
-                        },
-                    )
-                    .andWhere(
-                        `(user.lastDateModeReminderSent IS NULL${
-                            previousInterval
-                                ? " OR user.lastDateModeReminderSent <= :reminderThreshold"
-                                : ""
-                        })`,
-                        {
-                            reminderThreshold: reminderThreshold,
-                        },
-                    )
-                    .take(chunks)
-                    .skip(skip)
-                    .getMany();
+    private ghostModeAdapter(input: OfflineUserSince[]): Set<GhostModeTarget> {
+        const typeToIntervalMap = new Map<
+            OfflineUserSince["type"],
+            IntervalHour
+        >([
+            ["ONE_DAY", DEFAULT_INTERVAL_HOURS[0]],
+            ["THREE_DAYS", DEFAULT_INTERVAL_HOURS[1]],
+            ["TWO_WEEKS", DEFAULT_INTERVAL_HOURS[2]],
+        ]);
 
-                console.log(`Run ${intervalHour.hours} users`, users);
-
-                if (users.length === 0) break;
-
-                for (const user of users) {
-                    targetSet.add({ user, intervalHour });
-                    // Update user reminder status
-                    await this.userRepository.update(user.id, {
-                        lastDateModeReminderSent: now,
-                    });
-                }
-
-                skip += chunks;
-            }
-        }
-
-        return targetSet;
+        return new Set(
+            input.map((offlineUser) => ({
+                user: offlineUser.user,
+                intervalHour: typeToIntervalMap.get(offlineUser.type)!,
+            })),
+        );
     }
 
     public async sendGhostModeReminders(

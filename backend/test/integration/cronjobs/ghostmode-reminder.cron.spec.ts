@@ -1,267 +1,277 @@
+import { goBackInTimeFor } from "@/cronjobs/cronjobs.types";
 import { GhostModeReminderCronJob } from "@/cronjobs/ghostmode-reminder.cron";
 import { User } from "@/entities/user/user.entity";
-import {
-    EApproachChoice,
-    EDateMode,
-    EGender,
-    EIntention,
-} from "@/types/user.types";
+import { EApproachChoice, EDateMode } from "@/types/user.types";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { PointBuilder } from "../../_src/builders/point.builder";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
 
 describe("CronJob: GhostMode Reminder", () => {
-    let cronJobRunner: GhostModeReminderCronJob;
+    let service: GhostModeReminderCronJob;
     let userRepository: Repository<User>;
     let userFactory: any;
+    let baseUser: any;
 
     beforeEach(async () => {
+        baseUser = {
+            dateMode: EDateMode.GHOST,
+            approachChoice: EApproachChoice.BE_APPROACHED,
+        };
         const { module, factories } = await getIntegrationTestModule();
-        cronJobRunner = module.get<GhostModeReminderCronJob>(
+        service = module.get<GhostModeReminderCronJob>(
             GhostModeReminderCronJob,
         );
         userFactory = factories.get("user");
         userRepository = module.get<Repository<User>>(getRepositoryToken(User));
     });
 
-    it("should collect the correct amount of users to be notified", async () => {
-        const now = new Date();
-        const twentyFiveHoursAgo = new Date(
-            now.getTime() - 25 * 60 * 60 * 1000,
-        );
-        const fortyEightHoursAgo = new Date(
-            now.getTime() - 48 * 60 * 60 * 1000,
-        );
-        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    describe("OfflineUsersService", () => {
+        it("should identify users for ONE_DAY reminder correctly", async () => {
+            const user = await userFactory.persistNewTestUser({
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(25, "hours"),
+                lastDateModeReminderSent: null, // Never reminded
+            });
 
-        // User in LIVE mode - should NOT be notified
-        const liveUser = await userFactory.persistNewTestUser({
-            dateMode: EDateMode.LIVE,
-            location: new PointBuilder().build(0, 0),
-            gender: EGender.WOMAN,
-            genderDesire: [EGender.MAN],
-            intentions: [EIntention.RELATIONSHIP],
-            approachChoice: EApproachChoice.BE_APPROACHED,
+            const result = await service.findOfflineUsers();
+            expect(result).toContainEqual({
+                id: user.id,
+                type: "ONE_DAY",
+            });
         });
+        it("should not remind ONE_DAY users if already reminded within 24h", async () => {
+            const user = await userFactory.persistNewTestUser({
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(25, "hours"),
+                lastDateModeReminderSent: goBackInTimeFor(23, "hours"),
+            });
 
-        // User in GHOST mode, 25h without reminder - should be notified (24h interval)
-        const twentyFourHourUser = await userFactory.persistNewTestUser({
-            dateMode: EDateMode.GHOST,
-            location: new PointBuilder().build(0, 0),
-            gender: EGender.WOMAN,
-            genderDesire: [EGender.MAN],
-            intentions: [EIntention.RELATIONSHIP],
-            approachChoice: EApproachChoice.BE_APPROACHED,
-            lastDateModeChange: twentyFiveHoursAgo,
-            lastDateModeReminderSent: null,
+            const result = await service.findOfflineUsers();
+            expect(result).not.toContainEqual({
+                id: user.id,
+                type: "ONE_DAY",
+            });
         });
+        it("should identify users for THREE_DAYS reminder correctly", async () => {
+            const user = await userFactory.persistNewTestUser({
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(73, "hours"),
+                lastDateModeReminderSent: goBackInTimeFor(49, "hours"),
+            });
 
-        // must be in 48 hrs
-        const user3 = await userFactory.persistNewTestUser({
-            dateMode: EDateMode.GHOST,
-            location: new PointBuilder().build(0, 0),
-            gender: EGender.WOMAN,
-            genderDesire: [EGender.MAN],
-            intentions: [EIntention.RELATIONSHIP],
-            approachChoice: EApproachChoice.BE_APPROACHED,
-            lastDateModeChange: twentyFiveHoursAgo,
-            lastDateModeReminderSent: twentyFiveHoursAgo,
+            const result = await service.findOfflineUsers();
+            expect(result).toContainEqual({
+                id: user.id,
+                type: "THREE_DAYS",
+            });
         });
+        it("should identify users for TWO_WEEKS reminder correctly", async () => {
+            const user = await userFactory.persistNewTestUser({
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(337, "hours"),
+                lastDateModeReminderSent: goBackInTimeFor(265, "hours"),
+            });
 
-        // User in GHOST mode, 48h without reminder - should be notified (48h interval)
-        const fortyEightHourUser = await userFactory.persistNewTestUser({
-            dateMode: EDateMode.GHOST,
-            location: new PointBuilder().build(0, 0),
-            gender: EGender.WOMAN,
-            genderDesire: [EGender.MAN],
-            intentions: [EIntention.RELATIONSHIP],
-            approachChoice: EApproachChoice.BE_APPROACHED,
-            lastDateModeChange: fortyEightHoursAgo,
-            lastDateModeReminderSent: fortyEightHoursAgo,
+            const result = await service.findOfflineUsers();
+            expect(result).toContainEqual({
+                id: user.id,
+                type: "TWO_WEEKS",
+            });
         });
-
-        // User in GHOST mode, never reminded - should be notified (48h interval)
-        const fortyEightHourUserNeverReminded =
+        it("should not include users in multiple buckets", async () => {
             await userFactory.persistNewTestUser({
-                dateMode: EDateMode.GHOST,
-                location: new PointBuilder().build(0, 0),
-                gender: EGender.WOMAN,
-                genderDesire: [EGender.MAN],
-                intentions: [EIntention.RELATIONSHIP],
-                approachChoice: EApproachChoice.BE_APPROACHED,
-                lastDateModeChange: fortyEightHoursAgo,
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(337, "hours"),
+                lastDateModeReminderSent: goBackInTimeFor(265, "hours"),
+            });
+
+            const result = await service.findOfflineUsers();
+            expect(result).toHaveLength(1);
+            expect(result[0].type).toEqual("TWO_WEEKS");
+        });
+        it("should correctly handle multiple users in different time buckets", async () => {
+            // ONE_DAY users
+            await userFactory.persistNewTestUser({
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(25, "hours"),
+                lastDateModeReminderSent: null,
+            });
+            await userFactory.persistNewTestUser({
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(30, "hours"),
                 lastDateModeReminderSent: null,
             });
 
-        // User in GHOST mode, 7 days without reminder - should be notified (7-day interval)
-        const sevenDayUser = await userFactory.persistNewTestUser({
-            dateMode: EDateMode.GHOST,
-            location: new PointBuilder().build(0, 0),
-            gender: EGender.WOMAN,
-            genderDesire: [EGender.MAN],
-            intentions: [EIntention.RELATIONSHIP],
-            approachChoice: EApproachChoice.BE_APPROACHED,
-            lastDateModeChange: sevenDaysAgo,
-            lastDateModeReminderSent: null,
+            // THREE_DAYS users
+            await userFactory.persistNewTestUser({
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(73, "hours"),
+                lastDateModeReminderSent: goBackInTimeFor(49, "hours"),
+            });
+            await userFactory.persistNewTestUser({
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(100, "hours"),
+                lastDateModeReminderSent: null,
+            });
+
+            // TWO_WEEKS users
+            await userFactory.persistNewTestUser({
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(337, "hours"),
+                lastDateModeReminderSent: goBackInTimeFor(265, "hours"),
+            });
+
+            const result = await service.findOfflineUsers();
+
+            // Check counts per bucket
+            const oneDayUsers = result.filter((u) => u.type === "ONE_DAY");
+            const threeDayUsers = result.filter((u) => u.type === "THREE_DAYS");
+            const twoWeekUsers = result.filter((u) => u.type === "TWO_WEEKS");
+
+            expect(oneDayUsers).toHaveLength(2);
+            expect(threeDayUsers).toHaveLength(2);
+            expect(twoWeekUsers).toHaveLength(1);
+
+            // Run again and verify no users are returned (they've been reminded)
+            const secondResult = await service.findOfflineUsers();
+            expect(secondResult).toHaveLength(0);
         });
+        it("should handle edge cases with users just crossing time thresholds", async () => {
+            await Promise.all([
+                // Just crossed into ONE_DAY (24 hours + 1 minute)
+                userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(24.02, "hours"),
+                    lastDateModeReminderSent: null,
+                }),
+                // Just crossed into THREE_DAYS (72 hours + 1 minute)
+                userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(72.02, "hours"),
+                    lastDateModeReminderSent: null,
+                }),
+                // Just crossed into TWO_WEEKS (336 hours + 1 minute)
+                userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(336.02, "hours"),
+                    lastDateModeReminderSent: null,
+                }),
+            ]);
 
-        // User in GHOST mode but with recent reminder - should NOT be notified
-        const recentlyRemindedUser = await userFactory.persistNewTestUser({
-            dateMode: EDateMode.GHOST,
-            location: new PointBuilder().build(0, 0),
-            gender: EGender.WOMAN,
-            genderDesire: [EGender.MAN],
-            intentions: [EIntention.RELATIONSHIP],
-            approachChoice: EApproachChoice.BE_APPROACHED,
-            lastDateModeChange: sevenDaysAgo,
-            lastDateModeReminderSent: now,
+            const result = await service.findOfflineUsers();
+            expect(result).toHaveLength(3);
+
+            const types = result.map((u) => u.type);
+            expect(types).toContain("ONE_DAY");
+            expect(types).toContain("THREE_DAYS");
+            expect(types).toContain("TWO_WEEKS");
         });
+        it("should not include users who were recently reminded", async () => {
+            await Promise.all([
+                // Reminded 23 hours ago (should not be included)
+                userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(25, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(23, "hours"),
+                }),
+                // Reminded 47 hours ago (should not be included)
+                userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(73, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(47, "hours"),
+                }),
+                // Reminded 263 hours ago (should not be included)
+                userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(337, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(263, "hours"),
+                }),
+            ]);
 
-        const usersToBeNotified = await cronJobRunner.findGhostModeTargets(
-            new Date(),
-        );
+            const result = await service.findOfflineUsers();
+            expect(result).toHaveLength(0);
+        });
+        it("should handle mixed scenarios of reminded and never reminded users", async () => {
+            await Promise.all([
+                // ONE_DAY - never reminded
+                userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(25, "hours"),
+                    lastDateModeReminderSent: null,
+                }),
+                // ONE_DAY - recently reminded (should not be included)
+                userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(25, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(23, "hours"),
+                }),
+                // THREE_DAYS - never reminded
+                userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(73, "hours"),
+                    lastDateModeReminderSent: null,
+                }),
+                // THREE_DAYS - recently reminded (should not be included)
+                userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(73, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(47, "hours"),
+                }),
+                // TWO_WEEKS - never reminded
+                userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(337, "hours"),
+                    lastDateModeReminderSent: null,
+                }),
+            ]);
 
-        console.log(usersToBeNotified);
+            const result = await service.findOfflineUsers();
+            expect(result).toHaveLength(3);
 
-        expect(usersToBeNotified.size).toEqual(4);
-        // Check that the correct users are included
-        const notifiedUserIds = Array.from(usersToBeNotified).map(
-            (target) => target.user.id,
-        );
+            // Verify correct distribution
+            const types = result.map((u) => u.type);
+            expect(types.filter((t) => t === "ONE_DAY")).toHaveLength(1);
+            expect(types.filter((t) => t === "THREE_DAYS")).toHaveLength(1);
+            expect(types.filter((t) => t === "TWO_WEEKS")).toHaveLength(1);
+        });
+        it("should handle progression through reminder stages", async () => {
+            // Create a user that will progress through all stages
+            const user = await userFactory.persistNewTestUser({
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(337, "hours"), // Qualifies for TWO_WEEKS
+                lastDateModeReminderSent: null,
+            });
 
-        expect(notifiedUserIds).toContain(twentyFourHourUser.id);
-        expect(notifiedUserIds).toContain(fortyEightHourUserNeverReminded.id);
-        expect(notifiedUserIds).toContain(sevenDayUser.id);
-        // Check that the wrong users are NOT included
-        expect(notifiedUserIds).not.toContain(liveUser.id);
-        expect(notifiedUserIds).not.toContain(recentlyRemindedUser.id);
+            // First run - should get TWO_WEEKS reminder
+            const firstResult = await service.findOfflineUsers();
+            expect(firstResult).toHaveLength(1);
+            expect(firstResult[0].type).toBe("TWO_WEEKS");
 
-        // Check users are included with correct intervals
-        const targetArray = Array.from(usersToBeNotified);
+            // Update user's lastDateModeChange to qualify for THREE_DAYS
+            await userRepository.update(user.id, {
+                lastDateModeChange: goBackInTimeFor(73, "hours"),
+                lastDateModeReminderSent: goBackInTimeFor(49, "hours"),
+            });
 
-        // Check 24h user
-        const twentyFourHourTarget = targetArray.find(
-            (target) => target.user.id === twentyFourHourUser.id,
-        );
-        expect(twentyFourHourTarget).toBeDefined();
-        expect(twentyFourHourTarget?.intervalHour.hours).toBe(24);
+            // Second run - should get THREE_DAYS reminder
+            const secondResult = await service.findOfflineUsers();
+            expect(secondResult).toHaveLength(1);
+            expect(secondResult[0].type).toBe("THREE_DAYS");
 
-        // Check 48h user that has been reminded once, should not be included
-        const twentyFourHourButRemindedTarget = targetArray.find(
-            (target) => target.user.id === fortyEightHourUser.id,
-        );
-        expect(twentyFourHourButRemindedTarget).toBeUndefined();
+            // Update user's lastDateModeChange to qualify for ONE_DAY
+            await userRepository.update(user.id, {
+                lastDateModeChange: goBackInTimeFor(25, "hours"),
+                lastDateModeReminderSent: null,
+            });
 
-        // Check 48h user that has never been reminded! Should be 24h
-        const fortyEightHourTarget = targetArray.find(
-            (target) => target.user.id === fortyEightHourUserNeverReminded.id,
-        );
-        expect(fortyEightHourTarget).toBeDefined();
-        expect(fortyEightHourTarget?.intervalHour.hours).toBe(24);
+            // Third run - should get ONE_DAY reminder
+            const thirdResult = await service.findOfflineUsers();
+            expect(thirdResult).toHaveLength(1);
+            expect(thirdResult[0].type).toBe("ONE_DAY");
 
-        // Check user that has never been reminded! Should be 24h
-        const fortyEightHourTargetHasBeenReminded = targetArray.find(
-            (target) => target.user.id === user3.id,
-        );
-        expect(fortyEightHourTargetHasBeenReminded).toBeUndefined();
-
-        // Check 7-day user
-        const sevenDayTarget = targetArray.find(
-            (target) => target.user.id === sevenDayUser.id,
-        );
-        expect(sevenDayTarget).toBeDefined();
-        expect(sevenDayTarget?.intervalHour.hours).toBe(24); // 7 * 24 hours
-
-        // Check that wrong users are still not included
-        expect(
-            targetArray.find((target) => target.user.id === liveUser.id),
-        ).toBeUndefined();
-        expect(
-            targetArray.find(
-                (target) => target.user.id === recentlyRemindedUser.id,
-            ),
-        ).toBeUndefined();
+            // Final run - should get no reminders (already reminded)
+            const finalResult = await service.findOfflineUsers();
+            expect(finalResult).toHaveLength(0);
+        });
     });
-
-    it("should notify a user whole user flow", async () => {
-        const date = new Date(); // snapshot date of execution
-
-        const twentyfourHoursUpdatedLast = new Date(
-            new Date().getTime() - 25 * 60 * 60 * 1000,
-        );
-
-        const liveUser = await userFactory.persistNewTestUser({
-            dateMode: EDateMode.GHOST,
-            location: new PointBuilder().build(0, 0),
-            gender: EGender.WOMAN,
-            genderDesire: [EGender.MAN],
-            intentions: [EIntention.RELATIONSHIP],
-            approachChoice: EApproachChoice.APPROACH,
-            lastDateModeChange: undefined,
-            lastDateModeReminderSent: undefined,
-        });
-
-        await userRepository.query(
-            `UPDATE "user" SET updated = $1 WHERE id = $2`,
-            [twentyfourHoursUpdatedLast, liveUser.id],
-        );
-
-        /** @DEV First run - notify users once */
-
-        const usersToBeNotified =
-            await cronJobRunner.findGhostModeTargets(date);
-        const targetArray = Array.from(usersToBeNotified);
-
-        const userAfterFirstNotify = await userRepository.findOneBy({
-            id: liveUser.id,
-        });
-
-        expect(userAfterFirstNotify.lastDateModeReminderSent).toBeDefined();
-        // expect(userAfterFirstNotify.lastDateModeChange).toBeNull();
-        const user = targetArray.find(
-            (target) => target.user.id === liveUser.id,
-        );
-        expect(targetArray.length).toEqual(1);
-        expect(user).toBeDefined();
-        expect(user?.intervalHour.hours).toBe(24); // 7 * 24 hours
-
-        /** @DEV Second run again, User has now been notified once, hence if run again, should not happen anything */
-        const usersToBeNotifiedRunTwo =
-            await cronJobRunner.findGhostModeTargets(date);
-        expect(usersToBeNotifiedRunTwo.size).toEqual(0);
-
-        /** @DEV set lastDateModeReminder 48 hrs into the future */
-        const is48Hrsago = new Date(new Date().getTime() - 48 * 60 * 60 * 1000);
-        await userRepository.update(liveUser.id, {
-            lastDateModeReminderSent: is48Hrsago,
-        });
-        const usersToBeNotifiedRun48 =
-            await cronJobRunner.findGhostModeTargets(date);
-        expect(usersToBeNotifiedRun48.size).toEqual(0);
-
-        /** @DEV set lastDateModeReminder 72 hrs into the future */
-        const is72Hrsago = new Date(new Date().getTime() - 70 * 60 * 60 * 1000);
-        await userRepository.update(liveUser.id, {
-            lastDateModeReminderSent: is72Hrsago,
-        });
-
-        const currentUserIs = userRepository.findOneBy({ id: liveUser.id });
-        console.log("currentUserIs: ", currentUserIs);
-
-        const usersToBeNotifiedRun72 =
-            await cronJobRunner.findGhostModeTargets(date);
-        expect(usersToBeNotifiedRun72.size).toEqual(1); //IT FAILS HERE
-
-        /** @DEV set lastDateModeReminder 336 hrs into the future */
-        const is336hrsAgo = new Date(
-            new Date().getTime() - 330 * 60 * 60 * 1000,
-        );
-        await userRepository.update(liveUser.id, {
-            lastDateModeReminderSent: is336hrsAgo,
-        });
-        const usersToBeNotifiedRun336 =
-            await cronJobRunner.findGhostModeTargets(date);
-        expect(usersToBeNotifiedRun336.size).toEqual(1);
-    }, 60000);
 });
