@@ -28,7 +28,7 @@ export class UserRepository extends Repository<User> {
         super(User, dataSource.createEntityManager());
     }
 
-    private findUserMatchBaseQuery(userToBeApproached: User): this {
+    public findUserMatchBaseQuery(userToBeApproached: User): this {
         this.queryBuilder = this.createQueryBuilder("user");
         this.addEncounterJoins()
             .withRecentLocationsOnly()
@@ -46,6 +46,11 @@ export class UserRepository extends Repository<User> {
             .withDateModeLiveMode();
 
         return this;
+    }
+
+    /** @DEV helpful for debugging, returns the raw query with parameters */
+    public getSqlQuery() {
+        return this.queryBuilder.getQueryAndParameters();
     }
 
     /** @returns {key: encounterId, value: User}[]*/
