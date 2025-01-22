@@ -38,6 +38,7 @@ describe("GhostModeReminderCronJob", () => {
         };
 
         queryBuilder = {
+            select: jest.fn().mockReturnThis(),
             where: jest.fn().mockReturnThis(),
             andWhere: jest.fn().mockReturnThis(),
             take: jest.fn().mockReturnThis(),
