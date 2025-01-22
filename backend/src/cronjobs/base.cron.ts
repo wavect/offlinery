@@ -16,16 +16,17 @@ export abstract class BaseCronJob {
         user: User,
         data: OfflineryNotification["data"],
     ): OfflineryNotification {
+        const lang = user.preferredLanguage ?? ELanguage.en;
         return {
             sound: "default" as const,
-            title: this.i18n.t("main.notification.ghostmodeReminder.title", {
+            title: this.i18n.t(`main.notification.${this.cronJobType}.title`, {
                 args: {
                     firstName: user.firstName,
                 },
-                lang: user.preferredLanguage ?? ELanguage.en,
+                lang,
             }),
-            body: this.i18n.t("main.notification.ghostmodeReminder.body", {
-                lang: user.preferredLanguage ?? ELanguage.en,
+            body: this.i18n.t(`main.notification.${this.cronJobType}.body`, {
+                lang,
             }),
             to: user.pushToken,
             data,

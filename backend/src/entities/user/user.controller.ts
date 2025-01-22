@@ -187,7 +187,7 @@ export class UserController {
         @Param(USER_ID_PARAM) userId: string,
         @Body() locationUpdateDTO: LocationUpdateDTO,
     ): Promise<UserPublicDTO> {
-        const updatedUser = await this.userService.updateLocation(
+        const { updatedUser } = await this.userService.updateLocation(
             userId,
             locationUpdateDTO,
         );

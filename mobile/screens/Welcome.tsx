@@ -116,9 +116,15 @@ const Welcome = ({
             type: EACTION_USER.UPDATE_MULTIPLE,
             payload: {
                 ...userParsed,
-                approachFromTime: new Date(userParsed.approachFromTime),
-                approachToTime: new Date(userParsed.approachToTime),
-                birthDay: new Date(userParsed.birthDay),
+                ...(userParsed?.approachFromTime && {
+                    approachFromTime: new Date(userParsed.approachFromTime),
+                }),
+                ...(userParsed?.approachToTime && {
+                    approachToTime: new Date(userParsed.approachToTime),
+                }),
+                ...(userParsed?.birthDay && {
+                    birthDay: new Date(userParsed.birthDay),
+                }),
             },
         });
         const parsedStack = JSON.parse(savedStack);

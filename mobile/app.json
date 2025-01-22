@@ -62,6 +62,7 @@
                 "usesNonExemptEncryption": false
             },
             "infoPlist": {
+                "LSApplicationQueriesSchemes": ["mailto"],
                 "UIBackgroundModes": ["location", "fetch", "processing"],
                 "BGTaskSchedulerPermittedIdentifiers": [
                     "com.transistorsoft.fetch",

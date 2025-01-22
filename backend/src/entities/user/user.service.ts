@@ -12,6 +12,7 @@ import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-reg
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { MatchingService } from "@/transient-services/matching/matching.service";
 import { NotificationService } from "@/transient-services/notification/notification.service";
+import { OfflineryNotification } from "@/types/notification-message.types";
 import {
     EApproachChoice,
     EEmailVerificationStatus,
@@ -42,7 +43,7 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { randomBytes } from "crypto";
-import { Expo } from "expo-server-sdk";
+import { Expo, ExpoPushTicket } from "expo-server-sdk";
 import * as fs from "fs";
 import { Point } from "geojson";
 import { I18nService } from "nestjs-i18n";
@@ -552,33 +553,48 @@ export class UserService {
     async updateLocation(
         userId: string,
         { latitude, longitude }: LocationUpdateDTO,
-    ): Promise<User> {
+    ): Promise<{
+        updatedUser: User;
+        notifications: OfflineryNotification[];
+        expoPushTickets: ExpoPushTicket[];
+    }> {
         const user = await this.userRepository.findOneBy({ id: userId });
-
         if (!user) {
             throw new NotFoundException(`User with ID ${userId} not found`);
         }
-
+        this.logger.debug(
+            `${user.firstName} (${user.id}) sent a location update.`,
+        );
         user.location = { type: "Point", coordinates: [longitude, latitude] };
         user.locationLastTimeUpdated = new Date();
         const updatedUser = await this.userRepository.save(user);
         this.logger.debug(
-            `Saved new locationUpdate for user ${user.id}`,
-            longitude,
-            latitude,
+            `Updated Location for user: ${user.firstName} (${user.id}): ${longitude} (long), ${latitude} (lat)`,
         );
 
         // Check for matches and send notifications (from a semantic perspective we only send notifications if a person to be approached sends a location update)
         // TODO: Make sure notification not send double if other user then sends update!
         this.logger.debug(
-            `Sending notifications to users that want to potentially approach or be approached by userId ${user.id}`,
+            `Sending notifications to users that want to potentially approach or be approached by ${user.firstName} (${user.id})`,
         );
         const notifications =
             await this.matchingService.checkForEncounters(user);
 
-        await this.notificationService.sendPushNotifications(notifications);
+        this.logger.debug(
+            `Received base notifications to be sent: ${JSON.stringify(notifications)}`,
+        );
 
-        return updatedUser;
+        const expoPushTickets =
+            await this.notificationService.sendPushNotifications(notifications);
+        this.logger.debug(
+            `Sent notifications after location update from ${user.firstName} (${user.id}): ${JSON.stringify(expoPushTickets)}`,
+        );
+
+        return {
+            updatedUser,
+            notifications,
+            expoPushTickets,
+        };
     }
 
     async storeRefreshToken(

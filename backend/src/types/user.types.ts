@@ -29,6 +29,7 @@ export enum ELanguage {
 export enum EVerificationStatus {
     VERIFIED = "verified",
     PENDING = "pending",
+    DENIED = "denied",
 }
 
 /** @dev Dedicated Enum for email verification for separation of concerns */

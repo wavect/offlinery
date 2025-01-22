@@ -237,16 +237,16 @@ describe("NotificationService", () => {
             });
 
             /** @DEV location update that triggers notifyMatches */
-            const userUpdated = await userService.updateLocation(
-                testingMainUser.id,
-                {
+            const { updatedUser, notifications, expoPushTickets } =
+                await userService.updateLocation(testingMainUser.id, {
                     latitude: 0,
                     longitude: 0,
-                },
-            );
+                });
 
             /** expect to run through without failure */
-            expect(userUpdated).toBeDefined();
+            expect(notifications.length).toEqual(1);
+            expect(expoPushTickets.length).toEqual(1);
+            expect(updatedUser).toBeDefined();
         });
     });
 });

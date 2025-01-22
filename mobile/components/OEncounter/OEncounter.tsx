@@ -16,6 +16,7 @@ import { OImageWithLoader } from "@/components/OImageWithLoader/OImageWithLoader
 import OMessageModal from "@/components/OMessageModal/OMessageModal";
 import {
     EACTION_ENCOUNTERS,
+    getPublicProfileFromEncounter,
     useEncountersContext,
 } from "@/context/EncountersContext";
 import { useUserContext } from "@/context/UserContext";
@@ -329,7 +330,11 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                                             propsForNextScreen:
                                                                 {
                                                                     navigateToPerson:
-                                                                        encounterProfile,
+                                                                        getPublicProfileFromEncounter(
+                                                                            encounterProfile,
+                                                                        ),
+                                                                    encounterId:
+                                                                        encounterProfile.id,
                                                                 },
                                                         },
                                                     )
