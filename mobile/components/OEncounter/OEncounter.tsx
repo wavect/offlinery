@@ -127,7 +127,10 @@ const OEncounter = (props: ISingleEncounterProps) => {
             text={i18n.t(TR.tourEncounters)}
             shape="rectangle"
         >
-            <View style={styles.encounterContainer}>
+            <View
+                style={styles.encounterContainer}
+                testID="encounters-input-status"
+            >
                 <View style={styles.mainContent}>
                     <TouchableOpacity
                         onPress={() => {
