@@ -124,7 +124,7 @@ export default function App() {
 
     /** @DEV Custom 4-Slider on App Start is shown to the user if unseen */
     const initialComponent = hasSeenIntro
-        ? ROUTES.Onboarding.ApproachChoice
+        ? ROUTES.Welcome
         : ROUTES.Onboarding.AppIntroductionSlider;
 
     return (
