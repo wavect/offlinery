@@ -46,7 +46,7 @@ export class GhostModeReminderCronJob extends BaseCronJob {
     }
 
     public async findOfflineUsers(): Promise<OfflineUserSince[]> {
-        const users = await this.userRepository
+        const queryBuilder = this.userRepository
             .createQueryBuilder("user")
             .select([
                 "user.id",
@@ -74,20 +74,22 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                     threeDaysMinTime: goBackInTimeFor(72 - 24, "hours"),
                     oneDayMinTime: goBackInTimeFor(24, "hours"),
                 },
-            )
-            .getMany();
+            );
 
-        await Promise.all(
-            users.map((user) =>
-                this.userRepository.update(
-                    { id: user.id },
-                    { lastDateModeReminderSent: new Date() },
-                ),
-            ),
-        );
+        const users = await queryBuilder.getMany();
+
+        if (users.length === 0) return [];
+
+        // Bulk update in a single query instead of Promise.all
+        await this.userRepository
+            .createQueryBuilder()
+            .update()
+            .set({ lastDateModeReminderSent: new Date() })
+            .whereInIds(users.map((user) => user.id))
+            .execute();
 
         return users.map((user) => ({
-            user: user,
+            user,
             type: this.determineOfflineType(user.lastDateModeChange),
         }));
     }
@@ -125,11 +127,13 @@ export class GhostModeReminderCronJob extends BaseCronJob {
     ): Promise<void> {
         const notificationTicketsToSend: OfflineryNotification[] = [];
 
-        await Promise.all(
+        // Use Promise.allSettled for more efficient error handling
+        await Promise.allSettled(
             Array.from(targets).map(async ({ user, intervalHour }) => {
                 try {
                     // Send email
-                    await this.sendEmail(user, intervalHour);
+                    // Parallel email and push notification preparation
+                    const emailPromise = this.sendEmail(user, intervalHour);
 
                     // Prepare push notification if possible
                     if (user.pushToken) {
@@ -141,6 +145,8 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                         notificationTicketsToSend.push(
                             this.buildNotification(user, data),
                         );
+
+                        await emailPromise;
                     } else {
                         this.logger.warn(
                             `Cannot send push notification for user ${user.id} to remind about ghost mode since no pushToken. But should have sent email.`,
@@ -148,8 +154,7 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                     }
                 } catch (error) {
                     this.logger.error(
-                        `Failed to process user ${user.id} in cronjob ghostmode-reminder:`,
-                        error,
+                        `Failed to process user ${user.id} in cronjob ghostmode-reminder: ${JSON.stringify(error)}`,
                     );
                 }
             }),

@@ -46,10 +46,18 @@ describe("GhostModeReminderCronJob", () => {
                 take: jest.fn(),
                 skip: jest.fn(),
                 getMany: jest.fn(),
+                update: jest.fn(),
+                set: jest.fn(),
+                execute: jest.fn(),
+                whereInIds: jest.fn(),
             };
 
             // Make each method return the query builder for chaining
             qb.select.mockReturnValue(qb);
+            qb.update.mockReturnValue(qb);
+            qb.set.mockReturnValue(qb);
+            qb.whereInIds.mockReturnValue(qb);
+            qb.execute.mockResolvedValue({ affected: 1 }); // Default mock response
             qb.where.mockReturnValue(qb);
             qb.andWhere.mockReturnValue(qb);
             qb.take.mockReturnValue(qb);
@@ -178,7 +186,6 @@ describe("GhostModeReminderCronJob", () => {
 
         expect(Logger.prototype.error).toHaveBeenCalledWith(
             expect.stringContaining("Failed to process user"),
-            expect.any(Error),
         );
     });
 });
