@@ -1,4 +1,5 @@
 import { i18nLngModule } from "@/app.module.configuration";
+import { CronJobsModule } from "@/cronjobs/cronjobs.module";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { EncounterModule } from "@/entities/encounter/encounter.module";
@@ -69,6 +70,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
                 migrations: [__dirname + "/migrations/**/*{.ts,.js}"],
                 migrationsRun: true,
             }),
+            CronJobsModule,
             UserModule,
             MockAuthModule,
             UserReportModule,

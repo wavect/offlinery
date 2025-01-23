@@ -2,9 +2,11 @@ import { BaseCronJob } from "@/cronjobs/base.cron";
 import {
     DEFAULT_INTERVAL_HOURS,
     ECronJobType,
-    getIntervalDateTime,
-    getPreviousInterval,
+    GhostModeTarget,
+    goBackInTimeFor,
     IntervalHour,
+    OfflineUserSince,
+    TimeSpan,
 } from "@/cronjobs/cronjobs.types";
 import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
@@ -12,14 +14,12 @@ import { NotificationGhostReminderDTO } from "@/DTOs/notifications/notification-
 import { User } from "@/entities/user/user.entity";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { OfflineryNotification } from "@/types/notification-message.types";
-import {
-    EApproachChoice,
-    EDateMode,
-    EVerificationStatus,
-} from "@/types/user.types";
+import { EDateMode } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, Logger } from "@nestjs/common";
+import { Cron, CronExpression } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
+import { differenceInHours } from "date-fns";
 import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
 
@@ -37,122 +37,140 @@ export class GhostModeReminderCronJob extends BaseCronJob {
         super(ECronJobType.GHOST_MODE_REMINDER, mailService, i18n);
     }
 
-    // TODO: @Cron(CronExpression.EVERY_DAY_AT_NOON)
+    @Cron(CronExpression.EVERY_DAY_AT_NOON)
     async checkGhostModeUsers(): Promise<void> {
         this.logger.debug(`Starting checkGhostModeUsers cron job..`);
-        const chunks = 100; // Process users in chunks to prevent memory overload
-        const now = new Date();
+        const usersToNotify = await this.findOfflineUsers();
+        const ghostModeAdapted = this.ghostModeAdapter(usersToNotify);
+        await this.sendGhostModeReminders(ghostModeAdapted);
+        this.logger.debug(`All Ghostmode reminders sent for all intervals.`);
+    }
 
+    public async findOfflineUsers(): Promise<OfflineUserSince[]> {
+        const queryBuilder = this.userRepository
+            .createQueryBuilder("user")
+            .select([
+                "user.id",
+                "user.email",
+                "user.pushToken",
+                "user.preferredLanguage",
+                "user.firstName",
+                "user.lastDateModeChange",
+            ])
+            .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
+            .andWhere("user.lastDateModeChange < :dayAgo", {
+                dayAgo: goBackInTimeFor(24, "hours"),
+            })
+            .andWhere(
+                "(user.lastDateModeReminderSent IS NULL OR " +
+                    "CASE " +
+                    "WHEN user.lastDateModeChange < :twoWeeksAgo THEN user.lastDateModeReminderSent < :twoWeeksMinTime " +
+                    "WHEN user.lastDateModeChange < :threeDaysAgo THEN user.lastDateModeReminderSent < :threeDaysMinTime " +
+                    "ELSE user.lastDateModeReminderSent < :oneDayMinTime " +
+                    "END)",
+                {
+                    twoWeeksAgo: goBackInTimeFor(336, "hours"),
+                    threeDaysAgo: goBackInTimeFor(72, "hours"),
+                    twoWeeksMinTime: goBackInTimeFor(336 - 72, "hours"),
+                    threeDaysMinTime: goBackInTimeFor(72 - 24, "hours"),
+                    oneDayMinTime: goBackInTimeFor(24, "hours"),
+                },
+            );
+
+        const users = await queryBuilder.getMany();
+
+        if (users.length === 0) return [];
+
+        // Bulk update in a single query instead of Promise.all
+        await this.userRepository
+            .createQueryBuilder()
+            .update()
+            .set({ lastDateModeReminderSent: new Date() })
+            .whereInIds(users.map((user) => user.id))
+            .execute();
+
+        return users.map((user) => ({
+            user,
+            type: this.determineOfflineType(user.lastDateModeChange),
+        }));
+    }
+
+    private determineOfflineType(lastDateModeChange: Date): TimeSpan {
+        const hoursGhostMode = differenceInHours(
+            new Date(),
+            lastDateModeChange,
+        );
+        if (hoursGhostMode >= 336) return TimeSpan.TWO_WEEKS;
+        if (hoursGhostMode >= 72) return TimeSpan.THREE_DAYS;
+        return TimeSpan.ONE_DAY;
+    }
+
+    private ghostModeAdapter(input: OfflineUserSince[]): Set<GhostModeTarget> {
+        const typeToIntervalMap = new Map<
+            OfflineUserSince["type"],
+            IntervalHour
+        >([
+            [TimeSpan.ONE_DAY, DEFAULT_INTERVAL_HOURS[0]],
+            [TimeSpan.THREE_DAYS, DEFAULT_INTERVAL_HOURS[1]],
+            [TimeSpan.TWO_WEEKS, DEFAULT_INTERVAL_HOURS[2]],
+        ]);
+
+        return new Set(
+            input.map((offlineUser) => ({
+                user: offlineUser.user,
+                intervalHour: typeToIntervalMap.get(offlineUser.type)!,
+            })),
+        );
+    }
+
+    public async sendGhostModeReminders(
+        targets: Set<GhostModeTarget>,
+    ): Promise<void> {
         const notificationTicketsToSend: OfflineryNotification[] = [];
 
-        // Process one interval at a time, from longest to shortest
-        for (let i = 0; i < DEFAULT_INTERVAL_HOURS.length; i++) {
-            const intervalHour = DEFAULT_INTERVAL_HOURS[i];
-            let skip = 0;
+        // Use Promise.allSettled for more efficient error handling
+        await Promise.allSettled(
+            Array.from(targets).map(async ({ user, intervalHour }) => {
+                try {
+                    // Send email
+                    // Parallel email and push notification preparation
+                    const emailPromise = this.sendEmail(user, intervalHour);
 
-            this.logger.debug(
-                `Checking users for interval ${intervalHour.hours}h.`,
-            );
-            const previousInterval: IntervalHour | null =
-                getPreviousInterval(intervalHour);
+                    // Prepare push notification if possible
+                    if (user.pushToken) {
+                        const data: NotificationGhostReminderDTO = {
+                            type: ENotificationType.GHOSTMODE_REMINDER,
+                            screen: EAppScreens.GHOSTMODE_REMINDER,
+                        };
 
-            while (true) {
-                const users = await this.userRepository
-                    .createQueryBuilder("user")
-                    .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
-                    /** Only get active users basically: (verified AND not beApproached) OR (beApproached) */
-                    .andWhere(
-                        "((user.verificationStatus = :verificationStatusVerified AND user.approachChoice <> :beApproached) OR user.approachChoice = :beApproached)",
-                        {
-                            beApproached: EApproachChoice.BE_APPROACHED,
-                            verificationStatusVerified:
-                                EVerificationStatus.VERIFIED,
-                        },
-                    )
-                    .andWhere(
-                        "((user.lastDateModeChange IS NOT NULL AND user.lastDateModeChange <= :currentInterval) OR " +
-                            "(user.lastDateModeChange IS NULL AND user.updated <= :currentInterval))",
-                        {
-                            currentInterval: getIntervalDateTime(intervalHour),
-                        },
-                    )
-                    // Only get users who haven't been reminded yet or were last reminded before the previous interval
-                    .andWhere(
-                        `(user.lastDateModeReminderSent IS NULL${previousInterval && " OR user.lastDateModeReminderSent <= :currentInterval"})`,
-                        {
-                            /**
-                             * 24h interval: 24-0 -> now - 24h
-                             * 48h interval: 72-24 -> now - 48h
-                             * 2 weeks interval: 336-72 -> now - 264h
-                             * */
-                            currentInterval:
-                                now.getTime() -
-                                (intervalHour.hours -
-                                    (previousInterval?.hours ?? 0)) *
-                                    60 *
-                                    60 *
-                                    1000,
-                        },
-                    )
-                    .take(chunks)
-                    .skip(skip)
-                    .getMany();
+                        notificationTicketsToSend.push(
+                            this.buildNotification(user, data),
+                        );
 
-                if (users.length === 0) break;
+                        await emailPromise;
+                    } else {
+                        this.logger.warn(
+                            `Cannot send push notification for user ${user.id} to remind about ghost mode since no pushToken. But should have sent email.`,
+                        );
+                    }
+                } catch (error) {
+                    this.logger.error(
+                        `Failed to process user ${user.id} in cronjob ghostmode-reminder: ${JSON.stringify(error)}`,
+                    );
+                }
+            }),
+        );
 
-                this.logger.debug(
-                    `Found ${users.length} users to remind for interval ${intervalHour.hours}h.`,
+        // Send all push notifications
+        if (notificationTicketsToSend.length > 0) {
+            const tickets =
+                await this.notificationService.sendPushNotifications(
+                    notificationTicketsToSend,
                 );
 
-                await Promise.all(
-                    users.map(async (user) => {
-                        try {
-                            // TODO: Let users configure this in settings
-                            await this.sendEmail(user, intervalHour);
-                            if (user.pushToken) {
-                                const data: NotificationGhostReminderDTO = {
-                                    type: ENotificationType.GHOSTMODE_REMINDER,
-                                    screen: EAppScreens.GHOSTMODE_REMINDER,
-                                };
-                                notificationTicketsToSend.push(
-                                    this.buildNotification(user, data),
-                                );
-                            } else {
-                                this.logger.warn(
-                                    `Cannot send push notification for user ${user.id} to remind about ghost mode since no pushToken. But should have sent email.`,
-                                );
-                            }
-
-                            await this.userRepository.update(user.id, {
-                                lastDateModeReminderSent: now,
-                                lastDateModeChange:
-                                    user.lastDateModeChange ??
-                                    new Date(
-                                        now.getTime() - 25 * 60 * 60 * 1000,
-                                    ), // @dev set to 25h prior, to kickstart the flow
-                            });
-                        } catch (error) {
-                            this.logger.error(
-                                `Failed to process user ${user.id} in cronjob ghostmode-reminder:`,
-                                error,
-                            );
-                        }
-                    }),
-                );
-
-                skip += chunks;
-            }
             this.logger.debug(
-                `Ghostmode reminders sent for ${intervalHour.hours}h.`,
+                `Sent ${tickets.length} push notifications, status codes: ${JSON.stringify(tickets.map((t) => t.status))}`,
             );
         }
-
-        const tickets = await this.notificationService.sendPushNotifications(
-            notificationTicketsToSend,
-        );
-        this.logger.debug(
-            `Sent ${tickets.length} push notifications, status codes: ${JSON.stringify(tickets.map((t) => t.status))}`,
-        );
-        this.logger.debug(`All ghostmode reminders sent for all intervals.`);
     }
 }
