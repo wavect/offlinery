@@ -35,8 +35,6 @@ export const OBlacklistedRegion = (props: IOBlacklistedRegionProps) => {
         setDragging(false);
     };
 
-    console.error("HHH", region);
-
     return (
         <>
             <Circle
