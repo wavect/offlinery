@@ -89,25 +89,27 @@ export class MatchingService {
                 );
 
             // now save as encounters into DB
-            const newEncounters =
-                await this.encounterService.saveEncountersForUser(
+            const encounters =
+                await this.encounterService.saveOrUpdateEncountersForUser(
                     userSendingLocationUpdate,
                     nearbyMatches,
                 );
 
-            if (!newEncounters?.size) {
-                this.logger.log(`Reached daily encounter limit for user`);
+            if (!encounters?.size) {
+                this.logger.log(
+                    `No encounter were saved or updated. Reached daily encounter limit for user or already matched`,
+                );
                 return [];
             }
 
             this.logger.debug(
-                `Saved ${newEncounters.size} new encounters for user ${userSendingLocationUpdate.id}`,
+                `Saved/Updated ${encounters.size} encounters for user ${userSendingLocationUpdate.id}`,
             );
 
             const notifications: OfflineryNotification[] = [];
 
             for (const userNearBy of nearbyMatches) {
-                const encounter = newEncounters.get(userNearBy.id);
+                const encounter = encounters.get(userNearBy.id);
 
                 // @dev Still sending new notifications if encounter status is MET_INTERESTED (because why not, multiple times to meet)
                 if (encounter.status !== EEncounterStatus.MET_NOT_INTERESTED) {

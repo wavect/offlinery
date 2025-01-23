@@ -581,11 +581,12 @@ export class UserService {
             await this.matchingService.checkForEncounters(user);
 
         this.logger.debug(
-            `Received base notifications to be sent: ${JSON.stringify(notifications)}`,
+            `Checking for encounters created: ${notifications.length} notifications to be shipped.`,
         );
 
         const expoPushTickets =
             await this.notificationService.sendPushNotifications(notifications);
+
         this.logger.debug(
             `Sent notifications after location update from ${user.firstName} (${user.id}): ${JSON.stringify(expoPushTickets)}`,
         );

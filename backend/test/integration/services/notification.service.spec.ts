@@ -9,6 +9,7 @@ import { OfflineryNotification } from "@/types/notification-message.types";
 import {
     EApproachChoice,
     EDateMode,
+    EEncounterStatus,
     EGender,
     EIntention,
     ELanguage,
@@ -17,6 +18,7 @@ import { getAge } from "@/utils/date.utils";
 import { I18nService } from "nestjs-i18n";
 import { DataSource, DataSourceOptions } from "typeorm";
 import { PointBuilder } from "../../_src/builders/point.builder";
+import { EncounterFactory } from "../../_src/factories/encounter.factory";
 import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
 
@@ -48,6 +50,7 @@ describe("NotificationService", () => {
     let notificationService: NotificationService;
     let i18nService: I18nService<I18nTranslations>;
     let userFactory: UserFactory;
+    let encounterFactory: EncounterFactory;
     let userService: UserService;
 
     beforeEach(async () => {
@@ -62,6 +65,7 @@ describe("NotificationService", () => {
 
         userService = module.get<UserService>(UserService);
         userFactory = factories.get("user") as UserFactory;
+        encounterFactory = factories.get("encounter") as EncounterFactory;
         notificationService =
             module.get<NotificationService>(NotificationService);
         i18nService = module.get<I18nService<I18nTranslations>>(I18nService);
@@ -247,6 +251,78 @@ describe("NotificationService", () => {
             expect(notifications.length).toEqual(1);
             expect(expoPushTickets.length).toEqual(1);
             expect(updatedUser).toBeDefined();
+        });
+    });
+
+    describe("Encounter <> Notification", function () {
+        /** @DEV copy this block then and do it for BOTH <> BOTH etc. */
+        describe("User1 [Approach, sends Location update] approaches User2[BeApproached]", function () {
+            it("should send 1 notification to the approaching user", async () => {
+                const mainUser = await userFactory.persistNewTestUser({
+                    dateMode: EDateMode.LIVE,
+                    location: new PointBuilder().build(0, 0),
+                    pushToken: "ExponentPushToken[oQc_VGDj-r06r7d8hDF_2q]",
+                    genderDesire: [EGender.WOMAN],
+                    gender: EGender.MAN,
+                    approachChoice: EApproachChoice.APPROACH,
+                });
+
+                await userFactory.persistNewTestUser({
+                    firstName: "User1",
+                    approachChoice: EApproachChoice.BE_APPROACHED,
+                    location: new PointBuilder().build(0, 0),
+                });
+
+                /** @DEV location update that triggers encounters */
+                const { updatedUser, notifications, expoPushTickets } =
+                    await userService.updateLocation(mainUser.id, {
+                        latitude: 0,
+                        longitude: 0,
+                    });
+
+                expect(notifications.length).toEqual(1);
+                expect(notifications[0].to).toEqual(mainUser.pushToken);
+                expect(expoPushTickets.length).toEqual(1);
+                expect(updatedUser).toBeDefined();
+            });
+            it("should send 1 notifications as they have an encounter that is older than 24hrs and not on met_not_interesred", async () => {
+                const mainUser = await userFactory.persistNewTestUser({
+                    dateMode: EDateMode.LIVE,
+                    location: new PointBuilder().build(0, 0),
+                    pushToken: "ExponentPushToken[oQc_VGDj-r06r7d8hDF_2q]",
+                    genderDesire: [EGender.WOMAN],
+                    gender: EGender.MAN,
+                    approachChoice: EApproachChoice.APPROACH,
+                });
+
+                const otherUser = await userFactory.persistNewTestUser({
+                    firstName: "User1",
+                    approachChoice: EApproachChoice.BE_APPROACHED,
+                    location: new PointBuilder().build(0, 0),
+                });
+
+                await encounterFactory.persistNewTestEncounter(
+                    mainUser,
+                    otherUser,
+                    {
+                        status: EEncounterStatus.MET_NOT_INTERESTED,
+                    },
+                );
+
+                /** @DEV location update that triggers encounters */
+                const { updatedUser, notifications, expoPushTickets } =
+                    await userService.updateLocation(mainUser.id, {
+                        latitude: 0,
+                        longitude: 0,
+                    });
+
+                expect(notifications.length).toEqual(1);
+                expect(notifications[0].to).toEqual(mainUser.pushToken);
+                expect(expoPushTickets.length).toEqual(1);
+                expect(updatedUser).toBeDefined();
+            });
+            it("should send 0 notifications as they already have an encounter that is fresh", async () => {});
+            it("should send 0 notifications as they already have an encounter that is on met_not_interested", async () => {});
         });
     });
 });

@@ -732,9 +732,10 @@ describe("Encounter Service Integration Tests ", () => {
                 approachChoice: EApproachChoice.BOTH,
             });
 
-            const res = await encounterService.saveEncountersForUser(mainUser, [
-                otherUser,
-            ]);
+            const res = await encounterService.saveOrUpdateEncountersForUser(
+                mainUser,
+                [otherUser],
+            );
 
             expect(res.get(otherUser.id).amountStreaks).toEqual(1);
         });
@@ -757,20 +758,21 @@ describe("Encounter Service Integration Tests ", () => {
                 approachChoice: EApproachChoice.BOTH,
             });
 
-            const res = await encounterService.saveEncountersForUser(mainUser, [
-                otherUser,
-            ]);
+            const res = await encounterService.saveOrUpdateEncountersForUser(
+                mainUser,
+                [otherUser],
+            );
 
             expect(res.get(otherUser.id).amountStreaks).toEqual(1);
 
-            const res2 = await encounterService.saveEncountersForUser(
+            const res2 = await encounterService.saveOrUpdateEncountersForUser(
                 mainUser,
                 [otherUser],
             );
 
             expect(res2.get(otherUser.id).amountStreaks).toEqual(2);
 
-            const res3 = await encounterService.saveEncountersForUser(
+            const res3 = await encounterService.saveOrUpdateEncountersForUser(
                 mainUser,
                 [otherUser],
             );
