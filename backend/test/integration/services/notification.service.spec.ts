@@ -2,6 +2,7 @@ import { goBackInTimeFor } from "@/cronjobs/cronjobs.types";
 import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
+import { EncounterService } from "@/entities/encounter/encounter.service";
 import { UserReport } from "@/entities/user-report/user-report.entity";
 import { UserService } from "@/entities/user/user.service";
 import { NotificationService } from "@/transient-services/notification/notification.service";
@@ -53,6 +54,7 @@ describe("NotificationService", () => {
     let userFactory: UserFactory;
     let encounterFactory: EncounterFactory;
     let userService: UserService;
+    let encounterService: EncounterService;
 
     /** @DEV if you want to run the tests here with a real token on your device, add your token here. */
     const token = () => "ExponentPushToken[";
@@ -71,6 +73,7 @@ describe("NotificationService", () => {
         const { module, factories } = await getIntegrationTestModule();
 
         userService = module.get<UserService>(UserService);
+        encounterService = module.get<EncounterService>(EncounterService);
         userFactory = factories.get("user") as UserFactory;
         encounterFactory = factories.get("encounter") as EncounterFactory;
         notificationService =
@@ -1427,6 +1430,8 @@ describe("NotificationService", () => {
         });
     });
 
+    describe("should have the correct notification content for every optin", function () {});
+
     describe("Misc Tests", function () {
         it("should increase the streak for certain encounters, for some not etc. outsource!", function () {});
         it("should not send any notifications if invalid push token", function () {});
@@ -1456,6 +1461,96 @@ describe("NotificationService", () => {
             expect(notifications.length).toEqual(0);
             expect(expoPushTickets.length).toEqual(0);
             expect(updatedUser).toBeDefined();
+        });
+        it("should have the correct notification content for Approach > BeApproached", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                pushToken: token(),
+                genderDesire: [EGender.WOMAN],
+                gender: EGender.MAN,
+                approachChoice: EApproachChoice.APPROACH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                firstName: "User1",
+                approachChoice: EApproachChoice.BE_APPROACHED,
+                location: new PointBuilder().build(0, 0),
+            });
+
+            /** @DEV location update that triggers encounters */
+            const { notifications } = await userService.updateLocation(
+                mainUser.id,
+                {
+                    latitude: 0,
+                    longitude: 0,
+                },
+            );
+
+            const encounter = await encounterService.findEncountersByUser(
+                mainUser.id,
+            );
+
+            expect(notifications.length).toEqual(1);
+            expect(notifications[0].to).toEqual(mainUser.pushToken);
+            expect(notifications[0].title).toEqual(
+                `${otherUser.firstName} is nearby! 🔥`,
+            );
+            expect(notifications[0].body).toEqual(`Find. Approach. IRL.`);
+            expect(notifications[0].data.encounterId).toEqual(encounter[0].id);
+            expect(notifications[0].data.navigateToPerson["firstName"]).toEqual(
+                otherUser.firstName,
+            );
+        });
+        it("should have the correct notification content for Both > Both", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                firstName: "Mainuser",
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                pushToken: token(),
+                genderDesire: [EGender.WOMAN],
+                gender: EGender.MAN,
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const otherUser = await userFactory.persistNewTestUser({
+                firstName: "User1",
+                approachChoice: EApproachChoice.BOTH,
+                location: new PointBuilder().build(0, 0),
+            });
+
+            /** @DEV location update that triggers encounters */
+            const { notifications } = await userService.updateLocation(
+                mainUser.id,
+                {
+                    latitude: 0,
+                    longitude: 0,
+                },
+            );
+
+            const nOne = notifications.find(
+                (u) => u.to === otherUser.pushToken,
+            );
+
+            const encounter = await encounterService.findEncountersByUser(
+                mainUser.id,
+            );
+
+            const nTwo = notifications.find((u) => u.to === mainUser.pushToken);
+
+            expect(nOne.title).toEqual(`${mainUser.firstName} is nearby! 🔥`);
+            expect(nOne.body).toEqual(`Find. Approach. IRL.`);
+            expect(nOne.data.encounterId).toEqual(encounter[0].id);
+            expect(nOne.data.navigateToPerson["firstName"]).toEqual(
+                mainUser.firstName,
+            );
+
+            expect(nTwo.title).toEqual(`${otherUser.firstName} is nearby! 🔥`);
+            expect(nTwo.body).toEqual(`Find. Approach. IRL.`);
+            expect(nTwo.data.encounterId).toEqual(encounter[0].id);
+            expect(nTwo.data.navigateToPerson["firstName"]).toEqual(
+                otherUser.firstName,
+            );
         });
     });
 });
