@@ -10,6 +10,7 @@ export enum EMapStatus {
     SAVING_SAFEZONES = "saving_safezones",
     LIVE = "live",
     GHOST = "ghost",
+    ERROR = "error",
 }
 
 interface IOMapStatus {
@@ -39,6 +40,10 @@ export const OMapStatus = (props: IOMapStatus) => {
         [EMapStatus.GHOST]: {
             color: Color.schemesPrimary,
             lbl: i18n.t(TR.ghostMode),
+        },
+        [EMapStatus.ERROR]: {
+            color: Color.redLight,
+            lbl: i18n.t(TR.error),
         },
     }[props.status];
 

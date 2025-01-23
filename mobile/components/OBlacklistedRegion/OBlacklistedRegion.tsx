@@ -35,11 +35,14 @@ export const OBlacklistedRegion = (props: IOBlacklistedRegionProps) => {
         setDragging(false);
     };
 
+    console.error("HHH", region);
+
     return (
         <>
             <Circle
                 center={region}
                 radius={region?.radius}
+                strokeWidth={1}
                 fillColor={
                     isSelected ? "rgba(255, 0, 0, 0.4)" : "rgba(255, 0, 0, 0.2)"
                 }

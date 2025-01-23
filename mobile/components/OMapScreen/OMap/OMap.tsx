@@ -20,6 +20,7 @@ import { TOURKEY } from "@/services/tourguide.service";
 import { API } from "@/utils/api-config";
 import { getMapProvider } from "@/utils/map-provider";
 import { useIsFocused } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 import debounce from "lodash.debounce";
 import React, {
     memo,
@@ -182,6 +183,11 @@ export const OMap = memo(
                                 ),
                             },
                         });
+                    } catch (err) {
+                        Sentry.captureException(err, {
+                            tags: { omap: "debouncedSave" },
+                        });
+                        setMapStatus(EMapStatus.ERROR);
                     } finally {
                         isSavingRef.current = false;
                         if (!isHeatmapLoadingRef.current) {
@@ -263,21 +269,24 @@ export const OMap = memo(
             }
         }, [isFocused]);
 
-        const renderedBlacklistedRegions = useMemo(
-            () => (
+        const renderedBlacklistedRegions = useMemo(() => {
+            return (
                 <>
-                    {state.blacklistedRegions.map((region, index) => (
-                        <OBlacklistedRegion
-                            key={`region-${index}`}
-                            handleRegionPress={() => handleRegionPress(index)}
-                            region={region}
-                            isSelected={index === activeRegionIndex}
-                        />
-                    ))}
+                    {state.blacklistedRegions.map((region, index) => {
+                        return (
+                            <OBlacklistedRegion
+                                key={`region-${index}`}
+                                handleRegionPress={() =>
+                                    handleRegionPress(index)
+                                }
+                                region={region}
+                                isSelected={index === activeRegionIndex}
+                            />
+                        );
+                    })}
                 </>
-            ),
-            [state.blacklistedRegions, activeRegionIndex, handleRegionPress],
-        );
+            );
+        }, [state.blacklistedRegions, activeRegionIndex, handleRegionPress]);
 
         const MapViewMemo = useMemo(
             () => (
@@ -309,7 +318,8 @@ export const OMap = memo(
                 </MapView>
             ),
             [
-                mapRegion,
+                mapRegion.longitude,
+                mapRegion.latitude,
                 handleMapPress,
                 handleMapLongPress,
                 showBlacklistedRegions,
