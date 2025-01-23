@@ -1,8 +1,7 @@
 import { Color } from "@/GlobalStyles";
-import React, { useCallback, useEffect } from "react";
+import React, { memo } from "react";
 import {
-    Animated,
-    Easing,
+    ActivityIndicator,
     StyleSheet,
     Text,
     TextStyle,
@@ -27,69 +26,30 @@ interface SpinnerStyles {
     spinner: ViewStyle;
 }
 
-const DEFAULT_DURATION = 1000;
 const DEFAULT_SIZE = 40;
 
-export const OLoadingSpinner: React.FC<SpinnerProps> = ({
+export const OLoadingSpinnerComponent: React.FC<SpinnerProps> = ({
     size = DEFAULT_SIZE,
     color = Color.primary,
     text,
-    duration = DEFAULT_DURATION,
     textStyle,
     containerStyle,
     spinnerStyle,
     isVisible = true,
 }) => {
-    // Initialize animation value
-    const spinValue = React.useRef(new Animated.Value(0)).current;
-
-    // Calculate border width and radius based on size
-    const borderWidth = Math.max(2, Math.floor(size * 0.1)); // 10% of size, minimum 2
-    const borderRadius = size / 2; // Half of size to create perfect circle
-
-    // Animation setup
-    const startSpinning = useCallback(() => {
-        spinValue.setValue(0);
-        Animated.loop(
-            Animated.timing(spinValue, {
-                toValue: 1,
-                duration,
-                easing: Easing.linear,
-                useNativeDriver: true,
-            }),
-        ).start();
-    }, [spinValue, duration]);
-
-    useEffect(() => {
-        if (isVisible) {
-            startSpinning();
-        }
-        return () => {
-            spinValue.stopAnimation();
-        };
-    }, [isVisible, startSpinning, spinValue]);
-
-    const spin = spinValue.interpolate({
-        inputRange: [0, 1],
-        outputRange: ["0deg", "360deg"],
-    });
-
     if (!isVisible) {
         return null;
     }
 
     return (
         <View style={[styles.container, containerStyle]}>
-            <Animated.View
+            <ActivityIndicator
                 style={[
                     styles.spinner,
                     {
                         width: size,
                         height: size,
-                        borderWidth,
-                        borderRadius,
                         borderTopColor: color,
-                        transform: [{ rotate: spin }],
                     },
                     spinnerStyle,
                 ]}
@@ -106,6 +66,8 @@ export const OLoadingSpinner: React.FC<SpinnerProps> = ({
         </View>
     );
 };
+
+export const OLoadingSpinner = memo(OLoadingSpinnerComponent);
 
 const styles = StyleSheet.create<SpinnerStyles>({
     loadingText: {
