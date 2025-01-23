@@ -36,7 +36,7 @@ export class GhostModeReminderCronJob extends BaseCronJob {
         super(ECronJobType.GHOST_MODE_REMINDER, mailService, i18n);
     }
 
-    // TODO: @Cron(CronExpression.EVERY_DAY_AT_NOON)
+    // @Cron(CronExpression.EVERY_DAY_AT_NOON)
     async checkGhostModeUsers(): Promise<void> {
         this.logger.debug(`Starting checkGhostModeUsers cron job..`);
         const usersToNotify = await this.findOfflineUsers();
