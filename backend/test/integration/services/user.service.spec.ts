@@ -352,4 +352,24 @@ describe("UserService", () => {
             ).toEqual(0);
         });
     });
+
+    describe("Prepare a raw SQL Query Output", () => {
+        it("should return a raw sql query", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            // build sql query internally
+            userRepository.findUserMatchBaseQuery(mainUser);
+            // return the rawl sql format with parameters
+            const rawSql = userRepository.getSqlQuery();
+            console.log(rawSql);
+            expect(rawSql).toBeDefined();
+        });
+    });
 });

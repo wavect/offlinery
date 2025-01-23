@@ -1,5 +1,8 @@
-import { ECronJobType, IntervalHour } from "@/cronjobs/cronjobs.types";
-import { User } from "@/entities/user/user.entity";
+import {
+    ECronJobType,
+    IntervalHour,
+    ReceivableUser,
+} from "@/cronjobs/cronjobs.types";
 import { OfflineryNotification } from "@/types/notification-message.types";
 import { ELanguage } from "@/types/user.types";
 import { MailerService } from "@nestjs-modules/mailer";
@@ -13,7 +16,7 @@ export abstract class BaseCronJob {
     ) {}
 
     protected buildNotification(
-        user: User,
+        user: ReceivableUser,
         data: OfflineryNotification["data"],
     ): OfflineryNotification {
         const lang = user.preferredLanguage ?? ELanguage.en;
@@ -34,7 +37,7 @@ export abstract class BaseCronJob {
     }
 
     protected async sendEmail(
-        user: User,
+        user: ReceivableUser,
         intervalHour: IntervalHour,
     ): Promise<void> {
         const lang = user.preferredLanguage ?? ELanguage.en;
