@@ -40,6 +40,7 @@ export const OBlacklistedRegion = (props: IOBlacklistedRegionProps) => {
             <Circle
                 center={region}
                 radius={region?.radius}
+                strokeWidth={1}
                 fillColor={
                     isSelected ? "rgba(255, 0, 0, 0.4)" : "rgba(255, 0, 0, 0.2)"
                 }
