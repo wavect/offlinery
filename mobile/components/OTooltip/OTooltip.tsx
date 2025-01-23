@@ -3,10 +3,12 @@ import React, { useCallback, useState } from "react";
 import {
     Dimensions,
     Modal,
+    StyleProp,
     StyleSheet,
     Text,
     TouchableOpacity,
     View,
+    ViewStyle,
 } from "react-native";
 
 interface TooltipProps {
@@ -14,6 +16,7 @@ interface TooltipProps {
     iconSize?: number;
     iconColor?: string;
     iconName: keyof typeof MaterialIcons.glyphMap;
+    style?: StyleProp<ViewStyle>;
 }
 
 export const OTooltip: React.FC<TooltipProps> = ({
@@ -21,6 +24,7 @@ export const OTooltip: React.FC<TooltipProps> = ({
     iconSize = 20,
     iconColor = "#999",
     iconName,
+    style,
 }) => {
     const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
@@ -29,7 +33,7 @@ export const OTooltip: React.FC<TooltipProps> = ({
     }, []);
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, style]}>
             <TouchableOpacity onPress={toggleTooltip} style={styles.icon}>
                 <MaterialIcons
                     name={iconName}
