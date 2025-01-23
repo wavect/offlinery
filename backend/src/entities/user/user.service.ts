@@ -580,16 +580,20 @@ export class UserService {
         const notifications =
             await this.matchingService.checkForEncounters(user);
 
-        this.logger.debug(
-            `Checking for encounters created: ${notifications.length} notifications to be shipped.`,
-        );
+        if (notifications?.length) {
+            this.logger.debug(
+                `Checking for encounters created: ${notifications.length} notifications to be shipped.`,
+            );
+        }
 
         const expoPushTickets =
             await this.notificationService.sendPushNotifications(notifications);
 
-        this.logger.debug(
-            `Sent notifications after location update from ${user.firstName} (${user.id}): ${JSON.stringify(expoPushTickets)}`,
-        );
+        if (expoPushTickets?.length) {
+            this.logger.debug(
+                `Sent notifications after location update from ${user.firstName} (${user.id}): ${JSON.stringify(expoPushTickets)}`,
+            );
+        }
 
         return {
             updatedUser,

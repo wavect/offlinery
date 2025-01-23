@@ -30,9 +30,6 @@ export class UserFactory implements FactoryInterface {
     }
 
     public async persistNewTestUser(userData?: Partial<User>): Promise<User> {
-        /** @DEV predefine here to re-use */
-        const pushToken = `G-${generateRandomString(15)}`;
-
         const user = this.userRepository.create({
             firstName: `G-${generateRandomString(15)}`,
             bio: generateRandomString(15),
@@ -52,7 +49,7 @@ export class UserFactory implements FactoryInterface {
             location: { type: "Point", coordinates: [0.001, 0.001] },
             verificationStatus: EVerificationStatus.VERIFIED,
             approachChoice: EApproachChoice.BE_APPROACHED,
-            pushToken,
+            pushToken: `ExpoPushToken[`,
             trustScore: 1,
             ageRangeString: "[18,99]",
             ...userData,

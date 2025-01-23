@@ -114,10 +114,9 @@ export class MatchingService {
                 // @dev Still sending new notifications if encounter status is MET_INTERESTED (because why not, multiple times to meet)
                 if (encounter.status !== EEncounterStatus.MET_NOT_INTERESTED) {
                     if (
-                        userSendingLocationUpdate.approachChoice ===
-                            EApproachChoice.BE_APPROACHED ||
-                        userSendingLocationUpdate.approachChoice ===
-                            EApproachChoice.BOTH
+                        userNearBy.approachChoice ===
+                            EApproachChoice.APPROACH ||
+                        userNearBy.approachChoice === EApproachChoice.BOTH
                     ) {
                         const data: NotificationNavigateUserDTO = {
                             ...(baseNotification.data as any), // TODO: fix this type (type derivation issue, but content should be ok)
