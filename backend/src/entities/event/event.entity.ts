@@ -4,29 +4,35 @@ import { ChildEntity, Column } from "typeorm";
 
 @ChildEntity("Event")
 export class Event extends TranslatableEntity {
-    readonly LBL_TITLE = "title";
-    readonly LBL_DESCRIPTION = "description";
+    readonly LBL_VENUE_WITH_ARTICLE_IF_NEEDED = "venueWithArticleIfNeeded";
+    readonly LBL_ADDRESS = "address";
 
     @Column({ nullable: false })
-    startDateTime: Date;
+    eventStartDateTime: Date;
 
     @Column({ nullable: false })
-    endDateTime: Date;
+    eventEndDateTime: Date;
+
+    @Column({ nullable: false })
+    mapsLink: string;
 
     // Getters and setters for translations
-    get titles(): MultilingualString[] {
-        return this.getTranslations(this.LBL_TITLE);
+    get venueWithArticleIfNeeded(): MultilingualString[] {
+        return this.getTranslations(this.LBL_VENUE_WITH_ARTICLE_IF_NEEDED);
     }
 
-    set titles(translations: MultilingualString[]) {
-        this.setTranslations(this.LBL_TITLE, translations);
+    set venueWithArticleIfNeeded(translations: MultilingualString[]) {
+        this.setTranslations(
+            this.LBL_VENUE_WITH_ARTICLE_IF_NEEDED,
+            translations,
+        );
     }
 
-    get descriptions(): MultilingualString[] {
-        return this.getTranslations(this.LBL_DESCRIPTION);
+    get address(): MultilingualString[] {
+        return this.getTranslations(this.LBL_ADDRESS);
     }
 
-    set descriptions(translations: MultilingualString[]) {
-        this.setTranslations(this.LBL_DESCRIPTION, translations);
+    set address(translations: MultilingualString[]) {
+        this.setTranslations(this.LBL_ADDRESS, translations);
     }
 }

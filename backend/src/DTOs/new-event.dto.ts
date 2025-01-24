@@ -24,7 +24,7 @@ export class NewEventDTO {
         type: MultiLingStringDTO,
         format: "json",
     })
-    eventTitle: MultiLingStringDTO;
+    venueWithArticleIfNeeded: MultiLingStringDTO;
 
     @ApiProperty({
         nullable: false,
@@ -32,5 +32,12 @@ export class NewEventDTO {
         type: MultiLingStringDTO,
         format: "json",
     })
-    eventDescription: MultiLingStringDTO;
+    address: MultiLingStringDTO;
+
+    @ApiProperty({
+        type: "string",
+        nullable: false,
+        required: true,
+    })
+    mapsLink: string;
 }

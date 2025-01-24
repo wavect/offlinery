@@ -21,9 +21,26 @@
     "ghostmode-reminder": {
       "title": "Nobody can find you, {firstName}!",
       "body": "Switch from ghost mode to live, to cross paths with people in real life."
+    },
+    "new_event": {
+      "title": "Pack a Friend and visit {venueWithArticleIfNeeded}",
+      "body": "Be there on {date} between {startTime} - {endTime} to increase your odds of crossing paths with someone."
     }
   },
   "email": {
+    "new-event": {
+      "subject": "Your Chance - Swarm Event in Innsbruck (Offlinery)",
+      "header": "You Chance!",
+      "greeting": "Hey {firstName},",
+      "taskIntro": "We've got an exciting opportunity for you to increase your odds of meeting someone and to embrace spontaneity.",
+      "eventDetails": "Be here, to increase your odds of meeting someone.",
+      "taskDescription": "Grab one of your friends and meet up at {venueWithArticleIfNeeded} on {date} between {startTime} and {endTime} as you usually do.",
+      "eventExplanation": "With one difference: We told other users to be there as well. If someone matching your preferences is nearby, you or the other person will be notified that you are open to meet people.",
+      "note": "No pressure, just possibilities. Show up, be open, and see what unfolds.",
+      "findLocation": "Check Venue",
+      "reminder": "Your next great connection could be just around the corner.",
+      "footer": "Embrace the unexpected. Life happens outside your comfort zone."
+    },
     "request-account-deletion": {
       "subject": "Offlinery: Account Deletion Requested",
       "hello": "Hi {firstName}",
