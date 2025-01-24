@@ -1,3 +1,5 @@
+import { ELanguage } from "@/types/user.types";
+
 export const getAge = (birthday: Date | string): number => {
     const birthdayDate = new Date(birthday);
     const today = new Date();
@@ -13,4 +15,45 @@ export const getAge = (birthday: Date | string): number => {
     }
 
     return Math.max(0, age);
+};
+
+const DEFAULT_TIMEZONE_CET = "Europe/Berlin";
+const LOCALES_LANG_MAPPING: {
+    [K in ELanguage]: string;
+} = {
+    [ELanguage.en]: "en-US",
+    [ELanguage.de]: "de-DE",
+};
+/** dev Translates DateTime object into localized string for Date and Time each.
+ * @ref https://wavect.atlassian.net/jira/software/c/projects/OF/boards/29?selectedIssue=OF-635 */
+export const formatMultiLanguageDateTimeStringsCET = (
+    dateTime: Date,
+    lang: ELanguage,
+) => {
+    const locales =
+        LOCALES_LANG_MAPPING[lang] ?? LOCALES_LANG_MAPPING[ELanguage.en];
+    const cetTime = new Date(
+        dateTime.toLocaleString(locales, { timeZone: DEFAULT_TIMEZONE_CET }),
+    );
+
+    // English formats
+    const englishDateString = cetTime.toLocaleDateString(locales, {
+        timeZone: DEFAULT_TIMEZONE_CET,
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+
+    const englishTimeString = cetTime.toLocaleTimeString(locales, {
+        timeZone: DEFAULT_TIMEZONE_CET,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+    });
+
+    return {
+        date: englishDateString,
+        time: englishTimeString,
+    };
 };
