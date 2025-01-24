@@ -30,7 +30,7 @@
   "email": {
     "new-event": {
       "subject": "Your Chance - Swarm Event in Innsbruck (Offlinery)",
-      "header": "You Chance!",
+      "header": "Your Chance!",
       "greeting": "Hey {firstName},",
       "taskIntro": "We've got an exciting opportunity for you to increase your odds of meeting someone and to embrace spontaneity.",
       "goLive": "Make sure to have the switch turned on (top right) in the Offlinery app.",
