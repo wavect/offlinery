@@ -33,6 +33,7 @@
       "header": "Deine Chance!",
       "greeting": "Hey {firstName},",
       "eventDetails": "Sei hier, um deine Chancen zu erhöhen Jemanden zu treffen:",
+      "goLive": "Vergiss nicht den Switch (rechts oben) in der Offlinery App einzuschalten.",
       "taskIntro": "Wir haben eine mega Chance für dich, neue Leute kennenzulernen und dem Zufall eine Chance zu geben.",
       "taskDescription": "Schnapp dir einen deiner Freunde und gehe in {venueWithArticleIfNeeded} am {date} zwischen {startTime} und {endTime} - so wie sonst auch.",
       "eventExplanation": "Mit einem kleinen Unterschied: Wir schicken auch andere User dorthin. Wenn jemand in deiner Nähe ist, der zu dir passt, werdet ihr benachrichtigt, dass ihr offen für neue Bekanntschaften seid.",

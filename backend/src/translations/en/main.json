@@ -33,6 +33,7 @@
       "header": "You Chance!",
       "greeting": "Hey {firstName},",
       "taskIntro": "We've got an exciting opportunity for you to increase your odds of meeting someone and to embrace spontaneity.",
+      "goLive": "Make sure to have the switch turned on (top right) in the Offlinery app.",
       "eventDetails": "Be here, to increase your odds of meeting someone.",
       "taskDescription": "Grab one of your friends and meet up at {venueWithArticleIfNeeded} on {date} between {startTime} and {endTime} as you usually do.",
       "eventExplanation": "With one difference: We told other users to be there as well. If someone matching your preferences is nearby, you or the other person will be notified that you are open to meet people.",
