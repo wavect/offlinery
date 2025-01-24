@@ -29,12 +29,12 @@
   },
   "email": {
     "new-event": {
-      "title": "Deine Chance - Schwarm-Event in Innsbruck (Offlinery)",
+      "subject": "Deine Chance - Schwarm-Event in Innsbruck (Offlinery)",
       "header": "Deine Chance!",
       "greeting": "Hey {firstName},",
       "eventDetails": "Sei hier, um deine Chancen zu erhöhen Jemanden zu treffen:",
       "taskIntro": "Wir haben eine mega Chance für dich, neue Leute kennenzulernen und dem Zufall eine Chance zu geben.",
-      "taskDescription": "Schnapp dir einen deiner Freunde und triff dich in {venueWithArticleIfNeeded} am {date} zwischen {startTime} und {endTime} - so wie sonst auch.",
+      "taskDescription": "Schnapp dir einen deiner Freunde und gehe in {venueWithArticleIfNeeded} am {date} zwischen {startTime} und {endTime} - so wie sonst auch.",
       "eventExplanation": "Mit einem kleinen Unterschied: Wir schicken auch andere User dorthin. Wenn jemand in deiner Nähe ist, der zu dir passt, werdet ihr benachrichtigt, dass ihr offen für neue Bekanntschaften seid.",
       "note": "Kein Druck, nur Möglichkeiten. Komm vorbei, bleib offen, und lass dich überraschen.",
       "findLocation": "Location checken",
