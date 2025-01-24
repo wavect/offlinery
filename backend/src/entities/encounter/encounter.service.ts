@@ -140,11 +140,11 @@ export class EncounterService {
      * @param userMatches
      *
      * that are not supplied to this function will be set to isNearbyRightNow=false as they are e.g. not supplied by the matching service. */
-    async saveEncountersForUser(
+    async saveOrUpdateEncountersForUser(
         userSendingLocationUpdate: User,
         userMatches: User[],
     ): Promise<Map<string, Encounter>> {
-        const newEncounters: Map<string, Encounter> = new Map();
+        const encounters: Map<string, Encounter> = new Map();
         const queryRunner =
             this.encounterRepository.manager.connection.createQueryRunner();
 
@@ -168,12 +168,12 @@ export class EncounterService {
                 );
 
                 if (encounter.status !== EEncounterStatus.MET_NOT_INTERESTED) {
-                    newEncounters.set(userMatch.id, encounter);
+                    encounters.set(userMatch.id, encounter);
                     userEncounterCount++;
                 }
             }
 
-            return newEncounters;
+            return encounters;
         } finally {
             await queryRunner.release();
         }
