@@ -8,7 +8,9 @@ import { UserService } from "@/entities/user/user.service";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { OfflineryNotification } from "@/types/notification-message.types";
 import { ELanguage } from "@/types/user.types";
+import { formatMultiLanguageDateTimeStringsCET } from "@/utils/date.utils";
 import { countExpoPushTicketStatuses } from "@/utils/misc.utils";
+import { MailerService } from "@nestjs-modules/mailer";
 import {
     forwardRef,
     Inject,
@@ -34,6 +36,7 @@ export class EventService {
         @Inject(forwardRef(() => NotificationService))
         private notificationService: NotificationService,
         private readonly i18n: I18nService,
+        private readonly mailService: MailerService,
     ) {}
 
     async createNewEvent(newEvent: NewEventDTO): Promise<NewEventResponseDTO> {
@@ -58,22 +61,63 @@ export class EventService {
                     continue;
                 }
                 const defaultLang = ELanguage.en;
-                const userLanguage = user.preferredLanguage ?? defaultLang;
-                const eventTitle: string =
-                    newEvent.eventTitle[userLanguage] ??
-                    newEvent.eventTitle[defaultLang];
-                const eventDescription: string =
-                    newEvent.eventDescription[userLanguage] ??
-                    newEvent.eventDescription[defaultLang];
+                const lang = user.preferredLanguage ?? defaultLang;
+                const venueWithArticleIfNeeded: string =
+                    newEvent.venueWithArticleIfNeeded.translations[lang] ??
+                    newEvent.venueWithArticleIfNeeded.translations[defaultLang];
+
+                const address: string =
+                    newEvent.address.translations[lang] ??
+                    newEvent.address.translations[defaultLang];
+
+                const { date, time: startTime } =
+                    formatMultiLanguageDateTimeStringsCET(
+                        newEvent.eventStartDateTime,
+                        lang,
+                    );
+                const { time: endTime } = formatMultiLanguageDateTimeStringsCET(
+                    newEvent.eventEndDateTime,
+                    lang,
+                );
 
                 notifications.push({
                     sound: "default" as const,
-                    title: eventTitle,
-                    body: eventDescription,
+                    title: await this.i18n.translate(
+                        `main.notification.new_event.title`,
+                        { lang, args: { venueWithArticleIfNeeded } },
+                    ),
+                    body: await this.i18n.translate(
+                        `main.notification.new_event.body`,
+                        { lang, args: { date, startTime, endTime } },
+                    ),
                     to: user.pushToken,
                     data: {
                         type: ENotificationType.NEW_EVENT,
                         screen: EAppScreens.NEW_EVENT,
+                    },
+                });
+
+                await this.mailService.sendMail({
+                    to: user.email,
+                    subject: await this.i18n.translate(
+                        `main.email.new-event.subject`,
+                        { lang },
+                    ),
+                    template: `new-event`,
+                    context: {
+                        firstName: user.firstName,
+                        venueWithArticleIfNeeded,
+                        address,
+                        date,
+                        startTime,
+                        endTime,
+                        mapsLink: newEvent.mapsLink,
+                        languageId: lang,
+                        t: (key: string, params?: Record<string, any>) =>
+                            this.i18n.translate(`main.email.new-event.${key}`, {
+                                lang,
+                                args: { ...(params?.hash ?? params) },
+                            }),
                     },
                 });
             }
@@ -93,23 +137,23 @@ export class EventService {
 
         const newEventEntity: Event = this.eventRepository.create();
         await this.eventRepository.save(newEventEntity); // otherwise relationship constraints don't work
-        newEventEntity.titles =
+        newEventEntity.venueWithArticleIfNeeded =
             await this.multilingualStringService.createTranslations(
-                newEvent.eventTitle,
-                newEventEntity.LBL_TITLE,
+                newEvent.venueWithArticleIfNeeded,
+                newEventEntity.LBL_VENUE_WITH_ARTICLE_IF_NEEDED,
                 newEventEntity.entityType,
                 newEventEntity.id,
             );
 
-        newEventEntity.descriptions =
+        newEventEntity.address =
             await this.multilingualStringService.createTranslations(
-                newEvent.eventDescription,
-                newEventEntity.LBL_DESCRIPTION,
+                newEvent.address,
+                newEventEntity.LBL_ADDRESS,
                 newEventEntity.entityType,
                 newEventEntity.id,
             );
-        newEventEntity.startDateTime = newEvent.eventStartDateTime;
-        newEventEntity.endDateTime = newEvent.eventEndDateTime;
+        newEventEntity.eventStartDateTime = newEvent.eventStartDateTime;
+        newEventEntity.eventEndDateTime = newEvent.eventEndDateTime;
         await this.eventRepository.save(newEventEntity);
 
         this.logger.debug(`Event ${newEventEntity.id} persisted.`);

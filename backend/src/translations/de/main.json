@@ -1,19 +1,47 @@
 {
+  "general": {
+    "gender": {
+      "man_pl": "Männer",
+      "woman_pl": "Frauen"
+    }
+  },
   "notification": {
     "newMatch": {
       "title": "{firstName} ist in der Nähe! 🔥",
       "body": "Finden. Ansprechen. IRL."
     },
-    "accountApproved": {
+    "account_approved": {
       "title": "Du bist verifiziert!",
       "body": "Gratulation, du wurdest freigeschalten.."
+    },
+    "account_denied": {
+      "title": "Wir brauchen mehr Informationen",
+      "body": "Wir haben dir bezüglich deiner Verifizierung eine E-Mail geschickt."
     },
     "ghostmode-reminder": {
       "title": "Niemand kann dich finden, {firstName}!",
       "body": "Wechsle vom Geistmodus zu Live um Menschen über den Weg zu laufen."
+    },
+    "new_event": {
+      "title": "Schnapp dir einen Freund und ab in {venueWithArticleIfNeeded}",
+      "body": "Sei am {date} zwischen {startTime} - {endTime} Uhr dort, um eventuell Jemanden über den Weg zu laufen."
     }
   },
   "email": {
+    "new-event": {
+      "subject": "Deine Chance - Schwarm-Event in Innsbruck (Offlinery)",
+      "header": "Deine Chance!",
+      "greeting": "Hey {firstName},",
+      "eventDetails": "Sei hier, um deine Chancen zu erhöhen Jemanden zu treffen:",
+      "goLive": "Vergiss nicht den Switch (rechts oben) in der Offlinery App einzuschalten.",
+      "taskIntro": "Wir haben eine mega Chance für dich, neue Leute kennenzulernen und dem Zufall eine Chance zu geben.",
+      "taskDescription": "Schnapp dir einen deiner Freunde und gehe in {venueWithArticleIfNeeded} am {date} zwischen {startTime} und {endTime} - so wie sonst auch.",
+      "eventExplanation": "Mit einem kleinen Unterschied: Wir schicken auch andere User dorthin. Wenn jemand in deiner Nähe ist, der zu dir passt, werdet ihr benachrichtigt, dass ihr offen für neue Bekanntschaften seid.",
+      "note": "Kein Druck, nur Möglichkeiten. Komm vorbei, bleib offen, und lass dich überraschen.",
+      "findLocation": "Location checken",
+      "reminder": "Deine nächste große Connection wartet vielleicht schon um die Ecke.",
+      "footer": "Das Leben passiert außerhalb deiner Komfortzone."
+    },
     "request-account-deletion": {
       "subject": "Offlinery: Kontolöschung beantragt",
       "hello": "Hi {firstName}",
@@ -27,7 +55,7 @@
       "securityWarning": "Wenn du diese Löschung nicht beantragt hast, kontaktiere bitte umgehend unser Support-Team, um dein Konto zu sichern.",
       "footer": "Dies ist eine automatisierte Nachricht. Bitte antworte nicht auf diese E-Mail."
     },
-    "verification-successful": {
+    "account-verification-verified": {
       "subject": "Offlinery: Dein Konto wurde verifiziert",
       "title": "Offlinery: Konto verifiziert",
       "header": "Alles ist bereit!",
@@ -36,6 +64,19 @@
       "nextSteps": "Was kommt als Nächstes? Ab jetzt kannst du andere User in der echten Welt ansprechen beziehungsweise wirst von ihnen angesprochen.",
       "disclaimer": "Wenn du dich nicht bei Offlinery angemeldet hast, keine Sorge. Du kannst diese E-Mail einfach ignorieren.",
       "footer": "Dies ist eine automatisierte Nachricht. Bitte antworte nicht auf diese E-Mail."
+    },
+    "account-verification-denied": {
+      "subject": "Offlinery: Der letzte Schritt zur Verifizierung",
+      "title": "Vervollständige deine Offlinery-Verifizierung",
+      "header": "Bereit für ein kleines Abenteuer?",
+      "greeting": "Hey {firstName}!",
+      "taskIntro": "Wir haben eine spannende Challenge für dich, die dir hilft zu wachsen und uns zeigt, dass du bereit für echte Offline-Verbindungen bist.",
+      "taskDescription": "Deine Mission: Mach 3 {oppositeGender}, die du nicht kennst, ein ehrliches, herzliches Kompliment - und geh dann einfach weiter. Ohne Hintergedanken, verbreite einfach etwas Freude!",
+      "callExplanation": "Danach würden wir gerne von deinen Erfahrungen hören! Was hast du gelernt? Was würdest du anders machen? Deine Erkenntnisse sind super wertvoll für uns.",
+      "verificationNote": "Wenn unser Gespräch gut läuft (und davon sind wir überzeugt!), heißen wir dich mit Freude bei Offlinery willkommen.",
+      "bookCallButton": "Erfahrungs-Chat buchen",
+      "reminder": "Denk dran: Erfülle deine Mission vor dem Gespräch! 🎯",
+      "footer": "Dies ist eine automatische Nachricht. Bitte antworte nicht auf diese E-Mail."
     },
     "email-verification": {
       "subject": "Willkommen bei Offlinery! Bestätige deine E-Mail",

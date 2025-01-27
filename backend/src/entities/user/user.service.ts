@@ -569,9 +569,7 @@ export class UserService {
         user.locationLastTimeUpdated = new Date();
         const updatedUser = await this.userRepository.save(user);
         this.logger.debug(
-            `Updated Location for user: ${user.firstName} (${user.id})`,
-            longitude,
-            latitude,
+            `Updated Location for user: ${user.firstName} (${user.id}): ${longitude} (long), ${latitude} (lat)`,
         );
 
         // Check for matches and send notifications (from a semantic perspective we only send notifications if a person to be approached sends a location update)
@@ -582,24 +580,20 @@ export class UserService {
         const notifications =
             await this.matchingService.checkForEncounters(user);
 
-        this.logger.debug(
-            `Received base notifications to be sent: `,
-            notifications,
-        );
+        if (notifications?.length) {
+            this.logger.debug(
+                `Checking for encounters created: ${notifications.length} notifications to be shipped.`,
+            );
+        }
 
         const expoPushTickets =
             await this.notificationService.sendPushNotifications(notifications);
-        this.logger.debug(
-            `Sent notifications after location update from ${user.firstName} (${user.id})`,
-            expoPushTickets,
-        );
 
-        this.logger.debug(
-            `Here is the output after ${user.firstName} (${user.id}) sent a location update`,
-            updatedUser,
-            notifications,
-            expoPushTickets,
-        );
+        if (expoPushTickets?.length) {
+            this.logger.debug(
+                `Sent notifications after location update from ${user.firstName} (${user.id}): ${JSON.stringify(expoPushTickets)}`,
+            );
+        }
 
         return {
             updatedUser,

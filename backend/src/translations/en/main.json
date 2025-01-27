@@ -1,19 +1,47 @@
 {
+  "general": {
+    "gender": {
+      "man_pl": "men",
+      "woman_pl": "women"
+    }
+  },
   "notification": {
     "newMatch": {
       "title": "{firstName} is nearby! 🔥",
       "body": "Find. Approach. IRL."
     },
-    "accountApproved": {
+    "account_approved": {
       "title": "You are verified!",
       "body": "Congrats, you passed our screening."
+    },
+    "account_denied": {
+      "title": "We need more information",
+      "body": "We sent you an email in regards of your verification."
     },
     "ghostmode-reminder": {
       "title": "Nobody can find you, {firstName}!",
       "body": "Switch from ghost mode to live, to cross paths with people in real life."
+    },
+    "new_event": {
+      "title": "Pack a Friend and visit {venueWithArticleIfNeeded}",
+      "body": "Be there on {date} between {startTime} - {endTime} to increase your odds of crossing paths with someone."
     }
   },
   "email": {
+    "new-event": {
+      "subject": "Your Chance - Swarm Event in Innsbruck (Offlinery)",
+      "header": "Your Chance!",
+      "greeting": "Hey {firstName},",
+      "taskIntro": "We've got an exciting opportunity for you to increase your odds of meeting someone and to embrace spontaneity.",
+      "goLive": "Make sure to have the switch turned on (top right) in the Offlinery app.",
+      "eventDetails": "Be here, to increase your odds of meeting someone.",
+      "taskDescription": "Grab one of your friends and meet up at {venueWithArticleIfNeeded} on {date} between {startTime} and {endTime} as you usually do.",
+      "eventExplanation": "With one difference: We told other users to be there as well. If someone matching your preferences is nearby, you or the other person will be notified that you are open to meet people.",
+      "note": "No pressure, just possibilities. Show up, be open, and see what unfolds.",
+      "findLocation": "Check Venue",
+      "reminder": "Your next great connection could be just around the corner.",
+      "footer": "Embrace the unexpected. Life happens outside your comfort zone."
+    },
     "request-account-deletion": {
       "subject": "Offlinery: Account Deletion Requested",
       "hello": "Hi {firstName}",
@@ -27,7 +55,7 @@
       "securityWarning": "If you didn't request this deletion, please contact our support team immediately to secure your account.",
       "footer": "This is an automated message. Do not reply to this email."
     },
-    "verification-successful": {
+    "account-verification-verified": {
       "subject": "Offlinery: Your account has been verified",
       "title": "Offlinery: Account verified",
       "header": "You're all set!",
@@ -35,6 +63,19 @@
       "verificationSuccess": "Awesome news! Your Offlinery account is now verified and ready to go.",
       "nextSteps": "What's next? Start connecting with people around you or wait for someone to approach you. The offline world is now at your fingertips!",
       "disclaimer": "If you didn't sign up for Offlinery, no worries. You can safely ignore this email.",
+      "footer": "This is an automated message. Please don't reply to this email."
+    },
+    "account-verification-denied": {
+      "subject": "Offlinery: One last step for your verification",
+      "title": "Complete Your Offlinery Verification",
+      "header": "Ready for a mini-adventure?",
+      "greeting": "Hey {firstName}!",
+      "taskIntro": "We've got an exciting challenge that'll help you grow and show us you're ready for genuine offline connections.",
+      "taskDescription": "Your mission: Give 3 {oppositeGender} you don't know a genuine, heartfelt compliment - then simply walk away. No strings attached, just spread some joy!",
+      "callExplanation": "Afterward, we'd love to hear about your experience! What did you learn? What would you do differently? Your insights are super valuable to us.",
+      "verificationNote": "If our chat goes well (and we're sure it will!), we'll be thrilled to welcome you to Offlinery.",
+      "bookCallButton": "Book Your Experience Chat",
+      "reminder": "Remember: Complete your mission before the call! 🎯",
       "footer": "This is an automated message. Please don't reply to this email."
     },
     "email-verification": {

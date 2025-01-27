@@ -40,7 +40,7 @@ describe("MatchingService", () => {
                 {
                     provide: EncounterService,
                     useValue: {
-                        saveEncountersForUser: jest.fn(),
+                        saveOrUpdateEncountersForUser: jest.fn(),
                     },
                 },
                 {
@@ -108,7 +108,7 @@ describe("MatchingService", () => {
                 notificationService.sendPushNotifications,
             ).not.toHaveBeenCalled();
             expect(
-                encounterService.saveEncountersForUser,
+                encounterService.saveOrUpdateEncountersForUser,
             ).not.toHaveBeenCalled();
         });
     });

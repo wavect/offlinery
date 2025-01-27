@@ -74,6 +74,8 @@ export const de: Language = {
     both: "Beides",
     bothDescr: "Sprich an und werde angesprochen.",
     changePossible: "Du kannst diese Einstellung später ändern.",
+    emotionalIntelligenceScreeningRequired:
+        "Du musst einen 15-minütigen Verifizierungscall zum Test deiner emotionalen Intelligenz absolvieren.",
     approachMeBetween: "Sprich mich an..",
     approachMeBetweenDescr:
         "Zu welchen Zeiten fühlst du dich wohl, angesprochen zu werden? Standard ist tagsüber.",

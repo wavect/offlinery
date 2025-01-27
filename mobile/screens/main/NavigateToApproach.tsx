@@ -1,6 +1,8 @@
 import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
 import { OLoadingSpinner } from "@/components/OLoadingCircle/OLoadingCircle";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
+import { OPageHeader } from "@/components/OPageHeader/OPageHeader";
+import { OPageHeaderEncounters } from "@/components/OPageHeader/OPageHeaderEncounters/OPageHeaderEncounters";
 import OTeaserProfilePreview from "@/components/OTeaserProfilePreview/OTeaserProfilePreview";
 import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
@@ -48,6 +50,25 @@ const NavigateToApproach = ({
             isMounted.current = false;
         };
     }, []);
+
+    useEffect(() => {
+        const parent = navigation.getParent();
+
+        if (parent) {
+            // @dev This hides the help button on the NavigateTo screen which would not work here
+            parent.setOptions({
+                headerLeft: () => <OPageHeader title={i18n.t(TR.encounters)} />,
+            });
+        }
+
+        return () => {
+            if (parent) {
+                parent.setOptions({
+                    headerLeft: () => <OPageHeaderEncounters />,
+                });
+            }
+        };
+    }, [navigation]);
 
     useEffect(() => {
         let intervalId: string | number | NodeJS.Timeout | undefined;

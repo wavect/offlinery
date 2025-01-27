@@ -107,7 +107,9 @@ const ApproachMeBetween = ({
                     control={control}
                     rules={{
                         required: true,
-                        validate: (value) => value > state.approachFromTime,
+                        validate: (value) =>
+                            state?.approachFromTime &&
+                            value > state.approachFromTime,
                     }}
                     name="to"
                     render={({ field: { onChange, value } }) => (

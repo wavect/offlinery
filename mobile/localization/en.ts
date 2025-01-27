@@ -69,6 +69,8 @@ export const en = {
     both: "Both",
     bothDescr: "Want to approach and be approached by people you like?",
     changePossible: "You can change this later.",
+    emotionalIntelligenceScreeningRequired:
+        "You need to pass our screening for emotional intelligence (usually a 15-minute video-call).",
     approachMeBetween: "Approach me between",
     approachMeBetweenDescr:
         "What are times you feel comfortable being approached at? Default is during the day.",

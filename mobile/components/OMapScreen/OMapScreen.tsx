@@ -1,7 +1,7 @@
 import { Color, FontSize } from "@/GlobalStyles";
 import OCard from "@/components/OCard/OCard";
 import { OMap } from "@/components/OMapScreen/OMap/OMap";
-import React from "react";
+import React, { memo } from "react";
 import { Platform, StatusBar, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -14,6 +14,32 @@ interface IOMapScreenProps {
     showMapStatus: boolean;
     bottomChildren?: React.ReactNode;
 }
+
+const BottomChildrenMemo = memo(({ children }: any) => (
+    <SafeAreaView style={styles.bottomContainer} edges={["bottom"]}>
+        <OCard style={styles.bottomCard}>{children}</OCard>
+    </SafeAreaView>
+));
+
+const TopContentMemo = memo(
+    ({ subtitle, subtitle2 }: { subtitle: string; subtitle2?: string }) => (
+        <SafeAreaView
+            style={[styles.topContentContainer]}
+            edges={["top", "right", "left"]}
+        >
+            <View style={styles.topContent}>
+                <OCard dismissable={true}>
+                    <Text style={styles.subtitle}>{subtitle}</Text>
+                </OCard>
+                {subtitle2 && (
+                    <OCard dismissable={true} style={styles.subtitleCard}>
+                        <Text style={styles.subtitle}>{subtitle2}</Text>
+                    </OCard>
+                )}
+            </View>
+        </SafeAreaView>
+    ),
+);
 
 const OMapScreen = ({
     subtitle,
@@ -42,30 +68,11 @@ const OMapScreen = ({
             </SafeAreaView>
 
             {subtitle && (
-                <SafeAreaView
-                    style={[styles.topContentContainer]}
-                    edges={["top", "right", "left"]}
-                >
-                    <View style={styles.topContent}>
-                        <OCard dismissable={true}>
-                            <Text style={styles.subtitle}>{subtitle}</Text>
-                        </OCard>
-                        {subtitle2 && (
-                            <OCard
-                                dismissable={true}
-                                style={styles.subtitleCard}
-                            >
-                                <Text style={styles.subtitle}>{subtitle2}</Text>
-                            </OCard>
-                        )}
-                    </View>
-                </SafeAreaView>
+                <TopContentMemo subtitle={subtitle} subtitle2={subtitle2} />
             )}
 
             {bottomChildren && (
-                <SafeAreaView style={styles.bottomContainer} edges={["bottom"]}>
-                    <OCard style={styles.bottomCard}>{bottomChildren}</OCard>
-                </SafeAreaView>
+                <BottomChildrenMemo>{bottomChildren}</BottomChildrenMemo>
             )}
         </View>
     );

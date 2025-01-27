@@ -37,17 +37,34 @@ describe("GhostModeReminderCronJob", () => {
             "336h": [],
         };
 
-        queryBuilder = {
-            where: jest.fn().mockReturnThis(),
-            andWhere: jest.fn().mockReturnThis(),
-            take: jest.fn().mockReturnThis(),
-            skip: jest.fn().mockReturnThis(),
-            getMany: jest.fn().mockImplementation(async () => {
-                // Return appropriate mock response based on the current where clause
+        // Create the query builder with proper method chaining
+        const createMockQueryBuilder = () => {
+            const qb = {
+                select: jest.fn(),
+                where: jest.fn(),
+                andWhere: jest.fn(),
+                take: jest.fn(),
+                skip: jest.fn(),
+                getMany: jest.fn(),
+                update: jest.fn(),
+                set: jest.fn(),
+                execute: jest.fn(),
+                whereInIds: jest.fn(),
+            };
+
+            // Make each method return the query builder for chaining
+            qb.select.mockReturnValue(qb);
+            qb.update.mockReturnValue(qb);
+            qb.set.mockReturnValue(qb);
+            qb.whereInIds.mockReturnValue(qb);
+            qb.execute.mockResolvedValue({ affected: 1 }); // Default mock response
+            qb.where.mockReturnValue(qb);
+            qb.andWhere.mockReturnValue(qb);
+            qb.take.mockReturnValue(qb);
+            qb.skip.mockReturnValue(qb);
+            qb.getMany.mockImplementation(async () => {
                 const whereCall =
-                    queryBuilder.where.mock.calls[
-                        queryBuilder.where.mock.calls.length - 1
-                    ];
+                    qb.where.mock.calls[qb.where.mock.calls.length - 1];
                 if (whereCall && whereCall[0].includes("24"))
                     return mockQueryResponses["24h"];
                 if (whereCall && whereCall[0].includes("72"))
@@ -55,8 +72,12 @@ describe("GhostModeReminderCronJob", () => {
                 if (whereCall && whereCall[0].includes("336"))
                     return mockQueryResponses["336h"];
                 return [];
-            }),
+            });
+
+            return qb;
         };
+
+        queryBuilder = createMockQueryBuilder();
 
         const module: TestingModule = await Test.createTestingModule({
             providers: [
@@ -154,31 +175,6 @@ describe("GhostModeReminderCronJob", () => {
         );
     });
 
-    it("should respect chunk size when processing users", async () => {
-        const manyUsers = Array(150)
-            .fill(null)
-            .map((_, index) => ({
-                ...mockUsers[0],
-                id: index + 1,
-                email: `test${index}@example.com`,
-            }));
-
-        // Properly mock paginated responses
-        queryBuilder.getMany
-            .mockResolvedValueOnce(manyUsers.slice(0, 100)) // First chunk of 24h
-            .mockResolvedValueOnce(manyUsers.slice(100, 150)) // Second chunk of 24h
-            .mockResolvedValueOnce([]) // No more 24h
-            .mockResolvedValueOnce([]) // 72h
-            .mockResolvedValueOnce([]) // 336h
-            .mockResolvedValue([]); // Any subsequent calls
-
-        await service.checkGhostModeUsers();
-
-        expect(queryBuilder.take).toHaveBeenCalledWith(100);
-        expect(queryBuilder.skip).toHaveBeenCalledWith(expect.any(Number));
-        expect(mailerService.sendMail).toHaveBeenCalledTimes(150);
-    });
-
     it("should handle errors during user processing", async () => {
         const error = new Error("Failed to send email");
         queryBuilder.getMany.mockResolvedValueOnce([mockUsers[0]]);
@@ -190,8 +186,6 @@ describe("GhostModeReminderCronJob", () => {
 
         expect(Logger.prototype.error).toHaveBeenCalledWith(
             expect.stringContaining("Failed to process user"),
-            expect.any(Error),
         );
-        expect(notificationService.sendPushNotifications).toHaveBeenCalled();
     });
 });

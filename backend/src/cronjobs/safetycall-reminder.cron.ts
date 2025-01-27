@@ -30,7 +30,7 @@ export class SafetyCallReminderCronJob extends BaseCronJob {
         super(ECronJobType.SAFETY_CALL_REMINDER, mailService, i18n);
     }
 
-    //@Cron(CronExpression.EVERY_DAY_AT_7PM)
+    // TODO: @Cron(CronExpression.EVERY_DAY_AT_7PM)
     async checkSafetyCallVerificationPending(): Promise<void> {
         this.logger.debug(`Starting verification reminder cron job..`);
         const now = new Date();

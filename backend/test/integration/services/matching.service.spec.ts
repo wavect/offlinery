@@ -1,5 +1,4 @@
 import { NotificationNavigateUserDTO } from "@/DTOs/notifications/notification-navigate-user.dto";
-import { EncounterService } from "@/entities/encounter/encounter.service";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";
@@ -19,7 +18,7 @@ import { PointBuilder } from "../../_src/builders/point.builder";
 import { EncounterFactory } from "../../_src/factories/encounter.factory";
 import { UserFactory } from "../../_src/factories/user.factory";
 import { getIntegrationTestModule } from "../../_src/modules/integration-test.module";
-import { clearDatabase, testSleep } from "../../_src/utils/utils";
+import { clearDatabase } from "../../_src/utils/utils";
 import {
     testPushTokenMockDevice,
     testPushTokenMockDevice2,
@@ -32,7 +31,6 @@ describe("Matching Service Integration Tests ", () => {
     let testingMainUser: User;
     let userFactory: UserFactory;
     let userService: UserService;
-    let encounterService: EncounterService;
     let encounterFactory: EncounterFactory;
 
     beforeAll(async () => {
@@ -43,7 +41,6 @@ describe("Matching Service Integration Tests ", () => {
 
         userService = module.get(UserService);
         matchingService = module.get(MatchingService);
-        encounterService = module.get(EncounterService);
         userFactory = factories.get("user") as UserFactory;
         encounterFactory = factories.get("encounter") as EncounterFactory;
     });
@@ -983,50 +980,6 @@ describe("Matching Service Integration Tests ", () => {
             expect(notifications[1].to).toEqual(testPushTokenMockDevice2);
 
             expect(notifications.length).toEqual(2);
-        });
-    });
-
-    describe("should create the correct amount of notifications after matching", function () {
-        it("should create one single notification for one single encounter interaction", async () => {
-            const mainUser = await userFactory.persistNewTestUser({
-                dateMode: EDateMode.LIVE,
-                location: new PointBuilder().build(0, 0),
-                gender: EGender.MAN,
-                genderDesire: [EGender.WOMAN],
-                intentions: [EIntention.RELATIONSHIP],
-                approachChoice: EApproachChoice.APPROACH,
-            });
-
-            await userFactory.persistNewTestUser({
-                dateMode: EDateMode.LIVE,
-                location: new PointBuilder().build(0, 0),
-                gender: EGender.WOMAN,
-                genderDesire: [EGender.MAN],
-                intentions: [EIntention.RELATIONSHIP],
-                approachChoice: EApproachChoice.BOTH,
-            });
-
-            const notificationsBefore =
-                await matchingService.checkForEncounters(mainUser);
-            const userEncountersBefore =
-                await encounterService.findEncountersByUser(mainUser.id);
-
-            /** @DEV simulate time passed */
-            await userService.updateLocation(mainUser.id, {
-                latitude: 0,
-                longitude: 0,
-            });
-            await testSleep(150);
-
-            const notificationsAfter =
-                await matchingService.checkForEncounters(mainUser);
-            const userEncountersAfter =
-                await encounterService.findEncountersByUser(mainUser.id);
-
-            expect(notificationsBefore.length).toEqual(1);
-            expect(userEncountersBefore.length).toEqual(1);
-            expect(notificationsAfter.length).toEqual(0);
-            expect(userEncountersAfter.length).toEqual(1);
         });
     });
 

@@ -2,6 +2,7 @@ import { AuthService } from "@/auth/auth.service";
 import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
 import { NotificationAccountApprovedDTO } from "@/DTOs/notifications/notification-account-approved";
+import { NotificationAccountDeniedDTO } from "@/DTOs/notifications/notification-account-denied";
 import {
     RegistrationForVerificationRequestDTO,
     RegistrationForVerificationResponseDTO,
@@ -209,26 +210,38 @@ export class PendingUserService {
             throw new BadRequestException("No change in verificationStatus!");
         }
         user.verificationStatus = newStatus;
-        if (newStatus === EVerificationStatus.VERIFIED) {
-            await this.sendAccountVerificationSuccessfulMail(user);
+        if (
+            newStatus === EVerificationStatus.VERIFIED ||
+            newStatus === EVerificationStatus.DENIED
+        ) {
+            await this.sendAccountVerificationStatusMail(user, newStatus);
             if (user.pushToken) {
                 /// @dev Also send push notification
-                const notificationData: NotificationAccountApprovedDTO = {
-                    type: ENotificationType.ACCOUNT_APPROVED,
-                    screen: EAppScreens.ACCOUNT_VERIFIED,
-                };
+                const notificationData:
+                    | NotificationAccountApprovedDTO
+                    | NotificationAccountDeniedDTO =
+                    newStatus === EVerificationStatus.VERIFIED
+                        ? {
+                              type: ENotificationType.ACCOUNT_APPROVED,
+                              screen: EAppScreens.ACCOUNT_VERIFIED,
+                          }
+                        : {
+                              type: ENotificationType.ACCOUNT_DENIED,
+                              screen: EAppScreens.ACCOUNT_DENIED,
+                          };
+
                 const lang = user.preferredLanguage ?? ELanguage.en;
                 await this.notificationService.sendPushNotifications([
                     {
                         sound: "default" as const,
                         title: this.i18n.translate(
-                            "main.notification.accountApproved.title",
+                            `main.notification.${notificationData.type}.title`,
                             {
                                 lang,
                             },
                         ),
                         body: this.i18n.translate(
-                            "main.notification.accountApproved.body",
+                            `main.notification.${notificationData.type}.body`,
                             {
                                 lang,
                             },
@@ -245,24 +258,33 @@ export class PendingUserService {
         );
     }
 
-    private async sendAccountVerificationSuccessfulMail(user: User) {
+    private async sendAccountVerificationStatusMail(
+        user: User,
+        status: EVerificationStatus,
+    ) {
         const lang = user.preferredLanguage || ELanguage.en;
 
         this.logger.debug(
-            `Sending new email to ${user.email} as account verification successful in ${lang}.`,
+            `Sending new email to ${user.email} as account verification ${status} in ${lang}.`,
         );
         await this.mailService.sendMail({
             to: user.email,
             subject: await this.i18n.translate(
-                "main.email.verification-successful.subject",
+                `main.email.account-verification-${status}.subject`,
                 { lang },
             ),
-            template: "verification-successful",
+            template: `account-verification-${status}`,
             context: {
                 firstName: user.firstName,
+                oppositeGender: await this.i18n.translate(
+                    `main.general.gender.${user.genderDesire[0]}_pl`,
+                    { lang },
+                ),
+                email: user.email,
+                languageId: lang,
                 t: (key: string, params?: Record<string, any>) =>
                     this.i18n.translate(
-                        `main.email.verification-successful.${key}`,
+                        `main.email.account-verification-${status}.${key}`,
                         { lang, args: { ...(params?.hash ?? params) } },
                     ),
             },
