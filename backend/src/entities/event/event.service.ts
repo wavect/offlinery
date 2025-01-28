@@ -49,7 +49,7 @@ export class EventService {
 
         try {
             const notifications: OfflineryNotification[] = [];
-            const users = await this.userService.findAll(); // TODO!!!!
+            const users = await this.userService.findAll(); // TODO: restrict by region and also only active accounts
 
             for (const user of users) {
                 if (!user.pushToken) {
