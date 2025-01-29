@@ -33,9 +33,6 @@ export class MatchingService {
      * @param userToBeApproached
      */
     public async findHeatmapMatches(userToBeApproached: User): Promise<User[]> {
-        if (!this.isUserEligibleForMatchingLookup(userToBeApproached)) {
-            return [];
-        }
         return this.userRepository.getPotentialMatchesForHeatMap(
             userToBeApproached,
         );

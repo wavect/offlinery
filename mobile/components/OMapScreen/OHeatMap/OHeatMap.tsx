@@ -33,10 +33,8 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
         >([]);
 
         useEffect(() => {
-            if (datingMode === UserPrivateDTODateModeEnum.live) {
-                getOtherUsersPositions();
-            }
-        }, [datingMode, userId]);
+            getOtherUsersPositions();
+        }, [userId]);
 
         const { eventEmitter } = useTourGuideController(TOURKEY.FIND);
 
