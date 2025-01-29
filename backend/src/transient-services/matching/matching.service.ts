@@ -33,9 +33,11 @@ export class MatchingService {
      * @param userToBeApproached
      */
     public async findHeatmapMatches(userToBeApproached: User): Promise<User[]> {
-        return this.userRepository.getPotentialMatchesForHeatMap(
-            userToBeApproached,
-        );
+        const matches =
+            await this.userRepository.getPotentialMatchesForHeatMap(
+                userToBeApproached,
+            );
+        return matches ?? [];
     }
 
     public async getHeatMapClusteredPoints(userToBeApproached: User) {

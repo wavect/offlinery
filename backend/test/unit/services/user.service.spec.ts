@@ -1,6 +1,8 @@
 import { AuthService } from "@/auth/auth.service";
 import { LocationDTO } from "@/DTOs/location.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
+import { AppStatistic } from "@/entities/app-stats/app-stat.entity";
+import { AppStatsService } from "@/entities/app-stats/app-stats.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
@@ -62,6 +64,10 @@ describe("UserService", () => {
                     useValue: mockRepository,
                 },
                 {
+                    provide: getRepositoryToken(AppStatistic),
+                    useValue: mockRepository,
+                },
+                {
                     provide: MatchingService,
                     useFactory: () => mockMatchingService,
                 },
@@ -77,6 +83,12 @@ describe("UserService", () => {
                 },
                 {
                     provide: I18nService,
+                    useValue: {
+                        t: jest.fn(),
+                    },
+                },
+                {
+                    provide: AppStatsService,
                     useValue: {
                         t: jest.fn(),
                     },
