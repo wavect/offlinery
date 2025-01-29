@@ -577,7 +577,6 @@ export class UserService {
         );
 
         // Check for matches and send notifications (from a semantic perspective we only send notifications if a person to be approached sends a location update)
-        // TODO: Make sure notification not send double if other user then sends update!
         this.logger.debug(
             `Sending notifications to users that want to potentially approach or be approached by ${user.firstName} (${user.id})`,
         );
