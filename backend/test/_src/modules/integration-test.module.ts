@@ -1,5 +1,7 @@
 import { i18nLngModule } from "@/app.module.configuration";
 import { CronJobsModule } from "@/cronjobs/cronjobs.module";
+import { AppStatistic } from "@/entities/app-stats/app-stat.entity";
+import { AppStatsModule } from "@/entities/app-stats/app-stats.module";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { EncounterModule } from "@/entities/encounter/encounter.module";
@@ -63,6 +65,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
                     Message,
                     PendingUser,
                     UserFeedback,
+                    AppStatistic,
                 ],
                 synchronize: true,
                 dropSchema: true,
@@ -75,6 +78,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
             MockAuthModule,
             UserReportModule,
             MapModule,
+            AppStatsModule,
             MockMatchingModule,
             UserFeedbackModule,
             PendingUserModule,
