@@ -68,7 +68,7 @@
         "react-hook-form": "^7.53.1",
         "react-native": "0.76.6",
         "react-native-background-fetch": "^4.2.6",
-        "react-native-background-geolocation": "^4.17.6",
+        "react-native-background-geolocation": "^4.18.3",
         "react-native-element-dropdown": "^2.12.1",
         "react-native-error-boundary": "^1.2.4",
         "react-native-gesture-handler": "^2.20.2",
