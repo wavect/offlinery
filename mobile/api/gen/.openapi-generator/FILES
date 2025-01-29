@@ -22,6 +22,7 @@ src/models/EmailCodeResponseADTO.ts
 src/models/EncounterPublicDTO.ts
 src/models/GenericStatusDTO.ts
 src/models/GetLocationOfEncounterResponseDTO.ts
+src/models/LocationDTO.ts
 src/models/LocationUpdateDTO.ts
 src/models/MessagePublicDTO.ts
 src/models/NotificationAccountApprovedDTO.ts
@@ -43,6 +44,7 @@ src/models/StorePushTokenDTO.ts
 src/models/UpdateEncounterStatusDTO.ts
 src/models/UpdateUserDTO.ts
 src/models/UpdateUserPasswordDTO.ts
+src/models/UserCountDTO.ts
 src/models/UserFeedbackRequestDTO.ts
 src/models/UserPrivateDTO.ts
 src/models/UserPublicDTO.ts

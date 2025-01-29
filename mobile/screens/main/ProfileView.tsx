@@ -1,7 +1,7 @@
 import { Color, Subtitle } from "@/GlobalStyles";
 import { UserPublicDTO } from "@/api/gen/src";
-import { OBadgesOfUser } from "@/components/OBadge/OBadgesOfUser";
 import { OImageWithLoader } from "@/components/OImageWithLoader/OImageWithLoader";
+import { OBadgesOfUser } from "@/components/OIntentionBadge/OBadgesOfUser";
 import { OLoadingSpinner } from "@/components/OLoadingCircle/OLoadingCircle";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OPageHeader } from "@/components/OPageHeader/OPageHeader";

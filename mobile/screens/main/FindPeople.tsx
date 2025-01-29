@@ -23,6 +23,7 @@ const FindPeople = (
             }
             subtitle2={i18n.t(TR.safeZonesToHide)}
             showHeatmap={true}
+            showEncounters={true}
             showMapStatus={true}
             showBlacklistedRegions={true}
             saveChangesToBackend={true}

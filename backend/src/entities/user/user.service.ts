@@ -1,5 +1,5 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
-import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { LocationDTO } from "@/DTOs/location.dto";
 import { ResetPasswordResponseDTO } from "@/DTOs/reset-password.dto";
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserPasswordDTO } from "@/DTOs/update-user-password";
@@ -8,6 +8,10 @@ import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
 import { UserRequestDeletionFormSuccessDTO } from "@/DTOs/user-request-deletion-form-success.dto";
 import { UserResetPwdSuccessDTO } from "@/DTOs/user-reset-pwd-success.dto";
 import { AuthService } from "@/auth/auth.service";
+import {
+    AppStatsService,
+    EAPP_STAT_KEY,
+} from "@/entities/app-stats/app-stats.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { MatchingService } from "@/transient-services/matching/matching.service";
@@ -72,6 +76,7 @@ export class UserService {
         private authService: AuthService,
         private mailService: MailerService,
         private readonly i18n: I18nService,
+        private appStatsService: AppStatsService,
     ) {}
 
     private async saveFiles(
@@ -301,6 +306,10 @@ export class UserService {
         return this.userRepository.find();
     }
 
+    countAll(): Promise<number> {
+        return this.userRepository.count();
+    }
+
     async deleteUserByDeletionToken(
         deletionToken: string,
     ): Promise<UserDeletionSuccessDTO> {
@@ -320,6 +329,10 @@ export class UserService {
 
         await this.userRepository.delete({ deletionToken });
         await this.pendingUserRepo.delete({ email: userToDelete.email });
+        await this.appStatsService.incrementValue(
+            EAPP_STAT_KEY.USERS_DELETED_COUNT,
+        );
+
         this.logger.debug(`User ${userToDelete.id} successfully deleted!`);
 
         const lang = userToDelete.preferredLanguage || ELanguage.en;
@@ -552,7 +565,7 @@ export class UserService {
 
     async updateLocation(
         userId: string,
-        { latitude, longitude }: LocationUpdateDTO,
+        { latitude, longitude }: LocationDTO,
     ): Promise<{
         updatedUser: User;
         notifications: OfflineryNotification[];
@@ -573,7 +586,6 @@ export class UserService {
         );
 
         // Check for matches and send notifications (from a semantic perspective we only send notifications if a person to be approached sends a location update)
-        // TODO: Make sure notification not send double if other user then sends update!
         this.logger.debug(
             `Sending notifications to users that want to potentially approach or be approached by ${user.firstName} (${user.id})`,
         );

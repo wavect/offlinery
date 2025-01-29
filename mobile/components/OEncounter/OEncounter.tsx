@@ -6,13 +6,13 @@ import {
     UpdateEncounterStatusDTO,
     UserPrivateDTOApproachChoiceEnum,
 } from "@/api/gen/src";
-import { OBadgesOfUser } from "@/components/OBadge/OBadgesOfUser";
 import {
     IOButtonSmallVariant,
     OButtonSmall,
 } from "@/components/OButtonSmall/OButtonSmall";
 import { OEncounterStrike } from "@/components/OEncounterStrike/OEncounterStrike";
 import { OImageWithLoader } from "@/components/OImageWithLoader/OImageWithLoader";
+import { OBadgesOfUser } from "@/components/OIntentionBadge/OBadgesOfUser";
 import OMessageModal from "@/components/OMessageModal/OMessageModal";
 import {
     EACTION_ENCOUNTERS,

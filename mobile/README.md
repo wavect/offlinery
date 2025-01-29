@@ -6,8 +6,8 @@ Install `Expo Go` on your smart phone. This allows you to conveniently run your 
 
 Also available in production (for app stores etc.)
 
--   Email: `office@wavect.io`
--   Password: `TeSTmE93!pQ`
+- Email: `office@wavect.io`
+- Password: `TeSTmE93!pQ`
 
 ## New packages
 

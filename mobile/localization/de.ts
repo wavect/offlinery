@@ -5,9 +5,17 @@ export const de: Language = {
     bgLocationServiceBody: "Bereit dich zu beeindrucken..",
     createAccount: "Registrieren",
     signIn: "Anmelden",
+    userCount: "{{count}} User aktiv",
+    encounterCount: "{{count}} User getroffen",
+    encounterCountDescription:
+        "So vielen Usern bist du bereits über den Weg gelaufen. Wechsle zum Tab 'Begegnungen', um sie zu sehen.",
+    userCountDescription:
+        "So viele User sind in deiner Umgebung auf Offlinery. Aktive Nutzer die zu dir passen werden auf der Map angezeigt.",
     invalidCredentials: "E-Mail oder Passwort falsch.",
     signingIn: "Einen Moment..",
+    youMetHere: "bist du hier über den Weg gelaufen.",
     loadingHeatmap: "Lade Heatmap..",
+    loadingEncounters: "Lade Begegnungen..",
     loadingLocation: "Lade Location..",
     contactSupport: "Funktioniert etwas nicht?",
     gettingReadyToAmazeYou: "Bereit, dich zu beeindrucken..",

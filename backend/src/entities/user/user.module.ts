@@ -1,4 +1,6 @@
 import { AuthModule } from "@/auth/auth.module";
+import { AppStatistic } from "@/entities/app-stats/app-stat.entity";
+import { AppStatsModule } from "@/entities/app-stats/app-stats.module";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { EncounterModule } from "@/entities/encounter/encounter.module";
@@ -22,11 +24,13 @@ import { UserService } from "./user.service";
             Encounter,
             PendingUser,
             AuthModule,
+            AppStatistic,
         ]),
         forwardRef(() => NotificationModule),
         forwardRef(() => MatchingModule),
         forwardRef(() => AuthModule),
         forwardRef(() => EncounterModule),
+        AppStatsModule,
     ],
     providers: [UserService, UserRepository],
     controllers: [UserController],

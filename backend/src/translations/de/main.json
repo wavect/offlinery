@@ -8,7 +8,7 @@
   "notification": {
     "newMatch": {
       "title": "{firstName} ist in der Nähe! 🔥",
-      "body": "Finden. Ansprechen. IRL."
+      "body": "Klicke um {firstName} in der realen Welt anzusprechen."
     },
     "account_approved": {
       "title": "Du bist verifiziert!",

@@ -3,7 +3,7 @@ import { OnlyValidRegistrationSession } from "@/auth/auth-registration-session";
 import { Public } from "@/auth/auth.guard";
 import { CreateUserRequestDTO } from "@/DTOs/create-user-request.dto";
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
-import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { LocationUpdateDTO } from "@/DTOs/location.dto";
 import { RequestAccountDeletionViaFormDTO } from "@/DTOs/request-account-deletion-via-form.dto";
 import {
     ResetPasswordRequestDTO,
@@ -13,6 +13,7 @@ import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserPasswordDTO } from "@/DTOs/update-user-password";
 import { UpdateUserRequestDTO } from "@/DTOs/update-user-request.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
+import { UserCountDTO } from "@/DTOs/user-count.dto";
 import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
 import { UserPrivateDTO } from "@/DTOs/user-private.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
@@ -212,6 +213,20 @@ export class UserController {
     ): Promise<ResetPasswordResponseDTO> {
         const { email } = resetPwdRequestDTO;
         return this.userService.requestPasswordChangeAsForgotten(email);
+    }
+
+    @Get("user-count")
+    @Public()
+    @ApiOperation({ summary: "Get user count" })
+    @ApiResponse({
+        status: 200,
+        description: "User count has been returned successfully.",
+        type: UserCountDTO,
+    })
+    async getUserCount(): Promise<UserCountDTO> {
+        return {
+            userCount: await this.userService.countAll(),
+        };
     }
 
     @Put(`reset-password`)

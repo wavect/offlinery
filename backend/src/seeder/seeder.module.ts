@@ -2,6 +2,8 @@ import { AuthModule } from "@/auth/auth.module";
 import { AuthService } from "@/auth/auth.service";
 import { ApiUser } from "@/entities/api-user/api-user.entity";
 import { ApiUserService } from "@/entities/api-user/api-user.service";
+import { AppStatistic } from "@/entities/app-stats/app-stat.entity";
+import { AppStatsModule } from "@/entities/app-stats/app-stats.module";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
@@ -29,12 +31,14 @@ import { TypeOrmModule } from "@nestjs/typeorm";
             UserReport,
             Encounter,
             PendingUser,
+            AppStatistic,
         ]),
         PendingUserModule,
         forwardRef(() => MatchingModule),
         forwardRef(() => AuthModule),
         MailchimpModule,
         NotificationModule,
+        AppStatsModule,
     ],
     providers: [
         DefaultUserSeeder,

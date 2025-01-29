@@ -33,12 +33,11 @@ export class MatchingService {
      * @param userToBeApproached
      */
     public async findHeatmapMatches(userToBeApproached: User): Promise<User[]> {
-        if (!this.isUserEligibleForMatchingLookup(userToBeApproached)) {
-            return [];
-        }
-        return this.userRepository.getPotentialMatchesForHeatMap(
-            userToBeApproached,
-        );
+        const matches =
+            await this.userRepository.getPotentialMatchesForHeatMap(
+                userToBeApproached,
+            );
+        return matches ?? [];
     }
 
     public async getHeatMapClusteredPoints(userToBeApproached: User) {
@@ -143,6 +142,15 @@ export class MatchingService {
                             ...baseNotification,
                             title: this.i18n.translate(
                                 "main.notification.newMatch.title",
+                                {
+                                    args: {
+                                        firstName: userNearBy.firstName,
+                                    },
+                                    lang: userLanguage,
+                                },
+                            ),
+                            body: this.i18n.translate(
+                                "main.notification.newMatch.body",
                                 {
                                     args: {
                                         firstName: userNearBy.firstName,

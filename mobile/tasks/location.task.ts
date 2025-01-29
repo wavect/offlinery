@@ -1,3 +1,4 @@
+import { LocationDTO } from "@/api/gen/src";
 import { Color } from "@/GlobalStyles";
 import { i18n, TR } from "@/localization/translate.service";
 import { getLocalValue, LOCAL_VALUE } from "@/services/storage.service";
@@ -41,7 +42,7 @@ export class OBackgroundLocationService {
 
     private async updateUserLocation(
         userId: string,
-        locationUpdateDTO: LocationUpdateDTO,
+        locationUpdateDTO: LocationDTO,
     ): Promise<void> {
         try {
             await API.user.userControllerUpdateLocation({

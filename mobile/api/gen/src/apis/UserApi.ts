@@ -21,6 +21,7 @@ import type {
     SignInResponseDTO,
     UpdateUserDTO,
     UpdateUserPasswordDTO,
+    UserCountDTO,
     UserPrivateDTO,
     UserPublicDTO,
     UserResetPwdSuccessDTO,
@@ -35,6 +36,7 @@ import {
     SignInResponseDTOFromJSON,
     UpdateUserDTOToJSON,
     UpdateUserPasswordDTOToJSON,
+    UserCountDTOFromJSON,
     UserPrivateDTOFromJSON,
     UserPublicDTOFromJSON,
     UserResetPwdSuccessDTOFromJSON,
@@ -177,6 +179,24 @@ export interface UserApiInterface {
         requestParameters: UserControllerGetOwnUserDataRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<UserPrivateDTO>;
+
+    /**
+     *
+     * @summary Get user count
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApiInterface
+     */
+    userControllerGetUserCountRaw(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<UserCountDTO>>;
+
+    /**
+     * Get user count
+     */
+    userControllerGetUserCount(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<UserCountDTO>;
 
     /**
      *
@@ -553,6 +573,42 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
             requestParameters,
             initOverrides,
         );
+        return await response.value();
+    }
+
+    /**
+     * Get user count
+     */
+    async userControllerGetUserCountRaw(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<UserCountDTO>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request(
+            {
+                path: `/user/user-count`,
+                method: "GET",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            UserCountDTOFromJSON(jsonValue),
+        );
+    }
+
+    /**
+     * Get user count
+     */
+    async userControllerGetUserCount(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<UserCountDTO> {
+        const response =
+            await this.userControllerGetUserCountRaw(initOverrides);
         return await response.value();
     }
 

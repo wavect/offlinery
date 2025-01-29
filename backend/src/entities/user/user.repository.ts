@@ -7,6 +7,7 @@ import {
     EIntention,
     EVerificationStatus,
 } from "@/types/user.types";
+import { getTypedCoordinatesFromPoint } from "@/utils/location.utils";
 import { getAgeRangeParsed } from "@/utils/misc.utils";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -63,7 +64,9 @@ export class UserRepository extends Repository<User> {
             );
             return [];
         }
-        const [lon, lat] = userSendingLocationUpdate.location.coordinates;
+        const { longitude: lon, latitude: lat } = getTypedCoordinatesFromPoint(
+            userSendingLocationUpdate.location,
+        );
         const isInBlacklistedRegion = await this.isUserInBlacklistedRegion(
             userSendingLocationUpdate,
             lon,
@@ -125,7 +128,8 @@ export class UserRepository extends Repository<User> {
             return this;
         }
 
-        const [lon, lat] = userLocation.coordinates;
+        const { longitude: lon, latitude: lat } =
+            getTypedCoordinatesFromPoint(userLocation);
 
         try {
             this.queryBuilder.andWhere(

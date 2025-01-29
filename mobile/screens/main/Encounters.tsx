@@ -8,6 +8,7 @@ import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { TR, i18n } from "@/localization/translate.service";
 import { MainScreenTabsParamList } from "@/screens/main/MainScreenTabs.navigator";
 import { ROUTES } from "@/screens/routes";
+import { get3MonthsBefore } from "@/utils/date.utils";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import { useState } from "react";
@@ -20,8 +21,7 @@ const Encounters = ({
     typeof ROUTES.MainTabView
 >) => {
     const today = new Date();
-    const threeMonthsBefore = new Date();
-    threeMonthsBefore.setDate(today.getDate() - 90);
+    const threeMonthsBefore = get3MonthsBefore();
     const [metStartDateFilter, setMetStartDateFilter] =
         useState<Date>(threeMonthsBefore);
     const [metEndDateFilter, setMetEndDateFilter] = useState<Date>(today);

@@ -11,6 +11,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { Platform } from "react-native";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 import { ROUTES } from "../routes";
 import { EncounterScreenStack } from "./EncounterStackNavigator";
@@ -45,7 +46,9 @@ export const MainScreenTabs = ({ navigation }: any) => {
             screenOptions={() => ({
                 headerTitle: "",
                 headerTitleStyle: Title,
-                headerStyle: { height: 110 },
+                headerStyle: Platform.select({
+                    ios: { height: 120 },
+                }),
                 headerTitleAlign: "left",
                 tabBarActiveTintColor: Color.white,
                 tabBarLabelStyle: { marginBottom: 5 },

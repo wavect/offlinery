@@ -56,6 +56,7 @@ export const NotificationNavigateUserDTOTypeEnum = {
     account_approved: "account_approved",
     ghostmode_reminder: "ghostmode_reminder",
     safetycall_reminder: "safetycall_reminder",
+    account_denied: "account_denied",
 } as const;
 export type NotificationNavigateUserDTOTypeEnum =
     (typeof NotificationNavigateUserDTOTypeEnum)[keyof typeof NotificationNavigateUserDTOTypeEnum];
@@ -69,6 +70,7 @@ export const NotificationNavigateUserDTOScreenEnum = {
     FindPeople2: "Main_FindPeople",
     FindPeople3: "Main_FindPeople",
     FindPeople4: "Main_FindPeople",
+    FindPeople5: "Main_FindPeople",
 } as const;
 export type NotificationNavigateUserDTOScreenEnum =
     (typeof NotificationNavigateUserDTOScreenEnum)[keyof typeof NotificationNavigateUserDTOScreenEnum];

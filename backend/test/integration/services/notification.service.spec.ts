@@ -169,7 +169,9 @@ describe("NotificationService", () => {
             const n =
                 await notificationService.buildNewMatchBaseNotification(user);
             expect(n.title).toEqual(`${user.firstName} is nearby! 🔥`);
-            expect(n.body).toEqual(`Find. Approach. IRL.`);
+            expect(n.body).toEqual(
+                `Click to approach ${user.firstName} in real life.`,
+            );
         });
         it("should create a NEW_MATCH notification in DE", async () => {
             const user = await userFactory.persistNewTestUser({
@@ -180,7 +182,9 @@ describe("NotificationService", () => {
                 await notificationService.buildNewMatchBaseNotification(user);
 
             expect(n.title).toEqual(`${user.firstName} ist in der Nähe! 🔥`);
-            expect(n.body).toEqual(`Finden. Ansprechen. IRL.`);
+            expect(n.body).toEqual(
+                `Klicke um ${user.firstName} in der realen Welt anzusprechen.`,
+            );
         });
         it("should send 2 notifications in both languages", async () => {
             const user = await userFactory.persistNewTestUser({
@@ -1464,6 +1468,7 @@ describe("NotificationService", () => {
         });
         it("should have the correct notification content for Approach > BeApproached", async () => {
             const mainUser = await userFactory.persistNewTestUser({
+                firstName: "MainUser",
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
                 pushToken: token(),
@@ -1496,11 +1501,13 @@ describe("NotificationService", () => {
             expect(notifications[0].title).toEqual(
                 `${otherUser.firstName} is nearby! 🔥`,
             );
-            expect(notifications[0].body).toEqual(`Find. Approach. IRL.`);
-            expect(notifications[0].data.encounterId).toEqual(encounter[0].id);
             expect(notifications[0].data.navigateToPerson["firstName"]).toEqual(
                 otherUser.firstName,
             );
+            expect(notifications[0].body).toEqual(
+                `Click to approach ${otherUser.firstName} in real life.`,
+            );
+            expect(notifications[0].data.encounterId).toEqual(encounter[0].id);
         });
         it("should have the correct notification content for Both > Both", async () => {
             const mainUser = await userFactory.persistNewTestUser({
@@ -1539,14 +1546,18 @@ describe("NotificationService", () => {
             const nTwo = notifications.find((u) => u.to === mainUser.pushToken);
 
             expect(nOne.title).toEqual(`${mainUser.firstName} is nearby! 🔥`);
-            expect(nOne.body).toEqual(`Find. Approach. IRL.`);
+            expect(nOne.body).toEqual(
+                `Click to approach ${mainUser.firstName} in real life.`,
+            );
             expect(nOne.data.encounterId).toEqual(encounter[0].id);
             expect(nOne.data.navigateToPerson["firstName"]).toEqual(
                 mainUser.firstName,
             );
 
             expect(nTwo.title).toEqual(`${otherUser.firstName} is nearby! 🔥`);
-            expect(nTwo.body).toEqual(`Find. Approach. IRL.`);
+            expect(nTwo.body).toEqual(
+                `Click to approach ${otherUser.firstName} in real life.`,
+            );
             expect(nTwo.data.encounterId).toEqual(encounter[0].id);
             expect(nTwo.data.navigateToPerson["firstName"]).toEqual(
                 otherUser.firstName,

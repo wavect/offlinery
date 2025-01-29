@@ -7,6 +7,7 @@ import { Message } from "@/entities/messages/message.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { EEncounterStatus } from "@/types/user.types";
+import { getTypedCoordinatesFromPoint } from "@/utils/location.utils";
 import { MAX_ENCOUNTERS_PER_DAY_FOR_USER } from "@/utils/misc.utils";
 import {
     forwardRef,
@@ -245,8 +246,7 @@ export class EncounterService {
 
         return {
             lastTimeLocationUpdated: otherUser.locationLastTimeUpdated,
-            longitude: otherUser.location.coordinates[0],
-            latitude: otherUser.location.coordinates[1],
+            ...getTypedCoordinatesFromPoint(otherUser.location),
         };
     }
 
@@ -255,7 +255,6 @@ export class EncounterService {
         user2Id: string,
         queryRunner: QueryRunner,
     ): Promise<Encounter> {
-        console.log("---> inside Locker");
         await queryRunner.startTransaction();
 
         try {
