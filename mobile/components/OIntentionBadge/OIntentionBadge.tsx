@@ -5,12 +5,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
-interface OBadgeProps {
+interface OIntentionBadgeProps {
     intention: UserPublicDTOIntentionsEnum;
     hideLabel?: boolean;
 }
 
-const OBadge = ({ intention, hideLabel }: OBadgeProps) => {
+const OIntentionBadge = ({ intention, hideLabel }: OIntentionBadgeProps) => {
     const [showModal, setShowModal] = useState(false);
 
     // @dev Here to be re-rendered for storybook localization
@@ -32,6 +32,12 @@ const OBadge = ({ intention, hideLabel }: OBadgeProps) => {
             label: i18n.t(TR.relationship),
             backgroundColor: "#833467",
             description: i18n.t(TR.relationshipDescription),
+        },
+        [UserPublicDTOIntentionsEnum.reconnect_friends]: {
+            icon: "waving-hand",
+            label: i18n.t(TR.reconnectFriends),
+            backgroundColor: "#459da1",
+            description: i18n.t(TR.reconnectFriendsDescription),
         },
     };
 
@@ -77,4 +83,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default OBadge;
+export default OIntentionBadge;

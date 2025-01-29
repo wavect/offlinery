@@ -1,5 +1,5 @@
 import { UserPublicDTOIntentionsEnum } from "@/api/gen/src";
-import OBadge from "@/components/OBadge/OBadge";
+import OIntentionBadge from "@/components/OIntentionBadge/OIntentionBadge";
 import React from "react";
 import { View } from "react-native";
 
@@ -13,7 +13,11 @@ export const OBadgesOfUser = (props: IOBadgesOfUserProps) => {
     return (
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
             {props.intentions?.map((i) => (
-                <OBadge key={i} intention={i} hideLabel={props.hideLabel} />
+                <OIntentionBadge
+                    key={i}
+                    intention={i}
+                    hideLabel={props.hideLabel}
+                />
             ))}
         </View>
     );
