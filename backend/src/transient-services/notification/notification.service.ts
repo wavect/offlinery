@@ -49,6 +49,9 @@ export class NotificationService {
             ),
             body: this.i18n.translate("main.notification.newMatch.body", {
                 lang: userLanguage,
+                args: {
+                    firstName: userSendingLocationUpdate.firstName,
+                },
             }),
             data: {
                 type: ENotificationType.NEW_MATCH,
