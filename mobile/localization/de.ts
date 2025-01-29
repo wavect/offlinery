@@ -5,6 +5,9 @@ export const de: Language = {
     bgLocationServiceBody: "Bereit dich zu beeindrucken..",
     createAccount: "Registrieren",
     signIn: "Anmelden",
+    userCount: "{{count}} User aktiv",
+    userCountDescription:
+        "So viele User sind in deiner Umgebung auf Offlinery. Aktive Nutzer die zu dir passen werden auf der Map angezeigt.",
     invalidCredentials: "E-Mail oder Passwort falsch.",
     signingIn: "Einen Moment..",
     youMetHere: "bist du hier über den Weg gelaufen.",

@@ -5,6 +5,9 @@ export const en = {
     bgLocationServiceBody: "Letting others know about you.",
     createAccount: "Create Account",
     signIn: "Sign in",
+    userCount: "{{count}} users nearby",
+    userCountDescription:
+        "So many users are on Offlinery within your area. Active users that want to match with you are shown on the map.",
     youMetHere: "crossed your path here.",
     loadingHeatmap: "Loading heatmap..",
     loadingEncounters: "Loading encounters..",

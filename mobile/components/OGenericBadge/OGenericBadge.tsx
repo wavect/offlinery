@@ -1,18 +1,20 @@
 import { OModal } from "@/components/OModal/OModal";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
 
 interface OGenericBadgeProps {
     label: string;
     description: string;
     // @dev MaterialIcon string name
     icon: string;
-    backgroundColor: `#${string}`;
+    backgroundColor: string;
+    containerStyle?: ViewStyle;
 }
 
 const OGenericBadge = ({
     backgroundColor,
+    containerStyle,
     description,
     icon,
     label,
@@ -27,6 +29,7 @@ const OGenericBadge = ({
                     styles.badge,
                     { backgroundColor },
                     label ? null : { paddingLeft: 12, paddingRight: 12 },
+                    containerStyle,
                 ]}
             >
                 <MaterialIcons name={icon as any} size={16} color="white" />

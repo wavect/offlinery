@@ -1,6 +1,7 @@
 import { BorderRadius, Color, FontSize } from "@/GlobalStyles";
 import { UserPrivateDTODateModeEnum } from "@/api/gen/src";
 import { OBlacklistedRegion } from "@/components/OBlacklistedRegion/OBlacklistedRegion";
+import OGenericBadge from "@/components/OGenericBadge/OGenericBadge";
 import { OHeatMap } from "@/components/OMapScreen/OHeatMap/OHeatMap";
 import {
     EMapStatus,
@@ -406,6 +407,14 @@ export const OMap = memo(
                     </View>
                 )}
 
+                <OGenericBadge
+                    containerStyle={styles.badgeContainerStyle}
+                    label={i18n.t(TR.userCount, { count: 100 })}
+                    description={i18n.t(TR.userCountDescription)}
+                    icon="person-search"
+                    backgroundColor={Color.primary}
+                />
+
                 {showBlacklistedRegions && activeRegionIndex !== null && (
                     <OSafeZoneSliderCard
                         handleRadiusChange={handleRadiusChange}
@@ -421,6 +430,12 @@ export const OMap = memo(
 
 const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
+    badgeContainerStyle: {
+        position: "absolute",
+        top: 10,
+        left: 10,
+        zIndex: 999,
+    },
     container: {
         flex: 1,
         width: "100%",
