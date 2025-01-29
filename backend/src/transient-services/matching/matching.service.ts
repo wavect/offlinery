@@ -40,8 +40,18 @@ export class MatchingService {
         return matches ?? [];
     }
 
+    public async findTemporaryHeatmap(
+        userToBeApproached: User,
+    ): Promise<User[]> {
+        // TODO: Once enough users delete this function and switch back to findHeatmapMatches() function back which only shows matching users
+        const matches =
+            await this.userRepository.getHeatmapTEMPORARY(userToBeApproached);
+        return matches ?? [];
+    }
+
     public async getHeatMapClusteredPoints(userToBeApproached: User) {
-        const matches = await this.findHeatmapMatches(userToBeApproached);
+        // TODO: Once enough users delete the temporary function and switch back to findHeatmapMatches() function back which only shows matching users
+        const matches = await this.findTemporaryHeatmap(userToBeApproached);
         const realPoints = matches
             .filter((match: User) => !!match.location)
             .map((m) => m.location);

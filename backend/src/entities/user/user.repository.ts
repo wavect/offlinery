@@ -29,6 +29,16 @@ export class UserRepository extends Repository<User> {
         super(User, dataSource.createEntityManager());
     }
 
+    /** @dev temporary heatmap query to make it appear that we have lots of users. */
+    public getHeatmapTEMPORARY(userToBeApproached: User): Promise<User[]> {
+        this.queryBuilder = this.createQueryBuilder("user");
+        this.addEncounterJoins()
+            .excludeUser(userToBeApproached.id)
+            .filterNotInterested();
+
+        return this.getMany();
+    }
+
     public findUserMatchBaseQuery(userToBeApproached: User): this {
         this.queryBuilder = this.createQueryBuilder("user");
         this.addEncounterJoins()
