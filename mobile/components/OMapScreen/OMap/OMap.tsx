@@ -391,6 +391,7 @@ export const OMap = memo(
                 state.id,
                 state.dateMode,
                 renderedBlacklistedRegions,
+                renderedEncounterPins,
             ],
         );
 
