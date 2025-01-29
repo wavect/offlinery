@@ -1,3 +1,4 @@
+import { LocationDTO } from "@/api/gen/src";
 import { Color } from "@/GlobalStyles";
 import { i18n, TR } from "@/localization/translate.service";
 import { getLocalValue, LOCAL_VALUE } from "@/services/storage.service";
@@ -41,12 +42,12 @@ export class OBackgroundLocationService {
 
     private async updateUserLocation(
         userId: string,
-        locationUpdateDTO: LocationUpdateDTO,
+        locationDTO: LocationDTO,
     ): Promise<void> {
         try {
             await API.user.userControllerUpdateLocation({
                 userId,
-                locationUpdateDTO,
+                locationDTO,
             });
             console.log(
                 "[LOCATION_UPDATE]: User Location updated successfully",
@@ -59,7 +60,7 @@ export class OBackgroundLocationService {
                 tags: { location_service: "updateLocation" },
                 extra: {
                     userId,
-                    locationData: locationUpdateDTO,
+                    locationData: locationDTO,
                 },
             });
             throw error;

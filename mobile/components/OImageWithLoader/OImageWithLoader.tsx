@@ -16,6 +16,8 @@ import {
 interface OImageWithLoaderProps extends ImageProps {
     showLoadingIndicator?: boolean;
     source?: ImageURISource;
+    onError?: (error: NativeSyntheticEvent<ImageErrorEventData>) => void;
+    onLoadEnd?: () => void;
 }
 
 export const OImageWithLoader = (props: OImageWithLoaderProps) => {
@@ -24,6 +26,9 @@ export const OImageWithLoader = (props: OImageWithLoaderProps) => {
 
     const handleLoadEnd = () => {
         setIsLoading(false);
+        if (props.onLoadEnd) {
+            props.onLoadEnd();
+        }
     };
 
     const handleError = useCallback(
@@ -35,6 +40,9 @@ export const OImageWithLoader = (props: OImageWithLoaderProps) => {
             });
             setIsLoading(false);
             setHasError(true);
+            if (props.onError) {
+                props.onError(err);
+            }
         },
         [],
     );

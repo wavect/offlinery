@@ -292,8 +292,8 @@ export const OMap = memo(
             }
         }, [isFocused]);
 
-        const renderedEncounterPins = useMemo(() => {
-            return (
+        const renderedEncounterPins = useMemo(
+            () => (
                 <>
                     {encounterState.encounters.map((e) => {
                         if (!e.lastLocationPassedBy) return;
@@ -310,8 +310,9 @@ export const OMap = memo(
                         );
                     })}
                 </>
-            );
-        }, [encounterState.encounters]);
+            ),
+            [encounterState.encounters],
+        );
 
         const renderedBlacklistedRegions = useMemo(() => {
             return (
@@ -368,6 +369,7 @@ export const OMap = memo(
                 handleMapLongPress,
                 showBlacklistedRegions,
                 showHeatmap,
+                showEncounters,
                 state.id,
                 state.dateMode,
                 renderedBlacklistedRegions,
