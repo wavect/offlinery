@@ -1,10 +1,5 @@
 import { AppStatistic } from "@/entities/app-stats/app-stat.entity";
-import {
-    BadRequestException,
-    Injectable,
-    Logger,
-    NotFoundException,
-} from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -61,17 +56,15 @@ export class AppStatsService {
         });
     }
 
-    async getMostRecentStat(key: EAPP_STAT_KEY): Promise<AppStatistic> {
+    async getMostRecentStat(
+        key: EAPP_STAT_KEY,
+    ): Promise<AppStatistic | undefined> {
         const stat = await this.appStatisticRepository.findOne({
             where: { key },
             order: {
                 created: "DESC",
             },
         });
-
-        if (!stat) {
-            throw new NotFoundException(`No statistic found for key: ${key}`);
-        }
 
         return stat;
     }

@@ -31,10 +31,9 @@ export class NotificationService {
     }
 
     async buildNewMatchBaseNotification(
-        userSendingLocationUpdate: User,
+        user: User,
     ): Promise<OBaseNewMatchNotification> {
-        const userLanguage =
-            userSendingLocationUpdate.preferredLanguage ?? "en";
+        const userLanguage = user.preferredLanguage ?? "en";
 
         return {
             sound: "default" as const,
@@ -42,7 +41,7 @@ export class NotificationService {
                 "main.notification.newMatch.title",
                 {
                     args: {
-                        firstName: userSendingLocationUpdate.firstName,
+                        firstName: user.firstName,
                     },
                     lang: userLanguage,
                 },
@@ -50,7 +49,7 @@ export class NotificationService {
             body: this.i18n.translate("main.notification.newMatch.body", {
                 lang: userLanguage,
                 args: {
-                    firstName: userSendingLocationUpdate.firstName,
+                    firstName: user.firstName,
                 },
             }),
             data: {
