@@ -149,6 +149,15 @@ export class MatchingService {
                                     lang: userLanguage,
                                 },
                             ),
+                            body: this.i18n.translate(
+                                "main.notification.newMatch.body",
+                                {
+                                    args: {
+                                        firstName: userNearBy.firstName,
+                                    },
+                                    lang: userLanguage,
+                                },
+                            ),
                             to: userSendingLocationUpdate.pushToken,
                             data: {
                                 ...baseNotification.data,

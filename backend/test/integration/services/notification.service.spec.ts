@@ -1468,6 +1468,7 @@ describe("NotificationService", () => {
         });
         it("should have the correct notification content for Approach > BeApproached", async () => {
             const mainUser = await userFactory.persistNewTestUser({
+                firstName: "MainUser",
                 dateMode: EDateMode.LIVE,
                 location: new PointBuilder().build(0, 0),
                 pushToken: token(),
@@ -1500,13 +1501,13 @@ describe("NotificationService", () => {
             expect(notifications[0].title).toEqual(
                 `${otherUser.firstName} is nearby! 🔥`,
             );
+            expect(notifications[0].data.navigateToPerson["firstName"]).toEqual(
+                otherUser.firstName,
+            );
             expect(notifications[0].body).toEqual(
                 `Click to approach ${otherUser.firstName} in real life.`,
             );
             expect(notifications[0].data.encounterId).toEqual(encounter[0].id);
-            expect(notifications[0].data.navigateToPerson["firstName"]).toEqual(
-                otherUser.firstName,
-            );
         });
         it("should have the correct notification content for Both > Both", async () => {
             const mainUser = await userFactory.persistNewTestUser({
