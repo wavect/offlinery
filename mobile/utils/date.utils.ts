@@ -11,6 +11,12 @@ export const getAge = (birthday: Date | string): number => {
     return Math.floor(timeDiff / (1000 * 3600 * 24) / 365.25);
 };
 
+export const get3MonthsBefore = () => {
+    const threeMonthsBefore = new Date();
+    threeMonthsBefore.setDate(threeMonthsBefore.getDate() - 90);
+    return threeMonthsBefore;
+};
+
 export const formatDate = (dateString?: string) => {
     if (!dateString) {
         return "N/V";

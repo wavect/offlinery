@@ -8,16 +8,20 @@ import {
 } from "@/components/OMapScreen/OMapStatus/OMapStatus";
 import { OSafeZoneSliderCard } from "@/components/OMapScreen/OSafeZoneSliderCard/OSafeZoneSliderCard";
 import {
+    EACTION_ENCOUNTERS,
+    useEncountersContext,
+} from "@/context/EncountersContext";
+import {
     EACTION_USER,
     MapRegion,
     mapRegionToBlacklistedRegionDTO,
     useUserContext,
 } from "@/context/UserContext";
-import { useUserLocation } from "@/hooks/useUserLocation";
 import { TR, i18n } from "@/localization/translate.service";
 import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
 import { TOURKEY } from "@/services/tourguide.service";
 import { API } from "@/utils/api-config";
+import { get3MonthsBefore } from "@/utils/date.utils";
 import { getMapProvider } from "@/utils/map-provider";
 import { useIsFocused } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
@@ -37,13 +41,13 @@ import {
     TouchableWithoutFeedback,
     View,
 } from "react-native";
-import BackgroundGeolocation from "react-native-background-geolocation";
 import MapView, { LongPressEvent, Region } from "react-native-maps";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 
 interface OMapProps {
     saveChangesToBackend: boolean;
     showHeatmap: boolean;
+    showEncounters: boolean;
     showBlacklistedRegions: boolean;
     showMapStatus: boolean;
 }
@@ -56,67 +60,97 @@ export const OMap = memo(
         showHeatmap,
         showBlacklistedRegions,
         showMapStatus,
+        showEncounters,
     }: OMapProps) => {
         const [mapStatus, setMapStatus] = useState<EMapStatus | null>(null);
         const { state, dispatch } = useUserContext();
-        const location = useUserLocation(
-            BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
-        );
-        const isSavingRef = useRef(false);
+        const { state: encounterState, dispatch: encounterDispatch } =
+            useEncountersContext();
+        const [isSavingSafeZones, setSavingSafeZones] = useState(false);
+        const [isHeatMapLoading, setLoadingHeatMap] = useState(false);
+        const [isEncountersLoading, setEncountersLoading] = useState(false);
         const [activeRegionIndex, setActiveRegionIndex] = useState<
             number | null
         >(null);
-        const isHeatmapLoadingRef = useRef(false);
         const prevBlacklistedRegionsRef = useRef<MapRegion[]>([]);
         const [mapRegion, setMapRegion] = useState<Region>({
             latitude: 47.257832302,
             longitude: 11.383665132,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitudeDelta: 0.5,
+            longitudeDelta: 0.5,
         });
         /** @DEV use a temp value here, so we do not update and re-use the same value (lagging) */
         const [tempSliderValue, setTempSliderValue] =
             useState(DEFAULT_RADIUS_SIZE);
 
         useEffect(() => {
-            if (state.dateMode === UserPrivateDTODateModeEnum.live) {
-                setMapStatus(EMapStatus.LIVE);
+            // @dev Keep error showing
+            if (mapStatus === EMapStatus.ERROR) return;
+            else if (isSavingSafeZones) {
+                setMapStatus(EMapStatus.SAVING_SAFEZONES);
+            } else if (isHeatMapLoading) {
+                setMapStatus(EMapStatus.LOADING_HEATMAP);
+            } else if (isEncountersLoading) {
+                setMapStatus(EMapStatus.LOADING_ENCOUNTERS);
             } else {
-                setMapStatus(EMapStatus.GHOST);
+                setMapStatus(
+                    state.dateMode === UserPrivateDTODateModeEnum.live
+                        ? EMapStatus.LIVE
+                        : EMapStatus.GHOST,
+                );
             }
-        }, [state.dateMode]);
+        }, [
+            state.dateMode,
+            isSavingSafeZones,
+            isEncountersLoading,
+            isHeatMapLoading,
+        ]);
+
+        const fetchEncounters = useCallback(async () => {
+            try {
+                if (!showEncounters) return;
+                if (!state.id) {
+                    Sentry.captureMessage(
+                        `fetchEncounters (OMap): UserId undefined. Not making request. User maybe logging out or so?`,
+                    );
+                    return;
+                }
+                setEncountersLoading(true);
+
+                const encounters =
+                    await API.encounter.encounterControllerGetEncountersByUser({
+                        userId: state.id,
+                        startDate: get3MonthsBefore(),
+                        endDate: new Date(),
+                    });
+
+                encounterDispatch({
+                    type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
+                    payload: encounters,
+                });
+            } catch (error) {
+                console.error(error);
+                Sentry.captureException(error, {
+                    tags: {
+                        encountersOMap: "fetch",
+                    },
+                });
+            } finally {
+                setEncountersLoading(false);
+            }
+        }, [state.id, encounterDispatch, showEncounters]);
 
         const onLoadingStateChange = useCallback(
             (isLoading: boolean) => {
                 if (!showMapStatus) return;
-                isHeatmapLoadingRef.current = isLoading;
-
-                if (isLoading) {
-                    setMapStatus(EMapStatus.LOADING_HEATMAP);
-                } else {
-                    // Only change status back if we're not in the middle of saving
-                    if (!isSavingRef.current) {
-                        setMapStatus(
-                            state.dateMode === UserPrivateDTODateModeEnum.live
-                                ? EMapStatus.LIVE
-                                : EMapStatus.GHOST,
-                        );
-                    }
-                }
+                setLoadingHeatMap(isLoading);
             },
-            [state.dateMode, showMapStatus],
+            [showMapStatus],
         );
 
         useEffect(() => {
-            if (location) {
-                setMapRegion({
-                    latitude: location.coords.latitude,
-                    longitude: location.coords.longitude,
-                    latitudeDelta: 0.003,
-                    longitudeDelta: 0.003,
-                });
-            }
-        }, [location]);
+            fetchEncounters();
+        }, []);
 
         const setBlacklistedRegions = useCallback(
             (blacklistedRegions: MapRegion[]) => {
@@ -172,8 +206,7 @@ export const OMap = memo(
                 debounce(async (regions) => {
                     if (!saveChangesToBackend) return;
                     try {
-                        isSavingRef.current = true;
-                        setMapStatus(EMapStatus.SAVING_SAFEZONES);
+                        setSavingSafeZones(true);
 
                         await API.user.userControllerUpdateUser({
                             userId: state.id!,
@@ -189,15 +222,7 @@ export const OMap = memo(
                         });
                         setMapStatus(EMapStatus.ERROR);
                     } finally {
-                        isSavingRef.current = false;
-                        if (!isHeatmapLoadingRef.current) {
-                            setMapStatus(
-                                state.dateMode ===
-                                    UserPrivateDTODateModeEnum.live
-                                    ? EMapStatus.LIVE
-                                    : EMapStatus.GHOST,
-                            );
-                        }
+                        setSavingSafeZones(false);
                     }
                 }, 1000),
             [saveChangesToBackend, state.id, state.dateMode],
@@ -216,9 +241,7 @@ export const OMap = memo(
             return () => {
                 debouncedSave.cancel();
                 // Ensure we reset the saving flag if the component unmounts while saving
-                if (isSavingRef.current) {
-                    isSavingRef.current = false;
-                }
+                setSavingSafeZones(false);
             };
         }, [state.blacklistedRegions, state.id, state.dateMode, showMapStatus]);
 

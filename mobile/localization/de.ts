@@ -8,6 +8,7 @@ export const de: Language = {
     invalidCredentials: "E-Mail oder Passwort falsch.",
     signingIn: "Einen Moment..",
     loadingHeatmap: "Lade Heatmap..",
+    loadingEncounters: "Lade Begegnungen..",
     loadingLocation: "Lade Location..",
     contactSupport: "Funktioniert etwas nicht?",
     gettingReadyToAmazeYou: "Bereit, dich zu beeindrucken..",

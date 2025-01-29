@@ -6,6 +6,7 @@ export const en = {
     createAccount: "Create Account",
     signIn: "Sign in",
     loadingHeatmap: "Loading heatmap..",
+    loadingEncounters: "Loading encounters..",
     loadingLocation: "Loading location..",
     invalidCredentials: "Email or password invalid.",
     signingIn: "Signing in..",
