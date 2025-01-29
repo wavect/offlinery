@@ -1,5 +1,5 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
-import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { LocationDTO } from "@/DTOs/location.dto";
 import { ResetPasswordResponseDTO } from "@/DTOs/reset-password.dto";
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserPasswordDTO } from "@/DTOs/update-user-password";
@@ -552,7 +552,7 @@ export class UserService {
 
     async updateLocation(
         userId: string,
-        { latitude, longitude }: LocationUpdateDTO,
+        { latitude, longitude }: LocationDTO,
     ): Promise<{
         updatedUser: User;
         notifications: OfflineryNotification[];

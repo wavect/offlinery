@@ -7,6 +7,7 @@ export const de: Language = {
     signIn: "Anmelden",
     invalidCredentials: "E-Mail oder Passwort falsch.",
     signingIn: "Einen Moment..",
+    youMetHere: "bist du hier über den Weg gelaufen.",
     loadingHeatmap: "Lade Heatmap..",
     loadingEncounters: "Lade Begegnungen..",
     loadingLocation: "Lade Location..",

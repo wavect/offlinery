@@ -1,5 +1,5 @@
 import { AuthService } from "@/auth/auth.service";
-import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { LocationDTO } from "@/DTOs/location.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
@@ -166,7 +166,7 @@ describe("UserService", () => {
     describe("updateLocation", () => {
         it("should update user location and check for matches when approachChoice is BE_APPROACHED", async () => {
             const userId = "1";
-            const locationUpdateDto: LocationUpdateDTO = {
+            const locationUpdateDto: LocationDTO = {
                 latitude: 40.7128,
                 longitude: -74.006,
             };
@@ -216,7 +216,7 @@ describe("UserService", () => {
 
         it("should update user location and check for matches when approachChoice is BOTH", async () => {
             const userId = "1";
-            const locationUpdateDto: LocationUpdateDTO = {
+            const locationUpdateDto: LocationDTO = {
                 latitude: 40.7128,
                 longitude: -74.006,
             };
@@ -266,7 +266,7 @@ describe("UserService", () => {
 
         it("should throw NotFoundException if user is not found", async () => {
             const userId = "1";
-            const locationUpdateDto: LocationUpdateDTO = {
+            const locationUpdateDto: LocationDTO = {
                 latitude: 40.7128,
                 longitude: -74.006,
             };

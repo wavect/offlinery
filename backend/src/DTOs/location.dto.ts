@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNumber, Max, Min } from "class-validator";
 
-export class LocationUpdateDTO {
+export class LocationDTO {
     @ApiProperty({
         description: "Latitude of the user's location",
         example: 40.7128,

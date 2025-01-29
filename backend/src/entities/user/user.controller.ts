@@ -3,7 +3,7 @@ import { OnlyValidRegistrationSession } from "@/auth/auth-registration-session";
 import { Public } from "@/auth/auth.guard";
 import { CreateUserRequestDTO } from "@/DTOs/create-user-request.dto";
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
-import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { LocationDTO } from "@/DTOs/location.dto";
 import { RequestAccountDeletionViaFormDTO } from "@/DTOs/request-account-deletion-via-form.dto";
 import {
     ResetPasswordRequestDTO,
@@ -175,7 +175,7 @@ export class UserController {
     @OnlyOwnUserData()
     @ApiOperation({ summary: "Update user location" })
     @ApiParam({ name: USER_ID_PARAM, type: "string", description: "User ID" })
-    @ApiBody({ type: LocationUpdateDTO })
+    @ApiBody({ type: LocationDTO })
     @ApiResponse({
         status: 200,
         description: "The user location has been successfully updated.",
@@ -185,7 +185,7 @@ export class UserController {
     @UsePipes(new ValidationPipe({ transform: true }))
     async updateLocation(
         @Param(USER_ID_PARAM) userId: string,
-        @Body() locationUpdateDTO: LocationUpdateDTO,
+        @Body() locationUpdateDTO: LocationDTO,
     ): Promise<UserPublicDTO> {
         const { updatedUser } = await this.userService.updateLocation(
             userId,

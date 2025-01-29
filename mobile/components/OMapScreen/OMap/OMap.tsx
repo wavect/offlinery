@@ -41,7 +41,7 @@ import {
     TouchableWithoutFeedback,
     View,
 } from "react-native";
-import MapView, { LongPressEvent, Region } from "react-native-maps";
+import MapView, { LongPressEvent, Marker, Region } from "react-native-maps";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 
 interface OMapProps {
@@ -292,6 +292,27 @@ export const OMap = memo(
             }
         }, [isFocused]);
 
+        const renderedEncounterPins = useMemo(() => {
+            return (
+                <>
+                    {encounterState.encounters.map((e) => {
+                        if (!e.lastLocationPassedBy) return;
+                        return (
+                            <Marker
+                                key={e.otherUser.id}
+                                coordinate={e.lastLocationPassedBy}
+                                title={e.otherUser.firstName}
+                                pinColor={Color.primary}
+                                description={i18n.t(TR.youMetHere)}
+                                draggable={false}
+                                tracksViewChanges={false}
+                            />
+                        );
+                    })}
+                </>
+            );
+        }, [encounterState.encounters]);
+
         const renderedBlacklistedRegions = useMemo(() => {
             return (
                 <>
@@ -323,7 +344,6 @@ export const OMap = memo(
                     zoomEnabled
                     zoomTapEnabled
                     maxZoomLevel={15}
-                    minZoomLevel={8}
                     onPress={handleMapPress}
                     onLongPress={
                         showBlacklistedRegions ? handleMapLongPress : undefined
@@ -338,6 +358,7 @@ export const OMap = memo(
                         datingMode={state.dateMode}
                     />
                     {showBlacklistedRegions && renderedBlacklistedRegions}
+                    {showEncounters && renderedEncounterPins}
                 </MapView>
             ),
             [

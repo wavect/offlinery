@@ -1,3 +1,4 @@
+import { getTypedCoordinatesFromPoint } from "@/utils/location.utils";
 import { Injectable } from "@nestjs/common";
 import { Point } from "geojson";
 
@@ -22,7 +23,7 @@ export class ClusteringService {
         const clusters: ClusteredPoint[] = [];
 
         for (const point of points) {
-            const [longitude, latitude] = point.coordinates;
+            const { longitude, latitude } = getTypedCoordinatesFromPoint(point);
             let foundCluster = false;
 
             for (const cluster of clusters) {

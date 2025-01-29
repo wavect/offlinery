@@ -9,7 +9,7 @@ export * from "./EmailCodeResponseADTO";
 export * from "./EncounterPublicDTO";
 export * from "./GenericStatusDTO";
 export * from "./GetLocationOfEncounterResponseDTO";
-export * from "./LocationUpdateDTO";
+export * from "./LocationDTO";
 export * from "./MessagePublicDTO";
 export * from "./NotificationAccountApprovedDTO";
 export * from "./NotificationGhostReminderDTO";

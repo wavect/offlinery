@@ -5,6 +5,7 @@ export const en = {
     bgLocationServiceBody: "Letting others know about you.",
     createAccount: "Create Account",
     signIn: "Sign in",
+    youMetHere: "crossed your path here.",
     loadingHeatmap: "Loading heatmap..",
     loadingEncounters: "Loading encounters..",
     loadingLocation: "Loading location..",
