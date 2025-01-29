@@ -1,4 +1,4 @@
-import { OnlyAdmin, Public } from "@/auth/auth.guard";
+import { OnlyAdmin } from "@/auth/auth.guard";
 import { NewEventResponseDTO } from "@/DTOs/new-event-response.dto";
 import { NewEventDTO } from "@/DTOs/new-event.dto";
 import { NewTestEventDTO } from "@/DTOs/new-test-event.dto";
@@ -29,8 +29,7 @@ export class EventController {
     constructor(private readonly eventService: EventService) {}
 
     @Post("admin/new-event")
-    // TODO @OnlyAdmin()
-    @Public()
+    @OnlyAdmin()
     @ApiExcludeEndpoint()
     @ApiOperation({ summary: "Send event notifications" })
     @ApiBody({
