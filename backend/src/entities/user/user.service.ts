@@ -8,6 +8,10 @@ import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
 import { UserRequestDeletionFormSuccessDTO } from "@/DTOs/user-request-deletion-form-success.dto";
 import { UserResetPwdSuccessDTO } from "@/DTOs/user-reset-pwd-success.dto";
 import { AuthService } from "@/auth/auth.service";
+import {
+    AppStatsService,
+    EAPP_STAT_KEY,
+} from "@/entities/app-stats/app-stats.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { MatchingService } from "@/transient-services/matching/matching.service";
@@ -72,6 +76,7 @@ export class UserService {
         private authService: AuthService,
         private mailService: MailerService,
         private readonly i18n: I18nService,
+        private appStatsService: AppStatsService,
     ) {}
 
     private async saveFiles(
@@ -324,6 +329,10 @@ export class UserService {
 
         await this.userRepository.delete({ deletionToken });
         await this.pendingUserRepo.delete({ email: userToDelete.email });
+        await this.appStatsService.incrementValue(
+            EAPP_STAT_KEY.USERS_DELETED_COUNT,
+        );
+
         this.logger.debug(`User ${userToDelete.id} successfully deleted!`);
 
         const lang = userToDelete.preferredLanguage || ELanguage.en;
