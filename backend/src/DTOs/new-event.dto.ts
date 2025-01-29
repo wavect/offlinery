@@ -4,6 +4,13 @@ import { ApiProperty } from "@nestjs/swagger";
 export class NewEventDTO {
     @ApiProperty({
         type: "string",
+        nullable: false,
+        required: true,
+    })
+    eventKey: string;
+
+    @ApiProperty({
+        type: "string",
         format: "date-time",
         nullable: false,
         required: true,

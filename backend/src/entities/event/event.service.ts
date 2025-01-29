@@ -137,6 +137,7 @@ export class EventService {
 
         const newEventEntity: Event = this.eventRepository.create();
         await this.eventRepository.save(newEventEntity); // otherwise relationship constraints don't work
+        newEventEntity.eventKey = newEvent.eventKey;
         newEventEntity.venueWithArticleIfNeeded =
             await this.multilingualStringService.createTranslations(
                 newEvent.venueWithArticleIfNeeded,

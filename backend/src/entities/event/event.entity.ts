@@ -7,6 +7,10 @@ export class Event extends TranslatableEntity {
     readonly LBL_VENUE_WITH_ARTICLE_IF_NEEDED = "venueWithArticleIfNeeded";
     readonly LBL_ADDRESS = "address";
 
+    /** @dev Used to re-address the event and avoiding duplicates */
+    @Column({ nullable: false, unique: true })
+    eventKey: string;
+
     @Column({ nullable: false })
     eventStartDateTime: Date;
 
