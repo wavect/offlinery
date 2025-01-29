@@ -399,6 +399,7 @@ export const OMap = memo(
                 <TouchableWithoutFeedback onPress={handleMapPress}>
                     <TourGuideZone
                         zone={3}
+                        style={styles.tourMapContainer}
                         tourKey={TOURKEY.FIND}
                         text={i18n.t(TR.tourSafeZones)}
                         tooltipBottomOffset={-200}
@@ -406,6 +407,7 @@ export const OMap = memo(
                     >
                         <TourGuideZone
                             zone={2}
+                            style={styles.tourMapContainer}
                             tourKey={TOURKEY.FIND}
                             text={i18n.t(TR.tourHeatMap)}
                             tooltipBottomOffset={-200}
@@ -468,8 +470,13 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginLeft: 5,
     },
+    tourMapContainer: {
+        minHeight: height * 0.75,
+    },
     badgeOuterContainer: {
         flexDirection: "row",
+        position: "absolute",
+        top: 0,
     },
     container: {
         flex: 1,
