@@ -42,12 +42,12 @@ export class OBackgroundLocationService {
 
     private async updateUserLocation(
         userId: string,
-        locationDTO: LocationDTO,
+        locationUpdateDTO: LocationDTO,
     ): Promise<void> {
         try {
             await API.user.userControllerUpdateLocation({
                 userId,
-                locationDTO,
+                locationUpdateDTO,
             });
             console.log(
                 "[LOCATION_UPDATE]: User Location updated successfully",
@@ -60,7 +60,7 @@ export class OBackgroundLocationService {
                 tags: { location_service: "updateLocation" },
                 extra: {
                     userId,
-                    locationData: locationDTO,
+                    locationData: locationUpdateDTO,
                 },
             });
             throw error;

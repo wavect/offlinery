@@ -47,7 +47,7 @@ export const MainScreenTabs = ({ navigation }: any) => {
                 headerTitle: "",
                 headerTitleStyle: Title,
                 headerStyle: Platform.select({
-                    ios: { height: 110 },
+                    ios: { height: 120 },
                 }),
                 headerTitleAlign: "left",
                 tabBarActiveTintColor: Color.white,

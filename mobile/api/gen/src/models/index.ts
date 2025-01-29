@@ -10,6 +10,7 @@ export * from "./EncounterPublicDTO";
 export * from "./GenericStatusDTO";
 export * from "./GetLocationOfEncounterResponseDTO";
 export * from "./LocationDTO";
+export * from "./LocationUpdateDTO";
 export * from "./MessagePublicDTO";
 export * from "./NotificationAccountApprovedDTO";
 export * from "./NotificationGhostReminderDTO";

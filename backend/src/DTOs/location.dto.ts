@@ -24,3 +24,6 @@ export class LocationDTO {
     @Max(180)
     longitude: number;
 }
+
+// @dev To ensure the naming of the generated dto is the same client side (otherwise would break older app versions locationTask)
+export class LocationUpdateDTO extends LocationDTO {}

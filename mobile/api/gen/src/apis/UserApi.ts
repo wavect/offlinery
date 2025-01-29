@@ -14,7 +14,7 @@
 
 import type {
     CreateUserDTO,
-    LocationDTO,
+    LocationUpdateDTO,
     RequestAccountDeletionViaFormDTO,
     ResetPasswordRequestDTO,
     ResetPasswordResponseDTO,
@@ -29,7 +29,7 @@ import type {
 } from "../models/index";
 import {
     CreateUserDTOToJSON,
-    LocationDTOToJSON,
+    LocationUpdateDTOToJSON,
     RequestAccountDeletionViaFormDTOToJSON,
     ResetPasswordRequestDTOToJSON,
     ResetPasswordResponseDTOFromJSON,
@@ -79,7 +79,7 @@ export interface UserControllerResetPasswordRequest {
 
 export interface UserControllerUpdateLocationRequest {
     userId: string;
-    locationDTO: LocationDTO;
+    locationUpdateDTO: LocationUpdateDTO;
 }
 
 export interface UserControllerUpdateUserRequest {
@@ -286,7 +286,7 @@ export interface UserApiInterface {
      *
      * @summary Update user location
      * @param {string} userId User ID
-     * @param {LocationDTO} locationDTO
+     * @param {LocationUpdateDTO} locationUpdateDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApiInterface
@@ -827,10 +827,10 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
             );
         }
 
-        if (requestParameters["locationDTO"] == null) {
+        if (requestParameters["locationUpdateDTO"] == null) {
             throw new runtime.RequiredError(
-                "locationDTO",
-                'Required parameter "locationDTO" was null or undefined when calling userControllerUpdateLocation().',
+                "locationUpdateDTO",
+                'Required parameter "locationUpdateDTO" was null or undefined when calling userControllerUpdateLocation().',
             );
         }
 
@@ -849,7 +849,9 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
                 method: "PUT",
                 headers: headerParameters,
                 query: queryParameters,
-                body: LocationDTOToJSON(requestParameters["locationDTO"]),
+                body: LocationUpdateDTOToJSON(
+                    requestParameters["locationUpdateDTO"],
+                ),
             },
             initOverrides,
         );

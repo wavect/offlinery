@@ -23,6 +23,7 @@ src/models/EncounterPublicDTO.ts
 src/models/GenericStatusDTO.ts
 src/models/GetLocationOfEncounterResponseDTO.ts
 src/models/LocationDTO.ts
+src/models/LocationUpdateDTO.ts
 src/models/MessagePublicDTO.ts
 src/models/NotificationAccountApprovedDTO.ts
 src/models/NotificationGhostReminderDTO.ts
