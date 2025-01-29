@@ -23,10 +23,12 @@ export class AppStatsService {
 
     async incrementValue(key: EAPP_STAT_KEY): Promise<AppStatistic> {
         // Get the most recent value
-        const currentStat = await this.getMostRecentStat(key);
+        let currentStat = await this.getMostRecentStat(key);
 
         if (!currentStat) {
-            throw new NotFoundException(`No statistic found for key: ${key}`);
+            currentStat = new AppStatistic();
+            currentStat.key = key;
+            currentStat.value = "0";
         }
 
         // Parse the current value - ensure it's a number
