@@ -7,3 +7,10 @@ export const getTypedCoordinatesFromPoint = (point: Point): LocationDTO => {
         latitude: point.coordinates[1],
     };
 };
+
+export const getPointFromTypedCoordinates = (location: LocationDTO): Point => {
+    return {
+        type: "Point",
+        coordinates: [location.longitude, location.latitude],
+    };
+};

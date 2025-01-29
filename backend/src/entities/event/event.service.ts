@@ -9,6 +9,7 @@ import { NotificationService } from "@/transient-services/notification/notificat
 import { OfflineryNotification } from "@/types/notification-message.types";
 import { ELanguage } from "@/types/user.types";
 import { formatMultiLanguageDateTimeStringsCET } from "@/utils/date.utils";
+import { getPointFromTypedCoordinates } from "@/utils/location.utils";
 import { countExpoPushTicketStatuses } from "@/utils/misc.utils";
 import { MailerService } from "@nestjs-modules/mailer";
 import {
@@ -20,7 +21,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { I18nService } from "nestjs-i18n";
-import { Repository } from "typeorm";
+import { MoreThanOrEqual, Repository } from "typeorm";
 import { Event } from "./event.entity";
 
 @Injectable()
@@ -39,6 +40,20 @@ export class EventService {
         private readonly mailService: MailerService,
     ) {}
 
+    async getAllUpcomingEvents(): Promise<Event[]> {
+        const now = new Date();
+
+        return this.eventRepository.find({
+            where: {
+                // @dev upcoming or currently active/running
+                eventEndDateTime: MoreThanOrEqual(now),
+            },
+            order: {
+                eventStartDateTime: "ASC",
+            },
+        });
+    }
+
     async createNewEvent(newEvent: NewEventDTO): Promise<NewEventResponseDTO> {
         let responseDTO: NewEventResponseDTO = {
             error: 0,
@@ -48,6 +63,36 @@ export class EventService {
         };
 
         try {
+            const newEventEntity: Event = this.eventRepository.create();
+            await this.eventRepository.save(newEventEntity); // otherwise relationship constraints don't work
+            newEventEntity.eventKey = newEvent.eventKey;
+            newEventEntity.mapsLink = newEvent.mapsLink;
+            newEventEntity.location = getPointFromTypedCoordinates(
+                newEvent.location,
+            );
+            newEventEntity.venueWithArticleIfNeeded =
+                await this.multilingualStringService.createTranslations(
+                    newEvent.venueWithArticleIfNeeded,
+                    newEventEntity.LBL_VENUE_WITH_ARTICLE_IF_NEEDED,
+                    newEventEntity.entityType,
+                    newEventEntity.id,
+                );
+
+            newEventEntity.address =
+                await this.multilingualStringService.createTranslations(
+                    newEvent.address,
+                    newEventEntity.LBL_ADDRESS,
+                    newEventEntity.entityType,
+                    newEventEntity.id,
+                );
+            newEventEntity.eventStartDateTime = newEvent.eventStartDateTime;
+            newEventEntity.eventEndDateTime = newEvent.eventEndDateTime;
+            await this.eventRepository.save(newEventEntity);
+
+            this.logger.debug(
+                `Event ${newEventEntity.id} persisted. Notifying users now.`,
+            );
+
             const notifications: OfflineryNotification[] = [];
             const users = await this.userService.findAll(); // TODO: restrict by region and also only active accounts
 
@@ -134,30 +179,6 @@ export class EventService {
         } catch (err) {
             throw new InternalServerErrorException(err);
         }
-
-        const newEventEntity: Event = this.eventRepository.create();
-        await this.eventRepository.save(newEventEntity); // otherwise relationship constraints don't work
-        newEventEntity.eventKey = newEvent.eventKey;
-        newEventEntity.venueWithArticleIfNeeded =
-            await this.multilingualStringService.createTranslations(
-                newEvent.venueWithArticleIfNeeded,
-                newEventEntity.LBL_VENUE_WITH_ARTICLE_IF_NEEDED,
-                newEventEntity.entityType,
-                newEventEntity.id,
-            );
-
-        newEventEntity.address =
-            await this.multilingualStringService.createTranslations(
-                newEvent.address,
-                newEventEntity.LBL_ADDRESS,
-                newEventEntity.entityType,
-                newEventEntity.id,
-            );
-        newEventEntity.eventStartDateTime = newEvent.eventStartDateTime;
-        newEventEntity.eventEndDateTime = newEvent.eventEndDateTime;
-        await this.eventRepository.save(newEventEntity);
-
-        this.logger.debug(`Event ${newEventEntity.id} persisted.`);
 
         return responseDTO;
     }

@@ -1,3 +1,4 @@
+import { LocationDTO } from "@/DTOs/location.dto";
 import { MultiLingStringDTO } from "@/DTOs/multi-ling-string.dto";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -8,6 +9,13 @@ export class NewEventDTO {
         required: true,
     })
     eventKey: string;
+
+    @ApiProperty({
+        nullable: true,
+        type: LocationDTO,
+        description: "Location of event",
+    })
+    location: LocationDTO;
 
     @ApiProperty({
         type: "string",

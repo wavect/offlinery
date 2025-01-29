@@ -32,12 +32,12 @@ export const formatMultiLanguageDateTimeStringsCET = (
 ) => {
     const locales =
         LOCALES_LANG_MAPPING[lang] ?? LOCALES_LANG_MAPPING[ELanguage.en];
-    const cetTime = new Date(
-        dateTime.toLocaleString(locales, { timeZone: DEFAULT_TIMEZONE_CET }),
-    );
+
+    const cetTime = new Date(dateTime.getTime());
+    cetTime.toLocaleString(locales, { timeZone: DEFAULT_TIMEZONE_CET });
 
     // English formats
-    const englishDateString = cetTime.toLocaleDateString(locales, {
+    const dateString = cetTime.toLocaleDateString(locales, {
         timeZone: DEFAULT_TIMEZONE_CET,
         weekday: "long",
         year: "numeric",
@@ -45,7 +45,7 @@ export const formatMultiLanguageDateTimeStringsCET = (
         day: "numeric",
     });
 
-    const englishTimeString = cetTime.toLocaleTimeString(locales, {
+    const timeString = cetTime.toLocaleTimeString(locales, {
         timeZone: DEFAULT_TIMEZONE_CET,
         hour: "2-digit",
         minute: "2-digit",
@@ -53,7 +53,7 @@ export const formatMultiLanguageDateTimeStringsCET = (
     });
 
     return {
-        date: englishDateString,
-        time: englishTimeString,
+        date: dateString,
+        time: timeString,
     };
 };

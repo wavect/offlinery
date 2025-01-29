@@ -1,5 +1,5 @@
 import { BorderRadius, Color, FontSize } from "@/GlobalStyles";
-import { UserPrivateDTODateModeEnum } from "@/api/gen/src";
+import { EventPublicDTO, UserPrivateDTODateModeEnum } from "@/api/gen/src";
 import { OBlacklistedRegion } from "@/components/OBlacklistedRegion/OBlacklistedRegion";
 import OGenericBadge from "@/components/OGenericBadge/OGenericBadge";
 import { OHeatMap } from "@/components/OMapScreen/OHeatMap/OHeatMap";
@@ -18,7 +18,7 @@ import {
     mapRegionToBlacklistedRegionDTO,
     useUserContext,
 } from "@/context/UserContext";
-import { TR, i18n } from "@/localization/translate.service";
+import { TR, getLocalLanguageID, i18n } from "@/localization/translate.service";
 import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
 import { TOURKEY } from "@/services/tourguide.service";
 import { API } from "@/utils/api-config";
@@ -49,6 +49,7 @@ interface OMapProps {
     saveChangesToBackend: boolean;
     showHeatmap: boolean;
     showEncounters: boolean;
+    showEvents: boolean;
     showBlacklistedRegions: boolean;
     showMapStatus: boolean;
 }
@@ -59,6 +60,7 @@ export const OMap = memo(
     ({
         saveChangesToBackend,
         showHeatmap,
+        showEvents,
         showBlacklistedRegions,
         showMapStatus,
         showEncounters,
@@ -71,9 +73,13 @@ export const OMap = memo(
         const [isSavingSafeZones, setSavingSafeZones] = useState(false);
         const [isHeatMapLoading, setLoadingHeatMap] = useState(false);
         const [isEncountersLoading, setEncountersLoading] = useState(false);
+        const [isEventsLoading, setEventsLoading] = useState(false);
         const [activeRegionIndex, setActiveRegionIndex] = useState<
             number | null
         >(null);
+        const [upcomingEvents, setUpcomingEvents] = useState<EventPublicDTO[]>(
+            [],
+        );
         const prevBlacklistedRegionsRef = useRef<MapRegion[]>([]);
         const [mapRegion, setMapRegion] = useState<Region>({
             latitude: 47.257832302,
@@ -94,6 +100,8 @@ export const OMap = memo(
                 setMapStatus(EMapStatus.LOADING_HEATMAP);
             } else if (isEncountersLoading) {
                 setMapStatus(EMapStatus.LOADING_ENCOUNTERS);
+            } else if (isEventsLoading) {
+                setMapStatus(EMapStatus.LOADING_EVENTS);
             } else {
                 setMapStatus(
                     state.dateMode === UserPrivateDTODateModeEnum.live
@@ -104,6 +112,7 @@ export const OMap = memo(
         }, [
             state.dateMode,
             isSavingSafeZones,
+            isEventsLoading,
             isEncountersLoading,
             isHeatMapLoading,
         ]);
@@ -121,7 +130,34 @@ export const OMap = memo(
                         },
                     });
                 });
+
+            fetchEncounters();
+            fetchEvents();
         }, []);
+
+        const fetchEvents = useCallback(async () => {
+            try {
+                if (!showEvents) return;
+                setEventsLoading(true);
+
+                const events =
+                    await API.event.eventControllerGetAllUpcomingEvents({
+                        lang: getLocalLanguageID(),
+                    });
+
+                setUpcomingEvents(events);
+            } catch (error) {
+                console.error(error);
+                Sentry.captureException(error, {
+                    tags: {
+                        OMap: "fetchEvents",
+                    },
+                });
+                setMapStatus(EMapStatus.ERROR);
+            } finally {
+                setEventsLoading(false);
+            }
+        }, [showEvents]);
 
         const fetchEncounters = useCallback(async () => {
             try {
@@ -152,6 +188,7 @@ export const OMap = memo(
                         encountersOMap: "fetch",
                     },
                 });
+                setMapStatus(EMapStatus.ERROR);
             } finally {
                 setEncountersLoading(false);
             }
@@ -164,10 +201,6 @@ export const OMap = memo(
             },
             [showMapStatus],
         );
-
-        useEffect(() => {
-            fetchEncounters();
-        }, []);
 
         const setBlacklistedRegions = useCallback(
             (blacklistedRegions: MapRegion[]) => {
@@ -332,6 +365,30 @@ export const OMap = memo(
             [encounterState.encounters, encounterDispatch],
         );
 
+        const renderedEventPins = useMemo(
+            () => (
+                <>
+                    {upcomingEvents.map((e, idx) => {
+                        if (!e.location) return;
+                        return (
+                            <Marker
+                                key={idx}
+                                coordinate={e.location}
+                                title={i18n.t(TR.upcomingEventIn, {
+                                    venue: e.venueWithArticleIfNeeded,
+                                })}
+                                pinColor={Color.schemesPrimary}
+                                description={`${e.startDate}, ${e.startTime} - ${e.endTime}`}
+                                draggable={false}
+                                tracksViewChanges={false}
+                            />
+                        );
+                    })}
+                </>
+            ),
+            [encounterState.encounters, encounterDispatch],
+        );
+
         const renderedBlacklistedRegions = useMemo(() => {
             return (
                 <>
@@ -378,6 +435,7 @@ export const OMap = memo(
                     />
                     {showBlacklistedRegions && renderedBlacklistedRegions}
                     {showEncounters && renderedEncounterPins}
+                    {showEvents && renderedEventPins}
                 </MapView>
             ),
             [
@@ -392,6 +450,7 @@ export const OMap = memo(
                 state.dateMode,
                 renderedBlacklistedRegions,
                 renderedEncounterPins,
+                renderedEventPins,
             ],
         );
 

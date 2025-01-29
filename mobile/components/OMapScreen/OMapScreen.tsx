@@ -10,6 +10,7 @@ interface IOMapScreenProps {
     subtitle2?: string;
     saveChangesToBackend: boolean;
     showHeatmap: boolean;
+    showEvents: boolean;
     showBlacklistedRegions: boolean;
     showMapStatus: boolean;
     showEncounters: boolean;
@@ -46,6 +47,7 @@ const OMapScreen = ({
     subtitle,
     subtitle2,
     showHeatmap,
+    showEvents,
     showEncounters,
     showMapStatus,
     showBlacklistedRegions,
@@ -64,6 +66,7 @@ const OMapScreen = ({
                 <OMap
                     saveChangesToBackend={saveChangesToBackend}
                     showHeatmap={showHeatmap}
+                    showEvents={showEvents}
                     showEncounters={showEncounters}
                     showMapStatus={showMapStatus}
                     showBlacklistedRegions={showBlacklistedRegions}

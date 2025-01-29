@@ -1,6 +1,7 @@
 import {
     AuthApi,
     EncounterApi,
+    EventApi,
     MapApi,
     PendingUserApi,
     PushNotificationsApi,
@@ -20,6 +21,7 @@ import { jwtExpiresSoon } from "./misc.utils";
 type ApiClasses = {
     auth: AuthApi;
     encounter: EncounterApi;
+    event: EventApi;
     pushNotifications: PushNotificationsApi;
     pendingUser: PendingUserApi;
     user: UserApi;
@@ -43,6 +45,7 @@ class ApiManager {
     private initApis(): ApiClasses {
         return {
             auth: new AuthApi(this.config),
+            event: new EventApi(this.config),
             encounter: new EncounterApi(this.config),
             pushNotifications: new PushNotificationsApi(this.config),
             pendingUser: new PendingUserApi(this.config),

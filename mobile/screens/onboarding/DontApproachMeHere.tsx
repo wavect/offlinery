@@ -29,6 +29,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
             showHeatmap={false}
             showMapStatus={false}
             showEncounters={false}
+            showEvents={false}
             showBlacklistedRegions={true}
             saveChangesToBackend={false}
             bottomChildren={
