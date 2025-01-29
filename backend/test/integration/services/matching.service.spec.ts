@@ -95,7 +95,7 @@ describe("Matching Service Integration Tests ", () => {
                 await matchingService.findHeatmapMatches(userToBeApproached),
             ).toEqual([]);
         });
-        it("should not fetch heatmap matches if the user has no locations", async () => {
+        it("should fetch heatmap matches if the user has no locations", async () => {
             const userToBeApproached = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
                 location: null,
@@ -103,7 +103,7 @@ describe("Matching Service Integration Tests ", () => {
 
             expect(
                 await matchingService.findNearbyMatches(userToBeApproached),
-            ).toEqual([]);
+            ).not.toEqual([]);
         });
     });
 

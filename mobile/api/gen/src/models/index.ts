@@ -30,6 +30,7 @@ export * from "./StorePushTokenDTO";
 export * from "./UpdateEncounterStatusDTO";
 export * from "./UpdateUserDTO";
 export * from "./UpdateUserPasswordDTO";
+export * from "./UserCountDTO";
 export * from "./UserFeedbackRequestDTO";
 export * from "./UserPrivateDTO";
 export * from "./UserPublicDTO";

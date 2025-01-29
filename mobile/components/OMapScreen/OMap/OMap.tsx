@@ -63,6 +63,7 @@ export const OMap = memo(
         showMapStatus,
         showEncounters,
     }: OMapProps) => {
+        const [userCount, setUserCount] = useState<number | null>(null);
         const [mapStatus, setMapStatus] = useState<EMapStatus | null>(null);
         const { state, dispatch } = useUserContext();
         const { state: encounterState, dispatch: encounterDispatch } =
@@ -106,6 +107,21 @@ export const OMap = memo(
             isEncountersLoading,
             isHeatMapLoading,
         ]);
+
+        useEffect(() => {
+            API.user
+                .userControllerGetUserCount()
+                .then((count) => {
+                    setUserCount(count.userCount);
+                })
+                .catch((err) => {
+                    Sentry.captureException(err, {
+                        tags: {
+                            oMap: "getUserCount",
+                        },
+                    });
+                });
+        }, []);
 
         const fetchEncounters = useCallback(async () => {
             try {
@@ -274,6 +290,7 @@ export const OMap = memo(
                 setActiveRegionIndex(0);
             }
         };
+
         useEffect(() => {
             if (!eventEmitter) return;
             eventEmitter?.on("stop", handleTourOnStop);
@@ -312,7 +329,7 @@ export const OMap = memo(
                     })}
                 </>
             ),
-            [encounterState.encounters],
+            [encounterState.encounters, encounterDispatch],
         );
 
         const renderedBlacklistedRegions = useMemo(() => {
@@ -407,13 +424,15 @@ export const OMap = memo(
                     </View>
                 )}
 
-                <OGenericBadge
-                    containerStyle={styles.badgeContainerStyle}
-                    label={i18n.t(TR.userCount, { count: 100 })}
-                    description={i18n.t(TR.userCountDescription)}
-                    icon="person-search"
-                    backgroundColor={Color.primary}
-                />
+                {userCount && (
+                    <OGenericBadge
+                        containerStyle={styles.badgeContainerStyle}
+                        label={i18n.t(TR.userCount, { count: userCount })}
+                        description={i18n.t(TR.userCountDescription)}
+                        icon="person-search"
+                        backgroundColor={Color.primary}
+                    />
+                )}
 
                 {showBlacklistedRegions && activeRegionIndex !== null && (
                     <OSafeZoneSliderCard

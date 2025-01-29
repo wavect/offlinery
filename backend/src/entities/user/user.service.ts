@@ -301,6 +301,10 @@ export class UserService {
         return this.userRepository.find();
     }
 
+    countAll(): Promise<number> {
+        return this.userRepository.count();
+    }
+
     async deleteUserByDeletionToken(
         deletionToken: string,
     ): Promise<UserDeletionSuccessDTO> {
