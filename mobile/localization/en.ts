@@ -6,6 +6,9 @@ export const en = {
     createAccount: "Create Account",
     signIn: "Sign in",
     userCount: "{{count}} users nearby",
+    encounterCount: "{{count}} people met",
+    encounterCountDescription:
+        "You crossed paths with this many users. Switch to the tab 'Encounters' to see them.",
     userCountDescription:
         "So many users are on Offlinery within your area. Active users that want to match with you are shown on the map.",
     youMetHere: "crossed your path here.",

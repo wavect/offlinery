@@ -424,15 +424,30 @@ export const OMap = memo(
                     </View>
                 )}
 
-                {userCount && (
-                    <OGenericBadge
-                        containerStyle={styles.badgeContainerStyle}
-                        label={i18n.t(TR.userCount, { count: userCount })}
-                        description={i18n.t(TR.userCountDescription)}
-                        icon="person-search"
-                        backgroundColor={Color.primary}
-                    />
-                )}
+                <View style={styles.badgeOuterContainer}>
+                    {userCount ? (
+                        <OGenericBadge
+                            containerStyle={styles.badgeContainerStyle}
+                            label={i18n.t(TR.userCount, { count: userCount })}
+                            description={i18n.t(TR.userCountDescription)}
+                            icon="person-search"
+                            backgroundColor={Color.primary}
+                        />
+                    ) : null}
+
+                    {!isEncountersLoading &&
+                    encounterState.encounters.length ? (
+                        <OGenericBadge
+                            containerStyle={styles.badgeContainerStyle}
+                            label={i18n.t(TR.encounterCount, {
+                                count: encounterState.encounters.length,
+                            })}
+                            description={i18n.t(TR.encounterCountDescription)}
+                            icon="directions-walk"
+                            backgroundColor={Color.schemesPrimary}
+                        />
+                    ) : null}
+                </View>
 
                 {showBlacklistedRegions && activeRegionIndex !== null && (
                     <OSafeZoneSliderCard
@@ -450,10 +465,11 @@ export const OMap = memo(
 const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
     badgeContainerStyle: {
-        position: "absolute",
-        top: 10,
-        left: 10,
-        zIndex: 999,
+        marginTop: 5,
+        marginLeft: 5,
+    },
+    badgeOuterContainer: {
+        flexDirection: "row",
     },
     container: {
         flex: 1,

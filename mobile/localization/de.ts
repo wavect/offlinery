@@ -6,6 +6,9 @@ export const de: Language = {
     createAccount: "Registrieren",
     signIn: "Anmelden",
     userCount: "{{count}} User aktiv",
+    encounterCount: "{{count}} User getroffen",
+    encounterCountDescription:
+        "So vielen Usern bist du bereits über den Weg gelaufen. Wechsle zum Tab 'Begegnungen', um sie zu sehen.",
     userCountDescription:
         "So viele User sind in deiner Umgebung auf Offlinery. Aktive Nutzer die zu dir passen werden auf der Map angezeigt.",
     invalidCredentials: "E-Mail oder Passwort falsch.",
