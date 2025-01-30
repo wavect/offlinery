@@ -58,7 +58,6 @@ const Welcome = ({
             });
 
             if (
-                !resp.user ||
                 resp.status === SignInResponseDTOStatusEnum.JWT_DECODE_ERROR ||
                 resp.status === SignInResponseDTOStatusEnum.JWT_INVALID
             ) {

@@ -139,6 +139,11 @@ export const userAuthenticatedUpdate = async (
 ) => {
     await refreshUserData(dispatch, user, jwtAccessToken, jwtRefreshToken);
 
+    if (!user) {
+        // @dev do nothing as no user object supplied (otherwise sometimes results in maintenance screen)
+        return;
+    }
+
     if (
         user.verificationStatus !==
             UserPrivateDTOVerificationStatusEnum.verified &&
