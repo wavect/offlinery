@@ -11,6 +11,7 @@ import { ELanguage } from "@/types/user.types";
 import { formatMultiLanguageDateTimeStringsCET } from "@/utils/date.utils";
 import { getPointFromTypedCoordinates } from "@/utils/location.utils";
 import { countExpoPushTicketStatuses } from "@/utils/misc.utils";
+import { generateRestrictedViewUrl } from "@/utils/security.utils";
 import { MailerService } from "@nestjs-modules/mailer";
 import {
     forwardRef,
@@ -93,6 +94,7 @@ export class EventService {
                 `Event ${newEventEntity.id} persisted. Notifying users now.`,
             );
 
+            const emailPromises: Promise<void>[] = [];
             const notifications: OfflineryNotification[] = [];
             const users = await this.userService.findAll(); // TODO: restrict by region and also only active accounts
 
@@ -142,29 +144,50 @@ export class EventService {
                     },
                 });
 
-                await this.mailService.sendMail({
-                    to: user.email,
-                    subject: await this.i18n.translate(
-                        `main.email.new-event.subject`,
-                        { lang },
-                    ),
-                    template: `new-event`,
-                    context: {
-                        firstName: user.firstName,
-                        venueWithArticleIfNeeded,
-                        address,
-                        date,
-                        startTime,
-                        endTime,
-                        mapsLink: newEvent.mapsLink,
-                        languageId: lang,
-                        t: (key: string, params?: Record<string, any>) =>
-                            this.i18n.translate(`main.email.new-event.${key}`, {
-                                lang,
-                                args: { ...(params?.hash ?? params) },
-                            }),
-                    },
-                });
+                if (user.eventAnnouncementsEmail) {
+                    emailPromises.push(
+                        this.mailService.sendMail({
+                            to: user.email,
+                            subject: await this.i18n.translate(
+                                `main.email.new-event.subject`,
+                                { lang },
+                            ),
+                            template: `new-event`,
+                            context: {
+                                firstName: user.firstName,
+                                venueWithArticleIfNeeded,
+                                address,
+                                date,
+                                startTime,
+                                endTime,
+                                mapsLink: newEvent.mapsLink,
+                                languageId: lang,
+                                changeNotificationSettingsUrl:
+                                    generateRestrictedViewUrl(
+                                        "user/change-notification-settings",
+                                        user,
+                                    ),
+                                t: (
+                                    key: string,
+                                    params?: Record<string, any>,
+                                ) =>
+                                    this.i18n.translate(
+                                        `main.email.new-event.${key}`,
+                                        {
+                                            lang,
+                                            args: {
+                                                ...(params?.hash ?? params),
+                                            },
+                                        },
+                                    ),
+                            },
+                        }),
+                    );
+                } else {
+                    this.logger.debug(
+                        `Not sending event announcement via email to user ${user.email} as unsubscribed from it.`,
+                    );
+                }
             }
 
             const expoPushTickets =
@@ -172,11 +195,14 @@ export class EventService {
                     notifications,
                 );
 
+            await Promise.allSettled(emailPromises);
+
             responseDTO = {
                 ...responseDTO,
                 ...(await countExpoPushTicketStatuses(expoPushTickets)),
             };
         } catch (err) {
+            this.logger.error(`Error creating event: ${err?.message}`);
             throw new InternalServerErrorException(err);
         }
 

@@ -85,7 +85,12 @@ export class UserController {
         description: "User data and images",
     })
     @ApiOperation({ summary: "Create a new user with images" })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async createUser(
         /** @dev In Multipart requests, the Body needs to be separately parsed based on the property name in the RequestDTO! */
         @Body("createUserDTO", new ParseValidateJsonPipe(CreateUserDTO))
@@ -115,7 +120,12 @@ export class UserController {
         description: "User data and images",
     })
     @ApiOperation({ summary: "Update an existing user" })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async updateUser(
         @Param(USER_ID_PARAM) userId: string,
         /** @dev In Multipart requests, the Body needs to be separately parsed based on the property name in the RequestDTO! */
@@ -150,7 +160,12 @@ export class UserController {
         type: UpdateUserPasswordDTO,
     })
     @ApiOperation({ summary: "Update user password" })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async updateUserPassword(
         @Param(USER_ID_PARAM) userId: string,
         @Body() changePwdDTO: UpdateUserPasswordDTO,
@@ -193,7 +208,12 @@ export class UserController {
         type: UserPublicDTO,
     })
     @ApiResponse({ status: 404, description: "User not found." })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async updateLocation(
         @Param(USER_ID_PARAM) userId: string,
         @Body() locationUpdateDTO: LocationUpdateDTO,
@@ -257,7 +277,12 @@ export class UserController {
         description: "User not found, reset password token invalid.",
     })
     @ApiResponse({ status: 403, description: "Reset password token expired" })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async resetPassword(
         @Body() verifyResetPasswordDTO: VerifyResetPasswordDTO,
     ): Promise<UserResetPwdSuccessDTO> {
@@ -307,7 +332,12 @@ export class UserController {
         description: "User ID",
     })
     @ApiOperation({ summary: "Update notification settings" })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async updateNotificationSettings(
         @Param(USER_ID_PARAM) userId: string,
         @Body() userNotificationSettings: UserNotificationSettingsDTO[],

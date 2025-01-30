@@ -27,7 +27,12 @@ export class AuthController {
 
     @Public()
     @HttpCode(HttpStatus.OK)
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     @Post("login")
     signIn(@Body() signInDTO: SignInDTO): Promise<SignInResponseDTO> {
         this.logger.debug(`Trying to sign in user ${signInDTO.email}`);
