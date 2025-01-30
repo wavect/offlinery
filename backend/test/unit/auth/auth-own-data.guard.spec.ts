@@ -1,7 +1,4 @@
-import {
-    USER_ID_PARAM,
-    UserSpecificAuthGuard,
-} from "@/auth/auth-own-data.guard";
+import { USER_ID_PARAM, UserSpecificAuthGuard } from "@/auth/auth.guard";
 import { ExecutionContext, ForbiddenException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { Test, TestingModule } from "@nestjs/testing";

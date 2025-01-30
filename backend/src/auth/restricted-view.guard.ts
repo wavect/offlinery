@@ -13,13 +13,12 @@ import {
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 
-export const REQUIRE_OWN_PENDING_USER = "requireOwnPendingUser";
-export const OnlyValidRegistrationSession = () =>
-    SetMetadata(REQUIRE_OWN_PENDING_USER, true);
+export const RESTRICTED_VIEW = "restrictedView";
+export const RestrictedView = () => SetMetadata(RESTRICTED_VIEW, true);
 
 @Injectable()
-export class UserSpecificRegistrationGuard implements CanActivate {
-    private readonly logger = new Logger(UserSpecificRegistrationGuard.name);
+export class RestrictedViewGuard implements CanActivate {
+    private readonly logger = new Logger(RestrictedViewGuard.name);
 
     constructor(
         private reflector: Reflector,
@@ -27,12 +26,14 @@ export class UserSpecificRegistrationGuard implements CanActivate {
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        const requireOwnUser = this.reflector.getAllAndOverride<boolean>(
-            REQUIRE_OWN_PENDING_USER,
+        this.logger.error("HHHHH");
+
+        const restrictedView = this.reflector.getAllAndOverride<boolean>(
+            RESTRICTED_VIEW,
             [context.getHandler(), context.getClass()],
         );
 
-        if (!requireOwnUser) {
+        if (!restrictedView) {
             return true; // The route doesn't require user-specific check
         }
 
@@ -41,7 +42,7 @@ export class UserSpecificRegistrationGuard implements CanActivate {
         const token = extractTokenFromHeader(request);
         if (!token) {
             this.logger.debug(
-                `Unauthorized call attempt to protected route with no registration jwt`,
+                `Unauthorized call attempt to restricted view route with no token`,
             );
             throw new UnauthorizedException();
         }
@@ -53,7 +54,7 @@ export class UserSpecificRegistrationGuard implements CanActivate {
             });
         } catch {
             this.logger.debug(
-                `Unauthorized call attempt to protected registration route with invalid token: ${token}`,
+                `Unauthorized call attempt to restricted view route with invalid token: ${token}`,
             );
             throw new UnauthorizedException();
         }
@@ -62,7 +63,7 @@ export class UserSpecificRegistrationGuard implements CanActivate {
 
         if (!user) {
             this.logger.debug(
-                `Call to protected registration route without being authenticated at all!`,
+                `Call to restricted view route without being authenticated at all!`,
             );
             throw new ForbiddenException("User not authenticated");
         }
@@ -70,7 +71,7 @@ export class UserSpecificRegistrationGuard implements CanActivate {
         const params = request.params;
         if (params[USER_ID_PARAM] && params[USER_ID_PARAM] !== user.id) {
             this.logger.warn(
-                `Someone tried to hijack a registration session that does not belong to them!`,
+                `Someone tried to hijack a restricted view session that does not belong to them!`,
             );
             throw new ForbiddenException("Access denied");
         }

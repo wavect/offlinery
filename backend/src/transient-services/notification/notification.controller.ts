@@ -1,4 +1,4 @@
-import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard"; // Assume this service exists to handle user-related operations
+import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth.guard"; // Assume this service exists to handle user-related operations
 import { StorePushTokenDTO } from "@/DTOs/store-push-token.dto";
 import {
     Body,

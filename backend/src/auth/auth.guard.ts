@@ -1,10 +1,12 @@
 import { REQUIRE_OWN_PENDING_USER } from "@/auth/auth-registration-session";
 import { extractTokenFromHeader } from "@/auth/auth.utils";
+import { RESTRICTED_VIEW } from "@/auth/restricted-view.guard";
 import { ApiUserService } from "@/entities/api-user/api-user.service";
 import { TYPED_ENV } from "@/utils/env.utils";
 import {
     CanActivate,
     ExecutionContext,
+    ForbiddenException,
     Injectable,
     Logger,
     SetMetadata,
@@ -23,6 +25,10 @@ const REQUIRE_ONLY_ADMIN = "onlyAdmin";
 export const OnlyAdmin = () => SetMetadata(REQUIRE_ONLY_ADMIN, true);
 const API_KEY_HEADER_ID = "o-api-key";
 const API_KEY_SECRET_TOKEN_HEADER_ID = "o-api-secret-token";
+
+export const USER_ID_PARAM = "userId";
+export const REQUIRE_OWN_USER = "requireOwnUser";
+export const OnlyOwnUserData = () => SetMetadata(REQUIRE_OWN_USER, true);
 
 /** @dev All routes are private by default */
 @Injectable()
@@ -44,6 +50,13 @@ export class AuthGuard implements CanActivate {
         ]);
     }
 
+    private isRestrictedView(context: ExecutionContext): boolean {
+        return this.reflector.getAllAndOverride<boolean>(RESTRICTED_VIEW, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+    }
+
     private isOnlyValidRegistrationSessionRoute(
         context: ExecutionContext,
     ): boolean {
@@ -51,6 +64,13 @@ export class AuthGuard implements CanActivate {
             REQUIRE_OWN_PENDING_USER,
             [context.getHandler(), context.getClass()],
         );
+    }
+
+    private isOnlyOwnDataGuard(context: ExecutionContext): boolean {
+        return this.reflector.getAllAndOverride<boolean>(REQUIRE_OWN_USER, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
     }
 
     /** @dev All routes are forbidden by default except the ones marked as @OnlyAdmin() */
@@ -85,6 +105,9 @@ export class AuthGuard implements CanActivate {
             // registration session specific route, do not gate-keep through regular auth
             return true;
         }
+        if (this.isRestrictedView(context)) {
+            return true;
+        }
 
         const request = context.switchToHttp().getRequest<Request>();
         if (this.isAdminRoute(context)) {
@@ -101,9 +124,24 @@ export class AuthGuard implements CanActivate {
         try {
             // 💡 We're assigning the payload to the request object here
             // so that we can access it in our route handlers
+
             request[USER_OBJ_ID] = await this.jwtService.verifyAsync(token, {
                 secret: TYPED_ENV.JWT_SECRET,
             });
+
+            if (this.isOnlyOwnDataGuard(context)) {
+                const params = request.params;
+                const user = request[USER_OBJ_ID];
+                if (
+                    params[USER_ID_PARAM] &&
+                    params[USER_ID_PARAM] !== user.sub
+                ) {
+                    this.logger.warn(
+                        `Someone tried to access user data that does not belong to them: ${user.id} != ${params[USER_ID_PARAM]}`,
+                    );
+                    throw new ForbiddenException("Access denied");
+                }
+            }
         } catch {
             this.logger.debug(
                 `Unauthorized call attempt to protected route with invalid token: ${token}`,

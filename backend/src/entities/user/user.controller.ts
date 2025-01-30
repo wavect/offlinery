@@ -1,6 +1,6 @@
-import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
 import { OnlyValidRegistrationSession } from "@/auth/auth-registration-session";
-import { Public } from "@/auth/auth.guard";
+import { OnlyOwnUserData, Public, USER_ID_PARAM } from "@/auth/auth.guard";
+import { RestrictedView } from "@/auth/restricted-view.guard";
 import { CreateUserRequestDTO } from "@/DTOs/create-user-request.dto";
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location.dto";
@@ -258,6 +258,21 @@ export class UserController {
             verificationCode,
             newClearPassword,
         );
+    }
+
+    @Get("change-notification-settings")
+    @RestrictedView()
+    @Render("change-notification-settings")
+    changeNotificationSettings(@Res() res: Response) {
+        const nonce = uuidv4();
+        res.setHeader(
+            "Content-Security-Policy",
+            `script-src 'self' 'nonce-${nonce}'`,
+        );
+        return {
+            title: "Change Notification Settings | Offlinery",
+            nonce: nonce,
+        };
     }
 
     @Get("request-deletion")
