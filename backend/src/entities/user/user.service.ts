@@ -505,6 +505,25 @@ export class UserService {
         };
     }
 
+    async isValidRestrictedViewToken(
+        userId: string,
+        clearToken: string,
+    ): Promise<boolean> {
+        const user: User = await this.findUserById(userId);
+
+        if (!user) {
+            this.logger.warn(
+                `Invalid user Id provided. User does not exist (isValidRestrictedViewToken)`,
+            );
+            return false;
+        }
+        const isSecretTokenValid = clearToken === user.restrictedViewToken; // @dev needs to be saved in cleartext so that we can send it via email for example
+        this.logger.debug(
+            `Valid Restricted view token and user id provided to access restricted view: ${userId} - RESULT: ${isSecretTokenValid}`,
+        );
+        return isSecretTokenValid;
+    }
+
     async requestAccountDeletionViaApp(id: string) {
         const user = await this.userRepository.findOneBy({ id });
         if (!user) {

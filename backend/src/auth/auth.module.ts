@@ -1,5 +1,4 @@
 import { UserSpecificRegistrationGuard } from "@/auth/auth-registration-session";
-import { RestrictedViewGuard } from "@/auth/restricted-view.guard";
 import { ApiUser } from "@/entities/api-user/api-user.entity";
 import { ApiUserModule } from "@/entities/api-user/api-user.module";
 import { ApiUserService } from "@/entities/api-user/api-user.service";
@@ -15,12 +14,7 @@ import { AuthService } from "./auth.service";
 
 @Module({
     controllers: [AuthController],
-    providers: [
-        AuthService,
-        ApiUserService,
-        UserSpecificRegistrationGuard,
-        RestrictedViewGuard,
-    ],
+    providers: [AuthService, ApiUserService, UserSpecificRegistrationGuard],
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
@@ -34,6 +28,6 @@ import { AuthService } from "./auth.service";
         TypeOrmModule.forFeature([ApiUser]),
         ApiUserModule,
     ],
-    exports: [AuthService, UserSpecificRegistrationGuard, RestrictedViewGuard],
+    exports: [AuthService, UserSpecificRegistrationGuard],
 })
 export class AuthModule {}

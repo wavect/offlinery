@@ -1,6 +1,10 @@
 import { OnlyValidRegistrationSession } from "@/auth/auth-registration-session";
-import { OnlyOwnUserData, Public, USER_ID_PARAM } from "@/auth/auth.guard";
-import { RestrictedView } from "@/auth/restricted-view.guard";
+import {
+    OnlyOwnUserData,
+    Public,
+    RestrictedView,
+    USER_ID_PARAM,
+} from "@/auth/auth.guard";
 import { CreateUserRequestDTO } from "@/DTOs/create-user-request.dto";
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location.dto";

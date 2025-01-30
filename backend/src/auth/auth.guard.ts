@@ -1,7 +1,7 @@
 import { REQUIRE_OWN_PENDING_USER } from "@/auth/auth-registration-session";
 import { extractTokenFromHeader } from "@/auth/auth.utils";
-import { RESTRICTED_VIEW } from "@/auth/restricted-view.guard";
 import { ApiUserService } from "@/entities/api-user/api-user.service";
+import { UserService } from "@/entities/user/user.service";
 import { TYPED_ENV } from "@/utils/env.utils";
 import {
     CanActivate,
@@ -30,6 +30,9 @@ export const USER_ID_PARAM = "userId";
 export const REQUIRE_OWN_USER = "requireOwnUser";
 export const OnlyOwnUserData = () => SetMetadata(REQUIRE_OWN_USER, true);
 
+export const RESTRICTED_VIEW = "restrictedView";
+export const RestrictedView = () => SetMetadata(RESTRICTED_VIEW, true);
+
 /** @dev All routes are private by default */
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -39,6 +42,7 @@ export class AuthGuard implements CanActivate {
         private jwtService: JwtService,
         private reflector: Reflector,
         private apiUserService: ApiUserService,
+        private userService: UserService,
     ) {}
 
     /** @dev All routes are forbidden by default except the ones marked as @Public() */
@@ -96,6 +100,23 @@ export class AuthGuard implements CanActivate {
         );
     }
 
+    private async isAuthorizedToAccessRestrictedView(
+        request: Request,
+    ): Promise<boolean> {
+        const userToken = request.query.token;
+        const userId = request.query.userId;
+        if (!userToken || !userId) {
+            this.logger.warn(
+                `No userId or userToken provided to access restricted view: ${userId} / ${userToken}`,
+            );
+            return false;
+        }
+        return await this.userService.isValidRestrictedViewToken(
+            userId.toString(),
+            userToken.toString(),
+        );
+    }
+
     async canActivate(context: ExecutionContext): Promise<boolean> {
         if (this.isPublicRoute(context)) {
             this.logger.debug(`Call to public route, bypassing auth.guard`);
@@ -105,11 +126,11 @@ export class AuthGuard implements CanActivate {
             // registration session specific route, do not gate-keep through regular auth
             return true;
         }
-        if (this.isRestrictedView(context)) {
-            return true;
-        }
 
         const request = context.switchToHttp().getRequest<Request>();
+        if (this.isRestrictedView(context)) {
+            return await this.isAuthorizedToAccessRestrictedView(request);
+        }
         if (this.isAdminRoute(context)) {
             return await this.isAdminApiUser(request);
         }

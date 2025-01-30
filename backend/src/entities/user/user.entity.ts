@@ -105,6 +105,9 @@ export class User
     passwordHash: string;
 
     @Column()
+    restrictedViewToken: string;
+
+    @Column()
     passwordSalt: string;
 
     @Column({ type: "date" })
