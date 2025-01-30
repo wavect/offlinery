@@ -55,11 +55,13 @@ describe("AuthGuard:OnlyOwnData", () => {
         beforeEach(() => {
             mockExecutionContext = {
                 switchToHttp: jest.fn().mockReturnValue({
-                    getRequest: jest.fn().mockReturnValue({}),
+                    getRequest: jest.fn().mockReturnValue({
+                        headers: {},
+                    }),
                 }),
                 getHandler: jest.fn(),
                 getClass: jest.fn(),
-            } as any;
+            } as unknown as ExecutionContext;
         });
 
         it("should return true if @OnlyOwnUserData is not set", () => {
