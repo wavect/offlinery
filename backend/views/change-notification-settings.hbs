@@ -89,7 +89,7 @@
         try {
             const response = await fetch('/v1/user/get-notification-settings', {
                 headers: {
-                    'Authorization': 'Bearer {{token}}'
+                    "authorization": `Bearer {{jwtToken}}`
                 }
             });
             if (!response.ok) throw new Error('Failed to fetch settings');
@@ -113,7 +113,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer {{token}}'
+                    'Authorization': 'Bearer {{jwtToken}}'
                 },
                 body: JSON.stringify({ settings })
             });

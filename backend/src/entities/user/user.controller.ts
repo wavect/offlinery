@@ -5,8 +5,10 @@ import {
     RestrictedView,
     USER_ID_PARAM,
 } from "@/auth/auth.guard";
+import { AuthService } from "@/auth/auth.service";
 import { CreateUserRequestDTO } from "@/DTOs/create-user-request.dto";
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
+import { UserNotificationSettingsDTO } from "@/DTOs/get-user-notification-settings.dto";
 import { LocationUpdateDTO } from "@/DTOs/location.dto";
 import { RequestAccountDeletionViaFormDTO } from "@/DTOs/request-account-deletion-via-form.dto";
 import {
@@ -39,6 +41,7 @@ import {
     Param,
     Post,
     Put,
+    Query,
     Render,
     Res,
     UploadedFiles,
@@ -68,7 +71,10 @@ import { UserService } from "./user.service";
 export class UserController {
     private readonly logger = new Logger(UserController.name);
 
-    constructor(private readonly userService: UserService) {}
+    constructor(
+        private readonly userService: UserService,
+        private readonly authService: AuthService,
+    ) {}
 
     @OnlyValidRegistrationSession()
     @Post("create")
@@ -264,18 +270,42 @@ export class UserController {
         );
     }
 
+    @Get(`get-notification-settings/:${USER_ID_PARAM}`)
+    @OnlyOwnUserData()
+    @ApiParam({
+        name: USER_ID_PARAM,
+        type: "string",
+        description: "User ID",
+    })
+    @ApiOperation({ summary: "Get notification settings" })
+    async getNotificationSettings(
+        @Param(USER_ID_PARAM) userId: string,
+    ): Promise<UserNotificationSettingsDTO[]> {
+        console.log("USERID:", userId);
+        return [
+            { notficationSettingKey: "1", notificationSettingValue: true },
+            { notficationSettingKey: "2", notificationSettingValue: false },
+        ]; // TODO
+    }
+
     @Get("change-notification-settings")
     @RestrictedView()
     @Render("change-notification-settings")
-    changeNotificationSettings(@Res() res: Response) {
+    async changeNotificationSettings(
+        @Query("userId") userId: string,
+        @Res() res: Response,
+    ) {
         const nonce = uuidv4();
         res.setHeader(
             "Content-Security-Policy",
             `script-src 'self' 'nonce-${nonce}'`,
         );
+        // @dev very important to have this controller method gatekept through @RestrictedView
+        const jwtToken = await this.authService.getJwtTokenForUser(userId);
         return {
             title: "Change Notification Settings | Offlinery",
-            nonce: nonce,
+            nonce,
+            jwtToken,
         };
     }
 

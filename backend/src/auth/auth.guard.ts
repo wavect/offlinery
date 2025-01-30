@@ -155,7 +155,7 @@ export class AuthGuard implements CanActivate {
                 const user = request[USER_OBJ_ID];
                 if (
                     params[USER_ID_PARAM] &&
-                    params[USER_ID_PARAM] !== user.sub
+                    params[USER_ID_PARAM] !== user.id
                 ) {
                     this.logger.warn(
                         `Someone tried to access user data that does not belong to them: ${user.id} != ${params[USER_ID_PARAM]}`,

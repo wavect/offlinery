@@ -90,6 +90,14 @@ export class AuthService {
         );
     }
 
+    async getJwtTokenForUser(userId: string) {
+        const payload = { id: userId };
+        return await this.jwtService.signAsync(payload, {
+            secret: TYPED_ENV.JWT_SECRET,
+            expiresIn: TOKEN_EXPIRATION_TIME,
+        });
+    }
+
     async signIn(
         email: string,
         clearPassword: string,
@@ -111,7 +119,7 @@ export class AuthService {
             );
             throw new UnauthorizedException();
         }
-        const payload = { sub: user.id, email: user.email };
+        const payload = { id: user.id, email: user.email };
         const accessToken = await this.jwtService.signAsync(payload, {
             secret: TYPED_ENV.JWT_SECRET,
             expiresIn: TOKEN_EXPIRATION_TIME,
