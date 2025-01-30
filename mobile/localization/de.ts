@@ -12,6 +12,9 @@ export const de: Language = {
     signIn: "Anmelden",
     userCount: "{{count}} User aktiv",
     encounterCount: "{{count}} User getroffen",
+    bestChanceApproachTime: "Beste Chancen: {{startTime}}-{{endTime}} Uhr",
+    bestChanceApproachTimeDescription:
+        "Sei zu diesen Zeiten an den Hotspots, um deine Chancen Jemanden zu treffen drastisch zu erhöhen.",
     encounterCountDescription:
         "So vielen Usern bist du bereits über den Weg gelaufen. Wechsle zum Tab 'Begegnungen', um sie zu sehen.",
     userCountDescription:

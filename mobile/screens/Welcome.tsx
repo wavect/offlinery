@@ -77,6 +77,7 @@ const Welcome = ({
         } catch (error) {
             console.error(
                 `Error checking Auth Status, User might be offline or backend not reachable.`,
+                error,
             );
             Sentry.captureException(error, {
                 tags: {
@@ -225,7 +226,7 @@ const Welcome = ({
         if (hasError) {
             showAlert();
         }
-    }, [hasError]);
+    }, [hasError, isUserAuthenticated]);
 
     return (
         <OPageColorContainer isLoading={isLoading}>

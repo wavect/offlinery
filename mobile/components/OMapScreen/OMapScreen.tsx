@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
     },
     topContent: {
         marginHorizontal: 16,
+        marginTop: 10,
     },
     subtitle: {
         fontSize: FontSize.size_sm,

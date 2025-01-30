@@ -2,6 +2,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React, { useState } from "react";
 import {
     Animated,
+    Platform,
     StyleSheet,
     TouchableOpacity,
     ViewStyle,
@@ -76,7 +77,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 3,
         elevation: 3,
-        padding: 16,
+        padding: Platform.select({
+            ios: 16,
+            android: 12,
+        }),
         position: "relative",
     },
     closeButton: {

@@ -487,28 +487,48 @@ export const OMap = memo(
                 )}
 
                 <View style={styles.badgeOuterContainer}>
-                    {userCount ? (
+                    <View style={styles.badgeContainerRow}>
                         <OGenericBadge
                             containerStyle={styles.badgeContainerStyle}
-                            label={i18n.t(TR.userCount, { count: userCount })}
-                            description={i18n.t(TR.userCountDescription)}
-                            icon="person-search"
-                            backgroundColor={Color.primary}
-                        />
-                    ) : null}
-
-                    {!isEncountersLoading &&
-                    encounterState.encounters.length ? (
-                        <OGenericBadge
-                            containerStyle={styles.badgeContainerStyle}
-                            label={i18n.t(TR.encounterCount, {
-                                count: encounterState.encounters.length,
+                            label={i18n.t(TR.bestChanceApproachTime, {
+                                startTime: "9",
+                                endTime: "18:00",
                             })}
-                            description={i18n.t(TR.encounterCountDescription)}
-                            icon="directions-walk"
-                            backgroundColor={Color.schemesPrimary}
+                            description={i18n.t(
+                                TR.bestChanceApproachTimeDescription,
+                            )}
+                            icon="schedule"
+                            backgroundColor={Color.black}
                         />
-                    ) : null}
+                    </View>
+                    <View style={styles.badgeContainerRow}>
+                        {userCount ? (
+                            <OGenericBadge
+                                containerStyle={styles.badgeContainerStyle}
+                                label={i18n.t(TR.userCount, {
+                                    count: userCount,
+                                })}
+                                description={i18n.t(TR.userCountDescription)}
+                                icon="person-search"
+                                backgroundColor={Color.primary}
+                            />
+                        ) : null}
+
+                        {!isEncountersLoading &&
+                        encounterState.encounters.length ? (
+                            <OGenericBadge
+                                containerStyle={styles.badgeContainerStyle}
+                                label={i18n.t(TR.encounterCount, {
+                                    count: encounterState.encounters.length,
+                                })}
+                                description={i18n.t(
+                                    TR.encounterCountDescription,
+                                )}
+                                icon="directions-walk"
+                                backgroundColor={Color.schemesPrimary}
+                            />
+                        ) : null}
+                    </View>
                 </View>
 
                 {showBlacklistedRegions && activeRegionIndex !== null && (
@@ -534,9 +554,12 @@ const styles = StyleSheet.create({
         minHeight: height * 0.75,
     },
     badgeOuterContainer: {
-        flexDirection: "row",
+        flexDirection: "column",
         position: "absolute",
         top: 0,
+    },
+    badgeContainerRow: {
+        flexDirection: "row",
     },
     container: {
         flex: 1,

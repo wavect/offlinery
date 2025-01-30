@@ -12,6 +12,9 @@ export const en = {
     signIn: "Sign in",
     userCount: "{{count}} users nearby",
     encounterCount: "{{count}} people met",
+    bestChanceApproachTime: "Best time: {{startTime}}-{{endTime}}",
+    bestChanceApproachTimeDescription:
+        "Be at these hotspots at those times to drastically increase your odds of meeting people.",
     encounterCountDescription:
         "You crossed paths with this many users. Switch to the tab 'Encounters' to see them.",
     userCountDescription:

@@ -1,7 +1,13 @@
 import { OModal } from "@/components/OModal/OModal";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
+import {
+    Platform,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    ViewStyle,
+} from "react-native";
 
 interface OGenericBadgeProps {
     label: string;
@@ -51,13 +57,19 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 4,
         paddingHorizontal: 8,
-        paddingVertical: 4,
+        paddingVertical: Platform.select({
+            ios: 4,
+            android: 2,
+        }),
         borderRadius: 20,
         alignSelf: "flex-start", // Add this line
     },
     label: {
         color: "white",
-        fontSize: 14,
+        fontSize: Platform.select({
+            ios: 14,
+            android: 12,
+        }),
     },
 });
 
