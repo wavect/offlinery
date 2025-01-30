@@ -265,8 +265,8 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                 </View>
                                 <View style={styles.buttonContainer}>
                                     {!encounterProfile.isNearbyRightNow &&
-                                        dateStatus ===
-                                            EncounterPublicDTOStatusEnum.met_interested && (
+                                        dateStatus !==
+                                            EncounterPublicDTOStatusEnum.met_not_interested && (
                                             <OButtonSmall
                                                 label={i18n.t(
                                                     TR.leaveMessageBtnLbl,

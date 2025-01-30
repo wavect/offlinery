@@ -65,20 +65,11 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
 
         const getOtherUsersPositions = async () => {
             try {
-                onLoadingStateChange(true);
                 if (!userId) {
-                    Sentry.captureException(
-                        new Error(
-                            "Undefined user id in getOtherUsersPosition (Heatmap)",
-                        ),
-                        {
-                            tags: { heatMap: "getOtherUsersPositions" },
-                        },
-                    );
-                    throw new Error(
-                        "Cannot load heatmap data as no userId defined.",
-                    );
+                    // not ready yet (e.g. on registration)
+                    return;
                 }
+                onLoadingStateChange(true);
                 const positions = await API.map.mapControllerGetUserLocations({
                     userId,
                 });

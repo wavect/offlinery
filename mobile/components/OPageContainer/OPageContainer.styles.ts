@@ -5,6 +5,7 @@ export default {
         flex: 1,
         backgroundColor: "#fff",
         padding: 18,
+        zIndex: 1,
         width: "100%",
     },
     content: {
@@ -27,6 +28,6 @@ export default {
         backgroundColor: "transparent",
         justifyContent: "center",
         alignItems: "center",
-        zIndex: -1, // Place the icon behind other content
+        zIndex: 0, // Place the icon behind other content
     },
 };

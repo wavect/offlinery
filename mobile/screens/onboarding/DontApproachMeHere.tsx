@@ -28,6 +28,7 @@ const DontApproachMeHere: React.FC<DontApproachMeHereProps> = ({
             subtitle={i18n.t(TR.whatAreSpotsToNotApproachYou)}
             showHeatmap={false}
             showMapStatus={false}
+            showingBottomButton={true}
             showEncounters={false}
             showEvents={false}
             showBlacklistedRegions={true}

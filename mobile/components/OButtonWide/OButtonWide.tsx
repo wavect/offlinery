@@ -143,7 +143,6 @@ export const OButtonWide: FC<IOButtonWideProps> = ({
                     styleLbl,
                 ]}
                 numberOfLines={numberOfLines}
-                adjustsFontSizeToFit
             >
                 {isLoading ? (
                     <>
@@ -151,6 +150,7 @@ export const OButtonWide: FC<IOButtonWideProps> = ({
                             size="small"
                             style={{ marginRight: 6 }}
                         />
+                        &nbsp;
                         {(loadingBtnText || buttonText).toUpperCase()}
                     </>
                 ) : (

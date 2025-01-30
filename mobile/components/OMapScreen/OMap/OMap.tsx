@@ -50,6 +50,8 @@ interface OMapProps {
     showHeatmap: boolean;
     showEncounters: boolean;
     showEvents: boolean;
+    /// @dev This property lets the OMap component know to push bottom elements such as the slider up a bit since we show a button below it (e.g. continue in onboarding)
+    showingBottomButton: boolean;
     showBlacklistedRegions: boolean;
     showMapStatus: boolean;
 }
@@ -62,6 +64,7 @@ export const OMap = memo(
         showHeatmap,
         showEvents,
         showBlacklistedRegions,
+        showingBottomButton,
         showMapStatus,
         showEncounters,
     }: OMapProps) => {
@@ -533,6 +536,11 @@ export const OMap = memo(
 
                 {showBlacklistedRegions && activeRegionIndex !== null && (
                     <OSafeZoneSliderCard
+                        containerStyle={
+                            showingBottomButton
+                                ? { marginBottom: 50 }
+                                : undefined
+                        }
                         handleRadiusChange={handleRadiusChange}
                         handleRemoveRegion={handleRemoveRegion}
                         activeRegionIndex={activeRegionIndex}

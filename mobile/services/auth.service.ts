@@ -101,7 +101,6 @@ export const registerUser = async (
         const signInResponseDTO =
             await API.user.userControllerCreateUser(requestParameters);
         const { user, accessToken, refreshToken } = signInResponseDTO;
-        console.log("User created successfully:", user);
 
         // Navigate to the next screen or update the UI as needed
         onSuccess();
