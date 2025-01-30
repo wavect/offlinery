@@ -3,6 +3,7 @@ import { EmailCodeResponseADTO } from "@/DTOs/abstract/email-code-response.adto"
 import { NotificationAccountApprovedDTO } from "@/DTOs/notifications/notification-account-approved";
 import { NotificationGhostReminderDTO } from "@/DTOs/notifications/notification-ghostreminder.dto";
 import { NotificationNewEventDTO } from "@/DTOs/notifications/notification-new-event.dto";
+import { NotificationNewMessageDTO } from "@/DTOs/notifications/notification-new-message.dto";
 import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
@@ -90,6 +91,7 @@ const setupSwagger = (app: INestApplication) => {
             NotificationAccountApprovedDTO,
             NotificationGhostReminderDTO,
             NotificationNewEventDTO,
+            NotificationNewMessageDTO,
             EmailCodeResponseADTO,
             BaseNotificationADTO,
         ],

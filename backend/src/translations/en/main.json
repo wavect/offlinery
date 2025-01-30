@@ -25,6 +25,9 @@
     "new_event": {
       "title": "Pack a Friend and visit {venueWithArticleIfNeeded}",
       "body": "Be there on {date} between {startTime} - {endTime} to increase your odds of crossing paths with someone."
+    },
+    "new_message": {
+      "title": "New Message by {firstName}"
     }
   },
   "email": {

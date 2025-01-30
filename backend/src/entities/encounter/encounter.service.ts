@@ -1,12 +1,16 @@
+import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { DateRangeDTO } from "@/DTOs/date-range.dto";
+import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
 import { GetLocationOfEncounterResponseDTO } from "@/DTOs/get-location-of-encounter-response.dto";
+import { NotificationNewMessageDTO } from "@/DTOs/notifications/notification-new-message.dto";
 import { PushMessageDTO } from "@/DTOs/push-message.dto";
 import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { Message } from "@/entities/messages/message.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
-import { EEncounterStatus } from "@/types/user.types";
+import { NotificationService } from "@/transient-services/notification/notification.service";
+import { EEncounterStatus, ELanguage } from "@/types/user.types";
 import { getTypedCoordinatesFromPoint } from "@/utils/location.utils";
 import { MAX_ENCOUNTERS_PER_DAY_FOR_USER } from "@/utils/misc.utils";
 import {
@@ -18,6 +22,7 @@ import {
     PreconditionFailedException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { I18nService } from "nestjs-i18n";
 import { QueryRunner, Repository } from "typeorm";
 
 @Injectable()
@@ -33,6 +38,8 @@ export class EncounterService {
         private userRepository: Repository<User>,
         @Inject(forwardRef(() => UserService))
         private readonly userService: UserService,
+        protected readonly i18n: I18nService,
+        protected readonly notificationService: NotificationService,
     ) {}
 
     async findEncountersByUser(
@@ -365,6 +372,44 @@ export class EncounterService {
 
         await this.messageRepository.save(newMessage);
         encounter.messages.push(newMessage);
+
+        const user: User = encounter.users.find((u) => u.id === userId);
+        const otherUser: User = encounter.users.find((u) => u.id !== userId);
+
+        try {
+            if (otherUser?.pushToken && user) {
+                const data: NotificationNewMessageDTO = {
+                    type: ENotificationType.NEW_MESSAGE,
+                    screen: EAppScreens.NEW_MESSAGE,
+                };
+
+                const lang = otherUser.preferredLanguage ?? ELanguage.en;
+                const notification = {
+                    sound: "default" as const,
+                    title: this.i18n.t(`main.notification.new_message.title`, {
+                        args: {
+                            firstName: user.firstName,
+                        },
+                        lang,
+                    }),
+                    body: newMessage.content,
+                    to: otherUser.pushToken,
+                    data,
+                };
+                await this.notificationService.sendPushNotifications([
+                    notification,
+                ]);
+            } else {
+                this.logger.warn(
+                    `Cannot send push notification for user ${user.id} to remind about ghost mode since no pushToken. But should have sent email.`,
+                );
+            }
+        } catch (error) {
+            this.logger.error(
+                `Could not send push notification for user ${otherUser.id} to notify about new chat message: ${error?.message}`,
+            );
+        }
+
         return await this.encounterRepository.save(encounter);
     }
 

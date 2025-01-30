@@ -152,6 +152,14 @@ export class UserService {
         return user;
     }
 
+    async generateRestrictedViewToken(user: User): Promise<User> {
+        const random = randomBytes(32).toString("hex");
+        const salt = await bcrypt.genSalt(3);
+        // @dev Hash used as clearText token
+        user.restrictedViewToken = await bcrypt.hash(random, salt);
+        return user;
+    }
+
     async createUser(
         createUserDto: CreateUserDTO,
         images: Express.Multer.File[],
@@ -166,6 +174,7 @@ export class UserService {
         });
 
         await this.hashNewPassword(user, createUserDto.clearPassword);
+        await this.generateRestrictedViewToken(user);
 
         // Save images
         user.imageURIs = (await this.saveFiles(images)).map(

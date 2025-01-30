@@ -25,6 +25,9 @@
     "new_event": {
       "title": "Schnapp dir einen Freund und ab in {venueWithArticleIfNeeded}",
       "body": "Sei am {date} zwischen {startTime} - {endTime} Uhr dort, um eventuell Jemanden über den Weg zu laufen."
+    },
+    "new_message": {
+      "title": "Neue Nachricht von {firstName}"
     }
   },
   "email": {
