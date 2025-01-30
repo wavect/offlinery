@@ -1,16 +1,16 @@
-import { USER_ID_PARAM, UserSpecificAuthGuard } from "@/auth/auth.guard";
+import { AuthGuard, USER_ID_PARAM } from "@/auth/auth.guard";
 import { ExecutionContext, ForbiddenException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { Test, TestingModule } from "@nestjs/testing";
 
-describe("UserSpecificAuthGuard", () => {
-    let guard: UserSpecificAuthGuard;
+describe("AuthGuard:OnlyOwnData", () => {
+    let guard: AuthGuard;
     let reflector: Reflector;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                UserSpecificAuthGuard,
+                AuthGuard,
                 {
                     provide: Reflector,
                     useValue: {
@@ -20,7 +20,7 @@ describe("UserSpecificAuthGuard", () => {
             ],
         }).compile();
 
-        guard = module.get<UserSpecificAuthGuard>(UserSpecificAuthGuard);
+        guard = module.get<AuthGuard>(AuthGuard);
         reflector = module.get<Reflector>(Reflector);
     });
 
