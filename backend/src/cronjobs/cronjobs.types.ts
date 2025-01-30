@@ -18,7 +18,13 @@ export const DEFAULT_INTERVAL_HOURS: IntervalHour[] = [
 
 export type ReceivableUser = Pick<
     User,
-    "email" | "pushToken" | "preferredLanguage" | "firstName" | "id"
+    | "email"
+    | "pushToken"
+    | "preferredLanguage"
+    | "firstName"
+    | "id"
+    | "ghostModeRemindersEmail"
+    | "restrictedViewToken"
 >;
 
 export enum TimeSpan {

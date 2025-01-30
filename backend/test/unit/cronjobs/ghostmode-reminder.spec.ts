@@ -16,9 +16,9 @@ describe("GhostModeReminderCronJob", () => {
     let mailerService: MailerService;
     let queryBuilder: any;
 
-    const mockUsers = [
+    const mockUsers: Partial<User>[] = [
         {
-            id: 1,
+            id: "1",
             email: "test@example.com",
             firstName: "Test",
             dateMode: EDateMode.GHOST,
@@ -26,6 +26,7 @@ describe("GhostModeReminderCronJob", () => {
             pushToken: "push-token-1",
             lastDateModeChange: new Date(Date.now() - 25 * 60 * 60 * 1000),
             lastDateModeReminderSent: null,
+            ghostModeRemindersEmail: true,
         },
     ];
 

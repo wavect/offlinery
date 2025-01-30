@@ -1,6 +1,11 @@
-import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
 import { OnlyValidRegistrationSession } from "@/auth/auth-registration-session";
-import { Public } from "@/auth/auth.guard";
+import {
+    OnlyOwnUserData,
+    Public,
+    RestrictedView,
+    USER_ID_PARAM,
+} from "@/auth/auth.guard";
+import { AuthService } from "@/auth/auth.service";
 import { CreateUserRequestDTO } from "@/DTOs/create-user-request.dto";
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { LocationUpdateDTO } from "@/DTOs/location.dto";
@@ -15,6 +20,7 @@ import { UpdateUserRequestDTO } from "@/DTOs/update-user-request.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserCountDTO } from "@/DTOs/user-count.dto";
 import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
+import { UserNotificationSettingsDTO } from "@/DTOs/user-notification-settings.dto";
 import { UserPrivateDTO } from "@/DTOs/user-private.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
 import { UserRequestDeletionFormSuccessDTO } from "@/DTOs/user-request-deletion-form-success.dto";
@@ -35,6 +41,7 @@ import {
     Param,
     Post,
     Put,
+    Query,
     Render,
     Res,
     UploadedFiles,
@@ -64,7 +71,10 @@ import { UserService } from "./user.service";
 export class UserController {
     private readonly logger = new Logger(UserController.name);
 
-    constructor(private readonly userService: UserService) {}
+    constructor(
+        private readonly userService: UserService,
+        private readonly authService: AuthService,
+    ) {}
 
     @OnlyValidRegistrationSession()
     @Post("create")
@@ -75,7 +85,12 @@ export class UserController {
         description: "User data and images",
     })
     @ApiOperation({ summary: "Create a new user with images" })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async createUser(
         /** @dev In Multipart requests, the Body needs to be separately parsed based on the property name in the RequestDTO! */
         @Body("createUserDTO", new ParseValidateJsonPipe(CreateUserDTO))
@@ -105,7 +120,12 @@ export class UserController {
         description: "User data and images",
     })
     @ApiOperation({ summary: "Update an existing user" })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async updateUser(
         @Param(USER_ID_PARAM) userId: string,
         /** @dev In Multipart requests, the Body needs to be separately parsed based on the property name in the RequestDTO! */
@@ -140,7 +160,12 @@ export class UserController {
         type: UpdateUserPasswordDTO,
     })
     @ApiOperation({ summary: "Update user password" })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async updateUserPassword(
         @Param(USER_ID_PARAM) userId: string,
         @Body() changePwdDTO: UpdateUserPasswordDTO,
@@ -183,7 +208,12 @@ export class UserController {
         type: UserPublicDTO,
     })
     @ApiResponse({ status: 404, description: "User not found." })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async updateLocation(
         @Param(USER_ID_PARAM) userId: string,
         @Body() locationUpdateDTO: LocationUpdateDTO,
@@ -247,7 +277,12 @@ export class UserController {
         description: "User not found, reset password token invalid.",
     })
     @ApiResponse({ status: 403, description: "Reset password token expired" })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async resetPassword(
         @Body() verifyResetPasswordDTO: VerifyResetPasswordDTO,
     ): Promise<UserResetPwdSuccessDTO> {
@@ -258,6 +293,81 @@ export class UserController {
             verificationCode,
             newClearPassword,
         );
+    }
+
+    @Get(`notification-settings/:${USER_ID_PARAM}`)
+    @OnlyOwnUserData()
+    @ApiParam({
+        name: USER_ID_PARAM,
+        type: "string",
+        description: "User ID",
+    })
+    @ApiOperation({ summary: "Get notification settings" })
+    async getNotificationSettings(
+        @Param(USER_ID_PARAM) userId: string,
+    ): Promise<UserNotificationSettingsDTO[]> {
+        const user = await this.userService.findUserById(userId);
+        // @dev This list for now needs to be maintained, we also might want to allow users to modify their settings for push notifications as well in future.
+        return [
+            // notificationSettingKey = property name on entity!
+            {
+                notificationSettingKey: "ghostModeRemindersEmail",
+                notificationSettingLbl: "Ghost mode reminders via email",
+                notificationSettingValue: user.ghostModeRemindersEmail,
+            },
+            {
+                notificationSettingKey: "eventAnnouncementsEmail",
+                notificationSettingLbl: "Event announcements via email",
+                notificationSettingValue: user.eventAnnouncementsEmail,
+            },
+        ];
+    }
+
+    @Put(`notification-settings/:${USER_ID_PARAM}`)
+    @OnlyOwnUserData()
+    @ApiBody({ type: [UserNotificationSettingsDTO] })
+    @ApiParam({
+        name: USER_ID_PARAM,
+        type: "string",
+        description: "User ID",
+    })
+    @ApiOperation({ summary: "Update notification settings" })
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
+    async updateNotificationSettings(
+        @Param(USER_ID_PARAM) userId: string,
+        @Body() userNotificationSettings: UserNotificationSettingsDTO[],
+    ) {
+        return await this.userService.updateNotificationSettings(
+            userId,
+            userNotificationSettings,
+        );
+    }
+
+    @Get("change-notification-settings")
+    @RestrictedView()
+    @Render("change-notification-settings")
+    async changeNotificationSettings(
+        @Query("userId") userId: string,
+        @Res() res: Response,
+    ) {
+        const nonce = uuidv4();
+        res.setHeader(
+            "Content-Security-Policy",
+            `script-src 'self' 'nonce-${nonce}'`,
+        );
+        // @dev very important to have this controller method gatekept through @RestrictedView
+        const jwtToken = await this.authService.getJwtTokenForUser(userId);
+        return {
+            title: "Change Notification Settings | Offlinery",
+            nonce,
+            jwtToken,
+            userId,
+        };
     }
 
     @Get("request-deletion")

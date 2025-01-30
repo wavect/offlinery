@@ -1,4 +1,4 @@
-import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
+import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth.guard";
 import { EncounterPublicDTO } from "@/DTOs/encounter-public.dto";
 import { GenericStatusDTO } from "@/DTOs/generic-status.dto";
 import { GetLocationOfEncounterResponseDTO } from "@/DTOs/get-location-of-encounter-response.dto";

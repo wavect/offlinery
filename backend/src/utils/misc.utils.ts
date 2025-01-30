@@ -17,7 +17,7 @@ export const TOKEN_EXPIRATION_TIME = "60m";
 export const REFRESH_TOKEN_EXPIRATION_TIME = 90;
 
 /** @DEV - Expiration time of each registration token */
-export const REGISTRATION_TOKEN_TIME = "7d";
+export const REGISTRATION_TOKEN_TIME = "14d";
 
 /** @DEV - Expiration time of each registration token */
 export const MAX_ENCOUNTERS_PER_DAY_FOR_USER = 3;

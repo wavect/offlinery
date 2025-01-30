@@ -40,7 +40,8 @@
       "note": "Kein Druck, nur Möglichkeiten. Komm vorbei, bleib offen, und lass dich überraschen.",
       "findLocation": "Location checken",
       "reminder": "Deine nächste große Connection wartet vielleicht schon um die Ecke.",
-      "footer": "Das Leben passiert außerhalb deiner Komfortzone."
+      "reminder2": "Das Leben passiert außerhalb deiner Komfortzone.",
+      "footer": "Du bekommst diese E-Mail aufgrund deiner Einstellungen. Du kannst diese <a href='{changeNotificationSettingsUrl}' title='Einstellungen ändern' target='_blank'>hier</a> jederzeit ändern."
     },
     "request-account-deletion": {
       "subject": "Offlinery: Kontolöschung beantragt",
@@ -107,7 +108,7 @@
       "timeInGhost": "Du bist seit {intervalHour} im Ghost-Modus.",
       "impact": "Der Ghost-Modus schützt zwar deine Privatsphäre, bedeutet aber auch, dass du keine neuen Menschen treffen oder von anderen interessierten Personen entdeckt werden kannst.",
       "suggestion": "Wechsle in den Live-Modus innerhalb der Offlinery App, um wieder Menschen in deiner Umgebung kennenzulernen!",
-      "footer": "Du erhältst diese E-Mail, weil du den Ghost-Modus in deinen Einstellungen aktiviert hast. Du kannst dies jederzeit ändern."
+      "footer": "Du bekommst diese E-Mail aufgrund deiner Einstellungen. Du kannst diese <a href='{changeNotificationSettingsUrl}' title='Einstellungen ändern' target='_blank'>hier</a> jederzeit ändern."
     },
     "safety-call-booked-reminder": {
       "subject": "Vereinbare deinen kurzen Safety Call - Offlinery",

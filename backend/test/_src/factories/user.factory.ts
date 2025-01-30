@@ -52,6 +52,7 @@ export class UserFactory implements FactoryInterface {
             pushToken: `ExpoPushToken[`,
             trustScore: 1,
             ageRangeString: "[18,99]",
+            restrictedViewToken: "abcdef",
             ...userData,
         });
 

@@ -1,3 +1,4 @@
+import { AuthService } from "@/auth/auth.service";
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
 import { JwtStatus } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
@@ -31,6 +32,12 @@ describe("UserController", () => {
                         updateUser: jest.fn(),
                         findUserById: jest.fn(),
                         updateLocation: jest.fn(),
+                    },
+                },
+                {
+                    provide: AuthService,
+                    useValue: {
+                        getJwtTokenForUser: jest.fn(),
                     },
                 },
                 {

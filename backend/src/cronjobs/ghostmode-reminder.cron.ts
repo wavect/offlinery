@@ -55,6 +55,8 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                 "user.preferredLanguage",
                 "user.firstName",
                 "user.lastDateModeChange",
+                "user.ghostModeRemindersEmail",
+                "user.restrictedViewToken",
             ])
             .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
             .andWhere("user.lastDateModeChange < :dayAgo", {
@@ -132,8 +134,13 @@ export class GhostModeReminderCronJob extends BaseCronJob {
             Array.from(targets).map(async ({ user, intervalHour }) => {
                 try {
                     // Send email
-                    // Parallel email and push notification preparation
-                    const emailPromise = this.sendEmail(user, intervalHour);
+                    if (user.ghostModeRemindersEmail) {
+                        await this.sendEmail(user, intervalHour);
+                    } else {
+                        this.logger.debug(
+                            `Not sending reminder via email since user unsubscribed from it: ${user.email}, ${user.id}`,
+                        );
+                    }
 
                     // Prepare push notification if possible
                     if (user.pushToken) {
@@ -145,8 +152,6 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                         notificationTicketsToSend.push(
                             this.buildNotification(user, data),
                         );
-
-                        await emailPromise;
                     } else {
                         this.logger.warn(
                             `Cannot send push notification for user ${user.id} to remind about ghost mode since no pushToken. But should have sent email.`,

@@ -40,7 +40,8 @@
       "note": "No pressure, just possibilities. Show up, be open, and see what unfolds.",
       "findLocation": "Check Venue",
       "reminder": "Your next great connection could be just around the corner.",
-      "footer": "Embrace the unexpected. Life happens outside your comfort zone."
+      "reminder2": "Life happens outside your comfort zone.",
+      "footer": "You receive this email due to your notification settings. You can change your settings <a href='{changeNotificationSettingsUrl}' title='Change settings' target='_blank'>here</a>."
     },
     "request-account-deletion": {
       "subject": "Offlinery: Account Deletion Requested",
@@ -107,7 +108,7 @@
       "timeInGhost": "You've been in Ghost Mode for {intervalHour}.",
       "impact": "While Ghost Mode helps protect your privacy, it also means you can't meet new people or be discovered by others who might be interested in meeting you.",
       "suggestion": "Switch to Live Mode within Offlinery to start meeting people in your area again!",
-      "footer": "You received this email because you enabled Ghost Mode in your settings. You can change this anytime."
+      "footer": "You receive this email due to your notification settings. You can change your settings <a href='{changeNotificationSettingsUrl}' title='Change settings' target='_blank'>here</a>."
     },
     "safety-call-booked-reminder": {
       "subject": "Book Your Quick Safety Call - Offlinery",

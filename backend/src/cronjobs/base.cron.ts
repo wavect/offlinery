@@ -5,6 +5,7 @@ import {
 } from "@/cronjobs/cronjobs.types";
 import { OfflineryNotification } from "@/types/notification-message.types";
 import { ELanguage } from "@/types/user.types";
+import { generateRestrictedViewUrl } from "@/utils/security.utils";
 import { MailerService } from "@nestjs-modules/mailer";
 import { I18nService } from "nestjs-i18n";
 
@@ -56,6 +57,10 @@ export abstract class BaseCronJob {
                 }),
                 languageId: lang,
                 email: user.email,
+                changeNotificationSettingsUrl: generateRestrictedViewUrl(
+                    "user/change-notification-settings",
+                    user,
+                ),
                 t: (key: string, params?: Record<string, any>) =>
                     this.i18n.translate(
                         `main.email.${this.cronJobType}.${key}`,

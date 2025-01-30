@@ -1,4 +1,4 @@
-import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
+import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth.guard";
 import { CreateUserReportDTO } from "@/DTOs/create-user-report.dto";
 import { Body, Controller, Param, Post } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";

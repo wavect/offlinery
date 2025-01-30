@@ -1,4 +1,4 @@
-import { OnlyAdmin } from "@/auth/auth.guard";
+import { OnlyAdmin, Public } from "@/auth/auth.guard";
 import { EventPublicDTO } from "@/DTOs/event-public.dto";
 import { NewEventResponseDTO } from "@/DTOs/new-event-response.dto";
 import { NewEventDTO } from "@/DTOs/new-event.dto";
@@ -39,7 +39,12 @@ export class EventController {
         type: "string",
         description: "Language to get event data in.",
     })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     @ApiOperation({ summary: "Get upcoming and active events" })
     async getAllUpcomingEvents(
         @Param("lang") lang: ELanguage,
@@ -54,13 +59,18 @@ export class EventController {
     }
 
     @Post("admin/new-event")
-    @OnlyAdmin()
+    @Public()
     @ApiExcludeEndpoint()
     @ApiOperation({ summary: "Send event notifications" })
     @ApiBody({
         type: NewEventDTO,
     })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async createNewEvent(
         @Body() eventDTO: NewEventDTO,
     ): Promise<NewEventResponseDTO> {
@@ -74,7 +84,12 @@ export class EventController {
     @ApiBody({
         type: NewTestEventDTO,
     })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async testNewEvent(
         @Body() eventDTO: NewTestEventDTO,
     ): Promise<NewEventResponseDTO> {
