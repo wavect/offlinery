@@ -1,6 +1,11 @@
 import { Language } from "./translate.service";
 
 export const de: Language = {
+    blog: "Blog lesen",
+    retry: "Nochmal versuchen",
+    maintenanceAlertTitle: "Offlinery wird gewartet",
+    maintenanceAlertDescription:
+        "Wir führen gerade größere Verbesserungen an unserem System durch. Wir sind gleich wieder zurück.",
     bgLocationServiceTitle: "Offlinery EIN",
     bgLocationServiceBody: "Bereit dich zu beeindrucken..",
     createAccount: "Registrieren",

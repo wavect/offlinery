@@ -1,6 +1,11 @@
 // @dev Other languages have to be typed as Language!
 
 export const en = {
+    blog: "Read Blog",
+    retry: "Retry",
+    maintenanceAlertTitle: "Offlinery in maintenance",
+    maintenanceAlertDescription:
+        "We're making significant improvements on Offlinery right now. We'll be back as soon as possible.",
     bgLocationServiceTitle: "Offlinery ON",
     bgLocationServiceBody: "Letting others know about you.",
     createAccount: "Create Account",
