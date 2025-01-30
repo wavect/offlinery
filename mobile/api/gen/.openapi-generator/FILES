@@ -31,6 +31,7 @@ src/models/NotificationAccountApprovedDTO.ts
 src/models/NotificationGhostReminderDTO.ts
 src/models/NotificationNavigateUserDTO.ts
 src/models/NotificationNewEventDTO.ts
+src/models/NotificationNewMessageDTO.ts
 src/models/PushMessageDTO.ts
 src/models/RefreshJwtDTO.ts
 src/models/RegistrationForVerificationRequestDTO.ts
@@ -48,6 +49,7 @@ src/models/UpdateUserDTO.ts
 src/models/UpdateUserPasswordDTO.ts
 src/models/UserCountDTO.ts
 src/models/UserFeedbackRequestDTO.ts
+src/models/UserNotificationSettingsDTO.ts
 src/models/UserPrivateDTO.ts
 src/models/UserPublicDTO.ts
 src/models/UserResetPwdSuccessDTO.ts

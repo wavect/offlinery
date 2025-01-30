@@ -1,5 +1,9 @@
 import { Color } from "@/GlobalStyles";
-import { NotificationNavigateUserDTO, StorePushTokenDTO } from "@/api/gen/src";
+import {
+    NotificationNavigateUserDTO,
+    NotificationNewMessageDTO,
+    StorePushTokenDTO,
+} from "@/api/gen/src";
 import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import {
@@ -174,6 +178,18 @@ export const registerForPushNotificationsAsync = async (
         token,
         tokenFetchStatus: TokenFetchStatus.SUCCESS,
     };
+};
+
+export const reactToNewMessageNotification = (
+    response: Notifications.NotificationResponse,
+    navigation: any,
+) => {
+    const notificationData: NotificationNewMessageDTO = response.notification
+        .request.content.data as NotificationNewMessageDTO;
+
+    navigation.navigate(ROUTES.MainTabView, {
+        screen: notificationData.screen,
+    });
 };
 
 export const reactToNewEncounterNotification = (

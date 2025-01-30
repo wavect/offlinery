@@ -15,27 +15,27 @@
 /**
  *
  * @export
- * @interface BaseNotificationADTO
+ * @interface NotificationNewMessageDTO
  */
-export interface BaseNotificationADTO {
+export interface NotificationNewMessageDTO {
     /**
      *
      * @type {string}
-     * @memberof BaseNotificationADTO
+     * @memberof NotificationNewMessageDTO
      */
-    type: BaseNotificationADTOTypeEnum;
+    type: NotificationNewMessageDTOTypeEnum;
     /**
      *
      * @type {string}
-     * @memberof BaseNotificationADTO
+     * @memberof NotificationNewMessageDTO
      */
-    screen: BaseNotificationADTOScreenEnum;
+    screen: NotificationNewMessageDTOScreenEnum;
 }
 
 /**
  * @export
  */
-export const BaseNotificationADTOTypeEnum = {
+export const NotificationNewMessageDTOTypeEnum = {
     new_match: "new_match",
     new_event: "new_event",
     account_approved: "account_approved",
@@ -44,13 +44,13 @@ export const BaseNotificationADTOTypeEnum = {
     account_denied: "account_denied",
     new_message: "new_message",
 } as const;
-export type BaseNotificationADTOTypeEnum =
-    (typeof BaseNotificationADTOTypeEnum)[keyof typeof BaseNotificationADTOTypeEnum];
+export type NotificationNewMessageDTOTypeEnum =
+    (typeof NotificationNewMessageDTOTypeEnum)[keyof typeof NotificationNewMessageDTOTypeEnum];
 
 /**
  * @export
  */
-export const BaseNotificationADTOScreenEnum = {
+export const NotificationNewMessageDTOScreenEnum = {
     NavigateToApproach: "Main_NavigateToApproach",
     FindPeople: "Main_FindPeople",
     FindPeople2: "Main_FindPeople",
@@ -59,28 +59,30 @@ export const BaseNotificationADTOScreenEnum = {
     FindPeople5: "Main_FindPeople",
     Encounters_onTab: "Main_Encounters_onTab",
 } as const;
-export type BaseNotificationADTOScreenEnum =
-    (typeof BaseNotificationADTOScreenEnum)[keyof typeof BaseNotificationADTOScreenEnum];
+export type NotificationNewMessageDTOScreenEnum =
+    (typeof NotificationNewMessageDTOScreenEnum)[keyof typeof NotificationNewMessageDTOScreenEnum];
 
 /**
- * Check if a given object implements the BaseNotificationADTO interface.
+ * Check if a given object implements the NotificationNewMessageDTO interface.
  */
-export function instanceOfBaseNotificationADTO(
+export function instanceOfNotificationNewMessageDTO(
     value: object,
-): value is BaseNotificationADTO {
+): value is NotificationNewMessageDTO {
     if (!("type" in value) || value["type"] === undefined) return false;
     if (!("screen" in value) || value["screen"] === undefined) return false;
     return true;
 }
 
-export function BaseNotificationADTOFromJSON(json: any): BaseNotificationADTO {
-    return BaseNotificationADTOFromJSONTyped(json, false);
+export function NotificationNewMessageDTOFromJSON(
+    json: any,
+): NotificationNewMessageDTO {
+    return NotificationNewMessageDTOFromJSONTyped(json, false);
 }
 
-export function BaseNotificationADTOFromJSONTyped(
+export function NotificationNewMessageDTOFromJSONTyped(
     json: any,
     ignoreDiscriminator: boolean,
-): BaseNotificationADTO {
+): NotificationNewMessageDTO {
     if (json == null) {
         return json;
     }
@@ -90,8 +92,8 @@ export function BaseNotificationADTOFromJSONTyped(
     };
 }
 
-export function BaseNotificationADTOToJSON(
-    value?: BaseNotificationADTO | null,
+export function NotificationNewMessageDTOToJSON(
+    value?: NotificationNewMessageDTO | null,
 ): any {
     if (value == null) {
         return value;

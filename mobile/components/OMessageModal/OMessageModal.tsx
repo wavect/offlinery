@@ -42,6 +42,7 @@ const OMessageModal = (props: IOMessageModalProps) => {
             });
             // only close, if message was successful, otherwise let user re-send or close it
             onClose();
+            setMessage("");
             setMessageError(false);
         } catch (error) {
             console.error("Unable to send dm: ", error);

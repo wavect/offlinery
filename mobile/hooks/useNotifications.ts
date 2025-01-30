@@ -5,6 +5,7 @@ import { ROUTES } from "@/screens/routes";
 import {
     TokenFetchStatus,
     reactToNewEncounterNotification,
+    reactToNewMessageNotification,
     registerForPushNotificationsAsync,
 } from "@/services/notification.service";
 import { useFocusEffect } from "@react-navigation/native";
@@ -133,6 +134,11 @@ export const useNotifications = ({ navigation }: IUseNotificationProps) => {
                                             navigation,
                                         );
                                         break;
+                                    case NotificationNavigateUserDTOTypeEnum.new_message:
+                                        reactToNewMessageNotification(
+                                            response,
+                                            navigation,
+                                        );
                                     default:
                                         // @dev other notifications have this default behavior, if we want a different behavior just add above.
                                         navigation.navigate(

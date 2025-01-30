@@ -351,7 +351,7 @@ export class EncounterService {
 
         const encounter = await this.encounterRepository.findOne({
             where: { id: encounterId },
-            relations: { messages: { sender: true } },
+            relations: { messages: { sender: true }, users: true },
         });
         if (!encounter) {
             throw new NotFoundException(
