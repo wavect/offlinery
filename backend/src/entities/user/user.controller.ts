@@ -8,7 +8,6 @@ import {
 import { AuthService } from "@/auth/auth.service";
 import { CreateUserRequestDTO } from "@/DTOs/create-user-request.dto";
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
-import { UserNotificationSettingsDTO } from "@/DTOs/get-user-notification-settings.dto";
 import { LocationUpdateDTO } from "@/DTOs/location.dto";
 import { RequestAccountDeletionViaFormDTO } from "@/DTOs/request-account-deletion-via-form.dto";
 import {
@@ -21,6 +20,7 @@ import { UpdateUserRequestDTO } from "@/DTOs/update-user-request.dto";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserCountDTO } from "@/DTOs/user-count.dto";
 import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
+import { UserNotificationSettingsDTO } from "@/DTOs/user-notification-settings.dto";
 import { UserPrivateDTO } from "@/DTOs/user-private.dto";
 import { UserPublicDTO } from "@/DTOs/user-public.dto";
 import { UserRequestDeletionFormSuccessDTO } from "@/DTOs/user-request-deletion-form-success.dto";
@@ -270,7 +270,7 @@ export class UserController {
         );
     }
 
-    @Get(`get-notification-settings/:${USER_ID_PARAM}`)
+    @Get(`notification-settings/:${USER_ID_PARAM}`)
     @OnlyOwnUserData()
     @ApiParam({
         name: USER_ID_PARAM,
@@ -281,11 +281,41 @@ export class UserController {
     async getNotificationSettings(
         @Param(USER_ID_PARAM) userId: string,
     ): Promise<UserNotificationSettingsDTO[]> {
-        console.log("USERID:", userId);
+        const user = await this.userService.findUserById(userId);
+        // @dev This list for now needs to be maintained, we also might want to allow users to modify their settings for push notifications as well in future.
         return [
-            { notficationSettingKey: "1", notificationSettingValue: true },
-            { notficationSettingKey: "2", notificationSettingValue: false },
-        ]; // TODO
+            // notificationSettingKey = property name on entity!
+            {
+                notificationSettingKey: "ghostModeRemindersEmail",
+                notificationSettingLbl: "Ghost mode reminders via email",
+                notificationSettingValue: user.ghostModeRemindersEmail,
+            },
+            {
+                notificationSettingKey: "eventAnnouncementsEmail",
+                notificationSettingLbl: "Event announcements via email",
+                notificationSettingValue: user.eventAnnouncementsEmail,
+            },
+        ];
+    }
+
+    @Put(`notification-settings/:${USER_ID_PARAM}`)
+    @OnlyOwnUserData()
+    @ApiBody({ type: [UserNotificationSettingsDTO] })
+    @ApiParam({
+        name: USER_ID_PARAM,
+        type: "string",
+        description: "User ID",
+    })
+    @ApiOperation({ summary: "Update notification settings" })
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async updateNotificationSettings(
+        @Param(USER_ID_PARAM) userId: string,
+        @Body() userNotificationSettings: UserNotificationSettingsDTO[],
+    ) {
+        return await this.userService.updateNotificationSettings(
+            userId,
+            userNotificationSettings,
+        );
     }
 
     @Get("change-notification-settings")
@@ -306,6 +336,7 @@ export class UserController {
             title: "Change Notification Settings | Offlinery",
             nonce,
             jwtToken,
+            userId,
         };
     }
 

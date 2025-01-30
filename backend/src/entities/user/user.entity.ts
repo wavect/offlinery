@@ -236,6 +236,14 @@ export class User
     @Column({ type: "timestamptz", nullable: true })
     lastSafetyCallVerificationReminderSent: Date;
 
+    /** @dev Send me ghostmode reminders via email */
+    @Column({ default: true })
+    ghostModeRemindersEmail: boolean;
+
+    /** @dev Send event announcements via email */
+    @Column({ default: true })
+    eventAnnouncementsEmail: boolean;
+
     @BeforeInsert()
     beforeInsert() {
         this.verificationStatus = EVerificationStatus.PENDING;

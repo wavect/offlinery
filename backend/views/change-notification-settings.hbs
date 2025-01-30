@@ -5,57 +5,187 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Notification Settings</title>
     <style>
+        :root {
+            --primary-color: #36797d;
+            --primary-hover: #2c6164;
+            --background: #f5f5f5;
+            --success: #4caf50;
+            --error: #f44336;
+            --text: #333;
+            --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #36797d;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .checkbox-wrapper {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
+            justify-content: center;
         }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 2rem;
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 1.75rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .checkbox-wrapper {
+            position: relative;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .checkbox-wrapper:hover {
+            background-color: rgba(54, 121, 125, 0.05);
+        }
+
+        .checkbox-wrapper label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text);
+            user-select: none;
+        }
+
         .checkbox-wrapper input[type="checkbox"] {
-            margin-right: 10px;
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
+            margin-right: 12px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
         }
+
+        .checkbox-wrapper input[type="checkbox"]:checked {
+            background-color: var(--primary-color);
+        }
+
+        .checkbox-wrapper input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            left: 4px;
+            top: -1px;
+        }
+
         button {
             width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            background-color: #36797d;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.2s;
+            margin-top: 1.5rem;
         }
+
         button:hover {
-            background-color: #2c6164;
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
         }
+
+        button:active {
+            transform: translateY(0);
+        }
+
         .message {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 4px;
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
         }
-        .success { background-color: #dff0d8; color: #3c763d; }
-        .error { background-color: #f2dede; color: #a94442; }
+
+        .message::before {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        .success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success);
+        }
+
+        .success::before {
+            content: '✓';
+        }
+
+        .error {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--error);
+        }
+
+        .error::before {
+            content: '⚠';
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--text);
+            padding: 2rem;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -63,74 +193,116 @@
     <h1>Email Notification Settings</h1>
     <form id="settingsForm">
         {{#if loading}}
-            <p>Loading settings...</p>
+            <div class="loading">Loading your preferences...</div>
         {{else}}
-            {{#each notifications}}
-                <div class="checkbox-wrapper">
-                    <input type="checkbox"
-                           id="{{this.id}}"
-                           name="{{this.id}}"
-                           {{#if this.enabled}}checked{{/if}}>
-                    <label for="{{this.id}}">{{this.name}}</label>
-                </div>
-            {{/each}}
-            <button type="submit">Save Changes</button>
+            <div id="checkboxContainer"></div>
+            <button type="submit">Save Preferences</button>
         {{/if}}
         {{#if message}}
-            <div class="message {{messageType}}">
-                {{message}}
-            </div>
+            <div class="message {{messageType}}">{{message}}</div>
         {{/if}}
     </form>
 </div>
 
 <script nonce="{{nonce}}">
-    async function fetchSettings() {
-        try {
-            const response = await fetch('/v1/user/get-notification-settings', {
+    class NotificationSettings {
+        constructor() {
+            this.form = document.getElementById('settingsForm');
+            this.checkboxContainer = document.getElementById('checkboxContainer');
+            this.init();
+        }
+
+        async init() {
+            try {
+                await this.fetchSettings();
+                this.attachEventListeners();
+            } catch (error) {
+                this.showMessage('Failed to load settings', 'error');
+            }
+        }
+
+        async fetchSettings() {
+            const response = await fetch('/v1/user/notification-settings/{{userId}}', {
                 headers: {
-                    "authorization": `Bearer {{jwtToken}}`
+                    "Authorization": `Bearer {{jwtToken}}`
                 }
             });
+
             if (!response.ok) throw new Error('Failed to fetch settings');
-            return await response.json();
-        } catch (error) {
-            console.error('Error:', error);
-            return [];
+
+            const notifications = await response.json();
+            this.renderSettings(notifications);
         }
-    }
 
-    document.getElementById('settingsForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const settings = Array.from(document.querySelectorAll('input[type="checkbox"]'))
-            .map(checkbox => ({
-                id: checkbox.id,
-                enabled: checkbox.checked
-            }));
+        renderSettings(notifications) {
+            this.checkboxContainer.innerHTML = notifications.map(notification => `
+                    <div class="checkbox-wrapper">
+                        <label>
+                            <input type="checkbox"
+                                id="${notification.notificationSettingKey}"
+                                name="${notification.notificationSettingKey}"
+                                ${notification.notificationSettingValue ? 'checked' : ''}>
+                            ${this.formatSettingLabel(notification.notificationSettingLbl)}
+                        </label>
+                    </div>
+                `).join('');
+        }
 
-        try {
-            const response = await fetch('/v1/user/update-notification-settings', {
-                method: 'POST',
+        formatSettingLabel(key) {
+            return key
+                .split(/(?=[A-Z])/)
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+
+        async saveSettings(settings) {
+            console.error("HHH", settings)
+            const response = await fetch('/v1/user/notification-settings/{{userId}}', {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer {{jwtToken}}'
+                    'Authorization': `Bearer {{jwtToken}}`
                 },
-                body: JSON.stringify({ settings })
+                body: JSON.stringify(settings)
             });
 
             if (!response.ok) throw new Error('Failed to update settings');
-
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message success';
-            messageDiv.textContent = 'Settings updated successfully';
-            document.getElementById('settingsForm').appendChild(messageDiv);
-        } catch (error) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message error';
-            messageDiv.textContent = 'Failed to update settings';
-            document.getElementById('settingsForm').appendChild(messageDiv);
+            return response.json();
         }
-    });
+
+        showMessage(text, type) {
+            const existingMessage = this.form.querySelector('.message');
+            if (existingMessage) existingMessage.remove();
+
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            this.form.appendChild(message);
+
+            setTimeout(() => message.remove(), 5000);
+        }
+
+        attachEventListeners() {
+            this.form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                try {
+                    const settings = Array.from(this.form.querySelectorAll('input[type="checkbox"]'))
+                        .map(checkbox => ({
+                            notificationSettingKey: checkbox.id,
+                            notificationSettingValue: checkbox.checked
+                        }));
+
+                    await this.saveSettings(settings);
+                    this.showMessage('Settings updated successfully', 'success');
+                } catch (error) {
+                    this.showMessage('Failed to update settings', 'error');
+                }
+            });
+        }
+    }
+
+    // Initialize the application
+    document.addEventListener('DOMContentLoaded', () => new NotificationSettings());
 </script>
 </body>
 </html>

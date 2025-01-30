@@ -5,6 +5,7 @@ import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserPasswordDTO } from "@/DTOs/update-user-password";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
+import { UserNotificationSettingsDTO } from "@/DTOs/user-notification-settings.dto";
 import { UserRequestDeletionFormSuccessDTO } from "@/DTOs/user-request-deletion-form-success.dto";
 import { UserResetPwdSuccessDTO } from "@/DTOs/user-reset-pwd-success.dto";
 import { AuthService } from "@/auth/auth.service";
@@ -544,6 +545,28 @@ export class UserService {
         }
 
         return user;
+    }
+
+    /** @returns boolean: Was operation successful. */
+    async updateNotificationSettings(
+        id: string,
+        userNotificationSettingsDTOs: UserNotificationSettingsDTO[],
+    ): Promise<boolean> {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { id },
+            });
+            userNotificationSettingsDTOs.forEach((dto) => {
+                user[dto.notificationSettingKey] = dto.notificationSettingValue;
+            });
+            await this.userRepository.save(user);
+            return true;
+        } catch (error) {
+            this.logger.error(
+                `Couldn't update notification settings: ${error?.message}`,
+            );
+            return false;
+        }
     }
 
     async findUserByEmailOrFail(email: string): Promise<User> {

@@ -5,7 +5,13 @@ export class UserNotificationSettingsDTO {
         nullable: false,
         description: "Notification Setting",
     })
-    notficationSettingKey: string;
+    notificationSettingKey: string;
+
+    @ApiProperty({
+        nullable: true,
+        description: "User facing label",
+    })
+    notificationSettingLbl: string;
 
     @ApiProperty({
         nullable: false,
