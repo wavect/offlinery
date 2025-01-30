@@ -401,12 +401,12 @@ export class EncounterService {
                 ]);
             } else {
                 this.logger.warn(
-                    `Cannot send push notification for user ${user.id} to remind about ghost mode since no pushToken. But should have sent email.`,
+                    `Cannot send push notification for user ${userId} to remind about ghost mode since no pushToken. But should have sent email.`,
                 );
             }
         } catch (error) {
             this.logger.error(
-                `Could not send push notification for user ${otherUser.id} to notify about new chat message: ${error?.message}`,
+                `Could not send push notification for message from user ${otherUser.id} to notify about new chat message: ${error?.message}`,
             );
         }
 
