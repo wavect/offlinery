@@ -154,11 +154,11 @@ export class AuthGuard implements CanActivate {
                 const params = request.params;
                 const user = request[USER_OBJ_ID];
                 if (
-                    params[USER_ID_PARAM] &&
-                    params[USER_ID_PARAM] !== user.id
+                    !params[USER_ID_PARAM] ||
+                    params[USER_ID_PARAM]?.trim() !== user.sub?.trim()
                 ) {
                     this.logger.warn(
-                        `Someone tried to access user data that does not belong to them: ${user.id} != ${params[USER_ID_PARAM]}`,
+                        `Someone tried to access user data that does not belong to them: ${user.sub} != ${params[USER_ID_PARAM]}`,
                     );
                     throw new ForbiddenException("Access denied");
                 }
