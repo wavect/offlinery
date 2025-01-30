@@ -19,7 +19,8 @@ import FindPeople from "./FindPeople";
 import ProfileSettings from "./ProfileSettings";
 
 export const MainScreenTabs = ({ navigation }: any) => {
-    useNotifications({ navigation });
+    const { unseenEncountersCount, setUnseenEncountersCount } =
+        useNotifications({ navigation });
 
     const { tourKey: tourKeyFind, start: startTourFind } =
         useTourGuideController(TOURKEY.FIND);
@@ -95,13 +96,18 @@ export const MainScreenTabs = ({ navigation }: any) => {
             <MainTabs.Screen
                 name={ROUTES.Main.EncountersTab}
                 component={EncounterScreenStack}
+                listeners={{
+                    tabPress: () => {
+                        setUnseenEncountersCount(0); // @dev reset all unseen encounters once tab clicked
+                    },
+                }}
                 options={{
                     tabBarLabel: i18n.t(TR.encounters),
                     headerLeft: () => <OPageHeaderEncounters />,
-                    // tabBarBadge:
-                    // unreadNotifications.length === 0
-                    //     ? undefined
-                    //     : unreadNotifications.length,
+                    tabBarBadge:
+                        unseenEncountersCount === 0
+                            ? undefined
+                            : unseenEncountersCount,
                     tabBarIcon: ({ color, size }) => (
                         <MaterialIcons
                             name="emoji-people"

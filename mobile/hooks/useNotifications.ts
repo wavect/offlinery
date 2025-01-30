@@ -17,11 +17,17 @@ interface IUseNotificationProps {
     navigation: any;
 }
 
+const getNotificationType = (
+    notification: Notifications.Notification,
+): NotificationNavigateUserDTOTypeEnum | undefined => {
+    // Differentiate between different notifications
+    return notification.request.content?.data?.type; // @dev defined through backend side abstract class
+};
+
 export const useNotifications = ({ navigation }: IUseNotificationProps) => {
     const { state } = useUserContext();
-    const [unreadNotifications, setUnreadNotifications] = useState<
-        Notifications.Notification[]
-    >([]);
+    const [unseenEncountersCount, setUnseenEncountersCount] =
+        useState<number>(0);
     const [channels, setChannels] = useState<
         Notifications.NotificationChannel[]
     >([]);
@@ -85,27 +91,27 @@ export const useNotifications = ({ navigation }: IUseNotificationProps) => {
                     notificationListener.current =
                         Notifications.addNotificationReceivedListener(
                             (notification) => {
-                                // TODO: we likely will also need to check for notification type here then
-                                setUnreadNotifications([
-                                    ...unreadNotifications,
-                                    notification,
-                                ]);
-                                console.log(
-                                    "Received new notification: ",
-                                    notification,
-                                );
+                                const notificationType =
+                                    getNotificationType(notification);
+
+                                if (
+                                    notificationType ===
+                                    NotificationNavigateUserDTOTypeEnum.new_match
+                                ) {
+                                    setUnseenEncountersCount(
+                                        unseenEncountersCount + 1,
+                                    );
+                                }
                             },
                         );
 
                     responseListener.current =
                         Notifications.addNotificationResponseReceivedListener(
                             (response) => {
-                                console.log("Notification response", response);
-
                                 // Differentiate between different notifications
-                                const notificationType =
-                                    response.notification.request.content?.data
-                                        ?.type; // @dev defined through backend side abstract class
+                                const notificationType = getNotificationType(
+                                    response.notification,
+                                );
 
                                 if (!notificationType) {
                                     navigation.navigate(ROUTES.MainTabView, {
@@ -116,17 +122,12 @@ export const useNotifications = ({ navigation }: IUseNotificationProps) => {
 
                                 switch (notificationType) {
                                     case NotificationNavigateUserDTOTypeEnum.new_match:
-                                        // @dev Remove notification from array to update the "unread notification" bubble in the tab
-                                        const filteredNotifications =
-                                            unreadNotifications.filter(
-                                                (n) =>
-                                                    n.request.identifier !==
-                                                    response.notification
-                                                        .request.identifier,
+                                        if (unseenEncountersCount > 0) {
+                                            // @dev If unseen encounter on click, reduce "unread notification" bubble in the tab
+                                            setUnseenEncountersCount(
+                                                unseenEncountersCount - 1,
                                             );
-                                        setUnreadNotifications(
-                                            filteredNotifications,
-                                        );
+                                        }
                                         reactToNewEncounterNotification(
                                             response,
                                             navigation,
@@ -164,4 +165,6 @@ export const useNotifications = ({ navigation }: IUseNotificationProps) => {
             };
         }, [state.id, state.dateMode]),
     );
+
+    return { unseenEncountersCount, setUnseenEncountersCount };
 };
