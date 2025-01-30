@@ -37,6 +37,7 @@ export class UserBuilder extends AbstractEntityBuilder<User> {
         user.preferredLanguage = ELanguage.en;
         user.intentions = [EIntention.RELATIONSHIP];
         user.ageRangeString = "[18,99]";
+        user.restrictedViewToken = "abcdef";
         return user;
     }
 
