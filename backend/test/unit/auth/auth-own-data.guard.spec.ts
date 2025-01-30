@@ -1,6 +1,9 @@
 import { AuthGuard, USER_ID_PARAM } from "@/auth/auth.guard";
+import { ApiUserService } from "@/entities/api-user/api-user.service";
+import { UserService } from "@/entities/user/user.service";
 import { ExecutionContext, ForbiddenException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
+import { JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
 
 describe("AuthGuard:OnlyOwnData", () => {
@@ -12,9 +15,27 @@ describe("AuthGuard:OnlyOwnData", () => {
             providers: [
                 AuthGuard,
                 {
+                    provide: JwtService,
+                    useValue: {
+                        verifyAsync: jest.fn(),
+                    },
+                },
+                {
                     provide: Reflector,
                     useValue: {
                         getAllAndOverride: jest.fn(),
+                    },
+                },
+                {
+                    provide: ApiUserService,
+                    useValue: {
+                        findApiUserByApiKey: jest.fn(),
+                    },
+                },
+                {
+                    provide: UserService,
+                    useValue: {
+                        isValidRestrictedViewToken: jest.fn(),
                     },
                 },
             ],

@@ -1,5 +1,6 @@
 import { AuthGuard } from "@/auth/auth.guard";
 import { ApiUserService } from "@/entities/api-user/api-user.service";
+import { UserService } from "@/entities/user/user.service";
 import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
@@ -30,6 +31,12 @@ describe("AuthGuard", () => {
                     provide: ApiUserService,
                     useValue: {
                         findApiUserByApiKey: jest.fn(),
+                    },
+                },
+                {
+                    provide: UserService,
+                    useValue: {
+                        isValidRestrictedViewToken: jest.fn(),
                     },
                 },
             ],
