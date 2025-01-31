@@ -84,7 +84,6 @@ export const MOCK_ENCOUNTER = (
             ],
         },
         lastDateTimePassedBy: new Date().toISOString(),
-        lastLocationPassedBy: "Innsbruck",
         status: "not_met",
         ...override,
     };
