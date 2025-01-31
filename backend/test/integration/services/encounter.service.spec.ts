@@ -78,6 +78,46 @@ describe("Encounter Service Integration Tests ", () => {
             ).toEqual(3);
             expect(1).toEqual(1);
         });
+        it("should return the encounters a user has but skip encounters that have a deleted user", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                firstName: "Testing Main User",
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                genderDesire: [EGender.WOMAN],
+                gender: EGender.MAN,
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.APPROACH,
+            });
+
+            const maxDistUser = 1500;
+            const DPM = 1 / 111139;
+
+            /** @DEV insert 3 rest users */
+            const user1 = await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, (maxDistUser - 1) * DPM), // 1 meter less than max
+            });
+            const user2 = await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, maxDistUser * DPM), // Exactly at max distance
+            });
+            const user3 = await userFactory.persistNewTestUser({
+                location: new PointBuilder().build(0, (maxDistUser + 15) * DPM),
+            });
+
+            /** @DEV insert 3 test encounters to the user */
+            await encounterFactory.persistNewTestEncounter(mainUser, user1);
+            await encounterFactory.persistNewTestEncounter(mainUser, user2);
+            await encounterFactory.persistNewTestEncounter(mainUser, user3);
+
+            /** @dev Delete a test user, query should filter out that encounter */
+            const deleteResult = await userFactory.deleteTestUser(user2);
+            expect(deleteResult.affected).toEqual(1);
+
+            expect(
+                (await encounterService.getEncountersByUser(mainUser.id))
+                    .length,
+            ).toEqual(2);
+            expect(1).toEqual(1);
+        });
         it("should mark users that are nearby", async () => {
             const mainUser = await userFactory.persistNewTestUser({
                 firstName: "Testing Main User",
@@ -102,7 +142,7 @@ describe("Encounter Service Integration Tests ", () => {
                 ),
             });
 
-            /** @DEV insert 3 test encounters to the user */
+            /** @DEV insert 2 test encounters to the user */
             await encounterFactory.persistNewTestEncounter(mainUser, user1);
             await encounterFactory.persistNewTestEncounter(mainUser, user2);
 
@@ -110,6 +150,7 @@ describe("Encounter Service Integration Tests ", () => {
                 mainUser.id,
             );
 
+            expect(encounters.length).toEqual(2);
             expect(encounters[0].isNearbyRightNow).toEqual(true);
             expect(encounters[1].isNearbyRightNow).toEqual(null);
             expect(encounters.length).toEqual(2);

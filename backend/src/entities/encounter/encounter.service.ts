@@ -59,7 +59,11 @@ export class EncounterService {
                 ':userId IN (SELECT "userId" FROM user_encounters_encounter WHERE "encounterId" = encounter.id)',
                 { userId },
             )
-            .andWhere("userReports.id IS NULL");
+            .andWhere("userReports.id IS NULL")
+            /// @dev This filters out encounters that have a deleted user. As of today we don't delete encounters with one deleted user.
+            .andWhere(
+                '(SELECT COUNT(*) FROM user_encounters_encounter WHERE "encounterId" = encounter.id) > 1',
+            );
 
         if (dateRange?.startDate && dateRange?.endDate) {
             query = query.andWhere(
