@@ -44,6 +44,7 @@
       "findLocation": "Location checken",
       "reminder": "Deine nächste große Connection wartet vielleicht schon um die Ecke.",
       "reminder2": "Das Leben passiert außerhalb deiner Komfortzone.",
+      "joinWhatsApp": "Gib uns Feedback",
       "footer": "Du bekommst diese E-Mail aufgrund deiner Einstellungen. Du kannst diese <a href='{changeNotificationSettingsUrl}' title='Einstellungen ändern' target='_blank'>hier</a> jederzeit ändern."
     },
     "request-account-deletion": {
@@ -57,6 +58,7 @@
       "warningMessage": "⚠️ WARNUNG: Diese Aktion kann nicht rückgängig gemacht werden! ⚠️",
       "feedbackRequest": "Bevor du gehst, würden wir gerne wissen, warum du uns verlässt. Bitte teile uns deine Gedanken per E-Mail an office@offlinery.io mit.",
       "securityWarning": "Wenn du diese Löschung nicht beantragt hast, kontaktiere bitte umgehend unser Support-Team, um dein Konto zu sichern.",
+      "joinWhatsApp": "Gib uns Feedback",
       "footer": "Dies ist eine automatisierte Nachricht. Bitte antworte nicht auf diese E-Mail."
     },
     "account-verification-verified": {
@@ -67,6 +69,7 @@
       "verificationSuccess": "Großartige Neuigkeiten! Dein Offlinery-Konto ist jetzt verifiziert und einsatzbereit.",
       "nextSteps": "Was kommt als Nächstes? Ab jetzt kannst du andere User in der echten Welt ansprechen beziehungsweise wirst von ihnen angesprochen.",
       "disclaimer": "Wenn du dich nicht bei Offlinery angemeldet hast, keine Sorge. Du kannst diese E-Mail einfach ignorieren.",
+      "joinWhatsApp": "Gib uns Feedback",
       "footer": "Dies ist eine automatisierte Nachricht. Bitte antworte nicht auf diese E-Mail."
     },
     "account-verification-denied": {
@@ -90,6 +93,7 @@
       "thankYou": "Vielen Dank für deine Anmeldung! Bitte verwende den unten stehenden Verifizierungscode, um deine E-Mail-Adresse zu bestätigen:",
       "instructions": "Gib diesen Code in der Offlinery-App ein, um deine E-Mail-Verifizierung abzuschließen.",
       "disclaimer": "Wenn du diese E-Mail nicht angefordert hast, dann kannst du sie einfach ignorieren.",
+      "joinWhatsApp": "Gib uns Feedback",
       "footer": "Dies ist eine automatisierte Nachricht. Bitte antworte nicht auf diese E-Mail."
     },
     "request-password-reset": {
@@ -102,6 +106,7 @@
       "ignoreMessage": "⚠️ Wenn du das Zurücksetzen des Passworts nicht angefordert hast, ignoriere bitte diese E-Mail. ⚠️",
       "securityNote": "Aus Sicherheitsgründen teile diesen Code niemals mit anderen.",
       "contactSupport": "Bei Fragen oder Bedenken wende dich bitte an unser Support-Team unter office@offlinery.io.",
+      "joinWhatsApp": "Gib uns Feedback",
       "footer": "Dies ist eine automatisch generierte Nachricht. Bitte antworte nicht auf diese E-Mail."
     },
     "ghostmode-reminder": {

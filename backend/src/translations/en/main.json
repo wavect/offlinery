@@ -44,6 +44,7 @@
       "findLocation": "Check Venue",
       "reminder": "Your next great connection could be just around the corner.",
       "reminder2": "Life happens outside your comfort zone.",
+      "joinWhatsApp": "Give us Feedback",
       "footer": "You receive this email due to your notification settings. You can change your settings <a href='{changeNotificationSettingsUrl}' title='Change settings' target='_blank'>here</a>."
     },
     "request-account-deletion": {
@@ -57,6 +58,7 @@
       "warningMessage": "⚠️ WARNING: This action cannot be undone! ⚠️",
       "feedbackRequest": "Before you go, we'd appreciate knowing why you're leaving. Please share your thoughts by emailing office@offlinery.io.",
       "securityWarning": "If you didn't request this deletion, please contact our support team immediately to secure your account.",
+      "joinWhatsApp": "Give us Feedback",
       "footer": "This is an automated message. Do not reply to this email."
     },
     "account-verification-verified": {
@@ -67,6 +69,7 @@
       "verificationSuccess": "Awesome news! Your Offlinery account is now verified and ready to go.",
       "nextSteps": "What's next? Start connecting with people around you or wait for someone to approach you. The offline world is now at your fingertips!",
       "disclaimer": "If you didn't sign up for Offlinery, no worries. You can safely ignore this email.",
+      "joinWhatsApp": "Give us Feedback",
       "footer": "This is an automated message. Please don't reply to this email."
     },
     "account-verification-denied": {
@@ -90,6 +93,7 @@
       "thankYou": "Thank you for signing up! Please use the verification code below to confirm your email address:",
       "instructions": "Enter this code in the Offlinery app to complete your email verification.",
       "disclaimer": "If you didn't request this email, you can safely ignore it.",
+      "joinWhatsApp": "Give us Feedback",
       "footer": "This is an automated message, please do not reply to this email."
     },
     "request-password-reset": {
@@ -102,6 +106,7 @@
       "ignoreMessage": "⚠️ If you didn't request this password reset, please ignore this email. ⚠️",
       "securityNote": "For the security of your account, never share this code with anyone.",
       "contactSupport": "If you have any questions or concerns, please contact our support team at support@offlinery.io.",
+      "joinWhatsApp": "Give us Feedback",
       "footer": "This is an automated message. Please do not reply to this email."
     },
     "ghostmode-reminder": {
