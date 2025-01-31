@@ -382,7 +382,11 @@ export class EncounterService {
         const otherUser: User = encounter.users.find((u) => u.id !== userId);
 
         try {
-            if (otherUser?.pushToken && user) {
+            if (
+                otherUser?.pushToken &&
+                user &&
+                encounter.status !== EEncounterStatus.MET_NOT_INTERESTED
+            ) {
                 const data: NotificationNewMessageDTO = {
                     type: ENotificationType.NEW_MESSAGE,
                     screen: EAppScreens.NEW_MESSAGE,

@@ -53,19 +53,10 @@ describe("Encounter Service Integration Tests ", () => {
                 approachChoice: EApproachChoice.APPROACH,
             });
 
-            const maxDistUser = 1500;
-            const DPM = 1 / 111139;
-
             /** @DEV insert 3 rest users */
-            const user1 = await userFactory.persistNewTestUser({
-                location: new PointBuilder().build(0, (maxDistUser - 1) * DPM), // 1 meter less than max
-            });
-            const user2 = await userFactory.persistNewTestUser({
-                location: new PointBuilder().build(0, maxDistUser * DPM), // Exactly at max distance
-            });
-            const user3 = await userFactory.persistNewTestUser({
-                location: new PointBuilder().build(0, (maxDistUser + 15) * DPM),
-            });
+            const user1 = await userFactory.persistNewTestUser();
+            const user2 = await userFactory.persistNewTestUser();
+            const user3 = await userFactory.persistNewTestUser();
 
             /** @DEV insert 3 test encounters to the user */
             await encounterFactory.persistNewTestEncounter(mainUser, user1);
@@ -89,19 +80,10 @@ describe("Encounter Service Integration Tests ", () => {
                 approachChoice: EApproachChoice.APPROACH,
             });
 
-            const maxDistUser = 1500;
-            const DPM = 1 / 111139;
-
             /** @DEV insert 3 rest users */
-            const user1 = await userFactory.persistNewTestUser({
-                location: new PointBuilder().build(0, (maxDistUser - 1) * DPM), // 1 meter less than max
-            });
-            const user2 = await userFactory.persistNewTestUser({
-                location: new PointBuilder().build(0, maxDistUser * DPM), // Exactly at max distance
-            });
-            const user3 = await userFactory.persistNewTestUser({
-                location: new PointBuilder().build(0, (maxDistUser + 15) * DPM),
-            });
+            const user1 = await userFactory.persistNewTestUser();
+            const user2 = await userFactory.persistNewTestUser();
+            const user3 = await userFactory.persistNewTestUser();
 
             /** @DEV insert 3 test encounters to the user */
             await encounterFactory.persistNewTestEncounter(mainUser, user1);
