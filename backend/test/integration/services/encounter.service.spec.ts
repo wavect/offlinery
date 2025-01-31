@@ -151,8 +151,15 @@ describe("Encounter Service Integration Tests ", () => {
             );
 
             expect(encounters.length).toEqual(2);
-            expect(encounters[0].isNearbyRightNow).toEqual(true);
-            expect(encounters[1].isNearbyRightNow).toEqual(null);
+            // @dev needs to be sorted or as we do here, query the right encounter to make expect deterministic
+            const encounter1 = encounters.find(
+                (encounter) => encounter.otherUser.id === user1.id,
+            );
+            const encounter2 = encounters.find(
+                (encounter) => encounter.otherUser.id === user2.id,
+            );
+            expect(encounter1.isNearbyRightNow).toEqual(true);
+            expect(encounter2.isNearbyRightNow).toEqual(null);
             expect(encounters.length).toEqual(2);
 
             expect(1).toEqual(1);
