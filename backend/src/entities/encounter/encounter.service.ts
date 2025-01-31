@@ -39,6 +39,7 @@ export class EncounterService {
         @Inject(forwardRef(() => UserService))
         private readonly userService: UserService,
         protected readonly i18n: I18nService,
+        @Inject(forwardRef(() => NotificationService))
         protected readonly notificationService: NotificationService,
     ) {}
 
