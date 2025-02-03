@@ -18,7 +18,7 @@ import {
     View,
 } from "react-native";
 
-interface IOMessageModalProps {
+export interface IOMessageModalProps {
     userId: string;
     encounterId: string;
     visible: boolean;

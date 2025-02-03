@@ -1,6 +1,6 @@
 import { Platform, StyleSheet } from "react-native";
 
-export default {
+export const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#fff",
@@ -30,4 +30,4 @@ export default {
         alignItems: "center",
         zIndex: 0, // Place the icon behind other content
     },
-};
+});

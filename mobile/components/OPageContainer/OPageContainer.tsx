@@ -15,7 +15,7 @@ import {
     View,
     ViewStyle,
 } from "react-native";
-import styles from "./OPageContainer.styles";
+import { styles } from "./OPageContainer.styles";
 
 import { MaterialIcons as MaterialIconsType } from "@expo/vector-icons";
 type IconName = React.ComponentProps<typeof MaterialIconsType>["name"];
