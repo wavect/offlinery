@@ -1,4 +1,3 @@
-import { TR, i18n } from "@/localization/translate.service";
 import * as Sentry from "@sentry/react-native";
 import React, { FC, useRef, useState } from "react";
 import { Dimensions, Platform, View } from "react-native";
@@ -158,56 +157,6 @@ const OCalendlyInline: FC<Props> = ({
     return (
         <View style={[styles.container, { height: windowHeight * 0.9 }]}>
             {isLoading && <LoadingSpinner />}
-            <WebView
-                ref={webViewRef}
-                scrollEnabled={true}
-                nestedScrollEnabled={true}
-                showsVerticalScrollIndicator={true}
-                contentMode="mobile"
-                automaticallyAdjustsScrollIndicatorInsets={true}
-                overScrollMode={"content"}
-                userAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36"
-                style={styles.webView}
-                source={{
-                    html: webViewHtml,
-                    baseUrl: "https://calendly.com",
-                }}
-                originWhitelist={["*"]}
-                onLoadEnd={() => setIsLoading(false)}
-                injectedJavaScript={injectedJavaScript}
-                onMessage={handleMessage}
-                javaScriptEnabled={true}
-                domStorageEnabled={true}
-                startInLoadingState={true}
-                scalesPageToFit={true}
-                mixedContentMode="compatibility"
-                bounces={false}
-                webviewDebuggingEnabled={__DEV__}
-                allowsBackForwardNavigationGestures={true}
-                androidLayerType={
-                    Platform.OS === "android" ? "hardware" : undefined
-                }
-                cacheEnabled={true}
-                incognito={false}
-                thirdPartyCookiesEnabled={true}
-                sharedCookiesEnabled={true}
-                cacheMode="LOAD_CACHE_ELSE_NETWORK"
-                onError={(syntheticEvent) => {
-                    const { nativeEvent } = syntheticEvent;
-                    console.warn("WebView error: ", nativeEvent);
-                    Sentry.captureException(nativeEvent, {
-                        tags: { calendlyInline: "onError" },
-                    });
-                }}
-                onHttpError={(syntheticEvent) => {
-                    const { nativeEvent } = syntheticEvent;
-                    console.warn("WebView HTTP error: ", nativeEvent);
-                    Sentry.captureException(nativeEvent, {
-                        tags: { calendlyInline: "onHttpError" },
-                    });
-                }}
-                title={iframeTitle || i18n.t(TR.calendlySchedulingPageDefault)}
-            />
         </View>
     );
 };
