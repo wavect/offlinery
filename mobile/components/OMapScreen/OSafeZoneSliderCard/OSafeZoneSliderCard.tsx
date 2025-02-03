@@ -43,13 +43,7 @@ export const OSafeZoneSliderCard = ({
                 pointerEvents="box-none"
             >
                 <View style={styles.sliderWrapper} pointerEvents="box-none">
-                    <OCard
-                        style={[
-                            styles.controlsCard,
-                            Platform.OS === "android" &&
-                                styles.androidControlsCard,
-                        ]}
-                    >
+                    <OCard>
                         <View
                             pointerEvents="auto"
                             onPointerDown={handleRemoveRegion}
