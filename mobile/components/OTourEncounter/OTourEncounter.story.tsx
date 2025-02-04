@@ -1,3 +1,4 @@
+import { EncountersProvider } from "@/context/EncountersContext"; // Importiere den Provider!
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { View } from "react-native";
@@ -8,9 +9,13 @@ const meta: Meta<typeof OTourEncounter> = {
     component: OTourEncounter,
     decorators: [
         (Story) => (
-            <View style={{ flex: 1, backgroundColor: "#000", padding: 16 }}>
-                <Story />
-            </View>
+            <EncountersProvider>
+                {" "}
+                {/* ✅ Jetzt umschließt der Provider die Story */}
+                <View style={{ flex: 1, backgroundColor: "#000", padding: 16 }}>
+                    <Story />
+                </View>
+            </EncountersProvider>
         ),
     ],
     parameters: {
