@@ -1,4 +1,4 @@
-import { OnlyOwnUserData, Public, USER_ID_PARAM } from "@/auth/auth.guard";
+import { OnlyAdmin, OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth.guard";
 import { EncounterPublicDTO } from "@/DTOs/encounter-public.dto";
 import { GenericStatusDTO } from "@/DTOs/generic-status.dto";
 import { GetLocationOfEncounterResponseDTO } from "@/DTOs/get-location-of-encounter-response.dto";
@@ -37,7 +37,7 @@ export class EncounterController {
     constructor(private readonly encounterService: EncounterService) {}
 
     @Post("admin/simulate-encounter")
-    @Public()
+    @OnlyAdmin()
     @ApiExcludeEndpoint()
     @ApiOperation({ summary: "Send encounter notification & fake" })
     async simulateEncounter(): Promise<GenericStatusDTO> {
