@@ -141,6 +141,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                         }}
                     >
                         <OImageWithLoader
+                            testID="profile-image"
                             style={styles.profileImage}
                             resizeMode="cover"
                             source={{

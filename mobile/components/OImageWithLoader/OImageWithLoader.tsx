@@ -46,10 +46,13 @@ export const OImageWithLoader = (props: OImageWithLoaderProps) => {
             typeof props.source === "object" &&
             props.source?.uri
         ) {
-            Image.prefetch(props.source?.uri).catch(() => {
-                setIsLoading(false);
-                setHasError(true);
-            });
+            const prefetchResult = Image.prefetch(props.source.uri);
+            if (prefetchResult && typeof prefetchResult.catch === "function") {
+                prefetchResult.catch(() => {
+                    setIsLoading(false);
+                    setHasError(true);
+                });
+            }
         }
     }, [props.source]);
 
