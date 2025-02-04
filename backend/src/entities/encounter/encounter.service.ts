@@ -71,11 +71,11 @@ export class EncounterService {
         firstEncounter.amountStreaks++;
         const getCloseLocation = getTypedCoordinatesFromPoint(user.location);
         firstEncounter.lastLocationPassedBy = getPointFromTypedCoordinates({
-            latitude: getCloseLocation.latitude + 0.0000005,
+            latitude: getCloseLocation.latitude + 0.0003,
             longitude: getCloseLocation.longitude,
         });
         otherUser.location = getPointFromTypedCoordinates({
-            latitude: getCloseLocation.latitude + 0.0000004,
+            latitude: getCloseLocation.latitude + 0.0004,
             longitude: getCloseLocation.longitude,
         });
         firstEncounter.lastDateTimePassedBy = new Date();
@@ -93,6 +93,9 @@ export class EncounterService {
             this.logger.error(msg);
             throw new PreconditionFailedException(msg);
         }
+        this.logger.debug(
+            `Locations: ${otherUser.location.coordinates} (otheruser), ${user.location.coordinates} (user), ${firstEncounter.lastLocationPassedBy.coordinates} (last passed)`,
+        );
         this.logger.debug(
             `Updated encounter for simulation: ${firstEncounter.lastDateTimePassedBy}, ${firstEncounter.lastLocationPassedBy.coordinates}`,
         );
@@ -341,6 +344,10 @@ export class EncounterService {
             this.logger.error(msg);
             throw new PreconditionFailedException(msg);
         }
+
+        this.logger.debug(
+            `User location: ${currentUser.location.coordinates}, Other user: ${otherUser.location.coordinates}`,
+        );
 
         return {
             lastTimeLocationUpdated: otherUser.locationLastTimeUpdated,
