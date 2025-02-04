@@ -14,7 +14,7 @@ const meta: Meta<typeof OSafeAreaContainer> = {
     },
     decorators: [
         (Story) => (
-            <div
+            <View
                 style={{
                     width: "100%",
                     height: "100%",
@@ -22,7 +22,7 @@ const meta: Meta<typeof OSafeAreaContainer> = {
                 }}
             >
                 <Story />
-            </div>
+            </View>
         ),
     ],
 };
