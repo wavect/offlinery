@@ -68,10 +68,10 @@ const getRules = (approachChoice: UserPrivateDTOApproachChoiceEnum): Rule[] => {
 
 const HouseRules = ({
     route,
-    navigation,
 }: NativeStackScreenProps<MainStackParamList, typeof ROUTES.HouseRules>) => {
     const { state } = useUserContext();
     const forceWaitSeconds = route.params?.forceWaitSeconds ?? 3;
+    const navigation = route.params.navigation;
 
     const rules: Rule[] = getRules(state.approachChoice);
 

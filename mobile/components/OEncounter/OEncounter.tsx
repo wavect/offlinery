@@ -324,6 +324,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                                     navigation.navigate(
                                                         ROUTES.HouseRules,
                                                         {
+                                                            navigation,
                                                             nextPage:
                                                                 ROUTES.Main
                                                                     .NavigateToApproach,

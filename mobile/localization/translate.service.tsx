@@ -1,6 +1,5 @@
 import { FontFamily } from "@/GlobalStyles";
 import { CreateUserDTOPreferredLanguageEnum } from "@/api/gen/src";
-import { getLocales } from "expo-localization";
 import { I18n } from "i18n-js";
 import React, { ReactNode } from "react";
 import { Text } from "react-native";
@@ -15,8 +14,7 @@ const languages: Record<CreateUserDTOPreferredLanguageEnum, Language> = {
 export const i18n = new I18n(languages);
 
 // Set the locale once at the beginning of your app.
-i18n.locale =
-    getLocales()[0].languageCode ?? CreateUserDTOPreferredLanguageEnum.en;
+i18n.locale = CreateUserDTOPreferredLanguageEnum.en;
 i18n.enableFallback = true;
 i18n.defaultLocale = CreateUserDTOPreferredLanguageEnum.en;
 
