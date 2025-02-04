@@ -6,14 +6,27 @@
     "pre-commit:mobile": "cd mobile && pnpm run pre-commit",
     "pre-commit:all": "pnpm run pre-commit:backend && pnpm run pre-commit:mobile",
     "format:backend": "cd backend && pnpm run format",
-    "format:all": "pnpm run format:backend && pnpm run pre-commit:mobile"
+    "format:all": "pnpm run format:backend && pnpm run pre-commit:mobile",
+    "storybook-generate": "sb-rn-get-stories"
   },
   "devDependencies": {
+    "@babel/core": "7.26.7",
+    "@gorhom/bottom-sheet": "5.0.6",
+    "@react-native-async-storage/async-storage": "2.1.1",
+    "@react-native-community/datetimepicker": "8.3.0",
+    "@react-native-community/slider": "4.5.5",
+    "@storybook/addon-ondevice-actions": "8.5.3",
+    "@storybook/addon-ondevice-controls": "8.5.3",
+    "@storybook/addons": "^7.6.17",
+    "@storybook/react-native": "^8.5.3",
+    "babel-loader": "8.4.1",
     "husky": "^9.1.5",
     "lint-staged": "^15.2.9",
     "prettier": "^3.3.3",
-    "prettier-plugin-organize-imports": "^4.0.0"
-  },
-  "dependencies": {
+    "prettier-plugin-organize-imports": "^4.0.0",
+    "react-native-gesture-handler": "2.22.1",
+    "react-native-reanimated": "3.16.7",
+    "react-native-safe-area-context": "5.2.0",
+    "react-native-svg": "15.11.1"
   }
 }
