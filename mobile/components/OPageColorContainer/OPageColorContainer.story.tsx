@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native"; // Importiere View für React Native
 import { OPageColorContainer } from "./OPageColorContainer";
 
 const meta: Meta<typeof OPageColorContainer> = {
@@ -22,9 +22,9 @@ const meta: Meta<typeof OPageColorContainer> = {
     },
     decorators: [
         (Story) => (
-            <div style={{ padding: "20px", backgroundColor: "transparent" }}>
+            <View style={{ padding: 20, backgroundColor: "transparent" }}>
                 <Story />
-            </div>
+            </View>
         ),
     ],
 };
