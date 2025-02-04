@@ -1,6 +1,7 @@
 import { Color } from "@/GlobalStyles";
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
+import { View } from "react-native"; // Statt `div` jetzt `View`
 import { OShowcase } from "./OShowcase";
 
 const meta: Meta<typeof OShowcase> = {
@@ -22,9 +23,9 @@ const meta: Meta<typeof OShowcase> = {
     },
     decorators: [
         (Story) => (
-            <div style={{ backgroundColor: "#333", padding: "20px" }}>
+            <View style={{ backgroundColor: "#333", padding: 20 }}>
                 <Story />
-            </div>
+            </View>
         ),
     ],
 };
@@ -33,7 +34,6 @@ export default meta;
 
 type Story = StoryObj<typeof OShowcase>;
 
-// Default story with a simple subtitle and no system font
 export const Default: Story = {
     args: {
         subtitle: "This is a subtitle example.",
@@ -41,7 +41,6 @@ export const Default: Story = {
     },
 };
 
-// Story with system font only
 export const WithSystemFont: Story = {
     args: {
         ...Default.args,
@@ -50,7 +49,6 @@ export const WithSystemFont: Story = {
     },
 };
 
-// Story with custom container style
 export const CustomContainerStyle: Story = {
     args: {
         ...Default.args,
@@ -62,7 +60,6 @@ export const CustomContainerStyle: Story = {
     },
 };
 
-// Story with a longer subtitle
 export const LongSubtitle: Story = {
     args: {
         ...Default.args,
@@ -71,7 +68,6 @@ export const LongSubtitle: Story = {
     },
 };
 
-// Story with a headline icon (using the default icon)
 export const WithIcon: Story = {
     args: {
         ...Default.args,

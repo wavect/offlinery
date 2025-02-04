@@ -1,11 +1,11 @@
-import { MapRegion } from "@/context/UserContext";
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { View } from "react-native";
 import MapView from "react-native-maps";
 import { OBlacklistedRegion } from "./OBlacklistedRegion";
 
-const exampleRegion: MapRegion = {
+// Beispielregion für die Karte
+const exampleRegion = {
     latitude: 37.7749,
     longitude: -122.4194,
     radius: 500,
@@ -33,7 +33,7 @@ const meta: Meta<typeof OBlacklistedRegion> = {
         (Story) => (
             <View style={{ flex: 1 }}>
                 <MapView
-                    style={{ flex: 1 }}
+                    style={{ flex: 1, width: "100%", height: "100%" }}
                     initialRegion={{
                         latitude: exampleRegion.latitude,
                         longitude: exampleRegion.longitude,
@@ -46,21 +46,13 @@ const meta: Meta<typeof OBlacklistedRegion> = {
             </View>
         ),
     ],
-    parameters: {
-        backgrounds: {
-            default: "light",
-            values: [
-                { name: "light", value: "#FFFFFF" },
-                { name: "dark", value: "#333333" },
-            ],
-        },
-    },
 };
 
 export default meta;
 
 type Story = StoryObj<typeof OBlacklistedRegion>;
 
+// Standard-Story
 export const Default: Story = {
     args: {
         isSelected: false,
@@ -69,6 +61,7 @@ export const Default: Story = {
     },
 };
 
+// Story mit ausgewählter Region
 export const SelectedRegion: Story = {
     args: {
         isSelected: true,
@@ -77,6 +70,7 @@ export const SelectedRegion: Story = {
     },
 };
 
+// Benutzerdefinierte Region
 export const CustomRegion: Story = {
     args: {
         isSelected: false,
