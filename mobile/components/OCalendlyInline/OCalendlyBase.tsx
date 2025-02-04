@@ -201,6 +201,7 @@ const formatCustomAnswers = (customAnswers: object) => {
 
     if (!customAnswersFiltered.length) return [];
 
+    // @ts-ignore
     return customAnswersFiltered.map(
         (key) => `${key}=${encodeURIComponent(customAnswers[key])}`,
     );
