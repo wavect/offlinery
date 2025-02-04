@@ -8,6 +8,8 @@ export type MainStackParamList = {
         forceWaitSeconds?: number;
         nextPage: any;
         propsForNextScreen?: any;
+        /** @dev needed here to ensure the navigation is always in the expected context since we have nested navigators */
+        navigation: any;
     };
     [ROUTES.Onboarding.Email]: { errorMessage: string } | undefined;
     [ROUTES.Onboarding.VerifyEmail]: undefined;

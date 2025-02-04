@@ -27,7 +27,7 @@ export const EncounterScreenStack = memo(() => {
                     headerShown: true,
                     headerShadowVisible: false,
                     headerTitle: i18n.t(TR.reportPerson),
-                    headerBackTitleVisible: false,
+                    headerBackTitle: "",
                     headerTitleAlign: "left",
                 }}
             />
@@ -38,7 +38,7 @@ export const EncounterScreenStack = memo(() => {
                     headerShown: true,
                     headerShadowVisible: false,
                     headerTitle: i18n.t(TR.meetIRL),
-                    headerBackTitleVisible: false,
+                    headerBackTitle: "",
                     headerTitleAlign: "left",
                 }}
             />
@@ -49,7 +49,7 @@ export const EncounterScreenStack = memo(() => {
                     headerShown: true,
                     headerShadowVisible: false,
                     headerTitle: i18n.t(TR.profileView),
-                    headerBackTitleVisible: false,
+                    headerBackTitle: "",
                     headerTitleAlign: "left",
                 }}
             />
