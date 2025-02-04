@@ -1,8 +1,9 @@
+import { UserProvider } from "@/context/UserContext"; // Der Import des UserProviders
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { View } from "react-native";
 import MapView from "react-native-maps";
-import { OBlacklistedRegion } from "./OBlacklistedRegion";
+import { OBlacklistedRegion } from "./OBlacklistedRegion"; // Dein Komponentimport
 
 // Beispielregion für die Karte
 const exampleRegion = {
@@ -31,19 +32,23 @@ const meta: Meta<typeof OBlacklistedRegion> = {
     },
     decorators: [
         (Story) => (
-            <View style={{ flex: 1 }}>
-                <MapView
-                    style={{ flex: 1, width: "100%", height: "100%" }}
-                    initialRegion={{
-                        latitude: exampleRegion.latitude,
-                        longitude: exampleRegion.longitude,
-                        latitudeDelta: 0.05,
-                        longitudeDelta: 0.05,
-                    }}
-                >
-                    <Story />
-                </MapView>
-            </View>
+            <UserProvider>
+                {" "}
+                {/* Umgibt die Story mit dem UserProvider */}
+                <View style={{ flex: 1 }}>
+                    <MapView
+                        style={{ flex: 1, width: "100%", height: "100%" }}
+                        initialRegion={{
+                            latitude: exampleRegion.latitude,
+                            longitude: exampleRegion.longitude,
+                            latitudeDelta: 0.05,
+                            longitudeDelta: 0.05,
+                        }}
+                    >
+                        <Story />
+                    </MapView>
+                </View>
+            </UserProvider>
         ),
     ],
 };
