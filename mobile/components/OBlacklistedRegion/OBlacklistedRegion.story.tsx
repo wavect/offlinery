@@ -33,7 +33,6 @@ const meta: Meta<typeof OBlacklistedRegion> = {
     decorators: [
         (Story) => (
             <UserProvider>
-                {" "}
                 {/* Umgibt die Story mit dem UserProvider */}
                 <View style={{ flex: 1 }}>
                     <MapView
