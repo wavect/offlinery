@@ -34,7 +34,7 @@ import { UserService } from "./user.service";
         forwardRef(() => AuthModule),
         forwardRef(() => EncounterModule),
         MessageModule,
-        AppStatsModule,
+        forwardRef(() => AppStatsModule),
     ],
     providers: [UserService, UserRepository],
     controllers: [UserController],
