@@ -207,8 +207,11 @@ export class OBackgroundLocationService {
         try {
             const enabled = await this.initialize();
             if (!enabled) {
+                const geoLocState = await BackgroundGeolocation.getState();
                 // @dev if for whatever reason not running, restart.
-                await BackgroundGeolocation.start();
+                if (!geoLocState.enabled) {
+                    await BackgroundGeolocation.start();
+                }
             }
             // @dev change to background location always (show dialog to user)
             await BackgroundGeolocation.setConfig({

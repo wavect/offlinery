@@ -1,6 +1,7 @@
 import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
 import { DateRangeDTO } from "@/DTOs/date-range.dto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
+import { GenericStatusDTO } from "@/DTOs/generic-status.dto";
 import { GetLocationOfEncounterResponseDTO } from "@/DTOs/get-location-of-encounter-response.dto";
 import { NotificationNewMessageDTO } from "@/DTOs/notifications/notification-new-message.dto";
 import { PushMessageDTO } from "@/DTOs/push-message.dto";
@@ -11,7 +12,10 @@ import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { NotificationService } from "@/transient-services/notification/notification.service";
 import { EEncounterStatus, ELanguage } from "@/types/user.types";
-import { getTypedCoordinatesFromPoint } from "@/utils/location.utils";
+import {
+    getPointFromTypedCoordinates,
+    getTypedCoordinatesFromPoint,
+} from "@/utils/location.utils";
 import { MAX_ENCOUNTERS_PER_DAY_FOR_USER } from "@/utils/misc.utils";
 import {
     forwardRef,
@@ -42,6 +46,92 @@ export class EncounterService {
         @Inject(forwardRef(() => NotificationService))
         protected readonly notificationService: NotificationService,
     ) {}
+
+    /** @dev Only used for debugging in dev environments.
+     * Sends an encounter notification to the default account (office@wavect.io) with a test user. */
+    async simulateEncounter(): Promise<GenericStatusDTO> {
+        const user = await this.userRepository.findOneOrFail({
+            where: { email: "office@wavect.io" },
+            relations: { encounters: { users: true } },
+        });
+
+        const firstEncounter = user.encounters[0];
+        if (!firstEncounter) {
+            throw new NotFoundException("No encounter found.");
+        }
+        const otherUser = firstEncounter.users?.find((u) => u.id !== user.id);
+        if (!otherUser) {
+            throw new NotFoundException("Other user not found.");
+        }
+
+        firstEncounter.userStatuses = {
+            [user.id]: EEncounterStatus.NOT_MET,
+            [otherUser.id]: EEncounterStatus.NOT_MET,
+        };
+        firstEncounter.amountStreaks++;
+        const getCloseLocation = getTypedCoordinatesFromPoint(user.location);
+        firstEncounter.lastLocationPassedBy = getPointFromTypedCoordinates({
+            latitude: getCloseLocation.latitude + 0.0003,
+            longitude: getCloseLocation.longitude,
+        });
+        otherUser.location = getPointFromTypedCoordinates({
+            latitude: getCloseLocation.latitude + 0.0004,
+            longitude: getCloseLocation.longitude,
+        });
+        firstEncounter.lastDateTimePassedBy = new Date();
+        await this.userRepository.save(otherUser);
+        await this.encounterRepository.save(firstEncounter);
+
+        // final check, is user really nearby?
+        const res = await this.userService.findUsersNearbyByUserIds(
+            [otherUser.id],
+            user.location,
+        );
+
+        if (!res.includes(otherUser.id)) {
+            const msg = `Other user of first Encounter is not nearby right now: ${JSON.stringify(user.location.coordinates)} (user), ${JSON.stringify(otherUser.location.coordinates)}`;
+            this.logger.error(msg);
+            throw new PreconditionFailedException(msg);
+        }
+        this.logger.debug(
+            `Locations: ${otherUser.location.coordinates} (otheruser), ${user.location.coordinates} (user), ${firstEncounter.lastLocationPassedBy.coordinates} (last passed)`,
+        );
+        this.logger.debug(
+            `Updated encounter for simulation: ${firstEncounter.lastDateTimePassedBy}, ${firstEncounter.lastLocationPassedBy.coordinates}`,
+        );
+
+        const lang = ELanguage.en;
+        const baseNotification =
+            await this.notificationService.buildNewMatchBaseNotification(user);
+        await this.notificationService.sendPushNotifications([
+            {
+                ...baseNotification,
+                title: this.i18n.translate("main.notification.newMatch.title", {
+                    args: {
+                        firstName: otherUser.firstName,
+                    },
+                    lang,
+                }),
+                body: this.i18n.translate("main.notification.newMatch.body", {
+                    args: {
+                        firstName: otherUser.firstName,
+                    },
+                    lang,
+                }),
+                to: user.pushToken,
+                data: {
+                    ...baseNotification.data,
+                    encounterId: firstEncounter.id,
+                    navigateToPerson: otherUser.convertToPublicDTO(),
+                },
+            },
+        ]);
+
+        return {
+            success: true,
+            info: "Encounter simulated.",
+        };
+    }
 
     async findEncountersByUser(
         userId: string,
@@ -226,22 +316,21 @@ export class EncounterService {
             relations: ["users"],
         });
         if (!encounter) {
-            throw new NotFoundException(
-                `Encounter with ID ${encounterId} not found`,
-            );
+            const msg = `Encounter with ID ${encounterId} not found`;
+            throw new NotFoundException(msg);
         }
 
         const currentUser = encounter.users.find((u) => u.id === userId);
         const otherUser = encounter.users.find((u) => u.id !== userId);
         if (!otherUser) {
-            throw new NotFoundException(
-                `Other user of Encounter ${encounterId} not found! Requesting user: ${userId}`,
-            );
+            const msg = `Other user of Encounter ${encounterId} not found! Requesting user: ${userId}`;
+            this.logger.error(msg);
+            throw new NotFoundException(msg);
         }
         if (!otherUser.location) {
-            throw new PreconditionFailedException(
-                `Other user of Encounter ${encounterId} has not location: ${otherUser.location}`,
-            );
+            const msg = `Other user of Encounter ${encounterId} has not location: ${otherUser.location}`;
+            this.logger.error(msg);
+            throw new PreconditionFailedException(msg);
         }
 
         // final check, is user really nearby?
@@ -251,10 +340,14 @@ export class EncounterService {
         );
 
         if (!res.includes(otherUser.id)) {
-            throw new PreconditionFailedException(
-                `Other user of Encounter ${encounterId} is not nearby right now.`,
-            );
+            const msg = `Other user of Encounter ${encounterId} is not nearby right now: ${JSON.stringify(currentUser.location.coordinates)} (user), ${JSON.stringify(otherUser.location.coordinates)}`;
+            this.logger.error(msg);
+            throw new PreconditionFailedException(msg);
         }
+
+        this.logger.debug(
+            `User location: ${currentUser.location.coordinates}, Other user: ${otherUser.location.coordinates}`,
+        );
 
         return {
             lastTimeLocationUpdated: otherUser.locationLastTimeUpdated,

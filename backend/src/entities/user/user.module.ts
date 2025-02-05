@@ -4,6 +4,8 @@ import { AppStatsModule } from "@/entities/app-stats/app-stats.module";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { EncounterModule } from "@/entities/encounter/encounter.module";
+import { Message } from "@/entities/messages/message.entity";
+import { MessageModule } from "@/entities/messages/message.module";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { UserReport } from "@/entities/user-report/user-report.entity";
 import { UserRepository } from "@/entities/user/user.repository";
@@ -25,12 +27,14 @@ import { UserService } from "./user.service";
             PendingUser,
             AuthModule,
             AppStatistic,
+            Message,
         ]),
         forwardRef(() => NotificationModule),
         forwardRef(() => MatchingModule),
         forwardRef(() => AuthModule),
         forwardRef(() => EncounterModule),
-        AppStatsModule,
+        MessageModule,
+        forwardRef(() => AppStatsModule),
     ],
     providers: [UserService, UserRepository],
     controllers: [UserController],

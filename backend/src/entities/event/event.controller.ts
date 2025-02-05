@@ -1,4 +1,4 @@
-import { OnlyAdmin, Public } from "@/auth/auth.guard";
+import { OnlyAdmin } from "@/auth/auth.guard";
 import { EventPublicDTO } from "@/DTOs/event-public.dto";
 import { NewEventResponseDTO } from "@/DTOs/new-event-response.dto";
 import { NewEventDTO } from "@/DTOs/new-event.dto";
@@ -59,7 +59,7 @@ export class EventController {
     }
 
     @Post("admin/new-event")
-    @Public()
+    @OnlyAdmin()
     @ApiExcludeEndpoint()
     @ApiOperation({ summary: "Send event notifications" })
     @ApiBody({

@@ -759,6 +759,7 @@ const ProfileSettings = ({
                         style={{ width: "48%", height: 80 }}
                         onPress={() =>
                             navigation.navigate(ROUTES.HouseRules, {
+                                navigation,
                                 forceWaitSeconds: 0,
                                 nextPage: ROUTES.MainTabView,
                             })
