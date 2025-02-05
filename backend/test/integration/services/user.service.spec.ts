@@ -1,4 +1,8 @@
+import { AppStatistic } from "@/entities/app-stats/app-stat.entity";
+import { EAPP_STAT_KEY } from "@/entities/app-stats/app-stats.service";
+import { Encounter } from "@/entities/encounter/encounter.entity";
 import { EncounterService } from "@/entities/encounter/encounter.service";
+import { Message } from "@/entities/messages/message.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { UserRepository } from "@/entities/user/user.repository";
 import { UserService } from "@/entities/user/user.service";
@@ -11,6 +15,8 @@ import {
 } from "@/types/user.types";
 import { NotFoundException } from "@nestjs/common";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import * as fs from "node:fs";
+import path from "node:path";
 import { Repository } from "typeorm";
 import { PointBuilder } from "../../_src/builders/point.builder";
 import { UserBuilder } from "../../_src/builders/user.builder";
@@ -26,6 +32,9 @@ describe("UserService", () => {
     let userFactory: UserFactory;
     let encounterFactory: EncounterFactory;
     let pendingUserRepository: Repository<PendingUser>;
+    let encounterRepository: Repository<Encounter>;
+    let messageRepository: Repository<Message>;
+    let appStatsRepository: Repository<AppStatistic>;
     let testingDataSource;
 
     beforeAll(async () => {
@@ -34,6 +43,9 @@ describe("UserService", () => {
         testingDataSource = dataSource;
 
         userRepository = module.get<UserRepository>(UserRepository);
+        encounterRepository = module.get(getRepositoryToken(Encounter));
+        appStatsRepository = module.get(getRepositoryToken(AppStatistic));
+        messageRepository = module.get(getRepositoryToken(Message));
         userService = module.get<UserService>(UserService);
         pendingUserRepository = module.get(getRepositoryToken(PendingUser));
         encounterService = module.get<EncounterService>(EncounterService);
@@ -200,10 +212,26 @@ describe("UserService", () => {
             });
             expect(userLookupFailing).toEqual(null);
         }, 10000);
-        it("should delete a freshly added user by the delete token that sended messages, had encounters", async () => {
+        it("should delete ALL user-associated data by the delete token (incl. messages, encounters, images, pending user..)", async () => {
             const deleteToken = "DELETE_TOKEN-FOO";
+            const email = "email1@email.com";
+
+            const pendingUser = pendingUserRepository.create({
+                email,
+                verificationCode: "1",
+                verificationCodeIssuedAt: new Date(),
+                verificationStatus: EEmailVerificationStatus.VERIFIED,
+            });
+            await pendingUserRepository.save(pendingUser);
+            const pendingUserSaved = await pendingUserRepository.findOneBy({
+                email,
+                id: pendingUser.id,
+            });
+            expect(pendingUserSaved).toBeDefined();
+            expect(pendingUserSaved.id).toEqual(pendingUser.id);
+
             const user = await userFactory.persistNewTestUser({
-                email: "email1@email.com",
+                email,
                 approachFromTime: new Date(),
                 gender: EGender.MAN,
                 genderDesire: [EGender.MAN],
@@ -211,10 +239,26 @@ describe("UserService", () => {
                 deletionTokenExpires: new Date(
                     Date.now() + 24 * 60 * 60 * 1000,
                 ),
+                imageURIs: [
+                    userFactory.createRandomFile("file1"),
+                    userFactory.createRandomFile("file2"),
+                ],
             });
+
+            // @dev check if files exist
+            expect(user.imageURIs.length).toEqual(2);
+            for (const imageUri of user.imageURIs) {
+                expect(
+                    fs.existsSync(path.join("uploads", "img", imageUri)),
+                ).toBeTruthy();
+            }
 
             const encounterUser = await userFactory.persistNewTestUser({
                 email: "encounter@email.com",
+            });
+
+            const encounterUser2 = await userFactory.persistNewTestUser({
+                email: "encounter2@email.com",
             });
 
             // user lookup by email works
@@ -229,7 +273,68 @@ describe("UserService", () => {
             });
             expect(userLookupbyToken).toBeDefined();
 
-            await encounterFactory.persistNewTestEncounter(user, encounterUser);
+            const encounter1 = await encounterFactory.persistNewTestEncounter(
+                user,
+                encounterUser,
+            );
+            const encounter2 = await encounterFactory.persistNewTestEncounter(
+                user,
+                encounterUser2,
+            );
+
+            const encounter1Saved = await encounterRepository.findOneBy({
+                id: encounter1.id,
+            });
+            expect(encounter1Saved).toBeDefined();
+            expect(encounter1Saved.id).toEqual(encounter1.id);
+            const encounter2Saved = await encounterRepository.findOneBy({
+                id: encounter2.id,
+            });
+            expect(encounter2Saved).toBeDefined();
+            expect(encounter2Saved.id).toEqual(encounter2.id);
+
+            // write messages with both encounters in both directions
+            await encounterService.pushMessage(userLookup.id, {
+                content: "Hi there, here's my number: +43 123 123 23",
+                encounterId: encounter1.id,
+            });
+            await encounterService.pushMessage(encounterUser.id, {
+                content: "Hi !",
+                encounterId: encounter1.id,
+            });
+            await encounterService.pushMessage(userLookup.id, {
+                content: "Hi 2 there, here's my number: +43 123 123 23",
+                encounterId: encounter2.id,
+            });
+            await encounterService.pushMessage(encounterUser2.id, {
+                content: "Hi 2!",
+                encounterId: encounter2.id,
+            });
+
+            const messages1 = (
+                await encounterRepository.findOneOrFail({
+                    where: { id: encounter1.id },
+                    relations: { messages: true },
+                })
+            ).messages;
+            expect(messages1).toBeDefined();
+            expect(messages1.length).toBeGreaterThan(0);
+            expect(messages1.length).toEqual(2);
+
+            const messages2 = (
+                await encounterRepository.findOneOrFail({
+                    where: { id: encounter2.id },
+                    relations: { messages: true },
+                })
+            ).messages;
+            expect(messages2).toBeDefined();
+            expect(messages2.length).toBeGreaterThan(0);
+            expect(messages2.length).toEqual(2);
+
+            const userDeletedCountBefore = await appStatsRepository.findOneBy({
+                key: EAPP_STAT_KEY.USERS_DELETED_COUNT,
+            });
+            expect(userDeletedCountBefore).toBeNull();
 
             // act: delete the user
             await userService.deleteUserByDeletionToken(deleteToken);
@@ -238,7 +343,74 @@ describe("UserService", () => {
             const userLookupFailing = await userRepository.findOneBy({
                 email: user.email,
             });
-            expect(userLookupFailing).toEqual(null);
+            expect(userLookupFailing).not.toEqual(false);
+            expect(userLookupFailing).toBeFalsy();
+
+            /// @dev check that encounter users still exist (cascade)
+            const encounterUser1StillHere =
+                await userRepository.findOneByOrFail({
+                    email: encounterUser.email,
+                });
+            expect(encounterUser1StillHere).not.toEqual(true);
+            expect(encounterUser1StillHere).toBeTruthy();
+            expect(encounterUser1StillHere).toBeDefined();
+
+            const encounterUser2StillHere =
+                await userRepository.findOneByOrFail({
+                    email: encounterUser2.email,
+                });
+            expect(encounterUser2StillHere).not.toEqual(true);
+            expect(encounterUser2StillHere).toBeTruthy();
+            expect(encounterUser2StillHere).toBeDefined();
+
+            /// @dev check if pending user deleted
+            const pendingUserDeleted = await pendingUserRepository.findOneBy({
+                email,
+                id: pendingUser.id,
+            });
+            expect(pendingUserDeleted).toBeNull();
+
+            /// @dev Check if messages deleted
+            const message1After = await messageRepository.findOneBy({
+                id: messages1[0].id,
+            });
+            const message2After = await messageRepository.findOneBy({
+                id: messages1[1].id,
+            });
+            const message3After = await messageRepository.findOneBy({
+                id: messages2[0].id,
+            });
+            const message4After = await messageRepository.findOneBy({
+                id: messages2[1].id,
+            });
+            expect(message1After).toBeNull();
+            expect(message2After).toBeNull();
+            expect(message3After).toBeNull();
+            expect(message4After).toBeNull();
+
+            /// @dev check if encounters deleted
+            const encounter1Deleted = await encounterRepository.findOneBy({
+                id: encounter1.id,
+            });
+            expect(encounter1Deleted).toBeNull();
+            const encounter2Deleted = await encounterRepository.findOneBy({
+                id: encounter2.id,
+            });
+            expect(encounter2Deleted).toBeNull();
+
+            // Also check images to be deleted
+            expect(user.imageURIs.length).toEqual(2);
+            for (const imageUri of user.imageURIs) {
+                expect(
+                    fs.existsSync(path.join("uploads", "img", imageUri)),
+                ).toBeFalsy();
+            }
+
+            const userDeletedCount = await appStatsRepository.findOneBy({
+                key: EAPP_STAT_KEY.USERS_DELETED_COUNT,
+            });
+            expect(userDeletedCount).toBeDefined();
+            expect(parseInt(userDeletedCount.value)).toEqual(1);
         }, 10000);
         it("should delete a freshly added user by the delete token that sended messages", async () => {
             const deleteToken = "DELETE_TOKEN-BAR";

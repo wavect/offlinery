@@ -16,6 +16,7 @@ import {
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { randomBytes } from "crypto";
+import * as fs from "node:fs";
 import * as path from "node:path";
 import { Readable } from "stream";
 import { Repository } from "typeorm";
@@ -35,27 +36,29 @@ export class DefaultUserSeeder {
     ) {}
 
     createRandomFile() {
-        // Generate a random filename
-        const filename = `1`;
         const buffer = randomBytes(1024 * 1024);
         const fileStream = new Readable();
         fileStream.push(buffer);
         fileStream.push(null);
 
+        // Write buffer to file
+        const fileNameWithExt = "1.jpg";
+        const filePath = path.join("uploads", "img", fileNameWithExt);
+        fs.writeFileSync(filePath, buffer);
+
         // Create the file object
         const file: Express.Multer.File = {
             fieldname: "file",
-            originalname: filename,
+            originalname: fileNameWithExt,
             encoding: "7bit",
             mimetype: "image/jpeg",
             buffer, // 1 MB of random data
             size: 1024 * 1024, // 1 MB
-            destination: "uploads/",
-            filename: filename,
-            path: path.join("uploads", filename),
+            destination: path.join("uploads", "img"),
+            filename: fileNameWithExt,
+            path: filePath,
             stream: fileStream,
         };
-
         return file;
     }
 
