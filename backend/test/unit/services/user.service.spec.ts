@@ -4,6 +4,8 @@ import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { AppStatistic } from "@/entities/app-stats/app-stat.entity";
 import { AppStatsService } from "@/entities/app-stats/app-stats.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
+import { Encounter } from "@/entities/encounter/encounter.entity";
+import { Message } from "@/entities/messages/message.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
@@ -61,6 +63,14 @@ describe("UserService", () => {
                 },
                 {
                     provide: getRepositoryToken(PendingUser),
+                    useValue: mockRepository,
+                },
+                {
+                    provide: getRepositoryToken(Encounter),
+                    useValue: mockRepository,
+                },
+                {
+                    provide: getRepositoryToken(Message),
                     useValue: mockRepository,
                 },
                 {
