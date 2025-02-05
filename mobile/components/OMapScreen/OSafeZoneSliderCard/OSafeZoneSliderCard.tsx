@@ -5,7 +5,15 @@ import { useUserContext } from "@/context/UserContext";
 import { TR, i18n } from "@/localization/translate.service";
 import Slider from "@react-native-community/slider";
 import React from "react";
-import { Dimensions, Platform, StyleSheet, Text, View } from "react-native";
+import {
+    Dimensions,
+    Platform,
+    StyleProp,
+    StyleSheet,
+    Text,
+    View,
+    ViewStyle,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 interface IOSafeZoneSliderCardProps {
@@ -13,6 +21,7 @@ interface IOSafeZoneSliderCardProps {
     handleRemoveRegion: () => void;
     activeRegionIndex: number;
     sliderValue: number;
+    containerStyle: StyleProp<ViewStyle>;
 }
 
 export const OSafeZoneSliderCard = ({
@@ -20,10 +29,14 @@ export const OSafeZoneSliderCard = ({
     handleRemoveRegion,
     activeRegionIndex,
     sliderValue,
+    containerStyle,
 }: IOSafeZoneSliderCardProps) => {
     const { state } = useUserContext();
     return (
-        <View style={styles.sliderOverlayContainer} pointerEvents="box-none">
+        <View
+            style={[styles.sliderOverlayContainer, containerStyle]}
+            pointerEvents="box-none"
+        >
             <SafeAreaView
                 edges={["bottom", "right", "left"]}
                 style={styles.sliderSafeArea}
@@ -37,7 +50,11 @@ export const OSafeZoneSliderCard = ({
                                 styles.androidControlsCard,
                         ]}
                     >
-                        <View pointerEvents="auto">
+                        <View
+                            pointerEvents="auto"
+                            onPointerDown={handleRemoveRegion}
+                            style={styles.fabContainer}
+                        >
                             <OFloatingActionButton
                                 size="xs"
                                 icon="delete-outline"
@@ -86,6 +103,9 @@ const styles = StyleSheet.create({
         flex: 1,
         width: "100%",
         height: "100%",
+    },
+    fabContainer: {
+        padding: 10,
     },
     mapContainer: {
         flex: 1,

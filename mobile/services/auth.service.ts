@@ -35,17 +35,21 @@ export const refreshUserData = async (
     // Note: We still save the accessToken into the user context to avoid reading from secure storage all the time when making api requests (performance, security, ..)
     const payload: Partial<IUserData> = {
         ...user,
-        approachFromTime: new Date(user.approachFromTime),
-        approachToTime: new Date(user.approachToTime),
-        blacklistedRegions: user.blacklistedRegions
-            .map((br) => {
-                return mapBlacklistedRegionDTOToMapRegion(br);
-            })
-            .filter((br) => br) as MapRegion[],
+        approachFromTime: user ? new Date(user.approachFromTime) : undefined,
+        approachToTime: user ? new Date(user.approachToTime) : undefined,
+        blacklistedRegions: user
+            ? (user.blacklistedRegions
+                  .map((br) => {
+                      return mapBlacklistedRegionDTOToMapRegion(br);
+                  })
+                  .filter((br) => br) as MapRegion[])
+            : [],
         clearPassword: "",
-        imageURIs: Object.fromEntries(
-            user.imageURIs.map((value, index) => [index, value]),
-        ),
+        imageURIs: user
+            ? Object.fromEntries(
+                  user.imageURIs.map((value, index) => [index, value]),
+              )
+            : {},
     };
 
     dispatch({
@@ -97,7 +101,6 @@ export const registerUser = async (
         const signInResponseDTO =
             await API.user.userControllerCreateUser(requestParameters);
         const { user, accessToken, refreshToken } = signInResponseDTO;
-        console.log("User created successfully:", user);
 
         // Navigate to the next screen or update the UI as needed
         onSuccess();
@@ -135,6 +138,11 @@ export const userAuthenticatedUpdate = async (
     jwtRefreshToken: string,
 ) => {
     await refreshUserData(dispatch, user, jwtAccessToken, jwtRefreshToken);
+
+    if (!user) {
+        // @dev do nothing as no user object supplied (otherwise sometimes results in maintenance screen)
+        return;
+    }
 
     if (
         user.verificationStatus !==

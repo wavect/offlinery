@@ -1,6 +1,7 @@
 import { BorderRadius, Color, FontSize } from "@/GlobalStyles";
-import { UserPrivateDTODateModeEnum } from "@/api/gen/src";
+import { EventPublicDTO, UserPrivateDTODateModeEnum } from "@/api/gen/src";
 import { OBlacklistedRegion } from "@/components/OBlacklistedRegion/OBlacklistedRegion";
+import OGenericBadge from "@/components/OGenericBadge/OGenericBadge";
 import { OHeatMap } from "@/components/OMapScreen/OHeatMap/OHeatMap";
 import {
     EMapStatus,
@@ -8,16 +9,20 @@ import {
 } from "@/components/OMapScreen/OMapStatus/OMapStatus";
 import { OSafeZoneSliderCard } from "@/components/OMapScreen/OSafeZoneSliderCard/OSafeZoneSliderCard";
 import {
+    EACTION_ENCOUNTERS,
+    useEncountersContext,
+} from "@/context/EncountersContext";
+import {
     EACTION_USER,
     MapRegion,
     mapRegionToBlacklistedRegionDTO,
     useUserContext,
 } from "@/context/UserContext";
-import { useUserLocation } from "@/hooks/useUserLocation";
-import { TR, i18n } from "@/localization/translate.service";
+import { TR, getLocalLanguageID, i18n } from "@/localization/translate.service";
 import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
 import { TOURKEY } from "@/services/tourguide.service";
 import { API } from "@/utils/api-config";
+import { get3MonthsBefore } from "@/utils/date.utils";
 import { getMapProvider } from "@/utils/map-provider";
 import { useIsFocused } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
@@ -37,13 +42,16 @@ import {
     TouchableWithoutFeedback,
     View,
 } from "react-native";
-import BackgroundGeolocation from "react-native-background-geolocation";
-import MapView, { LongPressEvent, Region } from "react-native-maps";
+import MapView, { LongPressEvent, Marker, Region } from "react-native-maps";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 
 interface OMapProps {
     saveChangesToBackend: boolean;
     showHeatmap: boolean;
+    showEncounters: boolean;
+    showEvents: boolean;
+    /// @dev This property lets the OMap component know to push bottom elements such as the slider up a bit since we show a button below it (e.g. continue in onboarding)
+    showingBottomButton: boolean;
     showBlacklistedRegions: boolean;
     showMapStatus: boolean;
 }
@@ -54,69 +62,148 @@ export const OMap = memo(
     ({
         saveChangesToBackend,
         showHeatmap,
+        showEvents,
         showBlacklistedRegions,
+        showingBottomButton,
         showMapStatus,
+        showEncounters,
     }: OMapProps) => {
+        const [userCount, setUserCount] = useState<number | null>(null);
         const [mapStatus, setMapStatus] = useState<EMapStatus | null>(null);
         const { state, dispatch } = useUserContext();
-        const location = useUserLocation(
-            BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
-        );
-        const isSavingRef = useRef(false);
+        const { state: encounterState, dispatch: encounterDispatch } =
+            useEncountersContext();
+        const [isSavingSafeZones, setSavingSafeZones] = useState(false);
+        const [isHeatMapLoading, setLoadingHeatMap] = useState(false);
+        const [isEncountersLoading, setEncountersLoading] = useState(false);
+        const [isEventsLoading, setEventsLoading] = useState(false);
         const [activeRegionIndex, setActiveRegionIndex] = useState<
             number | null
         >(null);
-        const isHeatmapLoadingRef = useRef(false);
+        const [upcomingEvents, setUpcomingEvents] = useState<EventPublicDTO[]>(
+            [],
+        );
         const prevBlacklistedRegionsRef = useRef<MapRegion[]>([]);
         const [mapRegion, setMapRegion] = useState<Region>({
             latitude: 47.257832302,
             longitude: 11.383665132,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitudeDelta: 0.5,
+            longitudeDelta: 0.5,
         });
         /** @DEV use a temp value here, so we do not update and re-use the same value (lagging) */
         const [tempSliderValue, setTempSliderValue] =
             useState(DEFAULT_RADIUS_SIZE);
 
         useEffect(() => {
-            if (state.dateMode === UserPrivateDTODateModeEnum.live) {
-                setMapStatus(EMapStatus.LIVE);
+            // @dev Keep error showing
+            if (mapStatus === EMapStatus.ERROR) return;
+            else if (isSavingSafeZones) {
+                setMapStatus(EMapStatus.SAVING_SAFEZONES);
+            } else if (isHeatMapLoading) {
+                setMapStatus(EMapStatus.LOADING_HEATMAP);
+            } else if (isEncountersLoading) {
+                setMapStatus(EMapStatus.LOADING_ENCOUNTERS);
+            } else if (isEventsLoading) {
+                setMapStatus(EMapStatus.LOADING_EVENTS);
             } else {
-                setMapStatus(EMapStatus.GHOST);
+                setMapStatus(
+                    state.dateMode === UserPrivateDTODateModeEnum.live
+                        ? EMapStatus.LIVE
+                        : EMapStatus.GHOST,
+                );
             }
-        }, [state.dateMode]);
+        }, [
+            state.dateMode,
+            isSavingSafeZones,
+            isEventsLoading,
+            isEncountersLoading,
+            isHeatMapLoading,
+        ]);
+
+        useEffect(() => {
+            API.user
+                .userControllerGetUserCount()
+                .then((count) => {
+                    setUserCount(count.userCount);
+                })
+                .catch((err) => {
+                    Sentry.captureException(err, {
+                        tags: {
+                            oMap: "getUserCount",
+                        },
+                    });
+                });
+
+            fetchEncounters();
+            fetchEvents();
+        }, []);
+
+        const fetchEvents = useCallback(async () => {
+            try {
+                if (!showEvents) return;
+                setEventsLoading(true);
+
+                const events =
+                    await API.event.eventControllerGetAllUpcomingEvents({
+                        lang: getLocalLanguageID(),
+                    });
+
+                setUpcomingEvents(events);
+            } catch (error) {
+                console.error(error);
+                Sentry.captureException(error, {
+                    tags: {
+                        OMap: "fetchEvents",
+                    },
+                });
+                setMapStatus(EMapStatus.ERROR);
+            } finally {
+                setEventsLoading(false);
+            }
+        }, [showEvents]);
+
+        const fetchEncounters = useCallback(async () => {
+            try {
+                if (!showEncounters) return;
+                if (!state.id) {
+                    Sentry.captureMessage(
+                        `fetchEncounters (OMap): UserId undefined. Not making request. User maybe logging out or so?`,
+                    );
+                    return;
+                }
+                setEncountersLoading(true);
+
+                const encounters =
+                    await API.encounter.encounterControllerGetEncountersByUser({
+                        userId: state.id,
+                        startDate: get3MonthsBefore(),
+                        endDate: new Date(),
+                    });
+
+                encounterDispatch({
+                    type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
+                    payload: encounters,
+                });
+            } catch (error) {
+                console.error(error);
+                Sentry.captureException(error, {
+                    tags: {
+                        encountersOMap: "fetch",
+                    },
+                });
+                setMapStatus(EMapStatus.ERROR);
+            } finally {
+                setEncountersLoading(false);
+            }
+        }, [state.id, encounterDispatch, showEncounters]);
 
         const onLoadingStateChange = useCallback(
             (isLoading: boolean) => {
                 if (!showMapStatus) return;
-                isHeatmapLoadingRef.current = isLoading;
-
-                if (isLoading) {
-                    setMapStatus(EMapStatus.LOADING_HEATMAP);
-                } else {
-                    // Only change status back if we're not in the middle of saving
-                    if (!isSavingRef.current) {
-                        setMapStatus(
-                            state.dateMode === UserPrivateDTODateModeEnum.live
-                                ? EMapStatus.LIVE
-                                : EMapStatus.GHOST,
-                        );
-                    }
-                }
+                setLoadingHeatMap(isLoading);
             },
-            [state.dateMode, showMapStatus],
+            [showMapStatus],
         );
-
-        useEffect(() => {
-            if (location) {
-                setMapRegion({
-                    latitude: location.coords.latitude,
-                    longitude: location.coords.longitude,
-                    latitudeDelta: 0.003,
-                    longitudeDelta: 0.003,
-                });
-            }
-        }, [location]);
 
         const setBlacklistedRegions = useCallback(
             (blacklistedRegions: MapRegion[]) => {
@@ -172,8 +259,7 @@ export const OMap = memo(
                 debounce(async (regions) => {
                     if (!saveChangesToBackend) return;
                     try {
-                        isSavingRef.current = true;
-                        setMapStatus(EMapStatus.SAVING_SAFEZONES);
+                        setSavingSafeZones(true);
 
                         await API.user.userControllerUpdateUser({
                             userId: state.id!,
@@ -189,15 +275,7 @@ export const OMap = memo(
                         });
                         setMapStatus(EMapStatus.ERROR);
                     } finally {
-                        isSavingRef.current = false;
-                        if (!isHeatmapLoadingRef.current) {
-                            setMapStatus(
-                                state.dateMode ===
-                                    UserPrivateDTODateModeEnum.live
-                                    ? EMapStatus.LIVE
-                                    : EMapStatus.GHOST,
-                            );
-                        }
+                        setSavingSafeZones(false);
                     }
                 }, 1000),
             [saveChangesToBackend, state.id, state.dateMode],
@@ -216,9 +294,7 @@ export const OMap = memo(
             return () => {
                 debouncedSave.cancel();
                 // Ensure we reset the saving flag if the component unmounts while saving
-                if (isSavingRef.current) {
-                    isSavingRef.current = false;
-                }
+                setSavingSafeZones(false);
             };
         }, [state.blacklistedRegions, state.id, state.dateMode, showMapStatus]);
 
@@ -250,6 +326,7 @@ export const OMap = memo(
                 setActiveRegionIndex(0);
             }
         };
+
         useEffect(() => {
             if (!eventEmitter) return;
             eventEmitter?.on("stop", handleTourOnStop);
@@ -268,6 +345,52 @@ export const OMap = memo(
                 stopTourGuide();
             }
         }, [isFocused]);
+
+        const renderedEncounterPins = useMemo(
+            () => (
+                <>
+                    {encounterState.encounters.map((e) => {
+                        if (!e.lastLocationPassedBy) return;
+                        return (
+                            <Marker
+                                key={e.otherUser.id}
+                                coordinate={e.lastLocationPassedBy}
+                                title={e.otherUser.firstName}
+                                pinColor={Color.primary}
+                                description={i18n.t(TR.youMetHere)}
+                                draggable={false}
+                                tracksViewChanges={false}
+                            />
+                        );
+                    })}
+                </>
+            ),
+            [encounterState.encounters, encounterDispatch],
+        );
+
+        const renderedEventPins = useMemo(
+            () => (
+                <>
+                    {upcomingEvents.map((e, idx) => {
+                        if (!e.location) return;
+                        return (
+                            <Marker
+                                key={idx}
+                                coordinate={e.location}
+                                title={i18n.t(TR.upcomingEventIn, {
+                                    venue: e.venueWithArticleIfNeeded,
+                                })}
+                                pinColor={Color.schemesPrimary}
+                                description={`${e.startDate}, ${e.startTime} - ${e.endTime}`}
+                                draggable={false}
+                                tracksViewChanges={false}
+                            />
+                        );
+                    })}
+                </>
+            ),
+            [encounterState.encounters, encounterDispatch],
+        );
 
         const renderedBlacklistedRegions = useMemo(() => {
             return (
@@ -300,7 +423,6 @@ export const OMap = memo(
                     zoomEnabled
                     zoomTapEnabled
                     maxZoomLevel={15}
-                    minZoomLevel={8}
                     onPress={handleMapPress}
                     onLongPress={
                         showBlacklistedRegions ? handleMapLongPress : undefined
@@ -315,6 +437,8 @@ export const OMap = memo(
                         datingMode={state.dateMode}
                     />
                     {showBlacklistedRegions && renderedBlacklistedRegions}
+                    {showEncounters && renderedEncounterPins}
+                    {showEvents && renderedEventPins}
                 </MapView>
             ),
             [
@@ -324,9 +448,12 @@ export const OMap = memo(
                 handleMapLongPress,
                 showBlacklistedRegions,
                 showHeatmap,
+                showEncounters,
                 state.id,
                 state.dateMode,
                 renderedBlacklistedRegions,
+                renderedEncounterPins,
+                renderedEventPins,
             ],
         );
 
@@ -335,6 +462,7 @@ export const OMap = memo(
                 <TouchableWithoutFeedback onPress={handleMapPress}>
                     <TourGuideZone
                         zone={3}
+                        style={styles.tourMapContainer}
                         tourKey={TOURKEY.FIND}
                         text={i18n.t(TR.tourSafeZones)}
                         tooltipBottomOffset={-200}
@@ -342,6 +470,7 @@ export const OMap = memo(
                     >
                         <TourGuideZone
                             zone={2}
+                            style={styles.tourMapContainer}
                             tourKey={TOURKEY.FIND}
                             text={i18n.t(TR.tourHeatMap)}
                             tooltipBottomOffset={-200}
@@ -360,8 +489,58 @@ export const OMap = memo(
                     </View>
                 )}
 
+                <View style={styles.badgeOuterContainer}>
+                    <View style={styles.badgeContainerRow}>
+                        <OGenericBadge
+                            containerStyle={styles.badgeContainerStyle}
+                            label={i18n.t(TR.bestChanceApproachTime, {
+                                startTime: "9",
+                                endTime: "18:00",
+                            })}
+                            description={i18n.t(
+                                TR.bestChanceApproachTimeDescription,
+                            )}
+                            icon="schedule"
+                            backgroundColor={Color.black}
+                        />
+                    </View>
+                    <View style={styles.badgeContainerRow}>
+                        {userCount ? (
+                            <OGenericBadge
+                                containerStyle={styles.badgeContainerStyle}
+                                label={i18n.t(TR.userCount, {
+                                    count: userCount,
+                                })}
+                                description={i18n.t(TR.userCountDescription)}
+                                icon="person-search"
+                                backgroundColor={Color.primary}
+                            />
+                        ) : null}
+
+                        {!isEncountersLoading &&
+                        encounterState.encounters.length ? (
+                            <OGenericBadge
+                                containerStyle={styles.badgeContainerStyle}
+                                label={i18n.t(TR.encounterCount, {
+                                    count: encounterState.encounters.length,
+                                })}
+                                description={i18n.t(
+                                    TR.encounterCountDescription,
+                                )}
+                                icon="directions-walk"
+                                backgroundColor={Color.schemesPrimary}
+                            />
+                        ) : null}
+                    </View>
+                </View>
+
                 {showBlacklistedRegions && activeRegionIndex !== null && (
                     <OSafeZoneSliderCard
+                        containerStyle={
+                            showingBottomButton
+                                ? { marginBottom: 50 }
+                                : undefined
+                        }
                         handleRadiusChange={handleRadiusChange}
                         handleRemoveRegion={handleRemoveRegion}
                         activeRegionIndex={activeRegionIndex}
@@ -375,6 +554,21 @@ export const OMap = memo(
 
 const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
+    badgeContainerStyle: {
+        marginTop: 5,
+        marginLeft: 5,
+    },
+    tourMapContainer: {
+        minHeight: height * 0.75,
+    },
+    badgeOuterContainer: {
+        flexDirection: "column",
+        position: "absolute",
+        top: 0,
+    },
+    badgeContainerRow: {
+        flexDirection: "row",
+    },
     container: {
         flex: 1,
         width: "100%",

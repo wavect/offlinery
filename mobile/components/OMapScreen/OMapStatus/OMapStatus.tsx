@@ -6,6 +6,8 @@ import { Animated, Platform, StyleSheet, Text, View } from "react-native";
 
 export enum EMapStatus {
     LOADING_HEATMAP = "loading_heatmap",
+    LOADING_EVENTS = "loading_events",
+    LOADING_ENCOUNTERS = "loading_encounters",
     LOADING_LOCATION = "loading_location",
     SAVING_SAFEZONES = "saving_safezones",
     LIVE = "live",
@@ -24,6 +26,14 @@ export const OMapStatus = (props: IOMapStatus) => {
         [EMapStatus.LOADING_HEATMAP]: {
             color: Color.lightOrange,
             lbl: i18n.t(TR.loadingHeatmap),
+        },
+        [EMapStatus.LOADING_EVENTS]: {
+            color: Color.lightOrange,
+            lbl: i18n.t(TR.loadingEvents),
+        },
+        [EMapStatus.LOADING_ENCOUNTERS]: {
+            color: Color.lightOrange,
+            lbl: i18n.t(TR.loadingEncounters),
         },
         [EMapStatus.LOADING_LOCATION]: {
             color: Color.lightOrange,

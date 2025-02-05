@@ -1,6 +1,5 @@
-import { USER_ID_PARAM } from "@/auth/auth-own-data.guard";
 import { UserSpecificRegistrationGuard } from "@/auth/auth-registration-session";
-import { USER_OBJ_ID } from "@/auth/auth.guard";
+import { USER_ID_PARAM, USER_OBJ_ID } from "@/auth/auth.guard";
 import {
     ExecutionContext,
     ForbiddenException,

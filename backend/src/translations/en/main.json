@@ -8,7 +8,7 @@
   "notification": {
     "newMatch": {
       "title": "{firstName} is nearby! 🔥",
-      "body": "Find. Approach. IRL."
+      "body": "Click to approach {firstName} in real life."
     },
     "account_approved": {
       "title": "You are verified!",
@@ -25,6 +25,9 @@
     "new_event": {
       "title": "Pack a Friend and visit {venueWithArticleIfNeeded}",
       "body": "Be there on {date} between {startTime} - {endTime} to increase your odds of crossing paths with someone."
+    },
+    "new_message": {
+      "title": "New Message by {firstName}"
     }
   },
   "email": {
@@ -40,7 +43,9 @@
       "note": "No pressure, just possibilities. Show up, be open, and see what unfolds.",
       "findLocation": "Check Venue",
       "reminder": "Your next great connection could be just around the corner.",
-      "footer": "Embrace the unexpected. Life happens outside your comfort zone."
+      "reminder2": "Life happens outside your comfort zone.",
+      "joinWhatsApp": "Give us Feedback",
+      "footer": "You receive this email due to your notification settings. You can change your settings <a href='{changeNotificationSettingsUrl}' title='Change settings' target='_blank'>here</a>."
     },
     "request-account-deletion": {
       "subject": "Offlinery: Account Deletion Requested",
@@ -53,6 +58,7 @@
       "warningMessage": "⚠️ WARNING: This action cannot be undone! ⚠️",
       "feedbackRequest": "Before you go, we'd appreciate knowing why you're leaving. Please share your thoughts by emailing office@offlinery.io.",
       "securityWarning": "If you didn't request this deletion, please contact our support team immediately to secure your account.",
+      "joinWhatsApp": "Give us Feedback",
       "footer": "This is an automated message. Do not reply to this email."
     },
     "account-verification-verified": {
@@ -63,6 +69,7 @@
       "verificationSuccess": "Awesome news! Your Offlinery account is now verified and ready to go.",
       "nextSteps": "What's next? Start connecting with people around you or wait for someone to approach you. The offline world is now at your fingertips!",
       "disclaimer": "If you didn't sign up for Offlinery, no worries. You can safely ignore this email.",
+      "joinWhatsApp": "Give us Feedback",
       "footer": "This is an automated message. Please don't reply to this email."
     },
     "account-verification-denied": {
@@ -86,6 +93,7 @@
       "thankYou": "Thank you for signing up! Please use the verification code below to confirm your email address:",
       "instructions": "Enter this code in the Offlinery app to complete your email verification.",
       "disclaimer": "If you didn't request this email, you can safely ignore it.",
+      "joinWhatsApp": "Give us Feedback",
       "footer": "This is an automated message, please do not reply to this email."
     },
     "request-password-reset": {
@@ -98,6 +106,7 @@
       "ignoreMessage": "⚠️ If you didn't request this password reset, please ignore this email. ⚠️",
       "securityNote": "For the security of your account, never share this code with anyone.",
       "contactSupport": "If you have any questions or concerns, please contact our support team at support@offlinery.io.",
+      "joinWhatsApp": "Give us Feedback",
       "footer": "This is an automated message. Please do not reply to this email."
     },
     "ghostmode-reminder": {
@@ -107,7 +116,7 @@
       "timeInGhost": "You've been in Ghost Mode for {intervalHour}.",
       "impact": "While Ghost Mode helps protect your privacy, it also means you can't meet new people or be discovered by others who might be interested in meeting you.",
       "suggestion": "Switch to Live Mode within Offlinery to start meeting people in your area again!",
-      "footer": "You received this email because you enabled Ghost Mode in your settings. You can change this anytime."
+      "footer": "You receive this email due to your notification settings. You can change your settings <a href='{changeNotificationSettingsUrl}' title='Change settings' target='_blank'>here</a>."
     },
     "safety-call-booked-reminder": {
       "subject": "Book Your Quick Safety Call - Offlinery",

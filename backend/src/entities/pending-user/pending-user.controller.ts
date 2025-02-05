@@ -53,7 +53,12 @@ export class PendingUserController {
         status: HttpStatus.CONFLICT,
         description: "Email already exists.",
     })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async registerUserForEmailVerification(
         @Body() emailDto: RegistrationForVerificationRequestDTO,
     ): Promise<RegistrationForVerificationResponseDTO> {
@@ -68,7 +73,12 @@ export class PendingUserController {
         type: VerifyEmailDTO,
         description: "User email and verification code.",
     })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async verifyEmail(@Body() verifyEmailDto: VerifyEmailDTO): Promise<void> {
         return await this.registrationService.verifyEmail(
             verifyEmailDto.email,
@@ -83,7 +93,12 @@ export class PendingUserController {
         type: SetAcceptedSpecialDataGenderLookingForDTO,
         description: "Accept special data privacy",
     })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async setAcceptedSpecialDataGenderLookingForAt(
         @Body()
         setAcceptedSpecialDataGenderLookingForAtDTO: SetAcceptedSpecialDataGenderLookingForDTO,
@@ -101,7 +116,12 @@ export class PendingUserController {
     @ApiBody({
         type: UpdateUserVerificationstatusDTO,
     })
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
     async changeVerificationStatus(
         @Body() updateStatus: UpdateUserVerificationstatusDTO,
     ): Promise<void> {

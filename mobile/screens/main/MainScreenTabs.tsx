@@ -11,6 +11,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as Sentry from "@sentry/react-native";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { Platform } from "react-native";
 import { TourGuideZone, useTourGuideController } from "rn-tourguide";
 import { ROUTES } from "../routes";
 import { EncounterScreenStack } from "./EncounterStackNavigator";
@@ -18,7 +19,8 @@ import FindPeople from "./FindPeople";
 import ProfileSettings from "./ProfileSettings";
 
 export const MainScreenTabs = ({ navigation }: any) => {
-    useNotifications({ navigation });
+    const { unseenEncountersCount, setUnseenEncountersCount } =
+        useNotifications({ navigation });
 
     const { tourKey: tourKeyFind, start: startTourFind } =
         useTourGuideController(TOURKEY.FIND);
@@ -45,7 +47,9 @@ export const MainScreenTabs = ({ navigation }: any) => {
             screenOptions={() => ({
                 headerTitle: "",
                 headerTitleStyle: Title,
-                headerStyle: { height: 110 },
+                headerStyle: Platform.select({
+                    ios: { height: 120 },
+                }),
                 headerTitleAlign: "left",
                 tabBarActiveTintColor: Color.white,
                 tabBarLabelStyle: { marginBottom: 5 },
@@ -86,19 +90,24 @@ export const MainScreenTabs = ({ navigation }: any) => {
                             color={color}
                         />
                     ),
-                    tabBarTestID: "tab-find-people",
+                    tabBarButtonTestID: "tab-find-people",
                 }}
             />
             <MainTabs.Screen
                 name={ROUTES.Main.EncountersTab}
                 component={EncounterScreenStack}
+                listeners={{
+                    tabPress: () => {
+                        setUnseenEncountersCount(0); // @dev reset all unseen encounters once tab clicked
+                    },
+                }}
                 options={{
                     tabBarLabel: i18n.t(TR.encounters),
                     headerLeft: () => <OPageHeaderEncounters />,
-                    // tabBarBadge:
-                    // unreadNotifications.length === 0
-                    //     ? undefined
-                    //     : unreadNotifications.length,
+                    tabBarBadge:
+                        unseenEncountersCount === 0
+                            ? undefined
+                            : unseenEncountersCount,
                     tabBarIcon: ({ color, size }) => (
                         <MaterialIcons
                             name="emoji-people"
@@ -106,7 +115,7 @@ export const MainScreenTabs = ({ navigation }: any) => {
                             color={color}
                         />
                     ),
-                    tabBarTestID: "tab-encounters",
+                    tabBarButtonTestID: "tab-encounters",
                 }}
             />
             <MainTabs.Screen
@@ -122,7 +131,7 @@ export const MainScreenTabs = ({ navigation }: any) => {
                             color={color}
                         />
                     ),
-                    tabBarTestID: "tab-settings",
+                    tabBarButtonTestID: "tab-settings",
                 }}
             />
         </MainTabs.Navigator>

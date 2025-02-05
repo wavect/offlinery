@@ -19,12 +19,20 @@ import {
     saveJWTValues,
 } from "@/services/storage.service";
 import { API } from "@/utils/api-config";
+import { BLOG_URL } from "@/utils/general.constants";
 import { writeSupportEmail } from "@/utils/misc.utils";
 import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
 import * as React from "react";
-import { useCallback, useState } from "react";
-import { Dimensions, Platform, StyleSheet, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import {
+    Alert,
+    Dimensions,
+    Linking,
+    Platform,
+    StyleSheet,
+    View,
+} from "react-native";
 import { NativeStackScreenProps } from "react-native-screens/native-stack";
 import { ROUTES } from "./routes";
 
@@ -34,6 +42,7 @@ const Welcome = ({
     const { dispatch } = useUserContext();
     const [isLoading, setIsLoading] = useState(true);
     const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
+    const [hasError, setHasError] = useState<boolean>(false);
 
     const checkAuthStatus = async () => {
         try {
@@ -66,34 +75,35 @@ const Welcome = ({
                 resp.refreshToken,
             );
         } catch (error) {
-            console.log(
+            console.error(
                 `Error checking Auth Status, User might be offline or backend not reachable.`,
+                error,
             );
             Sentry.captureException(error, {
                 tags: {
                     authStatus: "JWT not checked",
                 },
             });
+            setHasError(true);
         }
 
         return await isAuthenticated();
     };
+    const checkAuthentication = async () => {
+        try {
+            if (!(await isOnboardingInProgress())) {
+                const isAuthSuccessful = await checkAuthStatus();
+                setIsUserAuthenticated(isAuthSuccessful ?? false);
+            }
+        } catch (error) {
+            console.error("Error checking authentication:", error);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
     useFocusEffect(
         useCallback(() => {
-            const checkAuthentication = async () => {
-                try {
-                    if (!(await isOnboardingInProgress())) {
-                        const isAuthSuccessful = await checkAuthStatus();
-                        setIsUserAuthenticated(isAuthSuccessful ?? false);
-                    }
-                } catch (error) {
-                    console.error("Error checking authentication:", error);
-                    throw error;
-                } finally {
-                    setIsLoading(false);
-                }
-            };
-
             checkAuthentication();
         }, [navigation]),
     );
@@ -187,6 +197,36 @@ const Welcome = ({
             />
         </View>
     );
+
+    const showAlert = () => {
+        Alert.alert(
+            i18n.t(TR.maintenanceAlertTitle),
+            i18n.t(TR.maintenanceAlertDescription),
+            [
+                {
+                    text: i18n.t(TR.retry),
+                    onPress: () => {
+                        setHasError(false);
+                        checkAuthentication();
+                    },
+                },
+                {
+                    text: i18n.t(TR.blog),
+                    isPreferred: true,
+                    onPress: () => {
+                        Linking.openURL(BLOG_URL);
+                        showAlert(); // @dev keep open
+                    },
+                },
+            ],
+            { cancelable: false },
+        );
+    };
+    useEffect(() => {
+        if (hasError) {
+            showAlert();
+        }
+    }, [hasError, isUserAuthenticated]);
 
     return (
         <OPageColorContainer isLoading={isLoading}>

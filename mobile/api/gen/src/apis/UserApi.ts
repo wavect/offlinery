@@ -21,6 +21,8 @@ import type {
     SignInResponseDTO,
     UpdateUserDTO,
     UpdateUserPasswordDTO,
+    UserCountDTO,
+    UserNotificationSettingsDTO,
     UserPrivateDTO,
     UserPublicDTO,
     UserResetPwdSuccessDTO,
@@ -35,6 +37,9 @@ import {
     SignInResponseDTOFromJSON,
     UpdateUserDTOToJSON,
     UpdateUserPasswordDTOToJSON,
+    UserCountDTOFromJSON,
+    UserNotificationSettingsDTOFromJSON,
+    UserNotificationSettingsDTOToJSON,
     UserPrivateDTOFromJSON,
     UserPublicDTOFromJSON,
     UserResetPwdSuccessDTOFromJSON,
@@ -46,6 +51,10 @@ import * as runtime from "../runtime";
 // template rendering logic. If the drawbacks of this approach
 // are larger than the benefits, we can try another approach.
 import { ImagePickerAsset } from "expo-image-picker";
+export interface UserControllerChangeNotificationSettingsRequest {
+    userId: string;
+}
+
 export interface UserControllerCreateUserRequest {
     createUserDTO: CreateUserDTO;
     images: (ImagePickerAsset | undefined)[];
@@ -53,6 +62,10 @@ export interface UserControllerCreateUserRequest {
 
 export interface UserControllerDeleteUserRequest {
     deletionToken: string;
+}
+
+export interface UserControllerGetNotificationSettingsRequest {
+    userId: string;
 }
 
 export interface UserControllerGetOwnUserDataRequest {
@@ -80,6 +93,11 @@ export interface UserControllerUpdateLocationRequest {
     locationUpdateDTO: LocationUpdateDTO;
 }
 
+export interface UserControllerUpdateNotificationSettingsRequest {
+    userId: string;
+    userNotificationSettingsDTO: Array<UserNotificationSettingsDTO>;
+}
+
 export interface UserControllerUpdateUserRequest {
     userId: string;
     updateUserDTO?: UpdateUserDTO;
@@ -98,6 +116,25 @@ export interface UserControllerUpdateUserPasswordRequest {
  * @interface UserApiInterface
  */
 export interface UserApiInterface {
+    /**
+     *
+     * @param {string} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApiInterface
+     */
+    userControllerChangeNotificationSettingsRaw(
+        requestParameters: UserControllerChangeNotificationSettingsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    userControllerChangeNotificationSettings(
+        requestParameters: UserControllerChangeNotificationSettingsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
+
     /**
      *
      * @summary Create a new user with images
@@ -159,6 +196,27 @@ export interface UserApiInterface {
 
     /**
      *
+     * @summary Get notification settings
+     * @param {string} userId User ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApiInterface
+     */
+    userControllerGetNotificationSettingsRaw(
+        requestParameters: UserControllerGetNotificationSettingsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<Array<UserNotificationSettingsDTO>>>;
+
+    /**
+     * Get notification settings
+     */
+    userControllerGetNotificationSettings(
+        requestParameters: UserControllerGetNotificationSettingsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<Array<UserNotificationSettingsDTO>>;
+
+    /**
+     *
      * @summary Get private user data by ID
      * @param {string} userId User ID
      * @param {*} [options] Override http request option.
@@ -177,6 +235,24 @@ export interface UserApiInterface {
         requestParameters: UserControllerGetOwnUserDataRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<UserPrivateDTO>;
+
+    /**
+     *
+     * @summary Get user count
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApiInterface
+     */
+    userControllerGetUserCountRaw(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<UserCountDTO>>;
+
+    /**
+     * Get user count
+     */
+    userControllerGetUserCount(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<UserCountDTO>;
 
     /**
      *
@@ -286,6 +362,28 @@ export interface UserApiInterface {
 
     /**
      *
+     * @summary Update notification settings
+     * @param {string} userId User ID
+     * @param {Array<UserNotificationSettingsDTO>} userNotificationSettingsDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApiInterface
+     */
+    userControllerUpdateNotificationSettingsRaw(
+        requestParameters: UserControllerUpdateNotificationSettingsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<boolean>>;
+
+    /**
+     * Update notification settings
+     */
+    userControllerUpdateNotificationSettings(
+        requestParameters: UserControllerUpdateNotificationSettingsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<boolean>;
+
+    /**
+     *
      * @summary Update an existing user
      * @param {string} userId
      * @param {UpdateUserDTO} [updateUserDTO]
@@ -334,6 +432,52 @@ export interface UserApiInterface {
  *
  */
 export class UserApi extends runtime.BaseAPI implements UserApiInterface {
+    /**
+     */
+    async userControllerChangeNotificationSettingsRaw(
+        requestParameters: UserControllerChangeNotificationSettingsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["userId"] == null) {
+            throw new runtime.RequiredError(
+                "userId",
+                'Required parameter "userId" was null or undefined when calling userControllerChangeNotificationSettings().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters["userId"] != null) {
+            queryParameters["userId"] = requestParameters["userId"];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request(
+            {
+                path: `/user/change-notification-settings`,
+                method: "GET",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async userControllerChangeNotificationSettings(
+        requestParameters: UserControllerChangeNotificationSettingsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.userControllerChangeNotificationSettingsRaw(
+            requestParameters,
+            initOverrides,
+        );
+    }
+
     /**
      * Create a new user with images
      */
@@ -507,6 +651,56 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
     }
 
     /**
+     * Get notification settings
+     */
+    async userControllerGetNotificationSettingsRaw(
+        requestParameters: UserControllerGetNotificationSettingsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<Array<UserNotificationSettingsDTO>>> {
+        if (requestParameters["userId"] == null) {
+            throw new runtime.RequiredError(
+                "userId",
+                'Required parameter "userId" was null or undefined when calling userControllerGetNotificationSettings().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request(
+            {
+                path: `/user/notification-settings/{userId}`.replace(
+                    `{${"userId"}}`,
+                    encodeURIComponent(String(requestParameters["userId"])),
+                ),
+                method: "GET",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            jsonValue.map(UserNotificationSettingsDTOFromJSON),
+        );
+    }
+
+    /**
+     * Get notification settings
+     */
+    async userControllerGetNotificationSettings(
+        requestParameters: UserControllerGetNotificationSettingsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<Array<UserNotificationSettingsDTO>> {
+        const response = await this.userControllerGetNotificationSettingsRaw(
+            requestParameters,
+            initOverrides,
+        );
+        return await response.value();
+    }
+
+    /**
      * Get private user data by ID
      */
     async userControllerGetOwnUserDataRaw(
@@ -553,6 +747,42 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
             requestParameters,
             initOverrides,
         );
+        return await response.value();
+    }
+
+    /**
+     * Get user count
+     */
+    async userControllerGetUserCountRaw(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<UserCountDTO>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request(
+            {
+                path: `/user/user-count`,
+                method: "GET",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            UserCountDTOFromJSON(jsonValue),
+        );
+    }
+
+    /**
+     * Get user count
+     */
+    async userControllerGetUserCount(
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<UserCountDTO> {
+        const response =
+            await this.userControllerGetUserCountRaw(initOverrides);
         return await response.value();
     }
 
@@ -813,6 +1043,70 @@ export class UserApi extends runtime.BaseAPI implements UserApiInterface {
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<UserPublicDTO> {
         const response = await this.userControllerUpdateLocationRaw(
+            requestParameters,
+            initOverrides,
+        );
+        return await response.value();
+    }
+
+    /**
+     * Update notification settings
+     */
+    async userControllerUpdateNotificationSettingsRaw(
+        requestParameters: UserControllerUpdateNotificationSettingsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<boolean>> {
+        if (requestParameters["userId"] == null) {
+            throw new runtime.RequiredError(
+                "userId",
+                'Required parameter "userId" was null or undefined when calling userControllerUpdateNotificationSettings().',
+            );
+        }
+
+        if (requestParameters["userNotificationSettingsDTO"] == null) {
+            throw new runtime.RequiredError(
+                "userNotificationSettingsDTO",
+                'Required parameter "userNotificationSettingsDTO" was null or undefined when calling userControllerUpdateNotificationSettings().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        const response = await this.request(
+            {
+                path: `/user/notification-settings/{userId}`.replace(
+                    `{${"userId"}}`,
+                    encodeURIComponent(String(requestParameters["userId"])),
+                ),
+                method: "PUT",
+                headers: headerParameters,
+                query: queryParameters,
+                body: requestParameters["userNotificationSettingsDTO"]!.map(
+                    UserNotificationSettingsDTOToJSON,
+                ),
+            },
+            initOverrides,
+        );
+
+        if (this.isJsonMime(response.headers.get("content-type"))) {
+            return new runtime.JSONApiResponse<boolean>(response);
+        } else {
+            return new runtime.TextApiResponse(response) as any;
+        }
+    }
+
+    /**
+     * Update notification settings
+     */
+    async userControllerUpdateNotificationSettings(
+        requestParameters: UserControllerUpdateNotificationSettingsRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<boolean> {
+        const response = await this.userControllerUpdateNotificationSettingsRaw(
             requestParameters,
             initOverrides,
         );

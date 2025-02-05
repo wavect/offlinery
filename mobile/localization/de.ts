@@ -1,14 +1,32 @@
 import { Language } from "./translate.service";
 
 export const de: Language = {
+    blog: "Blog lesen",
+    retry: "Nochmal versuchen",
+    maintenanceAlertTitle: "Offlinery wird gewartet",
+    maintenanceAlertDescription:
+        "Wir führen gerade größere Verbesserungen an unserem System durch. Wir sind gleich wieder zurück.",
     bgLocationServiceTitle: "Offlinery EIN",
     bgLocationServiceBody: "Bereit dich zu beeindrucken..",
     createAccount: "Registrieren",
     signIn: "Anmelden",
+    userCount: "{{count}} User aktiv",
+    encounterCount: "{{count}} User getroffen",
+    bestChanceApproachTime: "Beste Chancen: {{startTime}}-{{endTime}} Uhr",
+    bestChanceApproachTimeDescription:
+        "Sei zu diesen Zeiten an den Hotspots, um deine Chancen Jemanden zu treffen drastisch zu erhöhen.",
+    encounterCountDescription:
+        "So vielen Usern bist du bereits über den Weg gelaufen. Wechsle zum Tab 'Begegnungen', um sie zu sehen.",
+    userCountDescription:
+        "So viele User sind in deiner Umgebung auf Offlinery. Aktive Nutzer die zu dir passen werden auf der Map angezeigt.",
     invalidCredentials: "E-Mail oder Passwort falsch.",
     signingIn: "Einen Moment..",
+    youMetHere: "bist du hier über den Weg gelaufen.",
     loadingHeatmap: "Lade Heatmap..",
+    loadingEvents: "Lade Events..",
+    loadingEncounters: "Lade Begegnungen..",
     loadingLocation: "Lade Location..",
+    upcomingEventIn: "Event: {{venue}}",
     contactSupport: "Funktioniert etwas nicht?",
     gettingReadyToAmazeYou: "Bereit, dich zu beeindrucken..",
     connectInRealLife: "Connect in real life.",

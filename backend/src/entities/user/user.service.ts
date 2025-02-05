@@ -1,13 +1,18 @@
 import { CreateUserDTO } from "@/DTOs/create-user.dto";
-import { LocationUpdateDTO } from "@/DTOs/location-update.dto";
+import { LocationDTO } from "@/DTOs/location.dto";
 import { ResetPasswordResponseDTO } from "@/DTOs/reset-password.dto";
 import { SignInResponseDTO } from "@/DTOs/sign-in-response.dto";
 import { UpdateUserPasswordDTO } from "@/DTOs/update-user-password";
 import { UpdateUserDTO } from "@/DTOs/update-user.dto";
 import { UserDeletionSuccessDTO } from "@/DTOs/user-deletion-success.dto";
+import { UserNotificationSettingsDTO } from "@/DTOs/user-notification-settings.dto";
 import { UserRequestDeletionFormSuccessDTO } from "@/DTOs/user-request-deletion-form-success.dto";
 import { UserResetPwdSuccessDTO } from "@/DTOs/user-reset-pwd-success.dto";
 import { AuthService } from "@/auth/auth.service";
+import {
+    AppStatsService,
+    EAPP_STAT_KEY,
+} from "@/entities/app-stats/app-stats.service";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { MatchingService } from "@/transient-services/matching/matching.service";
@@ -72,6 +77,7 @@ export class UserService {
         private authService: AuthService,
         private mailService: MailerService,
         private readonly i18n: I18nService,
+        private appStatsService: AppStatsService,
     ) {}
 
     private async saveFiles(
@@ -146,6 +152,14 @@ export class UserService {
         return user;
     }
 
+    async generateRestrictedViewToken(user: User): Promise<User> {
+        const random = randomBytes(32).toString("hex");
+        const salt = await bcrypt.genSalt(3);
+        // @dev Hash used as clearText token
+        user.restrictedViewToken = await bcrypt.hash(random, salt);
+        return user;
+    }
+
     async createUser(
         createUserDto: CreateUserDTO,
         images: Express.Multer.File[],
@@ -160,6 +174,7 @@ export class UserService {
         });
 
         await this.hashNewPassword(user, createUserDto.clearPassword);
+        await this.generateRestrictedViewToken(user);
 
         // Save images
         user.imageURIs = (await this.saveFiles(images)).map(
@@ -301,6 +316,10 @@ export class UserService {
         return this.userRepository.find();
     }
 
+    countAll(): Promise<number> {
+        return this.userRepository.count();
+    }
+
     async deleteUserByDeletionToken(
         deletionToken: string,
     ): Promise<UserDeletionSuccessDTO> {
@@ -320,6 +339,10 @@ export class UserService {
 
         await this.userRepository.delete({ deletionToken });
         await this.pendingUserRepo.delete({ email: userToDelete.email });
+        await this.appStatsService.incrementValue(
+            EAPP_STAT_KEY.USERS_DELETED_COUNT,
+        );
+
         this.logger.debug(`User ${userToDelete.id} successfully deleted!`);
 
         const lang = userToDelete.preferredLanguage || ELanguage.en;
@@ -492,6 +515,25 @@ export class UserService {
         };
     }
 
+    async isValidRestrictedViewToken(
+        userId: string,
+        clearToken: string,
+    ): Promise<boolean> {
+        const user: User = await this.findUserById(userId);
+
+        if (!user) {
+            this.logger.warn(
+                `Invalid user Id provided. User does not exist (isValidRestrictedViewToken)`,
+            );
+            return false;
+        }
+        const isSecretTokenValid = clearToken === user.restrictedViewToken; // @dev needs to be saved in cleartext so that we can send it via email for example
+        this.logger.debug(
+            `Valid Restricted view token and user id provided to access restricted view: ${userId} - RESULT: ${isSecretTokenValid}`,
+        );
+        return isSecretTokenValid;
+    }
+
     async requestAccountDeletionViaApp(id: string) {
         const user = await this.userRepository.findOneBy({ id });
         if (!user) {
@@ -512,6 +554,28 @@ export class UserService {
         }
 
         return user;
+    }
+
+    /** @returns boolean: Was operation successful. */
+    async updateNotificationSettings(
+        id: string,
+        userNotificationSettingsDTOs: UserNotificationSettingsDTO[],
+    ): Promise<boolean> {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { id },
+            });
+            userNotificationSettingsDTOs.forEach((dto) => {
+                user[dto.notificationSettingKey] = dto.notificationSettingValue;
+            });
+            await this.userRepository.save(user);
+            return true;
+        } catch (error) {
+            this.logger.error(
+                `Couldn't update notification settings: ${error?.message}`,
+            );
+            return false;
+        }
     }
 
     async findUserByEmailOrFail(email: string): Promise<User> {
@@ -552,7 +616,7 @@ export class UserService {
 
     async updateLocation(
         userId: string,
-        { latitude, longitude }: LocationUpdateDTO,
+        { latitude, longitude }: LocationDTO,
     ): Promise<{
         updatedUser: User;
         notifications: OfflineryNotification[];
@@ -573,7 +637,6 @@ export class UserService {
         );
 
         // Check for matches and send notifications (from a semantic perspective we only send notifications if a person to be approached sends a location update)
-        // TODO: Make sure notification not send double if other user then sends update!
         this.logger.debug(
             `Sending notifications to users that want to potentially approach or be approached by ${user.firstName} (${user.id})`,
         );

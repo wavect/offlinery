@@ -6,13 +6,13 @@ import {
     UpdateEncounterStatusDTO,
     UserPrivateDTOApproachChoiceEnum,
 } from "@/api/gen/src";
-import { OBadgesOfUser } from "@/components/OBadge/OBadgesOfUser";
 import {
     IOButtonSmallVariant,
     OButtonSmall,
 } from "@/components/OButtonSmall/OButtonSmall";
 import { OEncounterStrike } from "@/components/OEncounterStrike/OEncounterStrike";
 import { OImageWithLoader } from "@/components/OImageWithLoader/OImageWithLoader";
+import { OBadgesOfUser } from "@/components/OIntentionBadge/OBadgesOfUser";
 import OMessageModal from "@/components/OMessageModal/OMessageModal";
 import {
     EACTION_ENCOUNTERS,
@@ -270,8 +270,8 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                 </View>
                                 <View style={styles.buttonContainer}>
                                     {!encounterProfile.isNearbyRightNow &&
-                                        dateStatus ===
-                                            EncounterPublicDTOStatusEnum.met_interested && (
+                                        dateStatus !==
+                                            EncounterPublicDTOStatusEnum.met_not_interested && (
                                             <OButtonSmall
                                                 label={i18n.t(
                                                     TR.leaveMessageBtnLbl,
@@ -329,6 +329,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                                     navigation.navigate(
                                                         ROUTES.HouseRules,
                                                         {
+                                                            navigation,
                                                             nextPage:
                                                                 ROUTES.Main
                                                                     .NavigateToApproach,

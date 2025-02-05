@@ -1,3 +1,4 @@
+import { LocationDTO } from "@/DTOs/location.dto";
 import { MessagePublicDTO } from "@/DTOs/message-public.dto";
 import { EEncounterStatus } from "@/types/user.types";
 import { ApiProperty } from "@nestjs/swagger";
@@ -22,10 +23,10 @@ export class EncounterPublicDTO {
 
     @ApiProperty({
         nullable: true,
-        type: "string",
+        type: LocationDTO,
         description: "Last rough location passed by",
     })
-    lastLocationPassedBy?: string;
+    lastLocationPassedBy?: LocationDTO;
 
     @ApiProperty({
         description: "Has this encounter been reported by any of the users",

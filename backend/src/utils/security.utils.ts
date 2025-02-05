@@ -1,3 +1,5 @@
+import { User } from "@/entities/user/user.entity";
+
 export const RESEND_EMAIL_CODE_TIMEOUT_IN_MS = 120 * 1000; // 2 min
 export const EMAIL_CODE_EXPIRATION_IN_MS = 15 * 60 * 1000; // 15 min
 
@@ -9,4 +11,11 @@ export const generate6DigitEmailCode = (): string => {
         verificationNumber = verificationNumber.concat(randomNumber);
     }
     return verificationNumber;
+};
+
+export const generateRestrictedViewUrl = (
+    routePrefix: string,
+    user: Pick<User, "restrictedViewToken" | "id">,
+) => {
+    return `https://api.offlinery.io/v1/${routePrefix}?token=${user.restrictedViewToken}&userId=${user.id}`;
 };

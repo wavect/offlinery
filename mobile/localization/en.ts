@@ -1,12 +1,30 @@
 // @dev Other languages have to be typed as Language!
 
 export const en = {
+    blog: "Read Blog",
+    retry: "Retry",
+    maintenanceAlertTitle: "Offlinery in maintenance",
+    maintenanceAlertDescription:
+        "We're making significant improvements on Offlinery right now. We'll be back as soon as possible.",
     bgLocationServiceTitle: "Offlinery ON",
     bgLocationServiceBody: "Letting others know about you.",
     createAccount: "Create Account",
     signIn: "Sign in",
+    userCount: "{{count}} users nearby",
+    encounterCount: "{{count}} people met",
+    bestChanceApproachTime: "Best time: {{startTime}}-{{endTime}}",
+    bestChanceApproachTimeDescription:
+        "Be at these hotspots at those times to drastically increase your odds of meeting people.",
+    encounterCountDescription:
+        "You crossed paths with this many users. Switch to the tab 'Encounters' to see them.",
+    userCountDescription:
+        "So many users are on Offlinery within your area. Active users that want to match with you are shown on the map.",
+    youMetHere: "crossed your path here.",
     loadingHeatmap: "Loading heatmap..",
+    loadingEvents: "Loading events..",
+    loadingEncounters: "Loading encounters..",
     loadingLocation: "Loading location..",
+    upcomingEventIn: "Event: {{venue}}",
     invalidCredentials: "Email or password invalid.",
     signingIn: "Signing in..",
     contactSupport: "Something not working?",

@@ -8,6 +8,7 @@ import {
 } from "@/app.module.configuration";
 import { CronJobsModule } from "@/cronjobs/cronjobs.module";
 import { ApiUserModule } from "@/entities/api-user/api-user.module";
+import { AppStatsModule } from "@/entities/app-stats/app-stats.module";
 import { BlacklistedRegionModule } from "@/entities/blacklisted-region/blacklisted-region.module";
 import { EncounterModule } from "@/entities/encounter/encounter.module";
 import { EventModule } from "@/entities/event/event.module";
@@ -44,6 +45,7 @@ import { typeOrmAsyncConfig } from "./typeorm.config";
         staticModule,
         throttlerModule,
         cacheModule,
+        AppStatsModule,
         UserModule,
         MatchingModule,
         NotificationModule,

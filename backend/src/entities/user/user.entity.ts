@@ -105,6 +105,9 @@ export class User
     passwordHash: string;
 
     @Column()
+    restrictedViewToken: string;
+
+    @Column()
     passwordSalt: string;
 
     @Column({ type: "date" })
@@ -232,6 +235,14 @@ export class User
     /** @dev Used to remind user to book a safety call in several intervals. */
     @Column({ type: "timestamptz", nullable: true })
     lastSafetyCallVerificationReminderSent: Date;
+
+    /** @dev Send me ghostmode reminders via email */
+    @Column({ default: true })
+    ghostModeRemindersEmail: boolean;
+
+    /** @dev Send event announcements via email */
+    @Column({ default: true })
+    eventAnnouncementsEmail: boolean;
 
     @BeforeInsert()
     beforeInsert() {

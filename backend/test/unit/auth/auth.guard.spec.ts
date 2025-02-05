@@ -1,5 +1,6 @@
-import { AuthGuard } from "@/auth/auth.guard";
+import { AuthGuard, USER_ID_PARAM } from "@/auth/auth.guard";
 import { ApiUserService } from "@/entities/api-user/api-user.service";
+import { UserService } from "@/entities/user/user.service";
 import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
@@ -32,6 +33,12 @@ describe("AuthGuard", () => {
                         findApiUserByApiKey: jest.fn(),
                     },
                 },
+                {
+                    provide: UserService,
+                    useValue: {
+                        isValidRestrictedViewToken: jest.fn(),
+                    },
+                },
             ],
         }).compile();
 
@@ -52,6 +59,7 @@ describe("AuthGuard", () => {
                 switchToHttp: jest.fn().mockReturnValue({
                     getRequest: jest.fn().mockReturnValue({
                         headers: {},
+                        params: {},
                     }),
                 }),
                 getHandler: jest.fn(),
@@ -108,6 +116,29 @@ describe("AuthGuard", () => {
             expect(
                 mockExecutionContext.switchToHttp().getRequest().user,
             ).toEqual({ userId: "123" });
+        });
+
+        it("should deny access when a valid token is provided but from wrong user", async () => {
+            jest.spyOn(reflector, "getAllAndOverride").mockReturnValue(false);
+            (
+                mockExecutionContext.switchToHttp().getRequest as jest.Mock
+            ).mockReturnValue({
+                headers: { authorization: "Bearer valid_token_but_wrong_user" },
+            });
+            jest.spyOn(jwtService, "verifyAsync").mockResolvedValue({
+                userId: "321",
+            });
+            (
+                mockExecutionContext.switchToHttp().getRequest as jest.Mock
+            ).mockReturnValue({
+                params: {
+                    [USER_ID_PARAM]: "123",
+                },
+            });
+
+            await expect(
+                authGuard.canActivate(mockExecutionContext),
+            ).rejects.toThrow(UnauthorizedException);
         });
     });
 });

@@ -1,4 +1,4 @@
-import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth-own-data.guard";
+import { OnlyOwnUserData, USER_ID_PARAM } from "@/auth/auth.guard";
 import { WeightedLatLngDTO } from "@/DTOs/map.dto";
 import { UserService } from "@/entities/user/user.service";
 import { MatchingService } from "@/transient-services/matching/matching.service";

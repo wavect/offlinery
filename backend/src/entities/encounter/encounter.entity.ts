@@ -5,6 +5,7 @@ import { UserReport } from "@/entities/user-report/user-report.entity";
 import { User } from "@/entities/user/user.entity";
 import { IEntityToDTOWithArgumentInterface } from "@/interfaces/IEntityToDTOWithArgument.interface";
 import { EEncounterStatus } from "@/types/user.types";
+import { getTypedCoordinatesFromPoint } from "@/utils/location.utils";
 import { Point } from "geojson";
 import {
     AfterLoad,
@@ -25,7 +26,9 @@ export class Encounter
             id: this.id,
             status: this.status,
             lastDateTimePassedBy: this.lastDateTimePassedBy,
-            lastLocationPassedBy: undefined, // TODO, derive a rough human readable string (translation??) that can be shown locally, or just give random radius point or so and let users open map or so?
+            lastLocationPassedBy: getTypedCoordinatesFromPoint(
+                this.lastLocationPassedBy,
+            ),
             reported: this.userReports?.length > 0,
             /** @dev Find other user to yourself */
             otherUser: this.users

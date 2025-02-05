@@ -2,11 +2,11 @@ import { UserPublicDTOIntentionsEnum } from "@/api/gen/src";
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { View } from "react-native";
-import OBadge from "./OBadge";
+import OIntentionBadge from "./OIntentionBadge";
 
 const meta = {
     title: "Components/OBadge",
-    component: OBadge,
+    component: OIntentionBadge,
     parameters: {
         docs: {
             description: {
@@ -31,7 +31,7 @@ const meta = {
         ),
     ],
     tags: ["autodocs"],
-} satisfies Meta<typeof OBadge>;
+} satisfies Meta<typeof OIntentionBadge>;
 
 export default meta;
 
@@ -46,9 +46,13 @@ export const Default: Story = {
 export const AllBadges: Story = {
     render: () => (
         <View style={{ gap: 8 }}>
-            <OBadge intention={UserPublicDTOIntentionsEnum.casual} />
-            <OBadge intention={UserPublicDTOIntentionsEnum.friendship} />
-            <OBadge intention={UserPublicDTOIntentionsEnum.relationship} />
+            <OIntentionBadge intention={UserPublicDTOIntentionsEnum.casual} />
+            <OIntentionBadge
+                intention={UserPublicDTOIntentionsEnum.friendship}
+            />
+            <OIntentionBadge
+                intention={UserPublicDTOIntentionsEnum.relationship}
+            />
         </View>
     ),
 };

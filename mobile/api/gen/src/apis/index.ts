@@ -3,6 +3,7 @@
 export * from "./AuthApi";
 export * from "./DefaultApi";
 export * from "./EncounterApi";
+export * from "./EventApi";
 export * from "./MapApi";
 export * from "./PendingUserApi";
 export * from "./PushNotificationsApi";

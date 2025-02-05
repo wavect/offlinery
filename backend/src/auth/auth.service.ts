@@ -90,6 +90,14 @@ export class AuthService {
         );
     }
 
+    async getJwtTokenForUser(userId: string) {
+        const payload = { sub: userId };
+        return await this.jwtService.signAsync(payload, {
+            secret: TYPED_ENV.JWT_SECRET,
+            expiresIn: TOKEN_EXPIRATION_TIME,
+        });
+    }
+
     async signIn(
         email: string,
         clearPassword: string,

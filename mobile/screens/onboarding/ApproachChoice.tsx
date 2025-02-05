@@ -39,16 +39,19 @@ const ApproachChoice = ({
         switch (approachChoice) {
             case UserPrivateDTOApproachChoiceEnum.approach: // fall through
                 navigation.navigate(ROUTES.HouseRules, {
+                    navigation,
                     nextPage: ROUTES.Onboarding.SafetyCheck,
                 });
                 break;
             case UserPrivateDTOApproachChoiceEnum.be_approached:
                 navigation.navigate(ROUTES.HouseRules, {
+                    navigation,
                     nextPage: ROUTES.Onboarding.DontApproachMeHere,
                 });
                 break;
             case UserPrivateDTOApproachChoiceEnum.both:
                 navigation.navigate(ROUTES.HouseRules, {
+                    navigation,
                     nextPage: ROUTES.Onboarding.DontApproachMeHere,
                 });
         }

@@ -1,3 +1,4 @@
+import { LocationDTO } from "@/api/gen/src";
 import { Color } from "@/GlobalStyles";
 import { i18n, TR } from "@/localization/translate.service";
 import { getLocalValue, LOCAL_VALUE } from "@/services/storage.service";
@@ -41,7 +42,7 @@ export class OBackgroundLocationService {
 
     private async updateUserLocation(
         userId: string,
-        locationUpdateDTO: LocationUpdateDTO,
+        locationUpdateDTO: LocationDTO,
     ): Promise<void> {
         try {
             await API.user.userControllerUpdateLocation({
@@ -206,8 +207,11 @@ export class OBackgroundLocationService {
         try {
             const enabled = await this.initialize();
             if (!enabled) {
+                const geoLocState = await BackgroundGeolocation.getState();
                 // @dev if for whatever reason not running, restart.
-                await BackgroundGeolocation.start();
+                if (!geoLocState.enabled) {
+                    await BackgroundGeolocation.start();
+                }
             }
             // @dev change to background location always (show dialog to user)
             await BackgroundGeolocation.setConfig({

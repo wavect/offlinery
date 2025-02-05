@@ -1,5 +1,4 @@
-import { USER_ID_PARAM } from "@/auth/auth-own-data.guard";
-import { USER_OBJ_ID } from "@/auth/auth.guard";
+import { USER_ID_PARAM, USER_OBJ_ID } from "@/auth/auth.guard";
 import { extractTokenFromHeader } from "@/auth/auth.utils";
 import { TYPED_ENV } from "@/utils/env.utils";
 import {

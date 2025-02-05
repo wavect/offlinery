@@ -8,7 +8,7 @@ import {
     EIntention,
     EVerificationStatus,
 } from "@/types/user.types";
-import { Repository } from "typeorm";
+import { DeleteResult, Repository } from "typeorm";
 import { generateRandomString } from "../utils/utils";
 import { FactoryInterface } from "./factory.interface";
 
@@ -27,6 +27,10 @@ export class UserFactory implements FactoryInterface {
     ) {
         this.userRepository = userRepository;
         this.blacklistedRegionRepository = blacklistedRegionRepository;
+    }
+
+    public async deleteTestUser(user: User): Promise<DeleteResult> {
+        return await this.userRepository.delete({ id: user.id });
     }
 
     public async persistNewTestUser(userData?: Partial<User>): Promise<User> {
@@ -52,6 +56,7 @@ export class UserFactory implements FactoryInterface {
             pushToken: `ExpoPushToken[`,
             trustScore: 1,
             ageRangeString: "[18,99]",
+            restrictedViewToken: "abcdef",
             ...userData,
         });
 

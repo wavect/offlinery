@@ -41,6 +41,8 @@ export const BaseNotificationADTOTypeEnum = {
     account_approved: "account_approved",
     ghostmode_reminder: "ghostmode_reminder",
     safetycall_reminder: "safetycall_reminder",
+    account_denied: "account_denied",
+    new_message: "new_message",
 } as const;
 export type BaseNotificationADTOTypeEnum =
     (typeof BaseNotificationADTOTypeEnum)[keyof typeof BaseNotificationADTOTypeEnum];
@@ -54,6 +56,8 @@ export const BaseNotificationADTOScreenEnum = {
     FindPeople2: "Main_FindPeople",
     FindPeople3: "Main_FindPeople",
     FindPeople4: "Main_FindPeople",
+    FindPeople5: "Main_FindPeople",
+    Encounters_onTab: "Main_Encounters_onTab",
 } as const;
 export type BaseNotificationADTOScreenEnum =
     (typeof BaseNotificationADTOScreenEnum)[keyof typeof BaseNotificationADTOScreenEnum];

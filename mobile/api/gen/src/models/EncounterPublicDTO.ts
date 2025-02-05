@@ -12,6 +12,8 @@
  * Do not edit the class manually.
  */
 
+import type { LocationDTO } from "./LocationDTO";
+import { LocationDTOFromJSON, LocationDTOToJSON } from "./LocationDTO";
 import type { MessagePublicDTO } from "./MessagePublicDTO";
 import {
     MessagePublicDTOFromJSON,
@@ -46,10 +48,10 @@ export interface EncounterPublicDTO {
     lastDateTimePassedBy: string;
     /**
      * Last rough location passed by
-     * @type {string}
+     * @type {LocationDTO}
      * @memberof EncounterPublicDTO
      */
-    lastLocationPassedBy?: string | null;
+    lastLocationPassedBy?: LocationDTO | null;
     /**
      * Has this encounter been reported by any of the users
      * @type {boolean}
@@ -138,7 +140,7 @@ export function EncounterPublicDTOFromJSONTyped(
         lastLocationPassedBy:
             json["lastLocationPassedBy"] == null
                 ? undefined
-                : json["lastLocationPassedBy"],
+                : LocationDTOFromJSON(json["lastLocationPassedBy"]),
         reported: json["reported"],
         otherUser: UserPublicDTOFromJSON(json["otherUser"]),
         messages:
@@ -162,7 +164,7 @@ export function EncounterPublicDTOToJSON(
         id: value["id"],
         status: value["status"],
         lastDateTimePassedBy: value["lastDateTimePassedBy"],
-        lastLocationPassedBy: value["lastLocationPassedBy"],
+        lastLocationPassedBy: LocationDTOToJSON(value["lastLocationPassedBy"]),
         reported: value["reported"],
         otherUser: UserPublicDTOToJSON(value["otherUser"]),
         messages:

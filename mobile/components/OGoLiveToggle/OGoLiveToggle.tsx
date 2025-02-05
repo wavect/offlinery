@@ -11,7 +11,14 @@ import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
 import * as Sentry from "@sentry/react-native";
 import React, { useEffect } from "react";
-import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
+import {
+    Platform,
+    StyleProp,
+    Switch,
+    Text,
+    View,
+    ViewStyle,
+} from "react-native";
 
 interface IOGoLiveToggleProps {
     style?: StyleProp<ViewStyle>;
@@ -116,6 +123,12 @@ export const OGoLiveToggle = (props: IOGoLiveToggleProps) => {
                         : Color.lightGray
                 }
                 ios_backgroundColor="#3e3e3e"
+                style={Platform.select({
+                    android: {
+                        transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }], // Much larger scale
+                        height: 25, // Increased height
+                    },
+                })}
                 onValueChange={toggleSwitch}
                 value={state.dateMode === UserPrivateDTODateModeEnum.live}
             />

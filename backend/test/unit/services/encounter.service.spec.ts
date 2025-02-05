@@ -4,10 +4,12 @@ import { EncounterService } from "@/entities/encounter/encounter.service";
 import { Message } from "@/entities/messages/message.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
+import { NotificationService } from "@/transient-services/notification/notification.service";
 import { EEncounterStatus } from "@/types/user.types";
 import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
 import { EncounterBuilder } from "../../_src/builders/encounter.builder";
 import { MessageBuilder } from "../../_src/builders/message.builder";
@@ -19,6 +21,8 @@ describe("EncounterService", () => {
     let encounterRepository: Repository<Encounter>;
     let messageRepository: Repository<Message>;
     let mockUserService: jest.Mocked<UserService>;
+    let mockNotificationService: jest.Mocked<NotificationService>;
+    let mockI18nService: jest.Mocked<I18nService>;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -39,6 +43,14 @@ describe("EncounterService", () => {
                 {
                     provide: UserService,
                     useValue: mockUserService,
+                },
+                {
+                    provide: NotificationService,
+                    useValue: mockNotificationService,
+                },
+                {
+                    provide: I18nService,
+                    useValue: mockI18nService,
                 },
             ],
         }).compile();

@@ -85,25 +85,61 @@ describe("Matching Service Integration Tests ", () => {
                 await matchingService.findNearbyMatches(userToBeApproached),
             ).toEqual([]);
         });
-        it("should not fetch heatmap locations if the user is not live", async () => {
+        it("should fetch heatmap locations if the user is ghost mode", async () => {
             const userToBeApproached = await userFactory.persistNewTestUser({
-                dateMode: EDateMode.LIVE,
+                dateMode: EDateMode.GHOST,
+                approachChoice: EApproachChoice.APPROACH,
                 location: null,
             });
 
-            expect(
-                await matchingService.findHeatmapMatches(userToBeApproached),
-            ).toEqual([]);
+            await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                approachChoice: EApproachChoice.BE_APPROACHED,
+                location: null,
+            });
+
+            const users =
+                await matchingService.findHeatmapMatches(userToBeApproached);
+
+            expect(users.length).toEqual(1);
         });
-        it("should not fetch heatmap matches if the user has no locations", async () => {
+        it("should fetch heatmap locations if the user is live mode", async () => {
             const userToBeApproached = await userFactory.persistNewTestUser({
                 dateMode: EDateMode.LIVE,
-                location: null,
+                approachChoice: EApproachChoice.APPROACH,
             });
 
-            expect(
-                await matchingService.findNearbyMatches(userToBeApproached),
-            ).toEqual([]);
+            await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                approachChoice: EApproachChoice.BE_APPROACHED,
+            });
+
+            const users =
+                await matchingService.findHeatmapMatches(userToBeApproached);
+
+            expect(users.length).toEqual(1);
+        });
+        it("should fetch heatmap matches if the user has no locations", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.MAN,
+                genderDesire: [EGender.WOMAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const users = await matchingService.findNearbyMatches(mainUser);
+            expect(users.length).toBeGreaterThan(0);
         });
     });
 

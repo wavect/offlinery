@@ -33,16 +33,25 @@ export class MatchingService {
      * @param userToBeApproached
      */
     public async findHeatmapMatches(userToBeApproached: User): Promise<User[]> {
-        if (!this.isUserEligibleForMatchingLookup(userToBeApproached)) {
-            return [];
-        }
-        return this.userRepository.getPotentialMatchesForHeatMap(
-            userToBeApproached,
-        );
+        const matches =
+            await this.userRepository.getPotentialMatchesForHeatMap(
+                userToBeApproached,
+            );
+        return matches ?? [];
+    }
+
+    public async findTemporaryHeatmap(
+        userToBeApproached: User,
+    ): Promise<User[]> {
+        // TODO: Once enough users delete this function and switch back to findHeatmapMatches() function back which only shows matching users
+        const matches =
+            await this.userRepository.getHeatmapTEMPORARY(userToBeApproached);
+        return matches ?? [];
     }
 
     public async getHeatMapClusteredPoints(userToBeApproached: User) {
-        const matches = await this.findHeatmapMatches(userToBeApproached);
+        // TODO: Once enough users delete the temporary function and switch back to findHeatmapMatches() function back which only shows matching users
+        const matches = await this.findTemporaryHeatmap(userToBeApproached);
         const realPoints = matches
             .filter((match: User) => !!match.location)
             .map((m) => m.location);
@@ -143,6 +152,15 @@ export class MatchingService {
                             ...baseNotification,
                             title: this.i18n.translate(
                                 "main.notification.newMatch.title",
+                                {
+                                    args: {
+                                        firstName: userNearBy.firstName,
+                                    },
+                                    lang: userLanguage,
+                                },
+                            ),
+                            body: this.i18n.translate(
+                                "main.notification.newMatch.body",
                                 {
                                     args: {
                                         firstName: userNearBy.firstName,

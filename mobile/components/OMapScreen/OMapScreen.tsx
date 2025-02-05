@@ -10,14 +10,18 @@ interface IOMapScreenProps {
     subtitle2?: string;
     saveChangesToBackend: boolean;
     showHeatmap: boolean;
+    showEvents: boolean;
+    /// @dev This property lets the OMap component know to push bottom elements such as the slider up a bit since we show a button below it (e.g. continue in onboarding)
+    showingBottomButton: boolean;
     showBlacklistedRegions: boolean;
     showMapStatus: boolean;
+    showEncounters: boolean;
     bottomChildren?: React.ReactNode;
 }
 
 const BottomChildrenMemo = memo(({ children }: any) => (
     <SafeAreaView style={styles.bottomContainer} edges={["bottom"]}>
-        <OCard style={styles.bottomCard}>{children}</OCard>
+        <View style={styles.bottomCard}>{children}</View>
     </SafeAreaView>
 ));
 
@@ -45,7 +49,10 @@ const OMapScreen = ({
     subtitle,
     subtitle2,
     showHeatmap,
+    showEvents,
+    showEncounters,
     showMapStatus,
+    showingBottomButton,
     showBlacklistedRegions,
     saveChangesToBackend,
     bottomChildren,
@@ -62,7 +69,10 @@ const OMapScreen = ({
                 <OMap
                     saveChangesToBackend={saveChangesToBackend}
                     showHeatmap={showHeatmap}
+                    showEvents={showEvents}
+                    showEncounters={showEncounters}
                     showMapStatus={showMapStatus}
+                    showingBottomButton={showingBottomButton}
                     showBlacklistedRegions={showBlacklistedRegions}
                 />
             </SafeAreaView>
@@ -95,6 +105,7 @@ const styles = StyleSheet.create({
     },
     topContent: {
         marginHorizontal: 16,
+        marginTop: 10,
     },
     subtitle: {
         fontSize: FontSize.size_sm,
@@ -111,7 +122,8 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
     bottomCard: {
-        backgroundColor: "rgba(255, 255, 255, 0.95)",
+        width: "100%",
+        alignItems: "center",
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16,
         marginBottom: 0,

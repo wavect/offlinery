@@ -10,7 +10,6 @@ services:
       POSTGRES_USER: ${DB_USER:-offlinery}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-offlinery}
       TZ: 'UTC'
-      POSTGRES_INITDB_ARGS: '--timezone=UTC'
       #POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
       #POSTGRES_HOST_AUTH_METHOD: scram-sha-256
     #volumes:

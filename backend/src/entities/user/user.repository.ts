@@ -7,6 +7,7 @@ import {
     EIntention,
     EVerificationStatus,
 } from "@/types/user.types";
+import { getTypedCoordinatesFromPoint } from "@/utils/location.utils";
 import { getAgeRangeParsed } from "@/utils/misc.utils";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -26,6 +27,16 @@ export class UserRepository extends Repository<User> {
         private blacklistedRegionRepository: Repository<BlacklistedRegion>,
     ) {
         super(User, dataSource.createEntityManager());
+    }
+
+    /** @dev temporary heatmap query to make it appear that we have lots of users. */
+    public getHeatmapTEMPORARY(userToBeApproached: User): Promise<User[]> {
+        this.queryBuilder = this.createQueryBuilder("user");
+        this.addEncounterJoins()
+            .excludeUser(userToBeApproached.id)
+            .filterNotInterested();
+
+        return this.getMany();
     }
 
     public findUserMatchBaseQuery(userToBeApproached: User): this {
@@ -63,7 +74,9 @@ export class UserRepository extends Repository<User> {
             );
             return [];
         }
-        const [lon, lat] = userSendingLocationUpdate.location.coordinates;
+        const { longitude: lon, latitude: lat } = getTypedCoordinatesFromPoint(
+            userSendingLocationUpdate.location,
+        );
         const isInBlacklistedRegion = await this.isUserInBlacklistedRegion(
             userSendingLocationUpdate,
             lon,
@@ -125,7 +138,8 @@ export class UserRepository extends Repository<User> {
             return this;
         }
 
-        const [lon, lat] = userLocation.coordinates;
+        const { longitude: lon, latitude: lat } =
+            getTypedCoordinatesFromPoint(userLocation);
 
         try {
             this.queryBuilder.andWhere(

@@ -5,6 +5,7 @@ package.json
 src/apis/AuthApi.ts
 src/apis/DefaultApi.ts
 src/apis/EncounterApi.ts
+src/apis/EventApi.ts
 src/apis/MapApi.ts
 src/apis/PendingUserApi.ts
 src/apis/PushNotificationsApi.ts
@@ -20,14 +21,17 @@ src/models/CreateUserDTO.ts
 src/models/CreateUserReportDTO.ts
 src/models/EmailCodeResponseADTO.ts
 src/models/EncounterPublicDTO.ts
+src/models/EventPublicDTO.ts
 src/models/GenericStatusDTO.ts
 src/models/GetLocationOfEncounterResponseDTO.ts
+src/models/LocationDTO.ts
 src/models/LocationUpdateDTO.ts
 src/models/MessagePublicDTO.ts
 src/models/NotificationAccountApprovedDTO.ts
 src/models/NotificationGhostReminderDTO.ts
 src/models/NotificationNavigateUserDTO.ts
 src/models/NotificationNewEventDTO.ts
+src/models/NotificationNewMessageDTO.ts
 src/models/PushMessageDTO.ts
 src/models/RefreshJwtDTO.ts
 src/models/RegistrationForVerificationRequestDTO.ts
@@ -43,7 +47,9 @@ src/models/StorePushTokenDTO.ts
 src/models/UpdateEncounterStatusDTO.ts
 src/models/UpdateUserDTO.ts
 src/models/UpdateUserPasswordDTO.ts
+src/models/UserCountDTO.ts
 src/models/UserFeedbackRequestDTO.ts
+src/models/UserNotificationSettingsDTO.ts
 src/models/UserPrivateDTO.ts
 src/models/UserPublicDTO.ts
 src/models/UserResetPwdSuccessDTO.ts
