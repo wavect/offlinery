@@ -23,10 +23,11 @@ interface IOMessageModalProps {
     encounterId: string;
     visible: boolean;
     onClose: (e?: any) => void;
+    testID?: string;
 }
 
 const OMessageModal = (props: IOMessageModalProps) => {
-    const { visible, onClose, encounterId, userId } = props;
+    const { visible, onClose, encounterId, userId, testID } = props;
     const [message, setMessage] = useState("");
     const [messageError, setMessageError] = useState<boolean>(false);
 
@@ -61,6 +62,7 @@ const OMessageModal = (props: IOMessageModalProps) => {
             transparent={true}
             visible={visible}
             onRequestClose={onClose}
+            testID={testID}
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>

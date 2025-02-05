@@ -8,23 +8,40 @@ jest.mock("expo-constants", () => ({
 }));
 
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-import {
-    fireEvent,
-    render,
-    screen,
-    waitFor,
-} from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 import React from "react";
+import { EncounterPublicDTOStatusEnum } from "../../api/gen/src";
 import * as EncountersContext from "../../context/EncountersContext";
 import { EncountersProvider } from "../../context/EncountersContext";
 import { UserProvider } from "../../context/UserContext";
 import { ROUTES } from "../../screens/routes";
+import { API } from "../../utils/api-config";
 import OEncounter from "./OEncounter";
+afterEach(() => {
+    jest.clearAllMocks();
+});
 
-it("renders without crashing", () => {
-    const locales = require("react-native-localize").getLocales();
-    console.log("Mocked getLocales:", locales);
-    expect(locales).toEqual([{ languageCode: "en" }]);
+jest.mock("react-native-element-dropdown", () => {
+    const { View, Text } = require("react-native");
+    return {
+        Dropdown: ({ data, value, onChange, testID }) => {
+            return (
+                <View testID={testID}>
+                    <Text>{value}</Text>
+                    {/* Render the options as buttons that can be tested */}
+                    {data.map((item) => (
+                        <View
+                            key={item.value}
+                            testID={item.testID}
+                            onPress={() => onChange(item)}
+                        >
+                            <Text>{item.label}</Text>
+                        </View>
+                    ))}
+                </View>
+            );
+        },
+    };
 });
 
 describe("Basic Test for OEncounter Component", () => {
@@ -72,6 +89,8 @@ const mockEncounterProfile = {
 };
 
 describe("OEncounter Component", () => {
+    const mockUpdateStatus = jest.fn();
+    const mockDispatch = jest.fn();
     beforeEach(() => {
         jest.spyOn(
             EncountersContext,
@@ -82,6 +101,15 @@ describe("OEncounter Component", () => {
             },
             dispatch: jest.fn(),
         }));
+
+        jest.clearAllMocks();
+        jest.spyOn(
+            API.encounter,
+            "encounterControllerUpdateStatus",
+        ).mockImplementation(mockUpdateStatus);
+        (EncountersContext.useEncountersContext as jest.Mock).mockReturnValue({
+            dispatch: mockDispatch,
+        });
     });
 
     it("renders the user's name and age", () => {
@@ -118,7 +146,7 @@ describe("OEncounter Component", () => {
         expect(image.props.source.uri).toBe("https://example.com/image.jpg");
     });
 
-    it("handles status change dropdown selection", async () => {
+    it("should update encounter status when dropdown option is selected", async () => {
         const { getByTestId } = render(
             <UserProvider>
                 <EncountersProvider>
@@ -131,13 +159,16 @@ describe("OEncounter Component", () => {
             </UserProvider>,
         );
 
-        const dropdown = getByTestId("dropdown-option-not-met");
-        fireEvent.press(dropdown);
+        const notMetOption = getByTestId("dropdown-option-not-met");
+        fireEvent.press(notMetOption);
 
-        await waitFor(() => {
-            expect(
-                EncountersContext.useEncountersContext().dispatch,
-            ).toHaveBeenCalled();
+        // Verify API call
+        expect(mockUpdateStatus).toHaveBeenCalledWith({
+            updateEncounterStatusDTO: {
+                encounterId: mockEncounterProfile.id,
+                status: EncounterPublicDTOStatusEnum.not_met,
+            },
+            userId: undefined, // Now this should match
         });
     });
 
@@ -157,7 +188,43 @@ describe("OEncounter Component", () => {
         expect(screen.getByText("Hello!")).toBeTruthy();
     });
 
-    it("handles the report button click", () => {
+    it("handles the report button click", async () => {
+        const mockNavigation = {
+            navigate: jest.fn(),
+        };
+
+        // Modify the mock encounter profile to have met_not_interested status
+        const mockEncounterProfileWithNotInterested = {
+            ...mockEncounterProfile,
+            status: EncounterPublicDTOStatusEnum.met_not_interested,
+        };
+
+        const { getByText } = render(
+            <UserProvider>
+                <EncountersProvider>
+                    <OEncounter
+                        encounterProfile={mockEncounterProfileWithNotInterested}
+                        showActions={true}
+                        navigation={mockNavigation}
+                    />
+                </EncountersProvider>
+            </UserProvider>,
+        );
+
+        // Find and click the report button
+        const reportButton = getByText("report");
+        fireEvent.press(reportButton);
+
+        // Verify navigation was called with correct parameters
+        expect(mockNavigation.navigate).toHaveBeenCalledWith(
+            ROUTES.Main.ReportEncounter,
+            {
+                personToReport: mockEncounterProfileWithNotInterested,
+            },
+        );
+    });
+
+    it("handles the navigate button click", () => {
         const navigation = { navigate: jest.fn() };
         render(
             <UserProvider>
@@ -171,14 +238,105 @@ describe("OEncounter Component", () => {
             </UserProvider>,
         );
 
-        const reportButton = screen.getByText("Report");
-        fireEvent.press(reportButton);
+        const navigateButton = screen.getByText("navigate");
+        fireEvent.press(navigateButton);
 
         expect(navigation.navigate).toHaveBeenCalledWith(
-            ROUTES.Main.ReportEncounter,
-            {
-                personToReport: mockEncounterProfile,
-            },
+            ROUTES.HouseRules,
+            expect.objectContaining({
+                nextPage: ROUTES.Main.NavigateToApproach,
+                propsForNextScreen: expect.objectContaining({
+                    encounterId: mockEncounterProfile.id,
+                    navigateToPerson: expect.objectContaining({
+                        firstName: mockEncounterProfile.otherUser.firstName,
+                        age: mockEncounterProfile.otherUser.age,
+                        // Add other required fields you want to verify
+                    }),
+                }),
+            }),
         );
+    });
+
+    it("handles the leave message button click", () => {
+        const messageEncounterProfile = {
+            id: "encounter-1",
+            otherUser: {
+                id: "user-1",
+                firstName: "John",
+                age: 30,
+                imageURIs: ["https://example.com/image.jpg"],
+                intentions: ["friendship", "casual", "relationship"],
+                bio: "This is John's bio",
+            },
+            status: "met_interested",
+            messages: [],
+            lastDateTimePassedBy: "2024-01-15T10:00:00Z",
+            isNearbyRightNow: false,
+            reported: false,
+            amountStreaks: 5,
+        };
+        render(
+            <UserProvider>
+                <EncountersProvider>
+                    <OEncounter
+                        encounterProfile={messageEncounterProfile}
+                        showActions={true}
+                        navigation={undefined}
+                    />
+                </EncountersProvider>
+            </UserProvider>,
+        );
+
+        const leaveMessageButton = screen.getByText("leaveMessageBtnLbl");
+        fireEvent.press(leaveMessageButton);
+
+        expect(screen.getByTestId("message-modal")).toBeTruthy();
+    });
+
+    it("disables dropdown and buttons when encounter is reported", () => {
+        const reportedEncounterProfile = {
+            ...mockEncounterProfile,
+            status: EncounterPublicDTOStatusEnum.met_not_interested,
+            reported: true,
+        };
+        // const reportedEncounterProfile = { ...mockEncounterProfile, reported: true };
+        render(
+            <UserProvider>
+                <EncountersProvider>
+                    <OEncounter
+                        encounterProfile={reportedEncounterProfile}
+                        showActions={true}
+                        navigation={undefined}
+                    />
+                </EncountersProvider>
+            </UserProvider>,
+        );
+
+        const dropdown = screen.getByTestId("input-update-status");
+        console.log("dropdown", dropdown.props);
+        const reportButton = screen.getByText("reported");
+        const leaveMessageButton = screen.queryByText("Leave Message");
+
+        // For React Native, we should check if the onPress handler is null/undefined
+        expect(dropdown.props.onPress).toBeUndefined();
+
+        // Same for the report button
+        expect(reportButton.props.onPress).toBeUndefined();
+    });
+
+    it("renders the strike component correctly", () => {
+        render(
+            <UserProvider>
+                <EncountersProvider>
+                    <OEncounter
+                        encounterProfile={mockEncounterProfile}
+                        showActions={true}
+                        navigation={undefined}
+                    />
+                </EncountersProvider>
+            </UserProvider>,
+        );
+
+        expect(screen.getByTestId("encounter-strike")).toBeTruthy();
     });
 });

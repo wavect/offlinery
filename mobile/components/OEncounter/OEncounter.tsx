@@ -192,6 +192,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                         {encounterProfile.status !==
                                             EncounterPublicDTOStatusEnum.met_not_interested && (
                                             <OEncounterStrike
+                                                testID="encounter-strike"
                                                 amountStreaks={
                                                     encounterProfile.amountStreaks
                                                 }
@@ -369,6 +370,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     onClose={() => setModalVisible(false)}
                     userId={state.id!}
                     encounterId={encounterProfile.id}
+                    testID="message-modal"
                 />
             </View>
         </TourGuideZone>
