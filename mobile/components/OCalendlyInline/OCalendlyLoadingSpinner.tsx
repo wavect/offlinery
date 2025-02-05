@@ -9,7 +9,7 @@ class LoadingSpinner extends React.Component {
             <View style={styles.calendlySpinner}>
                 <View style={styles.calendlyBounce1}></View>
                 <View style={styles.calendlyBounce2}></View>
-                <View></View>
+                <View style="calendly-bounce3"></View>
             </View>
         );
     }
