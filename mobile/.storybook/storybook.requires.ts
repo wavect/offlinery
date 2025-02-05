@@ -11,12 +11,12 @@ const normalizedStories = [
         directory: "./components",
         files: "**/*.story.?(ts|tsx|js|jsx)",
         importPathMatcher:
-            /^\.(?:(?:^|[\\/]|(?:(?:(?!(?:^|[\\/])\.).)*?)[\\/])(?!\.)(?=.)[^\\/]*?\.story\.(?:ts|tsx|js|jsx)?)$/,
+            /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.story\.(?:ts|tsx|js|jsx)?)$/,
         // @ts-ignore
         req: require.context(
             "../components",
             true,
-            /^\.(?:(?:^|[\\/]|(?:(?:(?!(?:^|[\\/])\.).)*?)[\\/])(?!\.)(?=.)[^\\/]*?\.story\.(?:ts|tsx|js|jsx)?)$/,
+            /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.story\.(?:ts|tsx|js|jsx)?)$/,
         ),
     },
     {
@@ -24,12 +24,12 @@ const normalizedStories = [
         directory: "./screens",
         files: "**/*.story.?(ts|tsx|js|jsx)",
         importPathMatcher:
-            /^\.(?:(?:^|[\\/]|(?:(?:(?!(?:^|[\\/])\.).)*?)[\\/])(?!\.)(?=.)[^\\/]*?\.story\.(?:ts|tsx|js|jsx)?)$/,
+            /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.story\.(?:ts|tsx|js|jsx)?)$/,
         // @ts-ignore
         req: require.context(
             "../screens",
             true,
-            /^\.(?:(?:^|[\\/]|(?:(?:(?!(?:^|[\\/])\.).)*?)[\\/])(?!\.)(?=.)[^\\/]*?\.story\.(?:ts|tsx|js|jsx)?)$/,
+            /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.story\.(?:ts|tsx|js|jsx)?)$/,
         ),
     },
 ];
