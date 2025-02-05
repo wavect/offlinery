@@ -1,11 +1,8 @@
 import { AppStatistic } from "@/entities/app-stats/app-stat.entity";
+import { EAPP_STAT_KEY } from "@/entities/app-stats/app-stats.types";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-
-export enum EAPP_STAT_KEY {
-    USERS_DELETED_COUNT = "users-deleted-count",
-}
 
 @Injectable()
 export class AppStatsService {

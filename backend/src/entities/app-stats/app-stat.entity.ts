@@ -1,4 +1,4 @@
-import { EAPP_STAT_KEY } from "@/entities/app-stats/app-stats.service";
+import { EAPP_STAT_KEY } from "@/entities/app-stats/app-stats.types";
 import { BaseEntity } from "@/entities/base.entity";
 import { Column, Entity, EventSubscriber } from "typeorm";
 
