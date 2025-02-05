@@ -1,5 +1,5 @@
 import { AppStatistic } from "@/entities/app-stats/app-stat.entity";
-import { EAPP_STAT_KEY } from "@/entities/app-stats/app-stats.service";
+import { EAPP_STAT_KEY } from "@/entities/app-stats/app-stats.types";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { EncounterService } from "@/entities/encounter/encounter.service";
 import { Message } from "@/entities/messages/message.entity";
