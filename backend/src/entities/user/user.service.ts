@@ -9,10 +9,8 @@ import { UserNotificationSettingsDTO } from "@/DTOs/user-notification-settings.d
 import { UserRequestDeletionFormSuccessDTO } from "@/DTOs/user-request-deletion-form-success.dto";
 import { UserResetPwdSuccessDTO } from "@/DTOs/user-reset-pwd-success.dto";
 import { AuthService } from "@/auth/auth.service";
-import {
-    AppStatsService,
-    EAPP_STAT_KEY,
-} from "@/entities/app-stats/app-stats.service";
+import { AppStatsService } from "@/entities/app-stats/app-stats.service";
+import { EAPP_STAT_KEY } from "@/entities/app-stats/app-stats.types";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
 import { Message } from "@/entities/messages/message.entity";
