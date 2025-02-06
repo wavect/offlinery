@@ -1,5 +1,8 @@
 import { BorderRadius, Color, FontFamily, FontSize } from "@/GlobalStyles";
+import { ResponseError } from "@/api/gen/src";
 import { OLoadingSpinner } from "@/components/OLoadingCircle/OLoadingCircle";
+import OMessageModal from "@/components/OMessageModal/OMessageModal";
+import ONotNearbyAnymore from "@/components/ONotNearbyAnymore/ONotNearbyAnymore";
 import { OPageContainer } from "@/components/OPageContainer/OPageContainer";
 import { OPageHeader } from "@/components/OPageHeader/OPageHeader";
 import { OPageHeaderEncounters } from "@/components/OPageHeader/OPageHeaderEncounters/OPageHeaderEncounters";
@@ -30,6 +33,8 @@ const NavigateToApproach = ({
     typeof ROUTES.Main.NavigateToApproach
 >) => {
     const { navigateToPerson, encounterId } = route.params;
+    const [isNearby, setIsNearby] = useState<boolean>(true);
+    const [modalVisible, setModalVisible] = React.useState(false);
 
     const { state } = useUserContext();
     const [isLoading, setIsLoading] = useState(false);
@@ -87,15 +92,30 @@ const NavigateToApproach = ({
                 setLocation(location);
 
                 /** @DEV name might be misleading, this is actually the REAL location of the other user, not the location where they met. */
-                const encounterLoc =
-                    await API.encounter.encounterControllerGetLocationOfEncounter(
-                        {
-                            userId: state.id!,
-                            encounterId,
-                        },
-                    );
+                try {
+                    const encounterLoc =
+                        await API.encounter.encounterControllerGetLocationOfEncounter(
+                            {
+                                userId: state.id!,
+                                encounterId,
+                            },
+                        );
 
-                setDestination(encounterLoc);
+                    setDestination(encounterLoc);
+                    setIsNearby(true);
+                } catch (err) {
+                    // @dev expected error in many cases when uses is not nearby anymore is http code 412 (precondition failed)
+                    if (
+                        err instanceof ResponseError &&
+                        err.response.status === 412
+                    ) {
+                        // @dev user not nearby (anymore)
+                        setIsNearby(false);
+                    } else {
+                        // @dev actual unexpected error
+                        throw err;
+                    }
+                }
                 setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching locations:", error);
@@ -156,6 +176,72 @@ const NavigateToApproach = ({
         await Linking.openURL(url!);
     };
 
+    const NavigateToMap = () =>
+        isLoading ? (
+            <OLoadingSpinner
+                size={60}
+                color={Color.primary}
+                text={i18n.t(TR.loadingTextNavigateTo)}
+            />
+        ) : (
+            <MapView
+                ref={mapRef}
+                style={styles.map}
+                region={mapRegion || undefined}
+                provider={getMapProvider()}
+            >
+                {location && (
+                    <Marker
+                        coordinate={location.coords}
+                        title={i18n.t(TR.yourLocation)}
+                        pinColor={Color.black}
+                    />
+                )}
+                {destination && (
+                    <Marker
+                        coordinate={destination}
+                        title={navigateToPerson.firstName}
+                    />
+                )}
+                {location && destination && (
+                    <>
+                        <Polyline
+                            coordinates={[
+                                {
+                                    latitude: location.coords.latitude,
+                                    longitude: location.coords.longitude,
+                                },
+                                destination,
+                            ]}
+                            strokeColor={Color.primary}
+                            strokeWidth={2}
+                        />
+                        <Marker
+                            coordinate={{
+                                latitude:
+                                    (location.coords.latitude +
+                                        destination.latitude) /
+                                    2,
+                                longitude:
+                                    (location.coords.longitude +
+                                        destination.longitude) /
+                                    2,
+                            }}
+                            anchor={{ x: 0.5, y: 0.5 }}
+                        >
+                            <View style={styles.distanceMarker}>
+                                <Text style={styles.distanceText}>
+                                    {distance
+                                        ? `${distance.toFixed(2)} km`
+                                        : i18n.t(TR.calculating)}
+                                </Text>
+                            </View>
+                        </Marker>
+                    </>
+                )}
+            </MapView>
+        );
+
     return (
         <OPageContainer>
             <OTeaserProfilePreview
@@ -163,15 +249,20 @@ const NavigateToApproach = ({
                 navigation={navigation}
                 publicProfile={navigateToPerson}
                 showOpenProfileButton={true}
+                secondButton={{
+                    onPress: () => setModalVisible(true),
+                    text: i18n.t(TR.leaveMessageBtnLbl),
+                    style: styles.secondaryBtn,
+                }}
                 // TODO navigate to disabled for now
                 // secondButton={{
                 //     onPress: openMapsApp,
                 //     disabled: !destination,
                 //     text: `${i18n.t(TR.navigateTo)}`,
-                //     style: styles.navigateBtn,
+                //     style: styles.secondaryBtn,
                 // }}
             />
-            {!isLoading && destination?.lastTimeLocationUpdated && (
+            {isNearby && !isLoading && destination?.lastTimeLocationUpdated && (
                 <Text style={styles.lastUpdateText}>
                     {i18n.t(TR.userLocationWasUpdatedLastTime)}
                     <Text style={styles.lastUpdateTimeText}>
@@ -181,70 +272,22 @@ const NavigateToApproach = ({
                     </Text>
                 </Text>
             )}
-            {isLoading ? (
-                <OLoadingSpinner
-                    size={60}
-                    color={Color.primary}
-                    text={i18n.t(TR.loadingTextNavigateTo)}
-                />
+            {isNearby ? (
+                <NavigateToMap />
             ) : (
-                <MapView
-                    ref={mapRef}
-                    style={styles.map}
-                    region={mapRegion || undefined}
-                    provider={getMapProvider()}
-                >
-                    {location && (
-                        <Marker
-                            coordinate={location.coords}
-                            title={i18n.t(TR.yourLocation)}
-                            pinColor={Color.black}
-                        />
-                    )}
-                    {destination && (
-                        <Marker
-                            coordinate={destination}
-                            title={navigateToPerson.firstName}
-                        />
-                    )}
-                    {location && destination && (
-                        <>
-                            <Polyline
-                                coordinates={[
-                                    {
-                                        latitude: location.coords.latitude,
-                                        longitude: location.coords.longitude,
-                                    },
-                                    destination,
-                                ]}
-                                strokeColor={Color.primary}
-                                strokeWidth={2}
-                            />
-                            <Marker
-                                coordinate={{
-                                    latitude:
-                                        (location.coords.latitude +
-                                            destination.latitude) /
-                                        2,
-                                    longitude:
-                                        (location.coords.longitude +
-                                            destination.longitude) /
-                                        2,
-                                }}
-                                anchor={{ x: 0.5, y: 0.5 }}
-                            >
-                                <View style={styles.distanceMarker}>
-                                    <Text style={styles.distanceText}>
-                                        {distance
-                                            ? `${distance.toFixed(2)} km`
-                                            : i18n.t(TR.calculating)}
-                                    </Text>
-                                </View>
-                            </Marker>
-                        </>
-                    )}
-                </MapView>
+                <ONotNearbyAnymore
+                    otherUserFirstName={navigateToPerson.firstName}
+                    setModalVisible={setModalVisible}
+                />
             )}
+
+            <OMessageModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                userId={state.id!}
+                encounterId={encounterId}
+                firstName={navigateToPerson.firstName}
+            />
         </OPageContainer>
     );
 };
@@ -256,7 +299,7 @@ const styles = StyleSheet.create({
         minHeight: 300,
         borderRadius: BorderRadius.br_5xs,
     },
-    navigateBtn: {
+    secondaryBtn: {
         backgroundColor: Color.primary,
         borderColor: Color.primaryBright,
     },

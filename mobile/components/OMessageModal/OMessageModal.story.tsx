@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
 import { Button, View } from "react-native";
-import OMessageModal, { IOMessageModalProps } from "./OMessageModal"; // Stelle sicher, dass der Pfad korrekt ist
+import OMessageModal, { IOMessageModalProps } from "./OMessageModal";
 
 const meta: Meta<typeof OMessageModal> = {
     title: "Components/OMessageModal",
@@ -77,6 +77,7 @@ export const Default: Story = {
                     encounterId={encounterId}
                     visible={modalVisible}
                     onClose={onClose}
+                    firstName={"Anna"}
                 />
             </View>
         );
@@ -108,6 +109,7 @@ export const WithMessageError: Story = {
                     encounterId={encounterId}
                     visible={modalVisible}
                     onClose={onClose}
+                    firstName={"Anna"}
                 />
             </View>
         );
@@ -133,6 +135,7 @@ export const ShowModal: Story = {
                 encounterId={encounterId}
                 visible={visible}
                 onClose={onClose}
+                firstName={"Anna"}
             />
         );
     },
@@ -160,6 +163,7 @@ export const DarkMode: Story = {
                 encounterId={encounterId}
                 visible={visible}
                 onClose={onClose}
+                firstName={"Anna"}
             />
         );
     },

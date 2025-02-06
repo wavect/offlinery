@@ -331,7 +331,7 @@ export class EncounterService {
         if (!otherUser.location) {
             const msg = `Other user of Encounter ${encounterId} has not location: ${otherUser.location}`;
             this.logger.error(msg);
-            throw new PreconditionFailedException(msg);
+            throw new PreconditionFailedException(msg); // @dev Only use this HTTP status code for when user is not nearby anymore (NavigateToScreen is listening on it)
         }
 
         // final check, is user really nearby?

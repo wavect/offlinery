@@ -8,6 +8,12 @@ export const de: Language = {
         "Wir führen gerade größere Verbesserungen an unserem System durch. Wir sind gleich wieder zurück.",
     bgLocationServiceTitle: "Offlinery EIN",
     bgLocationServiceBody: "Bereit dich zu beeindrucken..",
+    missedEachOther: "Ihr habt euch leider verpasst!",
+    notNearbyAnymore: "{{firstName}} ist nicht mehr in der Nähe.",
+    canStillSendMessage:
+        "Du kannst {{firstName}} trotzdem eine Nachricht schicken.",
+    willNotifyAgainIn24h:
+        "Wir geben dir nach 24h wieder Bescheid falls {{firstName}} wieder in der Nähe ist.",
     createAccount: "Registrieren",
     signIn: "Anmelden",
     userCount: "{{count}} User aktiv",
@@ -282,9 +288,7 @@ export const de: Language = {
     receivedMessage: "Letzte Nachricht",
     leaveMessage: "Nachricht schreiben",
     leaveMessageBtnLbl: "Kontakt",
-    messageInstructions:
-        "Falls nicht bereits in Person geschehen, dann füge deine Kontaktdetails hinzu.",
-    messageWarning: "Es wird nur die letzte Nachricht gespeichert.",
+    messageWarning: "{{firstName}} sieht nur deine letzte Nachricht.",
     messageUnableToSend: "Nachricht kann nicht gesendet werden.",
     dangerZone: "Gefahren-Zone",
     logout: "Logout",
