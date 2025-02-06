@@ -1,5 +1,12 @@
 import React from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+    Modal,
+    Platform,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
 
 interface OModalProps {
     showModal: boolean;
@@ -14,6 +21,9 @@ export const OModal = ({ showModal, setShowModal, text }: OModalProps) => {
             visible={showModal}
             onRequestClose={() => setShowModal(false)}
             animationType="fade"
+            statusBarTranslucent={Platform.OS === "android"}
+            hardwareAccelerated={Platform.OS === "android"}
+            presentationStyle="overFullScreen"
         >
             <TouchableOpacity
                 style={styles.modalOverlay}
@@ -41,6 +51,9 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         width: "80%",
         maxWidth: 300,
+    },
+    androidShadow: {
+        elevation: 5,
     },
     modalText: {
         fontSize: 16,

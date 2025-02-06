@@ -12,7 +12,7 @@ import { get3MonthsBefore } from "@/utils/date.utils";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 
 const Encounters = ({
     navigation,
@@ -94,11 +94,12 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        height: "100%",
     },
     dateRangeContainer: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 30,
+        marginBottom: Platform.OS === "ios" ? 15 : 8,
     },
     dateContainer: {
         flex: 1,
