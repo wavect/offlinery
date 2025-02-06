@@ -171,7 +171,18 @@
                     "project": "offlinery-app",
                     "organization": "wavect"
                 }
-            ]
+            ],
+          [
+            "expo-quick-actions",
+            {
+              "androidIcons": {
+                "help_icon": {
+                  "foregroundImage": "./assets/quick-actions/adaptive-icon-foreground-help.png",
+                  "backgroundColor": "#36797d"
+                }
+              }
+            }
+          ]
         ],
         "extra": {
             "eas": {

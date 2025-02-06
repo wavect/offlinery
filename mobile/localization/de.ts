@@ -1,6 +1,11 @@
 import { Language } from "./translate.service";
 
 export const de: Language = {
+    quickActionDontDeleteMeTitle: "Bitte lösch mich nicht!",
+    quickActionDontDeleteMeSubTitle: "Ich helfe im Hintergrund.",
+    quickActionDontDeleteMeEmailSubject: "Offlinery: Feedback (Quick-Action)",
+    quickActionDontDeleteMeEmailBody:
+        "Bitte lass uns wissen was dir an Offlinery nicht gefällt. Wir wollen dein knallhartes Feedback. Es hilft uns mehr als du denkst!",
     blog: "Blog lesen",
     retry: "Nochmal versuchen",
     maintenanceAlertTitle: "Offlinery wird gewartet",
@@ -154,7 +159,7 @@ export const de: Language = {
     men: "Männer",
     more: "Mehr",
     iAmA: "Ich bin ein(e)",
-    casual: "Casual",
+    casual: "Nichts Ernstes",
     casualDescription:
         "Offen für was Lockeres. Bitte beachte, dass dies keine offene Einladung ist - bleib respektvoll und taste dich langsam voran.",
     reconnectFriends: "Mit Freunden reconnecten",

@@ -1,6 +1,11 @@
 // @dev Other languages have to be typed as Language!
 
 export const en = {
+    quickActionDontDeleteMeTitle: "Wait! Don't delete me!",
+    quickActionDontDeleteMeSubTitle: "I help in the background.",
+    quickActionDontDeleteMeEmailSubject: "Offlinery: Feedback (Quick-Action)",
+    quickActionDontDeleteMeEmailBody:
+        "Please describe your problems and give us your honest feedback. It helps us so much more than you think!",
     blog: "Read Blog",
     retry: "Retry",
     maintenanceAlertTitle: "Offlinery in maintenance",
