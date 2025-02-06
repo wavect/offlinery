@@ -153,7 +153,8 @@ export class EncounterService {
             /// @dev This filters out encounters that have a deleted user. As of today we don't delete encounters with one deleted user.
             .andWhere(
                 '(SELECT COUNT(*) FROM user_encounters_encounter WHERE "encounterId" = encounter.id) > 1',
-            );
+            )
+            .orderBy("encounter.lastDateTimePassedBy", "DESC");
 
         if (dateRange?.startDate && dateRange?.endDate) {
             query = query.andWhere(
