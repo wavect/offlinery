@@ -108,7 +108,6 @@ const OMessageModal = (props: IOMessageModalProps) => {
             transparent={true}
             visible={visible}
             onRequestClose={onClose}
-            testID={testID}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.container}>
