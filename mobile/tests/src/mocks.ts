@@ -37,6 +37,17 @@ jest.mock("react-native-localize", () => ({
     getLocales: jest.fn().mockReturnValue([{ languageCode: "en" }]),
 }));
 
+jest.mock("expo-localization", () => ({
+    getLocales: () => [
+        {
+            languageCode: "en",
+            languageTag: "en-US",
+            regionCode: "US",
+            isRTL: false,
+        },
+    ],
+}));
+
 // Mock expo-constants
 jest.mock("expo-constants", () => ({
     manifest: { extra: { eas: {} } },
