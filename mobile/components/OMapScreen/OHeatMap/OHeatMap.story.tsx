@@ -1,4 +1,3 @@
-import { UserPrivateDTODateModeEnum } from "@/api/gen/src";
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { View } from "react-native";
@@ -15,14 +14,6 @@ const meta: Meta<typeof OHeatMap> = {
         userId: {
             control: "text",
             description: "User ID to fetch user-specific locations",
-        },
-        datingMode: {
-            control: {
-                type: "select",
-                options: Object.values(UserPrivateDTODateModeEnum), // Enum-Werte anpassen
-            },
-            description:
-                "The dating mode to adjust behavior (e.g., ghost, live)",
         },
         currentMapRegion: {
             control: "object",
@@ -68,7 +59,6 @@ export const Default: Story = {
     args: {
         showMap: true,
         userId: "user123",
-        datingMode: UserPrivateDTODateModeEnum.live, // Ändere auf "live" oder einen anderen gültigen Wert
         currentMapRegion: {
             latitude: 37.78825,
             longitude: -122.4324,
@@ -83,7 +73,6 @@ export const NoMap: Story = {
     args: {
         showMap: false,
         userId: "user123",
-        datingMode: UserPrivateDTODateModeEnum.ghost, // Ändere auf "ghost" oder einen anderen gültigen Wert
         currentMapRegion: {
             latitude: 37.78825,
             longitude: -122.4324,
@@ -98,7 +87,6 @@ export const GhostMode: Story = {
     args: {
         showMap: true,
         userId: "user456",
-        datingMode: UserPrivateDTODateModeEnum.ghost, // Beispiel für den "ghost" Modus
         currentMapRegion: {
             latitude: 37.78825,
             longitude: -122.4324,
