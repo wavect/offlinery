@@ -127,7 +127,10 @@ const OEncounter = (props: ISingleEncounterProps) => {
             text={i18n.t(TR.tourEncounters)}
             shape="rectangle"
         >
-            <View style={styles.encounterContainer}>
+            <View
+                style={styles.encounterContainer}
+                testID="encounters-input-status"
+            >
                 <View style={styles.mainContent}>
                     <TouchableOpacity
                         onPress={() => {
@@ -138,6 +141,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                         }}
                     >
                         <OImageWithLoader
+                            testID="profile-image"
                             style={styles.profileImage}
                             resizeMode="cover"
                             source={{
@@ -188,6 +192,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                                         {encounterProfile.status !==
                                             EncounterPublicDTOStatusEnum.met_not_interested && (
                                             <OEncounterStrike
+                                                testID="encounter-strike"
                                                 amountStreaks={
                                                     encounterProfile.amountStreaks
                                                 }
@@ -367,6 +372,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     userId={state.id!}
                     encounterId={encounterProfile.id}
                     firstName={encounterProfile.otherUser.firstName}
+                    testID="message-modal"
                 />
             </View>
         </TourGuideZone>

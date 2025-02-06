@@ -15,8 +15,9 @@ const languages: Record<CreateUserDTOPreferredLanguageEnum, Language> = {
 export const i18n = new I18n(languages);
 
 // Set the locale once at the beginning of your app.
-i18n.locale =
-    getLocales()[0].languageCode ?? CreateUserDTOPreferredLanguageEnum.en;
+const locales = getLocales();
+const languageCode = locales && locales[0] ? locales[0].languageCode : "en";
+i18n.locale = languageCode ?? "en";
 i18n.enableFallback = true;
 i18n.defaultLocale = CreateUserDTOPreferredLanguageEnum.en;
 

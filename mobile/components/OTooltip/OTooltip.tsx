@@ -33,7 +33,7 @@ export const OTooltip: React.FC<TooltipProps> = ({
     }, []);
 
     return (
-        <View style={[styles.container, style]}>
+        <View style={[styles.container, style]} testID="tooltipComponent">
             <TouchableOpacity onPress={toggleTooltip} style={styles.icon}>
                 <MaterialIcons
                     name={iconName}

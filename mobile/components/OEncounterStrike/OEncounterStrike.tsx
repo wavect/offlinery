@@ -14,11 +14,13 @@ import {
 interface OEncounterStrikeProps {
     amountStreaks?: number;
     isNearbyRightNow: boolean;
+    testID?: string;
 }
 
 export const OEncounterStrike: React.FC<OEncounterStrikeProps> = ({
     amountStreaks,
     isNearbyRightNow,
+    testID,
 }) => {
     if (!amountStreaks && !isNearbyRightNow) return;
 
@@ -72,6 +74,7 @@ export const OEncounterStrike: React.FC<OEncounterStrikeProps> = ({
             <TouchableOpacity
                 style={styles.container}
                 onPress={() => setShowModal(true)}
+                testID={testID}
             >
                 <View style={styles.strikeContainer}>
                     <Animated.View
