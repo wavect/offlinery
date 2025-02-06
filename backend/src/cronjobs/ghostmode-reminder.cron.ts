@@ -57,24 +57,26 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                 "user.lastDateModeChange",
                 "user.ghostModeRemindersEmail",
                 "user.restrictedViewToken",
+                "user.lastDateModeReminderSent",
             ])
             .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
             .andWhere("user.lastDateModeChange < :dayAgo", {
                 dayAgo: goBackInTimeFor(24, "hours"),
             })
             .andWhere(
-                "(user.lastDateModeReminderSent IS NULL OR " +
+                "(user.lastDateModeReminderSent IS NULL AND user.lastDateModeChange < :oneDayAgo) OR " +
                     "CASE " +
-                    "WHEN user.lastDateModeChange < :twoWeeksAgo THEN user.lastDateModeReminderSent < :twoWeeksMinTime " +
-                    "WHEN user.lastDateModeChange < :threeDaysAgo THEN user.lastDateModeReminderSent < :threeDaysMinTime " +
-                    "ELSE user.lastDateModeReminderSent < :oneDayMinTime " +
-                    "END)",
+                    "WHEN user.lastDateModeChange < :twoWeeksAgo AND user.lastDateModeReminderSent >= :twoWeeksMinTime THEN 0 " + // Changed this line
+                    "WHEN user.lastDateModeChange < :threeDaysAgo AND user.lastDateModeReminderSent < :threeDaysMinTime AND user.lastDateModeReminderSent > :twoWeeksAgo THEN 1 " +
+                    "WHEN user.lastDateModeChange < :oneDayAgo AND user.lastDateModeReminderSent IS NULL THEN 1 " +
+                    "ELSE 0 " +
+                    "END = 1",
                 {
                     twoWeeksAgo: goBackInTimeFor(336, "hours"),
                     threeDaysAgo: goBackInTimeFor(72, "hours"),
-                    twoWeeksMinTime: goBackInTimeFor(336 - 72, "hours"),
-                    threeDaysMinTime: goBackInTimeFor(72 - 24, "hours"),
-                    oneDayMinTime: goBackInTimeFor(24, "hours"),
+                    oneDayAgo: goBackInTimeFor(24, "hours"),
+                    twoWeeksMinTime: goBackInTimeFor(336 - 72, "hours"), // 264 hours
+                    threeDaysMinTime: goBackInTimeFor(72 - 24, "hours"), // 48 hours
                 },
             );
 

@@ -40,8 +40,8 @@ describe("CronJob: GhostMode Reminder", () => {
         it("should identify users for THREE_DAYS reminder correctly", async () => {
             const user = await userFactory.persistNewTestUser({
                 ...baseUser,
-                lastDateModeChange: goBackInTimeFor(73, "hours"),
-                lastDateModeReminderSent: goBackInTimeFor(49, "hours"),
+                lastDateModeChange: goBackInTimeFor(72, "hours"),
+                lastDateModeReminderSent: goBackInTimeFor(48, "hours"),
             });
 
             const result = await service.findOfflineUsers();
@@ -51,8 +51,8 @@ describe("CronJob: GhostMode Reminder", () => {
         it("should identify users for TWO_WEEKS reminder correctly", async () => {
             const user = await userFactory.persistNewTestUser({
                 ...baseUser,
-                lastDateModeChange: goBackInTimeFor(337, "hours"),
-                lastDateModeReminderSent: goBackInTimeFor(265, "hours"),
+                lastDateModeChange: goBackInTimeFor(336, "hours"),
+                lastDateModeReminderSent: goBackInTimeFor(264, "hours"),
             });
 
             const result = await service.findOfflineUsers();
@@ -61,18 +61,245 @@ describe("CronJob: GhostMode Reminder", () => {
         });
     });
 
-    describe("Ghost Mode: Border Cases", () => {
-        it("should not remind 24h users if already reminded within 24h", async () => {
-            await userFactory.persistNewTestUser({
-                ...baseUser,
-                lastDateModeChange: goBackInTimeFor(25, "hours"),
-                lastDateModeReminderSent: goBackInTimeFor(23, "hours"),
-            });
+    describe("Ghost Mode Reminder: 24/72/336 Cycle Test", function () {
+        describe("24 hours cycle - First Reminder", function () {
+            it("should not remind if 23 hrs offline and never reminded", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(23, "hours"),
+                    lastDateModeReminderSent: null,
+                });
 
-            const result = await service.findOfflineUsers();
-            expect(result.length).toEqual(0);
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(0);
+            });
+            it("should not remind if 23.9 hrs offline and never reminded", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(23.9, "hours"),
+                    lastDateModeReminderSent: null,
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(0);
+            });
+            it("should not remind if 30 hrs offline and never reminded", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(23.9, "hours"),
+                    lastDateModeReminderSent: null,
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(0);
+            });
+            it("should remind if 24 hrs offline and never reminded", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(24, "hours"),
+                    lastDateModeReminderSent: null,
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(1);
+                expect(result[0].type).toEqual(TimeSpan.ONE_DAY);
+            });
+            it("should remind if 24.1 hrs offline never reminded", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(24.1, "hours"),
+                    lastDateModeReminderSent: null,
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(1);
+                expect(result[0].type).toEqual(TimeSpan.ONE_DAY);
+            });
+            it("should remind if 30 hrs offline never reminded", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(30, "hours"),
+                    lastDateModeReminderSent: null,
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(1);
+                expect(result[0].type).toEqual(TimeSpan.ONE_DAY);
+            });
+            it("should remind if 30 hrs offline reminded a week ago", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(30, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(7, "days"),
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(0);
+            });
         });
-        it("should not include users in multiple buckets", async () => {
+        describe("72 hours cycle - Second Reminder", function () {
+            it("should not remind if 3 days offline and last reminded 1 day ago", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(3, "days"),
+                    lastDateModeReminderSent: goBackInTimeFor(1, "days"),
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(0);
+            });
+            it("should not remind if 72 hrs offline and last reminded 12 hrs ago", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(72, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(12, "hours"),
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(0);
+            });
+            it("should not remind if 35 hrs offline and last reminded 5 days ago", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(35, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(72, "hours"),
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(0);
+            });
+            it("should remind if 72 hrs offline and last reminded 48 hrs ago", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(72, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(48, "hours"),
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result[0].type).toEqual(TimeSpan.THREE_DAYS);
+                expect(result.length).toEqual(1);
+            });
+            it("should remind if 72 hrs offline and last reminded 120 hrs ago", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(72, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(120, "hours"),
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result[0].type).toEqual(TimeSpan.THREE_DAYS);
+                expect(result.length).toEqual(1);
+            });
+            it("should remind if 72 hrs offline and never reminded", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(72, "hours"),
+                    lastDateModeReminderSent: null,
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result[0].type).toEqual(TimeSpan.THREE_DAYS);
+                expect(result.length).toEqual(1);
+            });
+        });
+        describe("335 hours cycle - Third Reminder", function () {
+            it("should not remind if 30 days offline and last reminded 10 days ago", async () => {
+                const user = await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(30, "days"),
+                    lastDateModeReminderSent: goBackInTimeFor(10, "days"),
+                });
+
+                console.log({
+                    lastModeChange: user.lastDateModeChange,
+                    lastReminder: user.lastDateModeReminderSent,
+                    twoWeeksAgo: goBackInTimeFor(336, "hours"),
+                    twoWeeksMinTime: goBackInTimeFor(336 - 72, "hours"),
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(0);
+            });
+            it("should not remind if 73 hrs offline and last reminded 263 hrs ago", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(70, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(260, "hours"), // was reminded 11 days ago
+                });
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(0);
+            });
+            it("should remind if 336 hrs offline and last reminded 264 hrs ago", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(336, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(
+                        336 - 72, // 264
+                        "hours",
+                    ),
+                });
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(1);
+                expect(result[0].type).toEqual(TimeSpan.TWO_WEEKS);
+            });
+            it("should remind if 336 hrs offline and last reminded 265 hrs ago", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(336, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(
+                        336 - 71, // 265
+                        "hours",
+                    ),
+                });
+                const result = await service.findOfflineUsers();
+                expect(result.length).toEqual(1);
+                expect(result[0].type).toEqual(TimeSpan.TWO_WEEKS);
+            });
+            it("should remind if 336 hrs offline and never reminded", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(336, "hours"),
+                    lastDateModeReminderSent: null,
+                });
+                const result = await service.findOfflineUsers();
+                expect(result[0].type).toEqual(TimeSpan.TWO_WEEKS);
+                expect(result.length).toEqual(1);
+            });
+            it("should remind if 450 hrs offline and never reminded", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(450, "hours"),
+                    lastDateModeReminderSent: null,
+                });
+                const result = await service.findOfflineUsers();
+                expect(result[0].type).toEqual(TimeSpan.TWO_WEEKS);
+                expect(result.length).toEqual(1);
+            });
+            it("should remind if 450 hrs offline and last reminded 264 hrs ago", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(450, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(264, "hours"),
+                });
+                const result = await service.findOfflineUsers();
+                expect(result[0].type).toEqual(TimeSpan.TWO_WEEKS);
+                expect(result.length).toEqual(1);
+            });
+            it("should remind if 450 hrs offline and last reminded 265 hrs ago", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(450, "hours"),
+                    lastDateModeReminderSent: goBackInTimeFor(265, "hours"),
+                });
+                const result = await service.findOfflineUsers();
+                expect(result[0].type).toEqual(TimeSpan.TWO_WEEKS);
+                expect(result.length).toEqual(1);
+            });
+        });
+    });
+
+    describe("Ghost Mode: Border Cases", () => {
+        it("should not remind users twice if service runs twice", async () => {
             const user = await userFactory.persistNewTestUser({
                 ...baseUser,
                 lastDateModeChange: goBackInTimeFor(337, "hours"),
@@ -99,16 +326,18 @@ describe("CronJob: GhostMode Reminder", () => {
                 lastDateModeReminderSent: null,
             });
 
+            /** @DEV - it should not matter, how long he was off if he has never been reminded -> should put him in reminder 1 */
+            await userFactory.persistNewTestUser({
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(100, "hours"),
+                lastDateModeReminderSent: null,
+            });
+
             // THREE_DAYS users
             await userFactory.persistNewTestUser({
                 ...baseUser,
                 lastDateModeChange: goBackInTimeFor(73, "hours"),
                 lastDateModeReminderSent: goBackInTimeFor(49, "hours"),
-            });
-            await userFactory.persistNewTestUser({
-                ...baseUser,
-                lastDateModeChange: goBackInTimeFor(100, "hours"),
-                lastDateModeReminderSent: null,
             });
 
             // TWO_WEEKS users
@@ -125,7 +354,7 @@ describe("CronJob: GhostMode Reminder", () => {
             const threeDayUsers = result.filter((u) => u.type === "THREE_DAYS");
             const twoWeekUsers = result.filter((u) => u.type === "TWO_WEEKS");
 
-            expect(oneDayUsers).toHaveLength(2);
+            expect(oneDayUsers).toHaveLength(3);
             expect(threeDayUsers).toHaveLength(2);
             expect(twoWeekUsers).toHaveLength(1);
 
