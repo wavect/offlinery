@@ -8,6 +8,11 @@ export const en = {
         "We're making significant improvements on Offlinery right now. We'll be back as soon as possible.",
     bgLocationServiceTitle: "Offlinery ON",
     bgLocationServiceBody: "Letting others know about you.",
+    missedEachOther: "You missed each other!",
+    notNearbyAnymore: "{{firstName}} is not nearby anymore.",
+    canStillSendMessage: "You can still send a message to {{firstName}}.",
+    willNotifyAgainIn24h:
+        "After 24h we'll let you know if {{firstName}} is nearby again.",
     createAccount: "Create Account",
     signIn: "Sign in",
     userCount: "{{count}} users nearby",
@@ -277,9 +282,7 @@ export const en = {
     receivedMessage: "Last message",
     leaveMessage: "Leave message",
     leaveMessageBtnLbl: "Contact",
-    messageInstructions:
-        "You might want to add your contact details, if you didn't share them in person already.",
-    messageWarning: "Only the last message will be saved.",
+    messageWarning: "{{firstName}} sees only your last message.",
     messageUnableToSend: "Unable to send message.",
     dangerZone: "Danger Zone",
     logout: "Logout",

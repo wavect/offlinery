@@ -6,6 +6,8 @@ import { AppStatistic } from "@/entities/app-stats/app-stat.entity";
 import { AppStatsModule } from "@/entities/app-stats/app-stats.module";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
 import { Encounter } from "@/entities/encounter/encounter.entity";
+import { Message } from "@/entities/messages/message.entity";
+import { MessageModule } from "@/entities/messages/message.module";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { PendingUserModule } from "@/entities/pending-user/pending-user.module";
 import { PendingUserService } from "@/entities/pending-user/pending-user.service";
@@ -32,6 +34,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
             Encounter,
             PendingUser,
             AppStatistic,
+            Message,
         ]),
         PendingUserModule,
         forwardRef(() => MatchingModule),
@@ -39,6 +42,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
         MailchimpModule,
         NotificationModule,
         AppStatsModule,
+        MessageModule,
     ],
     providers: [
         DefaultUserSeeder,

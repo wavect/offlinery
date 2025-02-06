@@ -9,11 +9,11 @@ import { UserNotificationSettingsDTO } from "@/DTOs/user-notification-settings.d
 import { UserRequestDeletionFormSuccessDTO } from "@/DTOs/user-request-deletion-form-success.dto";
 import { UserResetPwdSuccessDTO } from "@/DTOs/user-reset-pwd-success.dto";
 import { AuthService } from "@/auth/auth.service";
-import {
-    AppStatsService,
-    EAPP_STAT_KEY,
-} from "@/entities/app-stats/app-stats.service";
+import { AppStatsService } from "@/entities/app-stats/app-stats.service";
+import { EAPP_STAT_KEY } from "@/entities/app-stats/app-stats.types";
 import { BlacklistedRegion } from "@/entities/blacklisted-region/blacklisted-region.entity";
+import { Encounter } from "@/entities/encounter/encounter.entity";
+import { Message } from "@/entities/messages/message.entity";
 import { PendingUser } from "@/entities/pending-user/pending-user.entity";
 import { MatchingService } from "@/transient-services/matching/matching.service";
 import { NotificationService } from "@/transient-services/notification/notification.service";
@@ -69,6 +69,10 @@ export class UserService {
         private blacklistedRegionRepository: Repository<BlacklistedRegion>,
         @InjectRepository(PendingUser)
         private pendingUserRepo: Repository<PendingUser>,
+        @InjectRepository(Encounter)
+        private encounterRepo: Repository<Encounter>,
+        @InjectRepository(Message)
+        private messageRepo: Repository<Message>,
         @Inject(forwardRef(() => NotificationService))
         private notificationService: NotificationService,
         @Inject(forwardRef(() => MatchingService))
@@ -323,8 +327,13 @@ export class UserService {
     async deleteUserByDeletionToken(
         deletionToken: string,
     ): Promise<UserDeletionSuccessDTO> {
-        const userToDelete = await this.userRepository.findOneBy({
-            deletionToken,
+        const userToDelete = await this.userRepository.findOne({
+            where: {
+                deletionToken,
+            },
+            relations: {
+                encounters: { messages: true },
+            },
         });
         if (!userToDelete) {
             throw new NotFoundException(
@@ -337,13 +346,44 @@ export class UserService {
             );
         }
 
-        await this.userRepository.delete({ deletionToken });
+        // Delete all encounters associated with this user
+        if (userToDelete.encounters?.length) {
+            // delete all messages associated with encounter (cascade would only delete messages of deleted user seemingly)
+            for (const encounter of userToDelete.encounters) {
+                if (encounter.messages?.length) {
+                    await this.messageRepo.remove(encounter.messages);
+                    this.logger.debug(
+                        `Deleted ${encounter.messages?.length} messages of soon to be deleted user for encounter ${encounter.id} (will also be deleted),`,
+                    );
+                }
+            }
+
+            const encountersDeleted = await this.encounterRepo.remove(
+                userToDelete.encounters,
+            );
+            this.logger.debug(
+                `Deleted ${encountersDeleted.length} encounters for user ${userToDelete.id}`,
+            );
+        }
+
+        if (userToDelete.imageURIs?.length) {
+            await this.deleteImages(
+                userToDelete.id,
+                userToDelete.imageURIs.map((_, idx) => idx),
+            );
+            this.logger.debug(
+                `Deleted ${userToDelete.imageURIs?.length} images of user ${userToDelete.id}.`,
+            );
+        }
+
+        await this.userRepository.remove(userToDelete);
         await this.pendingUserRepo.delete({ email: userToDelete.email });
         await this.appStatsService.incrementValue(
             EAPP_STAT_KEY.USERS_DELETED_COUNT,
         );
-
-        this.logger.debug(`User ${userToDelete.id} successfully deleted!`);
+        this.logger.debug(
+            `User ${userToDelete.id} successfully deleted (${userToDelete.email})`,
+        );
 
         const lang = userToDelete.preferredLanguage || ELanguage.en;
         return {

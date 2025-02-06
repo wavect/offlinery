@@ -153,7 +153,8 @@ export class EncounterService {
             /// @dev This filters out encounters that have a deleted user. As of today we don't delete encounters with one deleted user.
             .andWhere(
                 '(SELECT COUNT(*) FROM user_encounters_encounter WHERE "encounterId" = encounter.id) > 1',
-            );
+            )
+            .orderBy("encounter.lastDateTimePassedBy", "DESC");
 
         if (dateRange?.startDate && dateRange?.endDate) {
             query = query.andWhere(
@@ -330,7 +331,7 @@ export class EncounterService {
         if (!otherUser.location) {
             const msg = `Other user of Encounter ${encounterId} has not location: ${otherUser.location}`;
             this.logger.error(msg);
-            throw new PreconditionFailedException(msg);
+            throw new PreconditionFailedException(msg); // @dev Only use this HTTP status code for when user is not nearby anymore (NavigateToScreen is listening on it)
         }
 
         // final check, is user really nearby?

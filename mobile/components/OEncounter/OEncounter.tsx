@@ -371,6 +371,7 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     onClose={() => setModalVisible(false)}
                     userId={state.id!}
                     encounterId={encounterProfile.id}
+                    firstName={encounterProfile.otherUser.firstName}
                     testID="message-modal"
                 />
             </View>

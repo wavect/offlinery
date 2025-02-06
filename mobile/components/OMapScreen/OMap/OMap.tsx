@@ -307,7 +307,7 @@ export const OMap = memo(
         );
 
         const handleTourOnStop = async (e: any) => {
-            // @dev Save that tutorial done, to not show again except user clicked help btn
+            // @dev Save that tutorial done, to not show animation of help-btn
             await saveLocalValue(LOCAL_VALUE.HAS_DONE_FIND_WALKTHROUGH, "true");
         };
         const handleTourOnStepChange = (e: any) => {
@@ -434,7 +434,6 @@ export const OMap = memo(
                         onLoadingStateChange={onLoadingStateChange}
                         currentMapRegion={mapRegion}
                         userId={state.id}
-                        datingMode={state.dateMode}
                     />
                     {showBlacklistedRegions && renderedBlacklistedRegions}
                     {showEncounters && renderedEncounterPins}

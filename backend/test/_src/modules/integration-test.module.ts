@@ -79,7 +79,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
             MockAuthModule,
             UserReportModule,
             MapModule,
-            AppStatsModule,
+            forwardRef(() => AppStatsModule),
             forwardRef(() => NotificationModule),
             MockMatchingModule,
             UserFeedbackModule,

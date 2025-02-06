@@ -69,6 +69,32 @@ describe("Encounter Service Integration Tests ", () => {
             ).toEqual(3);
             expect(1).toEqual(1);
         });
+        it("should return the encounters a user has in a sorted way, sorted by DESC for lastDateTimePassedBy (most recent at start, later at end)", async () => {
+            const mainUser = await userFactory.persistNewTestUser({
+                firstName: "Testing Main User",
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                genderDesire: [EGender.WOMAN],
+                gender: EGender.MAN,
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.APPROACH,
+            });
+
+            /** @DEV insert some users and encounters */
+            const count = 4;
+            for (let i = 0; i < count; i++) {
+                const user = await userFactory.persistNewTestUser();
+                await encounterFactory.persistNewTestEncounter(mainUser, user);
+            }
+
+            const encounters = await encounterService.getEncountersByUser(
+                mainUser.id,
+            );
+            expect(encounters.length).toEqual(count);
+            expect(encounters).toBeSortedBy("lastDateTimePassedBy", {
+                descending: true,
+            });
+        });
         it("should return the encounters a user has but skip encounters that have a deleted user", async () => {
             const mainUser = await userFactory.persistNewTestUser({
                 firstName: "Testing Main User",

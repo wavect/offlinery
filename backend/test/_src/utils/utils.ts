@@ -5,6 +5,9 @@ export const clearDatabase = async (dataSource: DataSource) => {
     await dataSource.query(`
             TRUNCATE TABLE "user", encounter, user_report RESTART IDENTITY CASCADE;
         `);
+    await dataSource.query(`
+            TRUNCATE TABLE "app_statistic", encounter, user_report RESTART IDENTITY CASCADE;
+        `);
 };
 
 /** @DEV use this with caution and rarely. */

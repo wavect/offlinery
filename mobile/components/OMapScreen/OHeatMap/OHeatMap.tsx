@@ -1,4 +1,4 @@
-import { UserPrivateDTODateModeEnum, WeightedLatLngDTO } from "@/api/gen/src";
+import { WeightedLatLngDTO } from "@/api/gen/src";
 import { MOCK_HEATMAP_LOCATIONS, TOURKEY } from "@/services/tourguide.service";
 import { TestData } from "@/tests/src/accessors";
 import { API } from "@/utils/api-config";
@@ -12,19 +12,12 @@ import { useTourGuideController } from "rn-tourguide";
 interface OHeatMapProps {
     showMap: boolean;
     userId?: string;
-    datingMode: UserPrivateDTODateModeEnum;
     currentMapRegion: Region;
     onLoadingStateChange: (isLoading: boolean) => void;
 }
 
 export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
-    ({
-        showMap,
-        datingMode,
-        userId,
-        currentMapRegion,
-        onLoadingStateChange,
-    }) => {
+    ({ showMap, userId, currentMapRegion, onLoadingStateChange }) => {
         if (!showMap || isExpoGoEnvironment) {
             return <></>;
         }
@@ -48,7 +41,7 @@ export const OHeatMap: React.FC<OHeatMapProps> = React.memo(
         };
 
         const handleTourOnStop = () => {
-            setLocationsFromOthers([]);
+            getOtherUsersPositions();
         };
 
         useEffect(() => {

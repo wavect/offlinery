@@ -8,6 +8,10 @@ import {
     EIntention,
     EVerificationStatus,
 } from "@/types/user.types";
+import { randomBytes } from "crypto";
+import * as fs from "node:fs";
+import path from "node:path";
+import { Readable } from "stream";
 import { DeleteResult, Repository } from "typeorm";
 import { generateRandomString } from "../utils/utils";
 import { FactoryInterface } from "./factory.interface";
@@ -31,6 +35,22 @@ export class UserFactory implements FactoryInterface {
 
     public async deleteTestUser(user: User): Promise<DeleteResult> {
         return await this.userRepository.delete({ id: user.id });
+    }
+
+    /// @dev Returns filename without path but with extension
+    public createRandomFile(fileName: string): string {
+        // Generate a random filename
+        const buffer = randomBytes(1024 * 1024);
+        const fileStream = new Readable();
+        fileStream.push(buffer);
+        fileStream.push(null);
+
+        // Write buffer to file
+        const fileNameWithExt = fileName + ".jpg";
+        const filePath = path.join("uploads", "img", fileNameWithExt);
+        fs.writeFileSync(filePath, buffer);
+
+        return fileNameWithExt;
     }
 
     public async persistNewTestUser(userData?: Partial<User>): Promise<User> {

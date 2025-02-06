@@ -140,6 +140,10 @@ export class EncounterController {
         description: "Location of encounter.",
     })
     @ApiResponse({ status: 404, description: "Encounter not found." })
+    @ApiResponse({
+        status: 412,
+        description: "Other user not nearby right now.",
+    })
     async getLocationOfEncounter(
         @Param(USER_ID_PARAM) userId: string,
         @Param(EncounterController.ENCOUNTER_ID_PARAM) encounterId: string,

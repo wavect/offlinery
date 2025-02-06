@@ -7,6 +7,7 @@
         "devtools": "npx react-devtools",
         "storybook:ios": "EXPO_PUBLIC_STORYBOOK=true pnpm ios:device",
         "storybook:android": "EXPO_PUBLIC_STORYBOOK=true pnpm android",
+        "storybook:win": "set EXPO_PUBLIC_STORYBOOK=true && set EXPO_PUBLIC_ENVIRONMENT=development && npx expo run:android",
         "start:dev": "npx concurrently \"pnpm devtools\" \"EXPO_PUBLIC_ENVIRONMENT=development pnpm start\"",
         "start:devwin": "npx concurrently \"pnpm devtools\" \"set EXPO_PUBLIC_ENVIRONMENT=development && pnpm start\"",
         "start:prod": "expo start --no-dev --minify",
