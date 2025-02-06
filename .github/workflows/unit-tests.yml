@@ -37,14 +37,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Install backend dependencies
+      - name: Install backend/frontend dependencies
         run: |
-          pnpm install
           cd backend && pnpm install
-
-      - name: Install mobile dependencies
-        run: |
-          pnpm install
           cd ../mobile && pnpm install
 
       - name: Install Docker Compose
