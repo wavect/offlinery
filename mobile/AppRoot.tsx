@@ -7,6 +7,7 @@ import { ROUTES } from "./screens/routes";
 
 import Welcome from "./screens/Welcome";
 
+import { useQuickAction } from "@/hooks/useQuickAction";
 import { TR, i18n } from "@/localization/translate.service";
 import ResetPassword from "@/screens/ResetPassword";
 import AppIntroductionSwiperScreen from "@/screens/onboarding/AppIntroductionSlider";
@@ -94,6 +95,8 @@ export default function App() {
     });
 
     const navContainerRef = useRef<NavigationContainerRef<any>>(null);
+
+    useQuickAction();
 
     useEffect(() => {
         async function prepare() {
