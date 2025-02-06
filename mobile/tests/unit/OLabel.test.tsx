@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react-native";
 import React from "react";
-import { OLabel } from "./OLabel";
+import { OLabel } from "../../components/OLabel/OLabel";
 
 jest.mock("@expo/vector-icons", () => ({
     MaterialIcons: "MaterialIcons",

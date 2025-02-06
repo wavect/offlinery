@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
 import React from "react";
-import { OCheckbox } from "./OCheckbox";
+import { OCheckbox } from "../../components/OCheckbox/OCheckbox";
 
 describe("OCheckbox Component", () => {
     const mockOnValueChange = jest.fn();
