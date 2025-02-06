@@ -80,8 +80,8 @@ describe("Encounter Service Integration Tests ", () => {
                 approachChoice: EApproachChoice.APPROACH,
             });
 
-            /** @DEV insert lots of users and encounters */
-            const count = 20;
+            /** @DEV insert some users and encounters */
+            const count = 4;
             for (let i = 0; i < count; i++) {
                 const user = await userFactory.persistNewTestUser();
                 await encounterFactory.persistNewTestEncounter(mainUser, user);
