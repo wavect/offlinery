@@ -86,12 +86,14 @@ const OMessageModal = (props: IOMessageModalProps) => {
                 userId,
                 pushMessageDTO,
             });
+            // only close, if message was successful, otherwise let user re-send or close it
             onClose();
             setMessage("");
             setMessageError(false);
         } catch (error) {
             console.error("Unable to send dm: ", error);
             setMessageError(true);
+            setMessage("");
             Sentry.captureException(error, {
                 tags: {
                     chat: "message",
