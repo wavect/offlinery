@@ -16,6 +16,7 @@ import {
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
+import { formatMultiLanguageDateTimeStringsCET } from "@/utils/date.utils";
 import {
     EMAIL_CODE_EXPIRATION_IN_MS,
     generate6DigitEmailCode,
@@ -258,6 +259,60 @@ export class PendingUserService {
         );
     }
 
+    public async sendMissedEQCallReminder(
+        email: string,
+        plannedDateTime: Date,
+    ) {
+        const user = await this.userRepo.findOneBy({ email });
+        if (!user) {
+            throw new NotFoundException(
+                `User with email ${email} does not exist!`,
+            );
+        }
+        if (!user.isActive) {
+            throw new BadRequestException("Account is inactive!");
+        }
+        const lang = user.preferredLanguage ?? ELanguage.en;
+        const { date, time } = formatMultiLanguageDateTimeStringsCET(
+            plannedDateTime,
+            lang,
+        );
+
+        await this.sendEQCallMissedMail(user, date, time, lang);
+        if (user.pushToken) {
+            /// @dev Also send push notification
+            await this.notificationService.sendPushNotifications([
+                {
+                    sound: "default" as const,
+                    title: this.i18n.translate(
+                        `main.notification.${ENotificationType.SAFETY_CALL_MISSED}.title`,
+                        {
+                            lang,
+                        },
+                    ),
+                    body: this.i18n.translate(
+                        `main.notification.${ENotificationType.SAFETY_CALL_MISSED}.body`,
+                        {
+                            lang,
+                            args: {
+                                date,
+                                time,
+                            },
+                        },
+                    ),
+                    to: user.pushToken,
+                    data: {
+                        screen: EAppScreens.SAFETY_CALL_MISSED,
+                        type: ENotificationType.SAFETY_CALL_MISSED,
+                    },
+                },
+            ]);
+        }
+        this.logger.debug(
+            `Missed EQ Call reminder sent to ${email}. Missed call on ${plannedDateTime}`,
+        );
+    }
+
     private async sendAccountVerificationStatusMail(
         user: User,
         status: EVerificationStatus,
@@ -285,6 +340,41 @@ export class PendingUserService {
                 t: (key: string, params?: Record<string, any>) =>
                     this.i18n.translate(
                         `main.email.account-verification-${status}.${key}`,
+                        { lang, args: { ...(params?.hash ?? params) } },
+                    ),
+            },
+        });
+    }
+
+    private async sendEQCallMissedMail(
+        user: User,
+        date: string,
+        time: string,
+        lang: ELanguage,
+    ) {
+        this.logger.debug(
+            `Sending new email to ${user.email} as safety/eq call missed in ${lang}.`,
+        );
+        await this.mailService.sendMail({
+            to: user.email,
+            subject: await this.i18n.translate(
+                `main.email.safety-call-missed.subject`,
+                { lang },
+            ),
+            template: `safety-call-missed`,
+            context: {
+                firstName: user.firstName,
+                oppositeGender: await this.i18n.translate(
+                    `main.general.gender.${user.genderDesire[0]}_pl`,
+                    { lang },
+                ),
+                date,
+                time,
+                email: user.email,
+                languageId: lang,
+                t: (key: string, params?: Record<string, any>) =>
+                    this.i18n.translate(
+                        `main.email.safety-call-missed.${key}`,
                         { lang, args: { ...(params?.hash ?? params) } },
                     ),
             },

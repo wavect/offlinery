@@ -28,6 +28,10 @@
     },
     "new_message": {
       "title": "Neue Nachricht von {firstName}"
+    },
+    "safety_call_missed": {
+      "title": "Du hast deinen EQ Call verpasst :(",
+      "body": "Du hast einen EQ Call am {date} um {time} gebucht. Hast ihn aber verpasst. Jetzt neue Session buchen um Anzusprechen."
     }
   },
   "email": {
@@ -129,6 +133,20 @@
       "closingMessage": "Du möchtest selbst keine anderen Personen ansprechen? Kein Problem! Du kannst diesen Call überspringen und trotzdem von Anderen angesprochen werden - ändere einfach diese Einstellung in der App.",
       "beApproachAlternative": "Möchtest du später aktiv werden? Du kannst den Safety Call jederzeit nachholen, wenn du bereit bist.",
       "footer": "Dies ist eine automatische Nachricht von Offlinery."
+    },
+    "safety-call-missed": {
+      "subject": "Oops.. Du hast deinen EQ Call mit Offlinery verpasst",
+      "header": "Wir waren da, aber du leider nicht.",
+      "greeting": "Hi {firstName}",
+      "intro1": "Manchmal kommt etwas dazwischen - das verstehen wir! Wir haben bemerkt, dass du es nicht zu unserem geplanten EQ-Gespräch am {date} um {time} geschafft hast.",
+      "intro2": "Diese kurzen 10-15-minütigen Gespräche sind unser Weg, um sicherzustellen, dass sicher jeder auf Offlinery wohl fühlt.",
+      "taskDescription": "Nach diesem kurzen Gespräch kannst du {oppositeGender} im echten Leben ansprechen.",
+      "callExplanation": "Es ist nur eine entspannte Unterhaltung - wie ein kurzer virtueller Kaffee mit einem unserer Teammitglieder. Ganz ohne Druck!",
+      "verificationLink": "Was wir dich fragen",
+      "verificationNote": "Hier schon mal ein Sneak Peak:",
+      "bookCallButton": "Neue Session planen",
+      "reminder": "Kleiner Hinweis: Wenn du lieber in den \"Werde Angesprochen\"-Modus wechseln möchtest, kannst du diesen Schritt überspringen. Beachte dabei, dass du dann selbst dann niemanden ansprechen kannst.",
+      "footer": "Wir sind schon gespannt dich kennenzulernen!"
     }
   },
   "view": {

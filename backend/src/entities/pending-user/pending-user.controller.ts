@@ -1,5 +1,6 @@
 import { OnlyValidRegistrationSession } from "@/auth/auth-registration-session";
 import { OnlyAdmin, Public } from "@/auth/auth.guard";
+import { MissedEqCallDTO } from "@/DTOs/missed-eq-call.dto";
 import {
     RegistrationForVerificationRequestDTO,
     RegistrationForVerificationResponseDTO,
@@ -34,7 +35,7 @@ import { PendingUserService } from "./pending-user.service";
 export class PendingUserController {
     private readonly logger = new Logger(PendingUserController.name);
 
-    constructor(private readonly registrationService: PendingUserService) {}
+    constructor(private readonly pendingUserService: PendingUserService) {}
 
     @Post()
     @Public()
@@ -63,7 +64,7 @@ export class PendingUserController {
         @Body() emailDto: RegistrationForVerificationRequestDTO,
     ): Promise<RegistrationForVerificationResponseDTO> {
         this.logger.debug(`User registers his email: ${emailDto.email}`);
-        return await this.registrationService.registerPendingUser(emailDto);
+        return await this.pendingUserService.registerPendingUser(emailDto);
     }
 
     @Put("verify-email")
@@ -80,7 +81,7 @@ export class PendingUserController {
         }),
     )
     async verifyEmail(@Body() verifyEmailDto: VerifyEmailDTO): Promise<void> {
-        return await this.registrationService.verifyEmail(
+        return await this.pendingUserService.verifyEmail(
             verifyEmailDto.email,
             verifyEmailDto.verificationCode,
         );
@@ -103,7 +104,7 @@ export class PendingUserController {
         @Body()
         setAcceptedSpecialDataGenderLookingForAtDTO: SetAcceptedSpecialDataGenderLookingForDTO,
     ) {
-        return await this.registrationService.setAcceptedSpecialDataGenderLookingForAt(
+        return await this.pendingUserService.setAcceptedSpecialDataGenderLookingForAt(
             setAcceptedSpecialDataGenderLookingForAtDTO.email,
             setAcceptedSpecialDataGenderLookingForAtDTO.dateTimeAccepted,
         );
@@ -125,9 +126,33 @@ export class PendingUserController {
     async changeVerificationStatus(
         @Body() updateStatus: UpdateUserVerificationstatusDTO,
     ): Promise<void> {
-        return await this.registrationService.changeVerificationStatus(
+        return await this.pendingUserService.changeVerificationStatus(
             updateStatus.email,
             updateStatus.newVerificationStatus,
+        );
+    }
+
+    @Put("admin/missed-eq-call")
+    @OnlyAdmin()
+    @ApiExcludeEndpoint()
+    @ApiOperation({
+        summary: "Send reminder to user that they missed the EQ/Safety call.",
+    })
+    @ApiBody({
+        type: MissedEqCallDTO,
+    })
+    @UsePipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    )
+    async sendMissedEQCallReminder(
+        @Body() missedEQCall: MissedEqCallDTO,
+    ): Promise<void> {
+        return await this.pendingUserService.sendMissedEQCallReminder(
+            missedEQCall.email,
+            missedEQCall.plannedDateTime,
         );
     }
 }

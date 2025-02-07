@@ -9,6 +9,7 @@ export enum ENotificationType {
     SAFETYCALL_REMINDER = "safetycall_reminder",
     ACCOUNT_DENIED = "account_denied",
     NEW_MESSAGE = "new_message",
+    SAFETY_CALL_MISSED = "safety_call_missed",
 }
 
 export abstract class BaseNotificationADTO implements Record<string, unknown> {

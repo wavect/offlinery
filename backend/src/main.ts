@@ -4,6 +4,7 @@ import { NotificationAccountApprovedDTO } from "@/DTOs/notifications/notificatio
 import { NotificationGhostReminderDTO } from "@/DTOs/notifications/notification-ghostreminder.dto";
 import { NotificationNewEventDTO } from "@/DTOs/notifications/notification-new-event.dto";
 import { NotificationNewMessageDTO } from "@/DTOs/notifications/notification-new-message.dto";
+import { NotificationSafetyCallMissedDTO } from "@/DTOs/notifications/notification-safetycall-missed.dto";
 import { DefaultApiUserSeeder } from "@/seeder/default-admin-api-user.seeder";
 import { DefaultUserSeeder } from "@/seeder/default-user.seeder";
 import { RandomUsersSeeder } from "@/seeder/random-users-seeder.service";
@@ -88,6 +89,7 @@ const setupSwagger = (app: INestApplication) => {
         deepScanRoutes: true,
         extraModels: [
             NotificationNavigateUserDTO,
+            NotificationSafetyCallMissedDTO,
             NotificationAccountApprovedDTO,
             NotificationGhostReminderDTO,
             NotificationNewEventDTO,

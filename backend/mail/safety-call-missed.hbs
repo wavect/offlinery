@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="{{languageId}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t 'subject'}}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7f9;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        h2 {
+            color: #459da1;
+            font-size: 26px;
+            margin: 0;
+            font-weight: 600;
+        }
+        .content {
+            font-size: 16px;
+            color: #4a5568;
+        }
+        .task-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #459da1;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .cta-container {
+            text-align: center;
+            margin: 35px 0;
+        }
+        .button {
+            display: inline-block;
+            background-color: #459da1;
+            color: white;
+            padding: 14px 28px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background-color: #3a8387;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(69,157,161,0.2);
+        }
+        .secondary-button {
+            display: inline-block;
+            background-color: #f0f9fa;
+            color: #459da1;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid #459da1;
+            margin-top: 15px;
+        }
+        .secondary-button:hover {
+            background-color: #e0f2f3;
+            transform: translateY(-1px);
+        }
+        .emphasis {
+            color: #459da1;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 15px;
+            background-color: #f0f9fa;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        .footer {
+            font-size: 14px;
+            color: #718096;
+            text-align: center;
+            margin-top: 35px;
+            font-style: italic;
+        }
+        .verification-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>{{t 'header'}}</h2>
+    </div>
+    <div class="content">
+        <p>{{t 'greeting' firstName=firstName}}</p>
+        <p>{{t 'intro1' date=date time=time}}</p>
+        <p>{{t 'intro2'}}</p>
+
+        <div class="task-box">
+            <p>{{t 'taskDescription' oppositeGender=oppositeGender}}</p>
+            <p>{{t 'callExplanation'}}</p>
+        </div>
+
+        <div class="verification-container">
+            <p>{{t 'verificationNote'}}</p>
+            <a href="https://www.offlinery.io/verification-call/verification-call_{{languageId}}.pdf" class="secondary-button">
+                {{t 'verificationLink'}}
+            </a>
+        </div>
+
+        <div class="cta-container">
+            <a href="https://calendly.com/wavect/safety-call-{{languageId}}?name={{firstName}}&email={{email}}" class="button">
+            {{t 'bookCallButton'}}
+            </a>
+        </div>
+
+        <div class="emphasis">
+            <p>{{t 'reminder'}}</p>
+        </div>
+    </div>
+    <div class="footer">
+        <p>{{t 'footer'}}</p>
+    </div>
+</div>
+</body>
+</html>
