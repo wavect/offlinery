@@ -67,7 +67,7 @@ export class GhostModeReminderCronJob extends BaseCronJob {
             .andWhere(
                 "(user.lastDateModeReminderSent IS NULL AND user.lastDateModeChange < :oneDayAgo) OR " +
                     "CASE " +
-                    "WHEN user.lastDateModeChange < :twoWeeksAgo AND user.lastDateModeReminderSent >= :twoWeeksMinTime THEN 0 " + // Changed this line
+                    "WHEN user.lastDateModeChange < :twoWeeksAgo AND user.lastDateModeReminderSent >= :twoWeeksMinTime THEN 0 " +
                     "WHEN user.lastDateModeChange < :threeDaysAgo AND user.lastDateModeReminderSent < :threeDaysMinTime AND user.lastDateModeReminderSent > :twoWeeksAgo THEN 1 " +
                     "WHEN user.lastDateModeChange < :oneDayAgo AND user.lastDateModeReminderSent IS NULL THEN 1 " +
                     "ELSE 0 " +
