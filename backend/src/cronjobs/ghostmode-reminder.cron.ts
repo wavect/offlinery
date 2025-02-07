@@ -6,6 +6,7 @@ import {
     goBackInTimeFor,
     IntervalHour,
     OfflineUserSince,
+    ReceivableUser,
     TimeSpan,
 } from "@/cronjobs/cronjobs.types";
 import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
@@ -75,8 +76,8 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                     twoWeeksAgo: goBackInTimeFor(336, "hours"),
                     threeDaysAgo: goBackInTimeFor(72, "hours"),
                     oneDayAgo: goBackInTimeFor(24, "hours"),
-                    twoWeeksMinTime: goBackInTimeFor(336 - 72, "hours"), // 264 hours
-                    threeDaysMinTime: goBackInTimeFor(72 - 24, "hours"), // 48 hours
+                    twoWeeksMinTime: goBackInTimeFor(336 - 72, "hours"),
+                    threeDaysMinTime: goBackInTimeFor(72 - 24, "hours"),
                 },
             );
 
@@ -94,15 +95,22 @@ export class GhostModeReminderCronJob extends BaseCronJob {
 
         return users.map((user) => ({
             user,
-            type: this.determineOfflineType(user.lastDateModeChange),
+            type: this.determineOfflineType(user, user.lastDateModeChange),
         }));
     }
 
-    private determineOfflineType(lastDateModeChange: Date): TimeSpan {
+    private determineOfflineType(
+        user: ReceivableUser,
+        lastDateModeChange: Date,
+    ): TimeSpan {
         const hoursGhostMode = differenceInHours(
             new Date(),
             lastDateModeChange,
         );
+        /** @DEV Edge case: if a user has never been reminded he is always in the 24 hrs bucket */
+        if (!user.lastDateModeReminderSent) {
+            return TimeSpan.ONE_DAY;
+        }
         if (hoursGhostMode >= 336) return TimeSpan.TWO_WEEKS;
         if (hoursGhostMode >= 72) return TimeSpan.THREE_DAYS;
         return TimeSpan.ONE_DAY;

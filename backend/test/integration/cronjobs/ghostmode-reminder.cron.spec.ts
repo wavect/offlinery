@@ -136,6 +136,17 @@ describe("CronJob: GhostMode Reminder", () => {
                 const result = await service.findOfflineUsers();
                 expect(result.length).toEqual(0);
             });
+            it("should remind if 100 hrs offline and never reminded", async () => {
+                await userFactory.persistNewTestUser({
+                    ...baseUser,
+                    lastDateModeChange: goBackInTimeFor(100, "hours"),
+                    lastDateModeReminderSent: null,
+                });
+
+                const result = await service.findOfflineUsers();
+                expect(result[0].type).toEqual(TimeSpan.ONE_DAY);
+                expect(result.length).toEqual(1);
+            });
         });
         describe("72 hours cycle - Second Reminder", function () {
             it("should not remind if 3 days offline and last reminded 1 day ago", async () => {
@@ -198,7 +209,7 @@ describe("CronJob: GhostMode Reminder", () => {
                 });
 
                 const result = await service.findOfflineUsers();
-                expect(result[0].type).toEqual(TimeSpan.THREE_DAYS);
+                expect(result[0].type).toEqual(TimeSpan.ONE_DAY);
                 expect(result.length).toEqual(1);
             });
         });
@@ -262,7 +273,7 @@ describe("CronJob: GhostMode Reminder", () => {
                     lastDateModeReminderSent: null,
                 });
                 const result = await service.findOfflineUsers();
-                expect(result[0].type).toEqual(TimeSpan.TWO_WEEKS);
+                expect(result[0].type).toEqual(TimeSpan.ONE_DAY);
                 expect(result.length).toEqual(1);
             });
             it("should remind if 450 hrs offline and never reminded", async () => {
@@ -272,7 +283,7 @@ describe("CronJob: GhostMode Reminder", () => {
                     lastDateModeReminderSent: null,
                 });
                 const result = await service.findOfflineUsers();
-                expect(result[0].type).toEqual(TimeSpan.TWO_WEEKS);
+                expect(result[0].type).toEqual(TimeSpan.ONE_DAY);
                 expect(result.length).toEqual(1);
             });
             it("should remind if 450 hrs offline and last reminded 264 hrs ago", async () => {
@@ -298,7 +309,7 @@ describe("CronJob: GhostMode Reminder", () => {
         });
     });
 
-    describe("Ghost Mode: Border Cases", () => {
+    describe("Ghost Mode: Edge Cases", () => {
         it("should not remind users twice if service runs twice", async () => {
             const user = await userFactory.persistNewTestUser({
                 ...baseUser,
@@ -326,13 +337,6 @@ describe("CronJob: GhostMode Reminder", () => {
                 lastDateModeReminderSent: null,
             });
 
-            /** @DEV - it should not matter, how long he was off if he has never been reminded -> should put him in reminder 1 */
-            await userFactory.persistNewTestUser({
-                ...baseUser,
-                lastDateModeChange: goBackInTimeFor(100, "hours"),
-                lastDateModeReminderSent: null,
-            });
-
             // THREE_DAYS users
             await userFactory.persistNewTestUser({
                 ...baseUser,
@@ -350,12 +354,18 @@ describe("CronJob: GhostMode Reminder", () => {
             const result = await service.findOfflineUsers();
 
             // Check counts per bucket
-            const oneDayUsers = result.filter((u) => u.type === "ONE_DAY");
-            const threeDayUsers = result.filter((u) => u.type === "THREE_DAYS");
-            const twoWeekUsers = result.filter((u) => u.type === "TWO_WEEKS");
+            const oneDayUsers = result.filter(
+                (u) => u.type === TimeSpan.ONE_DAY,
+            );
+            const threeDayUsers = result.filter(
+                (u) => u.type === TimeSpan.THREE_DAYS,
+            );
+            const twoWeekUsers = result.filter(
+                (u) => u.type === TimeSpan.TWO_WEEKS,
+            );
 
-            expect(oneDayUsers).toHaveLength(3);
-            expect(threeDayUsers).toHaveLength(2);
+            expect(oneDayUsers).toHaveLength(2);
+            expect(threeDayUsers).toHaveLength(1);
             expect(twoWeekUsers).toHaveLength(1);
 
             // Run again and verify no users are returned (they've been reminded)
@@ -388,9 +398,9 @@ describe("CronJob: GhostMode Reminder", () => {
             expect(result).toHaveLength(3);
 
             const types = result.map((u) => u.type);
-            expect(types).toContain("ONE_DAY");
-            expect(types).toContain("THREE_DAYS");
-            expect(types).toContain("TWO_WEEKS");
+            expect(types).toContain(TimeSpan.ONE_DAY);
+            expect(types).toContain(TimeSpan.ONE_DAY);
+            expect(types).toContain(TimeSpan.ONE_DAY);
         });
         it("should not include users who were recently reminded", async () => {
             await Promise.all([
@@ -419,31 +429,26 @@ describe("CronJob: GhostMode Reminder", () => {
         });
         it("should handle mixed scenarios of reminded and never reminded users", async () => {
             await Promise.all([
-                // ONE_DAY - never reminded
                 userFactory.persistNewTestUser({
                     ...baseUser,
                     lastDateModeChange: goBackInTimeFor(25, "hours"),
                     lastDateModeReminderSent: null,
                 }),
-                // ONE_DAY - recently reminded (should not be included)
                 userFactory.persistNewTestUser({
                     ...baseUser,
                     lastDateModeChange: goBackInTimeFor(25, "hours"),
                     lastDateModeReminderSent: goBackInTimeFor(23, "hours"),
                 }),
-                // THREE_DAYS - never reminded
                 userFactory.persistNewTestUser({
                     ...baseUser,
                     lastDateModeChange: goBackInTimeFor(73, "hours"),
                     lastDateModeReminderSent: null,
                 }),
-                // THREE_DAYS - recently reminded (should not be included)
                 userFactory.persistNewTestUser({
                     ...baseUser,
                     lastDateModeChange: goBackInTimeFor(73, "hours"),
                     lastDateModeReminderSent: goBackInTimeFor(47, "hours"),
                 }),
-                // TWO_WEEKS - never reminded
                 userFactory.persistNewTestUser({
                     ...baseUser,
                     lastDateModeChange: goBackInTimeFor(337, "hours"),
@@ -454,11 +459,22 @@ describe("CronJob: GhostMode Reminder", () => {
             const result = await service.findOfflineUsers();
             expect(result).toHaveLength(3);
 
-            // Verify correct distribution
             const types = result.map((u) => u.type);
-            expect(types.filter((t) => t === "ONE_DAY")).toHaveLength(1);
-            expect(types.filter((t) => t === "THREE_DAYS")).toHaveLength(1);
-            expect(types.filter((t) => t === "TWO_WEEKS")).toHaveLength(1);
+            expect(types.filter((t) => t === TimeSpan.ONE_DAY)).toHaveLength(3);
+            expect(types.filter((t) => t === TimeSpan.THREE_DAYS)).toHaveLength(
+                0,
+            );
+            expect(types.filter((t) => t === TimeSpan.TWO_WEEKS)).toHaveLength(
+                0,
+            );
+        });
+        it.skip("should sort users into right bucket", async () => {
+            /** @DEV - it should not matter, how long he was off if he has never been reminded -> should put him in reminder 1! */
+            await userFactory.persistNewTestUser({
+                ...baseUser,
+                lastDateModeChange: goBackInTimeFor(100, "hours"),
+                lastDateModeReminderSent: null,
+            });
         });
     });
 
@@ -474,7 +490,7 @@ describe("CronJob: GhostMode Reminder", () => {
             // First run - should get TWO_WEEKS reminder
             const firstResult = await service.findOfflineUsers();
             expect(firstResult).toHaveLength(1);
-            expect(firstResult[0].type).toBe("TWO_WEEKS");
+            expect(firstResult[0].type).toBe(TimeSpan.ONE_DAY);
 
             // Update user's lastDateModeChange to qualify for THREE_DAYS
             await userRepository.update(user.id, {
@@ -485,7 +501,7 @@ describe("CronJob: GhostMode Reminder", () => {
             // Second run - should get THREE_DAYS reminder
             const secondResult = await service.findOfflineUsers();
             expect(secondResult).toHaveLength(1);
-            expect(secondResult[0].type).toBe("THREE_DAYS");
+            expect(secondResult[0].type).toBe(TimeSpan.THREE_DAYS);
 
             // Update user's lastDateModeChange to qualify for ONE_DAY
             await userRepository.update(user.id, {
@@ -496,7 +512,7 @@ describe("CronJob: GhostMode Reminder", () => {
             // Third run - should get ONE_DAY reminder
             const thirdResult = await service.findOfflineUsers();
             expect(thirdResult).toHaveLength(1);
-            expect(thirdResult[0].type).toBe("ONE_DAY");
+            expect(thirdResult[0].type).toBe(TimeSpan.ONE_DAY);
 
             // Final run - should get no reminders (already reminded)
             const finalResult = await service.findOfflineUsers();

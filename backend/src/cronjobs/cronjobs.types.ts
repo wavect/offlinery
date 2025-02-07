@@ -25,6 +25,7 @@ export type ReceivableUser = Pick<
     | "id"
     | "ghostModeRemindersEmail"
     | "restrictedViewToken"
+    | "lastDateModeReminderSent"
 >;
 
 export enum TimeSpan {
