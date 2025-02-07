@@ -65,7 +65,8 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                 dayAgo: goBackInTimeFor(24, "hours"),
             })
             .andWhere(
-                "(user.lastDateModeReminderSent IS NULL AND user.lastDateModeChange < :oneDayAgo) OR " +
+                "(user.lastDateModeReminderSent IS NULL) OR " + // Reminded if > 24 hrs off and never reminded
+                    "(user.lastDateModeReminderSent < user.lastDateModeChange) OR " + // Remind if went online in-between
                     "CASE " +
                     "WHEN user.lastDateModeChange < :twoWeeksAgo AND user.lastDateModeReminderSent >= :twoWeeksMinTime THEN 0 " +
                     "WHEN user.lastDateModeChange < :threeDaysAgo AND user.lastDateModeReminderSent < :threeDaysMinTime AND user.lastDateModeReminderSent > :twoWeeksAgo THEN 1 " +

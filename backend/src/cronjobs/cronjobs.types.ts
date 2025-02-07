@@ -41,10 +41,25 @@ export interface OfflineUserSince {
 
 export const goBackInTimeFor = (
     value: number,
-    unit: "hours" | "days",
+    unit: "hours" | "days" | "months" | "years",
 ): Date => {
-    const hours = unit === "days" ? value * 24 : value;
-    return new Date(new Date().getTime() - hours * 60 * 60 * 1000);
+    const now = new Date();
+    switch (unit) {
+        case "hours":
+            return new Date(now.getTime() - value * 60 * 60 * 1000);
+        case "days":
+            return new Date(now.getTime() - value * 24 * 60 * 60 * 1000);
+        case "months": {
+            const date = new Date(now);
+            date.setMonth(date.getMonth() - value);
+            return date;
+        }
+        case "years": {
+            const date = new Date(now);
+            date.setFullYear(date.getFullYear() - value);
+            return date;
+        }
+    }
 };
 
 /** @dev String value used for translation keys */
