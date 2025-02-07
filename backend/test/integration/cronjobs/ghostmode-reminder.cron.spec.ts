@@ -25,7 +25,7 @@ describe("CronJob: GhostMode Reminder", () => {
         userRepository = module.get<Repository<User>>(getRepositoryToken(User));
     });
 
-    describe("Ghost Mode Reminder: Happy Path Tests", function () {
+    describe("Happy Path Tests", function () {
         it("should identify users for ONE_DAY reminder correctly", async () => {
             const user = await userFactory.persistNewTestUser({
                 ...baseUser,
@@ -61,7 +61,7 @@ describe("CronJob: GhostMode Reminder", () => {
         });
     });
 
-    describe("Ghost Mode Reminder: 24/72/336 Cycle Test", function () {
+    describe("24/72/336 Cycle Test", function () {
         describe("24 hours cycle - First Reminder", function () {
             it("should not remind if 23 hrs offline and never reminded", async () => {
                 await userFactory.persistNewTestUser({
@@ -309,7 +309,7 @@ describe("CronJob: GhostMode Reminder", () => {
         });
     });
 
-    describe("Ghost Mode: Edge Cases", () => {
+    describe("Edge Cases", () => {
         it("should not remind users twice if service runs twice", async () => {
             const user = await userFactory.persistNewTestUser({
                 ...baseUser,
@@ -468,7 +468,7 @@ describe("CronJob: GhostMode Reminder", () => {
                 0,
             );
         });
-        it.skip("should sort users into right bucket", async () => {
+        it("should sort users into right bucket", async () => {
             /** @DEV - it should not matter, how long he was off if he has never been reminded -> should put him in reminder 1! */
             await userFactory.persistNewTestUser({
                 ...baseUser,
@@ -478,7 +478,7 @@ describe("CronJob: GhostMode Reminder", () => {
         });
     });
 
-    describe("Ghost Mode: Special Tests, Progression", function () {
+    describe("Special Tests, Progression", function () {
         it("should handle progression through reminder stages", async () => {
             // Create a user that will progress through all stages
             const user = await userFactory.persistNewTestUser({
