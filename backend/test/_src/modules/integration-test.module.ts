@@ -19,6 +19,7 @@ import { UserRepository } from "@/entities/user/user.repository";
 import { ClusteringModule } from "@/transient-services/clustering/clustering.module";
 import { MatchingModule } from "@/transient-services/matching/matching.module";
 import { NotificationModule } from "@/transient-services/notification/notification.module";
+import { TaskModule } from "@/transient-services/task/task.module";
 import { TYPED_ENV } from "@/utils/env.utils";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
@@ -79,6 +80,7 @@ export const getIntegrationTestModule = async (): Promise<TestModuleSetup> => {
             MockAuthModule,
             UserReportModule,
             MapModule,
+            TaskModule,
             forwardRef(() => AppStatsModule),
             forwardRef(() => NotificationModule),
             MockMatchingModule,
