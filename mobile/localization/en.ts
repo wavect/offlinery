@@ -283,7 +283,7 @@ export const en = {
     ghostMode: "Ghost Mode",
     saving: "Saving..",
     enterMessage: "Enter message or contact details..",
-    sendMessage: "Send message",
+    sendMessage: "Send",
     receivedMessage: "Last message",
     leaveMessage: "Leave message",
     leaveMessageBtnLbl: "Contact",

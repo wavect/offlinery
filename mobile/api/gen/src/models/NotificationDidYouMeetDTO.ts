@@ -15,27 +15,33 @@
 /**
  *
  * @export
- * @interface BaseNotificationADTO
+ * @interface NotificationDidYouMeetDTO
  */
-export interface BaseNotificationADTO {
+export interface NotificationDidYouMeetDTO {
     /**
      *
      * @type {string}
-     * @memberof BaseNotificationADTO
+     * @memberof NotificationDidYouMeetDTO
      */
-    type: BaseNotificationADTOTypeEnum;
+    type: NotificationDidYouMeetDTOTypeEnum;
     /**
      *
      * @type {string}
-     * @memberof BaseNotificationADTO
+     * @memberof NotificationDidYouMeetDTO
      */
-    screen: BaseNotificationADTOScreenEnum;
+    screen: NotificationDidYouMeetDTOScreenEnum;
+    /**
+     *
+     * @type {string}
+     * @memberof NotificationDidYouMeetDTO
+     */
+    encounterId: string;
 }
 
 /**
  * @export
  */
-export const BaseNotificationADTOTypeEnum = {
+export const NotificationDidYouMeetDTOTypeEnum = {
     new_match: "new_match",
     new_event: "new_event",
     account_approved: "account_approved",
@@ -46,13 +52,13 @@ export const BaseNotificationADTOTypeEnum = {
     safety_call_missed: "safety_call_missed",
     did_you_meet: "did_you_meet",
 } as const;
-export type BaseNotificationADTOTypeEnum =
-    (typeof BaseNotificationADTOTypeEnum)[keyof typeof BaseNotificationADTOTypeEnum];
+export type NotificationDidYouMeetDTOTypeEnum =
+    (typeof NotificationDidYouMeetDTOTypeEnum)[keyof typeof NotificationDidYouMeetDTOTypeEnum];
 
 /**
  * @export
  */
-export const BaseNotificationADTOScreenEnum = {
+export const NotificationDidYouMeetDTOScreenEnum = {
     Main_NavigateToApproach: "Main_NavigateToApproach",
     Main_FindPeople: "Main_FindPeople",
     Main_FindPeople2: "Main_FindPeople",
@@ -63,39 +69,44 @@ export const BaseNotificationADTOScreenEnum = {
     Main_Encounters_onTab2: "Main_Encounters_onTab",
     Welcome: "Welcome",
 } as const;
-export type BaseNotificationADTOScreenEnum =
-    (typeof BaseNotificationADTOScreenEnum)[keyof typeof BaseNotificationADTOScreenEnum];
+export type NotificationDidYouMeetDTOScreenEnum =
+    (typeof NotificationDidYouMeetDTOScreenEnum)[keyof typeof NotificationDidYouMeetDTOScreenEnum];
 
 /**
- * Check if a given object implements the BaseNotificationADTO interface.
+ * Check if a given object implements the NotificationDidYouMeetDTO interface.
  */
-export function instanceOfBaseNotificationADTO(
+export function instanceOfNotificationDidYouMeetDTO(
     value: object,
-): value is BaseNotificationADTO {
+): value is NotificationDidYouMeetDTO {
     if (!("type" in value) || value["type"] === undefined) return false;
     if (!("screen" in value) || value["screen"] === undefined) return false;
+    if (!("encounterId" in value) || value["encounterId"] === undefined)
+        return false;
     return true;
 }
 
-export function BaseNotificationADTOFromJSON(json: any): BaseNotificationADTO {
-    return BaseNotificationADTOFromJSONTyped(json, false);
+export function NotificationDidYouMeetDTOFromJSON(
+    json: any,
+): NotificationDidYouMeetDTO {
+    return NotificationDidYouMeetDTOFromJSONTyped(json, false);
 }
 
-export function BaseNotificationADTOFromJSONTyped(
+export function NotificationDidYouMeetDTOFromJSONTyped(
     json: any,
     ignoreDiscriminator: boolean,
-): BaseNotificationADTO {
+): NotificationDidYouMeetDTO {
     if (json == null) {
         return json;
     }
     return {
         type: json["type"],
         screen: json["screen"],
+        encounterId: json["encounterId"],
     };
 }
 
-export function BaseNotificationADTOToJSON(
-    value?: BaseNotificationADTO | null,
+export function NotificationDidYouMeetDTOToJSON(
+    value?: NotificationDidYouMeetDTO | null,
 ): any {
     if (value == null) {
         return value;
@@ -103,5 +114,6 @@ export function BaseNotificationADTOToJSON(
     return {
         type: value["type"],
         screen: value["screen"],
+        encounterId: value["encounterId"],
     };
 }

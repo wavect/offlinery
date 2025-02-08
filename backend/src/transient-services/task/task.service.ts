@@ -1,3 +1,4 @@
+import { BaseEntity } from "@/entities/base.entity";
 import { Injectable, Logger } from "@nestjs/common";
 import { SchedulerRegistry } from "@nestjs/schedule";
 
@@ -6,6 +7,10 @@ export class TaskService {
     private readonly logger = new Logger(TaskService.name);
 
     constructor(private schedulerRegistry: SchedulerRegistry) {}
+
+    public generateUniqueDeterministicTaskId = (entity: BaseEntity) => {
+        return `task-${entity.id}-${entity.created.toISOString()}`;
+    };
 
     public async createOneTimeTask(
         taskId: string,

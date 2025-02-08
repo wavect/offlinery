@@ -43,6 +43,8 @@ export const NotificationGhostReminderDTOTypeEnum = {
     safetycall_reminder: "safetycall_reminder",
     account_denied: "account_denied",
     new_message: "new_message",
+    safety_call_missed: "safety_call_missed",
+    did_you_meet: "did_you_meet",
 } as const;
 export type NotificationGhostReminderDTOTypeEnum =
     (typeof NotificationGhostReminderDTOTypeEnum)[keyof typeof NotificationGhostReminderDTOTypeEnum];
@@ -51,13 +53,15 @@ export type NotificationGhostReminderDTOTypeEnum =
  * @export
  */
 export const NotificationGhostReminderDTOScreenEnum = {
-    NavigateToApproach: "Main_NavigateToApproach",
-    FindPeople: "Main_FindPeople",
-    FindPeople2: "Main_FindPeople",
-    FindPeople3: "Main_FindPeople",
-    FindPeople4: "Main_FindPeople",
-    FindPeople5: "Main_FindPeople",
-    Encounters_onTab: "Main_Encounters_onTab",
+    Main_NavigateToApproach: "Main_NavigateToApproach",
+    Main_FindPeople: "Main_FindPeople",
+    Main_FindPeople2: "Main_FindPeople",
+    Main_FindPeople3: "Main_FindPeople",
+    Main_FindPeople4: "Main_FindPeople",
+    Main_FindPeople5: "Main_FindPeople",
+    Main_Encounters_onTab: "Main_Encounters_onTab",
+    Main_Encounters_onTab2: "Main_Encounters_onTab",
+    Welcome: "Welcome",
 } as const;
 export type NotificationGhostReminderDTOScreenEnum =
     (typeof NotificationGhostReminderDTOScreenEnum)[keyof typeof NotificationGhostReminderDTOScreenEnum];

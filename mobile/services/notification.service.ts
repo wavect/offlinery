@@ -1,14 +1,18 @@
 import { Color } from "@/GlobalStyles";
 import {
+    BaseNotificationADTOTypeEnum,
+    EncounterPublicDTOStatusEnum,
+    NotificationDidYouMeetDTO,
     NotificationNavigateUserDTO,
     NotificationNewMessageDTO,
     StorePushTokenDTO,
+    UpdateEncounterStatusDTO,
 } from "@/api/gen/src";
-import { TR, i18n } from "@/localization/translate.service";
+import { i18n, TR } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import {
-    LOCAL_VALUE,
     getLocalValue,
+    LOCAL_VALUE,
     saveLocalValue,
 } from "@/services/storage.service";
 import { API } from "@/utils/api-config";
@@ -17,6 +21,7 @@ import * as Sentry from "@sentry/react-native";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import { AndroidNotificationVisibility } from "expo-notifications";
 import { initializeApp } from "firebase/app";
 import { Platform } from "react-native";
 
@@ -68,13 +73,41 @@ const getExpoProjectId = () => {
         );
     }
 
-    console.log("Using project ID:", projectId); // Helpful for debugging
     return projectId;
 };
 
-export const registerForPushNotificationsAsync = async (
-    userId: string,
-): Promise<NotificationTokenFetchResponse> => {
+const setupNotificationCategories = async () => {
+    await Notifications.setNotificationCategoryAsync(
+        BaseNotificationADTOTypeEnum.did_you_meet,
+        [
+            {
+                identifier: EncounterPublicDTOStatusEnum.not_met,
+                buttonTitle: i18n.t(TR.encounterInterest.notMet),
+                options: {
+                    isAuthenticationRequired: false, // @dev device authentication (e.g. face id)
+                    opensAppToForeground: false,
+                },
+            },
+            {
+                identifier: EncounterPublicDTOStatusEnum.met_interested,
+                buttonTitle: i18n.t(TR.encounterInterest.metInterested),
+                options: {
+                    isAuthenticationRequired: false, // @dev device authentication (e.g. face id)
+                    opensAppToForeground: false,
+                },
+            },
+            {
+                identifier: EncounterPublicDTOStatusEnum.met_not_interested,
+                buttonTitle: i18n.t(TR.encounterInterest.metNotInterested),
+                options: {
+                    isAuthenticationRequired: false, // @dev device authentication (e.g. face id)
+                    isDestructive: true,
+                    opensAppToForeground: false,
+                },
+            },
+        ],
+    );
+
     if (Platform.OS === "android") {
         await Notifications.setNotificationChannelAsync("default", {
             name: "default",
@@ -82,7 +115,24 @@ export const registerForPushNotificationsAsync = async (
             vibrationPattern: [0, 250, 250, 250],
             lightColor: Color.primaryBright,
         });
+        await Notifications.setNotificationChannelAsync(
+            BaseNotificationADTOTypeEnum.did_you_meet,
+            {
+                name: BaseNotificationADTOTypeEnum.did_you_meet,
+                importance: Notifications.AndroidImportance.HIGH,
+                lightColor: Color.primaryBright,
+                enableVibrate: true,
+                showBadge: false,
+                lockscreenVisibility: AndroidNotificationVisibility.PUBLIC,
+            },
+        );
     }
+};
+
+export const registerForPushNotificationsAsync = async (
+    userId: string,
+): Promise<NotificationTokenFetchResponse> => {
+    await setupNotificationCategories();
 
     const { status: existingStatus } =
         await Notifications.getPermissionsAsync();
@@ -178,6 +228,54 @@ export const registerForPushNotificationsAsync = async (
         token,
         tokenFetchStatus: TokenFetchStatus.SUCCESS,
     };
+};
+
+export const reactToNewDidYouMeetNotification = async (
+    response: Notifications.NotificationResponse,
+    navigation: any,
+) => {
+    const interactiveActionId = response.actionIdentifier;
+    const notificationData: NotificationDidYouMeetDTO = response.notification
+        .request.content.data as NotificationDidYouMeetDTO;
+
+    if (
+        interactiveActionId === EncounterPublicDTOStatusEnum.not_met ||
+        interactiveActionId ===
+            EncounterPublicDTOStatusEnum.met_not_interested ||
+        interactiveActionId === EncounterPublicDTOStatusEnum.met_interested
+    ) {
+        // @dev interactive notification btn clicked
+        const userId = await getLocalValue(LOCAL_VALUE.USER_ID);
+        if (!userId) {
+            Sentry.captureException(
+                new Error(
+                    "No userId in local storage when user received didYouMeet notification and clicked interactive button.",
+                ),
+                {
+                    tags: {
+                        reactToNewDidYouMeetNotification: "getUserId",
+                    },
+                },
+            );
+            // @dev in that case we simply can't do anything since app not opened in foreground (desired), silent error
+            return;
+        }
+
+        const updateEncounterStatusDTO: UpdateEncounterStatusDTO = {
+            encounterId: notificationData.encounterId,
+            status: interactiveActionId,
+        };
+
+        await API.encounter.encounterControllerUpdateStatus({
+            updateEncounterStatusDTO,
+            userId,
+        });
+    } else {
+        // @dev notification tapped (no interactive button chosen), in this case the app is opened otherwise status is updated in the back
+        navigation.navigate(ROUTES.MainTabView, {
+            screen: notificationData.screen,
+        });
+    }
 };
 
 export const reactToNewMessageNotification = (

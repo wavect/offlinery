@@ -32,6 +32,10 @@
     "safety_call_missed": {
       "title": "Du hast deinen EQ Call verpasst :(",
       "body": "Du hast einen EQ Call am {date} um {time} gebucht. Hast ihn aber verpasst. Jetzt neue Session buchen um Anzusprechen."
+    },
+    "did_you_meet": {
+      "title": "Hast du {firstName} getroffen? \uD83E\uDD14",
+      "body": "Ihr seid euch zum \uD83D\uDD25{streakCount} Mal am {lastDatePassedBy} um {lastTimePassedBy} über den Weg gelaufen."
     }
   },
   "email": {

@@ -4,6 +4,7 @@ import { TR, i18n } from "@/localization/translate.service";
 import { ROUTES } from "@/screens/routes";
 import {
     TokenFetchStatus,
+    reactToNewDidYouMeetNotification,
     reactToNewEncounterNotification,
     reactToNewMessageNotification,
     registerForPushNotificationsAsync,
@@ -108,7 +109,7 @@ export const useNotifications = ({ navigation }: IUseNotificationProps) => {
 
                     responseListener.current =
                         Notifications.addNotificationResponseReceivedListener(
-                            (response) => {
+                            async (response) => {
                                 // Differentiate between different notifications
                                 const notificationType = getNotificationType(
                                     response.notification,
@@ -139,6 +140,13 @@ export const useNotifications = ({ navigation }: IUseNotificationProps) => {
                                             response,
                                             navigation,
                                         );
+                                        break;
+                                    case NotificationNavigateUserDTOTypeEnum.did_you_meet:
+                                        await reactToNewDidYouMeetNotification(
+                                            response,
+                                            navigation,
+                                        );
+                                        break;
                                     default:
                                         // @dev other notifications have this default behavior, if we want a different behavior just add above.
                                         navigation.navigate(

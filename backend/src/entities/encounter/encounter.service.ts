@@ -3,6 +3,7 @@ import { DateRangeDTO } from "@/DTOs/date-range.dto";
 import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
 import { GenericStatusDTO } from "@/DTOs/generic-status.dto";
 import { GetLocationOfEncounterResponseDTO } from "@/DTOs/get-location-of-encounter-response.dto";
+import { NotificationDidYouMeetDTO } from "@/DTOs/notifications/notification-did-you-meet";
 import { NotificationNewMessageDTO } from "@/DTOs/notifications/notification-new-message.dto";
 import { PushMessageDTO } from "@/DTOs/push-message.dto";
 import { UpdateEncounterStatusDTO } from "@/DTOs/update-encounter-status.dto";
@@ -11,7 +12,10 @@ import { Message } from "@/entities/messages/message.entity";
 import { User } from "@/entities/user/user.entity";
 import { UserService } from "@/entities/user/user.service";
 import { NotificationService } from "@/transient-services/notification/notification.service";
+import { TaskService } from "@/transient-services/task/task.service";
+import { OfflineryNotification } from "@/types/notification-message.types";
 import { EEncounterStatus, ELanguage } from "@/types/user.types";
+import { formatMultiLanguageDateTimeStringsCET } from "@/utils/date.utils";
 import {
     getPointFromTypedCoordinates,
     getTypedCoordinatesFromPoint,
@@ -45,6 +49,7 @@ export class EncounterService {
         protected readonly i18n: I18nService,
         @Inject(forwardRef(() => NotificationService))
         protected readonly notificationService: NotificationService,
+        private taskService: TaskService,
     ) {}
 
     /** @dev Only used for debugging in dev environments.
@@ -59,6 +64,7 @@ export class EncounterService {
         if (!firstEncounter) {
             throw new NotFoundException("No encounter found.");
         }
+
         const otherUser = firstEncounter.users?.find((u) => u.id !== user.id);
         if (!otherUser) {
             throw new NotFoundException("Other user not found.");
@@ -78,6 +84,8 @@ export class EncounterService {
             latitude: getCloseLocation.latitude + 0.0004,
             longitude: getCloseLocation.longitude,
         });
+        otherUser.locationLastTimeUpdated = new Date();
+        user.locationLastTimeUpdated = new Date();
         firstEncounter.lastDateTimePassedBy = new Date();
         await this.userRepository.save(otherUser);
         await this.encounterRepository.save(firstEncounter);
@@ -126,6 +134,8 @@ export class EncounterService {
                 },
             },
         ]);
+
+        await this.scheduleOneTimeFollowUpTaskForEncounter(firstEncounter);
 
         return {
             success: true,
@@ -265,6 +275,7 @@ export class EncounterService {
                     break;
                 }
 
+                // @dev new encounters only created until limit, aborted due to if above.
                 const encounter = await this.findOrCreateEncounterWithLock(
                     userSendingLocationUpdate.id,
                     userMatch.id,
@@ -272,9 +283,11 @@ export class EncounterService {
                 );
 
                 if (encounter.status !== EEncounterStatus.MET_NOT_INTERESTED) {
-                    encounters.set(userMatch.id, encounter);
-                    userEncounterCount++;
+                    encounters.set(userMatch.id, encounter); // @dev which encounter to act on
+                    userEncounterCount++; // @dev Abort condition for for loop
                 }
+
+                await this.scheduleOneTimeFollowUpTaskForEncounter(encounter);
             }
 
             return encounters;
@@ -439,6 +452,98 @@ export class EncounterService {
         }
     }
 
+    private buildFollowUpNotification = (
+        encounter: Encounter,
+        user: User,
+        otherUser: User,
+    ): OfflineryNotification => {
+        const lang = user.preferredLanguage ?? ELanguage.en;
+        const { date, time } = formatMultiLanguageDateTimeStringsCET(
+            encounter.lastDateTimePassedBy,
+            lang,
+        );
+
+        const data: NotificationDidYouMeetDTO = {
+            type: ENotificationType.DID_YOU_MEET,
+            screen: EAppScreens.DID_YOU_MEET,
+            encounterId: encounter.id,
+        };
+
+        return {
+            sound: "default" as const,
+            title: this.i18n.t(
+                `main.notification.${ENotificationType.DID_YOU_MEET}.title`,
+                {
+                    args: {
+                        firstName: otherUser.firstName,
+                    },
+                    lang,
+                },
+            ),
+            body: this.i18n.t(
+                `main.notification.${ENotificationType.DID_YOU_MEET}.body`,
+                {
+                    args: {
+                        lastDatePassedBy: date,
+                        lastTimePassedBy: time,
+                        streakCount: encounter.amountStreaks,
+                    },
+                    lang,
+                },
+            ),
+            to: user.pushToken,
+            // For iOS
+            categoryId: ENotificationType.DID_YOU_MEET,
+            // For Android
+            channelId: ENotificationType.DID_YOU_MEET,
+            data,
+        };
+    };
+
+    private async scheduleOneTimeFollowUpTaskForEncounter(
+        encounter: Encounter,
+    ): Promise<void> {
+        try {
+            const task = async () => {
+                if (encounter.users?.length < 2) {
+                    this.logger.error(
+                        `Cannot schedule follow up task for encounter since encounter has not 2 users: ${encounter.users.length} (${encounter.id})`,
+                    );
+                    return;
+                }
+                const user1 = encounter.users[0];
+                const user2 = encounter.users[1];
+
+                const notifications = [
+                    this.buildFollowUpNotification(encounter, user1, user2),
+                    this.buildFollowUpNotification(encounter, user2, user1),
+                ];
+
+                const tickets =
+                    await this.notificationService.sendPushNotifications(
+                        notifications,
+                    );
+                this.logger.debug(
+                    `Sent follow up notifications for encounter ${encounter.id} to both users with status: ${tickets.map((t) => t.status)}`,
+                );
+            };
+            const taskId =
+                this.taskService.generateUniqueDeterministicTaskId(encounter);
+            await this.taskService.createOneTimeTask(
+                taskId,
+                task,
+                3 * 60 * 60 * 1_000, // @dev 3 hours
+            );
+            this.logger.debug(
+                `Scheduled follow up notification task for encounter ${encounter.id}`,
+            );
+        } catch (error) {
+            this.logger.error(
+                `Could not schedule follow up task for encounter ${encounter.id} due to ${error?.message ?? JSON.stringify(error)}`,
+            );
+        }
+    }
+
     async pushMessage(
         userId: string,
         pushMessageDTO: PushMessageDTO,
@@ -504,7 +609,7 @@ export class EncounterService {
                 ]);
             } else {
                 this.logger.warn(
-                    `Cannot send push notification for user ${userId} to remind about ghost mode since no pushToken. But should have sent email.`,
+                    `Cannot send push notification for user ${userId} to notify about new user message because no pushToken.`,
                 );
             }
         } catch (error) {
@@ -514,26 +619,6 @@ export class EncounterService {
         }
 
         return await this.encounterRepository.save(encounter);
-    }
-
-    /**
-     * verify that a current encounter between two users really exists, considering both cases
-     * [user1, user2] or [user2, user1]
-     * @param user1Id
-     * @param user2Id
-     * @private
-     */
-    private async findExistingEncounterBetweenTwoUsers(
-        user1Id: string,
-        user2Id: string,
-    ) {
-        return await this.encounterRepository
-            .createQueryBuilder("encounter")
-            .innerJoinAndSelect("encounter.users", "users")
-            .where("users.id IN (:...userIds)", { userIds: [user1Id, user2Id] })
-            .groupBy("encounter.id, users.id") // Added users.id to GROUP BY
-            .having("COUNT(DISTINCT users.id) = 2")
-            .getOne();
     }
 
     private async findCreatedEncountersPerDay(userId: string): Promise<number> {

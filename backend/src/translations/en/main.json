@@ -32,6 +32,10 @@
     "safety_call_missed": {
       "title": "You missed your EQ Call :(",
       "body": "You've booked yourself a call on {date} at {time} but missed it. Please reschedule to approach."
+    },
+    "did_you_meet": {
+      "title": "Did you meet {firstName}? \uD83E\uDD14",
+      "body": "You crossed paths for the \uD83D\uDD25{streakCount} time on {lastDatePassedBy} at {lastTimePassedBy}."
     }
   },
   "email": {

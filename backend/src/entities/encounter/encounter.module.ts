@@ -3,6 +3,7 @@ import { MessageModule } from "@/entities/messages/message.module";
 import { User } from "@/entities/user/user.entity";
 import { UserModule } from "@/entities/user/user.module";
 import { NotificationModule } from "@/transient-services/notification/notification.module";
+import { TaskModule } from "@/transient-services/task/task.module";
 import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { EncounterController } from "./encounter.controller";
@@ -15,6 +16,7 @@ import { EncounterService } from "./encounter.service";
         MessageModule,
         forwardRef(() => NotificationModule),
         forwardRef(() => UserModule),
+        TaskModule,
     ],
     providers: [EncounterService],
     controllers: [EncounterController],

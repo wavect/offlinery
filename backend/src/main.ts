@@ -1,6 +1,7 @@
 import { BaseNotificationADTO } from "@/DTOs/abstract/base-notification.adto";
 import { EmailCodeResponseADTO } from "@/DTOs/abstract/email-code-response.adto";
 import { NotificationAccountApprovedDTO } from "@/DTOs/notifications/notification-account-approved";
+import { NotificationDidYouMeetDTO } from "@/DTOs/notifications/notification-did-you-meet";
 import { NotificationGhostReminderDTO } from "@/DTOs/notifications/notification-ghostreminder.dto";
 import { NotificationNewEventDTO } from "@/DTOs/notifications/notification-new-event.dto";
 import { NotificationNewMessageDTO } from "@/DTOs/notifications/notification-new-message.dto";
@@ -90,6 +91,7 @@ const setupSwagger = (app: INestApplication) => {
         extraModels: [
             NotificationNavigateUserDTO,
             NotificationSafetyCallMissedDTO,
+            NotificationDidYouMeetDTO,
             NotificationAccountApprovedDTO,
             NotificationGhostReminderDTO,
             NotificationNewEventDTO,

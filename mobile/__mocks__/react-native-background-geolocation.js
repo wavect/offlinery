@@ -7,5 +7,4 @@ module.exports = {
     off: jest.fn(),
     addListener: jest.fn(),
     removeListener: jest.fn(),
-  };
-  
+};
