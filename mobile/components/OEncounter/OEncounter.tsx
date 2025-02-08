@@ -372,7 +372,6 @@ const OEncounter = (props: ISingleEncounterProps) => {
                     userId={state.id!}
                     encounterId={encounterProfile.id}
                     firstName={encounterProfile.otherUser.firstName}
-                    testID="message-modal"
                 />
             </View>
         </TourGuideZone>

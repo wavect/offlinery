@@ -29,10 +29,20 @@ export const OEncounterStrike: React.FC<OEncounterStrikeProps> = ({
     const scaleValue = useRef(new Animated.Value(1)).current;
     const opacityValue = useRef(new Animated.Value(0.7)).current;
 
+    // Store animation references to stop them when needed
+    const scaleAnimationRef = useRef<Animated.CompositeAnimation | null>(null);
+    const opacityAnimationRef = useRef<Animated.CompositeAnimation | null>(
+        null,
+    );
+
     useEffect(() => {
         if (isNearbyRightNow) {
-            // Pulsing animation
-            Animated.loop(
+            // Reset values before starting new animations
+            scaleValue.setValue(1);
+            opacityValue.setValue(0.7);
+
+            // Create and store animation references
+            scaleAnimationRef.current = Animated.loop(
                 Animated.sequence([
                     Animated.timing(scaleValue, {
                         toValue: 1.2,
@@ -47,10 +57,9 @@ export const OEncounterStrike: React.FC<OEncounterStrikeProps> = ({
                         useNativeDriver: true,
                     }),
                 ]),
-            ).start();
+            );
 
-            // Opacity animation
-            Animated.loop(
+            opacityAnimationRef.current = Animated.loop(
                 Animated.sequence([
                     Animated.timing(opacityValue, {
                         toValue: 1,
@@ -65,8 +74,24 @@ export const OEncounterStrike: React.FC<OEncounterStrikeProps> = ({
                         useNativeDriver: true,
                     }),
                 ]),
-            ).start();
+            );
+
+            // Start animations
+            scaleAnimationRef.current.start();
+            opacityAnimationRef.current.start();
         }
+
+        // Cleanup function to stop animations and reset values
+        return () => {
+            if (scaleAnimationRef.current) {
+                scaleAnimationRef.current.stop();
+                scaleValue.setValue(1);
+            }
+            if (opacityAnimationRef.current) {
+                opacityAnimationRef.current.stop();
+                opacityValue.setValue(0.7);
+            }
+        };
     }, [isNearbyRightNow]);
 
     return (
