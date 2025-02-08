@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         width: "100%",
-        height: 65,
+        height: 50,
         borderRadius: BorderRadius.br_5xs,
         overflow: "hidden",
         backgroundColor: Color.stateLayersSurfaceDimOpacity08,
