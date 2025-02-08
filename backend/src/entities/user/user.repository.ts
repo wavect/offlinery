@@ -7,6 +7,7 @@ import {
     EIntention,
     EVerificationStatus,
 } from "@/types/user.types";
+import { getNearbyMaxLocationAge } from "@/utils/date.utils";
 import { getTypedCoordinatesFromPoint } from "@/utils/location.utils";
 import { getAgeRangeParsed } from "@/utils/misc.utils";
 import { Injectable, Logger } from "@nestjs/common";
@@ -197,13 +198,12 @@ export class UserRepository extends Repository<User> {
     }
 
     private withRecentLocationsOnly(): this {
-        const h24HoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
         this.queryBuilder.andWhere(
             `
                 user.locationLastTimeUpdated IS NOT NULL 
                 AND user.locationLastTimeUpdated >= :h24HoursAgo
             `,
-            { h24HoursAgo },
+            { h24HoursAgo: getNearbyMaxLocationAge() },
         );
         return this;
     }

@@ -1,3 +1,4 @@
+import { goBackInTimeFor } from "@/cronjobs/cronjobs.types";
 import { AppStatistic } from "@/entities/app-stats/app-stat.entity";
 import { EAPP_STAT_KEY } from "@/entities/app-stats/app-stats.types";
 import { Encounter } from "@/entities/encounter/encounter.entity";
@@ -460,6 +461,75 @@ describe("UserService", () => {
             });
             expect(userLookupFailing).toEqual(null);
         }, 10000);
+    });
+
+    describe("is nearby logic", () => {
+        it("should only define a user as nearby if the lastLocationDateTimeUpdated is not older than 24h", async () => {
+            const user1 = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(600, 600),
+                locationLastTimeUpdated: goBackInTimeFor(23, "hours"),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+            const user2 = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                locationLastTimeUpdated: goBackInTimeFor(23, "hours"),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+            const user3 = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                locationLastTimeUpdated: goBackInTimeFor(25, "hours"),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+            const user4 = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: new PointBuilder().build(0, 0),
+                locationLastTimeUpdated: goBackInTimeFor(23, "hours"),
+                isActive: false,
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+            const user5 = await userFactory.persistNewTestUser({
+                dateMode: EDateMode.LIVE,
+                location: null,
+                locationLastTimeUpdated: goBackInTimeFor(23, "hours"),
+                gender: EGender.WOMAN,
+                genderDesire: [EGender.MAN],
+                intentions: [EIntention.RELATIONSHIP],
+                approachChoice: EApproachChoice.BOTH,
+            });
+
+            const userIds = [user1.id, user2.id, user3.id, user4.id, user5.id];
+            expect(userIds.length).toEqual(
+                (await userService.findAll()).length,
+            );
+
+            const nearbyUserIds = await userService.findUsersNearbyByUserIds(
+                userIds,
+                new PointBuilder().build(0, 0),
+                1500,
+            );
+            expect(nearbyUserIds.find((id) => id === user1.id)).toBeUndefined(); // @dev location wise not nearby
+            expect(nearbyUserIds.find((id) => id === user2.id)).toEqual(
+                user2.id,
+            ); // @dev location and time wise nearby
+            expect(nearbyUserIds.find((id) => id === user3.id)).toBeUndefined(); // @dev location wise nearby but location too old
+            expect(nearbyUserIds.find((id) => id === user4.id)).toBeUndefined(); // @dev nearby but account inactive
+            expect(nearbyUserIds.find((id) => id === user5.id)).toBeUndefined(); // @dev nearby but no location available
+        });
     });
 
     describe("encounter lookup", function () {

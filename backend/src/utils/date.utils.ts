@@ -1,5 +1,9 @@
 import { ELanguage } from "@/types/user.types";
 
+/** @dev Get current dateTime - 24h right now to define users as nearby right now */
+export const getNearbyMaxLocationAge = () =>
+    new Date(Date.now() - 24 * 60 * 60 * 1000);
+
 export const getAge = (birthday: Date | string): number => {
     const birthdayDate = new Date(birthday);
     const today = new Date();

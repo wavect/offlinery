@@ -24,6 +24,7 @@ import {
     ELanguage,
     EVerificationStatus,
 } from "@/types/user.types";
+import { getNearbyMaxLocationAge } from "@/utils/date.utils";
 import {
     API_VERSION,
     BE_ENDPOINT,
@@ -751,6 +752,13 @@ export class UserService {
             )
             .andWhere("user.location IS NOT NULL")
             .andWhere("user.isActive = :isActive", { isActive: true })
+            .andWhere(
+                `
+                user.locationLastTimeUpdated IS NOT NULL 
+                AND user.locationLastTimeUpdated >= :h24HoursAgo
+            `,
+                { h24HoursAgo: getNearbyMaxLocationAge() },
+            )
             .getRawMany();
 
         return result.map((row) => row.user_id);
