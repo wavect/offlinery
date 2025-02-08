@@ -33,14 +33,10 @@ export const OSafeZoneSliderCard = ({
 }: IOSafeZoneSliderCardProps) => {
     const { state } = useUserContext();
     return (
-        <View
-            style={[styles.sliderOverlayContainer, containerStyle]}
-            pointerEvents="box-none"
-        >
+        <View style={[styles.sliderOverlayContainer, containerStyle]}>
             <SafeAreaView
                 edges={["bottom", "right", "left"]}
                 style={styles.sliderSafeArea}
-                pointerEvents="box-none"
             >
                 <View style={styles.sliderWrapper} pointerEvents="box-none">
                     <OCard
@@ -73,10 +69,7 @@ export const OSafeZoneSliderCard = ({
                                 m)
                             </Text>
                         </View>
-                        <View
-                            style={styles.sliderContainer}
-                            pointerEvents="auto"
-                        >
+                        <View style={styles.sliderContainer}>
                             <Slider
                                 style={[
                                     styles.slider,
