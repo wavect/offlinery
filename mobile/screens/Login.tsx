@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         marginBottom: height * 0.015,
-        width: "100%",
+        width: "90%",
     },
     termsDisclaimer: {
         marginTop: height * 0.02,

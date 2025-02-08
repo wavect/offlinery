@@ -5,7 +5,7 @@ const baseButtonStyle = {
     justifyContent: "center",
     alignItems: "center",
     width: "90%",
-    padding: 18,
+    padding: 12,
     borderRadius: 100,
 };
 
