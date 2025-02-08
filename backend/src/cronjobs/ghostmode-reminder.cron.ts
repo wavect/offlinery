@@ -6,6 +6,7 @@ import {
     goBackInTimeFor,
     IntervalHour,
     OfflineUserSince,
+    ReceivableUser,
     TimeSpan,
 } from "@/cronjobs/cronjobs.types";
 import { ENotificationType } from "@/DTOs/abstract/base-notification.adto";
@@ -57,24 +58,27 @@ export class GhostModeReminderCronJob extends BaseCronJob {
                 "user.lastDateModeChange",
                 "user.ghostModeRemindersEmail",
                 "user.restrictedViewToken",
+                "user.lastDateModeReminderSent",
             ])
             .where("user.dateMode = :mode", { mode: EDateMode.GHOST })
             .andWhere("user.lastDateModeChange < :dayAgo", {
                 dayAgo: goBackInTimeFor(24, "hours"),
             })
             .andWhere(
-                "(user.lastDateModeReminderSent IS NULL OR " +
+                "(user.lastDateModeReminderSent IS NULL) OR " + // Reminded if > 24 hrs off and never reminded
+                    "(user.lastDateModeReminderSent < user.lastDateModeChange) OR " + // Remind if went online in-between
                     "CASE " +
-                    "WHEN user.lastDateModeChange < :twoWeeksAgo THEN user.lastDateModeReminderSent < :twoWeeksMinTime " +
-                    "WHEN user.lastDateModeChange < :threeDaysAgo THEN user.lastDateModeReminderSent < :threeDaysMinTime " +
-                    "ELSE user.lastDateModeReminderSent < :oneDayMinTime " +
-                    "END)",
+                    "WHEN user.lastDateModeChange < :twoWeeksAgo AND user.lastDateModeReminderSent >= :twoWeeksMinTime THEN 0 " +
+                    "WHEN user.lastDateModeChange < :threeDaysAgo AND user.lastDateModeReminderSent < :threeDaysMinTime AND user.lastDateModeReminderSent > :twoWeeksAgo THEN 1 " +
+                    "WHEN user.lastDateModeChange < :oneDayAgo AND user.lastDateModeReminderSent IS NULL THEN 1 " +
+                    "ELSE 0 " +
+                    "END = 1",
                 {
                     twoWeeksAgo: goBackInTimeFor(336, "hours"),
                     threeDaysAgo: goBackInTimeFor(72, "hours"),
+                    oneDayAgo: goBackInTimeFor(24, "hours"),
                     twoWeeksMinTime: goBackInTimeFor(336 - 72, "hours"),
                     threeDaysMinTime: goBackInTimeFor(72 - 24, "hours"),
-                    oneDayMinTime: goBackInTimeFor(24, "hours"),
                 },
             );
 
@@ -92,15 +96,22 @@ export class GhostModeReminderCronJob extends BaseCronJob {
 
         return users.map((user) => ({
             user,
-            type: this.determineOfflineType(user.lastDateModeChange),
+            type: this.determineOfflineType(user, user.lastDateModeChange),
         }));
     }
 
-    private determineOfflineType(lastDateModeChange: Date): TimeSpan {
+    private determineOfflineType(
+        user: ReceivableUser,
+        lastDateModeChange: Date,
+    ): TimeSpan {
         const hoursGhostMode = differenceInHours(
             new Date(),
             lastDateModeChange,
         );
+        /** @DEV Edge case: if a user has never been reminded he is always in the 24 hrs bucket */
+        if (!user.lastDateModeReminderSent) {
+            return TimeSpan.ONE_DAY;
+        }
         if (hoursGhostMode >= 336) return TimeSpan.TWO_WEEKS;
         if (hoursGhostMode >= 72) return TimeSpan.THREE_DAYS;
         return TimeSpan.ONE_DAY;
