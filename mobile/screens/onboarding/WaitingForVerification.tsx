@@ -66,7 +66,9 @@ const WaitingForVerification = ({
 
     // Run reloadUserState when the screen is mounted
     useEffect(() => {
-        reloadUserState();
+        if (state.id) {
+            reloadUserState();
+        }
     }, []);
 
     const openVerificationCallPDF = async () => {
@@ -101,7 +103,9 @@ const WaitingForVerification = ({
     };
 
     return (
-        <OPageColorContainer refreshFunc={reloadUserState}>
+        <OPageColorContainer
+            refreshFunc={state.id ? reloadUserState : undefined}
+        >
             <View style={styles.btnContainer}>
                 <View style={styles.verificationTextContainer}>
                     <Text style={styles.verificationInProgress}>
