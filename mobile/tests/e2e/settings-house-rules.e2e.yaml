@@ -1,0 +1,16 @@
+appId: io.wavect.offlinery
+---
+- launchApp
+- runFlow: main.e2e.yaml
+- tapOn:
+      id: "tab-settings"
+- swipe:
+      start: "50%,80%"
+      end: "50%,20%"
+      duration: 500
+- tapOn:
+      id: "button-house-rules"
+
+# set new PWD
+- tapOn:
+      id: "house-rues-confirm"

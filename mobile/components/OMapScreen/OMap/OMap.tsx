@@ -1,0 +1,654 @@
+import { BorderRadius, Color, FontSize } from "@/GlobalStyles";
+import { EventPublicDTO, UserPrivateDTODateModeEnum } from "@/api/gen/src";
+import { OBlacklistedRegion } from "@/components/OBlacklistedRegion/OBlacklistedRegion";
+import OGenericBadge from "@/components/OGenericBadge/OGenericBadge";
+import { OHeatMap } from "@/components/OMapScreen/OHeatMap/OHeatMap";
+import {
+    EMapStatus,
+    OMapStatus,
+} from "@/components/OMapScreen/OMapStatus/OMapStatus";
+import { OSafeZoneSliderCard } from "@/components/OMapScreen/OSafeZoneSliderCard/OSafeZoneSliderCard";
+import {
+    EACTION_ENCOUNTERS,
+    useEncountersContext,
+} from "@/context/EncountersContext";
+import {
+    EACTION_USER,
+    MapRegion,
+    mapRegionToBlacklistedRegionDTO,
+    useUserContext,
+} from "@/context/UserContext";
+import { TR, getLocalLanguageID, i18n } from "@/localization/translate.service";
+import { LOCAL_VALUE, saveLocalValue } from "@/services/storage.service";
+import { TOURKEY } from "@/services/tourguide.service";
+import { API } from "@/utils/api-config";
+import { get3MonthsBefore } from "@/utils/date.utils";
+import { getMapProvider } from "@/utils/map-provider";
+import { useIsFocused } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
+import debounce from "lodash.debounce";
+import React, {
+    memo,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
+import {
+    Dimensions,
+    Platform,
+    StyleSheet,
+    TouchableWithoutFeedback,
+    View,
+} from "react-native";
+import MapView, { LongPressEvent, Marker, Region } from "react-native-maps";
+import { TourGuideZone, useTourGuideController } from "rn-tourguide";
+
+interface OMapProps {
+    saveChangesToBackend: boolean;
+    showHeatmap: boolean;
+    showEncounters: boolean;
+    showEvents: boolean;
+    /// @dev This property lets the OMap component know to push bottom elements such as the slider up a bit since we show a button below it (e.g. continue in onboarding)
+    showingBottomButton: boolean;
+    showBlacklistedRegions: boolean;
+    showMapStatus: boolean;
+}
+
+const DEFAULT_RADIUS_SIZE = 250;
+
+export const OMap = memo(
+    ({
+        saveChangesToBackend,
+        showHeatmap,
+        showEvents,
+        showBlacklistedRegions,
+        showingBottomButton,
+        showMapStatus,
+        showEncounters,
+    }: OMapProps) => {
+        const [userCount, setUserCount] = useState<number | null>(null);
+        const [mapStatus, setMapStatus] = useState<EMapStatus | null>(null);
+        const { state, dispatch } = useUserContext();
+        const { state: encounterState, dispatch: encounterDispatch } =
+            useEncountersContext();
+        const [isSavingSafeZones, setSavingSafeZones] = useState(false);
+        const [isHeatMapLoading, setLoadingHeatMap] = useState(false);
+        const [isEncountersLoading, setEncountersLoading] = useState(false);
+        const [isEventsLoading, setEventsLoading] = useState(false);
+        const [activeRegionIndex, setActiveRegionIndex] = useState<
+            number | null
+        >(null);
+        const [upcomingEvents, setUpcomingEvents] = useState<EventPublicDTO[]>(
+            [],
+        );
+        const prevBlacklistedRegionsRef = useRef<MapRegion[]>([]);
+        const [mapRegion, setMapRegion] = useState<Region>({
+            latitude: 47.257832302,
+            longitude: 11.383665132,
+            latitudeDelta: 0.5,
+            longitudeDelta: 0.5,
+        });
+        /** @DEV use a temp value here, so we do not update and re-use the same value (lagging) */
+        const [tempSliderValue, setTempSliderValue] =
+            useState(DEFAULT_RADIUS_SIZE);
+
+        useEffect(() => {
+            // @dev Keep error showing
+            if (mapStatus === EMapStatus.ERROR) return;
+            else if (isSavingSafeZones) {
+                setMapStatus(EMapStatus.SAVING_SAFEZONES);
+            } else if (isHeatMapLoading) {
+                setMapStatus(EMapStatus.LOADING_HEATMAP);
+            } else if (isEncountersLoading) {
+                setMapStatus(EMapStatus.LOADING_ENCOUNTERS);
+            } else if (isEventsLoading) {
+                setMapStatus(EMapStatus.LOADING_EVENTS);
+            } else {
+                setMapStatus(
+                    state.dateMode === UserPrivateDTODateModeEnum.live
+                        ? EMapStatus.LIVE
+                        : EMapStatus.GHOST,
+                );
+            }
+        }, [
+            state.dateMode,
+            isSavingSafeZones,
+            isEventsLoading,
+            isEncountersLoading,
+            isHeatMapLoading,
+        ]);
+
+        useEffect(() => {
+            API.user
+                .userControllerGetUserCount()
+                .then((count) => {
+                    setUserCount(count.userCount);
+                })
+                .catch((err) => {
+                    Sentry.captureException(err, {
+                        tags: {
+                            oMap: "getUserCount",
+                        },
+                    });
+                });
+
+            fetchEncounters();
+            fetchEvents();
+        }, []);
+
+        const fetchEvents = useCallback(async () => {
+            try {
+                if (!showEvents) return;
+                setEventsLoading(true);
+
+                const events =
+                    await API.event.eventControllerGetAllUpcomingEvents({
+                        lang: getLocalLanguageID(),
+                    });
+
+                setUpcomingEvents(events);
+            } catch (error) {
+                console.error(error);
+                Sentry.captureException(error, {
+                    tags: {
+                        OMap: "fetchEvents",
+                    },
+                });
+                setMapStatus(EMapStatus.ERROR);
+            } finally {
+                setEventsLoading(false);
+            }
+        }, [showEvents]);
+
+        const fetchEncounters = useCallback(async () => {
+            try {
+                if (!showEncounters) return;
+                if (!state.id) {
+                    Sentry.captureMessage(
+                        `fetchEncounters (OMap): UserId undefined. Not making request. User maybe logging out or so?`,
+                    );
+                    return;
+                }
+                setEncountersLoading(true);
+
+                const encounters =
+                    await API.encounter.encounterControllerGetEncountersByUser({
+                        userId: state.id,
+                        startDate: get3MonthsBefore(),
+                        endDate: new Date(),
+                    });
+
+                encounterDispatch({
+                    type: EACTION_ENCOUNTERS.PUSH_MULTIPLE,
+                    payload: encounters,
+                });
+            } catch (error) {
+                console.error(error);
+                Sentry.captureException(error, {
+                    tags: {
+                        encountersOMap: "fetch",
+                    },
+                });
+                setMapStatus(EMapStatus.ERROR);
+            } finally {
+                setEncountersLoading(false);
+            }
+        }, [state.id, encounterDispatch, showEncounters]);
+
+        const onLoadingStateChange = useCallback(
+            (isLoading: boolean) => {
+                if (!showMapStatus) return;
+                setLoadingHeatMap(isLoading);
+            },
+            [showMapStatus],
+        );
+
+        const setBlacklistedRegions = useCallback(
+            (blacklistedRegions: MapRegion[]) => {
+                dispatch({
+                    type: EACTION_USER.UPDATE_MULTIPLE,
+                    payload: { blacklistedRegions },
+                });
+            },
+            [],
+        );
+
+        const handleMapLongPress = useCallback(
+            (event: LongPressEvent) => {
+                const { coordinate } = event.nativeEvent;
+                const { latitude, longitude } = coordinate;
+
+                setBlacklistedRegions([
+                    ...state.blacklistedRegions,
+                    { latitude, longitude, radius: DEFAULT_RADIUS_SIZE },
+                ]);
+                setActiveRegionIndex(state.blacklistedRegions.length);
+            },
+            [state.blacklistedRegions],
+        );
+
+        const handleRegionPress = useCallback((index: number) => {
+            const region = state.blacklistedRegions.find((r, i) => i === index);
+            setActiveRegionIndex(index);
+            setTempSliderValue(region?.radius ?? DEFAULT_RADIUS_SIZE);
+        }, []);
+
+        const handleRemoveRegion = useCallback(() => {
+            const newRegions = state.blacklistedRegions.filter(
+                (_, i) => i !== activeRegionIndex,
+            );
+            setBlacklistedRegions(newRegions);
+            setActiveRegionIndex(null);
+        }, [state.blacklistedRegions, activeRegionIndex]);
+
+        const handleRadiusChange = (value: number) => {
+            if (activeRegionIndex !== null) {
+                const newRegions = [...state.blacklistedRegions];
+                newRegions[activeRegionIndex] = {
+                    ...newRegions[activeRegionIndex],
+                    radius: value,
+                };
+                setBlacklistedRegions(newRegions);
+            }
+        };
+
+        const debouncedSave = useMemo(
+            () =>
+                debounce(async (regions) => {
+                    if (!saveChangesToBackend) return;
+                    try {
+                        setSavingSafeZones(true);
+
+                        await API.user.userControllerUpdateUser({
+                            userId: state.id!,
+                            updateUserDTO: {
+                                blacklistedRegions: regions.map(
+                                    mapRegionToBlacklistedRegionDTO,
+                                ),
+                            },
+                        });
+                    } catch (err) {
+                        Sentry.captureException(err, {
+                            tags: { omap: "debouncedSave" },
+                        });
+                        setMapStatus(EMapStatus.ERROR);
+                    } finally {
+                        setSavingSafeZones(false);
+                    }
+                }, 1000),
+            [saveChangesToBackend, state.id, state.dateMode],
+        );
+
+        useEffect(() => {
+            if (!saveChangesToBackend) return;
+
+            if (
+                state.blacklistedRegions !== prevBlacklistedRegionsRef.current
+            ) {
+                debouncedSave(state.blacklistedRegions);
+                prevBlacklistedRegionsRef.current = state.blacklistedRegions;
+            }
+
+            return () => {
+                debouncedSave.cancel();
+                // Ensure we reset the saving flag if the component unmounts while saving
+                setSavingSafeZones(false);
+            };
+        }, [state.blacklistedRegions, state.id, state.dateMode, showMapStatus]);
+
+        const handleMapPress = useCallback(() => {
+            activeRegionIndex !== null && setActiveRegionIndex(null);
+        }, [activeRegionIndex]);
+
+        const { eventEmitter, stop: stopTourGuide } = useTourGuideController(
+            TOURKEY.FIND,
+        );
+
+        const handleTourOnStop = async (e: any) => {
+            // @dev Save that tutorial done, to not show animation of help-btn
+            await saveLocalValue(LOCAL_VALUE.HAS_DONE_FIND_WALKTHROUGH, "true");
+        };
+        const handleTourOnStepChange = (e: any) => {
+            if (e?.order === 3) {
+                // @dev add example blacklisted region if none added yet
+                if (!state.blacklistedRegions.length) {
+                    setBlacklistedRegions([
+                        ...state.blacklistedRegions,
+                        {
+                            latitude: mapRegion.latitude * 0.9999,
+                            longitude: mapRegion.longitude * 0.9999,
+                            radius: DEFAULT_RADIUS_SIZE,
+                        },
+                    ]);
+                }
+                setActiveRegionIndex(0);
+            }
+        };
+
+        useEffect(() => {
+            if (!eventEmitter) return;
+            eventEmitter?.on("stop", handleTourOnStop);
+            eventEmitter?.on("stepChange", handleTourOnStepChange);
+
+            return () => {
+                eventEmitter?.off("stop", handleTourOnStop);
+                eventEmitter?.off("stepChange", handleTourOnStepChange);
+            };
+            // @dev Keep mapRegion in dependency to mock heatmap along current mapRegion
+        }, [eventEmitter, mapRegion]);
+
+        const isFocused = useIsFocused();
+        useEffect(() => {
+            if (!isFocused) {
+                stopTourGuide();
+            }
+        }, [isFocused]);
+
+        const renderedEncounterPins = useMemo(
+            () => (
+                <>
+                    {encounterState.encounters.map((e) => {
+                        if (!e.lastLocationPassedBy) return;
+                        return (
+                            <Marker
+                                key={e.otherUser.id}
+                                coordinate={e.lastLocationPassedBy}
+                                title={e.otherUser.firstName}
+                                pinColor={Color.primary}
+                                description={i18n.t(TR.youMetHere)}
+                                draggable={false}
+                                tracksViewChanges={false}
+                            />
+                        );
+                    })}
+                </>
+            ),
+            [encounterState.encounters, encounterDispatch],
+        );
+
+        const renderedEventPins = useMemo(
+            () => (
+                <>
+                    {upcomingEvents.map((e, idx) => {
+                        if (!e.location) return;
+                        return (
+                            <Marker
+                                key={idx}
+                                coordinate={e.location}
+                                title={i18n.t(TR.upcomingEventIn, {
+                                    venue: e.venueWithArticleIfNeeded,
+                                })}
+                                pinColor={Color.schemesPrimary}
+                                description={`${e.startDate}, ${e.startTime} - ${e.endTime}`}
+                                draggable={false}
+                                tracksViewChanges={false}
+                            />
+                        );
+                    })}
+                </>
+            ),
+            [encounterState.encounters, encounterDispatch],
+        );
+
+        const renderedBlacklistedRegions = useMemo(() => {
+            return (
+                <>
+                    {state.blacklistedRegions.map((region, index) => {
+                        return (
+                            <OBlacklistedRegion
+                                key={`region-${index}`}
+                                handleRegionPress={() =>
+                                    handleRegionPress(index)
+                                }
+                                region={region}
+                                isSelected={index === activeRegionIndex}
+                            />
+                        );
+                    })}
+                </>
+            );
+        }, [state.blacklistedRegions, activeRegionIndex, handleRegionPress]);
+
+        const MapViewMemo = useMemo(
+            () => (
+                <MapView
+                    style={styles.map}
+                    region={mapRegion}
+                    initialRegion={mapRegion}
+                    showsMyLocationButton
+                    showsUserLocation
+                    zoomControlEnabled
+                    zoomEnabled
+                    zoomTapEnabled
+                    maxZoomLevel={15}
+                    onPress={handleMapPress}
+                    onLongPress={
+                        showBlacklistedRegions ? handleMapLongPress : undefined
+                    }
+                    provider={getMapProvider()}
+                >
+                    <OHeatMap
+                        showMap={showHeatmap}
+                        onLoadingStateChange={onLoadingStateChange}
+                        currentMapRegion={mapRegion}
+                        userId={state.id}
+                    />
+                    {showBlacklistedRegions && renderedBlacklistedRegions}
+                    {showEncounters && renderedEncounterPins}
+                    {showEvents && renderedEventPins}
+                </MapView>
+            ),
+            [
+                mapRegion.longitude,
+                mapRegion.latitude,
+                handleMapPress,
+                handleMapLongPress,
+                showBlacklistedRegions,
+                showHeatmap,
+                showEncounters,
+                state.id,
+                state.dateMode,
+                renderedBlacklistedRegions,
+                renderedEncounterPins,
+                renderedEventPins,
+            ],
+        );
+
+        return (
+            <View style={styles.container}>
+                <TouchableWithoutFeedback onPress={handleMapPress}>
+                    <TourGuideZone
+                        zone={3}
+                        style={styles.tourMapContainer}
+                        tourKey={TOURKEY.FIND}
+                        text={i18n.t(TR.tourSafeZones)}
+                        tooltipBottomOffset={-200}
+                        shape="rectangle"
+                    >
+                        <TourGuideZone
+                            zone={2}
+                            style={styles.tourMapContainer}
+                            tourKey={TOURKEY.FIND}
+                            text={i18n.t(TR.tourHeatMap)}
+                            tooltipBottomOffset={-200}
+                            shape="rectangle"
+                        >
+                            <View style={styles.mapContainer}>
+                                {MapViewMemo}
+                            </View>
+                        </TourGuideZone>
+                    </TourGuideZone>
+                </TouchableWithoutFeedback>
+
+                {showMapStatus && mapStatus && (
+                    <View style={styles.mapStatusContainer}>
+                        <OMapStatus status={mapStatus} />
+                    </View>
+                )}
+
+                <View style={styles.badgeOuterContainer}>
+                    <View style={styles.badgeContainerRow}>
+                        <OGenericBadge
+                            containerStyle={styles.badgeContainerStyle}
+                            label={i18n.t(TR.bestChanceApproachTime, {
+                                startTime: "9",
+                                endTime: "18:00",
+                            })}
+                            description={i18n.t(
+                                TR.bestChanceApproachTimeDescription,
+                            )}
+                            icon="schedule"
+                            backgroundColor={Color.black}
+                        />
+                    </View>
+                    <View style={styles.badgeContainerRow}>
+                        {userCount ? (
+                            <OGenericBadge
+                                containerStyle={styles.badgeContainerStyle}
+                                label={i18n.t(TR.userCount, {
+                                    count: userCount,
+                                })}
+                                description={i18n.t(TR.userCountDescription)}
+                                icon="person-search"
+                                backgroundColor={Color.primary}
+                            />
+                        ) : null}
+
+                        {!isEncountersLoading &&
+                        encounterState.encounters.length ? (
+                            <OGenericBadge
+                                containerStyle={styles.badgeContainerStyle}
+                                label={i18n.t(TR.encounterCount, {
+                                    count: encounterState.encounters.length,
+                                })}
+                                description={i18n.t(
+                                    TR.encounterCountDescription,
+                                )}
+                                icon="directions-walk"
+                                backgroundColor={Color.schemesPrimary}
+                            />
+                        ) : null}
+                    </View>
+                </View>
+
+                {showBlacklistedRegions && activeRegionIndex !== null && (
+                    <OSafeZoneSliderCard
+                        containerStyle={
+                            showingBottomButton
+                                ? { marginBottom: 50 }
+                                : undefined
+                        }
+                        handleRadiusChange={handleRadiusChange}
+                        handleRemoveRegion={handleRemoveRegion}
+                        activeRegionIndex={activeRegionIndex}
+                        sliderValue={tempSliderValue}
+                    />
+                )}
+            </View>
+        );
+    },
+);
+
+const { width, height } = Dimensions.get("window");
+const styles = StyleSheet.create({
+    badgeContainerStyle: {
+        marginTop: 5,
+        marginLeft: 5,
+    },
+    tourMapContainer: {
+        minHeight: height * 0.75,
+    },
+    badgeOuterContainer: {
+        flexDirection: "column",
+        position: "absolute",
+        top: 0,
+    },
+    badgeContainerRow: {
+        flexDirection: "row",
+    },
+    container: {
+        flex: 1,
+        width: "100%",
+        height: "100%",
+    },
+    mapStatusContainer: {
+        position: "absolute",
+        left: 4,
+        bottom: Platform.OS === "ios" ? -10 : 4,
+        zIndex: 1,
+    },
+    mapContainer: {
+        flex: 1,
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        minHeight: height * 0.75,
+    },
+    map: {
+        minHeight: 400,
+        borderRadius: BorderRadius.br_5xs,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width,
+        height,
+        backgroundColor: Color.white,
+    },
+    sliderOverlayContainer: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: "flex-end",
+    },
+    sliderSafeArea: {
+        width: "100%",
+    },
+    sliderWrapper: {
+        paddingHorizontal: 20,
+        paddingBottom: 20,
+    },
+    controlsCard: {
+        padding: 16,
+    },
+    androidControlsCard: {
+        elevation: 8,
+        marginBottom: 12,
+        backgroundColor: "rgba(255, 255, 255, 0.98)",
+    },
+    controlsHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    sliderText: {
+        fontSize: FontSize.size_md,
+        flex: 1,
+        marginRight: 16,
+    },
+    sliderContainer: {
+        paddingVertical: Platform.OS === "android" ? 8 : 0,
+    },
+    slider: {
+        width: "100%",
+    },
+    androidSlider: {
+        height: 40,
+    },
+    instructions: {
+        marginTop: 20,
+    },
+    instructionText: {
+        marginBottom: 5,
+        fontSize: FontSize.size_sm,
+    },
+    overlay: {
+        position: "absolute",
+        top: height / 1.5,
+        left: 0,
+        right: 0,
+        zIndex: 1,
+    },
+});

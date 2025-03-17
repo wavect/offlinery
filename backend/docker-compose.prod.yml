@@ -1,0 +1,164 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgis/postgis:16-master
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-offlinery}
+      POSTGRES_USER: ${DB_USER:-offlinery}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-offlinery}
+      TZ: 'UTC'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '127.0.0.1:${DB_PORT:-5432}:5432'  # Only allow local connections
+    networks:
+      - app_network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-offlinery} -d ${DB_DATABASE:-offlinery}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    restart: always
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USER:-admin}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_PASSWORD:-adminpassword}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG:-offlinery}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET:-logs}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_ADMIN_TOKEN:-your-super-secret-admin-token}
+      # Add retention period in hours (2160 hours = 90 days)
+      - DOCKER_INFLUXDB_INIT_RETENTION=${INFLUXDB_RETENTION:-2160h}
+      # Add these to ensure proper binding
+      - INFLUXD_HTTP_BIND_ADDRESS=:8086
+      - DOCKER_INFLUXDB_INIT_HOST=influxdb  # Change from localhost to container name
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - ./init-scripts/influxdb/init-retention.sh:/docker-entrypoint-initdb.d/init-retention.sh
+    ports:
+      - '8086:8086'
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_HTTP_PORT=3100  # Changed from 3000 to not conflict with backend
+      - GF_SERVER_ROOT_URL=https://api.offlinery.io/grafana
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      # Additional security settings
+      - GF_SECURITY_ALLOW_EMBEDDING=false
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      # Cookie settings
+      - GF_SESSION_COOKIE_SECURE=true
+      - GF_SESSION_COOKIE_SAMESITE=strict
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - '127.0.0.1:3100:3100'  # Only allow local connections
+    networks:
+      - app_network
+    depends_on:
+      - influxdb
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3100/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: europe-west6-docker.pkg.dev/offlinery-439317/offlinery-backend/nestjs:${BACKEND_DOCKER_TAG:-latest}
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - 3000
+    env_file:
+      - .env
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_TOKEN=${INFLUXDB_ADMIN_TOKEN:-your-super-secret-admin-token}
+      - INFLUXDB_ORG=${INFLUXDB_ORG:-offlinery}
+      - INFLUXDB_BUCKET=${INFLUXDB_BUCKET:-logs}
+    networks:
+      - app_network
+    volumes:
+      - ./uploads:/usr/src/app/uploads
+    depends_on:
+      - postgres
+      - influxdb
+    restart: on-failure
+
+  db_ui:
+    container_name: db-ui
+    image: dpage/pgadmin4
+    restart: on-failure
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "${DB_UI_EMAIL:-office@offlinery.io}"
+      PGADMIN_DEFAULT_PASSWORD: "${DB_UI_PASSWORD:-123}"
+      PGADMIN_LISTEN_PORT: ${DB_UI_PORT:-8091}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      #PGADMIN_CONFIG_MASTER_PASSWORD: "${DB_UI_PASSWORD:-your-secure-master-password}"
+    ports:
+      - "127.0.0.1:${DB_UI_PORT:-8091}:${DB_UI_PORT:-8091}"
+    networks:
+      - app_network
+    depends_on:
+      - postgres
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+      - ./.htpasswd:/etc/apache2/.htpasswd
+    depends_on:
+      - backend
+    networks:
+      - app_network
+    restart: always
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  influxdb_data:
+    driver: local
+  grafana_data:
+    driver: local

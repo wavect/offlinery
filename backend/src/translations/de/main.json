@@ -1,0 +1,169 @@
+{
+  "general": {
+    "gender": {
+      "man_pl": "Männer",
+      "woman_pl": "Frauen"
+    }
+  },
+  "notification": {
+    "newMatch": {
+      "title": "{firstName} ist in der Nähe! 🔥",
+      "body": "Klicke um {firstName} in der realen Welt anzusprechen."
+    },
+    "account_approved": {
+      "title": "Du bist verifiziert!",
+      "body": "Gratulation, du wurdest freigeschalten.."
+    },
+    "account_denied": {
+      "title": "Wir brauchen mehr Informationen",
+      "body": "Wir haben dir bezüglich deiner Verifizierung eine E-Mail geschickt."
+    },
+    "ghostmode-reminder": {
+      "title": "Niemand kann dich finden, {firstName}!",
+      "body": "Wechsle vom Geistmodus zu Live um Menschen über den Weg zu laufen."
+    },
+    "new_event": {
+      "title": "Schnapp dir einen Freund und ab in {venueWithArticleIfNeeded}",
+      "body": "Sei am {date} zwischen {startTime} - {endTime} Uhr dort, um eventuell Jemanden über den Weg zu laufen."
+    },
+    "new_message": {
+      "title": "Neue Nachricht von {firstName}"
+    },
+    "safety_call_missed": {
+      "title": "Du hast deinen EQ Call verpasst :(",
+      "body": "Du hast einen EQ Call am {date} um {time} gebucht. Hast ihn aber verpasst. Jetzt neue Session buchen um Anzusprechen."
+    },
+    "did_you_meet": {
+      "title": "Hast du {firstName} getroffen? \uD83E\uDD14",
+      "body": "Ihr seid euch zum \uD83D\uDD25{streakCount} Mal am {lastDatePassedBy} um {lastTimePassedBy} über den Weg gelaufen."
+    }
+  },
+  "email": {
+    "new-event": {
+      "subject": "Deine Chance - Schwarm-Event in Innsbruck (Offlinery)",
+      "header": "Deine Chance!",
+      "greeting": "Hey {firstName},",
+      "eventDetails": "Sei hier, um deine Chancen zu erhöhen Jemanden zu treffen:",
+      "goLive": "Vergiss nicht den Switch (rechts oben) in der Offlinery App einzuschalten.",
+      "taskIntro": "Wir haben eine mega Chance für dich, neue Leute kennenzulernen und dem Zufall eine Chance zu geben.",
+      "taskDescription": "Schnapp dir einen deiner Freunde und gehe in {venueWithArticleIfNeeded} am {date} zwischen {startTime} und {endTime} - so wie sonst auch.",
+      "eventExplanation": "Mit einem kleinen Unterschied: Wir schicken auch andere User dorthin. Wenn jemand in deiner Nähe ist, der zu dir passt, werdet ihr benachrichtigt, dass ihr offen für neue Bekanntschaften seid.",
+      "note": "Kein Druck, nur Möglichkeiten. Komm vorbei, bleib offen, und lass dich überraschen.",
+      "findLocation": "Location checken",
+      "reminder": "Deine nächste große Connection wartet vielleicht schon um die Ecke.",
+      "reminder2": "Das Leben passiert außerhalb deiner Komfortzone.",
+      "joinWhatsApp": "Gib uns Feedback",
+      "footer": "Du bekommst diese E-Mail aufgrund deiner Einstellungen. Du kannst diese <a href='{changeNotificationSettingsUrl}' title='Einstellungen ändern' target='_blank'>hier</a> jederzeit ändern."
+    },
+    "request-account-deletion": {
+      "subject": "Offlinery: Kontolöschung beantragt",
+      "hello": "Hi {firstName}",
+      "warning": "Warnung: Kontolöschung",
+      "receivedRequest": "Wir haben eine Anfrage erhalten, dein Konto dauerhaft zu löschen. Diese Aktion ist unwiderruflich und löscht alle deine Daten aus unseren Systemen.",
+      "proceedInstructions": "Wenn du fortfahren möchtest, klicke auf den untenstehenden Link:",
+      "deleteButton": "MEIN KONTO LÖSCHEN",
+      "expirationNote": "Hinweis: Dieser Link läuft aus Sicherheitsgründen in 24 Stunden ab.",
+      "warningMessage": "⚠️ WARNUNG: Diese Aktion kann nicht rückgängig gemacht werden! ⚠️",
+      "feedbackRequest": "Bevor du gehst, würden wir gerne wissen, warum du uns verlässt. Bitte teile uns deine Gedanken per E-Mail an office@offlinery.io mit.",
+      "securityWarning": "Wenn du diese Löschung nicht beantragt hast, kontaktiere bitte umgehend unser Support-Team, um dein Konto zu sichern.",
+      "joinWhatsApp": "Gib uns Feedback",
+      "footer": "Dies ist eine automatisierte Nachricht. Bitte antworte nicht auf diese E-Mail."
+    },
+    "account-verification-verified": {
+      "subject": "Offlinery: Dein Konto wurde verifiziert",
+      "title": "Offlinery: Konto verifiziert",
+      "header": "Alles ist bereit!",
+      "greeting": "Hi {firstName}",
+      "verificationSuccess": "Großartige Neuigkeiten! Dein Offlinery-Konto ist jetzt verifiziert und einsatzbereit.",
+      "nextSteps": "Was kommt als Nächstes? Ab jetzt kannst du andere User in der echten Welt ansprechen beziehungsweise wirst von ihnen angesprochen.",
+      "disclaimer": "Wenn du dich nicht bei Offlinery angemeldet hast, keine Sorge. Du kannst diese E-Mail einfach ignorieren.",
+      "joinWhatsApp": "Gib uns Feedback",
+      "footer": "Dies ist eine automatisierte Nachricht. Bitte antworte nicht auf diese E-Mail."
+    },
+    "account-verification-denied": {
+      "subject": "Offlinery: Der letzte Schritt zur Verifizierung",
+      "title": "Vervollständige deine Offlinery-Verifizierung",
+      "header": "Bereit für ein kleines Abenteuer?",
+      "greeting": "Hey {firstName}!",
+      "taskIntro": "Wir haben eine spannende Challenge für dich, die dir hilft zu wachsen und uns zeigt, dass du bereit für echte Offline-Verbindungen bist.",
+      "taskDescription": "Deine Mission: Mach 3 {oppositeGender}, die du nicht kennst, ein ehrliches, herzliches Kompliment - und geh dann einfach weiter. Ohne Hintergedanken, verbreite einfach etwas Freude!",
+      "callExplanation": "Danach würden wir gerne von deinen Erfahrungen hören! Was hast du gelernt? Was würdest du anders machen? Deine Erkenntnisse sind super wertvoll für uns.",
+      "verificationNote": "Wenn unser Gespräch gut läuft (und davon sind wir überzeugt!), heißen wir dich mit Freude bei Offlinery willkommen.",
+      "bookCallButton": "Erfahrungs-Chat buchen",
+      "reminder": "Denk dran: Erfülle deine Mission vor dem Gespräch! 🎯",
+      "footer": "Dies ist eine automatische Nachricht. Bitte antworte nicht auf diese E-Mail."
+    },
+    "email-verification": {
+      "subject": "Willkommen bei Offlinery! Bestätige deine E-Mail",
+      "title": "E-Mail-Verifizierung",
+      "header": "E-Mail-Verifizierung",
+      "greeting": "Hey",
+      "thankYou": "Vielen Dank für deine Anmeldung! Bitte verwende den unten stehenden Verifizierungscode, um deine E-Mail-Adresse zu bestätigen:",
+      "instructions": "Gib diesen Code in der Offlinery-App ein, um deine E-Mail-Verifizierung abzuschließen.",
+      "disclaimer": "Wenn du diese E-Mail nicht angefordert hast, dann kannst du sie einfach ignorieren.",
+      "joinWhatsApp": "Gib uns Feedback",
+      "footer": "Dies ist eine automatisierte Nachricht. Bitte antworte nicht auf diese E-Mail."
+    },
+    "request-password-reset": {
+      "subject": "Offlinery: Code zum Zurücksetzen des Passworts",
+      "title": "Code zum Zurücksetzen des Passworts",
+      "greeting": "Hi {firstName}",
+      "receivedRequest": "Wir haben eine Anfrage zum Zurücksetzen des Passworts für dein Offlinery-Konto erhalten.",
+      "instructions": "Um Ihr Passwort zurückzusetzen, verwende bitte den folgenden 6-stelligen Code:",
+      "expirationNote": "Hinweis: Dieser Code läuft aus Sicherheitsgründen in 15 Minuten ab.",
+      "ignoreMessage": "⚠️ Wenn du das Zurücksetzen des Passworts nicht angefordert hast, ignoriere bitte diese E-Mail. ⚠️",
+      "securityNote": "Aus Sicherheitsgründen teile diesen Code niemals mit anderen.",
+      "contactSupport": "Bei Fragen oder Bedenken wende dich bitte an unser Support-Team unter office@offlinery.io.",
+      "joinWhatsApp": "Gib uns Feedback",
+      "footer": "Dies ist eine automatisch generierte Nachricht. Bitte antworte nicht auf diese E-Mail."
+    },
+    "ghostmode-reminder": {
+      "subject": "Ghost-Modus Erinnerung (Offlinery)",
+      "header": "Du bist unsichtbar!",
+      "greeting": "Hi {firstName}",
+      "timeInGhost": "Du bist seit {intervalHour} im Ghost-Modus.",
+      "impact": "Der Ghost-Modus schützt zwar deine Privatsphäre, bedeutet aber auch, dass du keine neuen Menschen treffen oder von anderen interessierten Personen entdeckt werden kannst.",
+      "suggestion": "Wechsle in den Live-Modus innerhalb der Offlinery App, um wieder Menschen in deiner Umgebung kennenzulernen!",
+      "footer": "Du bekommst diese E-Mail aufgrund deiner Einstellungen. Du kannst diese <a href='{changeNotificationSettingsUrl}' title='Einstellungen ändern' target='_blank'>hier</a> jederzeit ändern."
+    },
+    "safety-call-booked-reminder": {
+      "subject": "Vereinbare deinen kurzen Safety Call - Offlinery",
+      "header": "Zeit für deinen Safety Call! 🎉",
+      "greeting": "Hi {firstName}",
+      "reminderMessage": "Hier ist eine freundliche Erinnerung, deinen kurzen Safety Call mit uns zu planen! Dies ist ein wichtiger Schritt, um das volle Potential von Offlinery nutzen zu können.",
+      "importanceMessage": "In diesem entspannten 15-minütigen Gespräch machen wir einen kurzen Check deiner emotionalen Intelligenz, damit sich alle in unserer Community sicher und wohl fühlen. Nach der Freischaltung kannst du direkt loslegen, Menschen in der realen Welt anzusprechen!",
+      "bookCallButton": "Call buchen",
+      "timeEstimate": "Es geht super schnell - in 15 Minuten sind wir durch! ⏰",
+      "closingMessage": "Du möchtest selbst keine anderen Personen ansprechen? Kein Problem! Du kannst diesen Call überspringen und trotzdem von Anderen angesprochen werden - ändere einfach diese Einstellung in der App.",
+      "beApproachAlternative": "Möchtest du später aktiv werden? Du kannst den Safety Call jederzeit nachholen, wenn du bereit bist.",
+      "footer": "Dies ist eine automatische Nachricht von Offlinery."
+    },
+    "safety-call-missed": {
+      "subject": "Oops.. Du hast deinen EQ Call mit Offlinery verpasst",
+      "header": "Wir waren da, aber du leider nicht.",
+      "greeting": "Hi {firstName}",
+      "intro1": "Manchmal kommt etwas dazwischen - das verstehen wir! Wir haben bemerkt, dass du es nicht zu unserem geplanten EQ-Gespräch am {date} um {time} geschafft hast.",
+      "intro2": "Diese kurzen 10-15-minütigen Gespräche sind unser Weg, um sicherzustellen, dass sicher jeder auf Offlinery wohl fühlt.",
+      "taskDescription": "Nach diesem kurzen Gespräch kannst du {oppositeGender} im echten Leben ansprechen.",
+      "callExplanation": "Es ist nur eine entspannte Unterhaltung - wie ein kurzer virtueller Kaffee mit einem unserer Teammitglieder. Ganz ohne Druck!",
+      "verificationLink": "Was wir dich fragen",
+      "verificationNote": "Hier schon mal ein Sneak Peak:",
+      "bookCallButton": "Neue Session planen",
+      "reminder": "Kleiner Hinweis: Wenn du lieber in den \"Werde Angesprochen\"-Modus wechseln möchtest, kannst du diesen Schritt überspringen. Beachte dabei, dass du dann selbst dann niemanden ansprechen kannst.",
+      "footer": "Wir sind schon gespannt dich kennenzulernen!"
+    }
+  },
+  "view": {
+    "account-deletion-confirmation": {
+      "subject": "Konto erfolgreich gelöscht",
+      "message": "Dein Konto wurde dauerhaft gelöscht. All deine persönlichen Daten wurden aus unseren Systemen entfernt. Schade, dass du gehst, und wir hoffen, dass du bei uns dennoch eine schöne Zeit hattest."
+    }
+  },
+  "cron": {
+    "intervalHours": {
+      "h24": "24 Stunden",
+      "h72": "3 Tagen",
+      "h336": "2 Wochen"
+    }
+  }
+}

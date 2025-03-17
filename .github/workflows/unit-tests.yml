@@ -1,0 +1,75 @@
+name: Run unit tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: pnpm install
+
+      - name: Install mobile dependencies
+        working-directory: ./mobile
+        run: pnpm install:all
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
+      - name: Start Docker containers
+        run: |
+          cd backend
+          docker-compose up -d postgres_test
+        env:
+          COMPOSE_PROJECT_NAME: myproject
+
+      - name: Wait for containers to be ready
+        run: |
+          sleep 30  # Simple wait
+          # Add more sophisticated checks here if needed
+
+      - name: Run all tests (unit, integration) with coverage
+        run: pnpm test
+        env:
+          SHELL: /bin/bash
+
+      - name: Stop Docker containers
+        run: |
+          cd backend
+          docker-compose down
+        if: always()  # Ensure this step runs even if previous steps fail

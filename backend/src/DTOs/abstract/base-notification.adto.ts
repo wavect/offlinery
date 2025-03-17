@@ -1,0 +1,24 @@
+import { EAppScreens } from "@/DTOs/enums/app-screens.enum";
+import { ApiProperty } from "@nestjs/swagger";
+
+export enum ENotificationType {
+    NEW_MATCH = "new_match",
+    NEW_EVENT = "new_event",
+    ACCOUNT_APPROVED = "account_approved",
+    GHOSTMODE_REMINDER = "ghostmode_reminder",
+    SAFETYCALL_REMINDER = "safetycall_reminder",
+    ACCOUNT_DENIED = "account_denied",
+    NEW_MESSAGE = "new_message",
+    SAFETY_CALL_MISSED = "safety_call_missed",
+    DID_YOU_MEET = "did_you_meet",
+}
+
+export abstract class BaseNotificationADTO implements Record<string, unknown> {
+    [key: string]: unknown;
+
+    @ApiProperty({ enum: ENotificationType })
+    type: ENotificationType;
+
+    @ApiProperty({ enum: EAppScreens })
+    screen: EAppScreens;
+}

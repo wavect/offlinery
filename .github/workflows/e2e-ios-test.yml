@@ -1,0 +1,68 @@
+name: iOS E2E Tests
+
+on:
+  workflow_dispatch:  # This allows manual triggering if needed
+  release:
+    types: [disabled_event_that_never_happens]
+
+jobs:
+  ios-e2e-tests:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./mobile
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: |
+          pnpm install:all
+          pnpm add -g expo-cli@latest eas-cli
+
+      - name: Check font installation
+        run: |
+          ls -R node_modules/@expo-google-fonts
+          cat package.json
+          echo "Font paths from app.json:"
+          grep -A 4 '"fonts":' app.json
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "${HOME}/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Setup iOS simulator
+        run: |
+          brew install watchman
+          xcrun simctl create "iPhone 15" com.apple.CoreSimulator.SimDeviceType.iPhone-15
+
+      - name: Build iOS app
+        env:
+          EXPO_PUBLIC_ENVIRONMENT: production
+        run: |
+          pnpm ios
+
+      - name: Run Maestro tests
+        env:
+          EXPO_PUBLIC_ENVIRONMENT: production
+        run: |
+          pnpm e2e:ios:test
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: maestro-test-results
+          path: |
+            ~/.maestro/tests
+            /tmp/maestro
